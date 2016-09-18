@@ -1,9 +1,10 @@
 import PageObject from 'bsrs-ember/tests/page-object';
 import BASEURLS from 'bsrs-ember/utilities/urls';
 import CD from 'bsrs-ember/vendor/defaults/category';
+let { visitable, fillable, clickable, count, text, value, hasClass } = PageObject;
 import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
-let { visitable, fillable, clickable, count, text, value } = PageObject;
+
 const BASE_URL = BASEURLS.base_categories_url;
 const INDEX_URL = BASEURLS.base_categories_url + '/index';
 const DETAIL_URL = `${BASE_URL}/${CD.idOne}`;
@@ -38,6 +39,9 @@ var CategoryPage = PageObject.create({
   categoryClickOptionTwoEq: clickable(`${options} > .ember-power-select-option:eq(1)`),
   categoryOptionLength: count(`${options} > li`),
   categoriesSelected: count(CATEGORIES),
+  
+  //validation
+  nameValidationErrorVisible: hasClass('invalid', '.t-category-name-validator'),
 });
 
 export default CategoryPage;

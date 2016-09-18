@@ -1,11 +1,18 @@
 import Ember from 'ember';
+const { run } = Ember;
 import inject from 'bsrs-ember/utilities/store';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import { attr, Model } from 'ember-cli-simple-store/model';
+import { validator, buildValidations } from 'ember-cp-validations';
 
-const { run } = Ember;
+const Validations = buildValidations({
+  name: validator('presence', {
+    presence: true,
+    message: 'errors.location_level.name'
+  }),
+});
 
-var LocationLevel = Model.extend(NewMixin, {
+var LocationLevel = Model.extend(NewMixin, Validations, {
   simpleStore: Ember.inject.service(),
   name: attr(''),
   locations: [],

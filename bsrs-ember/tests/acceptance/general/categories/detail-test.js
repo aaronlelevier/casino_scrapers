@@ -102,7 +102,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), CATEGORIES_INDEX_URL);
-    let category = store.find('category', CD.idOne);
+    const category = store.find('category', CD.idOne);
     assert.equal(category.get('name'), CD.nameTwo);
     assert.equal(category.get('description'), CD.descriptionMaintenance);
     assert.equal(category.get('label'), CD.labelTwo);
@@ -126,18 +126,30 @@ test('when you click cancel, you are redirected to the category list view', (ass
 
 test('when editing the category name to invalid, it checks for validation', (assert) => {
   page.visitDetail();
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+    assert.notOk(page.nameValidationErrorVisible);
+  });
   page.nameFill('');
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid Name');
-    assert.ok(find('.t-name-validation-error').hasClass('validation'));
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), 'errors.category.name');
+    assert.ok(page.nameValidationErrorVisible);
   });
   page.nameFill(CD.nameTwo);
+  triggerEvent('.t-category-name', 'keyup', {keyCode: 65});
   page.descriptionFill(CD.descriptionRepair);
-  let url = PREFIX + DETAIL_URL + "/";
-  let response = CF.detail(CD.idOne);
-  let payload = CF.put({id: CD.idOne, name: CD.nameTwo});
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+    assert.notOk(page.nameValidationErrorVisible);
+  });
+  const url = PREFIX + DETAIL_URL + "/";
+  const response = CF.detail(CD.idOne);
+  const payload = CF.put({id: CD.idOne, name: CD.nameTwo});
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
   generalPage.save();
   andThen(() => {
@@ -194,58 +206,6 @@ test('when click delete, modal displays and when click ok, category is deleted a
   });
 });
 /* jshint ignore:end */
-
-test('validation works and when hit save, we do same post', (assert) => {
-  page.visitDetail();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.ok(find('.t-name-validation-error').is(':hidden'));
-  });
-  page.nameFill('');
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.ok(find('.t-name-validation-error').is(':visible'));
-  });
-  page.descriptionFill('');
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.ok(find('.t-name-validation-error').is(':visible'));
-  });
-  page.costCodeFill('');
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.ok(find('.t-name-validation-error').is(':visible'));
-  });
-  page.labelFill('');
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.ok(find('.t-name-validation-error').is(':visible'));
-  });
-  page.subLabelFill('');
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.ok(find('.t-name-validation-error').is(':visible'));
-  });
-  page.nameFill(CD.nameOne);
-  page.descriptionFill(CD.descriptionMaintenance);
-  page.labelFill(CD.labelOne);
-  page.costCodeFill(CD.costCodeOne);
-  page.subLabelFill(CD.subCatLabelTwo);
-  let url = PREFIX + DETAIL_URL + '/';
-  let response = CF.detail(CD.idOne);
-  let payload = CF.put({id: CD.idOne, name: CD.nameOne, description: CD.descriptionMaintenance,
-                       label: CD.labelOne, subcategory_label: CD.subCatLabelTwo, cost_amount: CD.costAmountOne, cost_code: CD.costCodeOne});
-                       xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), CATEGORIES_INDEX_URL);
-  });
-});
 
 test('cost_amount - is not required', (assert) => {
   page.visitDetail();

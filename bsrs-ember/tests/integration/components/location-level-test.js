@@ -9,12 +9,14 @@ import repository from 'bsrs-ember/tests/helpers/repository';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location-level_fixtures';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 let store, location_level, all_location_levels, location_levels, location_level_repo, run = Ember.run;
 
 moduleForComponent('location-level', 'integration: location-level test', {
   integration: true,
   setup() {
+    generalPage.setContext(this);
     store = module_registry(this.container, this.registry, ['model:location-level']);
     all_location_levels = LOCATION_LEVEL_FIXTURES.all_location_levels();
     run(function() {
@@ -32,24 +34,24 @@ moduleForComponent('location-level', 'integration: location-level test', {
     loadTranslations(service, json);
     location_level_repo = repository.initialize(this.container, this.registry, 'location-level');
     location_level_repo.peek = (filter) => { return store.find('location-level', filter); };
+  },
+  afterEach() {
+    generalPage.removeContext(this);
   }
 });
 
-test('validation should enforce basic location name property', function(assert) {
+test('name is required validation, cannot save w/o name', function(assert) {
+  // let modalDialogService = this.container.lookup('service:modal-dialog');
+  // modalDialogService.destinationElementId = 'description';
+  location_level.set('name', '');
   this.set('model', location_level);
   this.set('location_level_options', location_levels);
-  this.setName = function(name) { location_level.set('name', name); };
-  this.render(hbs`{{location-level-general model=model location_level_options=location_level_options setName=setName}}`);
-  var $component = this.$('.t-location-level-name');
-  let $validation = this.$('.t-name-validation-error');
-  assert.ok($validation.is(':hidden'));
-  assert.equal($component.val(), LLD.nameCompany);
-  $component.val('').trigger('input');
-  $validation = this.$('.t-name-validation-error');
-  assert.ok($validation.is(':visible'));
-  $component.val(LLD.nameRegion).trigger('input');
-  $validation = this.$('.t-name-validation-error');
-  assert.ok($validation.is(':hidden'));
+  this.render(hbs`{{location-level-general model=model location_level_options=location_level_options}}`);
+  let $err = this.$('.t-location-level-name-validator.invalid');
+  assert.notOk($err.is(':visible'));
+  generalPage.save();
+  $err = this.$('.t-location-level-name-validator.invalid');
+  assert.ok($err.is(':visible'));
 });
 
 test('if save isRunning, btn is disabled', function(assert) {

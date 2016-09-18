@@ -40,15 +40,6 @@ moduleForComponent('person-single', 'integration: person-single test', {
     });
     phone_number_types = store.find('phone-number-type');
     default_phone_number_type = phone_number_types.objectAt(0);
-    // let ad_types = [{ "id": "8e16a68c-fda6-4c30-ba7d-fee98257e92d", "name": "admin.address_type.office" },
-    //   { "id": "f7e55e71-1ff2-4cc2-8700-139802738bd0", "name": "admin.address_type.shipping" }];
-    //   run(function() {
-    //     ad_types.forEach(function(ad) {
-    //       store.push('address-type', ad);
-    //     });
-    //   });
-    //   address_types = store.find('phone-number-type');
-    //   default_address_type = address_types.objectAt(0);
     let em_types = [{ 'id': ETD.personalId, 'name': ETD.personalEmail }, { 'id': ETD.workId, 'name': ETD.workEmail }];
     run(() => {
       em_types.forEach(function(emt) {

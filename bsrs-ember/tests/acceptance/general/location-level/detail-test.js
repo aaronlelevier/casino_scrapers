@@ -111,25 +111,30 @@ test('a location level child can be selected and persisted', (assert) => {
   });
 });
 
-test('when editing name to invalid, it checks for validation', (assert) => {
+test('when editing the location level name to invalid, it checks for validation', (assert) => {
   page.visitDetail();
-  fillIn('.t-location-level-name', '');
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+    assert.notOk(page.nameValidationErrorVisible);
+  });
+  page.nameFill('');
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid Name');
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), 'errors.location_level.name');
+    assert.ok(page.nameValidationErrorVisible);
   });
-  fillIn('.t-location-level-name', LLD.nameRegion);
-  generalPage.save();
+  page.nameFill(LLD.nameAnother);
+  triggerEvent('.t-location-level-name', 'keyup', {keyCode: 65});
   andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-name-validation-error').is(':hidden'), false);
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+    assert.notOk(page.nameValidationErrorVisible);
   });
-  let response = LLF.detail(LLD.idOne);
-  response.name = LLD.nameAnother;
   let payload = LLF.put({id: LLD.idOne, name: LLD.nameAnother, children: LLD.companyChildren});
-  xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-  fillIn('.t-location-level-name', LLD.nameAnother);
+  xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);

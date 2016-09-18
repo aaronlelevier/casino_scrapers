@@ -4,7 +4,7 @@ import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance'
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location-level_fixtures';
-import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
+import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -17,7 +17,7 @@ const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
 const LOCATION_LEVEL_URL = BASE_URL + '/index';
 const LOCATION_LEVEL_NEW_URL = BASE_URL + '/new/1';
-const DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idOne;
+const DETAIL_URL = BASE_URL + '/' + LLD.idOne;
 
 let application, store, payload, list_xhr;
 
@@ -27,8 +27,8 @@ moduleForAcceptance('Acceptance | location-level-new', {
     list_xhr = xhr(`${LOCATION_LEVELS_URL}?page=1`, 'GET', null, {}, 200, LOCATION_LEVEL_FIXTURES.empty());
     payload = {
       id: UUID.value,
-      name: LOCATION_LEVEL_DEFAULTS.nameAnother,
-      children: LOCATION_LEVEL_DEFAULTS.newTemplateChildren
+      name: LLD.nameAnother,
+      children: LLD.newTemplateChildren
     };
     random.uuid = function() { return UUID.value; };
   },
@@ -65,33 +65,44 @@ test('visiting /location-level/new', (assert) => {
     assert.equal(location_level.get('children_fks').length, 8);
     assert.ok(location_level.get('new'));
   });
-  fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameAnother);
+  fillIn('.t-location-level-name', LLD.nameAnother);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
     assert.equal(store.find('location-level').get('length'), 9);
     let location_level = store.find('location-level', UUID.value);
     assert.equal(location_level.get('new'), undefined);
-    assert.equal(location_level.get('name'), LOCATION_LEVEL_DEFAULTS.nameAnother);
+    assert.equal(location_level.get('name'), LLD.nameAnother);
     assert.ok(location_level.get('isNotDirty'));
   });
 });
 
-test('validation works and when hit save, we do same post', (assert) => {
-  payload.name = LOCATION_LEVEL_DEFAULTS.nameRegion;
+test('when editing the location level name to invalid, it checks for validation', (assert) => {
+  page.visitNew();
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+    assert.notOk(page.nameValidationErrorVisible);
+  });
+  page.nameFill('');
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), 'errors.location_level.name');
+    assert.ok(page.nameValidationErrorVisible);
+  });
+  page.nameFill(LLD.nameAnother);
+  triggerEvent('.t-location-level-name', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+    assert.notOk(page.nameValidationErrorVisible);
+  });
+  payload.name = LLD.nameRegion;
   payload.children = [];
   let response = Ember.$.extend(true, {}, payload);
   xhr(LOCATION_LEVELS_URL, 'POST', JSON.stringify(payload), {}, 201, response);
-  page.visit();
-  click('.t-add-new');
-  andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':hidden'));
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':visible'));
-  });
-  fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameRegion);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
@@ -101,7 +112,7 @@ test('validation works and when hit save, we do same post', (assert) => {
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
   clearxhr(list_xhr);
   visit(LOCATION_LEVEL_NEW_URL);
-  fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
+  fillIn('.t-location-level-name', LLD.nameCompany);
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
@@ -117,7 +128,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
-      assert.equal(find('.t-location-level-name').val(), LOCATION_LEVEL_DEFAULTS.nameCompany);
+      assert.equal(find('.t-location-level-name').val(), LLD.nameCompany);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
@@ -125,7 +136,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
   visit(LOCATION_LEVEL_NEW_URL);
-  fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
+  fillIn('.t-location-level-name', LLD.nameCompany);
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
@@ -163,12 +174,12 @@ test('adding a new location-level should allow for another new location-level to
   uuidReset();
   payload.id = 'abc123';
   patchRandomAsync(0);
-  payload.name = LOCATION_LEVEL_DEFAULTS.nameRegion;
+  payload.name = LLD.nameRegion;
   payload.children = [];
   xhr(LOCATION_LEVELS_URL, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
   page.visit();
   click('.t-add-new');
-  fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameRegion);
+  fillIn('.t-location-level-name', LLD.nameRegion);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);

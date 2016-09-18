@@ -93,45 +93,39 @@ test('visiting /category/new', (assert) => {
   });
 });
 
-test('validation works and when hit save, we do same post', (assert) => {
+test('when editing the category name to invalid, it checks for validation', (assert) => {
   clearxhr(children_xhr);
-  let response = Ember.$.extend(true, {}, payload);
-  xhr(CATEGORIES_URL, 'POST', JSON.stringify(payload), {}, 201, response );
-  page.visit();
-  click('.t-add-new');
+  page.visitNew();
   andThen(() => {
     assert.equal(currentURL(), CATEGORY_NEW_URL);
-    assert.ok(find('.t-name-validation-error').is(':hidden'));
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+    assert.notOk(page.nameValidationErrorVisible);
   });
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), CATEGORY_NEW_URL);
-    assert.ok(find('.t-name-validation-error').is(':visible'));
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), 'errors.category.name');
+    assert.ok(page.nameValidationErrorVisible);
   });
-  fillIn('.t-category-description', CD.descriptionMaintenance);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), CATEGORY_NEW_URL);
-    assert.ok(find('.t-name-validation-error').is(':visible'));
-  });
+  page.nameFill(CD.nameOne);
+  triggerEvent('.t-category-name', 'keyup', {keyCode: 65});
+  page.descriptionFill(CD.descriptionMaintenance);
   fillIn('.t-category-cost-code', CD.costCodeOne);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), CATEGORY_NEW_URL);
-    assert.ok(find('.t-name-validation-error').is(':visible'));
-  });
   fillIn('.t-category-label', CD.labelOne);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), CATEGORY_NEW_URL);
-    assert.ok(find('.t-name-validation-error').is(':visible'));
-  });
   fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
   fillIn('.t-amount', CD.costAmountOne);
   andThen(() => {
     $('.t-amount').focusout();
   });
-  fillIn('.t-category-name', CD.nameOne);
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+    assert.notOk(page.nameValidationErrorVisible);
+  });
+  const response = Ember.$.extend(true, {}, payload);
+  xhr(CATEGORIES_URL, 'POST', JSON.stringify(payload), {}, 201, response);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), CATEGORIES_INDEX_URL);

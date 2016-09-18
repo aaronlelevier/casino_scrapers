@@ -65,9 +65,7 @@ test('description is required validation, cannot save w/o description', function
   let modalDialogService = this.container.lookup('service:modal-dialog');
   modalDialogService.destinationElementId = 'description';
   run(function() {
-    model = store.push('assignment', {
-      id: AD.idTwo,
-    });
+    model = store.push('assignment', { id: AD.idTwo });
   });
   this.set('model', model);
   this.render(hbs `{{assignments/assignment-single model=model}}`);

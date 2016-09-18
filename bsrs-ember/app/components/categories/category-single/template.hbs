@@ -26,8 +26,14 @@
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.category.label.name" for="name"}}
-            {{one-way-input type="text" placeholder=(t "admin.category.label.name") value=model.name update=(action setName) class="form-control t-category-name" id="category_name"}}
-            {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.category.label.name"}}{{/validation-error-field}}
+              {{validated-input
+                model=model
+                valuePath="name"
+                didValidate=didValidate
+                className="form-control t-category-name"
+                placeholder=(t "admin.category.label.name")
+                class="t-category-name-validator"
+              }}
             {{/form-group}}
           </div>
         </div>
@@ -73,7 +79,18 @@
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.category.label.children" for="category"}}
-            {{db-fetch-multi-select model=model multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-category-children-select" displayName="name" add_func="add_children" remove_func="remove_children" repository=repository searchMethod="findCategoryChildren"}}
+            {{db-fetch-multi-select 
+              model=model 
+              multiAttr="children" 
+              multiAttrIds="children_ids" 
+              selectedAttr=model.children 
+              className="t-category-children-select" 
+              displayName="name" 
+              add_func="add_children" 
+              remove_func="remove_children" 
+              repository=repository 
+              searchMethod="findCategoryChildren"
+            }}
             {{/form-group}}
           </div>
         </div>

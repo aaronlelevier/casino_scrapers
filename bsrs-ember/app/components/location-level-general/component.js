@@ -1,18 +1,20 @@
 import Ember from 'ember';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
-import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 import prevent_duplicate_name from 'bsrs-ember/validation/prevent_duplicate_name';
 import { task } from 'ember-concurrency';
 
-var LocationLevelGeneral = Ember.Component.extend(TabMixin, ValidationMixin, {
+var LocationLevelGeneral = Ember.Component.extend(TabMixin, {
+  init() {
+    this._super(...arguments);
+    this.didValidate = false;
+  },
   classNames: ['wrapper', 'form'],
-  nameValidation: validate('model.name', prevent_duplicate_name),
   saveTask: task(function * () {
-    this.set('submitted', true);
-    if (this.get('valid')) {
+    if (this.get('model.validations.isValid')) {
       const tab = this.tab();
       yield this.get('save')(tab);
     }
+    this.set('didValidate', true);
   }),
   actions: {
     save() {

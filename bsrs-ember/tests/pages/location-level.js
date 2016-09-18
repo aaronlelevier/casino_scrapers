@@ -1,9 +1,10 @@
 import PageObject from 'bsrs-ember/tests/page-object';
+let { text, visitable, fillable, clickable, count, hasClass } = PageObject;
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BASEURLS, { LOCATION_LEVELS_URL } from 'bsrs-ember/utilities/urls';
 
-let { text, visitable, fillable, clickable, count } = PageObject;
+
 const BASE_URL = BASEURLS.base_location_levels_url;
 const DETAIL_URL = BASE_URL + '/' + LLD.idOne;
 const NEW_URL = BASE_URL + '/new/1';
@@ -16,6 +17,7 @@ export default PageObject.create({
   visit: visitable(BASE_URL + '/index'),
   visitDetail: visitable(DETAIL_URL),
   visitNew: visitable(NEW_URL),
+  nameFill: fillable('.t-location-level-name'),
   childrenClickDropdown: clickable(CHILDREN),
   childrenSelected: text(CHILDREN_ONE),
   childrenOneRemove: clickable(`${CHILDREN_ONE} > .ember-power-select-multiple-remove-btn`),
@@ -34,4 +36,7 @@ export default PageObject.create({
   childrenSelectedCount: count(CHILDREN_MULTIPLE),
   categoriesSelected: count(CHILDREN_MULTIPLE),
   childrenTwoClickOptionOne: clickable(`${CHILDREN_DROPDOWN} > .ember-power-select-option:contains(${LLD.nameTwo})`),
+
+  //validation
+  nameValidationErrorVisible: hasClass('invalid', '.t-location-level-name-validator'),
 });
