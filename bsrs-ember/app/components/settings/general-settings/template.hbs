@@ -29,24 +29,43 @@
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.setting.company_name" for="company_name"}}
-            {{input type="text" placeholder=(t "admin.setting.company_name") value=model.company_name class="form-control t-settings-company_name" id="company_name"}}
-            {{#validation-error-field submitted=submitted field="company_name" className="validation validation-under t-company_name-text-validation-error" model=model validation=companyNameValidation}}{{t "validation.invalid"}} {{t "admin.setting.company_name"}}{{/validation-error-field}}
+              {{validated-input
+                model=model
+                valuePath="company_name"
+                didValidate=didValidate
+                className="form-control t-settings-company_name"
+                placeholder=(t "admin.setting.company_name")
+                class="t-settings-company-name-validator"
+              }}
             {{/form-group}}
           </div>
         </div>
         <div>
           <div class="col-md-12">
             {{#form-group title="admin.setting.company_code" for="company_code"}}
-            {{input type="text" placeholder=(t "admin.setting.company_code") value=model.company_code class="form-control t-settings-company_code" id="company_code"}}
-            {{#validation-error-field submitted=submitted field="company_code" className="validation validation-under t-company_code-text-validation-error" model=model validation=companyCodeValidation}}{{t "validation.invalid"}} {{t "admin.setting.company_code"}}{{/validation-error-field}}
+              {{validated-input
+                model=model
+                valuePath="company_code"
+                didValidate=didValidate
+                className="form-control t-settings-company_code"
+                placeholder=(t "admin.setting.company_code")
+                class="t-settings-company-code-validator"
+              }}
             {{/form-group}}
           </div>
         </div>
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.setting.dashboard_text" for="dashboard_text"}}
-            {{textarea autoresize=true placeholder=(t "admin.setting.dashboard_text") value=model.dashboard_text class="form-control t-settings-dashboard_text" id="dashboard_text"}}
-            {{#validation-error-field submitted=submitted field="dashboard_text" className="validation validation-under t-welcome-text-validation-error" model=model validation=dashboardTextValidation}}{{t "validation.invalid"}} {{t "admin.setting.dashboard_text"}}{{/validation-error-field}}
+              {{validated-input
+                textarea=true
+                model=model
+                valuePath="dashboard_text"
+                didValidate=didValidate
+                className="form-control t-settings-dashboard_text"
+                placeholder=(t "admin.setting.dashboard_text")
+                class="t-settings-dashboard-text-validator"
+              }}
             {{/form-group}}
           </div>
         </div>

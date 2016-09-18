@@ -34,9 +34,7 @@ moduleForComponent('settings/general-settings', 'integration: settings/general-s
 
 test('translations - for labels', function(assert) {
   this.set('model', model);
-  this.render(hbs `{{settings/general-settings
-      model=model
-    }}`);
+  this.render(hbs `{{settings/general-settings model=model }}`);
   assert.equal(getLabelText('company_name'), trans.t('admin.setting.company_name'));
   assert.equal(getLabelText('company_code'), trans.t('admin.setting.company_code'));
   assert.equal(getLabelText('dashboard_text'), trans.t('admin.setting.dashboard_text'));
@@ -45,20 +43,38 @@ test('translations - for labels', function(assert) {
   assert.equal(getLabelText('default_currency'), trans.t('admin.category.label.cost_currency'));
 });
 
-test('validation errors for required fields', function(assert) {
+test('company name is required validation, cannot save w/o name', function(assert) {
   this.set('model', model);
-  this.render(hbs `{{settings/general-settings
-      model=model
-    }}`);
+  this.render(hbs `{{settings/general-settings model=model }}`);
+  let $err = this.$('.t-settings-company-name-validator.invalid');
+  assert.notOk($err.is(':visible'));
+  assert.equal($('.validated-input-error-dialog').length, 0);
+  assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
   generalPage.save();
-  const $company_name_error = this.$('.t-company_name-text-validation-error');
-  assert.equal($company_name_error.text().trim(), trans.t('validation.invalid')+ ' '+trans.t('admin.setting.company_name'));
-  const $company_code_error = this.$('.t-company_code-text-validation-error');
-  assert.equal($company_code_error.text().trim(), trans.t('validation.invalid')+ ' '+trans.t('admin.setting.company_code'));
-  const $dashboard_text_error = this.$('.t-welcome-text-validation-error');
-  assert.equal($dashboard_text_error.text().trim(), trans.t('validation.invalid')+ ' '+trans.t('admin.setting.dashboard_text'));
-  page.companyNameFill('x');
-  page.companyCodeFill('y');
-  page.dashboardTextFill('z');
+  $err = this.$('.t-settings-company-name-validator.invalid');
+  assert.ok($err.is(':visible'));
+});
+
+test('company code is required validation, cannot save w/o code', function(assert) {
+  this.set('model', model);
+  this.render(hbs `{{settings/general-settings model=model }}`);
+  let $err = this.$('.t-settings-company-code-validator.invalid');
+  assert.notOk($err.is(':visible'));
+  assert.equal($('.validated-input-error-dialog').length, 0);
+  assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
   generalPage.save();
+  $err = this.$('.t-settings-company-code-validator.invalid');
+  assert.ok($err.is(':visible'));
+});
+
+test('dashboard text is required validation, cannot save w/o code', function(assert) {
+  this.set('model', model);
+  this.render(hbs `{{settings/general-settings model=model }}`);
+  let $err = this.$('.t-settings-dashboard-text-validator.invalid');
+  assert.notOk($err.is(':visible'));
+  assert.equal($('.validated-input-error-dialog').length, 0);
+  assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+  generalPage.save();
+  $err = this.$('.t-settings-dashboard-text-validator.invalid');
+  assert.ok($err.is(':visible'));
 });

@@ -1,17 +1,18 @@
 import Ember from 'ember';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
-import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-var ThirdPartySingle = Ember.Component.extend(TabMixin, ValidationMixin, {
-  nameValidation: validate('model.name'),
-  numberValidation: validate('model.number'),
+var ThirdPartySingle = Ember.Component.extend(TabMixin, {
+  init() {
+    this._super(...arguments);
+    this.didValidate = false;
+  },
   actions: {
     save() {
-      this.set('submitted', true);
-      if (this.get('valid')) {
+      if (this.get('model.validations.isValid')) {
         const tab = this.tab();
         return this.get('save')(tab);
       }
+      this.set('didValidate', true);
     },
   }
 });

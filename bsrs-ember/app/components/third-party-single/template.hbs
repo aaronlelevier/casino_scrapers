@@ -23,16 +23,28 @@
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.third_party.label.name" for="name"}}
-            {{input type="text" placeholder=(t "admin.third_party.label.name") value=model.name class="form-control t-third-party-name" id="third_party_name"}}
-            {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.third_party.label.name"}}{{/validation-error-field}}
+              {{validated-input
+                model=model
+                valuePath="name"
+                didValidate=didValidate
+                className="form-control t-third-party-name"
+                placeholder=(t "admin.third_party.label.name")
+                class="t-third-party-name-validator"
+              }}
             {{/form-group}}
           </div>
         </div>
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.third_party.label.number" for="number"}}
-            {{input type="text" placeholder=(t "admin.third_party.label.number") value=model.number class="form-control t-third-party-number" id="third_party_number"}}
-            {{#validation-error-field submitted=submitted field="number" className="validation validation-under t-number-validation-error" model=model validation=numberValidation}}{{t "validation.invalid"}} {{t "admin.third_party.label.number"}}{{/validation-error-field}}
+              {{validated-input
+                model=model
+                valuePath="number"
+                didValidate=didValidate
+                className="form-control t-third-party-number"
+                placeholder=(t "admin.third_party.label.number")
+                class="t-third-party-number-validator"
+              }}
             {{/form-group}}
           </div>
         </div>

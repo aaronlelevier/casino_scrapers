@@ -25,7 +25,6 @@ let store, payload, list_xhr;
 
 moduleForAcceptance('Acceptance | third-party new test', {
   beforeEach() {
-
     store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${DJANGO_THIRD_PARTY_URL}?page=1`, "GET", null, {}, 200, TPF.empty());
     payload = {
@@ -66,33 +65,40 @@ test('visit /third-parties/new and do a create', (assert) => {
   });
 });
 
-test('validation works and when hit save, we do same post', (assert) => {
-  let response = Ember.$.extend(true, {}, payload);
-  xhr(DJANGO_THIRD_PARTY_URL, 'POST', JSON.stringify(payload), {}, 201, response);
+test('when editing the third party name and number to invalid, it checks for validation', (assert) => {
   visit(THIRD_PARTY_URL);
   click('.t-add-new');
   andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':hidden'));
-    assert.ok(find('.t-number-validation-error').is(':hidden'));
-    assert.ok(find('.t-status-validation-error').is(':hidden'));
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+    assert.notOk(page.nameValidationErrorVisible);
+    assert.notOk(page.numberValidationErrorVisible);
   });
-  generalPage.save();
-  andThen(() => {
-    assert.ok(find('.t-name-validation-error').is(':visible'));
-    assert.ok(find('.t-number-validation-error').is(':visible'));
-    assert.ok(find('.t-status-validation-error').is(':visible'));
-  });
-  fillIn('.t-third-party-name', TPD.nameOne);
+  page.nameFill('');
+  page.numberFill('');
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), THIRD_PARTY_NEW_URL);
-    assert.ok(find('.t-number-validation-error').is(':visible'));
-    assert.ok(find('.t-status-validation-error').is(':visible'));
+    assert.equal($('.validated-input-error-dialog').length, 2);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), 'errors.third_party.name');
+    assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), 'errors.third_party.number');
+    assert.ok(page.nameValidationErrorVisible);
+    assert.ok(page.numberValidationErrorVisible);
   });
-  fillIn('.t-third-party-name', TPD.nameOne);
-  fillIn('.t-third-party-number', TPD.numberOne);
+  page.nameFill(TPD.nameOne);
+  triggerEvent('.t-third-party-name', 'keyup', {keyCode: 65});
+  page.numberFill(TPD.numberOne);
+  triggerEvent('.t-third-party-number', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+    assert.notOk(page.nameValidationErrorVisible);
+    assert.notOk(page.numberValidationErrorVisible);
+  });
   page.statusClickDropdown();
   page.statusClickOptionOne();
+  const response = Ember.$.extend(true, {}, payload);
+  xhr(DJANGO_THIRD_PARTY_URL, 'POST', JSON.stringify(payload), {}, 201, response);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), THIRD_PARTY_URL);

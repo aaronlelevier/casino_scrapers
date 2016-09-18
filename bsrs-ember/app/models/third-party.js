@@ -1,13 +1,24 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import OptConf from 'bsrs-ember/mixins/optconfigure/third-party';
+import { validator, buildValidations } from 'ember-cp-validations';
 
-const { run } = Ember;
+const Validations = buildValidations({
+  name: validator('presence', {
+    presence: true,
+    message: 'errors.third_party.name'
+  }),
+  number: validator('presence', {
+    presence: true,
+    message: 'errors.third_party.number'
+  }),
+});
 
-var ThirdPartyModel = Model.extend(NewMixin, OptConf, {
+var ThirdPartyModel = Model.extend(NewMixin, Validations, OptConf, {
   init() {
     belongs_to.bind(this)('status', 'third-party', {bootstrapped:true, 'dirty':true});
     this._super(...arguments);

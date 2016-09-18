@@ -79,27 +79,41 @@ test('visiting admin/third-parties detail and update all fields on the record', 
   });
 });
 
-test('admin/third-parties detail: when editing name to invalid, it checks for validation', (assert) => {
+test('when editing the third party name and number to invalid, it checks for validation', (assert) => {
   page.visitDetail();
-  fillIn('.t-third-party-name', '');
-  fillIn('.t-third-party-number', '');
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+    assert.notOk(page.nameValidationErrorVisible);
+    assert.notOk(page.numberValidationErrorVisible);
+  });
+  page.nameFill('');
+  page.numberFill('');
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid Name');
-    assert.equal(find('.t-number-validation-error').text().trim(), 'Invalid Number');
+    assert.equal($('.validated-input-error-dialog').length, 2);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), 'errors.third_party.name');
+    assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), 'errors.third_party.number');
+    assert.ok(page.nameValidationErrorVisible);
+    assert.ok(page.numberValidationErrorVisible);
   });
-  fillIn('.t-third-party-name', TPD.nameTwo);
-  fillIn('.t-third-party-number', TPD.numberTwo);
-  page.statusClickDropdown();
-  page.statusClickOptionTwo();
-  let response = TPF.detail(TPD.idOne);
+  page.nameFill(TPD.nameOne);
+  triggerEvent('.t-third-party-name', 'keyup', {keyCode: 65});
+  page.numberFill(TPD.numberOne);
+  triggerEvent('.t-third-party-number', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+    assert.notOk(page.nameValidationErrorVisible);
+    assert.notOk(page.numberValidationErrorVisible);
+  });
   let payload = TPF.put({
-    name: TPD.nameTwo,
-    number: TPD.numberTwo,
-    status: TPD.statusInactive
+    name: TPD.nameOne,
+    number: TPD.numberOne,
+    status: TPD.statusActive
   });
-  xhr(endpoint_detail, 'PUT', JSON.stringify(payload), {}, 200, response);
+  xhr(endpoint_detail, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LIST_URL);

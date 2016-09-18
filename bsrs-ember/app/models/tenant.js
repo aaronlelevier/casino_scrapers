@@ -1,8 +1,24 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/inject';
+import { validator, buildValidations } from 'ember-cp-validations';
 
-export default Model.extend({
+const Validations = buildValidations({
+  company_name: validator('presence', {
+    presence: true,
+    message: 'errors.settings.company_name'
+  }),
+  company_code: validator('presence', {
+    presence: true,
+    message: 'errors.settings.company_code'
+  }),
+  dashboard_text: validator('presence', {
+    presence: true,
+    message: 'errors.settings.dashboard_text'
+  }),
+});
+
+export default Model.extend(Validations, {
   repository: inject('tenant'),
   company_code: attr(''),
   company_name: attr(''),
