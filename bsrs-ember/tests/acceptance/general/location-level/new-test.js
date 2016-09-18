@@ -87,12 +87,12 @@ test('when editing the location level name to invalid, it checks for validation'
   page.nameFill('');
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
     assert.equal($('.validated-input-error-dialog').length, 1);
     assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), 'errors.location_level.name');
     assert.ok(page.nameValidationErrorVisible);
   });
-  page.nameFill(LLD.nameAnother);
+  page.nameFill(LLD.nameRegion);
   triggerEvent('.t-location-level-name', 'keyup', {keyCode: 65});
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
