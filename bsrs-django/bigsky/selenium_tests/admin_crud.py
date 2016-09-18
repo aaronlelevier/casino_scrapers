@@ -447,7 +447,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         location_level_new_link.click()
         # create new Location Level
         location_level_name = rand_chars()
-        location_level = InputHelper(location_level_name=location_level_name)
+        location_level = InputHelper(name=location_level_name)
         self._fill_in(location_level)
         self.gen_elem_page.click_save_btn()
         # new record shows in List view
@@ -463,7 +463,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         ### UPDATE
         location_level_page.find_wait_and_assert_elem("t-location-level-name", location_level_name)
         location_level_name = rand_chars()
-        location_level = InputHelper(location_level_name=location_level_name)
+        location_level = InputHelper(name=location_level_name)
         self._fill_in(location_level, True)
         self.gen_elem_page.click_save_btn()
         ### List View
