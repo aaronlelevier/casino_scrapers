@@ -178,7 +178,7 @@ export default function startApp(attrs) {
     bp[point.name] = point.begin + 5;
   });
   run(() => {
-    flexi.set('width', bp['huge']);
+    flexi.set('width', bp['desktop']);
   });
 
   windowProxy.locationUrl = null;

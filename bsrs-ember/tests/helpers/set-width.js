@@ -1,7 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
 
-/* @param {string} string - 'huge' 'mobile' */
+/* @param {string} string - 'desktop' 'mobile' */
 export default Ember.Test.registerAsyncHelper('setWidth', function(application, string) {
   if (!string) {
     console.warn('mobile, huge or other width needs to be provided');

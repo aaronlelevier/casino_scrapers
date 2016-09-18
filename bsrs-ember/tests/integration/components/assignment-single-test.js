@@ -27,7 +27,7 @@ moduleForComponent('assignment-single', 'integration: assignment-single test', {
     /* Desktop */
     const flexi = this.container.lookup('service:device/layout');
     const breakpoints = flexi.get('breakpoints');
-    const width = breakpoints.find(bp => bp.name === 'huge').begin + 5;
+    const width = breakpoints.find(bp => bp.name === 'desktop').begin + 5;
     flexi.set('width', width);
   },
   afterEach() {
