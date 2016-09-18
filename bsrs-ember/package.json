@@ -47,7 +47,7 @@
     "ember-cli-qunit": "3.0.0",
     "ember-cli-release": "0.2.8",
     "ember-cli-sass": "5.5.1",
-    "ember-cli-simple-store": "5.0.0",
+    "ember-cli-simple-store": "git+ssh//git@github.com:snewcomer/ember-cli-simple-store.git",
     "ember-cli-simple-validation": "1.4.0",
     "ember-cli-sri": "^2.1.0",
     "ember-cli-test-helpers": "2.0.1",
