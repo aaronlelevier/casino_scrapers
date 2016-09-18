@@ -52,11 +52,6 @@ Router.map(function() {
       this.route('new', {path: 'new/:new_id'});
       this.route('location-level', {path: '/:location_level_id'});
     });
-    this.route('third-parties', function() {
-      this.route('index');
-      this.route('new', {path: 'new/:new_id'});
-      this.route('third-party', {path: '/:third_party_id'});
-    });
   });
   this.route('tickets', function() {
     this.route('index');

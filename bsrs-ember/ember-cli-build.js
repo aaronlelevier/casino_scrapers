@@ -94,8 +94,6 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/state.js');
       app.import('vendor/defaults/status.js');
       app.import('vendor/defaults/tenant.js');
-      app.import('vendor/defaults/third-party.js');
-      app.import('vendor/defaults/third-party-status.js');
       app.import('vendor/defaults/ticket.js');
       app.import('vendor/defaults/ticket_activity.js');
       app.import('vendor/defaults/ticket-join-person.js');
