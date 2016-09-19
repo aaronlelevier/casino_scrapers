@@ -36,6 +36,7 @@ module.exports = function(defaults) {
       app.import('vendor/automation_fixtures.js');
       app.import('vendor/country_fixtures.js');
       app.import('vendor/criteria_fixtures.js');
+      app.import('vendor/currency_fixtures.js');
       app.import('vendor/dtd_fixtures.js');
       app.import('vendor/email_fixtures.js');
       app.import('vendor/locale_fixtures.js');
@@ -60,7 +61,7 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/automation.js');
       app.import('vendor/defaults/category-children.js');
       app.import('vendor/defaults/country.js');
-      app.import('vendor/defaults/currencies.js');
+      app.import('vendor/defaults/currency.js');
       app.import('vendor/defaults/category.js');
       app.import('vendor/defaults/dtd.js');
       app.import('vendor/defaults/dtd-link.js');
@@ -94,6 +95,7 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/state.js');
       app.import('vendor/defaults/status.js');
       app.import('vendor/defaults/tenant.js');
+      app.import('vendor/defaults/tenant-join-country.js');
       app.import('vendor/defaults/ticket.js');
       app.import('vendor/defaults/ticket_activity.js');
       app.import('vendor/defaults/ticket-join-person.js');

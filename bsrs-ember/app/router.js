@@ -13,8 +13,12 @@ Router.map(function() {
     this.route('location-types');
     this.route('category-types');
     this.route('contractors');
-    this.route('settings', {path: '/settings/:id'});
-    this.route('contractor-automations');
+    this.route('tenants', function() {
+      this.route('index');
+      this.route('new', {path: 'new/:new_id'});
+      this.route('tenant', {path: '/:tenant_id'});
+    });
+    this.route('contractor-assignments');
     this.route('locations', function() {
       this.route('index');
       this.route('new', {path: 'new/:new_id'});

@@ -11,6 +11,7 @@ export const AUTOMATION_AVAILABLE_FILTERS_URL = `${PREFIX}/admin/automations-ava
 export const ATTACHMENTS_URL = `${PREFIX}/admin/attachments/`;
 export const CATEGORIES_URL = `${PREFIX}/admin/categories/`;
 export const COUNTRY_URL = `${PREFIX}/countries/`;
+export const CURRENCIES_URL = `${PREFIX}/admin/currency/`;
 export const DASHBOARD_URL = `${PREFIX}/dashboard/`;
 export const DTD_URL = `${PREFIX}/dtds/`;
 export const DTD_ERROR_URL = `${PREFIX}/dtds/dtd-error/`;
@@ -23,6 +24,7 @@ export const PEOPLE_URL = `${PREFIX}/admin/people/`;
 export const ROLES_URL = `${PREFIX}/admin/roles/`;
 export const SETTING_URL = `${PREFIX}/admin/settings/`;
 export const STATE_URL = `${PREFIX}/states/`;
+export const TENANT_URL = `${PREFIX}/admin/tenants/`;
 export const THIRD_PARTIES_URL = `${PREFIX}/admin/third-parties/`;
 export const TRANSLATION_URL = `${PREFIX}/admin/translations/`;
 export const TICKETS_URL = `${PREFIX}/tickets/`;
@@ -37,6 +39,7 @@ export const LOCATION_LEVEL_LIST_URL = '/admin/location-levels/index';
 export const PEOPLE_LIST_URL = '/admin/people/index';
 export const ROLE_LIST_URL = '/admin/roles/index';
 export const THIRD_PARTY_LIST_URL = '/admin/third-parties/index';
+export const TENANT_LIST_URL = '/admin/tenants/index';
 export const TICKET_LIST_URL = '/tickets/index';
 
 var BASEURLS = {
@@ -55,6 +58,7 @@ var BASEURLS = {
   base_tickets_url: '/tickets',
   base_wos_url: '/work-orders',
   base_setting_url: '/admin/settings',
+  BASE_TENANT_URL: '/admin/tenants',
   DASHBOARD_URL: '/dashboard',
   dtd_error_url: '/dtds/dtd-error',
   error_url: '/error',

@@ -3,7 +3,7 @@ import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import CD from 'bsrs-ember/vendor/defaults/currencies';
+import CD from 'bsrs-ember/vendor/defaults/currency';
 
 var store, run = Ember.run, trans;
 

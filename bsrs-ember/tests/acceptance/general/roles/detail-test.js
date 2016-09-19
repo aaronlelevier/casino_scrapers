@@ -11,7 +11,7 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import LLF from 'bsrs-ember/vendor/location-level_fixtures';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import CD from 'bsrs-ember/vendor/defaults/category';
-import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
+import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currency';
 import TD from 'bsrs-ember/vendor/defaults/tenant';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import config from 'bsrs-ember/config/environment';

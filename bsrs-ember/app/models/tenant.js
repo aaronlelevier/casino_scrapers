@@ -1,57 +1,63 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
-import inject from 'bsrs-ember/utilities/inject';
+import { belongs_to } from 'bsrs-components/attr/belongs-to';
+import { many_to_many } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
+import OptConf from 'bsrs-ember/mixins/optconfigure/tenant';
 
 const Validations = buildValidations({
-  company_name: validator('presence', {
-    presence: true,
-    message: 'errors.settings.company_name'
-  }),
-  company_code: validator('presence', {
-    presence: true,
-    message: 'errors.settings.company_code'
-  }),
-  dashboard_text: validator('presence', {
-    presence: true,
-    message: 'errors.settings.dashboard_text'
-  }),
+  company_name: [
+    validator('presence', {
+      presence: true,
+      message: 'errors.tenant.company_name'
+    }),
+    validator('length', {
+      min: 5,
+      max: 500,
+      message: 'errors.tenant.company_name.min_max'
+    })
+  ],
+  currency: [
+    validator('presence', {
+      presence: true,
+      message: 'errors.tenant.currency'
+    }),
+  ],
 });
 
-export default Model.extend(Validations, {
-  repository: inject('tenant'),
-  company_code: attr(''),
+export default Model.extend(OptConf, Validations, {
+  init() {
+    this._super(...arguments);
+    belongs_to.bind(this)('currency', 'tenant');
+    many_to_many.bind(this)('country', 'tenant');
+  },
+  simpleStore: Ember.inject.service(),
   company_name: attr(''),
-  dashboard_text: attr(''),
-  test_mode: attr(),
-  dt_start_id: attr(''),
-  default_currency_id: attr(''),
-  i18n: Ember.inject.service(),
-  translated_title: Ember.computed(function() {
-    return this.get('i18n').t('admin.general', {
-      count: 2
-    });
-  }),
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
-    return this.get('isDirty');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'currencyIsDirty', 'countryIsDirty', function() {
+    return this.get('isDirty') || this.get('currencyIsDirty') || this.get('countryIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-  changeStartDtd(dtd) {
-    this.set('dt_start_id', dtd.id);
-    this.set('dt_start', {
-      id: dtd.id,
-      key: dtd.key
+  rollback() {
+    this.rollbackCurrency();
+    this.rollbackCountry();
+    this._super(...arguments);
+  },
+  saveRelated() {
+    this.saveCurrency();
+    this.saveCountry();
+  },
+  removeRecord() {
+    run(() => {
+      this.get('simpleStore').remove('tenant', this.get('id'));
     });
   },
   serialize() {
     return {
       id: this.get('id'),
-      company_code: this.get('company_code'),
       company_name: this.get('company_name'),
-      dashboard_text: this.get('dashboard_text'),
-      test_mode: this.get('test_mode'),
-      dt_start: this.get('dt_start_id'),
-      default_currency: this.get('default_currency_id')
+      currency: this.get('currency').get('id'),
+      country: this.get('country_ids'),
     };
-  }
+  },
 });

@@ -3,6 +3,7 @@ var BSRS_CURRENCY_DEFAULTS_OBJECT = (function() {
   factory.prototype.defaults = function() {
     return {
       id: '2e92dc64-8646-4ef4-823f-407b5a3a2853',
+      idOne: '2e92dc64-8646-4ef4-823f-407b5a3a2853',
       symbol: '$',
       name: 'US Dollar',
       decimal_digits: 2,
@@ -11,7 +12,8 @@ var BSRS_CURRENCY_DEFAULTS_OBJECT = (function() {
       rounding: 0,
       symbol_native: '$',
       // Euro
-      idEuro: '2e92dc64-8646-4ef4-823f-407b5a3a2854',
+      idEuro: 'ace31029-1a97-4759-a986-76cf84f657c7',
+      idTwo: '2e92dc64-8646-4ef4-823f-407b5a3a2854',
       symbolEuro: '€',
       nameEuro: 'Euro',
       decimal_digitsEuro: 2,
@@ -35,7 +37,7 @@ if (typeof window === 'undefined') {
   module.exports = new BSRS_CURRENCY_DEFAULTS_OBJECT().defaults();
 }
 else {
-  define('bsrs-ember/vendor/defaults/currencies', ['exports'], function(exports) {
+  define('bsrs-ember/vendor/defaults/currency', ['exports'], function(exports) {
     'use strict';
     return new BSRS_CURRENCY_DEFAULTS_OBJECT().defaults();
   });

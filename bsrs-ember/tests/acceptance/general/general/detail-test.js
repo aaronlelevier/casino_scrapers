@@ -6,7 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/utilities/urls';
-import CD from 'bsrs-ember/vendor/defaults/currencies';
+import CD from 'bsrs-ember/vendor/defaults/currency';
 import TD from 'bsrs-ember/vendor/defaults/tenant';
 import TF from 'bsrs-ember/vendor/tenant_fixtures';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';

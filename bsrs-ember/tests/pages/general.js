@@ -71,6 +71,8 @@ var GeneralPage = PageObject.create({
   emailZeroValidationErrorVisible: hasClass('invalid', '.t-email-email-validator0'),
   emailOneValidationErrorVisible: hasClass('invalid', '.t-email-email-validator1'),
   emailTwoValidationErrorVisible: hasClass('invalid', '.t-email-email-validator2'),
+
+  clickTenants: clickable('.t-nav-tenants'),
 });
 
 export default GeneralPage;

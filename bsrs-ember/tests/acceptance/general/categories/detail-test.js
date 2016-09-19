@@ -9,7 +9,7 @@ import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CF from 'bsrs-ember/vendor/category_fixtures';
-import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
+import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currency';
 import page from 'bsrs-ember/tests/pages/category';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import personPage from 'bsrs-ember/tests/pages/person';

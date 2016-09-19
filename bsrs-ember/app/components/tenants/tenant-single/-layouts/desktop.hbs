@@ -1,0 +1,76 @@
+{{base-component
+  model=model
+  save="save"
+  cancel="cancel"
+  delete=delete
+  btnDisabled=saveTask.isRunning
+}}
+
+<section class="docSection container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <section style="padding-bottom: 0">
+        <div class="row card-title">
+          <h1 class="col-md-12 t-tenant-header">
+            <span class="new">
+            {{#if model.new}}
+              {{t "tenant.new"}}
+            {{else}}
+              {{t "tenant.detail"}}
+            {{/if}}
+            </span>
+          </h1>
+        </div>
+      </section>
+    </div>
+    <div class="col-md-12">
+      <section>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="tenant.company_name" for="company_name"}}
+              {{validated-input
+                model=model
+                value=model.company_name
+                valuePath="company_name"
+                didValidate=didValidate
+                className="form-control t-tenant-company_name"
+                placeholder=(t "tenant.company_name")
+              }}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12 t-currency-code">
+            {{#form-group title="admin.category.label.cost_currency" for="default_currency"}}
+              {{power-select-foreign-key
+                mainModel=model
+                selected=model.currency
+                change_method='change_currency'
+                relatedModels=currencies
+                relatedModelName='currency'
+              }}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="tenant.country" for="country"}}
+            {{db-fetch-multi-select
+              model=model
+              multiAttr='country'
+              multiAttrIds='country_ids'
+              selectedAttr=model.country
+              className="t-tenant-country-select"
+              displayName="name"
+              add_func="add_country"
+              remove_func="remove_country"
+              repository=countryRepo
+              searchMethod="findCountry"
+            }}
+            {{/form-group}}
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>

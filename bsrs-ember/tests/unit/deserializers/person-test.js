@@ -18,6 +18,8 @@ import ETD from 'bsrs-ember/vendor/defaults/email-type';
 // import Person from 'bsrs-ember/models/person';
 import PPHD from 'bsrs-ember/vendor/defaults/person-join-phonenumber';
 import PEMD from 'bsrs-ember/vendor/defaults/person-join-email';
+import CD from 'bsrs-ember/vendor/defaults/currency';
+import Person from 'bsrs-ember/models/person';
 import PersonDeserializer from 'bsrs-ember/deserializers/person';
 import LocationDeserializer from 'bsrs-ember/deserializers/location';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
