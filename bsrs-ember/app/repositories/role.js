@@ -27,9 +27,6 @@ var RoleRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
     });
     return role;
   },
-  get_default() {
-    return this.get('simpleStore').find('role');
-  },
   /* @method getRouteData
   * gets settings data such as dashboard_text
   */

@@ -48,7 +48,6 @@
           {{#form-group title="admin.person.label.role-name" for="role"}}
           {{role-select
             model=model
-            options=(if roles roles mobileComponentData.[0].roles)
             role_change=role_change
           }}
           {{/form-group}}

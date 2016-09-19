@@ -1,6 +1,11 @@
 import Ember from 'ember';
+const { inject } = Ember;
 
 var RoleSelect = Ember.Component.extend({
+  simpleStore: inject.service(),
+  options: Ember.computed(function() {
+    return this.get('simpleStore').find('role');
+  }),
   actions: {
     /*
     * @method selected
