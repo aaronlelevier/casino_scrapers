@@ -176,8 +176,8 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.equal(find('.t-category-name').val(), CD.nameTwo);
-      // assert.throws(Ember.$('.ember-modal-dialog'));
+      // assert.equal(find('.t-category-name').val(), CD.nameTwo);
+      assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
