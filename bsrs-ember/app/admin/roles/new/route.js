@@ -11,7 +11,6 @@ var RoleNewRoute = TabNewRoute.extend({
   model(params) {
     let new_pk = parseInt(params.new_id, 10);
     const repository = this.get('repository');
-    const all_role_types = this.get('simpleStore').find('role-type');
     let model = this.get('simpleStore').find('role', {new_pk: new_pk}).objectAt(0);
     if(!model){
       const all_role_types = this.get('simpleStore').find('role-type');
@@ -25,7 +24,6 @@ var RoleNewRoute = TabNewRoute.extend({
     ];
     return Ember.RSVP.hash({
       model,
-      all_role_types,
       otherXhrs: Ember.RSVP.all(otherXhrs),
       repository,
       hashComponents

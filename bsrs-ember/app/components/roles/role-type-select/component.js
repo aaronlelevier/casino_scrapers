@@ -1,8 +1,12 @@
 import Ember from 'ember';
 
-var TicketPriority = Ember.Component.extend({
+var RoleTypeSelect = Ember.Component.extend({
+  simpleStore: Ember.inject.service(),
+  options: Ember.computed(function() {
+    return this.get('simpleStore').find('role-type'); 
+  }),
   selected: Ember.computed('role.role_type', function() {
-    const all_role_types = this.get('all_role_types') || [];
+    const all_role_types = this.get('simpleStore').find('role-type');
     return all_role_types.filter((type) => {
       return type.get('name') === this.get('role').get('role_type');
     }).objectAt(0);
@@ -15,4 +19,4 @@ var TicketPriority = Ember.Component.extend({
   }
 });
 
-export default TicketPriority;
+export default RoleTypeSelect;
