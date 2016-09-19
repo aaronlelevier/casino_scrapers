@@ -25,7 +25,7 @@ test('passing a type will change the form fields type', function(assert) {
       model=model
       placeholder=(t 'admin.person.label.password')
       valuePath='password'
-      className='form-control t-person-password'
+      className='t-person-password'
       didValidate=didValidate
       class='t-person-password-validator'
       type='password'
@@ -51,7 +51,7 @@ test('didValidate and isInvalid trigger validation', function(assert) {
       model=model
       placeholder=(t 'admin.person.label.password')
       valuePath='password'
-      className='form-control t-person-password'
+      className='t-person-password'
       didValidate=didValidate
       class='t-person-password-validator'
       type='password'

@@ -165,11 +165,11 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(Ember.$('.ember-modal-dialog'));
-      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
-      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
-      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
-      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
+      assert.ok(generalPage.modalIsVisible, 'modal is visible');
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'), 'text for title');
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'), 'text for body');
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'), 'rollback btn');
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'), 'cancel btn');
     });
   });
   generalPage.clickModalCancel();
@@ -177,7 +177,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       // assert.equal(find('.t-category-name').val(), CD.nameTwo);
-      assert.throws(Ember.$('.ember-modal-dialog'));
+      assert.throws(Ember.$('.ember-modal-dialog'), 'modal dialog isnt there');
     });
   });
 });
