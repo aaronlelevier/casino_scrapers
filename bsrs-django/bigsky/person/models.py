@@ -391,6 +391,7 @@ class Person(BaseModel, AbstractUser):
 
     class Meta:
         verbose_name_plural = 'People'
+        ordering = ("fullname",)
 
     def __str__(self):
         return self.username

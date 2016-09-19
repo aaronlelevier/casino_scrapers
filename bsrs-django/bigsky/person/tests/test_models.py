@@ -297,6 +297,9 @@ class PersonTests(TestCase):
         create_default(PersonStatus)
         self.person_default_status = PersonStatus.objects.default()
 
+    def test_meta__ordering(self):
+        self.assertEqual(Person._meta.ordering, ("fullname",))
+
     def test_person_is_user_subclass(self):
         self.assertIsInstance(self.person, AbstractUser)
 
