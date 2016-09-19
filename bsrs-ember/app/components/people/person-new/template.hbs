@@ -20,7 +20,7 @@
         <div class="row">
           <div class="col-sm-12">
             {{#form-group title="admin.person.label.username" for="username"}}
-            {{input-backend-validation model=model value=model.username valuePath="username" placeholder=(t "admin.person.label.username") className="form-control t-person-username" didValidate=didValidate}}
+            {{input-backend-validation model=model value=model.username valuePath="username" placeholder=(t "admin.person.label.username") className="t-person-username" didValidate=didValidate}}
             {{/form-group}}
           </div>
         </div>
@@ -31,7 +31,7 @@
               model=model
               placeholder=(t "admin.person.label.password")
               valuePath="password"
-              className="form-control t-person-password"
+              className="t-person-password"
               didValidate=didValidate
               class="t-person-password-validator"
               type="password"

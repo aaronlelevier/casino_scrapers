@@ -1,4 +1,10 @@
-{{input type=type value=value placeholder=placeholder class=className id=valuePath}}
+{{input 
+  type=type 
+  value=value 
+  placeholder=placeholder 
+  class=(concat "form-control " className)
+  id=valuePath
+}}
 
 {{#if showMessage}}
   <div class="error t-existing-error">

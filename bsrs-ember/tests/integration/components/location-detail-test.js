@@ -20,7 +20,7 @@ import general from 'bsrs-ember/tests/pages/general';
 var store, phone_number_types, default_phone_number_type, address_types, default_address_type, default_email_type, email_types, trans;
 const ERR_TEXT = '.validated-input-error-dialog';
 
-moduleForComponent('locations/location-detail', 'integration: locations/location-detail test', {
+moduleForComponent('locations/location-single', 'integration: locations/location-single test', {
   integration: true,
   beforeEach() {
     page.setContext(this);
@@ -70,7 +70,7 @@ test('clicking save will reveal all validation msgs', function(assert) {
   run(() => {
     this.model = store.push('location', {id: LD.idOne, name: LD.storeName});
   });
-  this.render(hbs`{{locations/location-detail model=model}}`);
+  this.render(hbs`{{locations/location-single model=model}}`);
   this.$('.t-location-name').val('').trigger('change');
   assert.equal($('.validated-input-error-dialog').length, 0);
   assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
@@ -101,7 +101,7 @@ test('filling in location level on location new template will set diabled to fal
     store.push('location-level', LLF.generate(LLD.idTwo, LLD.nameDistrict));
   });
   this.all_location_levels = store.find('location-level');
-  this.render(hbs`{{locations/location-detail model=model all_location_levels=all_location_levels}}`);
+  this.render(hbs`{{locations/location-single model=model all_location_levels=all_location_levels}}`);
   assert.equal(this.$('.t-location-children-select .ember-basic-dropdown-trigger input').attr('disabled'), 'disabled');
   assert.equal(this.$('.t-location-parent-select .ember-basic-dropdown-trigger input').attr('disabled'), 'disabled');
   clickTrigger('.t-location-level-select');
@@ -116,7 +116,7 @@ test('if save isRunning, btn is disabled', function(assert) {
   });
   // monkey patched.  Not actually passed to component but save.isRunning comes from save ember-concurrency task
   this.saveIsRunning = { isRunning: 'disabled' };
-  this.render(hbs`{{locations/location-detail model=model saveTask=saveIsRunning}}`);
+  this.render(hbs`{{locations/location-single model=model saveTask=saveIsRunning}}`);
   assert.equal(this.$('.t-save-btn').attr('disabled'), 'disabled', 'Button is disabled if xhr save is outstanding');
 });
 
@@ -127,7 +127,7 @@ test('filling in invalid phone number reveal validation messages', function(asse
   });
   this.phone_number_types = phone_number_types;
   this.default_phone_number_type = default_phone_number_type;
-  this.render(hbs`{{locations/location-detail model=model phone_number_types=phone_number_types default_phone_number_type=default_phone_number_type}}`);
+  this.render(hbs`{{locations/location-single model=model phone_number_types=phone_number_types default_phone_number_type=default_phone_number_type}}`);
   general.clickAddPhoneNumber();
   let $err = this.$('.invalid');
   assert.equal($err.text().trim(), '');
@@ -154,7 +154,7 @@ test('filling in invalid emails reveal validation messages', function(assert) {
   });
   this.email_types = email_types;
   this.default_email_type = default_email_type;
-  this.render(hbs`{{locations/location-detail model=model email_types=email_types default_email_type=default_email_type}}`);
+  this.render(hbs`{{locations/location-single model=model email_types=email_types default_email_type=default_email_type}}`);
   general.clickAddEmail();
   let $err = this.$('.invalid');
   assert.equal($err.text().trim(), '');
@@ -180,7 +180,7 @@ test('can remove a new phone number', function(assert) {
   });
   this.phone_number_types = phone_number_types;
   this.default_phone_number_type = default_phone_number_type;
-  this.render(hbs`{{locations/location-detail model=model phone_number_types=phone_number_types default_phone_number_type=default_phone_number_type}}`);
+  this.render(hbs`{{locations/location-single model=model phone_number_types=phone_number_types default_phone_number_type=default_phone_number_type}}`);
   general.clickAddPhoneNumber();
   assert.equal(this.$('.t-phonenumber-number0').length, 1);
   general.clickDeletePhoneNumber();
@@ -193,7 +193,7 @@ test('can add and remove new email', function(assert) {
   });
   this.email_types = email_types;
   this.default_email_type = default_email_type;
-  this.render(hbs`{{locations/location-detail model=model email_types=email_types default_email_type=default_email_type}}`);
+  this.render(hbs`{{locations/location-single model=model email_types=email_types default_email_type=default_email_type}}`);
   general.clickAddEmail();
   assert.equal(this.$('.t-email-email0').length, 1);
   general.clickDeleteEmail();
@@ -206,7 +206,7 @@ test('can add and remove new address', function(assert) {
   });
   this.address_types = address_types;
   this.default_address_type = default_address_type;
-  this.render(hbs`{{locations/location-detail model=model address_types=address_types default_address_type=default_address_type}}`);
+  this.render(hbs`{{locations/location-single model=model address_types=address_types default_address_type=default_address_type}}`);
   general.clickAddAddress();
   assert.equal(this.$('.t-address-address0').length, 1);
   general.clickDeleteAddress();

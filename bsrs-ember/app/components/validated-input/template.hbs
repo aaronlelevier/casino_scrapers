@@ -4,7 +4,7 @@
     type=type
     placeholder=placeholder
     value=value
-    class=className
+    class=(concat "form-control " className)
     id=(if count (concat valuePath count) valuePath)
     focus-out=(action "focusedOut")
     key-up=(action "keyedUp")
@@ -30,7 +30,7 @@
     autoresize=true
     placeholder=placeholder
     value=value
-    class=className
+    class=(concat "form-control " className)
     id=valuePath
     focus-out="focusedOut"
     key-up="keyedUp"
