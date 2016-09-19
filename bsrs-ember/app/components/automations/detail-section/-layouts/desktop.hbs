@@ -1,0 +1,30 @@
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="admin.automation.description" for="description"}}
+    {{validated-input
+      model=model
+      valuePath="description"
+      didValidate=didValidate
+      className="t-automation-description"
+      placeholder=(t "admin.automation.description")
+    }}
+    {{/form-group}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="admin.automation.assignee" for="assignee"}}
+    {{db-fetch-select
+      model=model
+      selectedAttr=model.assignee
+      className="t-automation-assignee-select"
+      displayName="fullname"
+      change_func="change_assignee"
+      repository=personRepo
+      searchMethod="findPeople"
+      valuePath="assignee"
+      didValidate=didValidate
+    }}
+    {{/form-group}}
+  </div>
+</div>

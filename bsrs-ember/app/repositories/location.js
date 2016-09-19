@@ -46,7 +46,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
       return response.results;
     });
   },
-  // TODO: Used in 'people' and 'assignment'. Needs a name refactor.
+  // TODO: Used in 'people' and 'automation'. Needs a name refactor.
   findPersonsLocations(search_criteria, filter) {
     let url = LOCATIONS_URL;
     if (filter && search_criteria) {

@@ -101,7 +101,7 @@ test('add_criteria - will create join model and mark model dirty', (assert) => {
   assert.ok(pfilter.get('isDirtyOrRelatedDirty'));
 });
 
-test('saveCriteria - will reset the previous pf with multiple assignments', (assert) => {
+test('saveCriteria - will reset the previous pf with multiple automations', (assert) => {
   let criteria_unused = {id: CD.unusedId};
   run(() => {
     store.push('criteria', {id: CD.idOne});
@@ -131,7 +131,7 @@ test('saveCriteria - will reset the previous pf with multiple assignments', (ass
   assert.ok(pfilter.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('rollbackCriteria - multiple assignments with the same pf will rollbackCriteria correctly', (assert) => {
+test('rollbackCriteria - multiple automations with the same pf will rollbackCriteria correctly', (assert) => {
   let pfilter_two;
   run(() => {
     store.push('pfilter-join-criteria', {id: PJFD.idOne, pfilter_pk: PFD.idOne, criteria_pk: CD.idOne});

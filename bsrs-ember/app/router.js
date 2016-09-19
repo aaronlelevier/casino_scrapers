@@ -14,7 +14,7 @@ Router.map(function() {
     this.route('category-types');
     this.route('contractors');
     this.route('settings', {path: '/settings/:id'});
-    this.route('contractor-assignments');
+    this.route('contractor-automations');
     this.route('locations', function() {
       this.route('index');
       this.route('new', {path: 'new/:new_id'});
@@ -26,10 +26,10 @@ Router.map(function() {
       this.route('category', {path: '/:category_id'});
     });
     this.route('notifications');
-    this.route('assignments', function() {
+    this.route('automations', function() {
       this.route('index');
       this.route('new', {path: 'new/:new_id'});
-      this.route('assignment', {path: '/:assignment_id'});
+      this.route('automation', {path: '/:automation_id'});
     });
     this.route('approvals');
     this.route('translations', function() {

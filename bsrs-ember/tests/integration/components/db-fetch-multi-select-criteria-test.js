@@ -16,7 +16,7 @@ const DROPDOWN = '.ember-power-select-dropdown';
 
 var store, trans, pfilter, results, state_repo, component;
 
-moduleForComponent('db-fetch-multi-select-criteria', 'Integration | Component | db-fetch-multi-select-criteria assignment profile criteria', {
+moduleForComponent('db-fetch-multi-select-criteria', 'Integration | Component | db-fetch-multi-select-criteria automation profile criteria', {
   integration: true,
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:pfilter', 'model:criteria', 'model:state']);

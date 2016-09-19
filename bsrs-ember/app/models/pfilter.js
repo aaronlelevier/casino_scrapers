@@ -11,7 +11,7 @@ const Validations = buildValidations({
     if (model.get('field') === 'auto_assign' || !model.get('source_id')) {
       return true;
     }
-    return get(value, 'length') > 0 ? true : 'errors.assignment.pf.criteria.length';
+    return get(value, 'length') > 0 ? true : 'errors.automation.pf.criteria.length';
   })
 });
 

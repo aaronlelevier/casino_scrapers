@@ -1,0 +1,40 @@
+{{power-select-validation
+  model=model
+  valuePath="pf"
+  didValidate=didValidate
+}}
+<div class="row">
+  <div class="col-md-12">
+    {{#each model.pf as |_ index|}}
+      <div class="input-group-vertical">
+        <div class="input-group">
+          <span class="input-group-btn">
+            <button class="t-del-pf-btn btn btn-default btn-sm delete" type="button" {{action "delete" (model-at model.pf index)}}>{{fa-icon "minus"}}</button>
+          </span>
+          {{#power-select
+            class="t-automation-pf-select"
+            tagName="div"
+            selected=(model-at model.pf index)
+            options=options
+            placeholder=(t "admin.automation.placeholder.available_filter")
+            onchange=(action "setautomationFilter" (model-at model.pf index))
+            onopen=(action "fetchFilters" index)
+            searchEnabled=false
+            as |pf|
+          }}
+            {{t pf.key}} {{if pf.existingautomation (concat (t "admin.automation.selected_in") " " pf.existingautomation)}}
+          {{/power-select}}
+        </div>
+        {{component (automation-filter (model-at model.pf index))
+          model=(model-at model.pf index)
+          didValidate=didValidate
+          id=(concat "criteria" index)
+          index=index
+        }}
+      </div>
+    {{/each}}
+    <button class="t-add-pf-btn btn-add btn btn-default btn-sm" type="button" disabled={{addFilterDisabled}} {{action "append"}}>
+      <span class="btn-label">{{fa-icon "plus"}} {{t "admin.automation.pf.add"}}</span>
+    </button>
+  </div>
+</div>

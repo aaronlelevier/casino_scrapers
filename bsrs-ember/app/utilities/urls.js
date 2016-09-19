@@ -5,8 +5,8 @@ const PREFIX = config.APP.NAMESPACE;
 // API Urls
 export const ADMIN_URL = `${PREFIX}/admin/`;
 export const ADMIN_TRANSLATIONS_URL = `${PREFIX}/admin/translations/`;
-export const ASSIGNMENT_URL = `${PREFIX}/admin/assignments/`;
-export const ASSIGNMENT_AVAILABLE_FILTERS_URL = `${PREFIX}/admin/assignments-available-filters/`;
+export const AUTOMATION_URL = `${PREFIX}/admin/automations/`;
+export const AUTOMATION_AVAILABLE_FILTERS_URL = `${PREFIX}/admin/automations-available-filters/`;
 export const ATTACHMENTS_URL = `${PREFIX}/admin/attachments/`;
 export const CATEGORIES_URL = `${PREFIX}/admin/categories/`;
 export const COUNTRY_URL = `${PREFIX}/countries/`;
@@ -28,7 +28,7 @@ export const TICKETS_URL = `${PREFIX}/tickets/`;
 export const WOS_URL = `${PREFIX}/work-orders/`;
 
 // App Urls
-export const ASSIGNMENT_LIST_URL = '/admin/assignments/index';
+export const automation_LIST_URL = '/admin/automations/index';
 export const CATEGORY_LIST_URL = '/admin/categories/index';
 export const I18N_LIST_URL = '/admin/translations/index';
 export const LOCATION_LIST_URL = '/admin/locations/index';
@@ -40,7 +40,7 @@ export const TICKET_LIST_URL = '/tickets/index';
 
 var BASEURLS = {
   base_admin_url: '/admin',
-  BASE_ASSIGNMENT_URL: '/admin/assignments',
+  BASE_AUTOMATION_URL: '/admin/automations',
   ADMIN_MOBILE_URL: '/admin-mobile',
   base_admin_translations_url: '/admin/translations',
   base_categories_url: '/admin/categories',

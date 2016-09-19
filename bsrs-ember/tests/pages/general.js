@@ -38,7 +38,7 @@ var GeneralPage = PageObject.create({
   //Admin Routes
   clickDashboard: clickable('.t-nav-dashboard'),
   clickDTD: clickable('.t-nav-admin-dtd'),
-  clickAssignments: clickable('.t-nav-admin-assignment-profiles'),
+  clickautomations: clickable('.t-nav-admin-automation-profiles'),
   clickCategories: clickable('.t-nav-admin-category'),
   clickPeople: clickable('.t-nav-admin-people'),
   clickLocations: clickable('.t-nav-admin-location'),
