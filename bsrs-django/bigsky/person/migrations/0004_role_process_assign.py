@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='role',
             name='process_assign',
-            field=models.BooleanField(default=True, help_text='If True, run the Ticket Assignment Profiles after a Ticket is create, but if False, assign to the Person who created the Ticket'),
+            field=models.BooleanField(default=True, help_text='If True, run the Ticket Automation Profiles after a Ticket is create, but if False, assign to the Person who created the Ticket'),
         ),
     ]

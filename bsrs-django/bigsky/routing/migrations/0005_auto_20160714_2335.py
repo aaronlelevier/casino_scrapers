@@ -13,16 +13,16 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name='assignment',
+            name='automation',
             options={'ordering': ['order']},
         ),
         migrations.AlterField(
-            model_name='assignment',
+            model_name='automation',
             name='description',
             field=models.CharField(max_length=500),
         ),
         migrations.AlterField(
-            model_name='assignment',
+            model_name='automation',
             name='order',
             field=models.IntegerField(null=True),
         ),

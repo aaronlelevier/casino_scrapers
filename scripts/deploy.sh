@@ -62,7 +62,7 @@ TEST=$?; if [ "$TEST" == 1 ]; then echo "create db failed"; exit $TEST; fi
 
 
 wait
-../venv/bin/python manage.py makemigrations accounting assignment category contact dt dtd generic location person session tenant third_party ticket translation utils work_order work_request
+../venv/bin/python manage.py makemigrations accounting automation category contact dt dtd generic location person session tenant third_party ticket translation utils work_order work_request
 TEST=$?; if [ "$TEST" == 1 ]; then echo "makemigrations failed"; exit $TEST; fi
 
 

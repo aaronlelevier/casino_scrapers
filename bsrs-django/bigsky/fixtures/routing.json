@@ -1,127 +1,88 @@
 [
 {
-  "model": "routing.assignment",
-  "pk": "0aea4884-195e-463d-887f-a09a82d9e3d1",
+  "model": "routing.automation",
+  "pk": "0cfa1f55-dede-4530-b4cf-b4316ab54720",
   "fields": {
-    "created": "2016-08-24T22:19:48.711Z",
-    "modified": "2016-08-24T22:19:48.713Z",
-    "deleted": null,
-    "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
-    "order": 2,
-    "description": "admin.placeholder.priority_filter_select",
-    "assignee": "030530c4-ce6c-4724-9cfd-37a16e787023"
-  }
-},
-{
-  "model": "routing.assignment",
-  "pk": "1b339cce-0631-428e-87c5-facf8d38c12d",
-  "fields": {
-    "created": "2016-08-24T22:19:48.701Z",
-    "modified": "2016-08-24T22:19:48.705Z",
-    "deleted": null,
-    "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
-    "order": 1,
-    "description": "location",
-    "assignee": "030530c4-ce6c-4724-9cfd-37a16e787164"
-  }
-},
-{
-  "model": "routing.assignment",
-  "pk": "7df1c32a-7275-44fc-a006-8ef2d7f128a0",
-  "fields": {
-    "created": "2016-08-24T22:19:48.719Z",
-    "modified": "2016-08-24T22:19:48.721Z",
-    "deleted": null,
-    "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
-    "order": 3,
-    "description": "admin.placeholder.auto_assign",
-    "assignee": "030530c4-ce6c-4724-9cfd-37a16e787109"
-  }
-},
-{
-  "model": "routing.assignment",
-  "pk": "9a13f92c-b5b8-41d7-ba81-f4eb60dd6d27",
-  "fields": {
-    "created": "2016-08-24T22:19:48.740Z",
-    "modified": "2016-08-24T22:19:48.743Z",
-    "deleted": null,
-    "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
-    "order": 6,
-    "description": "admin.placeholder.category_filter_select",
-    "assignee": "030530c4-ce6c-4724-9cfd-37a16e787056"
-  }
-},
-{
-  "model": "routing.assignment",
-  "pk": "de4cf7a6-6685-445d-8803-1794823638b4",
-  "fields": {
-    "created": "2016-08-24T22:19:48.733Z",
-    "modified": "2016-08-24T22:19:48.735Z",
+    "created": "2016-09-19T16:53:56.095Z",
+    "modified": "2016-09-19T16:53:56.097Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "order": 5,
-    "description": "admin.placeholder.state_filter_select",
-    "assignee": "030530c4-ce6c-4724-9cfd-37a16e787037"
+    "description": "admin.placeholder.category_filter_select",
+    "assignee": "033530c4-ce6c-4724-9cfd-37a16e787126"
   }
 },
 {
-  "model": "routing.assignment",
-  "pk": "fed157a6-b990-4463-ac03-05d7a99e2c99",
+  "model": "routing.automation",
+  "pk": "31e77c08-4600-428c-8aa8-3201171ce9ad",
   "fields": {
-    "created": "2016-08-24T22:19:48.726Z",
-    "modified": "2016-08-24T22:19:48.728Z",
+    "created": "2016-09-19T16:53:56.075Z",
+    "modified": "2016-09-19T16:53:56.078Z",
+    "deleted": null,
+    "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
+    "order": 3,
+    "description": "admin.placeholder.state_filter_select",
+    "assignee": "033530c4-ce6c-4724-9cfd-37a16e787019"
+  }
+},
+{
+  "model": "routing.automation",
+  "pk": "3f128b54-eb5b-413c-afa3-3c1ca5ca9330",
+  "fields": {
+    "created": "2016-09-19T16:53:56.056Z",
+    "modified": "2016-09-19T16:53:56.059Z",
+    "deleted": null,
+    "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
+    "order": 1,
+    "description": "admin.placeholder.country_filter_select",
+    "assignee": "033530c4-ce6c-4724-9cfd-37a16e787174"
+  }
+},
+{
+  "model": "routing.automation",
+  "pk": "5829a1c1-e332-4f50-b5d3-bf0669549b2f",
+  "fields": {
+    "created": "2016-09-19T16:53:56.066Z",
+    "modified": "2016-09-19T16:53:56.070Z",
+    "deleted": null,
+    "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
+    "order": 2,
+    "description": "location",
+    "assignee": "033530c4-ce6c-4724-9cfd-37a16e787140"
+  }
+},
+{
+  "model": "routing.automation",
+  "pk": "bab2fcec-8fa9-4c28-bf20-924e3c721ca3",
+  "fields": {
+    "created": "2016-09-19T16:53:56.084Z",
+    "modified": "2016-09-19T16:53:56.088Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "order": 4,
-    "description": "admin.placeholder.country_filter_select",
-    "assignee": "030530c4-ce6c-4724-9cfd-37a16e787100"
+    "description": "admin.placeholder.priority_filter_select",
+    "assignee": "033530c4-ce6c-4724-9cfd-37a16e787152"
   }
 },
 {
-  "model": "routing.availablefilter",
-  "pk": "05d20444-045c-4b9d-ae49-2051cb278607",
+  "model": "routing.automation",
+  "pk": "e038be07-0478-441c-a678-494543d1e4dc",
   "fields": {
-    "created": "2016-08-24T22:19:48.690Z",
-    "modified": "2016-08-24T22:19:48.690Z",
+    "created": "2016-09-19T16:53:56.103Z",
+    "modified": "2016-09-19T16:53:56.105Z",
     "deleted": null,
-    "key": "admin.placeholder.country_filter_select",
-    "context": "ticket.ticket",
-    "field": "country",
-    "lookups": {}
+    "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
+    "order": 6,
+    "description": "admin.placeholder.auto_assign",
+    "assignee": "033530c4-ce6c-4724-9cfd-37a16e787153"
   }
 },
 {
   "model": "routing.availablefilter",
-  "pk": "46a1cf3e-eb8a-405a-94b6-458a8843c2c7",
+  "pk": "3e88890c-a345-4753-a53b-d2135bb1809f",
   "fields": {
-    "created": "2016-08-24T22:19:48.665Z",
-    "modified": "2016-08-24T22:19:48.665Z",
-    "deleted": null,
-    "key": "admin.placeholder.priority_filter_select",
-    "context": "ticket.ticket",
-    "field": "priority",
-    "lookups": {}
-  }
-},
-{
-  "model": "routing.availablefilter",
-  "pk": "790bfe20-8f45-4cd7-821e-a8dfcd55505c",
-  "fields": {
-    "created": "2016-08-24T22:19:48.661Z",
-    "modified": "2016-08-24T22:19:48.661Z",
-    "deleted": null,
-    "key": "admin.placeholder.auto_assign",
-    "context": "ticket.ticket",
-    "field": "auto_assign",
-    "lookups": {}
-  }
-},
-{
-  "model": "routing.availablefilter",
-  "pk": "aa0b807b-be11-40a8-9a1e-aa62f4e71679",
-  "fields": {
-    "created": "2016-08-24T22:19:48.685Z",
-    "modified": "2016-08-24T22:19:48.685Z",
+    "created": "2016-09-19T16:53:56.016Z",
+    "modified": "2016-09-19T16:53:56.016Z",
     "deleted": null,
     "key": "admin.placeholder.state_filter_select",
     "context": "ticket.ticket",
@@ -131,10 +92,23 @@
 },
 {
   "model": "routing.availablefilter",
-  "pk": "d05c2f8d-ca95-48ab-929e-dd7447f9ee44",
+  "pk": "3f244e52-39c3-40cc-9db5-a346e7e78239",
   "fields": {
-    "created": "2016-08-24T22:19:48.670Z",
-    "modified": "2016-08-24T22:19:48.670Z",
+    "created": "2016-09-19T16:53:55.972Z",
+    "modified": "2016-09-19T16:53:55.972Z",
+    "deleted": null,
+    "key": "admin.placeholder.priority_filter_select",
+    "context": "ticket.ticket",
+    "field": "priority",
+    "lookups": {}
+  }
+},
+{
+  "model": "routing.availablefilter",
+  "pk": "43414d30-dfde-407b-ad26-a76f4efa26d3",
+  "fields": {
+    "created": "2016-09-19T16:53:55.978Z",
+    "modified": "2016-09-19T16:53:55.978Z",
     "deleted": null,
     "key": "admin.placeholder.category_filter_select",
     "context": "ticket.ticket",
@@ -144,10 +118,36 @@
 },
 {
   "model": "routing.availablefilter",
-  "pk": "ddadf98f-3f8b-489c-9c6b-07cbcad3ad7f",
+  "pk": "76ec5db3-69c7-4f08-af83-1db211f8a419",
   "fields": {
-    "created": "2016-08-24T22:19:48.677Z",
-    "modified": "2016-08-24T22:19:48.677Z",
+    "created": "2016-09-19T16:53:56.038Z",
+    "modified": "2016-09-19T16:53:56.038Z",
+    "deleted": null,
+    "key": "admin.placeholder.country_filter_select",
+    "context": "ticket.ticket",
+    "field": "country",
+    "lookups": {}
+  }
+},
+{
+  "model": "routing.availablefilter",
+  "pk": "798b125e-da74-4c4c-aa60-66062ef797c7",
+  "fields": {
+    "created": "2016-09-19T16:53:55.966Z",
+    "modified": "2016-09-19T16:53:55.966Z",
+    "deleted": null,
+    "key": "admin.placeholder.auto_assign",
+    "context": "ticket.ticket",
+    "field": "auto_assign",
+    "lookups": {}
+  }
+},
+{
+  "model": "routing.availablefilter",
+  "pk": "d3b60b0c-5d4f-4aff-89cf-abc1e4a2885b",
+  "fields": {
+    "created": "2016-09-19T16:53:56.008Z",
+    "modified": "2016-09-19T16:53:56.008Z",
     "deleted": null,
     "key": "",
     "context": "ticket.ticket",
@@ -159,100 +159,100 @@
 },
 {
   "model": "routing.profilefilter",
-  "pk": "21377272-e12d-498d-a120-bce79357a9cd",
+  "pk": "2a01ce5b-b931-4ff7-b310-ae4f2a771c20",
   "fields": {
-    "created": "2016-08-24T22:19:48.678Z",
-    "modified": "2016-08-24T22:19:48.678Z",
+    "created": "2016-09-19T16:53:56.044Z",
+    "modified": "2016-09-19T16:53:56.044Z",
     "deleted": null,
-    "source": "ddadf98f-3f8b-489c-9c6b-07cbcad3ad7f",
-    "lookups": {
-      "id": "826f372a-cb18-465f-afa5-b43f0fb6f934",
-      "name": "Company",
-      "filters": "location_level"
-    },
-    "criteria": [
-      "e5e4bdda-befb-4fe0-af6f-5038edefe11e"
-    ],
-    "content_type": 36,
-    "object_id": "1b339cce-0631-428e-87c5-facf8d38c12d"
-  }
-},
-{
-  "model": "routing.profilefilter",
-  "pk": "38ceafa1-c322-48a0-9e7a-5bb83fd6802a",
-  "fields": {
-    "created": "2016-08-24T22:19:48.667Z",
-    "modified": "2016-08-24T22:19:48.667Z",
-    "deleted": null,
-    "source": "46a1cf3e-eb8a-405a-94b6-458a8843c2c7",
-    "lookups": {},
-    "criteria": [
-      "040530c4-ce6c-4724-9cfd-37a16e787004"
-    ],
-    "content_type": 36,
-    "object_id": "0aea4884-195e-463d-887f-a09a82d9e3d1"
-  }
-},
-{
-  "model": "routing.profilefilter",
-  "pk": "5fc6b3f1-b8e2-4ca2-9b78-9fdd8395c238",
-  "fields": {
-    "created": "2016-08-24T22:19:48.662Z",
-    "modified": "2016-08-24T22:19:48.662Z",
-    "deleted": null,
-    "source": "790bfe20-8f45-4cd7-821e-a8dfcd55505c",
-    "lookups": {},
-    "criteria": [],
-    "content_type": 36,
-    "object_id": "7df1c32a-7275-44fc-a006-8ef2d7f128a0"
-  }
-},
-{
-  "model": "routing.profilefilter",
-  "pk": "6d4e5196-2b1c-4080-a992-5d0d253fc7c7",
-  "fields": {
-    "created": "2016-08-24T22:19:48.691Z",
-    "modified": "2016-08-24T22:19:48.691Z",
-    "deleted": null,
-    "source": "05d20444-045c-4b9d-ae49-2051cb278607",
+    "source": "76ec5db3-69c7-4f08-af83-1db211f8a419",
     "lookups": {},
     "criteria": [
       "61760373-0b13-4a1e-8abe-8166ca841e01"
     ],
-    "content_type": 36,
-    "object_id": "fed157a6-b990-4463-ac03-05d7a99e2c99"
+    "content_type": 35,
+    "object_id": "3f128b54-eb5b-413c-afa3-3c1ca5ca9330"
   }
 },
 {
   "model": "routing.profilefilter",
-  "pk": "91e86605-ea11-44a6-9a51-23768333be9c",
+  "pk": "2d043891-ee19-4696-9d41-128e4085b12d",
   "fields": {
-    "created": "2016-08-24T22:19:48.686Z",
-    "modified": "2016-08-24T22:19:48.686Z",
+    "created": "2016-09-19T16:53:56.010Z",
+    "modified": "2016-09-19T16:53:56.010Z",
     "deleted": null,
-    "source": "aa0b807b-be11-40a8-9a1e-aa62f4e71679",
+    "source": "d3b60b0c-5d4f-4aff-89cf-abc1e4a2885b",
+    "lookups": {
+      "filters": "location_level",
+      "id": "e87d6326-4e8d-4d40-9c62-112569e3e129",
+      "name": "Company"
+    },
+    "criteria": [
+      "6f1dd31d-9fa7-4c97-a606-85a2d16e3dee"
+    ],
+    "content_type": 35,
+    "object_id": "5829a1c1-e332-4f50-b5d3-bf0669549b2f"
+  }
+},
+{
+  "model": "routing.profilefilter",
+  "pk": "bb17d5ed-04b1-461f-a71e-f0198d638930",
+  "fields": {
+    "created": "2016-09-19T16:53:56.023Z",
+    "modified": "2016-09-19T16:53:56.023Z",
+    "deleted": null,
+    "source": "3e88890c-a345-4753-a53b-d2135bb1809f",
     "lookups": {},
     "criteria": [
       "2f193a90-a270-48b7-8752-b4c5ad19156c"
     ],
-    "content_type": 36,
-    "object_id": "de4cf7a6-6685-445d-8803-1794823638b4"
+    "content_type": 35,
+    "object_id": "31e77c08-4600-428c-8aa8-3201171ce9ad"
   }
 },
 {
   "model": "routing.profilefilter",
-  "pk": "b9ead996-92cd-4868-bb20-f977972424a6",
+  "pk": "da4c0f8f-2a33-4a91-b930-2e036877af5f",
   "fields": {
-    "created": "2016-08-24T22:19:48.671Z",
-    "modified": "2016-08-24T22:19:48.671Z",
+    "created": "2016-09-19T16:53:55.974Z",
+    "modified": "2016-09-19T16:53:55.974Z",
     "deleted": null,
-    "source": "d05c2f8d-ca95-48ab-929e-dd7447f9ee44",
+    "source": "3f244e52-39c3-40cc-9db5-a346e7e78239",
+    "lookups": {},
+    "criteria": [
+      "042530c4-ce6c-4724-9cfd-37a16e787002"
+    ],
+    "content_type": 35,
+    "object_id": "bab2fcec-8fa9-4c28-bf20-924e3c721ca3"
+  }
+},
+{
+  "model": "routing.profilefilter",
+  "pk": "dedbbd0a-1e49-4cf2-96cb-2a1751460828",
+  "fields": {
+    "created": "2016-09-19T16:53:55.986Z",
+    "modified": "2016-09-19T16:53:55.986Z",
+    "deleted": null,
+    "source": "43414d30-dfde-407b-ad26-a76f4efa26d3",
     "lookups": {},
     "criteria": [
       "015530c4-ce6c-4724-9cfd-37a16e787001"
     ],
-    "content_type": 36,
-    "object_id": "9a13f92c-b5b8-41d7-ba81-f4eb60dd6d27"
+    "content_type": 35,
+    "object_id": "0cfa1f55-dede-4530-b4cf-b4316ab54720"
+  }
+},
+{
+  "model": "routing.profilefilter",
+  "pk": "f285dd93-16c6-4f1e-8256-6284ad09833d",
+  "fields": {
+    "created": "2016-09-19T16:53:55.967Z",
+    "modified": "2016-09-19T16:53:55.967Z",
+    "deleted": null,
+    "source": "798b125e-da74-4c4c-aa60-66062ef797c7",
+    "lookups": {},
+    "criteria": [],
+    "content_type": 35,
+    "object_id": "e038be07-0478-441c-a678-494543d1e4dc"
   }
 }
 ]

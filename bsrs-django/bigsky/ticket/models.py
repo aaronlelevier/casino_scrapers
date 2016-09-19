@@ -193,7 +193,7 @@ class Ticket(BaseModel):
                                  ticket=self)
 
     def _process_ticket(self, tenant_id, ticket):
-        model = apps.get_model("routing", "assignment")
+        model = apps.get_model("routing", "automation")
         model.objects.process_ticket(tenant_id, ticket)
 
     @property

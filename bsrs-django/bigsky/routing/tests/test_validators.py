@@ -6,7 +6,7 @@ from rest_framework.test import APITestCase
 from location.models import Location
 from location.tests.factory import create_top_level_location
 from person.tests.factory import create_single_person, PASSWORD
-from routing.serializers import AssignmentCreateUpdateSerializer
+from routing.serializers import AutomationCreateUpdateSerializer
 from routing.tests.mixins import ViewTestSetupMixin
 from routing.tests.factory import create_ticket_location_filter
 from tenant.tests.factory import get_or_create_tenant
@@ -32,7 +32,7 @@ class ProfileFilterFieldValidatorTests(ViewTestSetupMixin, APITestCase):
             'criteria': [self.invalid_criteria_id]
         })
 
-        response = self.client.post('/api/admin/assignments/', self.data, format='json')
+        response = self.client.post('/api/admin/automations/', self.data, format='json')
 
         self.assertEqual(response.status_code, 400)
         msg = json.loads(response.content.decode('utf8'))
@@ -47,7 +47,7 @@ class ProfileFilterFieldValidatorTests(ViewTestSetupMixin, APITestCase):
             'criteria': criteria
         })
 
-        response = self.client.post('/api/admin/assignments/', self.data, format='json')
+        response = self.client.post('/api/admin/automations/', self.data, format='json')
 
         self.assertEqual(response.status_code, 400)
         msg = json.loads(response.content.decode('utf8'))
@@ -67,8 +67,8 @@ class AvailableFilterValidatorTests(ViewTestSetupMixin, APITestCase):
         # simulate what an existing location_filter.lookup will hold
         location_filter.lookups = {'id': str(location_level.id)}
         location_filter.save()
-        self.assignment.filters.add(location_filter)
-        self.data = AssignmentCreateUpdateSerializer(self.assignment).data
+        self.automation.filters.add(location_filter)
+        self.data = AutomationCreateUpdateSerializer(self.automation).data
 
         self.data['id'] = str(uuid.uuid4())
         self.data['description'] = 'foo'
@@ -87,7 +87,7 @@ class AvailableFilterValidatorTests(ViewTestSetupMixin, APITestCase):
             'criteria': [str(self.ticket_priority.id)]
         }]
 
-        response = self.client.post('/api/admin/assignments/', self.data, format='json')
+        response = self.client.post('/api/admin/automations/', self.data, format='json')
 
         self.assertEqual(response.status_code, 400)
         msg = json.loads(response.content.decode('utf8'))
@@ -110,7 +110,7 @@ class AvailableFilterValidatorTests(ViewTestSetupMixin, APITestCase):
             'lookups': {'id': str(self.location.location_level.id)}
         }]
 
-        response = self.client.post('/api/admin/assignments/', self.data, format='json')
+        response = self.client.post('/api/admin/automations/', self.data, format='json')
 
         self.assertEqual(response.status_code, 400)
         msg = json.loads(response.content.decode('utf8'))
@@ -124,11 +124,11 @@ class AvailableFilterValidatorTests(ViewTestSetupMixin, APITestCase):
 class UniqueByTenantValidatorTests(ViewTestSetupMixin, APITestCase):
 
     def test_not_unique_by_tenant(self):
-        self.assertEqual(self.assignment.order, 1)
+        self.assertEqual(self.automation.order, 1)
         self.data['id'] = str(uuid.uuid4())
         self.data['order'] = 1
 
-        response = self.client.post('/api/admin/assignments/', self.data, format='json')
+        response = self.client.post('/api/admin/automations/', self.data, format='json')
 
         self.assertEqual(response.status_code, 400)
         msg = json.loads(response.content.decode('utf8'))
@@ -145,7 +145,7 @@ class UniqueByTenantValidatorTests(ViewTestSetupMixin, APITestCase):
 
     def test_unique_by_tenant_but_not_unique_accross_model(self):
         # this is fine, 'order' only needs to be unique by Tenant
-        self.assertEqual(self.assignment.order, 1)
+        self.assertEqual(self.automation.order, 1)
         tenant_two = get_or_create_tenant('foo')
         person = create_single_person()
         person.role.tenant = tenant_two
@@ -156,6 +156,6 @@ class UniqueByTenantValidatorTests(ViewTestSetupMixin, APITestCase):
         self.data['id'] = str(uuid.uuid4())
         self.data['order'] = 1
 
-        response = self.client.post('/api/admin/assignments/', self.data, format='json')
+        response = self.client.post('/api/admin/automations/', self.data, format='json')
 
         self.assertEqual(response.status_code, 201)

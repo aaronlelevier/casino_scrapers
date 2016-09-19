@@ -10,11 +10,11 @@ from location.models import LocationLevel
 from location.tests.factory import (create_location_levels, create_top_level_location,
     create_location_level, create_location)
 from person.tests.factory import create_single_person, PASSWORD
-from routing.models import Assignment, ProfileFilter, AvailableFilter, AUTO_ASSIGN
+from routing.models import Automation, ProfileFilter, AvailableFilter, AUTO_ASSIGN
 from routing.tests.factory import (
-    create_assignment, create_available_filters, create_auto_assign_filter,
+    create_automation, create_available_filters, create_auto_assign_filter,
     create_available_filter_location, create_ticket_location_filter,
-    create_ticket_categories_mid_level_filter, create_assignment,
+    create_ticket_categories_mid_level_filter, create_automation,
     create_available_filter_auto_assign, create_ticket_location_state_filter,
     create_ticket_location_country_filter)
 from routing.tests.mixins import ViewTestSetupMixin
@@ -23,50 +23,50 @@ from utils.create import _generate_chars
 from utils.helpers import create_default
 
 
-class AssignmentListTests(ViewTestSetupMixin, APITestCase):
+class AutomationListTests(ViewTestSetupMixin, APITestCase):
 
     def test_data(self):
-        response = self.client.get('/api/admin/assignments/')
+        response = self.client.get('/api/admin/automations/')
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
         data = data['results'][0]
-        self.assertEqual(data['id'], str(self.assignment.id))
+        self.assertEqual(data['id'], str(self.automation.id))
         self.assertNotIn('tenant', data)
         self.assertEqual(data['order'], 1)
-        self.assertEqual(data['description'], self.assignment.description)
-        self.assertEqual(data['assignee']['id'], str(self.assignment.assignee.id))
-        self.assertEqual(data['assignee']['fullname'], self.assignment.assignee.fullname)
+        self.assertEqual(data['description'], self.automation.description)
+        self.assertEqual(data['assignee']['id'], str(self.automation.assignee.id))
+        self.assertEqual(data['assignee']['fullname'], self.automation.assignee.fullname)
 
     def test_search(self):
-        self.assignment_two = create_assignment(_generate_chars())
-        self.assignment_three = create_assignment(_generate_chars())
-        self.assertEqual(Assignment.objects.count(), 3)
-        keyword = self.assignment_two.description
+        self.automation_two = create_automation(_generate_chars())
+        self.automation_three = create_automation(_generate_chars())
+        self.assertEqual(Automation.objects.count(), 3)
+        keyword = self.automation_two.description
 
-        response = self.client.get('/api/admin/assignments/?search={}'.format(keyword))
+        response = self.client.get('/api/admin/automations/?search={}'.format(keyword))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
 
 
-class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
+class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
 
     def test_data(self):
-        response = self.client.get('/api/admin/assignments/{}/'.format(self.assignment.id))
+        response = self.client.get('/api/admin/automations/{}/'.format(self.automation.id))
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['id'], str(self.assignment.id))
+        self.assertEqual(data['id'], str(self.automation.id))
         self.assertNotIn('tenant', data)
         self.assertEqual(data['order'], 1)
-        self.assertEqual(data['description'], self.assignment.description)
-        self.assertEqual(data['assignee']['id'], str(self.assignment.assignee.id))
-        self.assertEqual(data['assignee']['fullname'], self.assignment.assignee.fullname)
+        self.assertEqual(data['description'], self.automation.description)
+        self.assertEqual(data['assignee']['id'], str(self.automation.assignee.id))
+        self.assertEqual(data['assignee']['fullname'], self.automation.assignee.fullname)
         # profile_filter
         self.assertEqual(len(data['filters']), 2)
-        pf = self.assignment.filters.get(id=data['filters'][0]['id'])
+        pf = self.automation.filters.get(id=data['filters'][0]['id'])
         af = pf.source
         self.assertEqual(data['filters'][0]['id'], str(pf.id))
         self.assertEqual(data['filters'][0]['source_id'], str(af.id))
@@ -80,10 +80,10 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         location_level = create_top_level_location().location_level
         location_filter = create_ticket_location_filter()
         location_filter.lookups.pop('filters', None)
-        self.assignment.filters.clear()
-        self.assignment.filters.add(location_filter)
+        self.automation.filters.clear()
+        self.automation.filters.add(location_filter)
 
-        response = self.client.get('/api/admin/assignments/{}/'.format(self.assignment.id))
+        response = self.client.get('/api/admin/automations/{}/'.format(self.automation.id))
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -100,10 +100,10 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
 
     def test_criteria__priority(self):
         priority = create_default(TicketPriority)
-        for pf in self.assignment.filters.exclude(source__field='priority'):
-            self.assignment.filters.remove(pf)
+        for pf in self.automation.filters.exclude(source__field='priority'):
+            self.automation.filters.remove(pf)
 
-        response = self.client.get('/api/admin/assignments/{}/'.format(self.assignment.id))
+        response = self.client.get('/api/admin/automations/{}/'.format(self.automation.id))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['filters']), 1)
@@ -112,13 +112,13 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['filters'][0]['criteria'][0]['name'], str(priority.name))
 
     def test_criteria__location(self):
-        self.assignment.filters.clear()
-        self.assertEqual(self.assignment.filters.count(), 0)
+        self.automation.filters.clear()
+        self.assertEqual(self.automation.filters.count(), 0)
         location = create_top_level_location()
         location_filter = create_ticket_location_filter()
-        self.assignment.filters.add(location_filter)
+        self.automation.filters.add(location_filter)
 
-        response = self.client.get('/api/admin/assignments/{}/'.format(self.assignment.id))
+        response = self.client.get('/api/admin/automations/{}/'.format(self.automation.id))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['filters']), 1)
@@ -127,13 +127,13 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['filters'][0]['criteria'][0]['name'], location.name)
 
     def test_criteria__categories(self):
-        self.assignment.filters.clear()
-        self.assertEqual(self.assignment.filters.count(), 0)
+        self.automation.filters.clear()
+        self.assertEqual(self.automation.filters.count(), 0)
         category_filter = create_ticket_categories_mid_level_filter()
         category = Category.objects.get(id=category_filter.criteria[0])
-        self.assignment.filters.add(category_filter)
+        self.automation.filters.add(category_filter)
 
-        response = self.client.get('/api/admin/assignments/{}/'.format(self.assignment.id))
+        response = self.client.get('/api/admin/automations/{}/'.format(self.automation.id))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['filters']), 1)
@@ -142,13 +142,13 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['filters'][0]['criteria'][0]['name'], category.parents_and_self_as_string())
 
     def test_criteria_state(self):
-        self.assignment.filters.clear()
-        self.assertEqual(self.assignment.filters.count(), 0)
+        self.automation.filters.clear()
+        self.assertEqual(self.automation.filters.count(), 0)
         state_filter = create_ticket_location_state_filter()
         state = State.objects.get(id=state_filter.criteria[0])
-        self.assignment.filters.add(state_filter)
+        self.automation.filters.add(state_filter)
 
-        response = self.client.get('/api/admin/assignments/{}/'.format(self.assignment.id))
+        response = self.client.get('/api/admin/automations/{}/'.format(self.automation.id))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['filters']), 1)
@@ -157,13 +157,13 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['filters'][0]['criteria'][0]['name'], state.name)
 
     def test_criteria_country(self):
-        self.assignment.filters.clear()
-        self.assertEqual(self.assignment.filters.count(), 0)
+        self.automation.filters.clear()
+        self.assertEqual(self.automation.filters.count(), 0)
         country_filter = create_ticket_location_country_filter()
         country = Country.objects.get(id=country_filter.criteria[0])
-        self.assignment.filters.add(country_filter)
+        self.automation.filters.add(country_filter)
 
-        response = self.client.get('/api/admin/assignments/{}/'.format(self.assignment.id))
+        response = self.client.get('/api/admin/automations/{}/'.format(self.automation.id))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['filters']), 1)
@@ -172,7 +172,7 @@ class AssignmentDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['filters'][0]['criteria'][0]['name'], country.common_name)
 
 
-class AssignmentCreateTests(ViewTestSetupMixin, APITestCase):
+class AutomationCreateTests(ViewTestSetupMixin, APITestCase):
 
     def test_create(self):
         self.data['id'] = str(uuid.uuid4())
@@ -188,21 +188,21 @@ class AssignmentCreateTests(ViewTestSetupMixin, APITestCase):
             'lookups': {'id': str(location.location_level.id)}
         }]
 
-        response = self.client.post('/api/admin/assignments/', self.data, format='json')
+        response = self.client.post('/api/admin/automations/', self.data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201)
-        assignment = Assignment.objects.get(id=self.data['id'])
-        self.assertEqual(data['id'], str(assignment.id))
+        automation = Automation.objects.get(id=self.data['id'])
+        self.assertEqual(data['id'], str(automation.id))
         self.assertNotIn('tenant', data)
         self.assertEqual(data['order'], 2)
-        self.assertEqual(data['description'], assignment.description)
-        self.assertEqual(data['assignee'], str(assignment.assignee.id))
+        self.assertEqual(data['description'], automation.description)
+        self.assertEqual(data['assignee'], str(automation.assignee.id))
         # profile_filter
         self.assertEqual(len(data['filters']), 1)
-        self.assertEqual(assignment.filters.first().source, location_af)
-        self.assertEqual(assignment.filters.first().criteria, criteria_two)
-        self.assertEqual(assignment.filters.first().lookups, {'id': str(location.location_level.id)})
+        self.assertEqual(automation.filters.first().source, location_af)
+        self.assertEqual(automation.filters.first().criteria, criteria_two)
+        self.assertEqual(automation.filters.first().lookups, {'id': str(location.location_level.id)})
 
     def test_create__multiple_filters(self):
         # filter 1 (will come w/ `self.data` by default)
@@ -228,25 +228,25 @@ class AssignmentCreateTests(ViewTestSetupMixin, APITestCase):
             'lookups': {'id': str(location_level_two.id)}
         })
 
-        response = self.client.post('/api/admin/assignments/', self.data, format='json')
+        response = self.client.post('/api/admin/automations/', self.data, format='json')
 
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
-        assignment = Assignment.objects.get(id=data['id'])
-        self.assertEqual(assignment.filters.filter(source__field='priority').count(), 1)
-        self.assertEqual(assignment.filters.filter(source__field='location', lookups={'id': str(location_level.id)}).count(), 1)
-        self.assertEqual(assignment.filters.filter(source__field='location', lookups={'id': str(location_level_two.id)}).count(), 1)
+        automation = Automation.objects.get(id=data['id'])
+        self.assertEqual(automation.filters.filter(source__field='priority').count(), 1)
+        self.assertEqual(automation.filters.filter(source__field='location', lookups={'id': str(location_level.id)}).count(), 1)
+        self.assertEqual(automation.filters.filter(source__field='location', lookups={'id': str(location_level_two.id)}).count(), 1)
 
 
-class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
+class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
 
     def setUp(self):
-        super(AssignmentUpdateTests, self).setUp()
-        self.assignment.filters.remove(self.category_filter)
+        super(AutomationUpdateTests, self).setUp()
+        self.automation.filters.remove(self.category_filter)
 
     def test_setup(self):
-        self.assertEqual(self.assignment.filters.count(), 1)
-        self.assertEqual(self.assignment.filters.first(), self.priority_filter)
+        self.assertEqual(self.automation.filters.count(), 1)
+        self.assertEqual(self.automation.filters.first(), self.priority_filter)
 
     def test_update(self):
         # Base fields update only, no nested updating
@@ -257,7 +257,7 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
         })
         self.data['filters'] = []
 
-        response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
+        response = self.client.put('/api/admin/automations/{}/'.format(self.automation.id),
             self.data, format='json')
 
         self.assertEqual(response.status_code, 200)
@@ -271,8 +271,8 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
 
     def test_update__nested_create(self):
         af = create_available_filter_location()
-        self.assertNotEqual(self.assignment.filters.first().source, af)
-        self.assertNotEqual(self.assignment.filters.first().criteria, [str(self.location.id)])
+        self.assertNotEqual(self.automation.filters.first().source, af)
+        self.assertNotEqual(self.automation.filters.first().criteria, [str(self.location.id)])
         self.data['filters'] = [{
             'id': str(uuid.uuid4()),
             'source': str(af.id),
@@ -280,16 +280,16 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
             'lookups': {'id': str(self.location.location_level.id)}
         }]
 
-        response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
+        response = self.client.put('/api/admin/automations/{}/'.format(self.automation.id),
             self.data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(data['filters']), 1)
-        self.assertEqual(str(self.assignment.filters.first().id), data['filters'][0]['id'])
-        self.assertEqual(self.assignment.filters.first().source.id, af.id)
-        self.assertEqual(self.assignment.filters.first().criteria, self.data['filters'][0]['criteria'])
-        self.assertEqual(self.assignment.filters.first().lookups, self.data['filters'][0]['lookups'])
+        self.assertEqual(str(self.automation.filters.first().id), data['filters'][0]['id'])
+        self.assertEqual(self.automation.filters.first().source.id, af.id)
+        self.assertEqual(self.automation.filters.first().criteria, self.data['filters'][0]['criteria'])
+        self.assertEqual(self.automation.filters.first().lookups, self.data['filters'][0]['lookups'])
 
     def test_update__nested_create__multiple(self):
         # filter 1 - in existing record
@@ -313,48 +313,48 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
             'lookups': {'id': str(location_level_two.id)}
         })
 
-        response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
+        response = self.client.put('/api/admin/automations/{}/'.format(self.automation.id),
             self.data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(data['filters']), 3)
-        self.assertEqual(self.assignment.filters.filter(source__field='priority').count(), 1)
-        self.assertEqual(self.assignment.filters.filter(source__field='location', lookups={'id': str(location_level.id)}).count(), 1)
-        self.assertEqual(self.assignment.filters.filter(source__field='location', lookups={'id': str(location_level_two.id)}).count(), 1)
+        self.assertEqual(self.automation.filters.filter(source__field='priority').count(), 1)
+        self.assertEqual(self.automation.filters.filter(source__field='location', lookups={'id': str(location_level.id)}).count(), 1)
+        self.assertEqual(self.automation.filters.filter(source__field='location', lookups={'id': str(location_level_two.id)}).count(), 1)
 
     def test_update__nested_update(self):
         priority_two = mommy.make(TicketPriority)
         criteria_two = [str(priority_two.id)]
-        profile_filter = self.assignment.filters.first()
-        self.assertEqual(self.assignment.filters.first().source, self.priority_af)
-        self.assertNotEqual(self.assignment.filters.first().criteria, criteria_two)
+        profile_filter = self.automation.filters.first()
+        self.assertEqual(self.automation.filters.first().source, self.priority_af)
+        self.assertNotEqual(self.automation.filters.first().criteria, criteria_two)
         self.data['filters'] = [{
             'id': str(profile_filter.id),
             'source': str(profile_filter.source.id),
             'criteria': criteria_two
         }]
 
-        response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
+        response = self.client.put('/api/admin/automations/{}/'.format(self.automation.id),
             self.data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(data['filters']), 1)
-        self.assertEqual(self.assignment.filters.first(), profile_filter)
-        self.assertEqual(self.assignment.filters.first().source, self.priority_af)
-        self.assertEqual(self.assignment.filters.first().criteria, criteria_two)
+        self.assertEqual(self.automation.filters.first(), profile_filter)
+        self.assertEqual(self.automation.filters.first().source, self.priority_af)
+        self.assertEqual(self.automation.filters.first().criteria, criteria_two)
 
     def test_update__nested_update__dynamic(self):
-        self.assignment.filters.clear()
+        self.automation.filters.clear()
         location = create_location()
         criteria_two = [str(location.id)]
         location_filter = create_ticket_location_filter()
         location_af = location_filter.source
-        self.assignment.filters.add(location_filter)
+        self.automation.filters.add(location_filter)
         # pre-test
-        self.assertEqual(self.assignment.filters.first().source, location_af)
-        self.assertNotEqual(self.assignment.filters.first().criteria, criteria_two)
+        self.assertEqual(self.automation.filters.first().source, location_af)
+        self.assertNotEqual(self.automation.filters.first().criteria, criteria_two)
         self.data['filters'] = [{
             'id': str(location_filter.id),
             'source': str(location_af.id),
@@ -362,26 +362,26 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
             'lookups': {'id': str(location.location_level.id)}
         }]
 
-        response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
+        response = self.client.put('/api/admin/automations/{}/'.format(self.automation.id),
             self.data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(data['filters']), 1)
-        self.assertEqual(self.assignment.filters.first(), location_filter)
-        self.assertEqual(self.assignment.filters.first().source, location_af)
-        self.assertEqual(self.assignment.filters.first().criteria, criteria_two)
-        self.assertEqual(self.assignment.filters.first().lookups, self.data['filters'][0]['lookups'])
+        self.assertEqual(self.automation.filters.first(), location_filter)
+        self.assertEqual(self.automation.filters.first().source, location_af)
+        self.assertEqual(self.automation.filters.first().criteria, criteria_two)
+        self.assertEqual(self.automation.filters.first().lookups, self.data['filters'][0]['lookups'])
 
     def test_update__nested_update__dynamic__multiple(self):
-        self.assignment.filters.clear()
+        self.automation.filters.clear()
         location_filter = create_ticket_location_filter()
         # filter 1 - will be an existing related record
         location_level = create_location_level('foo')
         location = create_location(location_level)
-        self.assignment.filters.add(location_filter)
-        self.assertEqual(self.assignment.filters.first().source, location_filter.source)
-        self.assertNotEqual(self.assignment.filters.first().criteria, [str(location.id)])
+        self.automation.filters.add(location_filter)
+        self.assertEqual(self.automation.filters.first().source, location_filter.source)
+        self.assertNotEqual(self.automation.filters.first().criteria, [str(location.id)])
         self.data['filters'] = [{
             'id': str(location_filter.id),
             'source': str(location_filter.source.id),
@@ -390,7 +390,7 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
         }]
         # filter 2
         location_filter_two = create_ticket_location_filter()
-        self.assignment.filters.add(location_filter_two)
+        self.automation.filters.add(location_filter_two)
         location_level_two = create_location_level('bar')
         location_two = create_location(location_level)
         self.data['filters'].append({
@@ -400,17 +400,17 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
             'lookups': {'id': str(location_level_two.id)}
         })
 
-        response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
+        response = self.client.put('/api/admin/automations/{}/'.format(self.automation.id),
             self.data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(data['filters']), 2)
-        self.assertEqual(self.assignment.filters.filter(source__field='location', lookups={'id': str(location_level.id)}).count(), 1)
-        self.assertEqual(self.assignment.filters.filter(source__field='location', lookups={'id': str(location_level_two.id)}).count(), 1)
+        self.assertEqual(self.automation.filters.filter(source__field='location', lookups={'id': str(location_level.id)}).count(), 1)
+        self.assertEqual(self.automation.filters.filter(source__field='location', lookups={'id': str(location_level_two.id)}).count(), 1)
 
     def test_update_auto_assign(self):
-        self.assignment.filters.clear()
+        self.automation.filters.clear()
         auto_assign_af = create_available_filter_auto_assign()
         self.data['filters'] = [{
             'id': str(uuid.uuid4()),
@@ -419,7 +419,7 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
             'lookups': {}
         }]
 
-        response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
+        response = self.client.put('/api/admin/automations/{}/'.format(self.automation.id),
             self.data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
@@ -431,13 +431,13 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
     def test_update__nested_delete(self):
         """
         Related ProfileFilters are "hard" deleted if they have been
-        removed from the Assignment.
+        removed from the Automation.
         """
-        self.assertEqual(self.assignment.filters.count(), 1)
+        self.assertEqual(self.automation.filters.count(), 1)
         deleted_id = self.data['filters'][0]['id']
         self.data['filters'] = []
 
-        response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
+        response = self.client.put('/api/admin/automations/{}/'.format(self.automation.id),
             self.data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
@@ -446,15 +446,15 @@ class AssignmentUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertFalse(ProfileFilter.objects.filter(id=deleted_id).exists())
         self.assertFalse(ProfileFilter.objects_all.filter(id=deleted_id).exists())
 
-    def test_update__other_assignment_filters_not_affected(self):
+    def test_update__other_automation_filters_not_affected(self):
         """
         Confirms that the nested remove clean up loop filters for the related
-        ProfileFilters only for the Assignment instance.
+        ProfileFilters only for the Automation instance.
         """
         mommy.make(ProfileFilter, criteria=self.priority_filter.criteria)
         init_count = ProfileFilter.objects.count()
 
-        response = self.client.put('/api/admin/assignments/{}/'.format(self.assignment.id),
+        response = self.client.put('/api/admin/automations/{}/'.format(self.automation.id),
             self.data, format='json')
 
         self.assertEqual(response.status_code, 200)
@@ -466,7 +466,7 @@ class AvailableFilterTests(APITestCase):
     def setUp(self):
         self.person = create_single_person()
         self.tenant = self.person.role.tenant
-        self.assignment = create_assignment(tenant=self.tenant)
+        self.automation = create_automation(tenant=self.tenant)
         create_location_levels()
         create_available_filters()
         self.af = AvailableFilter.objects.first()
@@ -476,7 +476,7 @@ class AvailableFilterTests(APITestCase):
         self.client.logout()
 
     def test_list_non_dynamic(self):
-        response = self.client.get('/api/admin/assignments-available-filters/')
+        response = self.client.get('/api/admin/automations-available-filters/')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
@@ -498,7 +498,7 @@ class AvailableFilterTests(APITestCase):
         self.assertEqual(location_level_filters, 5)
         desired_count = raw_filter_count - dynamic_filter_count + location_level_filters
 
-        response = self.client.get('/api/admin/assignments-available-filters/')
+        response = self.client.get('/api/admin/automations-available-filters/')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
@@ -518,7 +518,7 @@ class AvailableFilterTests(APITestCase):
         self.assertEqual(location_data['lookups']['name'], location_level.name)
 
     def test_list_sorted_in_ascending_order_by_key(self):
-        response = self.client.get('/api/admin/assignments-available-filters/')
+        response = self.client.get('/api/admin/automations-available-filters/')
 
         data = json.loads(response.content.decode('utf8'))
         prev = None
@@ -529,9 +529,9 @@ class AvailableFilterTests(APITestCase):
 
     def test_auto_assign_filter_decorated_if_in_use(self):
         # AUTO_ASSIGN included
-        self.assertFalse(Assignment.objects.auto_assign_filter_in_use(self.tenant))
+        self.assertFalse(Automation.objects.auto_assign_filter_in_use(self.tenant))
 
-        response = self.client.get('/api/admin/assignments-available-filters/')
+        response = self.client.get('/api/admin/automations-available-filters/')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertIn(
@@ -540,34 +540,34 @@ class AvailableFilterTests(APITestCase):
         )
 
         auto_assign_filter = create_auto_assign_filter()
-        self.assignment.filters.add(auto_assign_filter)
-        self.assertTrue(Assignment.objects.auto_assign_filter_in_use(self.tenant))
+        self.automation.filters.add(auto_assign_filter)
+        self.assertTrue(Automation.objects.auto_assign_filter_in_use(self.tenant))
 
-        response = self.client.get('/api/admin/assignments-available-filters/')
+        response = self.client.get('/api/admin/automations-available-filters/')
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(self.assignment.description, [i.get('existingAssignment') for i in data['results'] if i.get('existingAssignment')][0])
+        self.assertEqual(self.automation.description, [i.get('existingAutomation') for i in data['results'] if i.get('existingAutomation')][0])
         self.assertEqual(True, [i.get('disabled') for i in data['results'] if i.get('disabled')][0])
 
     def test_detail(self):
-        response = self.client.get('/api/admin/assignments-available-filters/{}/'.format(self.af.id))
+        response = self.client.get('/api/admin/automations-available-filters/{}/'.format(self.af.id))
         self.assertEqual(response.status_code, 405)
 
     def test_create(self):
-        response = self.client.post('/api/admin/assignments-available-filters/', {}, format='json')
+        response = self.client.post('/api/admin/automations-available-filters/', {}, format='json')
         self.assertEqual(response.status_code, 405)
 
     def test_update(self):
-        response = self.client.put('/api/admin/assignments-available-filters/{}/'.format(self.af.id))
+        response = self.client.put('/api/admin/automations-available-filters/{}/'.format(self.af.id))
         self.assertEqual(response.status_code, 405)
 
     def test_delete(self):
-        response = self.client.delete('/api/admin/assignments-available-filters/{}/'.format(self.af.id))
+        response = self.client.delete('/api/admin/automations-available-filters/{}/'.format(self.af.id))
         self.assertEqual(response.status_code, 405)
 
     def test_list_non_dynamic_no_llevel(self):
         AvailableFilter.objects.filter(lookups__filters='location_level').delete()
-        response = self.client.get('/api/admin/assignments-available-filters/')
+        response = self.client.get('/api/admin/automations-available-filters/')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)

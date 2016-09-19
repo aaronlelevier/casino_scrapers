@@ -69,7 +69,7 @@ class Role(BaseModel):
     dashboad_links = models.TextField(blank=True)
     tabs = models.TextField(blank=True)
     process_assign = models.BooleanField(default=True,
-        help_text="If True, run the Ticket Assignment Profiles after a Ticket is create, "
+        help_text="If True, run the Ticket Automation Profiles after a Ticket is create, "
                   "but if False, assign to the Person who created the Ticket")
     # Password
     password_can_change = models.BooleanField(blank=True, default=True)

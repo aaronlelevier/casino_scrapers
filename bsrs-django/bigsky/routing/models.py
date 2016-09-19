@@ -16,7 +16,7 @@ from utils.models import BaseQuerySet, BaseManager, BaseModel
 
 AUTO_ASSIGN = 'auto_assign'
 
-class AssignmentQuerySet(BaseQuerySet):
+class AutomationQuerySet(BaseQuerySet):
 
     def search_multi(self, keyword):
         return self.filter(
@@ -25,25 +25,25 @@ class AssignmentQuerySet(BaseQuerySet):
         )
 
     def filter_export_data(self, query_params):
-        qs = super(AssignmentQuerySet, self).filter_export_data(query_params)
+        qs = super(AutomationQuerySet, self).filter_export_data(query_params)
         return qs.annotate(assignee_name=F('assignee__fullname'))
 
 
-class AssignmentManager(BaseManager):
+class AutomationManager(BaseManager):
 
-    queryset_cls = AssignmentQuerySet
+    queryset_cls = AutomationQuerySet
 
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
 
     def process_ticket(self, tenant_id, ticket):
         """
-        for each assignment-profile in this Tenant's Assignment Profiles
+        for each automation-profile in this Tenant's Automation Profiles
           does it match?
             match logic:
               for each profile filter in this Assingment Profile:
                 do all filters's match? if so, it's an match for this
-                assignment profile
+                automation profile
           if match:
             assign ticket to that ap's assignee
             break out of for-loop
@@ -54,10 +54,10 @@ class AssignmentManager(BaseManager):
             ticket.save()
             return
 
-        for assignment in self.filter(tenant__id=tenant_id).order_by('order'):
-            match = assignment.is_match(ticket)
+        for automation in self.filter(tenant__id=tenant_id).order_by('order'):
+            match = automation.is_match(ticket)
             if match:
-                ticket.assignee = assignment.assignee
+                ticket.assignee = automation.assignee
                 ticket.save()
                 break
 
@@ -67,11 +67,11 @@ class AssignmentManager(BaseManager):
                     .prefetch_related('filters').first())
 
 
-class Assignment(BaseModel):
+class Automation(BaseModel):
 
     _RAW_EXPORT_FIELDS_AND_HEADERS = [
-        ('description', 'admin.assignment.description'),
-        ('assignee_name', 'admin.assignment.assignee')
+        ('description', 'admin.automation.description'),
+        ('assignee_name', 'admin.automation.assignee')
     ]
 
     @classproperty
@@ -87,10 +87,10 @@ class Assignment(BaseModel):
     order = models.IntegerField(null=True)
     description = models.CharField(max_length=500)
     assignee = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                 related_name="assignments")
+                                 related_name="automations")
     filters = GenericRelation("routing.ProfileFilter")
 
-    objects = AssignmentManager()
+    objects = AutomationManager()
 
     class Meta:
         ordering = ['order']
@@ -109,11 +109,11 @@ class Assignment(BaseModel):
         return all(matches)
 
 
-@receiver(post_save, sender=Assignment)
+@receiver(post_save, sender=Automation)
 def update_order(sender, instance=None, created=False, **kwargs):
     "Post-save hook for incrementing order if not set"
     if instance.order is None:
-        instance.order = Assignment.objects.filter(tenant=instance.tenant).count()
+        instance.order = Automation.objects.filter(tenant=instance.tenant).count()
         instance.save()
 
 

@@ -352,7 +352,7 @@ class ExportDataTests(APITestCase):
         )
 
     def test_set_model(self):
-        model_names = ['assignment', 'category', 'dtd', 'location',
+        model_names = ['automation', 'category', 'dtd', 'location',
                        'location-level', 'person', 'role', 'ticket']
 
         for name in model_names:

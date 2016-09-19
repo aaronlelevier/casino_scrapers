@@ -24,5 +24,5 @@ class NavPage(JavascriptMixin):
     def find_ticket_link(self):
         return self.wait_for_xhr_request("t-nav-tickets")
 
-    def find_assignment_profiles_link(self):
-        return self.wait_for_xhr_request("t-nav-admin-assignment-profiles")
+    def find_automation_profiles_link(self):
+        return self.wait_for_xhr_request("t-nav-admin-automation-profiles")

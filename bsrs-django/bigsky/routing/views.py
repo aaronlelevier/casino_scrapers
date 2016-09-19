@@ -4,25 +4,25 @@ from rest_framework import permissions, viewsets
 from rest_framework.exceptions import MethodNotAllowed
 
 from location.models import LocationLevel
-from routing.models import Assignment, AvailableFilter, AUTO_ASSIGN
+from routing.models import Automation, AvailableFilter, AUTO_ASSIGN
 from routing import serializers as rs
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.views import BaseModelViewSet
 
 
-class AssignmentViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
+class AutomationViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
 
-    model = Assignment
-    queryset = Assignment.objects.all()
+    model = Automation
+    queryset = Automation.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_serializer_class(self):
         if self.action == 'retrieve':
-            return rs.AssignmentDetailSerializer
+            return rs.AutomationDetailSerializer
         if self.action == 'list':
-            return rs.AssignmentListSerializer
+            return rs.AutomationListSerializer
         else:
-            return rs.AssignmentCreateUpdateSerializer
+            return rs.AutomationCreateUpdateSerializer
 
     def create(self, request, *args, **kwargs):
         """
@@ -30,7 +30,7 @@ class AssignmentViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewS
         description and order by Tenant.
         """
         request.data['tenant'] = request.user.role.tenant.id
-        return super(AssignmentViewSet, self).create(request, *args, **kwargs)
+        return super(AutomationViewSet, self).create(request, *args, **kwargs)
 
 
 class AvailableFilterViewSet(viewsets.ModelViewSet):
@@ -66,19 +66,19 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
         """
         Looks for dynamic AvailableFilters. If it finds one, remove that filter
         placeholder, and replace it with dynamic versions of itself.
-        Adds data to auto assign filter for use in power select only if another assignment
+        Adds data to auto assign filter for use in power select only if another automation
         has auto_assign (which is likely the case for all customers after they are setup)
         """
         data_copy = copy.copy(data)
         location_filter = None
         auto_assign_filter = None
-        assignment_with_auto_assign = Assignment.objects.auto_assign_filter_in_use(request.user.role.tenant)
+        automation_with_auto_assign = Automation.objects.auto_assign_filter_in_use(request.user.role.tenant)
         for i, d in enumerate(data_copy['results']):
             if d['lookups'] == {'filters': 'location_level'}:
                 location_filter = data['results'].pop(i)
 
-            if d['field'] == AUTO_ASSIGN and assignment_with_auto_assign:
-                data['results'][i]['existingAssignment'] = assignment_with_auto_assign.description
+            if d['field'] == AUTO_ASSIGN and automation_with_auto_assign:
+                data['results'][i]['existingAutomation'] = automation_with_auto_assign.description
                 data['results'][i]['disabled'] = True
 
         if location_filter:

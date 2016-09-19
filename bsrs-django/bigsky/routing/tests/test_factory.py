@@ -8,7 +8,7 @@ from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
-from routing.models import Assignment, ProfileFilter, AvailableFilter, AUTO_ASSIGN
+from routing.models import Automation, ProfileFilter, AvailableFilter, AUTO_ASSIGN
 from routing.tests import factory
 from tenant.models import Tenant
 from ticket.models import Ticket, TicketPriority
@@ -185,54 +185,54 @@ class PriorityFilterTests(TestCase):
         self.assertEqual(ProfileFilter.objects.count(), 6)
 
 
-class AssignmentTests(TestCase):
+class AutomationTests(TestCase):
 
-    def test_create_assignment(self):
-        assignment = factory.create_assignment()
-        self.assertIsInstance(assignment, Assignment)
-        self.assertIn(assignment.description, LOREM_IPSUM_WORDS.split())
-        self.assertIsInstance(assignment.assignee, Person)
-        self.assertIsInstance(assignment.tenant, Tenant)
+    def test_create_automation(self):
+        automation = factory.create_automation()
+        self.assertIsInstance(automation, Automation)
+        self.assertIn(automation.description, LOREM_IPSUM_WORDS.split())
+        self.assertIsInstance(automation.assignee, Person)
+        self.assertIsInstance(automation.tenant, Tenant)
         # profile_filters
-        self.assertEqual(assignment.filters.count(), 2)
-        self.assertEqual(assignment.filters.filter(source__field='priority').count(), 1)
-        self.assertEqual(assignment.filters.filter(source__field='categories').count(), 1)
+        self.assertEqual(automation.filters.count(), 2)
+        self.assertEqual(automation.filters.filter(source__field='priority').count(), 1)
+        self.assertEqual(automation.filters.filter(source__field='categories').count(), 1)
 
-    def test_create_assignment__arbitrary_assignee(self):
+    def test_create_automation__arbitrary_assignee(self):
         assignee = create_single_person()
-        a = factory.create_assignment(assignee=assignee)
+        a = factory.create_automation(assignee=assignee)
         self.assertEqual(a.assignee, assignee)
 
-    def test_create_assignments(self):
-        self.assertEqual(Assignment.objects.count(), 0)
+    def test_create_automations(self):
+        self.assertEqual(Automation.objects.count(), 0)
         factory.create_profile_filters()
 
-        factory.create_assignments()
+        factory.create_automations()
 
-        self.assertEqual(Assignment.objects.count(), 6)
-        # Assignments w/ static ProfileFilter.source
-        self.assertEqual(Assignment.objects.exclude(filters__lookups__filters='location_level').count(), 5)
+        self.assertEqual(Automation.objects.count(), 6)
+        # Automations w/ static ProfileFilter.source
+        self.assertEqual(Automation.objects.exclude(filters__lookups__filters='location_level').count(), 5)
         # auto_assign
         key = 'admin.placeholder.auto_assign'
-        x = Assignment.objects.get(filters__source__key=key)
+        x = Automation.objects.get(filters__source__key=key)
         self.assertEqual(x.description, key)
         # priority
         key = 'admin.placeholder.priority_filter_select'
-        x = Assignment.objects.get(filters__source__key=key)
+        x = Automation.objects.get(filters__source__key=key)
         self.assertEqual(x.description, key)
         # location
-        x = Assignment.objects.get(filters__lookups__filters='location_level')
-        self.assertIsInstance(x, Assignment)
+        x = Automation.objects.get(filters__lookups__filters='location_level')
+        self.assertIsInstance(x, Automation)
         self.assertEqual(x.description, 'location')
         # category
         key = 'admin.placeholder.category_filter_select'
-        x = Assignment.objects.get(filters__source__key=key)
+        x = Automation.objects.get(filters__source__key=key)
         self.assertEqual(x.description, key)
         # state
         key = 'admin.placeholder.state_filter_select'
-        x = Assignment.objects.get(filters__source__key=key)
+        x = Automation.objects.get(filters__source__key=key)
         self.assertEqual(x.description, key)
         # country
         key = 'admin.placeholder.country_filter_select'
-        x = Assignment.objects.get(filters__source__key=key)
+        x = Automation.objects.get(filters__source__key=key)
         self.assertEqual(x.description, key)

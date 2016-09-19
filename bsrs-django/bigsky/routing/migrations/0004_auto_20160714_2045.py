@@ -15,13 +15,13 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='assignment',
+            model_name='automation',
             name='order',
             field=models.IntegerField(blank=True, default=0),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='assignment',
+            model_name='automation',
             name='tenant',
             field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='tenant.Tenant'),
         ),

@@ -98,25 +98,25 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         post_title = self.wait_for_xhr_request_xpath("//*/div/h1")
         assert init_title == post_title
 
-    def test_assignment_profile(self):
-        ap_link = self.nav_page.find_assignment_profiles_link()
+    def test_automation_profile(self):
+        ap_link = self.nav_page.find_automation_profiles_link()
         ap_link.click()
         # Create AP Page Object
         page = ModelPage(
             driver = self.driver,
             new_link = "t-add-new",
-            list_name = "t-assignment-description",
+            list_name = "t-automation-description",
             list_data = "t-grid-data"
         )
         # Create
         page.find_new_link().click()
         # description
         description = rand_chars()
-        assignment = InputHelper(description=description)
-        self.wait_for_xhr_request("t-assignment-description")
-        self._fill_in(assignment)
+        automation = InputHelper(description=description)
+        self.wait_for_xhr_request("t-automation-description")
+        self._fill_in(automation)
         # assignee
-        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-assignment-assignee-select ')]/div")
+        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-assignee-select ')]/div")
         assignee_dropdown.click()
         assignee_input = self.wait_for_xhr_request("ember-power-select-search-input")
         assignee_input.send_keys('a')
@@ -124,7 +124,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         time.sleep(2)
         self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
         # pf
-        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-assignment-pf-select ')]/div")
+        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-pf-select ')]/div")
         assignee_dropdown.click()
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
         time.sleep(2)
@@ -141,7 +141,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.gen_elem_page.click_save_btn()
 
         # Find in list
-        assignment = page.find_list_data()
+        automation = page.find_list_data()
         self.driver.refresh()
         list_view = page.find_list_name()
         time.sleep(2)
@@ -150,12 +150,12 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # Update
         # description
         description = rand_chars()
-        assignment = InputHelper(description=description)
-        assignment_input = self.wait_for_xhr_request("t-assignment-description")
-        assignment_input.clear()
-        self._fill_in(assignment)
+        automation = InputHelper(description=description)
+        automation_input = self.wait_for_xhr_request("t-automation-description")
+        automation_input.clear()
+        self._fill_in(automation)
         # assignee
-        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-assignment-assignee-select ')]/div")
+        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-assignee-select ')]/div")
         assignee_dropdown.click()
         assignee_input = self.wait_for_xhr_request("ember-power-select-search-input")
         assignee_input.send_keys('a')
@@ -163,7 +163,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         time.sleep(2)
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]//li[2]").click()
         # pf
-        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-assignment-pf-select ')]/div")
+        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-pf-select ')]/div")
         assignee_dropdown.click()
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
         time.sleep(2)
@@ -180,13 +180,13 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.gen_elem_page.click_save_btn()
 
         # Find in list
-        assignment = page.find_list_data()
+        automation = page.find_list_data()
             # self.driver.refresh()
         list_view = page.find_list_name()
         page.click_name_in_list(description, list_view)
 
         # Delete
-        assignment_input = self.wait_for_xhr_request("t-assignment-description")
+        automation_input = self.wait_for_xhr_request("t-automation-description")
         self.gen_elem_page.click_dropdown_delete()
         self.wait_for_xhr_request("t-delete-btn").click()
         self.wait_for_xhr_request("t-modal-delete-btn").click()

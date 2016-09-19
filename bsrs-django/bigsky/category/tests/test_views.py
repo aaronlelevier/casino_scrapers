@@ -442,7 +442,7 @@ class CategorySubRouteProfileFilterTests(APITestCase):
         child = create_single_category(name='aaab', parent=parent)
         grand_child = create_single_category(name='c', parent=child)
 
-        response = self.client.get('/api/admin/categories/assignment-criteria/{}/'.format(parent.name))
+        response = self.client.get('/api/admin/categories/automation-criteria/{}/'.format(parent.name))
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -456,7 +456,7 @@ class CategorySubRouteProfileFilterTests(APITestCase):
         create_categories()
         self.assertTrue(Category.objects.count() > settings.PAGE_SIZE)
 
-        response = self.client.get('/api/admin/categories/assignment-criteria/{}/'.format('a'))
+        response = self.client.get('/api/admin/categories/automation-criteria/{}/'.format('a'))
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -466,7 +466,7 @@ class CategorySubRouteProfileFilterTests(APITestCase):
         name = 'foobar'
         self.assertFalse(Category.objects.filter(name__icontains=name).exists())
 
-        response = self.client.get('/api/admin/categories/assignment-criteria/{}/'.format(name))
+        response = self.client.get('/api/admin/categories/automation-criteria/{}/'.format(name))
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))

@@ -3,8 +3,8 @@ from django.contrib import admin
 from routing import models
 
 
-@admin.register(models.Assignment)
-class AssignmentAdmin(admin.ModelAdmin):
+@admin.register(models.Automation)
+class AutomationAdmin(admin.ModelAdmin):
     list_display = ('id', 'description')
 
 

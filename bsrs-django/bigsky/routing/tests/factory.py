@@ -3,7 +3,7 @@ from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
-from routing.models import Assignment, ProfileFilter, AvailableFilter, AUTO_ASSIGN
+from routing.models import Automation, ProfileFilter, AvailableFilter, AUTO_ASSIGN
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import TicketPriority
 from utils.create import random_lorem
@@ -113,31 +113,31 @@ def create_profile_filters():
     create_ticket_location_country_filter()
 
 
-# Assignments
+# Automations
 
-def create_assignment(description=None, tenant=None, assignee=None):
+def create_automation(description=None, tenant=None, assignee=None):
     kwargs = {
         'description': description or random_lorem(1),
         'tenant': tenant or get_or_create_tenant()
     }
 
     try:
-        assignment = Assignment.objects.get(**kwargs)
-    except Assignment.DoesNotExist:
+        automation = Automation.objects.get(**kwargs)
+    except Automation.DoesNotExist:
         if not assignee:
             assignee = create_single_person()
         kwargs['assignee'] = assignee
 
-        assignment = Assignment.objects.create(**kwargs)
+        automation = Automation.objects.create(**kwargs)
 
         priority_filter = create_ticket_priority_filter()
         category_filter = create_ticket_categories_filter()
-        assignment.filters.add(priority_filter, category_filter)
+        automation.filters.add(priority_filter, category_filter)
 
-    return assignment
+    return automation
 
 
-def create_assignments():
+def create_automations():
     tenant = get_or_create_tenant()
 
     for pf in ProfileFilter.objects.all():
@@ -146,12 +146,12 @@ def create_assignments():
         except IndexError:
             assignee = create_single_person()
 
-        assignment = Assignment.objects.create(tenant=tenant,
+        automation = Automation.objects.create(tenant=tenant,
             description=pf.source.key, assignee=assignee,
         )
-        if not assignment.description:
-            assignment.description = pf.source.field
-            assignment.save()
+        if not automation.description:
+            automation.description = pf.source.field
+            automation.save()
 
-        assignment.filters.add(pf)
+        automation.filters.add(pf)
 

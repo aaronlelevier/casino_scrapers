@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
-                ('type', models.CharField(default='assignment', help_text='could be different for the model being filtered. i.e. assignment, notification, etc...', max_length=100, null=True)),
+                ('type', models.CharField(default='automation', help_text='could be different for the model being filtered. i.e. automation, notification, etc...', max_length=100, null=True)),
                 ('key', models.CharField(blank=True, help_text='To use for i18n UI key, and also for mapping component based on selected filter', max_length=100)),
                 ('key_is_i18n', models.BooleanField(default=True, help_text="is the 'key' field i18n'able")),
                 ('context', models.CharField(blank=True, default='ticket.ticket', help_text="The namespace of the model to look the field up on. ex: 'app_name.model_name'", max_length=100)),

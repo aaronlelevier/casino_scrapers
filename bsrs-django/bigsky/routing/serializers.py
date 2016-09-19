@@ -6,7 +6,7 @@ from category.models import Category
 from contact.models import State, Country
 from location.models import Location, LocationLevel
 from person.serializers_leaf import PersonSimpleSerializer
-from routing.models import Assignment, ProfileFilter, AvailableFilter
+from routing.models import Automation, ProfileFilter, AvailableFilter
 from routing.validators import (ProfileFilterFieldValidator, UniqueByTenantValidator,
     AvailableFilterValidator)
 from tenant.mixins import RemoveTenantMixin
@@ -98,23 +98,23 @@ class ProfileFilterSerializer(BaseCreateSerializer):
         return data
 
 
-ASSIGNMENT_FIELDS = ('id', 'tenant', 'order', 'description', 'assignee',)
+AUTOMATION_FIELDS = ('id', 'tenant', 'order', 'description', 'assignee',)
 
-class AssignmentCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
+class AutomationCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
     filters = ProfileFilterUnnestedSerializer(required=False, many=True)
 
     class Meta:
-        model = Assignment
+        model = Automation
         validators = [AvailableFilterValidator(),
                       UniqueByTenantValidator('order'),
                       UniqueByTenantValidator('description')]
-        fields = ASSIGNMENT_FIELDS + ('filters',)
+        fields = AUTOMATION_FIELDS + ('filters',)
 
     def create(self, validated_data):
         filters = validated_data.pop('filters')
 
-        instance = super(AssignmentCreateUpdateSerializer, self).create(validated_data)
+        instance = super(AutomationCreateUpdateSerializer, self).create(validated_data)
 
         if filters:
             for f in filters:
@@ -145,30 +145,30 @@ class AssignmentCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
         for x in instance.filters.exclude(id__in=filter_ids):
             x.delete(override=True)
 
-        return super(AssignmentCreateUpdateSerializer, self).update(instance, validated_data)
+        return super(AutomationCreateUpdateSerializer, self).update(instance, validated_data)
 
 
-class AssignmentListSerializer(RemoveTenantMixin, BaseCreateSerializer):
+class AutomationListSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
     assignee = PersonSimpleSerializer()
 
     class Meta:
-        model = Assignment
-        fields = ASSIGNMENT_FIELDS
+        model = Automation
+        fields = AUTOMATION_FIELDS
 
     @staticmethod
     def eager_load(queryset):
         return queryset.select_related('assignee')
 
 
-class AssignmentDetailSerializer(RemoveTenantMixin, BaseCreateSerializer):
+class AutomationDetailSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
     assignee = PersonSimpleSerializer()
     filters = ProfileFilterSerializer(required=False, many=True)
 
     class Meta:
-        model = Assignment
-        fields = ASSIGNMENT_FIELDS + ('filters',)
+        model = Automation
+        fields = AUTOMATION_FIELDS + ('filters',)
 
     @staticmethod
     def eager_load(queryset):

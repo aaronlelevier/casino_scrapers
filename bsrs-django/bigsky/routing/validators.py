@@ -3,7 +3,7 @@ from django.contrib.auth.models import ContentType
 
 from rest_framework.exceptions import ValidationError
 
-from routing.models import Assignment
+from routing.models import Automation
 
 
 class ProfileFilterFieldValidator(object):
@@ -37,7 +37,7 @@ class ProfileFilterFieldValidator(object):
 
 class AvailableFilterValidator(object):
     """Each AvailableFilter can only be used 1x. Get the AF from the 'id'
-    attr for an Assignment's related ProfileFilters in order to check it."""
+    attr for an Automation's related ProfileFilters in order to check it."""
 
     def __call__(self, data):
         filters = data.get('filters', [])
@@ -77,9 +77,9 @@ class UniqueByTenantValidator(object):
         }
 
         if self.instance:
-            exists = Assignment.objects.filter(**kwargs).exclude(id=self.instance.id).exists()
+            exists = Automation.objects.filter(**kwargs).exclude(id=self.instance.id).exists()
         else:
-            exists = Assignment.objects.filter(**kwargs).exists()
+            exists = Automation.objects.filter(**kwargs).exists()
 
         if exists:
             raise ValidationError("{}: '{}' already exists for Tenant: '{}'"
