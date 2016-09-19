@@ -289,7 +289,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         location_level_select.click()
         ll_option = self.driver.find_element_by_xpath("//*[@aria-current='true']")
         ll_option.click()
-        status_select = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-status-select ')]/div")
+        status_select = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-status-select ')]/div")
         status_select.click()
         status_option = self.driver.find_element_by_xpath("//*[@aria-current='true']")
         status_option.click()
