@@ -16,14 +16,12 @@ var PersonNew = TabNewRoute.extend({
     }
     return Ember.RSVP.hash({
       model: model,
-      roles: roles,
-      locales: this.get('simpleStore').find('locale')
+      roles: roles
     });
   },
   setupController(controller, hash) {
     controller.set('model', hash.model);
     controller.set('roles', hash.roles);
-    controller.set('locales', hash.locales);
   },
   actions: {
     editPerson() {

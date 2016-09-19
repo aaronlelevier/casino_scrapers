@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { run, computed, defineProperty } = Ember;
+const { run, computed, defineProperty, inject } = Ember;
 
 /*
  * API
@@ -7,13 +7,13 @@ const { run, computed, defineProperty } = Ember;
  * - 'model'
  * - 'change_method'
  * - 'labelText'
- * - 'relatedModelName'
- * - 'relatedModels'
+ * - 'relatedModelName' - string that finds the related keys in simple store and used in class name
  * - 'valuePath'
  * - 'didValidate'
  * - 'selected'
 */
 var PowerSelectFKComponent = Ember.Component.extend({
+  simpleStore: inject.service(),
   displayName: 'name',
   init() {
     this._super(...arguments);
@@ -22,6 +22,9 @@ var PowerSelectFKComponent = Ember.Component.extend({
   },
   showMessage: computed('attributeValidation.isDirty', 'isInvalid', 'didValidate', function() {
     return (this.get('attributeValidation.isDirty') || this.get('didValidate')) && this.get('isInvalid');
+  }),
+  options: Ember.computed(function() {
+    return this.get('simpleStore').find(this.get('relatedModelName'));
   }),
   isValid: computed.oneWay('attributeValidation.isValid'),
   isInvalid: computed.oneWay('attributeValidation.isInvalid'),

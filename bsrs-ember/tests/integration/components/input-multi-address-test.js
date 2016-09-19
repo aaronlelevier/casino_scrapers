@@ -12,8 +12,9 @@ import LADD from 'bsrs-ember/vendor/defaults/location-join-address';
 // import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
 // import STATE_DEFAULTS from 'bsrs-ember/vendor/defaults/state';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import ADTYPEREPO from 'bsrs-ember/repositories/address-type';
 
-var store, default_type, address_types, addresses;
+var store, addresses;
 
 moduleForComponent('input-multi-address', 'integration: input-multi-address test', {
   integration: true,
@@ -25,14 +26,13 @@ moduleForComponent('input-multi-address', 'integration: input-multi-address test
     store.push('address', {id: AD.idOne, street: AD.streetOne, address_type_fk: ATD.idOne});
     store.push('address-type', {id: ATD.idOne, addresses: [AD.idOne]});
     addresses = store.find('address');
-    default_type = store.push('address-type', {id: ATD.officeId, name: ATD.officeName});
+    store.push('address-type', {id: ATD.officeId, name: ATD.officeName});
     store.push('address-type', {id: ATD.shippingId, name: ATD.shippingName});
-    address_types = store.find('address-type');
     this.set('model', location);
     this.set('addresses', addresses);
-    this.set('address_types', address_types);
-    this.set('default_type', default_type);
-    this.render(hbs `{{input-multi-address addresses=addresses model=model types=address_types default_type=default_type}}`);
+    this.address_type_repo = ADTYPEREPO.create({simpleStore: store});
+    this.simpleStore = store;
+    this.render(hbs `{{input-multi-address addresses=addresses model=model address_type_repo=address_type_repo simpleStore=simpleStore}}`);
     // var service = this.container.lookup('service:i18n');
     // var json = translations.generate('en');
     // loadTranslations(service, json);

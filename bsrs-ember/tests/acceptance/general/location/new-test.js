@@ -42,7 +42,7 @@ const PARENTS_MULTIPLE_OPTION = `.t-location-parent-select > .ember-power-select
 
 let store, payload, list_xhr;
 
-moduleForAcceptance('Acceptance | location-new', {
+moduleForAcceptance('scott Acceptance | location-new', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${LOCATIONS_URL}?page=1`, "GET", null, {}, 201, LOCATION_FIXTURES.empty());
@@ -153,7 +153,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     assert.notOk(page.llevelValidationErrorVisible);
     assert.ok(page.statusValidationErrorVisible);
   });
-  selectChoose('.t-status-select', 'Open');
+  selectChoose('.t-location-status-select', 'Open');
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
     assert.notOk(page.nameValidationErrorVisible);

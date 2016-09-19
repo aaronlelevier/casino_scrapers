@@ -85,7 +85,7 @@ test('each status shows up as a valid select option', function(assert) {
   let statuses = store.find('ticket-status');
   this.set('model', ticket);
   this.set('statuses', statuses);
-  this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
+  this.render(hbs`{{tickets/ticket-single model=model activities=statuses}}`);
   let $component = this.$('.t-ticket-status-select');
   assert.equal($component.length, 1);
 });

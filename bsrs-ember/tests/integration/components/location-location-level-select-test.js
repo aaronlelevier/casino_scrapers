@@ -10,7 +10,7 @@ import translations from 'bsrs-ember/vendor/translation_fixtures';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import { clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 
-let store, locationz, location_level, all_location_levels, location_levels, trans, run = Ember.run;
+let store, locationz, location_level, location_levels, trans, run = Ember.run;
 const COMPONENT = '.t-location-level-select';
 const DROPDOWN = '.ember-power-select-dropdown';
 const SELECTED = '.ember-power-select-selected-item';
@@ -18,7 +18,6 @@ const SELECTED = '.ember-power-select-selected-item';
 moduleForComponent('location location-level-select', 'integration: location location-level-select', {
   integration: true,
   setup() {
-
     trans = this.container.lookup('service:i18n');
     loadTranslations(trans, translations.generate('en'));
     translation.initialize(this);
@@ -30,29 +29,12 @@ moduleForComponent('location location-level-select', 'integration: location loca
       location_levels.forEach((location_level) => { store.push('location-level', location_level); } );
     });
     location_level = store.find('location-level', LLD.idOne);
-    all_location_levels = store.find('location-level');
   }
-});
-
-test('should render a selectbox when location type options are empty', function(assert) {
-  let all_location_levels = Ember.A([]);
-  this.set('model', locationz);
-  this.set('all_location_levels', all_location_levels);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.location_level relatedModels=all_location_levels change_method='change_location_level' relatedModelName='location-level' notTranslated=true}}`);
-  let $component = this.$(COMPONENT);
-  clickTrigger();
-  assert.equal($(DROPDOWN).length, 1);
-  assert.equal($('.ember-basic-dropdown-content').length, 1);
-  assert.equal($('.ember-power-select-options > li').length, 1);
-  assert.equal($('li.ember-power-select-option').text().trim(), 'No Matches');
-  assert.ok(!locationz.get('location_level'));
-  assert.notOk($('.ember-power-select-search').text());
 });
 
 test('should render a selectbox with bound options', function(assert) {
   this.set('model', locationz);
-  this.set('all_location_levels', all_location_levels);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.location_level relatedModels=all_location_levels change_method='change_location_level' relatedModelName='location-level' notTranslated=true}}`);
+  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.location_level change_method='change_location_level' relatedModelName='location-level' notTranslated=true}}`);
   let $component = this.$(COMPONENT);
   clickTrigger();
   assert.equal($(DROPDOWN).length, 1);
@@ -62,8 +44,7 @@ test('should render a selectbox with bound options', function(assert) {
 
 test('should be able to select new location level when one doesnt exist', function(assert) {
   this.set('model', locationz);
-  this.set('all_location_levels', all_location_levels);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.location_level relatedModels=all_location_levels change_method='change_location_level' relatedModelName='location-level' notTranslated=true}}`);
+  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.location_level change_method='change_location_level' relatedModelName='location-level' notTranslated=true}}`);
   let $component = this.$(COMPONENT);
   clickTrigger();
   assert.equal($(DROPDOWN).length, 1);
@@ -83,8 +64,7 @@ test('should be able to select same location level when location already has a l
     store.push('location-level', {id: LLD.idOne, locations: [LD.idOne]});
   });
   this.set('model', locationz);
-  this.set('all_location_levels', all_location_levels);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.location_level relatedModels=all_location_levels change_method='change_location_level' relatedModelName='location-level' notTranslated=true}}`);
+  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.location_level change_method='change_location_level' relatedModelName='location-level' notTranslated=true}}`);
   let $component = this.$(COMPONENT);
   assert.equal($component.find(SELECTED).text().trim(), LLD.nameCompany);
   clickTrigger();
@@ -105,8 +85,7 @@ test('should be able to select new location level when location already has a lo
     store.push('location-level', {id: LLD.idOne, locations: [LD.idOne]});
   });
   this.set('model', locationz);
-  this.set('all_location_levels', all_location_levels);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.location_level relatedModels=all_location_levels change_method='change_location_level' relatedModelName='location-level' notTranslated=true}}`);
+  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.location_level change_method='change_location_level' relatedModelName='location-level' notTranslated=true}}`);
   let $component = this.$(COMPONENT);
   assert.equal($component.find(SELECTED).text().trim(), LLD.nameCompany);
   clickTrigger();

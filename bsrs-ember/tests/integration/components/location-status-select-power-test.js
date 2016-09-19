@@ -9,7 +9,7 @@ import LDS from 'bsrs-ember/vendor/defaults/location-status';
 
 let store, location_one, status_one, status_two, status_three, trans, run = Ember.run;
 const PowerSelect = '.ember-power-select-trigger';
-const relatedModelName = 'status';
+const relatedModelName = 'location-status';
 const COMPONENT = `.t-${relatedModelName}-select`;
 const DROPDOWN = '.ember-power-select-dropdown';
 
@@ -32,8 +32,7 @@ test('should render a selectbox with bound options (defaulted to open on new tem
   let all_statuses = store.find('location-status');
   status_one.set('locations', [LD.idOne]);
   this.set('model', location_one);
-  this.set('all_statuses', all_statuses);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModels=all_statuses relatedModelName='status'}}`);
+  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModelName='location-status'}}`);
   let $component = this.$(`${COMPONENT}`);
   assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(LDS.openName));
   clickTrigger();
@@ -47,8 +46,7 @@ test('should be able to select same status when location already has a status', 
   let all_statuses = store.find('location-status');
   status_one.set('locations', [LD.idOne]);
   this.set('model', location_one);
-  this.set('all_statuses', all_statuses);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModels=all_statuses relatedModelName='status'}}`);
+  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModelName='location-status'}}`);
   let $component = this.$(`${COMPONENT}`);
   assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(LDS.openName));
   clickTrigger();
@@ -66,8 +64,7 @@ test('should be able to select new status when location already has a status', f
   let all_statuses = store.find('location-status');
   status_one.set('locations', [LD.idOne]);
   this.set('model', location_one);
-  this.set('all_statuses', all_statuses);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModels=all_statuses relatedModelName='status'}}`);
+  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModelName='location-status'}}`);
   let $component = this.$(`${COMPONENT}`);
   assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(LDS.openName));
   clickTrigger();

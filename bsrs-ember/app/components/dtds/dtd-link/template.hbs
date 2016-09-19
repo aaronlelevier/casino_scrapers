@@ -2,7 +2,7 @@
   <div class="input-group-vertical">
     <div class="input-group">
       <span class="input-group-btn">
-        <button class="t-del-link-btn btn btn-default btn-sm delete" type="button" {{action 'delete' link}}>{{fa-icon "minus"}}</button>
+        <button class="t-del-link-btn btn btn-default btn-sm delete" type="button" {{action "delete" link}}>{{fa-icon "minus"}}</button>
       </span>
       {{validated-input
         model=link
@@ -43,11 +43,23 @@
     </div>
     <div class="input-group">
       <span class="input-group-addon">{{t "admin.dtd.label.link.priority"}}</span>
-      {{power-select-foreign-key mainModel=link selected=link.priority change_method='change_priority' relatedModels=priorities relatedModelName='ticket-priority' clear=true}}
+      {{power-select-foreign-key 
+        mainModel=link 
+        selected=link.priority 
+        change_method="change_priority" 
+        relatedModelName="ticket-priority" 
+        clear=true
+      }}
     </div>
     <div class="input-group">
       <span class="input-group-addon">{{t "admin.dtd.label.link.status"}}</span>
-      {{power-select-foreign-key mainModel=link selected=link.status change_method='change_status' relatedModels=statuses relatedModelName='ticket-status' clear=true}}
+      {{power-select-foreign-key 
+        mainModel=link 
+        selected=link.status 
+        change_method="change_status" 
+        relatedModelName="ticket-status" 
+        clear=true
+      }}
     </div>
     <div class="input-group">
       <span class="input-group-addon">{{t "admin.dtd.label.destination"}}</span>

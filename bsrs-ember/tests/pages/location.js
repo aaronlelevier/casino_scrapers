@@ -11,7 +11,7 @@ const BASE_URL = BASEURLS.base_locations_url;
 const DETAIL_URL = `${BASE_URL}/${LD.idOne}`;
 const NEW_URL = `${BASE_URL}/new/1`;
 const LOCATIONLEVEL = '.t-location-level-select .ember-basic-dropdown-trigger';
-const STATUS = '.t-status-select .ember-basic-dropdown-trigger';
+const STATUS = '.t-location-status-select .ember-basic-dropdown-trigger';
 const DROPDOWN = options;
 
 const CHILDREN = '.t-location-children-select .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
@@ -123,7 +123,7 @@ export default PageObject.create({
   // Validation
   nameValidationErrorVisible: hasClass('invalid', '.t-location-name-validator'),
   numberValidationErrorVisible: hasClass('invalid', '.t-location-number-validator'),
-  statusValidationErrorVisible: hasClass('invalid', '.t-status-select'),
+  statusValidationErrorVisible: hasClass('invalid', '.t-location-status-select'),
   llevelValidationErrorVisible: hasClass('invalid', '.t-location-level-select'),
   phonenumberZeroValidationErrorVisible: hasClass('invalid', '.t-phonenumber-number-validator0'),
   phonenumberOneValidationErrorVisible: hasClass('invalid', '.t-phonenumber-number-validator1'),

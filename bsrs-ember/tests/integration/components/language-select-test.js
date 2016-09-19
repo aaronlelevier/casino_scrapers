@@ -29,26 +29,11 @@ moduleForComponent('language-select', 'integration: language-select test', {
   }
 });
 
-test('should render a selectbox when locale options are empty (initial state of power select)', function(assert) {
-  let locales = Ember.A([]);
-  this.set('model', person);
-  this.set('locales', locales);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.locale change_method='change_locale' relatedModels=locales relatedModelName='locale'}}`);
-  let $component = this.$(COMPONENT);
-  assert.equal($('.ember-power-select-placeholder').text().trim(), trans.t('power.select.select'));
-  clickTrigger();
-  assert.equal($(DROPDOWN).length, 1);
-  assert.equal($('.ember-power-select-options > li').length, 1);
-  assert.ok(!person.get('locale'));
-  assert.notOk($('.ember-power-select-search').text());
-});
-
 test('should render a selectbox with bound options', function(assert) {
   let locales = store.find('locale');
   locale_one.set('people', [PD.idOne]);
   this.set('model', person);
-  this.set('locales', locales);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.locale change_method='change_locale' relatedModels=locales relatedModelName='locale'}}`);
+  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.locale change_method='change_locale' relatedModelName='locale'}}`);
   let $component = this.$(COMPONENT);
   assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(LOCALED.nameOneKey));
   clickTrigger();
@@ -61,8 +46,7 @@ test('should render a selectbox with bound options', function(assert) {
 test('should be able to select new locale when one doesnt exist', function(assert) {
   let locales = store.find('locale');
   this.set('model', person);
-  this.set('locales', locales);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.locale change_method='change_locale' relatedModels=locales relatedModelName='locale'}}`);
+  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.locale change_method='change_locale' relatedModelName='locale'}}`);
   let $component = this.$(COMPONENT);
   assert.equal($('.ember-power-select-placeholder').text().trim(), trans.t('power.select.select'));
   clickTrigger();
@@ -80,8 +64,7 @@ test('should be able to select same locale when person already has a locale', fu
   let locales = store.find('locale');
   locale_one.set('people', [PD.idOne]);
   this.set('model', person);
-  this.set('locales', locales);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.locale change_method='change_locale' relatedModels=locales relatedModelName='locale'}}`);
+  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.locale change_method='change_locale' relatedModelName='locale'}}`);
   let $component = this.$(COMPONENT);
   assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(LOCALED.nameOneKey));
   clickTrigger();
@@ -99,8 +82,7 @@ test('should be able to select new locale when person already has a locale', fun
   let locales = store.find('locale');
   locale_one.set('people', [PD.idOne]);
   this.set('model', person);
-  this.set('locales', locales);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.locale change_method='change_locale' relatedModels=locales relatedModelName='locale'}}`);
+  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.locale change_method='change_locale' relatedModelName='locale'}}`);
   let $component = this.$(COMPONENT);
   assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(LOCALED.nameOneKey));
   clickTrigger();

@@ -8,7 +8,7 @@ import StatusMixin from 'bsrs-ember/mixins/route/status';
 import computed from 'ember-computed-decorators';
 //end-non-standard
 
-var TicketSingleRoute = TabRoute.extend(FindById, PriorityMixin, StatusMixin, {
+var TicketSingleRoute = TabRoute.extend(FindById, {
   activityRepository: inject('activity'),
   repository: inject('ticket'),
   attachmentRepository: inject('attachment'),
@@ -26,15 +26,15 @@ var TicketSingleRoute = TabRoute.extend(FindById, PriorityMixin, StatusMixin, {
     const pk = params.ticket_id;
     const repository = this.get('repository');
     let ticket = repository.fetch(pk);
-    const statuses = this.get('statuses');
-    const priorities = this.get('priorities');
+    // const statuses = this.get('statuses');
+    // const priorities = this.get('priorities');
     const otherXhrs = [this.get('activityRepository').find('ticket', 'tickets', pk)];
     const hashComponents = [
       {'title': this.get('i18n').t('ticket.section.activity'), 'component': 'mobile/ticket/activity-section', active: 'active'},
       {'title': this.get('i18n').t('ticket.section.details'), 'component': 'mobile/ticket/detail-section', active: ''},
       {'title': this.get('i18n').t('ticket.section.location'), 'component': 'mobile/ticket/location-section', active: ''},
     ];
-    return this.findByIdScenario(ticket, pk, {statuses:statuses, priorities:priorities, repository:repository, hashComponents:hashComponents }, false, otherXhrs);
+    return this.findByIdScenario(ticket, pk, {repository:repository, hashComponents:hashComponents }, false, otherXhrs);
   },
   setupController: function(controller, hash) {
     controller.setProperties(hash);

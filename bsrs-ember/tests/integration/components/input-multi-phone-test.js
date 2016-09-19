@@ -7,8 +7,9 @@ import PND from 'bsrs-ember/vendor/defaults/phone-number';
 import PTD from 'bsrs-ember/vendor/defaults/phone-number-type';
 import LPND from 'bsrs-ember/vendor/defaults/location-join-phonenumber';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import PNDTYPEREPO from 'bsrs-ember/repositories/phone-number-type';
 
-var store, default_type, phone_number_types, phonenumbers;
+var store, phonenumbers;
 
 moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
   integration: true,
@@ -20,15 +21,14 @@ moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
     store.push('phonenumber', {id: PND.idOne, street: PND.numberOne, phone_number_type_fk: PTD.idOne});
     store.push('phone-number-type', {id: PTD.idOne, phonenumbers: [PND.idOne]});
     phonenumbers = store.find('phonenumber');
-    default_type = store.push('phone-number-type', {id: PTD.officeId, name: PTD.officeName});
+    store.push('phone-number-type', {id: PTD.officeId, name: PTD.officeName});
     // other ph type
     store.push('phone-number-type', {id: PTD.mobileId, name: PTD.mobileName});
-    phone_number_types = store.find('phone-number-type');
     this.set('model', location);
     this.set('phonenumbers', phonenumbers);
-    this.set('phone_number_types', phone_number_types);
-    this.set('default_type', default_type);
-    this.render(hbs `{{input-multi-phone numbers=phonenumbers model=model types=phone_number_types default_type=default_type}}`);
+    this.phone_number_type_repo = PNDTYPEREPO.create({simpleStore: store});
+    this.simpleStore = store;
+    this.render(hbs `{{input-multi-phone numbers=phonenumbers model=model simpleStore=simpleStore phone_number_type_repo=phone_number_type_repo}}`);
     // var service = this.container.lookup('service:i18n');
     // var json = translations.generate('en');
     // loadTranslations(service, json);
@@ -53,7 +53,6 @@ test('click add btn will append blank entry to list of entries and binds value t
   assert.equal(phonenumbers.objectAt(1).get('number'), undefined);
   this.$('.t-phonenumber-number1').val(PND.numberOne).trigger('change');
   assert.equal(phonenumbers.objectAt(1).get('number'), PND.numberOne);
-  // leaving out other fields b/c possiblity using GOOGLE API for this stuff
 });
 
 test('once added a button for phonenumber type appears with a button to delete it', function(assert) {

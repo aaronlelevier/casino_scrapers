@@ -9,6 +9,7 @@ var MultiAddressComponent = Ember.Component.extend({
   simpleStore: Ember.inject.service(),
   countryDbFetch: injectRepo('country-db-fetch'),
   stateDbFetch: injectRepo('state-db-fetch'),
+  address_type_repo: injectRepo('address-type'),
   address_types: Ember.computed(function() {
     return this.get('simpleStore').find('address-type');
   }),
@@ -17,7 +18,7 @@ var MultiAddressComponent = Ember.Component.extend({
   actions: {
     append() {
       const id = this.get('uuid').v4();
-      const default_type = this.get('default_type');
+      const default_type = this.get('address_type_repo').get_default();
       const type_id = default_type.get('id');
       var model = {id: id, address_type_fk: type_id};
       run(() => {

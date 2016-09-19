@@ -11,14 +11,14 @@ import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location-level_fixtures';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import generalPage from 'bsrs-ember/tests/pages/general';
 
-let store, location_level, all_location_levels, location_levels, location_level_repo, run = Ember.run;
+let store, location_level, location_levels, location_level_repo, run = Ember.run;
 
 moduleForComponent('location-level', 'integration: location-level test', {
   integration: true,
   setup() {
     generalPage.setContext(this);
     store = module_registry(this.container, this.registry, ['model:location-level']);
-    all_location_levels = LOCATION_LEVEL_FIXTURES.all_location_levels();
+    const all_location_levels = LOCATION_LEVEL_FIXTURES.all_location_levels();
     run(function() {
       all_location_levels.forEach((location_level) => { 
         location_level.children_fks = location_level.children || [];
