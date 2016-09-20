@@ -29,8 +29,11 @@
                 {{timestamp-created model=model}}
               </div>
               <div class="col-md-12 ticket-categories">
-                {{#parent-model-category-select ticket=model as |child_valid|}}{{/parent-model-category-select}}
-                <span class="validation validation-under category-validation-error t-category-validation-error {{child-validation submitted child_valid}}">{{t "validation.invalid"}} {{t "admin.category.label.name"}}</span>
+                {{parent-model-category-select 
+                  model=model 
+                  didValidate=didValidate
+                  valuePath="categories"
+                }}
               </div>
               <div class="col-md-12 request-wrap">
                 <div class="input-group">
@@ -63,7 +66,19 @@
     <section>
       <div class="col-md-12">
         {{#form-group title="ticket.label.location-name" for="location"}}
-        {{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket" valuePath="location" didValidate=didValidate errorClass="error t-ticket-location-error"}}
+        {{db-fetch-select 
+          model=model 
+          selectedAttr=model.location 
+          className="t-ticket-location-select" 
+          displayName="name" 
+          change_func="change_location" 
+          remove_func="remove_location" 
+          repository=locationRepo 
+          searchMethod="findTicket" 
+          valuePath="location" 
+          didValidate=didValidate 
+          errorClass="error t-ticket-location-error"
+        }}
         {{/form-group}}
       </div>
       <div class="col-md-12">

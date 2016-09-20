@@ -55,13 +55,9 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin
   status_fk: undefined,
   location_level_fk: undefined,
   tickets: [],
-  // TODO: remove email/ph fks now
-  email_fks: [],
-  phone_number_fks: [],
   location_phonenumbers_fks: [],
   location_emails_fks: [],
   location_addresses_fks: [],
-  address_fks: [],
   // PH
   phonenumbersIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('location_phonenumbers'),
   phonenumbersIsDirty: Ember.computed('phonenumbers.@each.{isDirtyOrRelatedDirty}', 'phonenumbersIsDirtyContainer', function() {

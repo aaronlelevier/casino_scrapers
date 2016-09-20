@@ -1,6 +1,6 @@
 import BaseValidator from 'ember-cp-validations/validators/base';
 
-export default BaseValidator.extend({
+var TicketStatusValidator = BaseValidator.extend({
   /* @method validate - ticket-status
    * @param {string} attribute - field on ticket model
    * want to prevent user from saving a ticket if the status is draft or new, let them save the form
@@ -9,3 +9,5 @@ export default BaseValidator.extend({
     return (model.get('status.name') === 'ticket.status.draft' || model.get('status.name') === 'ticket.status.new') ? true : model.get(`${attribute}.id`) ? true : 'errors.ticket.assignee';
   }
 });
+
+export default TicketStatusValidator;

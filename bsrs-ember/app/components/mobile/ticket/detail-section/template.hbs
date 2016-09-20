@@ -1,4 +1,3 @@
-
 <div class="row">
   <div class="col-md-12">
     {{#form-group title="ticket.label.assignee-fullname" for="assignee"}}
@@ -17,7 +16,7 @@
 
 <div class="row gutter-top">
   <div class="col-md-12">
-    {{#parent-model-category-select ticket=model as |child_valid|}}
+    {{#parent-model-category-select model=model as |child_valid|}}
     <span class="validation validation-under category-validation-error t-category-validation-error {{child-validation submitted child_valid}}">{{t "validation.invalid"}} {{t "admin.category.label.name"}}</span>
     {{/parent-model-category-select}}
   </div>
@@ -26,7 +25,16 @@
 <div class="row gutter-top gutter-bottom">
   <div class="col-md-12">
     {{#form-group title="ticket.label.request" for="request"}}
-    {{validated-input model=model value=model.request placeholder=(t "ticket.label.request") valuePath="request" className="t-mobile-ticket-request ticket-request" didValidate=didValidate textarea=true class="t-ticket-request-validator"}}
+    {{validated-input 
+      model=model 
+      value=model.request 
+      placeholder=(t "ticket.label.request") 
+      valuePath="request" 
+      className="t-mobile-ticket-request ticket-request" 
+      didValidate=didValidate 
+      textarea=true 
+      class="t-ticket-request-validator"
+    }}
     {{/form-group}}
   </div>
 </div>

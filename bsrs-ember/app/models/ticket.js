@@ -43,6 +43,7 @@ const Validations = buildValidations({
   assignee: validator('ticket-status', {
     dependentKeys: ['model.status']
   }),
+  categories: validator('ticket-categories'),
 });
 
 const { run } = Ember;

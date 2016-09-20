@@ -19,6 +19,7 @@ var DBFetch = Ember.Component.extend({
     const valuePath = this.get('valuePath');
     defineProperty(this, 'attributeValidation', computed.oneWay(`model.validations.attrs.${valuePath}`));
   },
+  classNameBindings: ['showMessage:invalid'],
   showMessage: computed('attributeValidation.isDirty', 'isInvalid', 'didValidate', function() {
     return (this.get('attributeValidation.isDirty') || this.get('didValidate')) && this.get('isInvalid');
   }),

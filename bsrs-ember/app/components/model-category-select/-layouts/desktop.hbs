@@ -3,7 +3,7 @@
   {{#power-select
     selected=categories_selected
     options=options
-    class="category-select input-group-select t-model-category-select"
+    class=(concat "category-select input-group-select t-model-category-select " invalid)
     tagName="div"
     onchange=(action "selected")
     onopen=(action "handleOpen" category.id)

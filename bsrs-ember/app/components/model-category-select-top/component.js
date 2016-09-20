@@ -1,15 +1,12 @@
 import Ember from 'ember';
-import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
-
-const PREFIX = config.APP.NAMESPACE;
-const CATEGORY_URL = PREFIX + '/admin/categories/';
+import { CATEGORIES_URL } from 'bsrs-ember/utilities/urls';
 
 var TicketCategories = Ember.Component.extend({
   classNames: ['category'],
-  categories_selected: Ember.computed('ticket.top_level_category', 'ticket.categories.[]', function() {
+  categories_selected: Ember.computed('model.top_level_category', 'model.categories.[]', function() {
     let index = this.get('index');
-    let ticket = this.get('ticket');
+    let ticket = this.get('model');
     let categories = ticket.get('sorted_categories');
     let top_level_category = ticket.get('top_level_category');
     if (!index) {
@@ -28,7 +25,7 @@ var TicketCategories = Ember.Component.extend({
   }),
   actions: {
     selected(category) {
-      const ticket = this.get('ticket');
+      const ticket = this.get('model');
       const top_level_id = ticket.get('top_level_category.id');
       if(!category) {
         ticket.remove_categories_down_tree(top_level_id);
@@ -42,7 +39,7 @@ var TicketCategories = Ember.Component.extend({
       ticket.change_category_tree(category);
     },
     handleOpen() {
-      const url = CATEGORY_URL + 'parents/';
+      const url = CATEGORIES_URL + 'parents/';
       const _this = this;
       PromiseMixin.xhr(url, 'GET').then((response) => {
         _this.set('options', response.results);

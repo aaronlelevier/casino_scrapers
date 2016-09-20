@@ -121,6 +121,9 @@ var TicketPage = PageObject.create({
   requesterValidationErrorVisible: hasClass('invalid', '.t-ticket-requester-validator'),
   locationValidationErrorVisible: hasClass('invalid', '.t-ticket-location-select .ember-power-select-trigger'),
   assigneeValidationErrorVisible: hasClass('invalid', '.t-ticket-assignee-select .ember-power-select-trigger'),
+  categoryValidationErrorVisible: hasClass('invalid', '.t-model-category-select:eq(0)'),
+  categoryTwoValidationErrorVisible: hasClass('invalid', '.t-model-category-select:eq(1)'),
+  categoryThreeValidationErrorVisible: hasClass('invalid', '.t-model-category-select:eq(2)'),
   // statusValidationErrorVisible: hasClass('invalid', '.t-ticket-status-validator'),
   // priorityValidationErrorVisible: hasClass('invalid', '.t-ticket-priority-validator'),
 

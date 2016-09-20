@@ -1,32 +1,34 @@
 <section>
   <div class="row">
     <div class="col-md-12">
-      {{#parent-model-category-select ticket=model top_level_category_options=top_level_category_options as |child_valid|}}
-      <span class="validation validation-under t-category-validation-error {{child-validation submitted child_valid}}">{{t "validation.invalid"}} {{t "ticket.label.category-name"}}</span>
-      {{/parent-model-category-select}}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      {{validated-input
-      model=model
-      valuePath="requester"
-      didValidate=didValidate
-      className="t-ticket-requester"
-      placeholder=(t "ticket.label.requester")
-      class="t-ticket-requester-validator"
+      {{parent-model-category-select 
+        model=model 
+        didValidate=didValidate
+        valuePath="categories"
       }}
     </div>
   </div>
   <div class="row">
     <div class="col-md-12">
       {{validated-input
-      model=model
-      valuePath="request"
-      didValidate=didValidate
-      className="t-ticket-request"
-      placeholder=(t "ticket.label.request")
-      class="t-ticket-request-validator"
+        model=model
+        valuePath="requester"
+        didValidate=didValidate
+        className="t-ticket-requester"
+        placeholder=(t "ticket.label.requester")
+        class="t-ticket-requester-validator"
+      }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      {{validated-input
+        model=model
+        valuePath="request"
+        didValidate=didValidate
+        className="t-ticket-request"
+        placeholder=(t "ticket.label.request")
+        class="t-ticket-request-validator"
       }}
     </div>
   </div>
