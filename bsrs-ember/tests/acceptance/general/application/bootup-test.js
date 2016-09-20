@@ -224,16 +224,6 @@ test('on boot we should fetch and load the person-current, logged in Person, con
   });
 });
 
-test('on boot we should fetch and load the default model ordering configuration', assert => {
-  visit(HOME_URL);
-  andThen(() => {
-    var model_ordering = store.find('model-ordering');
-    assert.equal(model_ordering.get('length'), 1);
-    assert.equal(model_ordering.objectAt(0).get('id'), 'admin.people.index');
-    assert.deepEqual(model_ordering.objectAt(0).get('order'), ['fullname']);
-  });
-});
-
 test('on boot we should fetch and load the saved filterset configuration', assert => {
   visit(HOME_URL);
   andThen(() => {

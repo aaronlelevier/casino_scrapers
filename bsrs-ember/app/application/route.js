@@ -78,11 +78,6 @@ var ApplicationRoute = Ember.Route.extend({
     filterset_list.forEach(filterset => {
       store.push('filterset', filterset);
     });
-    const model_default_order_definitions = Ember.$('[data-preload-default-model-ordering]').data('configuration');
-    Object.keys(model_default_order_definitions).forEach(function(key) {
-      let order = model_default_order_definitions[key];
-      store.push('model-ordering', {id: key, order: order});
-    });
     const locale_list = Ember.$('[data-preload-locales]').data('configuration');
     locale_list.forEach((model, index) => {
       store.push('locale', model);
