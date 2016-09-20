@@ -32,8 +32,6 @@ class AutomationViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewS
     queryset = Automation.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
 
-    eager_load_actions = ['retrieve']
-
     def get_serializer_class(self):
         if self.action == 'retrieve':
             return rs.AutomationDetailSerializer

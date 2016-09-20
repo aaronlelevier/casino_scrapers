@@ -115,7 +115,7 @@ class AutomationCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
         model = Automation
         validators = [AvailableFilterValidator(),
                       UniqueByTenantValidator('description')]
-        fields = AUTOMATION_FIELDS + ('filters',)
+        fields = AUTOMATION_FIELDS + ('events', 'filters',)
 
     def create(self, validated_data):
         filters = validated_data.pop('filters')
@@ -156,19 +156,26 @@ class AutomationCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
 class AutomationListSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
+    events = RoutingEventSerializer(required=False, many=True)
+
     class Meta:
         model = Automation
-        fields = AUTOMATION_FIELDS
+        fields = AUTOMATION_FIELDS + ('events', 'has_filters')
+
+    @staticmethod
+    def eager_load(queryset):
+        return queryset.prefetch_related('events', 'filters')
 
 
 class AutomationDetailSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
+    events = RoutingEventSerializer(required=False, many=True)
     filters = ProfileFilterSerializer(required=False, many=True)
 
     class Meta:
         model = Automation
-        fields = AUTOMATION_FIELDS + ('filters',)
+        fields = AUTOMATION_FIELDS + ('events', 'filters',)
 
     @staticmethod
     def eager_load(queryset):
-        return queryset.prefetch_related('filters', 'filters__source')
+        return queryset.prefetch_related('events', 'filters', 'filters__source')

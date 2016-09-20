@@ -33,6 +33,12 @@ class RoutingEventTests(TestCase):
         self.assertIsInstance(ret, RoutingEvent)
         self.assertEqual(ret.key, key)
 
+    def test_create_routing_event_two(self):
+        ret = factory.create_routing_event_two()
+
+        self.assertIsInstance(ret, RoutingEvent)
+        self.assertEqual(ret.key, factory.DEFAULT_ROUTING_EVENT_TWO)
+
     def test_create_routing_events(self):
         self.assertEqual(RoutingEvent.objects.count(), 0)
 
@@ -197,6 +203,8 @@ class AutomationTests(TestCase):
         self.assertIsInstance(automation, Automation)
         self.assertIn(automation.description, LOREM_IPSUM_WORDS.split())
         self.assertIsInstance(automation.tenant, Tenant)
+        # events
+        self.assertEqual(automation.events.count(), 1)
         # profile_filters
         self.assertEqual(automation.filters.count(), 2)
         self.assertEqual(automation.filters.filter(source__field='priority').count(), 1)

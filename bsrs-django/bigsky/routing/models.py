@@ -103,6 +103,10 @@ class Automation(BaseModel):
     class Meta:
         ordering = ['description']
 
+    @property
+    def has_filters(self):
+        return bool(self.filters.first())
+
     def is_match(self, ticket):
         matches = []
         for f in self.filters.all().select_related('source'):

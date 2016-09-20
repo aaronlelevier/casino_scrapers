@@ -195,15 +195,21 @@ class AutomationTests(SetupMixin, TestCase):
         for f in Automation.EXPORT_FIELDS:
             self.assertTrue(hasattr(automation, f))
 
+    def test_manager(self):
+        self.assertIsInstance(Automation.objects, AutomationManager)
+
     def test_meta__ordering(self):
         # this demostrates processing order
         self.assertEqual(Automation._meta.ordering, ['description'])
 
-    def test_fields(self):
-        self.assertIsInstance(self.automation.description, str)
+    def test_has_filters(self):
+        self.assertTrue(self.automation.filters.first())
+        self.assertTrue(self.automation.has_filters)
 
-    def test_manager(self):
-        self.assertIsInstance(Automation.objects, AutomationManager)
+        self.automation.filters.clear()
+
+        self.assertFalse(self.automation.filters.first())
+        self.assertFalse(self.automation.has_filters)
 
     def test_is_match__true(self):
         # raw logic test

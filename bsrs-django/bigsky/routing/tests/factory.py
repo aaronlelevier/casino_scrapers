@@ -14,10 +14,17 @@ from utils.helpers import create_default
 # RoutingEvents
 
 DEFAULT_ROUTING_EVENT = 'automation.event.ticket_status_new'
+DEFAULT_ROUTING_EVENT_TWO = 'automation.event.ticket_status_complete'
 
 def create_routing_event(key=DEFAULT_ROUTING_EVENT):
     obj, _  = RoutingEvent.objects.get_or_create(key=key)
     return obj
+
+
+def create_routing_event_two(key=DEFAULT_ROUTING_EVENT_TWO):
+    obj, _  = RoutingEvent.objects.get_or_create(key=key)
+    return obj
+
 
 def create_routing_events():
     [create_routing_event(key) for key in ROUTING_EVENTS]
@@ -126,6 +133,10 @@ def create_automation(description=None, tenant=None):
     except Automation.DoesNotExist:
         automation = Automation.objects.create(**kwargs)
 
+        # events
+        event = create_routing_event()
+        automation.events.add(event)
+        # provile_filters
         priority_filter = create_ticket_priority_filter()
         category_filter = create_ticket_categories_filter()
         automation.filters.add(priority_filter, category_filter)

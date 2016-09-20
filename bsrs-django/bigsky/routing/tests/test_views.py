@@ -14,7 +14,8 @@ from routing.models import RoutingEvent, Automation, ProfileFilter, AvailableFil
 from routing.tests.factory import (
     create_automation, create_available_filters, create_available_filter_location,
     create_ticket_location_filter, create_ticket_categories_mid_level_filter, create_automation,
-    create_ticket_location_state_filter, create_ticket_location_country_filter, create_routing_events)
+    create_ticket_location_state_filter, create_ticket_location_country_filter, create_routing_events,
+    create_routing_event_two)
 from routing.tests.mixins import ViewTestSetupMixin
 from ticket.models import TicketPriority
 from utils.create import _generate_chars
@@ -73,6 +74,14 @@ class AutomationListTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['id'], str(self.automation.id))
         self.assertNotIn('tenant', data)
         self.assertEqual(data['description'], self.automation.description)
+        # events
+        self.assertEqual(len(data['events']), 1)
+        event = self.automation.events.first()
+        self.assertEqual(data['events'][0]['id'], str(event.id))
+        self.assertEqual(data['events'][0]['key'], event.key)
+        # profile_filters
+        self.assertTrue(self.automation.filters.first())
+        self.assertTrue(data['has_filters'])
 
     def test_search(self):
         self.automation_two = create_automation(_generate_chars())
@@ -96,6 +105,11 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['id'], str(self.automation.id))
         self.assertNotIn('tenant', data)
         self.assertEqual(data['description'], self.automation.description)
+        # events
+        self.assertEqual(len(data['events']), 1)
+        event = self.automation.events.first()
+        self.assertEqual(data['events'][0]['id'], str(event.id))
+        self.assertEqual(data['events'][0]['key'], event.key)
         # profile_filter
         self.assertEqual(len(data['filters']), 2)
         pf = self.automation.filters.get(id=data['filters'][0]['id'])
@@ -209,6 +223,9 @@ class AutomationCreateTests(ViewTestSetupMixin, APITestCase):
     def test_create(self):
         self.data['id'] = str(uuid.uuid4())
         self.data['description'] = 'foo'
+        # events
+        event = create_routing_event_two()
+        self.data['events'] = [str(event.id)]
         # dynamic location filter
         location = create_location()
         criteria_two = [str(location.id)]
@@ -228,6 +245,8 @@ class AutomationCreateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['id'], str(automation.id))
         self.assertNotIn('tenant', data)
         self.assertEqual(data['description'], automation.description)
+        # events
+        self.assertEqual(data['events'], [str(event.id)])
         # profile_filter
         self.assertEqual(len(data['filters']), 1)
         self.assertEqual(automation.filters.first().source, location_af)
@@ -280,8 +299,11 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
 
     def test_update(self):
         # Base fields update only, no nested updating
+        event = create_routing_event_two()
+        self.assertNotEqual(self.data['events'], [str(event.id)])
         self.data.update({
             'description': 'foo',
+            'events': [str(event.id)]
         })
         self.data['filters'] = []
 
@@ -293,6 +315,7 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['id'], self.data['id'])
         self.assertNotIn('tenant', data)
         self.assertEqual(data['description'], self.data['description'])
+        self.assertEqual(data['events'], [str(event.id)])
         self.assertEqual(len(data['filters']), 0)
 
     def test_update__nested_create(self):
