@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
-import prevent_duplicate_name from 'bsrs-ember/validation/prevent_duplicate_name';
+// import prevent_duplicate_name from 'bsrs-ember/validation/prevent_duplicate_name';
 import { task } from 'ember-concurrency';
 
 var LocationLevelGeneral = Ember.Component.extend(TabMixin, {

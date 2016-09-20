@@ -9,7 +9,6 @@ var LocationLevelNew = TabRoute.extend({
   templateModelField: Ember.computed(function() { return 'location-level'; }),
   model(params) {
     let new_pk = parseInt(params.new_id, 10);
-    let location_level_options = this.get('simpleStore').find('location-level');
     let model = this.get('simpleStore').find('location-level', {new_pk: new_pk}).objectAt(0);
     const repository = this.get('repository');
     if(!model){
@@ -17,7 +16,6 @@ var LocationLevelNew = TabRoute.extend({
     }
     return Ember.RSVP.hash({
       model: model,
-      location_level_options: location_level_options,
       repository: repository
     });
   },
