@@ -98,7 +98,7 @@ class ProfileFilterSerializer(BaseCreateSerializer):
         return data
 
 
-AUTOMATION_FIELDS = ('id', 'tenant', 'order', 'description', 'assignee',)
+AUTOMATION_FIELDS = ('id', 'tenant', 'description',)
 
 class AutomationCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
@@ -107,7 +107,6 @@ class AutomationCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
     class Meta:
         model = Automation
         validators = [AvailableFilterValidator(),
-                      UniqueByTenantValidator('order'),
                       UniqueByTenantValidator('description')]
         fields = AUTOMATION_FIELDS + ('filters',)
 
@@ -150,20 +149,13 @@ class AutomationCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
 class AutomationListSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
-    assignee = PersonSimpleSerializer()
-
     class Meta:
         model = Automation
         fields = AUTOMATION_FIELDS
 
-    @staticmethod
-    def eager_load(queryset):
-        return queryset.select_related('assignee')
-
 
 class AutomationDetailSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
-    assignee = PersonSimpleSerializer()
     filters = ProfileFilterSerializer(required=False, many=True)
 
     class Meta:
@@ -172,4 +164,4 @@ class AutomationDetailSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
     @staticmethod
     def eager_load(queryset):
-        return queryset.select_related('assignee').prefetch_related('filters', 'filters__source')
+        return queryset.prefetch_related('filters', 'filters__source')

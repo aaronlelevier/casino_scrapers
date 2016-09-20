@@ -32,10 +32,7 @@ class AutomationListTests(ViewTestSetupMixin, APITestCase):
         data = data['results'][0]
         self.assertEqual(data['id'], str(self.automation.id))
         self.assertNotIn('tenant', data)
-        self.assertEqual(data['order'], 1)
         self.assertEqual(data['description'], self.automation.description)
-        self.assertEqual(data['assignee']['id'], str(self.automation.assignee.id))
-        self.assertEqual(data['assignee']['fullname'], self.automation.assignee.fullname)
 
     def test_search(self):
         self.automation_two = create_automation(_generate_chars())
@@ -58,10 +55,7 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.automation.id))
         self.assertNotIn('tenant', data)
-        self.assertEqual(data['order'], 1)
         self.assertEqual(data['description'], self.automation.description)
-        self.assertEqual(data['assignee']['id'], str(self.automation.assignee.id))
-        self.assertEqual(data['assignee']['fullname'], self.automation.assignee.fullname)
         # profile_filter
         self.assertEqual(len(data['filters']), 2)
         pf = self.automation.filters.get(id=data['filters'][0]['id'])
@@ -193,9 +187,7 @@ class AutomationCreateTests(ViewTestSetupMixin, APITestCase):
         automation = Automation.objects.get(id=self.data['id'])
         self.assertEqual(data['id'], str(automation.id))
         self.assertNotIn('tenant', data)
-        self.assertEqual(data['order'], 2)
         self.assertEqual(data['description'], automation.description)
-        self.assertEqual(data['assignee'], str(automation.assignee.id))
         # profile_filter
         self.assertEqual(len(data['filters']), 1)
         self.assertEqual(automation.filters.first().source, location_af)
@@ -248,10 +240,8 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
 
     def test_update(self):
         # Base fields update only, no nested updating
-        assignee = create_single_person()
         self.data.update({
             'description': 'foo',
-            'assignee': str(assignee.id)
         })
         self.data['filters'] = []
 
@@ -262,9 +252,7 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], self.data['id'])
         self.assertNotIn('tenant', data)
-        self.assertEqual(data['order'], 1)
         self.assertEqual(data['description'], self.data['description'])
-        self.assertEqual(data['assignee'], self.data['assignee'])
         self.assertEqual(len(data['filters']), 0)
 
     def test_update__nested_create(self):

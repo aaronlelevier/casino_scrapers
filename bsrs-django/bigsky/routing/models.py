@@ -45,7 +45,7 @@ class AutomationManager(BaseManager):
         if ticket.creator and not ticket.creator.role.process_assign:
             return True
 
-        for automation in self.filter(tenant__id=tenant_id).order_by('order'):
+        for automation in self.filter(tenant__id=tenant_id).order_by('description'):
             match = automation.is_match(ticket)
             if match:
                 return automation
@@ -67,14 +67,13 @@ class Automation(BaseModel):
 
     # keys
     tenant = models.ForeignKey(Tenant, null=True)
-    order = models.IntegerField(null=True)
     description = models.CharField(max_length=500)
     filters = GenericRelation("routing.ProfileFilter")
 
     objects = AutomationManager()
 
     class Meta:
-        ordering = ['order']
+        ordering = ['description']
 
     def is_match(self, ticket):
         matches = []
@@ -85,14 +84,6 @@ class Automation(BaseModel):
                 matches.append(False)
 
         return all(matches)
-
-
-@receiver(post_save, sender=Automation)
-def update_order(sender, instance=None, created=False, **kwargs):
-    "Post-save hook for incrementing order if not set"
-    if instance.order is None:
-        instance.order = Automation.objects.filter(tenant=instance.tenant).count()
-        instance.save()
 
 
 class AvailableFilter(BaseModel):

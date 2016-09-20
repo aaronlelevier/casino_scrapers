@@ -26,7 +26,6 @@ class ViewTestSetupMixin(object):
         self.ticket_priority = self.ticket.priority
         self.location = create_top_level_location()
         self.data = AutomationCreateUpdateSerializer(self.automation).data
-        self.data.pop('order', None)
         self.data.pop('tenant', None)
         # automation.filter payloads - b/c a combo of the PF & AF
         self.priority_af = create_available_filter_priority()

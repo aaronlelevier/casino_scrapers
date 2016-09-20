@@ -118,16 +118,12 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
     def test_process_ticket__both_match_so_determined_by_order(self):
         # 1st matching
-        automation_three = create_automation('c')
-        automation_three.order = 0
-        automation_three.save()
-        self.assertEqual(automation_three.order, 0)
-        self.assertTrue(automation_three.is_match(self.ticket))
-        # 2nd matching
-        self.assertEqual(self.automation.order, 1)
-        self.assertTrue(self.automation.is_match(self.ticket))
+        automation_three = create_automation('AAAA')
         # processed Ticket should get the first matching AP assignee
-        self.assertIsNone(self.ticket.assignee)
+        self.assertTrue(automation_three.description < self.automation.description)
+        # both match
+        self.assertTrue(automation_three.is_match(self.ticket))
+        self.assertTrue(self.automation.is_match(self.ticket))
 
         ret = Automation.objects.process_ticket(self.ticket.location.location_level.tenant.id,
                                                 self.ticket)
@@ -189,27 +185,14 @@ class AutomationTests(SetupMixin, TestCase):
             self.assertTrue(hasattr(automation, f))
 
     def test_meta__ordering(self):
-        # order by ascending 'order' b/c this demostrates processing order
-        self.assertEqual(Automation._meta.ordering, ['order'])
+        # this demostrates processing order
+        self.assertEqual(Automation._meta.ordering, ['description'])
 
     def test_fields(self):
         self.assertIsInstance(self.automation.description, str)
 
     def test_manager(self):
         self.assertIsInstance(Automation.objects, AutomationManager)
-
-    def test_order_increments_by_tenant(self):
-        self.assertEqual(self.automation.order, 1)
-
-        automation2 = create_automation()
-        self.assertEqual(automation2.order, 2)
-
-        # tenant 2
-        tenant_two = get_or_create_tenant('foo')
-        automation3 = create_automation(tenant=tenant_two)
-        self.assertEqual(automation3.order, 1)
-        automation4 = create_automation(tenant=tenant_two)
-        self.assertEqual(automation4.order, 2)
 
     def test_is_match__true(self):
         # raw logic test
