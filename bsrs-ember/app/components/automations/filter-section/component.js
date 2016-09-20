@@ -11,9 +11,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
     const model = this.get('model');
     const pfilters = model.get('pf');
-    if (pfilters.objectAt(0) && pfilters.objectAt(0).get('field') === 'auto_assign') {
-      this.set('addFilterDisabled', true);
-    } else if (pfilters.get('length') === 0) {
+    if (pfilters.get('length') === 0) {
       const id = this.get('uuid').v4();
       model.add_pf({id: id, lookups: {}});
     }
@@ -39,20 +37,6 @@ export default Ember.Component.extend({
         return !filter_ids.includes(avail_filter.id);
       }
     });
-    //.filter(avail_filter => {
-      // only show on first db-fetch component
-      // if (avail_filter.field !== 'auto_assign') {
-      //   return true;
-      // } else if (index === 0) {
-      //   // defend against tabs here. If the 'auto_assign' filter is in use
-      //   // in another tab, it should not be available
-      //   return this.get('simpleStore').find('automation').reduce((prev, obj) => {
-      //     return prev && !obj.get('pf').isAny('field', 'auto_assign');
-      //   }, true);
-      // } else {
-      //   return false;
-      // }
-    // });
   },
   actions: {
     /* @method append
@@ -85,15 +69,10 @@ export default Ember.Component.extend({
         field: avail_filter.field,
         lookups: avail_filter.lookups,
       });
-      if (avail_filter.field === 'auto_assign') {
-        this.set('addFilterDisabled', true);
-      } else {
-        this.set('addFilterDisabled', false);
-      }
+      this.set('addFilterDisabled', false);
     },
     /* @method fetchFilters
-    * fetches pfilters that are filtered down if already used as a filter && if auto assigned pfilter already used
-    * The only filtering of filters on the django side is `auto_assign`
+    * fetches pfilters that are filtered down if already used
     */
     fetchFilters(index) {
       this.get('repository').getFilters().then((response) => {

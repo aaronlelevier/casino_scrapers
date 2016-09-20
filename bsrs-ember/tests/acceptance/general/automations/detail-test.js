@@ -399,34 +399,6 @@ test('add filter, add criteria, remove filter, cancel', assert => {
   });
 });
 
-test('select auto_assign filter and update automation', assert => {
-  page.visitDetail();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
-    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
-  });
-  // replace existing filter w/ 'auto_assign' filter
-  // this also tests that if there's an existing, the existing is removed n replaced on the model.pf array
-  xhr(`${AUTOMATION_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
-  selectChoose('.t-automation-pf-select:eq(0)', PFD.autoAssignKeyTranslated);
-  let payload = AF.put({
-    description: AD.descriptionOne,
-    assignee: AD.assigneeOne,
-    filters: [{
-      id: PFD.idOne,
-      source: PFD.sourceIdThree,
-      criteria: [],
-      lookups: {}
-    }]
-  });
-  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
-  });
-});
-
 test('select category filter and update automation', assert => {
   page.visitDetail();
   andThen(() => {

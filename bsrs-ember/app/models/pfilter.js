@@ -8,7 +8,7 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/pfilter';
 
 const Validations = buildValidations({
   criteria: validator((value, options, model, attribute) => {
-    if (model.get('field') === 'auto_assign' || !model.get('source_id')) {
+    if (!model.get('source_id')) {
       return true;
     }
     return get(value, 'length') > 0 ? true : 'errors.automation.pf.criteria.length';

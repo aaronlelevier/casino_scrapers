@@ -38,7 +38,6 @@ export default create({
   deleteFilterTwo: clickable('.t-del-pf-btn:eq(1)'),
   filterOneClickDropdown: clickable('.t-automation-pf-select:eq(0) .ember-basic-dropdown-trigger'),
   filterOneClickOptionTwo: clickable(`.ember-power-select-option:contains(${PFD.keyTwo})`, { scope: DROPDOWN }),
-  filterOneClickOptionAutoAssign: clickable(`.ember-power-select-option:contains(${PFD.autoAssignKey})`, { scope: DROPDOWN }),
   filterOnePriorityOneRemove: clickable('.ember-power-select-multiple-remove-btn', { scope: `${PRIORITIES}:eq(0)` }),
 
   automationFilterOneText: text('.t-automation-pf-select:eq(0)'),
