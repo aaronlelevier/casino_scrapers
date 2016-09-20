@@ -1,9 +1,9 @@
 {{#each numbers as |phonenumber index|}}
-  <div class="input-group-vertical t-address-group">
-    <div class="input-group">
-      <span class="input-group-btn">
-        <button class="t-del-phone-number-btn btn btn-default btn-sm delete" type="button" {{action "delete" phonenumber}}>{{fa-icon "minus"}}</button>
-      </span>
+  <div class="input-group t-address-group">
+    <span class="input-group-btn">
+      <button class="t-del-phone-number-btn btn btn-default btn-sm delete" type="button" {{action "delete" phonenumber}}>{{fa-icon "minus"}}</button>
+    </span>
+    <div class="input-group-btn input-group-select">
       {{power-select-foreign-key
         mainModel=phonenumber
         selected=phonenumber.phone_number_type
@@ -11,18 +11,17 @@
         relatedModelName="phone-number-type"
       }}
     </div>
-    <div class="input-group">
-      <span class="input-group-addon address-label">{{t "admin.person.label.phone_number.one"}}</span>
-        {{validated-input-multi
-          model=phonenumber
-          valuePath="number"
-          count=index
-          className=(concat "t-phonenumber-number" index)
-          placeholder=placeholder
-          class=(concat "t-phonenumber-number-validator" index)
-          didValidate=didValidate
-        }}
-    </div>
-</div>
+    {{validated-input-multi
+      model=phonenumber
+      valuePath="number"
+      count=index
+      className=(concat "t-phonenumber-number" index)
+      placeholder=placeholder
+      class=(concat "t-phonenumber-number-validator" index)
+      didValidate=didValidate
+    }}
+  </div>
 {{/each}}
-<button class="t-add-phone-number-btn btn-add btn btn-default btn-sm" type="button" {{action "append"}}><span class="btn-label">{{fa-icon "plus"}} {{t "admin.phone.add"}}</span></button>
+<button class="t-add-phone-number-btn btn-add btn btn-default btn-sm" type="button" {{action "append"}}>
+  <span class="btn-label">{{fa-icon "plus"}} {{t "admin.phone.add"}}</span>
+</button>

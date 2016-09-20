@@ -31,6 +31,7 @@ select.form-control{
 .btn{
   font-size: 1.3rem;
   border: $borderStyle;
+  min-height: 34px;
 }
 
 .btn-default:focus,
@@ -61,23 +62,7 @@ select.form-control{
   outline: none !important;
 }
 
-.input-group .btn {
-  height: 34px !important; //Remove after bootstrap fix released
-}
-.input-group{
-	margin-bottom: 10px;
-  .input-group-btn{
-    .ember-power-select .ember-power-select-trigger{
-      font-size: 14px;
-      line-height: 32px;
-    }
-    &:first-child{
-      .ember-power-select .ember-power-select-trigger{
-        border-radius: $borderRadiusLeft;
-      }
-    }
-  }
-}
+
 .btn-default:hover,
 .input-group-addon,
 .form-control[disabled],

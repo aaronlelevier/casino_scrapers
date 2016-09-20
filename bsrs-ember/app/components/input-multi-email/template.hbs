@@ -1,9 +1,9 @@
 {{#each emails as |email index|}}
-  <div class="input-group-vertical t-address-group">
-    <div class="input-group">
-      <span class="input-group-btn">
-        <button class="t-del-email-btn btn btn-default btn-sm delete" type="button" {{action 'delete' email}}>{{fa-icon "minus"}}</button>
-      </span>
+  <div class="input-group t-address-group">
+    <span class="input-group-btn">
+      <button class="t-del-email-btn btn btn-default btn-sm delete" type="button" {{action 'delete' email}}>{{fa-icon "minus"}}</button>
+    </span>
+    <div class="input-group-btn input-group-select">
       {{power-select-foreign-key
         mainModel=email
         selected=email.email_type
@@ -11,18 +11,15 @@
         relatedModelName='email-type'
       }}
     </div>
-    <div class="input-group">
-      <span class="input-group-addon address-label">{{t "admin.person.label.email"}}</span>
-        {{validated-input-multi
-          model=email
-          valuePath="email"
-          count=index
-          className=(concat "t-email-email" index)
-          placeholder=placeholder
-          class=(concat "t-email-email-validator" index)
-          didValidate=didValidate
-        }}
-    </div>
+    {{validated-input-multi
+      model=email
+      valuePath="email"
+      count=index
+      className=(concat "t-email-email" index)
+      placeholder=placeholder
+      class=(concat "t-email-email-validator" index)
+      didValidate=didValidate
+    }}
   </div>
 {{/each}}
 <button class="t-add-email-btn btn-add btn btn-default btn-sm" type="button" {{action 'append'}}>

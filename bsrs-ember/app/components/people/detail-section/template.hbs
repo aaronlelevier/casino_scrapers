@@ -101,10 +101,10 @@
       <div class="row">
         <div class="col-md-12">
           {{#form-group title="admin.person.label.language" for="locale"}}
-          {{power-select-foreign-key 
-            mainModel=model 
-            selected=model.locale 
-            change_method="change_locale" 
+          {{power-select-foreign-key
+            mainModel=model
+            selected=model.locale
+            change_method="change_locale"
             relatedModelName="locale"
           }}
           {{/form-group}}
