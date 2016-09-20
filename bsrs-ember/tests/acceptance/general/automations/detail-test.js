@@ -56,7 +56,6 @@ test('visit detail and update all fields', assert => {
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(page.descriptionValue, AD.descriptionOne);
-    assert.equal(page.assigneeInput, AD.fullname);
     assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
     assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
   });
@@ -73,18 +72,10 @@ test('visit detail and update all fields', assert => {
     const automation = store.find('automation', AD.idOne);
     assert.equal(automation.get('description'), AD.descriptionTwo);
   });
-  // assignee
-  let keyword = 'Boy1';
-  xhr(`${PEOPLE_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, PersonF.search_power_select());
-  selectSearch('.t-automation-assignee-select', keyword);
-  selectChoose('.t-automation-assignee-select', keyword);
-  andThen(() => {
-    assert.equal(page.assigneeInput, PD.fullnameBoy);
-  });
   xhr(`${AUTOMATION_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
   page.addFilter();
   selectChoose('.t-automation-pf-select:eq(1)', PFD.keyTwo);
-  keyword = 'a';
+  let keyword = 'a';
   xhr(`/api/admin/locations/location__icontains=${keyword}/?location_level=${PFD.lookupsDynamic.id}`, 'GET', null, {}, 200, LF.search_power_select());
   selectSearch('.t-ticket-location-select', keyword);
   selectChoose('.t-ticket-location-select', LD.storeNameFour);
@@ -93,7 +84,6 @@ test('visit detail and update all fields', assert => {
   });
   let payload = AF.put({
     description: AD.descriptionTwo,
-    assignee: AD.assigneeSelectOne,
     filters: [{
       id: PFD.idOne,
       source: PFD.sourceIdOne,
@@ -357,7 +347,6 @@ test('remove filter and save - should stay on page because an automation must ha
   });
   let payload = AF.put({
     description: AD.descriptionOne,
-    assignee: AD.assigneeOne,
     filters: [{
       id: UUID.value,
       source: PFD.sourceIdOne,
@@ -423,7 +412,6 @@ test('select category filter and update automation', assert => {
   });
   let payload = AF.put({
     description: AD.descriptionOne,
-    assignee: AD.assigneeOne,
     filters: [{
       id: PFD.idOne,
       source: PFD.sourceIdFour,
@@ -462,7 +450,6 @@ test('select state filter and update automation', assert => {
   });
   let payload = AF.put({
     description: AD.descriptionOne,
-    assignee: AD.assigneeOne,
     filters: [{
       id: PFD.idOne,
       source: PFD.sourceIdFive,
@@ -501,7 +488,6 @@ test('select country filter and update automation', assert => {
   });
   let payload = AF.put({
     description: AD.descriptionOne,
-    assignee: AD.assigneeOne,
     filters: [{
       id: PFD.idOne,
       source: PFD.sourceIdSix,

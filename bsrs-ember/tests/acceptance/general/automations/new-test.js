@@ -41,11 +41,6 @@ test('visit new URL and create a new record', assert => {
   andThen(() => {
     assert.equal(page.descriptionValue, AD.descriptionOne);
   });
-  // assignee
-  let keyword = 'Boy1';
-  xhr(`${PEOPLE_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, PersonF.search_power_select());
-  selectSearch('.t-automation-assignee-select', keyword);
-  selectChoose('.t-automation-assignee-select', keyword);
   // filter w/ a criteria
   page.addFilter();
   andThen(() => {
@@ -56,7 +51,6 @@ test('visit new URL and create a new record', assert => {
   selectChoose('.t-priority-criteria', TD.priorityOne);
   xhr(AUTOMATION_URL, 'POST', AF.put({
     id: UUID.value,
-    assignee: AD.assigneeSelectOne,
     filters: [{
       id: UUID.value,
       source: PFD.sourceIdOne,

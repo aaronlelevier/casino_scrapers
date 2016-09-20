@@ -18,12 +18,6 @@ const Validations = buildValidations({
       message: 'errors.automation.description.min_max'
     })
   ],
-  assignee: [
-    validator('presence', {
-      presence: true,
-      message: 'errors.automation.assignee'
-    }),
-  ],
   pf: [
     validator('length', {
       min: 1,
@@ -36,8 +30,6 @@ const Validations = buildValidations({
 export default Model.extend(OptConf, Validations, {
   init() {
     this._super(...arguments);
-    belongs_to.bind(this)('assignee', 'automation');
-    //TODO: pf is available filters...or just filter...
     many_to_many.bind(this)('pf', 'automation', {dirty: false});
   },
   simpleStore: Ember.inject.service(),
@@ -48,8 +40,8 @@ export default Model.extend(OptConf, Validations, {
     return pf.isAny('isDirtyOrRelatedDirty') || this.get('pfIsDirtyContainer');
   }),
   pfIsNotDirty: Ember.computed.not('pfIsDirty'),
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'pfIsDirty', function() {
-    return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('pfIsDirty');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'pfIsDirty', function() {
+    return this.get('isDirty') || this.get('pfIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   rollbackPfContainer() {
@@ -59,7 +51,6 @@ export default Model.extend(OptConf, Validations, {
     });
   },
   rollback() {
-    this.rollbackAssignee();
     this.rollbackPfContainer();
     this.rollbackPf();
     this._super(...arguments);
@@ -72,7 +63,6 @@ export default Model.extend(OptConf, Validations, {
     });
   },
   saveRelated() {
-    this.saveAssignee();
     this.savePfContainer();
     this.savePf();
   },
@@ -90,7 +80,6 @@ export default Model.extend(OptConf, Validations, {
     return {
       id: this.get('id'),
       description: this.get('description'),
-      assignee: this.get('assignee').get('id'),
       filters: this.get('pf').map((obj) => obj.serialize())
     };
   },

@@ -22,7 +22,6 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 const DETAIL_URL = `${BASE_URL}/index/${AD.idOne}`;
-const ASSIGNEE = '.t-ticket-assignee-select';
 
 moduleForAcceptance('Acceptance | grid automation mobile test', {
   beforeEach() {
@@ -71,7 +70,6 @@ test('automation description filter will filter down results and reset page to 1
   await visit(automation_LIST_URL+'?page=2');
   assert.equal(currentURL(), automation_LIST_URL + '?page=2');
   assert.equal(find('.t-grid-data:eq(0) > div:eq(0)').text().trim(), AD.descriptionGridOne);
-  assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), AD.fullnameGridOne);
   await generalMobilePage.clickFilterOpen();
   await page.clickFilterDescription();
   assert.equal(find('.t-filter-input').length, 1);
@@ -126,47 +124,5 @@ test('automation description filter will filter down results and reset page to 1
 //   await page.statusOneCheck();
 //   await generalMobilePage.submitFilterSort();
 // });
-
-test('filtering assignee on power select and can remove', async assert => {
-  xhr(`${AUTOMATION_URL}?page=1&assignee__id__in=${PersonD.idBoy}`, 'GET', null, {}, 200, AF.searched_related(AD.assigneeSelectOne, 'assignee'));
-  await automationPage.visit();
-  assert.equal(store.find('automation-list').get('length'), 10);
-  await generalMobilePage.clickFilterOpen();
-  assert.equal(find('.t-filter__input-wrap').length, 0);
-  assert.equal(find(ASSIGNEE).length, 0);
-  await page.clickFilterAssignee();
-  assert.equal(find('.t-filter__input-wrap').length, 1);
-  xhr(`${PEOPLE_URL}person__icontains=boy/`, 'GET', null, {}, 200, PersonF.search_power_select());
-  await selectSearch(ASSIGNEE, 'boy');
-  await selectChoose(ASSIGNEE, PersonD.fullnameBoy);
-  assert.equal(page.assigneeInput.split(' ')[1], PersonD.nameBoy);
-  await generalMobilePage.submitFilterSort();
-  await generalMobilePage.clickFilterOpen();
-  assert.equal(page.assigneeInput.split(' ')[1], PersonD.nameBoy);
-  removeMultipleOption(ASSIGNEE, PersonD.fullnameBoy);
-  await generalMobilePage.submitFilterSort();
-});
-
-test('removing find or id_in filter will reset grid', async assert => {
-  xhr(`${AUTOMATION_URL}?page=1&assignee__id__in=${PersonD.idBoy}`, 'GET', null, {}, 200, {'results': []});
-  await automationPage.visit();
-  await generalMobilePage.clickFilterOpen();
-  await page.clickFilterAssignee();
-  xhr(`${PEOPLE_URL}person__icontains=boy/`, 'GET', null, {}, 200, PersonF.search_power_select());
-  await selectSearch(ASSIGNEE, 'boy');
-  await selectChoose(ASSIGNEE, PersonD.fullnameBoy);
-  await generalMobilePage.submitFilterSort();
-  await generalMobilePage.clickFilterOpen();
-  assert.equal(find('.t-grid-data:eq(0) > div:eq(0)').text().trim(), '');
-  removeMultipleOption(ASSIGNEE, PersonD.fullnameBoy);
-  await generalMobilePage.submitFilterSort();
-  assert.equal(find('.t-grid-data:eq(0) > div:eq(0)').text().trim(), AD.descriptionGridOne);
-  await generalMobilePage.clickFilterOpen();
-  await generalMobilePage.submitFilterSort();
-  assert.equal(find('.t-grid-data:eq(0) > div:eq(0)').text().trim(), AD.descriptionGridOne);
-  await generalMobilePage.clickFilterOpen();
-  await generalMobilePage.submitFilterSort();
-  assert.equal(find('.t-grid-data:eq(0) > div:eq(0)').text().trim(), AD.descriptionGridOne);
-});
 
 /* jshint ignore:end */

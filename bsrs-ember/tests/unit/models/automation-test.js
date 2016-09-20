@@ -8,7 +8,7 @@ import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import AJFD from 'bsrs-ember/vendor/defaults/automation-join-pfilter';
 
-var store, automation, pfilter, inactive_assignee, pf;
+var store, automation, pfilter, pf;
 
 moduleFor('model:automation', 'Unit | Model | automation', {
   needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username', 'validator:has-many'],
@@ -30,15 +30,13 @@ test('dirty test | description', assert => {
 
 test('serialize', assert => {
   run(() => {
-    automation = store.push('automation', {id: AD.idOne, description: AD.descriptionOne, assignee_fk: PersonD.idOne});
-    store.push('person', {id: PersonD.idOne, automations: [AD.idOne]});
+    automation = store.push('automation', {id: AD.idOne, description: AD.descriptionOne});
     store.push('automation-join-pfilter', {id: AJFD.idOne, automation_pk: AD.idOne, pfilter_pk: PFD.idOne});
     store.push('pfilter', {id: PFD.idOne});
   });
   let ret = automation.serialize();
   assert.equal(ret.id, AD.idOne);
   assert.equal(ret.description, AD.descriptionOne);
-  assert.equal(ret.assignee, AD.assigneeOne);
 });
 
 test('add pfilter w/ id only and automation is still clean', assert => {
@@ -47,78 +45,6 @@ test('add pfilter w/ id only and automation is still clean', assert => {
   });
   automation.add_pf({id: PFD.idOne});
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
-});
-
-/* Assignee */
-test('related person should return one person for a automation', (assert) => {
-  run(() => {
-    automation = store.push('automation', {id: AD.idOne, assignee_fk: PersonD.idOne});
-    store.push('person', {id: PersonD.idOne, automations: [AD.idOne]});
-  });
-  assert.equal(automation.get('assignee').get('id'), PersonD.idOne);
-});
-
-test('change_assignee - will update the persons assignee and dirty the model', (assert) => {
-  run(() => {
-    automation = store.push('automation', {id: AD.idOne, assignee_fk: undefined});
-    store.push('person', {id: PersonD.idOne, automations: []});
-    inactive_assignee = store.push('person', {id: PersonD.idTwo, automations: []});
-  });
-  assert.equal(automation.get('assignee'), undefined);
-  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
-  assert.ok(automation.get('assigneeIsNotDirty'));
-  automation.change_assignee({id: PersonD.idOne});
-  assert.equal(automation.get('assignee_fk'), undefined);
-  assert.equal(automation.get('assignee.id'), PersonD.idOne);
-  automation.change_assignee({id: inactive_assignee.get('id')});
-  assert.ok(automation.get('isDirtyOrRelatedDirty'));
-  assert.ok(automation.get('assigneeIsDirty'));
-  assert.equal(automation.get('assignee_fk'), undefined);
-  assert.equal(automation.get('assignee.id'), PersonD.idTwo);
-  assert.ok(automation.get('isDirtyOrRelatedDirty'));
-  assert.ok(automation.get('assigneeIsDirty'));
-});
-
-test('saveAssignee - assignee - automationwill set assignee_fk to current assignee id', (assert) => {
-  run(() => {
-    automation = store.push('automation', {id: AD.idOne, assignee_fk: PersonD.idOne});
-    store.push('person', {id: PersonD.idOne, automations: [AD.idOne]});
-    inactive_assignee = store.push('person', {id: PersonD.idTwo, automations: []});
-  });
-  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(automation.get('assignee_fk'), PersonD.idOne);
-  assert.equal(automation.get('assignee.id'), PersonD.idOne);
-  automation.change_assignee({id: inactive_assignee.get('id')});
-  assert.equal(automation.get('assignee_fk'), PersonD.idOne);
-  assert.equal(automation.get('assignee.id'), PersonD.idTwo);
-  assert.ok(automation.get('isDirtyOrRelatedDirty'));
-  assert.ok(automation.get('assigneeIsDirty'));
-  automation.saveAssignee();
-  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
-  assert.ok(!automation.get('assigneeIsDirty'));
-  assert.equal(automation.get('assignee_fk'), PersonD.idTwo);
-  assert.equal(automation.get('assignee.id'), PersonD.idTwo);
-});
-
-test('rollbackAssignee - assignee - automationwill set assignee to current assignee_fk', (assert) => {
-  run(() => {
-    automation = store.push('automation', {id: AD.idOne, assignee_fk: PersonD.idOne});
-    store.push('person', {id: PersonD.idOne, automations: [AD.idOne]});
-    inactive_assignee = store.push('person', {id: PersonD.idTwo, automations: []});
-  });
-  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(automation.get('assignee_fk'), PersonD.idOne);
-  assert.equal(automation.get('assignee.id'), PersonD.idOne);
-  automation.change_assignee({id: inactive_assignee.get('id')});
-  assert.equal(automation.get('assignee_fk'), PersonD.idOne);
-  assert.equal(automation.get('assignee.id'), PersonD.idTwo);
-  assert.ok(automation.get('isDirtyOrRelatedDirty'));
-  assert.ok(automation.get('assigneeIsDirty'));
-  automation.rollbackAssignee();
-  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
-  assert.ok(!automation.get('assigneeIsDirty'));
-  assert.equal(automation.get('assignee.id'), PersonD.idOne);
-  assert.equal(automation.get('assignee_fk'), PersonD.idOne);
 });
 
 /* automation & PROFILE_FILTER: Start */
@@ -203,18 +129,6 @@ test('add_pf - will create join model and mark model dirty', (assert) => {
 
 /* automation & PROFILE_FILTER: End */
 
-test('saveRelated - change assignee', assert => {
-  // assignee
-  run(() => {
-    inactive_assignee = store.push('person', {id: PersonD.idTwo, automations: []});
-  });
-  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
-  automation.change_assignee({id: inactive_assignee.get('id')});
-  assert.ok(automation.get('isDirtyOrRelatedDirty'));
-  automation.saveRelated();
-  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
-});
-
 test('save - pfilter and their criteria not dirty when just add new filters but is dirty if add criteria (new location for example)', (assert) => {
   assert.equal(automation.get('pf').get('length'), 0);
   automation.add_pf({id: PFD.idOne});
@@ -265,22 +179,10 @@ test('savePf - and add back old pf with same id will keep criteria and wont be d
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('rollback - assignee and pf', assert => {
-  // assignee
-  let assignee;
+test('rollback - pf', assert => {
   run(() => {
-    automation = store.push('automation', {id: AD.idOne, assignee_fk: PersonD.idOne});
-    assignee = store.push('person', {id: PersonD.idOne, automations: [AD.idOne]});
-    inactive_assignee = store.push('person', {id: PersonD.idTwo, automations: []});
+    automation = store.push('automation', {id: AD.idOne});
   });
-  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
-  automation.change_assignee({id: inactive_assignee.get('id')});
-  assert.equal(automation.get('assignee').get('id'), inactive_assignee.get('id'));
-  assert.ok(automation.get('isDirtyOrRelatedDirty'));
-  automation.rollback();
-  assert.equal(automation.get('assignee').get('id'), assignee.get('id'));
-  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
-  // pf
   assert.equal(automation.get('pf').get('length'), 0);
   automation.add_pf({id: PFD.idOne});
   assert.equal(automation.get('pf').get('length'), 1);
@@ -360,13 +262,11 @@ test('rollback - pf and their criteria', (assert) => {
 
 test('automation validations', assert => {
   run(() => {
-    automation = store.push('automation', {id: AD.idOne, assignee_fk: PersonD.idOne});
+    automation = store.push('automation', {id: AD.idOne});
   });
   const attrs = automation.get('validations').get('attrs');
   assert.ok(attrs.get('description'));
   assert.equal(automation.get('validations').get('_validators').description[0].get('_type'), 'presence');
   assert.equal(automation.get('validations').get('_validators').description[1].get('_type'), 'length');
   assert.deepEqual(attrs.get('description').get('messages'), ['errors.automation.description']);
-  assert.ok(attrs.get('assignee'));
-  assert.deepEqual(attrs.get('assignee').get('messages'), ['errors.automation.assignee']);
 });

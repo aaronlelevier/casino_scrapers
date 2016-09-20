@@ -9,7 +9,6 @@ import CD from 'bsrs-ember/vendor/defaults/criteria';
 
 const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
 const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
-const ASSIGNEE = '.t-automation-assignee-select';
 const DROPDOWN = options;
 const AF_SELECT_ONE = '.t-automation-pf-select:eq(0) .ember-basic-dropdown-trigger';
 const PRIORITY = '.t-priority-criteria .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
@@ -28,10 +27,6 @@ export default create({
   descriptionFill: fillable('.t-automation-description'),
   descriptionGridOne: text('.t-automation-description:eq(0)'),
   descriptionSortText: text('.t-sort-description'),
-
-  assigneeInput: text(ASSIGNEE),
-  assigneeSortText: text('.t-sort-assignee-fullname'),
-  assigneeGridOne: text('.t-automation-assignee-fullname:eq(0)'),
 
   addFilter: clickable('.t-add-pf-btn'),
   deleteFilter: clickable('.t-del-pf-btn:eq(0)'),

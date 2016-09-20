@@ -10,10 +10,6 @@ var BSRS_automation_FACTORY = (function() {
     return {
       id: id,
       description: this.automation.descriptionOne,
-      assignee: {
-        id: this.automation.assigneeOne,
-        fullname: this.automation.fullname
-      },
       // TODO: these are pfilters which should just be the actual filter models. ie. Ticket-Prority
       filters: [{
         id: this.pfilter.idOne,
@@ -31,7 +27,6 @@ var BSRS_automation_FACTORY = (function() {
   factory.prototype.put = function(automation) {
     var id = automation && automation.id || this.automation.idOne;
     var response = this.generate(id);
-    response.assignee = response.assignee.id;
     for(var key in automation) {
       response[key] = automation[key];
     }
@@ -88,11 +83,7 @@ var BSRS_automation_FACTORY = (function() {
   factory.prototype._generate_item = function(i) {
     return {
       id: `${this.automation.idOne.slice(0,-1)}${i}`,
-      description: `${this.automation.descriptionOne}${i}`,
-      assignee: {
-        id: `${this.automation.assigneeOne.slice(0,-1)}${i}`,
-        fullname: `${this.automation.fullname}${i}`,
-      }
+      description: `${this.automation.descriptionOne}${i}`
     };
   };
   return factory;

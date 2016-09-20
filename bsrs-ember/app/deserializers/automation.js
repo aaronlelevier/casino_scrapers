@@ -6,7 +6,6 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/automation';
 export default Ember.Object.extend(OptConf, {
   init() {
     this._super(...arguments);
-    belongs_to.bind(this)('assignee', 'automation', 'person');
     many_to_many.bind(this)('pf', 'automation');
     many_to_many.bind(this)('criteria', 'pfilter');
   },
@@ -19,8 +18,6 @@ export default Ember.Object.extend(OptConf, {
   },
   _deserializeSingle(response) {
     const store = this.get('simpleStore');
-    response.assignee_fk = response.assignee.id;
-    const assignee = response.assignee;
     // extract criteria
     let criteriaMap = {};
     for (let i in response.filters) {
@@ -29,11 +26,9 @@ export default Ember.Object.extend(OptConf, {
       delete response.filters[i].criteria;
     }
     const filters = response.filters;
-    delete response.assignee;
     delete response.filters;
     response.detail = true;
     let automation = store.push('automation', response);
-    this.setup_assignee(assignee, automation);
     const [,pfs,] = this.setup_pf(filters, automation);
     pfs.forEach((pf) => {
       const criteria = criteriaMap[pf.id];

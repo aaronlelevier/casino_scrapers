@@ -30,9 +30,6 @@ test('deserialize single', assert => {
   });
   assert.equal(automation.get('id'), AD.idOne);
   assert.equal(automation.get('description'), AD.descriptionOne);
-  assert.equal(automation.get('assignee_fk'), AD.assigneeOne);
-  assert.equal(automation.get('assignee').get('id'), AD.assigneeOne);
-  assert.equal(automation.get('assignee').get('fullname'), AD.fullname);
   assert.equal(automation.get('pf').get('length'), 1);
   assert.equal(automation.get('pf').objectAt(0).get('id'), PFD.idOne);
   assert.equal(automation.get('pf').objectAt(0).get('source_id'), PFD.sourceIdOne);
@@ -130,8 +127,6 @@ test('deserialize list', assert => {
   automation = store.find('automation-list').objectAt(0);
   assert.equal(automation.get('id'), AD.idOne);
   assert.equal(automation.get('description'), AD.descriptionOne+'1');
-  assert.equal(automation.get('assignee').id, AD.assigneeOne);
-  assert.equal(automation.get('assignee').fullname, AD.fullname+'1');
 });
 
 test('different automations that have different criteria but the same available filter type', assert => {

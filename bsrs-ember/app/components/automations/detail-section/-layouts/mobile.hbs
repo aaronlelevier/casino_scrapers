@@ -13,22 +13,6 @@
 </div>
 <div class="row">
   <div class="col-md-12">
-    {{#form-group title="admin.automation.assignee" for="assignee"}}
-    {{db-fetch-select
-      model=model
-      selectedAttr=model.assignee
-      className="t-automation-assignee-select"
-      displayName="fullname"
-      change_func="change_assignee"
-      repository=personRepo
-      searchMethod="findPeople"
-      valuePath="assignee"
-    }}
-    {{/form-group}}
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-12">
     <div class="appliedFilters" data-test-id="applied-filters">{{t 'admin.automation.filtersApplied' count=model.pf.length}}</div>
   </div>
 </div>

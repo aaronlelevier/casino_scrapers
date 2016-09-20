@@ -21,7 +21,6 @@ const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
 const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
 const GRID_DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
 const automation_PUT_URL = `${AUTOMATION_URL}${AD.idOne}/`;
-// const Assignee = '.t-automation-assignee-select';
 
 moduleForAcceptance('Acceptance | mobile automation detail test', {
   beforeEach() {
@@ -62,16 +61,10 @@ test('visit mobile detail and update all fields', async assert => {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(automationPage.descriptionValue, AD.descriptionOne);
-  assert.equal(automationPage.assigneeInput, AD.fullname);
   // description
   await automationPage.descriptionFill(AD.descriptionTwo);
   assert.equal(automationPage.descriptionValue, AD.descriptionTwo);
-  let keyword = 'Boy1';
-  xhr(`${PEOPLE_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, PersonF.search_power_select());
-  await selectSearch('.t-automation-assignee-select', keyword);
-  await selectChoose('.t-automation-assignee-select', keyword);
-  assert.equal(automationPage.assigneeInput, PD.fullnameBoy);
-  xhr(automation_PUT_URL, 'PUT', AF.put({'description': AD.descriptionTwo, 'assignee': AD.assigneeSelectOne}), {}, 200, AF.list());
+  xhr(automation_PUT_URL, 'PUT', AF.put({'description': AD.descriptionTwo, }), {}, 200, AF.list());
   await generalPage.save()
   assert.equal(currentURL(), automation_LIST_URL);
 });

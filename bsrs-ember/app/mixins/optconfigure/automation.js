@@ -17,11 +17,6 @@ import Ember from 'ember';
  */
 export default Ember.Mixin.create({
   OPT_CONF: {
-    assignee: {
-      collection: 'automations',
-      property: 'person',
-      related_model: 'assignee',
-    },
     pf: {
       associated_model: 'pfilter',
       join_model: 'automation-join-pfilter',

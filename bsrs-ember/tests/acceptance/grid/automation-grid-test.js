@@ -41,7 +41,6 @@ test('template translation tags as variables', function(assert) {
     assert.equal(generalPage.gridPageCountText, '19 ' + t('admin.automation.other'));
     // column headers
     assert.equal(page.descriptionSortText, t('admin.automation.description'));
-    assert.equal(page.assigneeSortText, t('admin.automation.assignee'));
   });
 });
 
@@ -51,7 +50,6 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
     assert.equal(currentURL(), automation_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(page.descriptionGridOne, AD.descriptionOne+'1');
-    assert.equal(page.assigneeGridOne, AD.fullname+'1');
     var pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 2);
     assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -72,7 +70,6 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     assert.equal(currentURL(), automation_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-automation-description').text().trim()), AD.descriptionOne);
-    assert.equal(find('.t-grid-data:eq(0) .t-automation-assignee-fullname').text().trim(), AD.fullnameGridOne);
     var pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 2);
     assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -104,7 +101,6 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     assert.equal(currentURL(), automation_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-automation-description').text().trim(), AD.descriptionOne+'1');
-    assert.equal(find('.t-grid-data:eq(0) .t-automation-assignee-fullname').text().trim(), AD.fullnameGridOne);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
     isNotDisabledElement('.t-next');
@@ -115,7 +111,6 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     assert.equal(currentURL(), automation_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-automation-description').text().trim(), AD.descriptionOne+'11');
-    assert.equal(find('.t-grid-data:eq(0) .t-automation-assignee-fullname').text().trim(), `${AD.fullnameGridOne.slice(0,-1)}11`);
     isNotDisabledElement('.t-first');
     isNotDisabledElement('.t-previous');
     isDisabledElement('.t-next');
@@ -126,7 +121,6 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     assert.equal(currentURL(), automation_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-automation-description').text().trim(), AD.descriptionOne+'1');
-    assert.equal(find('.t-grid-data:eq(0) .t-automation-assignee-fullname').text().trim(), AD.fullnameGridOne);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
     isNotDisabledElement('.t-next');
@@ -137,7 +131,6 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     assert.equal(currentURL(), automation_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-automation-description').text().trim(), AD.descriptionOne+'11');
-    assert.equal(find('.t-grid-data:eq(0) .t-automation-assignee-fullname').text().trim(), `${AD.fullnameGridOne.slice(0,-1)}11`);
     isNotDisabledElement('.t-first');
     isNotDisabledElement('.t-previous');
     isDisabledElement('.t-next');
@@ -148,7 +141,6 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     assert.equal(currentURL(), automation_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-automation-description').text().trim(), AD.descriptionOne+'1');
-    assert.equal(find('.t-grid-data:eq(0) .t-automation-assignee-fullname').text().trim(), AD.fullnameGridOne);
     isDisabledElement('.t-first');
     isDisabledElement('.t-previous');
     isNotDisabledElement('.t-next');
@@ -223,57 +215,6 @@ test('multiple sort options appear in the query string as expected', function(as
     assert.equal(currentURL(), automation_LIST_URL + '?sort=-description');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-automation-description').text().trim(), AD.descriptionGridOneReverse);
-  });
-});
-
-// assignee.fullname search/sort
-
-test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
-  visit(automation_LIST_URL);
-  andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
-    assert.equal(find('.t-grid-data:eq(0) .t-automation-assignee-fullname').text().trim(), AD.fullnameGridOne);
-  });
-  const searchText = '10';
-  var search_two = PREFIX + BASE_URL + `/?page=1&search=${searchText}`;
-  xhr(search_two ,'GET',null,{},200, AF.searched(searchText, 'description', 1));
-  fillIn('.t-grid-search-input', searchText);
-  triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
-  andThen(() => {
-    assert.equal(currentURL(),automation_LIST_URL + `?search=${searchText}`);
-    assert.equal(find('.t-grid-data').length, 1);
-    assert.equal(find('.t-grid-data:eq(0) .t-automation-assignee-fullname').text().trim(), AD.fullnameGridTen);
-  });
-  click('.t-reset-grid');
-  andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
-    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-automation-assignee-fullname').text().trim(), AD.fullnameGridOne);
-  });
-});
-
-test('sort by assignee fullname', function(assert) {
-  visit(automation_LIST_URL);
-  andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
-    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-automation-assignee-fullname').text().trim(), AD.fullnameGridOne);
-  });
-  var sort_one = `${AUTOMATION_URL}?page=1&ordering=assignee__fullname`;
-  xhr(sort_one ,'GET',null,{},200, AF.sorted_page_one('assignee'));
-  click('.t-sort-assignee-fullname-dir');
-  andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL + '?sort=assignee.fullname');
-    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-automation-assignee-fullname').text().trim(), AD.fullnameGridOne);
-  });
-  var sort = `${AUTOMATION_URL}?page=1&ordering=-assignee__fullname`;
-  xhr(sort ,'GET',null,{},200, AF.list_reverse());
-  click('.t-sort-assignee-fullname-dir');
-  andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL + '?sort=-assignee.fullname');
-    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-automation-assignee-fullname').text().trim(), AD.fullnameGridTen);
   });
 });
 

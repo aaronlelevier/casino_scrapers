@@ -100,5 +100,4 @@ test('labels are translated', function(assert) {
   this.model = model;
   this.render(hbs `{{automations/automation-single model=model}}`);
   assert.equal(getLabelText('description'), trans.t('admin.automation.description'));
-  assert.equal(getLabelText('assignee'), trans.t('admin.automation.assignee'));
 });
