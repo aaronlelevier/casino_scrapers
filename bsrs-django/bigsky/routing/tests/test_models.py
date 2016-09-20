@@ -7,7 +7,7 @@ from model_mommy import mommy
 
 from category.models import Category
 from category.tests.factory import create_single_category, REPAIR
-from contact.models import Address
+from contact.models import Address, AddressType
 from contact.tests.factory import create_contact, add_office_to_location, create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
@@ -436,6 +436,29 @@ class ProfileFilterTests(SetupMixin, TestCase):
         self.assertFalse(self.ticket.location.is_office_or_store)
 
         self.assertFalse(mock_func.called)
+
+    def test_is_match__state_or_country_filter__and_not_office_or_store(self):
+        # address
+        self.assertEqual(self.ticket.location.addresses.count(), 1)
+        address = self.ticket.location.addresses.first()
+        address.type = mommy.make(AddressType, name='foo')
+        address.save()
+        self.assertFalse(self.ticket.location.is_office_or_store)
+        # state filter
+        state_filter = create_ticket_location_state_filter()
+        self.assertEqual([str(self.state_ca.id)], state_filter.criteria)
+
+        ret = state_filter.is_match(self.ticket)
+
+        self.assertFalse(ret)
+
+        # country filter
+        country_filter = create_ticket_location_country_filter()
+        self.assertEqual([str(self.country.id)], country_filter.criteria)
+
+        ret = country_filter.is_match(self.ticket)
+
+        self.assertFalse(ret)
 
     def test_is_match__location_address_should_only_check_offices_and_store_types(self):
         state_nv = create_contact_state("NV")

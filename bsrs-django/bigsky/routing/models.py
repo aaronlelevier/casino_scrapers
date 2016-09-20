@@ -180,7 +180,10 @@ class ProfileFilter(BaseModel):
 
     def is_match(self, ticket):
         # State filter
-        if self.source.is_state_filter and ticket.location.is_office_or_store:
+        if (self.source.is_state_filter or self.source.is_country_filter) \
+            and not ticket.location.is_office_or_store:
+            return False
+        elif self.source.is_state_filter and ticket.location.is_office_or_store:
             return self._is_address_match(ticket, 'state__id')
         # Country filter
         elif self.source.is_country_filter and ticket.location.is_office_or_store:
