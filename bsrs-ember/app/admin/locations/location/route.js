@@ -13,6 +13,7 @@ var LocationRoute = TabRoute.extend(FindById, {
     const pk = params.location_id;
     const repository = this.get('repository');
     let location = repository.fetch(pk);
+    /* MOBILE SPECIFIC */
     const hashComponents = [
       {'title': this.get('i18n').t('admin.location.section.details'), 'component': 'locations/location/detail-section', active: 'active'},
       {'title': this.get('i18n').t('admin.location.section.contact'), 'component': 'locations/location/contact-section', active: ''},

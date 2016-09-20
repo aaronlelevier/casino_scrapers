@@ -26,9 +26,8 @@ var TicketSingleRoute = TabRoute.extend(FindById, {
     const pk = params.ticket_id;
     const repository = this.get('repository');
     let ticket = repository.fetch(pk);
-    // const statuses = this.get('statuses');
-    // const priorities = this.get('priorities');
     const otherXhrs = [this.get('activityRepository').find('ticket', 'tickets', pk)];
+    /* MOBILE SPECIFIC */
     const hashComponents = [
       {'title': this.get('i18n').t('ticket.section.activity'), 'component': 'mobile/ticket/activity-section', active: 'active'},
       {'title': this.get('i18n').t('ticket.section.details'), 'component': 'mobile/ticket/detail-section', active: ''},

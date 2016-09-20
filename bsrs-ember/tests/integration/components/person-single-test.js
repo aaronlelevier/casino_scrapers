@@ -96,97 +96,25 @@ test('if save isRunning, btn is disabled', function(assert) {
   assert.equal(this.$('.t-save-btn').attr('disabled'), 'disabled', 'Button is disabled if xhr save is outstanding');
 });
 
-// test('filling in invalid phone number reveal validation messages', function(assert) {
-//   var done = assert.async();
-//   run(() => {
-//     this.model = store.push('person', {});
-//   });
-//   this.render(hbs`{{people/person-single model=model}}`);
-//   general.clickAddPhoneNumber();
-//   let $err = this.$('.invalid');
-//   assert.equal($err.text().trim(), '');
-//   this.$('.t-phonenumber-number0').val('').keyup();
-//   Ember.run.later(() => {
-//     let $err = this.$('.invalid');
-//     assert.ok($err.is(':visible'));
-//     assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.phonenumber.number'));
-//     this.$('.t-phonenumber-number0').val('444-455-4332').keyup();
-//     Ember.run.later(() => {
-//       // valid input
-//       $err = this.$('.invalid');
-//       assert.notOk($err.is(':visible'));
-//       assert.equal($(ERR_TEXT).text().trim(), trans.t(''));
-//       done();
-//     }, 300);
-//   }, 1900);
-// });
-
-// test('filling in invalid emails reveal validation messages', function(assert) {
-//   var done = assert.async();
-//   run(() => {
-//       this.model = store.push('person', {});
-//   });
-//   this.render(hbs`{{people/person-single model=model}}`);
-//   general.clickAddEmail();
-//   let $err = this.$('.invalid');
-//   assert.equal($err.text().trim(), '');
-//   this.$('.t-email-email0').val('').keyup();
-//   Ember.run.later(() => {
-//     let $err = this.$('.invalid');
-//     assert.ok($err.is(':visible'));
-//     assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.email.email'));
-//     this.$('.t-email-email0').val('abbay@gmail.com').keyup();
-//     Ember.run.later(() => {
-//       // valid input
-//       $err = this.$('.invalid');
-//       assert.notOk($err.is(':visible'));
-//       assert.equal($(ERR_TEXT).text().trim(), trans.t(''));
-//       done();
-//     }, 300);
-//   }, 1900);
-// });
-
-// test('clicking save will reveal all validation msgs', function(assert) {
-//   // no phone/email
-//   run(() => {
-//     this.model = store.push('person', {id: PD.idOne});
-//   });
-//   this.render(hbs`{{people/person-single model=model}}`);
-//   assert.equal($('.validated-input-error-dialog').length, 0);
-//   assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
-//   assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), '');
-//   assert.notOk(page.firstNameValidationErrorVisible);
-//   assert.notOk(page.lastNameValidationErrorVisible);
-//   const save_btn = this.$('.t-save-btn');
-//   save_btn.trigger('click').trigger('change');
-//   assert.equal($('.validated-input-error-dialog').length, 2);
-//   assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.person.first_name'));
-//   assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.person.last_name'));
-//   assert.ok(page.firstNameValidationErrorVisible);
-//   assert.ok(page.lastNameValidationErrorVisible);
-// });
-
-// test('can remove a new phone number', function(assert) {
-//   run(() => {
-//     this.model = store.push('person', {});
-//   });
-//   this.render(hbs`{{people/person-single model=model}}`);
-//   general.clickAddPhoneNumber();
-//   assert.equal(this.$('.t-phonenumber-number0').length, 1);
-//   general.clickDeletePhoneNumber();
-//   assert.equal(this.$('.t-phonenumber-number0').length, 0);
-// });
-
-// test('can add and remove new email', function(assert) {
-//   run(() => {
-//     this.model = store.push('person', {});
-//   });
-//   this.render(hbs`{{people/person-single model=model}}`);
-//   general.clickAddEmail();
-//   assert.equal(this.$('.t-email-email0').length, 1);
-//   general.clickDeleteEmail();
-//   assert.equal(this.$('.t-email-email0').length, 0);
-// });
+test('clicking save will reveal all validation msgs', function(assert) {
+  // no phone/email
+  run(() => {
+    this.model = store.push('person', {id: PD.idOne});
+  });
+  this.render(hbs`{{people/person-single model=model}}`);
+  assert.equal($('.validated-input-error-dialog').length, 0);
+  assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+  assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), '');
+  assert.notOk(page.firstNameValidationErrorVisible);
+  assert.notOk(page.lastNameValidationErrorVisible);
+  const save_btn = this.$('.t-save-btn');
+  save_btn.trigger('click').trigger('change');
+  assert.equal($('.validated-input-error-dialog').length, 2);
+  assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.person.first_name'));
+  assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.person.last_name'));
+  assert.ok(page.firstNameValidationErrorVisible);
+  assert.ok(page.lastNameValidationErrorVisible);
+});
 
 test('header populates with username and role name', function(assert) {
   let model;

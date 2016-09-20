@@ -21,80 +21,17 @@
         </div>
       </section>
     </div>
-    <div class="col-md-12">
-      <section>
-        <div class="row">
-          <div class="col-md-12">
-            {{#form-group title="admin.category.label.name" for="name"}}
-              {{validated-input
-                model=model
-                valuePath="name"
-                didValidate=didValidate
-                className="t-category-name"
-                placeholder=(t "admin.category.label.name")
-                class="t-category-name-validator"
-              }}
-            {{/form-group}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            {{#form-group title="admin.category.label.description" for="category_description"}}
-            {{one-way-input type="text" placeholder=(t "admin.category.label.description") value=model.description update=(action setDescription) class="form-control t-category-description" id="category_description"}}
-            {{/form-group}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            {{#form-group title="admin.category.label.label" for="category_label"}}
-            {{one-way-input type="text" placeholder=(t "admin.category.label.label") value=model.label update=(action setLabel) class="form-control t-category-label" id="category_label"}}
-            {{/form-group}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            {{#form-group title="admin.category.label.subcategory_label" for="subcategory_label"}}
-            {{one-way-input type="text" value=model.subcategory_label update=(action setSubLabel) placeholder=(t "admin.category.label.subcategory_label") class="form-control t-category-subcategory-label" id="subcategory_label"}}
-            {{/form-group}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            {{#form-group title="admin.category.label.cost_amount" for="cost_amount"}}
-            {{input-currency
-              model=model
-              field="cost_amount"
-              currencyField="cost_currency"
-            }}
-            {{/form-group}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            {{#form-group title="admin.category.label.cost_code" for="category_cost_code"}}
-            {{input type="text" placeholder=(t "admin.category.label.cost_code") value=model.cost_code class="form-control t-category-cost-code" id="category_cost_code"}}
-            {{/form-group}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            {{#form-group title="admin.category.label.children" for="category"}}
-            {{db-fetch-multi-select 
-              model=model 
-              multiAttr="children" 
-              multiAttrIds="children_ids" 
-              selectedAttr=model.children 
-              className="t-category-children-select" 
-              displayName="name" 
-              add_func="add_children" 
-              remove_func="remove_children" 
-              repository=repository 
-              searchMethod="findCategoryChildren"
-            }}
-            {{/form-group}}
-          </div>
-        </div>
-      </section>
-    </div>
+    {{categories/detail-section 
+      model=model
+      didValidate=didValidate
+    }}
+    {{categories/cost-section 
+      model=model
+    }}
+    {{categories/other-section 
+      model=model
+      didValidate=didValidate
+      repository=repository
+    }}
   </div>
 </section>

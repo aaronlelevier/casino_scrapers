@@ -3,10 +3,9 @@ import inject from 'bsrs-ember/utilities/inject';
 import config from 'bsrs-ember/config/environment';
 import injectStore from 'bsrs-ember/utilities/store';
 import TabRoute from 'bsrs-ember/route/tab/route';
-import ContactRouteMixin from 'bsrs-ember/mixins/route/contact';
 import FindById from 'bsrs-ember/mixins/route/findById';
 
-var PersonRoute = TabRoute.extend(FindById, ContactRouteMixin, {
+var PersonRoute = TabRoute.extend(FindById, {
   repository: inject('person'),
   i18n: Ember.inject.service(),
   queryParams: {
@@ -24,6 +23,7 @@ var PersonRoute = TabRoute.extend(FindById, ContactRouteMixin, {
     let person = repository.fetch(pk);
     /* Person's role is dirty, then always fetch. Why would I do that? */
     const override = person.get('roleIsDirty');
+    /* MOBILE SPECIFIC */
     const hashComponents = [
       {'title': this.get('i18n').t('admin.person.section.details'), 'component': 'people/detail-section', active: 'active'},
       {'title': this.get('i18n').t('admin.person.section.credentials'), 'component': 'people/credentials-section', active: ''},
