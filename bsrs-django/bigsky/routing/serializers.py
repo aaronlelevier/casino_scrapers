@@ -6,12 +6,19 @@ from category.models import Category
 from contact.models import State, Country
 from location.models import Location, LocationLevel
 from person.serializers_leaf import PersonSimpleSerializer
-from routing.models import Automation, ProfileFilter, AvailableFilter
+from routing.models import RoutingEvent, Automation, ProfileFilter, AvailableFilter
 from routing.validators import (ProfileFilterFieldValidator, UniqueByTenantValidator,
     AvailableFilterValidator)
 from tenant.mixins import RemoveTenantMixin
 from ticket.models import TicketPriority
 from utils.serializers import BaseCreateSerializer
+
+
+class RoutingEventSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = RoutingEvent
+        fields = ('id', 'key')
 
 
 class AvailableFilterSerializer(serializers.ModelSerializer):

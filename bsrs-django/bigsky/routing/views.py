@@ -4,10 +4,26 @@ from rest_framework import permissions, viewsets
 from rest_framework.exceptions import MethodNotAllowed
 
 from location.models import LocationLevel
-from routing.models import Automation, AvailableFilter
+from routing.models import RoutingEvent, Automation, AvailableFilter
 from routing import serializers as rs
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.views import BaseModelViewSet
+
+
+class RoutingEventViewSet(BaseModelViewSet):
+
+    model = RoutingEvent
+    queryset = RoutingEvent.objects.all()
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return rs.RoutingEventSerializer
+        else:
+            raise MethodNotAllowed(method=self.action)
+
+    def perform_destroy(self, instance, override):
+        raise MethodNotAllowed(method=self.action)
 
 
 class AutomationViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):

@@ -10,15 +10,55 @@ from location.models import LocationLevel
 from location.tests.factory import (create_location_levels, create_top_level_location,
     create_location_level, create_location)
 from person.tests.factory import create_single_person, PASSWORD
-from routing.models import Automation, ProfileFilter, AvailableFilter
+from routing.models import RoutingEvent, Automation, ProfileFilter, AvailableFilter
 from routing.tests.factory import (
     create_automation, create_available_filters, create_available_filter_location,
     create_ticket_location_filter, create_ticket_categories_mid_level_filter, create_automation,
-    create_ticket_location_state_filter, create_ticket_location_country_filter)
+    create_ticket_location_state_filter, create_ticket_location_country_filter, create_routing_events)
 from routing.tests.mixins import ViewTestSetupMixin
 from ticket.models import TicketPriority
 from utils.create import _generate_chars
 from utils.helpers import create_default
+
+
+class RoutingEventTests(APITestCase):
+
+    def setUp(self):
+        self.person = create_single_person()
+        create_routing_events()
+        self.event = RoutingEvent.objects.first()
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_list(self):
+        self.assertTrue(self.event)
+
+        response = self.client.get('/api/admin/automation-events/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data['count'] > 0)
+        self.assertEqual(len(data['results'][0]), 2)
+        event = RoutingEvent.objects.get(id=data['results'][0]['id'])
+        self.assertEqual(data['results'][0]['key'], event.key)
+
+    def test_detail(self):
+        response = self.client.get('/api/admin/automation-events/{}/'.format(self.event.id))
+        self.assertEqual(response.status_code, 405)
+
+    def test_create(self):
+        response = self.client.post('/api/admin/automation-events/', {}, format='json')
+        self.assertEqual(response.status_code, 405)
+
+    def test_update(self):
+        response = self.client.put('/api/admin/automation-events/{}/'.format(self.event.id), {}, format='json')
+        self.assertEqual(response.status_code, 405)
+
+    def test_delete(self):
+        response = self.client.delete('/api/admin/automation-events/{}/'.format(self.event.id))
+        self.assertEqual(response.status_code, 405)
 
 
 class AutomationListTests(ViewTestSetupMixin, APITestCase):
@@ -443,7 +483,7 @@ class AvailableFilterTests(APITestCase):
         self.client.logout()
 
     def test_list_non_dynamic(self):
-        response = self.client.get('/api/admin/automations-available-filters/')
+        response = self.client.get('/api/admin/automation-available-filters/')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
@@ -465,7 +505,7 @@ class AvailableFilterTests(APITestCase):
         self.assertEqual(location_level_filters, 5)
         desired_count = raw_filter_count - dynamic_filter_count + location_level_filters
 
-        response = self.client.get('/api/admin/automations-available-filters/')
+        response = self.client.get('/api/admin/automation-available-filters/')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
@@ -485,7 +525,7 @@ class AvailableFilterTests(APITestCase):
         self.assertEqual(location_data['lookups']['name'], location_level.name)
 
     def test_list_sorted_in_ascending_order_by_key(self):
-        response = self.client.get('/api/admin/automations-available-filters/')
+        response = self.client.get('/api/admin/automation-available-filters/')
 
         data = json.loads(response.content.decode('utf8'))
         prev = None
@@ -495,24 +535,24 @@ class AvailableFilterTests(APITestCase):
             prev = af
 
     def test_detail(self):
-        response = self.client.get('/api/admin/automations-available-filters/{}/'.format(self.af.id))
+        response = self.client.get('/api/admin/automation-available-filters/{}/'.format(self.af.id))
         self.assertEqual(response.status_code, 405)
 
     def test_create(self):
-        response = self.client.post('/api/admin/automations-available-filters/', {}, format='json')
+        response = self.client.post('/api/admin/automation-available-filters/', {}, format='json')
         self.assertEqual(response.status_code, 405)
 
     def test_update(self):
-        response = self.client.put('/api/admin/automations-available-filters/{}/'.format(self.af.id))
+        response = self.client.put('/api/admin/automation-available-filters/{}/'.format(self.af.id))
         self.assertEqual(response.status_code, 405)
 
     def test_delete(self):
-        response = self.client.delete('/api/admin/automations-available-filters/{}/'.format(self.af.id))
+        response = self.client.delete('/api/admin/automation-available-filters/{}/'.format(self.af.id))
         self.assertEqual(response.status_code, 405)
 
     def test_list_non_dynamic_no_llevel(self):
         AvailableFilter.objects.filter(lookups__filters='location_level').delete()
-        response = self.client.get('/api/admin/automations-available-filters/')
+        response = self.client.get('/api/admin/automation-available-filters/')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
