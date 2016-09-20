@@ -14,11 +14,10 @@ from person.models import Person
 from person.tests.factory import create_single_person
 from routing.models import (
     Automation, AutomationManager, AutomationQuerySet, AvailableFilter,
-    ProfileFilter, AUTO_ASSIGN)
+    ProfileFilter)
 from routing.tests.factory import (
     create_automation, create_ticket_priority_filter, create_ticket_categories_filter,
-    create_auto_assign_filter, create_auto_assign_filter, create_available_filters,
-    create_ticket_location_state_filter, create_available_filter_state,
+    create_available_filters, create_ticket_location_state_filter, create_available_filter_state,
     create_ticket_location_country_filter, create_available_filter_country)
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority, TicketStatus
@@ -152,11 +151,8 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.ticket.creator = creator
         self.ticket.save()
         self.assertFalse(self.ticket.creator.role.process_assign)
-        # auto-assign filter
-        auto_assign_filter = create_auto_assign_filter()
-        self.automation.filters.add(auto_assign_filter)
-        # person is different, so would expect the auto-assign filter to be
-        # used, but if role.process_assign == False, that takes precedence
+        # creator is not the assignee.If role.process_assign == False,
+        # that takes precedence and the creator will be assigned
         self.assertNotEqual(self.automation.assignee, creator)
         self.ticket.assignee = None
         self.assertIsNone(self.ticket.assignee)
@@ -165,18 +161,6 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
         ticket = Ticket.objects.get(id=self.ticket.id)
         self.assertEqual(ticket.assignee, creator)
-
-    def test_auto_assign_filter_in_use(self):
-        self.assertFalse(Automation.objects.auto_assign_filter_in_use(self.tenant))
-
-        auto_assign_filter = create_auto_assign_filter()
-        self.automation.filters.add(auto_assign_filter)
-        self.assertTrue(Automation.objects.filter(tenant=self.tenant,
-                                                  filters__source__field=AUTO_ASSIGN).exists())
-
-        ret = Automation.objects.auto_assign_filter_in_use(self.tenant)
-
-        self.assertTrue(ret)
 
     def test_filter_export_data(self):
         ret = Automation.objects.filter_export_data({'id': self.automation.id})
@@ -274,24 +258,6 @@ class AutomationTests(SetupMixin, TestCase):
 
         self.assertFalse(ret)
 
-    def test_is_match__auto_assign(self):
-        self.assertEqual(self.automation.filters.count(), 2)
-        filter_one = self.automation.filters.filter(source__field='categories')[0]
-        filter_two = self.automation.filters.exclude(id=filter_one.id)[0]
-        filter_one.criteria = [str(create_single_category().id)]
-        filter_one.save()
-        # the below line assertion of False, says that this Ticket
-        # shouldn't match, but it has an "auto_assign" filter, so
-        # it's an automatic match
-        self.assertFalse(filter_one.is_match(self.ticket))
-        self.assertTrue(filter_two.is_match(self.ticket))
-        # add auto_assign filter
-        auto_assign_filter = create_auto_assign_filter()
-        self.automation.filters.add(auto_assign_filter)
-
-        ret = self.automation.is_match(self.ticket)
-
-        self.assertTrue(ret)
 
 class AvailableFilterTests(TestCase):
 

@@ -8,7 +8,7 @@ from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
-from routing.models import Automation, ProfileFilter, AvailableFilter, AUTO_ASSIGN
+from routing.models import Automation, ProfileFilter, AvailableFilter
 from routing.tests import factory
 from tenant.models import Tenant
 from ticket.models import Ticket, TicketPriority
@@ -26,17 +26,6 @@ class AvailableFilterTests(TestCase):
         app_label, model = ret.context.split('.')
         content_type = ContentType.objects.get(app_label=app_label, model=model)
         self.assertEqual(content_type.model_class(), Ticket)
-
-    def test_create_available_filter_auto_assign(self):
-        ret = factory.create_available_filter_auto_assign()
-        ret_two = factory.create_available_filter_auto_assign()
-        # indempotent
-        self.assertEqual(ret, ret_two)
-        # attrs
-        self.assertEqual(ret.key, 'admin.placeholder.auto_assign')
-        self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
-        self.assertEqual(ret.field, AUTO_ASSIGN)
-        self.assertEqual(ret.lookups, {})
 
     def test_create_available_filter_priority(self):
         ret = factory.create_available_filter_priority()
@@ -96,24 +85,15 @@ class AvailableFilterTests(TestCase):
     def test_create_available_filters(self):
         self.assertEqual(AvailableFilter.objects.count(), 0)
         factory.create_available_filters()
-        self.assertEqual(AvailableFilter.objects.count(), 6)
+        self.assertEqual(AvailableFilter.objects.count(), 5)
 
-        fields = [AUTO_ASSIGN, 'priority', 'categories', 'location', 'state', 'country']
+        fields = ['priority', 'categories', 'location', 'state', 'country']
         ret_fields = AvailableFilter.objects.values_list('field', flat=True)
         self.assertEqual(sorted(fields), sorted(ret_fields))
-        self.assertEqual(len(set(ret_fields)), 6)
+        self.assertEqual(len(set(ret_fields)), 5)
 
 
 class PriorityFilterTests(TestCase):
-
-    def test_create_auto_assign_filter(self):
-        source = factory.create_available_filter_auto_assign()
-
-        pf = factory.create_auto_assign_filter()
-
-        self.assertEqual(pf.source, source)
-        self.assertEqual(pf.lookups, {})
-        self.assertEqual(pf.criteria, [])
 
     def test_create_ticket_priority_filter(self):
         priority = create_default(TicketPriority)
@@ -182,7 +162,7 @@ class PriorityFilterTests(TestCase):
     def test_create_profile_filters(self):
         self.assertEqual(ProfileFilter.objects.count(), 0)
         factory.create_profile_filters()
-        self.assertEqual(ProfileFilter.objects.count(), 6)
+        self.assertEqual(ProfileFilter.objects.count(), 5)
 
 
 class AutomationTests(TestCase):
@@ -209,13 +189,9 @@ class AutomationTests(TestCase):
 
         factory.create_automations()
 
-        self.assertEqual(Automation.objects.count(), 6)
+        self.assertEqual(Automation.objects.count(), 5)
         # Automations w/ static ProfileFilter.source
-        self.assertEqual(Automation.objects.exclude(filters__lookups__filters='location_level').count(), 5)
-        # auto_assign
-        key = 'admin.placeholder.auto_assign'
-        x = Automation.objects.get(filters__source__key=key)
-        self.assertEqual(x.description, key)
+        self.assertEqual(Automation.objects.exclude(filters__lookups__filters='location_level').count(), 4)
         # priority
         key = 'admin.placeholder.priority_filter_select'
         x = Automation.objects.get(filters__source__key=key)

@@ -8,13 +8,10 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from tenant.models import Tenant
-from ticket.models import Ticket
 from utils import classproperty
 from utils.fields import MyGenericForeignKey
 from utils.models import BaseQuerySet, BaseManager, BaseModel
 
-
-AUTO_ASSIGN = 'auto_assign'
 
 class AutomationQuerySet(BaseQuerySet):
 
@@ -61,11 +58,6 @@ class AutomationManager(BaseManager):
                 ticket.save()
                 break
 
-    def auto_assign_filter_in_use(self, tenant):
-        return (self.filter(tenant=tenant, filters__source__field=AUTO_ASSIGN)
-                    .select_related('tenant')
-                    .prefetch_related('filters').first())
-
 
 class Automation(BaseModel):
 
@@ -98,9 +90,6 @@ class Automation(BaseModel):
     def is_match(self, ticket):
         matches = []
         for f in self.filters.all().select_related('source'):
-            if f.source.field == AUTO_ASSIGN:
-                return True
-
             if f.is_match(ticket):
                 matches.append(True)
             else:

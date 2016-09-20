@@ -10,13 +10,11 @@ from location.models import LocationLevel
 from location.tests.factory import (create_location_levels, create_top_level_location,
     create_location_level, create_location)
 from person.tests.factory import create_single_person, PASSWORD
-from routing.models import Automation, ProfileFilter, AvailableFilter, AUTO_ASSIGN
+from routing.models import Automation, ProfileFilter, AvailableFilter
 from routing.tests.factory import (
-    create_automation, create_available_filters, create_auto_assign_filter,
-    create_available_filter_location, create_ticket_location_filter,
-    create_ticket_categories_mid_level_filter, create_automation,
-    create_available_filter_auto_assign, create_ticket_location_state_filter,
-    create_ticket_location_country_filter)
+    create_automation, create_available_filters, create_available_filter_location,
+    create_ticket_location_filter, create_ticket_categories_mid_level_filter, create_automation,
+    create_ticket_location_state_filter, create_ticket_location_country_filter)
 from routing.tests.mixins import ViewTestSetupMixin
 from ticket.models import TicketPriority
 from utils.create import _generate_chars
@@ -409,25 +407,6 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(self.automation.filters.filter(source__field='location', lookups={'id': str(location_level.id)}).count(), 1)
         self.assertEqual(self.automation.filters.filter(source__field='location', lookups={'id': str(location_level_two.id)}).count(), 1)
 
-    def test_update_auto_assign(self):
-        self.automation.filters.clear()
-        auto_assign_af = create_available_filter_auto_assign()
-        self.data['filters'] = [{
-            'id': str(uuid.uuid4()),
-            'source': str(auto_assign_af.id),
-            'criteria': [],
-            'lookups': {}
-        }]
-
-        response = self.client.put('/api/admin/automations/{}/'.format(self.automation.id),
-            self.data, format='json')
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(data['filters']), 1)
-        self.assertEqual(data['filters'][0]['id'], self.data['filters'][0]['id'])
-        self.assertEqual(data['filters'][0]['source'], str(auto_assign_af.id))
-
     def test_update__nested_delete(self):
         """
         Related ProfileFilters are "hard" deleted if they have been
@@ -493,7 +472,7 @@ class AvailableFilterTests(APITestCase):
         raw_filter_count = AvailableFilter.objects.count()
         dynamic_filter_count = AvailableFilter.objects.filter(lookups__filters='location_level').count()
         location_level_filters = LocationLevel.objects.count()
-        self.assertEqual(raw_filter_count, 6)
+        self.assertEqual(raw_filter_count, 5)
         self.assertEqual(dynamic_filter_count, 1)
         self.assertEqual(location_level_filters, 5)
         desired_count = raw_filter_count - dynamic_filter_count + location_level_filters
@@ -503,7 +482,7 @@ class AvailableFilterTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         # count dynamic and non-dynamic
-        self.assertEqual(data['count'], 10)
+        self.assertEqual(data['count'], desired_count)
         # dynamic location_level record
         for d in data['results']:
             if d['lookups']:
@@ -526,28 +505,6 @@ class AvailableFilterTests(APITestCase):
             if i > 0:
                 self.assertTrue(af['key'] > prev['key'])
             prev = af
-
-    def test_auto_assign_filter_decorated_if_in_use(self):
-        # AUTO_ASSIGN included
-        self.assertFalse(Automation.objects.auto_assign_filter_in_use(self.tenant))
-
-        response = self.client.get('/api/admin/automations-available-filters/')
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertIn(
-            AUTO_ASSIGN,
-            [f['field'] for f in data['results']]
-        )
-
-        auto_assign_filter = create_auto_assign_filter()
-        self.automation.filters.add(auto_assign_filter)
-        self.assertTrue(Automation.objects.auto_assign_filter_in_use(self.tenant))
-
-        response = self.client.get('/api/admin/automations-available-filters/')
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(self.automation.description, [i.get('existingAutomation') for i in data['results'] if i.get('existingAutomation')][0])
-        self.assertEqual(True, [i.get('disabled') for i in data['results'] if i.get('disabled')][0])
 
     def test_detail(self):
         response = self.client.get('/api/admin/automations-available-filters/{}/'.format(self.af.id))
