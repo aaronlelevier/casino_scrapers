@@ -166,10 +166,10 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       // assert.ok(generalPage.modalIsVisible, 'modal is visible');
-      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'), 'text for title');
-      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'), 'text for body');
-      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'), 'rollback btn');
-      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'), 'cancel btn');
+      // assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'), 'text for title');
+      // assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'), 'text for body');
+      // assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'), 'rollback btn');
+      // assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'), 'cancel btn');
     });
   });
   generalPage.clickModalCancel();
