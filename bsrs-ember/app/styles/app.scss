@@ -44,7 +44,6 @@
 @import 'app/styles/base/body.scss';
 @import 'app/styles/base/form.scss';
 
-@import 'app/styles/globals/validation.scss';
 @import 'app/styles/globals/file.scss';
 @import 'app/styles/globals/tag.scss';
 
@@ -102,7 +101,6 @@
 * Bootstrap............overrides
 * test............hack to display the app during pauseTest
 */
-@import 'app/styles/drumpfs/validation.scss';
 @import 'app/styles/drumpfs/bootstrap.scss';
 @import 'app/styles/drumpfs/liquid-outlet.scss';
 @import 'app/styles/drumpfs/test.scss';

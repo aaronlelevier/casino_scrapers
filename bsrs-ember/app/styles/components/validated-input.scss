@@ -24,3 +24,9 @@
   box-shadow: none;
   max-width: 300px;
 }
+
+.invalid {
+  input, textarea, div {
+    border-color: $orange;
+  }
+}
