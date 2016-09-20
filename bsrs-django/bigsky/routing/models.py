@@ -13,6 +13,33 @@ from utils.fields import MyGenericForeignKey
 from utils.models import BaseQuerySet, BaseManager, BaseModel
 
 
+ROUTING_EVENTS = [
+    'automation.event.ticket_assignee_change',
+    'automation.event.ticket_attachment_add',
+    'automation.event.ticket_category_change',
+    'automation.event.ticket_cc_add',
+    'automation.event.ticket_comment',
+    'automation.event.ticket_location_change',
+    'automation.event.ticket_priority_change',
+    'automation.event.ticket_status_cancelled',
+    'automation.event.ticket_status_complete',
+    'automation.event.ticket_status_deferred',
+    'automation.event.ticket_status_denied',
+    'automation.event.ticket_status_in_progress',
+    'automation.event.ticket_status_new',
+    'automation.event.ticket_status_pending',
+    'automation.event.ticket_status_unsatisfactory'
+]
+
+class RoutingEvent(BaseModel):
+
+    key = models.CharField(max_length=100, unique=True,
+                           choices=[(x,x) for x in ROUTING_EVENTS])
+
+    class Meta:
+        ordering = ['key']
+
+
 class AutomationQuerySet(BaseQuerySet):
 
     def search_multi(self, keyword):
@@ -69,6 +96,7 @@ class Automation(BaseModel):
     tenant = models.ForeignKey(Tenant, null=True)
     description = models.CharField(max_length=500)
     filters = GenericRelation("routing.ProfileFilter")
+    events = models.ManyToManyField(RoutingEvent, related_name="automations")
 
     objects = AutomationManager()
 

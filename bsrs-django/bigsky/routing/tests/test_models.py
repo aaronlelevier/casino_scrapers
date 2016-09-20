@@ -8,13 +8,14 @@ from model_mommy import mommy
 from category.models import Category
 from category.tests.factory import create_single_category, REPAIR
 from contact.models import Address, AddressType
-from contact.tests.factory import create_contact, add_office_to_location, create_contact_state, create_contact_country
+from contact.tests.factory import (
+    create_contact, add_office_to_location, create_contact_state, create_contact_country)
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
 from routing.models import (
-    Automation, AutomationManager, AutomationQuerySet, AvailableFilter,
-    ProfileFilter)
+    RoutingEvent, ROUTING_EVENTS, Automation, AutomationManager, AutomationQuerySet,
+    AvailableFilter, ProfileFilter)
 from routing.tests.factory import (
     create_automation, create_ticket_priority_filter, create_ticket_categories_filter,
     create_available_filters, create_ticket_location_state_filter, create_available_filter_state,
@@ -34,6 +35,16 @@ class SetupMixin(object):
         self.ticket.status = create_default(TicketStatus)
         self.ticket.priority = create_default(TicketPriority)
         self.ticket.save()
+
+
+class RoutingEventTests(TestCase):
+
+    def test_key_choices(self):
+        field = RoutingEvent._meta.get_field('key')
+        self.assertEqual([(a) for a,b in field.choices], ROUTING_EVENTS)
+
+    def test_meta(self):
+        self.assertEqual(RoutingEvent._meta.ordering, ['key'])
 
 
 class AutomationManagerTests(SetupMixin, TestCase):
