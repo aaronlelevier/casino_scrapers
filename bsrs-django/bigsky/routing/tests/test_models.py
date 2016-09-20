@@ -59,8 +59,6 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.filter_two.save()
 
     def test_setup(self):
-        self.assertIsNone(self.ticket.assignee)
-
         # matching automation
         self.assertEqual(self.automation.tenant, self.tenant)
 
@@ -83,10 +81,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.assertEqual(Automation.objects.count(), 2)
         keyword = self.automation.description
 
-        raw_ret = Automation.objects.filter(
-            Q(description=keyword) | \
-            Q(assignee__username=keyword)
-        )
+        raw_ret = Automation.objects.filter(description=keyword)
 
         ret = Automation.objects.search_multi(keyword)
 
@@ -99,11 +94,10 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.assertTrue(self.automation.is_match(self.ticket))
         self.assertFalse(self.automation_two.is_match(self.ticket))
 
-        Automation.objects.process_ticket(self.tenant.id, self.ticket)
+        ret = Automation.objects.process_ticket(self.tenant.id, self.ticket)
 
-        ticket = Ticket.objects.get(id=self.ticket.id)
-        self.assertEqual(ticket.assignee, self.automation.assignee)
-        self.assertNotEqual(ticket.assignee, self.automation_two.assignee)
+        self.assertEqual(ret, self.automation)
+        self.assertNotEqual(ret, self.automation_two)
 
     def test_process_ticket__no_match(self):
         # filter_one make false
@@ -118,10 +112,9 @@ class AutomationManagerTests(SetupMixin, TestCase):
         for automation in Automation.objects.filter(tenant__id=self.tenant.id):
             self.assertFalse(automation.is_match(self.ticket))
 
-        Automation.objects.process_ticket(self.tenant.id, self.ticket)
+        ret = Automation.objects.process_ticket(self.tenant.id, self.ticket)
 
-        ticket = Ticket.objects.get(id=self.ticket.id)
-        self.assertIsNone(ticket.assignee)
+        self.assertIsNone(ret)
 
     def test_process_ticket__both_match_so_determined_by_order(self):
         # 1st matching
@@ -136,11 +129,10 @@ class AutomationManagerTests(SetupMixin, TestCase):
         # processed Ticket should get the first matching AP assignee
         self.assertIsNone(self.ticket.assignee)
 
-        Automation.objects.process_ticket(self.ticket.location.location_level.tenant.id,
-                                          self.ticket)
+        ret = Automation.objects.process_ticket(self.ticket.location.location_level.tenant.id,
+                                                self.ticket)
 
-        ticket = Ticket.objects.get(id=self.ticket.id)
-        self.assertEqual(ticket.assignee, automation_three.assignee)
+        self.assertEqual(ret, automation_three)
 
     def test_process_ticket__process_assign_attr_on_role_is_false(self):
         # the creator's role.process_assign == False, so assign the ticket
@@ -153,22 +145,12 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.assertFalse(self.ticket.creator.role.process_assign)
         # creator is not the assignee.If role.process_assign == False,
         # that takes precedence and the creator will be assigned
-        self.assertNotEqual(self.automation.assignee, creator)
         self.ticket.assignee = None
         self.assertIsNone(self.ticket.assignee)
 
-        Automation.objects.process_ticket(self.automation.tenant.id, self.ticket)
+        ret = Automation.objects.process_ticket(self.automation.tenant.id, self.ticket)
 
-        ticket = Ticket.objects.get(id=self.ticket.id)
-        self.assertEqual(ticket.assignee, creator)
-
-    def test_filter_export_data(self):
-        ret = Automation.objects.filter_export_data({'id': self.automation.id})
-
-        self.assertEqual(ret.count(), 1)
-        self.assertEqual(ret[0].id, self.automation.id)
-        self.assertEqual(ret[0].description, self.automation.description)
-        self.assertEqual(ret[0].assignee_name, self.automation.assignee.fullname)
+        self.assertTrue(ret)
 
 
 class AutomationTests(SetupMixin, TestCase):
@@ -188,14 +170,13 @@ class AutomationTests(SetupMixin, TestCase):
         self.ticket.categories.add(category)
 
     def test_export_fields(self):
-        export_fields = ['description', 'assignee_name']
+        export_fields = ['description']
 
         self.assertEqual(Automation.EXPORT_FIELDS, export_fields)
 
     def test_i18n_header_fields(self):
         raw_headers = [
             ('description', 'admin.automation.description'),
-            ('assignee_name', 'admin.automation.assignee')
         ]
 
         ret = Automation.I18N_HEADER_FIELDS
@@ -213,7 +194,6 @@ class AutomationTests(SetupMixin, TestCase):
 
     def test_fields(self):
         self.assertIsInstance(self.automation.description, str)
-        self.assertIsInstance(self.automation.assignee, Person)
 
     def test_manager(self):
         self.assertIsInstance(Automation.objects, AutomationManager)

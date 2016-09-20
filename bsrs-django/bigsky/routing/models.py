@@ -16,14 +16,7 @@ from utils.models import BaseQuerySet, BaseManager, BaseModel
 class AutomationQuerySet(BaseQuerySet):
 
     def search_multi(self, keyword):
-        return self.filter(
-            Q(description=keyword) |
-            Q(assignee__username=keyword)
-        )
-
-    def filter_export_data(self, query_params):
-        qs = super(AutomationQuerySet, self).filter_export_data(query_params)
-        return qs.annotate(assignee_name=F('assignee__fullname'))
+        return self.filter(description=keyword)
 
 
 class AutomationManager(BaseManager):
@@ -41,29 +34,27 @@ class AutomationManager(BaseManager):
               for each profile filter in this Assingment Profile:
                 do all filters's match? if so, it's an match for this
                 automation profile
+
           if match:
-            assign ticket to that ap's assignee
-            break out of for-loop
+            "return True" or "automation" is a placeholder return
+
+            TODO: should trigger running all Actions associated
+                  with this Automation
 
         """
         if ticket.creator and not ticket.creator.role.process_assign:
-            ticket.assignee = ticket.creator
-            ticket.save()
-            return
+            return True
 
         for automation in self.filter(tenant__id=tenant_id).order_by('order'):
             match = automation.is_match(ticket)
             if match:
-                ticket.assignee = automation.assignee
-                ticket.save()
-                break
+                return automation
 
 
 class Automation(BaseModel):
 
     _RAW_EXPORT_FIELDS_AND_HEADERS = [
         ('description', 'admin.automation.description'),
-        ('assignee_name', 'admin.automation.assignee')
     ]
 
     @classproperty
@@ -78,8 +69,6 @@ class Automation(BaseModel):
     tenant = models.ForeignKey(Tenant, null=True)
     order = models.IntegerField(null=True)
     description = models.CharField(max_length=500)
-    assignee = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                 related_name="automations")
     filters = GenericRelation("routing.ProfileFilter")
 
     objects = AutomationManager()

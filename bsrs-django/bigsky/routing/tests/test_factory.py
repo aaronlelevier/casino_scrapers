@@ -171,17 +171,11 @@ class AutomationTests(TestCase):
         automation = factory.create_automation()
         self.assertIsInstance(automation, Automation)
         self.assertIn(automation.description, LOREM_IPSUM_WORDS.split())
-        self.assertIsInstance(automation.assignee, Person)
         self.assertIsInstance(automation.tenant, Tenant)
         # profile_filters
         self.assertEqual(automation.filters.count(), 2)
         self.assertEqual(automation.filters.filter(source__field='priority').count(), 1)
         self.assertEqual(automation.filters.filter(source__field='categories').count(), 1)
-
-    def test_create_automation__arbitrary_assignee(self):
-        assignee = create_single_person()
-        a = factory.create_automation(assignee=assignee)
-        self.assertEqual(a.assignee, assignee)
 
     def test_create_automations(self):
         self.assertEqual(Automation.objects.count(), 0)

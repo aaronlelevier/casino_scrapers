@@ -102,7 +102,7 @@ def create_profile_filters():
 
 # Automations
 
-def create_automation(description=None, tenant=None, assignee=None):
+def create_automation(description=None, tenant=None):
     kwargs = {
         'description': description or random_lorem(1),
         'tenant': tenant or get_or_create_tenant()
@@ -111,10 +111,6 @@ def create_automation(description=None, tenant=None, assignee=None):
     try:
         automation = Automation.objects.get(**kwargs)
     except Automation.DoesNotExist:
-        if not assignee:
-            assignee = create_single_person()
-        kwargs['assignee'] = assignee
-
         automation = Automation.objects.create(**kwargs)
 
         priority_filter = create_ticket_priority_filter()
@@ -128,14 +124,8 @@ def create_automations():
     tenant = get_or_create_tenant()
 
     for pf in ProfileFilter.objects.all():
-        try:
-            assignee = Person.objects.order_by('?')[0]
-        except IndexError:
-            assignee = create_single_person()
-
         automation = Automation.objects.create(tenant=tenant,
-            description=pf.source.key, assignee=assignee,
-        )
+                                               description=pf.source.key)
         if not automation.description:
             automation.description = pf.source.field
             automation.save()
