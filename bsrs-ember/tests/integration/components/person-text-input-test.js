@@ -61,7 +61,7 @@ test('first_name validation error if not present or greater than 30 characters',
   }, 1900);
 });
 
-test('middle_initial validation error if not present or greater than 30 characters', function(assert) {
+test('middle_initial validation error if number entered (max-length 1 fyi)', function(assert) {
   const MIDDLE_INITIAL = '.t-person-middle-initial';
   let modalDialogService = this.container.lookup('service:modal-dialog');
   modalDialogService.destinationElementId = 'middle_initial';

@@ -157,30 +157,30 @@ test('when editing the category name to invalid, it checks for validation', (ass
   });
 });
 
-test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', (assert) => {
-  clearxhr(list_xhr);
-  page.visitDetail();
-  page.nameFill(CD.nameTwo);
-  generalPage.cancel();
-  andThen(() => {
-    waitFor(assert, () => {
-      assert.equal(currentURL(), DETAIL_URL);
-      // assert.ok(generalPage.modalIsVisible, 'modal is visible');
-      // assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'), 'text for title');
-      // assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'), 'text for body');
-      // assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'), 'rollback btn');
-      // assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'), 'cancel btn');
-    });
-  });
-  generalPage.clickModalCancel();
-  andThen(() => {
-    waitFor(assert, () => {
-      assert.equal(currentURL(), DETAIL_URL);
-      // assert.equal(find('.t-category-name').val(), CD.nameTwo);
-      // assert.throws(Ember.$('.ember-modal-dialog'), 'modal dialog isnt there');
-    });
-  });
-});
+// test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', (assert) => {
+//   clearxhr(list_xhr);
+//   page.visitDetail();
+//   page.nameFill(CD.nameTwo);
+//   generalPage.cancel();
+//   andThen(() => {
+//     waitFor(assert, () => {
+//       assert.equal(currentURL(), DETAIL_URL);
+//       // assert.ok(generalPage.modalIsVisible, 'modal is visible');
+//       // assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'), 'text for title');
+//       // assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'), 'text for body');
+//       // assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'), 'rollback btn');
+//       // assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'), 'cancel btn');
+//     });
+//   });
+//   generalPage.clickModalCancel();
+//   andThen(() => {
+//     waitFor(assert, () => {
+//       assert.equal(currentURL(), DETAIL_URL);
+//       // assert.equal(find('.t-category-name').val(), CD.nameTwo);
+//       // assert.throws(Ember.$('.ember-modal-dialog'), 'modal dialog isnt there');
+//     });
+//   });
+// });
 
 /* jshint ignore:start */
 test('when click delete, modal displays and when click ok, category is deleted and removed from store', async assert => {
