@@ -55,6 +55,8 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/address-type.js');
       app.import('vendor/defaults/address.js');
       app.import('vendor/defaults/criteria.js');
+      app.import('vendor/defaults/automation-event.js');
+      app.import('vendor/defaults/automation-join-event.js');
       app.import('vendor/defaults/automation-join-pfilter.js');
       app.import('vendor/defaults/pfilter-join-criteria.js');
       app.import('vendor/defaults/automation.js');

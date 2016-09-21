@@ -17,9 +17,14 @@ import Ember from 'ember';
  */
 export default Ember.Mixin.create({
   OPT_CONF: {
+    event: {
+      associated_model: 'automation-event',
+      join_model: 'automation-join-event',
+      associated_pointer: 'event'
+    },
     pf: {
       associated_model: 'pfilter',
-      join_model: 'automation-join-pfilter',
+      join_model: 'automation-join-pfilter'
     },
     //deserializer
     criteria: {

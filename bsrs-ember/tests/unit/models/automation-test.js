@@ -3,17 +3,21 @@ const { run } = Ember;
 import { moduleFor, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import AD from 'bsrs-ember/vendor/defaults/automation';
+import ED from 'bsrs-ember/vendor/defaults/automation-event';
+import AF from 'bsrs-ember/vendor/automation_fixtures';
+import AJED from 'bsrs-ember/vendor/defaults/automation-join-event';
+import AJFD from 'bsrs-ember/vendor/defaults/automation-join-pfilter';
+import PJCD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
 import PersonD from 'bsrs-ember/vendor/defaults/person';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import LD from 'bsrs-ember/vendor/defaults/location';
-import AJFD from 'bsrs-ember/vendor/defaults/automation-join-pfilter';
 
-var store, automation, pfilter, pf;
+var store, automation, event, pfilter, pf;
 
 moduleFor('model:automation', 'Unit | Model | automation', {
   needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username', 'validator:has-many'],
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-join-pfilter', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-event', 'model:automation-join-event', 'model:automation-join-pfilter', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     run(() => {
       automation = store.push('automation', {id: AD.idOne});
     });
@@ -128,6 +132,108 @@ test('add_pf - will create join model and mark model dirty', (assert) => {
 });
 
 /* automation & PROFILE_FILTER: End */
+
+/* automation & event: Start */
+
+test('event property should return all associated events. also confirm related and join model attr values', (assert) => {
+  let automationJoinEvent, automationEvent;
+  run(() => {
+    automationJoinEvent =  store.push('automation-join-event', {id: AJED.idOne, automation_pk: AD.idOne, event_pk: ED.idOne});
+    automation = store.push('automation', {id: AD.idOne, automation_event_fks: [AJED.idOne]});
+    automationEvent =  store.push('automation-event', {id: ED.idOne});
+  });
+  let event = automation.get('event');
+  // debugger
+  assert.equal(event.get('length'), 1);
+  assert.deepEqual(automation.get('event_ids'), [ED.idOne]);
+  assert.deepEqual(automation.get('automation_event_ids'), [AJED.idOne]);
+  assert.equal(event.objectAt(0).get('id'), ED.idOne);
+});
+
+test('event property is not dirty when no event present (undefined)', (assert) => {
+  run(() => {
+    automation = store.push('automation', {id: AD.idOne, automation_event_fks: undefined});
+    store.push('automation-event', {id: ED.idOne});
+  });
+  assert.equal(automation.get('event').get('length'), 0);
+  assert.ok(automation.get('eventIsNotDirty'));
+});
+
+test('event property is not dirty when no event present (empty array)', (assert) => {
+  run(() => {
+    automation = store.push('automation', {id: AD.idOne, automation_event_fks: []});
+    store.push('automation-event', {id: ED.idOne});
+  });
+  assert.equal(automation.get('event').get('length'), 0);
+  assert.ok(automation.get('eventIsNotDirty'));
+});
+
+test('remove_event - will remove join model and mark model as dirty', (assert) => {
+  run(() => {
+    store.push('automation-join-event', {id: AJED.idOne, automation_pk: AD.idOne, event_pk: ED.idOne});
+    store.push('automation-event', {id: ED.idOne});
+    automation = store.push('automation', {id: AD.idOne, automation_event_fks: [AJED.idOne]});
+  });
+  assert.equal(automation.get('event').get('length'), 1);
+  assert.equal(automation.get('automation_event_ids').length, 1);
+  assert.equal(automation.get('automation_event_fks').length, 1);
+  assert.ok(automation.get('eventIsNotDirty'));
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  automation.remove_event(ED.idOne);
+  assert.equal(automation.get('event').get('length'), 0);
+  assert.equal(automation.get('automation_event_ids').length, 0);
+  assert.equal(automation.get('automation_event_fks').length, 1);
+  assert.ok(automation.get('eventIsDirty'));
+  assert.ok(automation.get('isDirtyOrRelatedDirty'));
+});
+
+test('add_event - will create join model and mark model dirty', (assert) => {
+  run(() => {
+    store.push('automation-join-event', {id: AJED.idOne, automation_pk: AD.idOne, event_pk: ED.idOne});
+    event = store.push('automation-event', {id: ED.idOne});
+    automation = store.push('automation', {id: AD.idOne, automation_event_fks: [AJED.idOne]});
+  });
+  assert.equal(automation.get('event').get('length'), 1);
+  assert.equal(automation.get('automation_event_ids').length, 1);
+  assert.equal(automation.get('automation_event_fks').length, 1);
+  assert.deepEqual(automation.get('event_ids'), [ED.idOne]);
+  assert.ok(automation.get('eventIsNotDirty'));
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  automation.add_event({id: ED.idTwo});
+  assert.equal(automation.get('event').get('length'), 2);
+  assert.equal(automation.get('automation_event_ids').length, 2);
+  assert.equal(automation.get('automation_event_fks').length, 1);
+  assert.deepEqual(automation.get('event_ids'), [ED.idOne, ED.idTwo]);
+  assert.equal(automation.get('event').objectAt(0).get('id'), ED.idOne);
+  assert.equal(automation.get('event').objectAt(1).get('id'), ED.idTwo);
+});
+
+test('rollback - event', assert => {
+  run(() => {
+    automation = store.push('automation', {id: AD.idOne});
+  });
+  assert.equal(automation.get('event').get('length'), 0);
+  automation.add_event({id: ED.idOne});
+  assert.equal(automation.get('event').get('length'), 1);
+  assert.ok(automation.get('isDirtyOrRelatedDirty'));
+  automation.rollback();
+  assert.equal(automation.get('event').get('length'), 0);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('saveRelated - event', (assert) => {
+  assert.equal(automation.get('event').get('length'), 0);
+  automation.add_event({id: ED.idOne});
+  assert.equal(automation.get('event').get('length'), 1);
+  assert.ok(automation.get('eventIsDirty'));
+  assert.ok(automation.get('isDirtyOrRelatedDirty'));
+  automation.saveRelated();
+  assert.equal(automation.get('event').get('length'), 1);
+  assert.ok(automation.get('eventIsNotDirty'));
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+/* automation & event: End */
 
 test('save - pfilter and their criteria not dirty when just add new filters but is dirty if add criteria (new location for example)', (assert) => {
   assert.equal(automation.get('pf').get('length'), 0);

@@ -3,6 +3,7 @@ const { run } = Ember;
 import { test, module } from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import AD from 'bsrs-ember/vendor/defaults/automation';
+import ED from 'bsrs-ember/vendor/defaults/automation-event';
 import AF from 'bsrs-ember/vendor/automation_fixtures';
 import automationDeserializer from 'bsrs-ember/deserializers/automation';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
@@ -15,7 +16,7 @@ var store, automation, deserializer, pfilter, pfilter_unused;
 
 module('unit: automation deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-list', 'model:person', 'model:automation-join-pfilter', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-event', 'model:automation-join-event', 'model:automation-list', 'model:person', 'model:automation-join-pfilter', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     deserializer = automationDeserializer.create({ simpleStore: store });
     run(() => {
       automation = store.push('automation', { id: AD.idOne });
@@ -30,6 +31,11 @@ test('deserialize single', assert => {
   });
   assert.equal(automation.get('id'), AD.idOne);
   assert.equal(automation.get('description'), AD.descriptionOne);
+  // events
+  assert.equal(automation.get('event').get('length'), 1);
+  assert.equal(automation.get('event').objectAt(0).get('id'), ED.idOne);
+  assert.equal(automation.get('event').objectAt(0).get('key'), ED.keyOne);
+  // pfilters
   assert.equal(automation.get('pf').get('length'), 1);
   assert.equal(automation.get('pf').objectAt(0).get('id'), PFD.idOne);
   assert.equal(automation.get('pf').objectAt(0).get('source_id'), PFD.sourceIdOne);
@@ -127,6 +133,10 @@ test('deserialize list', assert => {
   automation = store.find('automation-list').objectAt(0);
   assert.equal(automation.get('id'), AD.idOne);
   assert.equal(automation.get('description'), AD.descriptionOne+'1');
+  // events
+  assert.equal(automation.get('events').length, 1);
+  assert.equal(automation.get('events')[0].id, ED.idOne+'1');
+  assert.equal(automation.get('events')[0].key, ED.keyOne+'1');
 });
 
 test('different automations that have different criteria but the same available filter type', assert => {

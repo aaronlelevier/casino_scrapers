@@ -6,6 +6,7 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/automation';
 export default Ember.Object.extend(OptConf, {
   init() {
     this._super(...arguments);
+    many_to_many.bind(this)('event', 'automation');
     many_to_many.bind(this)('pf', 'automation');
     many_to_many.bind(this)('criteria', 'pfilter');
   },
@@ -27,8 +28,11 @@ export default Ember.Object.extend(OptConf, {
     }
     const filters = response.filters;
     delete response.filters;
+    const events = response.events;
+    delete response.events;
     response.detail = true;
     let automation = store.push('automation', response);
+    const [,eventData,] = this.setup_event(events, automation);
     const [,pfs,] = this.setup_pf(filters, automation);
     pfs.forEach((pf) => {
       const criteria = criteriaMap[pf.id];

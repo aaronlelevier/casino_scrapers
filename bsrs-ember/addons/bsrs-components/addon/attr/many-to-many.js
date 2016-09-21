@@ -252,8 +252,11 @@ var many_to_many_save = function(_joinModelName, _associatedModel, modelName) {
 
 /**
  * Add
- * - associated_pointer is defined in the config file.  Might be different than the associated model.  Ie associated model might be location but since the associated
- *   model is an instance of the main model (location), then you will want the pointer to that associated model to be called something different
+ * - associated_pointer is defined in the config file.  Might be different than the associated model.
+ *   Ie associated model might be location but since the associated model is an instance of the main
+ *   model (location), then you will want the pointer to that associated model to be called something different
+ *   - note: for use if the related model name is dasherized and you need to use a non-dasherized
+ *           name for the m2m join model key for the related model
  *
  * @method add_many_to_many
  * @return {function}

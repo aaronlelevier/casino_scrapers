@@ -1,6 +1,7 @@
 var BSRS_automation_FACTORY = (function() {
-  var factory = function(automation, pfilter, ticket, config) {
+  var factory = function(automation, event, pfilter, ticket, config) {
     this.automation = automation;
+    this.event = event;
     this.pfilter = pfilter;
     this.ticket = ticket;
     this.config = config;
@@ -11,6 +12,10 @@ var BSRS_automation_FACTORY = (function() {
       id: id,
       description: this.automation.descriptionOne,
       // TODO: these are pfilters which should just be the actual filter models. ie. Ticket-Prority
+      events: [{
+        id: this.event.idOne,
+        key: this.event.keyOne
+      }],
       filters: [{
         id: this.pfilter.idOne,
         source_id: this.pfilter.sourceIdOne,
@@ -83,7 +88,11 @@ var BSRS_automation_FACTORY = (function() {
   factory.prototype._generate_item = function(i) {
     return {
       id: `${this.automation.idOne.slice(0,-1)}${i}`,
-      description: `${this.automation.descriptionOne}${i}`
+      description: `${this.automation.descriptionOne}${i}`,
+      events: [{
+        id: `${this.event.idOne}${i}`,
+        key: `${this.event.keyOne}${i}`
+      }]
     };
   };
   return factory;
@@ -93,19 +102,20 @@ if (typeof window === 'undefined') {
   var objectAssign = require('object-assign');
   var mixin = require('../vendor/mixin');
   var automation = require('./defaults/automation');
+  var event = require('./defaults/automation-event');
   var pfilter = require('./defaults/pfilter');
   var ticket = require('./defaults/ticket');
   var config = require('../config/environment');
   objectAssign(BSRS_automation_FACTORY.prototype, mixin.prototype);
-  module.exports = new BSRS_automation_FACTORY(automation, pfilter, ticket, config);
+  module.exports = new BSRS_automation_FACTORY(automation, event, pfilter, ticket, config);
 }
 else {
-  define('bsrs-ember/vendor/automation_fixtures', ['exports', 'bsrs-ember/vendor/defaults/automation', 'bsrs-ember/vendor/defaults/pfilter',
-   'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
-    function(exports, automation, pfilter, ticket, mixin, config) {
+  define('bsrs-ember/vendor/automation_fixtures',
+    ['exports', 'bsrs-ember/vendor/defaults/automation', 'bsrs-ember/vendor/defaults/automation-event', 'bsrs-ember/vendor/defaults/pfilter', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
+    function(exports, automation, event, pfilter, ticket, mixin, config) {
       'use strict';
       Object.assign(BSRS_automation_FACTORY.prototype, mixin.prototype);
-      return new BSRS_automation_FACTORY(automation, pfilter, ticket, config);
+      return new BSRS_automation_FACTORY(automation, event, pfilter, ticket, config);
     }
   );
 }

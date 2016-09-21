@@ -30,6 +30,7 @@ const Validations = buildValidations({
 export default Model.extend(OptConf, Validations, {
   init() {
     this._super(...arguments);
+    many_to_many.bind(this)('event', 'automation');
     many_to_many.bind(this)('pf', 'automation', {dirty: false});
   },
   simpleStore: Ember.inject.service(),
@@ -40,8 +41,8 @@ export default Model.extend(OptConf, Validations, {
     return pf.isAny('isDirtyOrRelatedDirty') || this.get('pfIsDirtyContainer');
   }),
   pfIsNotDirty: Ember.computed.not('pfIsDirty'),
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'pfIsDirty', function() {
-    return this.get('isDirty') || this.get('pfIsDirty');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'pfIsDirty', 'eventIsDirty', function() {
+    return this.get('isDirty') || this.get('pfIsDirty') || this.get('eventIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   rollbackPfContainer() {
@@ -51,6 +52,7 @@ export default Model.extend(OptConf, Validations, {
     });
   },
   rollback() {
+    this.rollbackEvent();
     this.rollbackPfContainer();
     this.rollbackPf();
     this._super(...arguments);
@@ -63,6 +65,7 @@ export default Model.extend(OptConf, Validations, {
     });
   },
   saveRelated() {
+    this.saveEvent();
     this.savePfContainer();
     this.savePf();
   },

@@ -57,7 +57,8 @@ var many_to_many = function(_associatedModel, modelName, noSetup) {
 var many_to_many_json = function(modelName, _associatedModel, _singularAssociatedName, _joinModelName) {
   return function(json, model) {
     const store = this.get('simpleStore');
-    let [m2m_models, relateds, server_sum] = many_to_many_extract(json, store, model, _joinModelName, `${modelName}_pk`, _singularAssociatedName, `${this.OPT_CONF[_associatedModel]['associated_model']}_pk`);
+    const relatedModelLookup = Ember.String.underscore(this.OPT_CONF[_associatedModel]['associated_pointer'] || this.OPT_CONF[_associatedModel]['associated_model']);
+    let [m2m_models, relateds, server_sum] = many_to_many_extract(json, store, model, _joinModelName, `${modelName}_pk`, _singularAssociatedName, `${relatedModelLookup}_pk`);
     run(() => {
       relateds.forEach((related) => {
         const ass_model = this.OPT_CONF[_associatedModel]['associated_model'];
