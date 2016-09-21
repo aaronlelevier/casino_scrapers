@@ -17,20 +17,8 @@
         </div>
       </section>
     </div>
-    <div class="col-md-12">
-      <section>
-        {{#each model.locales as |locale|}}
-        <h2 class="t-translation-locale-name">{{t locale.locale_name}}</h2>
-        <div class="row">
-          <div class="col-md-12">
-            {{#form-group title="admin.translation.label.translation" for="translation"}}
-            {{input type="text" placeholder=(t "admin.translation.label.translation") value=locale.translation class="form-control t-translation-translation"}}
-            {{/form-group}}
-          </div>
-        </div>
-        <br><br>
-        {{/each}}
-      </section>
-    </div>
+    {{translations/detail-section
+      model=model
+    }}
   </div>
 </section>

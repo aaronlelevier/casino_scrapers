@@ -1,0 +1,7 @@
+<hbox class="mobile-footer__wrapper">
+  {{#each hashComponents as |componentObj|}}
+    <div class="mobile-footer__item">
+      <a class="t-mobile-footer-item {{componentObj.active}}" {{action "renderSection" componentObj}} data-test-id="mobile-footer-item">{{componentObj.title}}</a>
+    </div>
+  {{/each}}
+</hbox>

@@ -1,32 +1,27 @@
 <vbox class="mobile-wrap">
-<header class="mobile-header flex-item--none">
-  <hbox class="detail__head">
-    <button class="detail__head__btn--back mobile-btn t-detail-back" {{action "cancel"}}>{{fa-icon "angle-left"}}</button>
-    <h1 class="detail__head__title t-detail-title">{{title}}</h1>
-    <button class="detail__head__btn detail__head__btn--action mobile-btn t-save-btn" {{action "save"}}>{{t "crud.save_only.button"}}</button>
-  </hbox>
-</header>
-<section class="mobile-main flex-item--auto">
-  {{yield}}
-  {{component componentString model=model
-    activities=activities
-    save=(action "save")
-    mobile=mobile
-    tagName="flexgrow"
-    classNames="mobile-inner"
-    mobileComponentData=(filter-by "component" componentString hashComponents)
-    role_change=role_change
+  <header class="mobile-header flex-item--none" data-test-id="mobile-header">
+    <hbox class="detail__head">
+      <button class="detail__head__btn--back mobile-btn t-detail-back" {{action "cancel"}}>{{fa-icon "angle-left"}}</button>
+      <h1 class="detail__head__title t-detail-title" data-test-id="mobile-detail-title">{{title}}</h1>
+      <button class="detail__head__btn detail__head__btn--action mobile-btn t-save-btn" {{action "save"}} data-test-id="mobile-save-btn">{{t "crud.save_only.button"}}</button>
+    </hbox>
+  </header>
+  <section class="mobile-main flex-item--auto">
+    {{yield}}
+    {{component componentString model=model
+      activities=activities
+      save=(action "save")
+      mobile=mobile
+      tagName="flexgrow"
+      classNames="mobile-inner"
+      mobileComponentData=(filter-by "component" componentString hashComponents)
+      role_change=role_change
+    }}
+  </section>
+  {{mobile/full-screen-footer
+    hashComponents=hashComponents
+    renderSection="renderSection"
   }}
-</section>
-<footer class="mobile-footer flex-item--none">
-  <hbox class="mobile-footer__wrapper">
-    {{#each hashComponents as |componentObj|}}
-      <div class="mobile-footer__item">
-        <a class="t-mobile-footer-item {{componentObj.active}}" {{action "renderSection" componentObj}}>{{componentObj.title}}</a>
-      </div>
-    {{/each}}
-  </hbox>
-</footer>
 </vbox>
 
 <!-- mobile dialog -->

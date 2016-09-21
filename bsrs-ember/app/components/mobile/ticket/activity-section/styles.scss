@@ -2,6 +2,10 @@
   background: $white;
   display: flex;
   flex-direction: column;
+  .ticket-activity{
+    margin: -4%;
+    padding: 4%;
+  }
   .ticket-action {
     margin: 2% 0 2% 2%;
     float: right;
@@ -11,6 +15,7 @@
 /* NEED TO REMOVE ONCE MOBILE AND DESKTOP ACTIVITY LIST COMPONENTS ARE COMBINED */
 
 .activity-list-wrap {
+  margin: 4% -4% -4%;
   position: relative;
   .activity-list-tabs {
     margin: 0;

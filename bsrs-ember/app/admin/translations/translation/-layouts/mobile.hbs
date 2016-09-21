@@ -1,0 +1,12 @@
+{{#ember-wormhole to="mobile-single-wormhole"}}
+  {{#mobile/full-screen
+    model=model
+    title=(t model.key)
+    close="closeMobileDetail"
+    redirectRoute="admin.translations.index"
+    hashComponents=hashComponents
+    footer=false
+    repository=repository
+  }}
+  {{/mobile/full-screen}}
+{{/ember-wormhole}}
