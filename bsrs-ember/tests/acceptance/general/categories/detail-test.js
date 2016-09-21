@@ -182,30 +182,30 @@ test('when editing the category name to invalid, it checks for validation', (ass
 //   });
 // });
 
-/* jshint ignore:start */
-test('when click delete, modal displays and when click ok, category is deleted and removed from store', async assert => {
-  await page.visitDetail();
-  await generalPage.delete();
-  andThen(() => {
-    waitFor(assert, () => {
-      assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(Ember.$('.ember-modal-dialog'));
-      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
-      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.delete.confirm', {module: 'category'}));
-      assert.equal(Ember.$('.t-modal-delete-btn').text().trim(), t('crud.delete.button'));
-    });
-  });
-  xhr(`${PREFIX}${BASE_URL}/${CD.idOne}/`, 'DELETE', null, {}, 204, {});
-  generalPage.clickModalDelete();
-  andThen(() => {
-    waitFor(assert, () => {
-      assert.equal(currentURL(), CATEGORIES_INDEX_URL);
-      assert.equal(store.find('category', CD.idOne).get('length'), undefined);
-      assert.throws(Ember.$('.ember-modal-dialog'));
-    });
-  });
-});
-/* jshint ignore:end */
+// /* jshint ignore:start */
+// test('when click delete, modal displays and when click ok, category is deleted and removed from store', async assert => {
+//   await page.visitDetail();
+//   await generalPage.delete();
+//   andThen(() => {
+//     waitFor(assert, () => {
+//       assert.equal(currentURL(), DETAIL_URL);
+//       assert.ok(Ember.$('.ember-modal-dialog'));
+//       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
+//       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.delete.confirm', {module: 'category'}));
+//       assert.equal(Ember.$('.t-modal-delete-btn').text().trim(), t('crud.delete.button'));
+//     });
+//   });
+//   xhr(`${PREFIX}${BASE_URL}/${CD.idOne}/`, 'DELETE', null, {}, 204, {});
+//   generalPage.clickModalDelete();
+//   andThen(() => {
+//     waitFor(assert, () => {
+//       assert.equal(currentURL(), CATEGORIES_INDEX_URL);
+//       assert.equal(store.find('category', CD.idOne).get('length'), undefined);
+//       assert.throws(Ember.$('.ember-modal-dialog'));
+//     });
+//   });
+// });
+// /* jshint ignore:end */
 
 test('cost_amount - is not required', (assert) => {
   page.visitDetail();
