@@ -7,14 +7,10 @@ import repository from 'bsrs-ember/tests/helpers/repository';
 
 let store;
 
-moduleForComponent('mobile/full-screen', 'Integration | Component | full-screen', {
+moduleForComponent('mobile/full-screen', 'amk Integration | Component | full-screen', {
   integration: true,
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:person']);
-    const flexi = this.container.lookup('service:device/layout');
-    const breakpoints = flexi.get('breakpoints');
-    const width = breakpoints.find(bp => bp.name === 'mobile').begin + 5;
-    flexi.set('width', width);
     run(() => {
       store.push('person', {'id': '55639133-fd6f-4a03-b7bc-ec2a6a3cb049', 'name': 'person'});
     });
@@ -23,12 +19,8 @@ moduleForComponent('mobile/full-screen', 'Integration | Component | full-screen'
 
 test('full screen renders with a title, header and footer', function(assert) {
   this.hashComponents=[
-    {
-      title: 'Detail'
-    },
-    {
-      title: 'Other'
-    }
+    { title: 'Detail' },
+    { title: 'Other' }
   ];
   this.repository = repository.initialize(this.container, this.registry, 'person');
   this.model = store.find('person');
@@ -50,11 +42,7 @@ test('full screen renders with a title, header and footer', function(assert) {
 });
 
 test('full screen with one section renders with no footer', function(assert) {
-  this.hashComponents=[
-    {
-      title: 'Display'
-    }
-  ];
+  this.hashComponents=[{ title: 'Display' }];
   this.repository = repository.initialize(this.container, this.registry, 'person');
   this.model = store.find('person');
   this.title = "Person";

@@ -6,23 +6,13 @@ import hbs from 'htmlbars-inline-precompile';
 let store;
 
 moduleForComponent('mobile/full-screen', 'amk Integration | Component | full-screen-footer', {
-  integration: true,
-  beforeEach() {
-    const flexi = this.container.lookup('service:device/layout');
-    const breakpoints = flexi.get('breakpoints');
-    const width = breakpoints.find(bp => bp.name === 'mobile').begin + 5;
-    flexi.set('width', width);
-  },
+  integration: true
 });
 
 test('full screen footer renders with multiple footer items', function(assert) {
   this.hashComponents=[
-    {
-      title: 'Detail'
-    },
-    {
-      title: 'Other'
-    }
+    { title: 'Detail' },
+    { title: 'Other' }
   ];
   this.render(hbs`{{mobile/full-screen-footer
     hashComponents=hashComponents
@@ -32,11 +22,7 @@ test('full screen footer renders with multiple footer items', function(assert) {
   assert.equal(this.$('[data-test-id="mobile-footer-item"]:eq(1)').text(), 'Other');
 });
 test('full screen footer is not visible with one section', function(assert) {
-  this.hashComponents=[
-    {
-      title: 'Detail'
-    }
-  ];
+  this.hashComponents=[{ title: 'Detail' }];
   this.render(hbs`{{mobile/full-screen-footer
     hashComponents=hashComponents
   }}`);
