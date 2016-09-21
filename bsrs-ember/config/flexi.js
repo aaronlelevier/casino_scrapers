@@ -31,5 +31,5 @@ module.exports = {
   gutterPadding: '.5rem',
 
   // if false, no styles are included (trumps 'includeMediaCSS' and 'includeElementCSS')
-  includeCSS: false
+  includeCSS: true
 };
