@@ -72,6 +72,17 @@ class RoleTests(TestCase):
 
         self.assertEqual(Role.EXPORT_FIELDS, export_fields)
 
+    def test_i18n_header_fields(self):
+        raw_headers = [
+            ('name', 'admin.role.label.name'),
+            ('role_type', 'admin.role.label.role_type'),
+            ('location_level_name', 'admin.role.label.location_level')
+        ]
+
+        ret = Role.I18N_HEADER_FIELDS
+
+        self.assertEqual(ret, [x[1] for x in raw_headers])
+
     def test_filter_export_data__queryset_matches_export_fields(self):
         role = Role.objects.filter_export_data().first()
         for f in Role.EXPORT_FIELDS:

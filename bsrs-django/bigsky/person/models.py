@@ -51,7 +51,20 @@ class RoleManager(BaseManager):
 
 
 class Role(BaseModel):
-    EXPORT_FIELDS = ['name', 'role_type', 'location_level_name']
+
+    _RAW_EXPORT_FIELDS_AND_HEADERS = [
+        ('name', 'admin.role.label.name'),
+        ('role_type', 'admin.role.label.role_type'),
+        ('location_level_name', 'admin.role.label.location_level')
+    ]
+
+    @classproperty
+    def EXPORT_FIELDS(cls):
+        return [x[0] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
+
+    @classproperty
+    def I18N_HEADER_FIELDS(cls):
+        return [x[1] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
 
     # keys
     tenant = models.ForeignKey(Tenant, related_name="roles", null=True)
