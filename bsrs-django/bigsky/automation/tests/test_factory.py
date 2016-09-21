@@ -8,7 +8,7 @@ from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
-from automation.models import (RoutingEvent, Automation, ProfileFilter, AvailableFilter,
+from automation.models import (AutomationEvent, Automation, ProfileFilter, AvailableFilter,
     ROUTING_EVENTS)
 from automation.tests import factory
 from tenant.models import Tenant
@@ -17,12 +17,12 @@ from utils.create import LOREM_IPSUM_WORDS
 from utils.helpers import create_default
 
 
-class RoutingEventTests(TestCase):
+class AutomationEventTests(TestCase):
 
     def test_create_routing_event(self):
         ret = factory.create_routing_event()
 
-        self.assertIsInstance(ret, RoutingEvent)
+        self.assertIsInstance(ret, AutomationEvent)
         self.assertEqual(ret.key, factory.DEFAULT_ROUTING_EVENT)
 
     def test_create_routing_event__key(self):
@@ -30,21 +30,21 @@ class RoutingEventTests(TestCase):
 
         ret = factory.create_routing_event(key)
 
-        self.assertIsInstance(ret, RoutingEvent)
+        self.assertIsInstance(ret, AutomationEvent)
         self.assertEqual(ret.key, key)
 
     def test_create_routing_event_two(self):
         ret = factory.create_routing_event_two()
 
-        self.assertIsInstance(ret, RoutingEvent)
+        self.assertIsInstance(ret, AutomationEvent)
         self.assertEqual(ret.key, factory.DEFAULT_ROUTING_EVENT_TWO)
 
     def test_create_routing_events(self):
-        self.assertEqual(RoutingEvent.objects.count(), 0)
+        self.assertEqual(AutomationEvent.objects.count(), 0)
 
         factory.create_routing_events()
 
-        self.assertEqual(RoutingEvent.objects.count(), len(ROUTING_EVENTS))
+        self.assertEqual(AutomationEvent.objects.count(), len(ROUTING_EVENTS))
 
 
 class AvailableFilterTests(TestCase):

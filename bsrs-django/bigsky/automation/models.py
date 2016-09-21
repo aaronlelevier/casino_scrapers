@@ -31,7 +31,7 @@ ROUTING_EVENTS = [
     'automation.event.ticket_status_unsatisfactory'
 ]
 
-class RoutingEvent(BaseModel):
+class AutomationEvent(BaseModel):
 
     key = models.CharField(max_length=100, unique=True,
                            choices=[(x,x) for x in ROUTING_EVENTS])
@@ -96,7 +96,7 @@ class Automation(BaseModel):
     tenant = models.ForeignKey(Tenant, null=True)
     description = models.CharField(max_length=500)
     filters = GenericRelation("automation.ProfileFilter")
-    events = models.ManyToManyField(RoutingEvent, related_name="automations")
+    events = models.ManyToManyField(AutomationEvent, related_name="automations")
 
     objects = AutomationManager()
 

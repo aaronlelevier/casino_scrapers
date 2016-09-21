@@ -10,7 +10,7 @@ from location.models import LocationLevel
 from location.tests.factory import (create_location_levels, create_top_level_location,
     create_location_level, create_location)
 from person.tests.factory import create_single_person, PASSWORD
-from automation.models import RoutingEvent, Automation, ProfileFilter, AvailableFilter
+from automation.models import AutomationEvent, Automation, ProfileFilter, AvailableFilter
 from automation.tests.factory import (
     create_automation, create_available_filters, create_available_filter_location,
     create_ticket_location_filter, create_ticket_categories_mid_level_filter, create_automation,
@@ -22,12 +22,12 @@ from utils.create import _generate_chars
 from utils.helpers import create_default
 
 
-class RoutingEventTests(APITestCase):
+class AutomationEventTests(APITestCase):
 
     def setUp(self):
         self.person = create_single_person()
         create_routing_events()
-        self.event = RoutingEvent.objects.first()
+        self.event = AutomationEvent.objects.first()
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
@@ -42,7 +42,7 @@ class RoutingEventTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data['count'] > 0)
         self.assertEqual(len(data['results'][0]), 2)
-        event = RoutingEvent.objects.get(id=data['results'][0]['id'])
+        event = AutomationEvent.objects.get(id=data['results'][0]['id'])
         self.assertEqual(data['results'][0]['key'], event.key)
 
     def test_detail(self):

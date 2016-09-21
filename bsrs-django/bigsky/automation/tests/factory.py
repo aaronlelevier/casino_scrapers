@@ -3,7 +3,7 @@ from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
-from automation.models import (RoutingEvent, Automation, ProfileFilter, AvailableFilter,
+from automation.models import (AutomationEvent, Automation, ProfileFilter, AvailableFilter,
     ROUTING_EVENTS)
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import TicketPriority
@@ -11,18 +11,18 @@ from utils.create import random_lorem
 from utils.helpers import create_default
 
 
-# RoutingEvents
+# AutomationEvents
 
 DEFAULT_ROUTING_EVENT = 'automation.event.ticket_status_new'
 DEFAULT_ROUTING_EVENT_TWO = 'automation.event.ticket_status_complete'
 
 def create_routing_event(key=DEFAULT_ROUTING_EVENT):
-    obj, _  = RoutingEvent.objects.get_or_create(key=key)
+    obj, _  = AutomationEvent.objects.get_or_create(key=key)
     return obj
 
 
 def create_routing_event_two(key=DEFAULT_ROUTING_EVENT_TWO):
-    obj, _  = RoutingEvent.objects.get_or_create(key=key)
+    obj, _  = AutomationEvent.objects.get_or_create(key=key)
     return obj
 
 

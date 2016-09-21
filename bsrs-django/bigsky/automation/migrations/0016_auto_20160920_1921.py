@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='RoutingEvent',
+            name='AutomationEvent',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
@@ -29,6 +29,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='automation',
             name='events',
-            field=models.ManyToManyField(related_name='automations', to='automation.RoutingEvent'),
+            field=models.ManyToManyField(related_name='automations', to='automation.AutomationEvent'),
         ),
     ]

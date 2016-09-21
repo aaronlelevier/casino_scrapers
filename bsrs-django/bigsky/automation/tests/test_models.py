@@ -14,7 +14,7 @@ from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
 from automation.models import (
-    RoutingEvent, ROUTING_EVENTS, Automation, AutomationManager, AutomationQuerySet,
+    AutomationEvent, ROUTING_EVENTS, Automation, AutomationManager, AutomationQuerySet,
     AvailableFilter, ProfileFilter)
 from automation.tests.factory import (
     create_automation, create_ticket_priority_filter, create_ticket_categories_filter,
@@ -37,14 +37,14 @@ class SetupMixin(object):
         self.ticket.save()
 
 
-class RoutingEventTests(TestCase):
+class AutomationEventTests(TestCase):
 
     def test_key_choices(self):
-        field = RoutingEvent._meta.get_field('key')
+        field = AutomationEvent._meta.get_field('key')
         self.assertEqual([(a) for a,b in field.choices], ROUTING_EVENTS)
 
     def test_meta(self):
-        self.assertEqual(RoutingEvent._meta.ordering, ['key'])
+        self.assertEqual(AutomationEvent._meta.ordering, ['key'])
 
 
 class AutomationManagerTests(SetupMixin, TestCase):
