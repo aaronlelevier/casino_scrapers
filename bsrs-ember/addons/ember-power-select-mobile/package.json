@@ -1,7 +1,7 @@
 {
   "name": "ember-power-select-mobile",
-  "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "0.0.1",
+  "description": "Ember Power Select Mobile Addon",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -20,7 +20,7 @@
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.2",
     "ember-ajax": "^2.0.1",
-    "ember-cli": "2.6.3",
+    "ember-cli": "2.8.0",
     "ember-cli-app-version": "^1.0.0",
     "ember-cli-dependency-checker": "^1.2.0",
     "ember-cli-htmlbars": "^1.0.3",
