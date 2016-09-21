@@ -8,5 +8,5 @@ module.exports = function(app) {
     res.send(automation_FIXTURES.list_pfilters());
   });
 
-  app.use('/api/admin/automations-available-filters', adminautomationsRouter);
+  app.use('/api/admin/automation-available-filters', adminautomationsRouter);
 };
