@@ -10,7 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('tenant', '0001_initial'),
-        ('routing', '0003_auto_20160713_2249'),
+        ('automation', '0003_auto_20160713_2249'),
     ]
 
     operations = [

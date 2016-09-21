@@ -95,7 +95,7 @@ class Automation(BaseModel):
     # keys
     tenant = models.ForeignKey(Tenant, null=True)
     description = models.CharField(max_length=500)
-    filters = GenericRelation("routing.ProfileFilter")
+    filters = GenericRelation("automation.ProfileFilter")
     events = models.ManyToManyField(RoutingEvent, related_name="automations")
 
     objects = AutomationManager()

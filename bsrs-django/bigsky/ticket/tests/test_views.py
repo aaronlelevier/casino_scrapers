@@ -13,7 +13,7 @@ from location.tests.factory import create_location, create_locations
 from generic.models import Attachment
 from generic.tests.factory import create_file_attachment
 from person.tests.factory import PASSWORD, create_single_person, DistrictManager
-from routing.tests.factory import create_automation
+from automation.tests.factory import create_automation
 from ticket.models import Ticket, TicketStatus, TicketActivity, TicketActivityType
 from ticket.serializers import TicketCreateSerializer
 from ticket.tests.factory_related import create_ticket_priority, create_ticket_status

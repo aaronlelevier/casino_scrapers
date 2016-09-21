@@ -38,6 +38,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     'accounting',
+    'automation',
     'bigsky',
     'dt',
     'dtd',
@@ -46,7 +47,6 @@ LOCAL_APPS = [
     'generic',
     'location',
     'person',
-    'routing',
     'session',
     'tenant',
     'third_party',

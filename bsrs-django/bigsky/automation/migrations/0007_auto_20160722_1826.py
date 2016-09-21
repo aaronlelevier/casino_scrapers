@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('routing', '0006_profilefilter_key'),
+        ('automation', '0006_profilefilter_key'),
     ]
 
     operations = [

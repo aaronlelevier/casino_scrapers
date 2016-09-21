@@ -3,7 +3,7 @@ from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
-from routing.models import (RoutingEvent, Automation, ProfileFilter, AvailableFilter,
+from automation.models import (RoutingEvent, Automation, ProfileFilter, AvailableFilter,
     ROUTING_EVENTS)
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import TicketPriority

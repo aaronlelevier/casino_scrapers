@@ -2,8 +2,8 @@ import uuid
 
 from location.tests.factory import create_top_level_location
 from person.tests.factory import create_single_person, PASSWORD
-from routing.serializers import AutomationCreateUpdateSerializer
-from routing.tests.factory import (create_automation, create_available_filter_location,
+from automation.serializers import AutomationCreateUpdateSerializer
+from automation.tests.factory import (create_automation, create_available_filter_location,
     create_available_filter_priority)
 from ticket.tests.factory import create_ticket
 

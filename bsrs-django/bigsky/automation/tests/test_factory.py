@@ -8,9 +8,9 @@ from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
-from routing.models import (RoutingEvent, Automation, ProfileFilter, AvailableFilter,
+from automation.models import (RoutingEvent, Automation, ProfileFilter, AvailableFilter,
     ROUTING_EVENTS)
-from routing.tests import factory
+from automation.tests import factory
 from tenant.models import Tenant
 from ticket.models import Ticket, TicketPriority
 from utils.create import LOREM_IPSUM_WORDS

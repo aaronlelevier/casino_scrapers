@@ -13,10 +13,10 @@ from contact.tests.factory import (
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
-from routing.models import (
+from automation.models import (
     RoutingEvent, ROUTING_EVENTS, Automation, AutomationManager, AutomationQuerySet,
     AvailableFilter, ProfileFilter)
-from routing.tests.factory import (
+from automation.tests.factory import (
     create_automation, create_ticket_priority_filter, create_ticket_categories_filter,
     create_available_filters, create_ticket_location_state_filter, create_available_filter_state,
     create_ticket_location_country_filter, create_available_filter_country)
@@ -325,14 +325,14 @@ class ProfileFilterTests(SetupMixin, TestCase):
 
         self.assertFalse(ret)
 
-    @patch("routing.models.ProfileFilter._is_address_match")
+    @patch("automation.models.ProfileFilter._is_address_match")
     def test_is_match__location_state__false__not_a_state_filter(self, mock_func):
         self.assertFalse(self.pf.source.is_state_filter)
         self.assertTrue(self.ticket.location.is_office_or_store)
 
         self.assertFalse(mock_func.called)
 
-    @patch("routing.models.ProfileFilter._is_address_match")
+    @patch("automation.models.ProfileFilter._is_address_match")
     def test_is_match__location_state__false__location_is_not_an_office(self, mock_func):
         state_filter = create_ticket_location_state_filter()
         self.ticket.location.addresses.remove(self.office_address)
@@ -366,14 +366,14 @@ class ProfileFilterTests(SetupMixin, TestCase):
 
         self.assertFalse(ret)
 
-    @patch("routing.models.ProfileFilter._is_address_match")
+    @patch("automation.models.ProfileFilter._is_address_match")
     def test_is_match__location_country__false__no_a_country_filter(self, mock_func):
         self.assertFalse(self.pf.source.is_country_filter)
         self.assertTrue(self.ticket.location.is_office_or_store)
 
         self.assertFalse(mock_func.called)
 
-    @patch("routing.models.ProfileFilter._is_address_match")
+    @patch("automation.models.ProfileFilter._is_address_match")
     def test_is_match__location_country__false__location_is_not_an_office(self, mock_func):
         country_filter = create_ticket_location_country_filter()
         self.ticket.location.addresses.remove(self.office_address)

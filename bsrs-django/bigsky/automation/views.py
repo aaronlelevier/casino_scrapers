@@ -4,8 +4,8 @@ from rest_framework import permissions, viewsets
 from rest_framework.exceptions import MethodNotAllowed
 
 from location.models import LocationLevel
-from routing.models import RoutingEvent, Automation, AvailableFilter
-from routing import serializers as rs
+from automation.models import RoutingEvent, Automation, AvailableFilter
+from automation import serializers as rs
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.views import BaseModelViewSet
 

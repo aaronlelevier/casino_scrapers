@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from routing import models
+from automation import models
 
 
 @admin.register(models.Automation)

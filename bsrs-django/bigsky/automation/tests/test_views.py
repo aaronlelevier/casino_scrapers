@@ -10,13 +10,13 @@ from location.models import LocationLevel
 from location.tests.factory import (create_location_levels, create_top_level_location,
     create_location_level, create_location)
 from person.tests.factory import create_single_person, PASSWORD
-from routing.models import RoutingEvent, Automation, ProfileFilter, AvailableFilter
-from routing.tests.factory import (
+from automation.models import RoutingEvent, Automation, ProfileFilter, AvailableFilter
+from automation.tests.factory import (
     create_automation, create_available_filters, create_available_filter_location,
     create_ticket_location_filter, create_ticket_categories_mid_level_filter, create_automation,
     create_ticket_location_state_filter, create_ticket_location_country_filter, create_routing_events,
     create_routing_event_two)
-from routing.tests.mixins import ViewTestSetupMixin
+from automation.tests.mixins import ViewTestSetupMixin
 from ticket.models import TicketPriority
 from utils.create import _generate_chars
 from utils.helpers import create_default

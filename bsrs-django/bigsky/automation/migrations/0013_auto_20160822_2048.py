@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('routing', '0012_remove_availablefilter_key_is_i18n'),
+        ('automation', '0012_remove_availablefilter_key_is_i18n'),
     ]
 
     operations = [

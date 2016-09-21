@@ -6,10 +6,10 @@ from rest_framework.test import APITestCase
 from location.models import Location
 from location.tests.factory import create_top_level_location
 from person.tests.factory import create_single_person, PASSWORD
-from routing.models import Automation
-from routing.serializers import AutomationCreateUpdateSerializer
-from routing.tests.mixins import ViewTestSetupMixin
-from routing.tests.factory import create_ticket_location_filter
+from automation.models import Automation
+from automation.serializers import AutomationCreateUpdateSerializer
+from automation.tests.mixins import ViewTestSetupMixin
+from automation.tests.factory import create_ticket_location_filter
 from tenant.tests.factory import get_or_create_tenant
 
 

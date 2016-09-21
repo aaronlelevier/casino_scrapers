@@ -9,7 +9,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('routing', '0008_availablefilter'),
+        ('automation', '0008_availablefilter'),
     ]
 
     operations = [

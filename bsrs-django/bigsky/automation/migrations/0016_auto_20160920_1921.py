@@ -9,7 +9,7 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('routing', '0015_auto_20160920_1909'),
+        ('automation', '0015_auto_20160920_1909'),
     ]
 
     operations = [
@@ -29,6 +29,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='automation',
             name='events',
-            field=models.ManyToManyField(related_name='automations', to='routing.RoutingEvent'),
+            field=models.ManyToManyField(related_name='automations', to='automation.RoutingEvent'),
         ),
     ]
