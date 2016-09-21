@@ -84,8 +84,10 @@ class BsOAuthSessionDev1Tests(TestCase):
         self.assertTrue(mock_func.called)
 
     def test_post(self):
-        ret = self.session.post(self.subscriber_post_url, data=SC_SUBSCRIBER_POST_DATA)
-        self.assertEqual(ret.status_code, 201)
+        response = self.session.post(self.subscriber_post_url, data=SC_SUBSCRIBER_POST_DATA)
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(data['ServiceAutomationID'])
 
 
 class BsOAuthSessionSandbox2Tests(TestCase):
