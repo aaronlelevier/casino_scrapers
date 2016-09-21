@@ -89,10 +89,10 @@ var change_belongs_to = function(_ownerName) {
     let push_related;
     if(new_related && typeof new_related === 'object'){
       //push in js object
-      push_related = store.find(name, new_related.id);
+      push_related = store.find(this.OPT_CONF[_ownerName]['property'], new_related.id);
       if(!push_related.get('content') || push_related.get('isNotDirtyOrRelatedNotDirty')){
         run(() => {
-          let push_related = store.push(name, new_related);
+          let push_related = store.push(this.OPT_CONF[_ownerName]['property'], new_related);
           push_related.save();
         });
       }
@@ -108,7 +108,7 @@ var change_belongs_to = function(_ownerName) {
       const current_related_pojo = {id: current_related.get('id')};
       current_related_pojo[collection] = updated_current_related_existing;
       run(() => {
-        store.push(name, current_related_pojo);
+        store.push(this.OPT_CONF[_ownerName]['property'], current_related_pojo);
       });
     }
     if (new_related && typeof new_related === 'object') {
@@ -117,13 +117,13 @@ var change_belongs_to = function(_ownerName) {
       const new_related_pojo = {id: push_related.get('id')};
       new_related_pojo[collection] = related_collection.concat(this.get('id'));
       run(() => {
-        store.push(name, new_related_pojo);
+        store.push(this.OPT_CONF[_ownerName]['property'], new_related_pojo);
       });
     } else if (typeof new_related !== 'object') { //may be # or string
-      let new_related_obj = store.find(name, new_related);
+      let new_related_obj = store.find(this.OPT_CONF[_ownerName]['property'], new_related);
       const new_related_existing = new_related_obj.get(collection) || [];
       run(() => {
-        store.push(name, { id: new_related_obj.get('id'), [collection]: new_related_existing.concat(this.get('id')) });
+        store.push(this.OPT_CONF[_ownerName]['property'], { id: new_related_obj.get('id'), [collection]: new_related_existing.concat(this.get('id')) });
       });
     }
   };

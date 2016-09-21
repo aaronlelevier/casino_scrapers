@@ -105,13 +105,13 @@ var many_to_many_ids = function(_joinModelName) {
 var many_models = function(_joinModelName, _associatedModel) {
   return Ember.computed(`${_joinModelName}.[]`, function() {
     const many_relateds = this.get(_joinModelName);
-    const relatedModelName = this.OPT_CONF[_associatedModel]['associated_model'];
-    const lookup_pk = this.OPT_CONF[_associatedModel]['associated_pointer'] || this.OPT_CONF[_associatedModel]['associated_model'];
+    // const relatedModelName = this.OPT_CONF[_associatedModel]['associated_model'];
+    const lookup_pk = Ember.String.underscore(this.OPT_CONF[_associatedModel]['associated_pointer'] || this.OPT_CONF[_associatedModel]['associated_model']);
     const filter = function(many_related) {
       const many_related_pks = this.mapBy(`${lookup_pk}_pk`);
       return many_related_pks.includes(many_related.get('id'));
     };
-    return this.get('simpleStore').find(relatedModelName, filter.bind(many_relateds));
+    return this.get('simpleStore').find(this.OPT_CONF[_associatedModel]['associated_model'], filter.bind(many_relateds));
   });
 };
 
@@ -180,26 +180,26 @@ var many_to_many_dirty_unlessAddedM2M = function(_joinModelName) {
  */
 var many_to_many_rollback = function(_associatedModel, _joinModelName, modelName) {
   return function() {
-    const join_model = this.OPT_CONF[_associatedModel]['join_model'];
+    // const join_model = this.OPT_CONF[_associatedModel]['join_model'];
     const join_model_fks = `${_joinModelName}_fks`;
     const main_many_fk = `${modelName}_pk`;
     const store = this.get('simpleStore');
     const previous_m2m_fks = this.get(join_model_fks) || [];
-    const m2m_array = store.find(join_model).toArray();
+    const m2m_array = store.find(this.OPT_CONF[_associatedModel]['join_model']).toArray();
     const m2m_to_throw_out = m2m_array.filter((m2m) => {
       return !previous_m2m_fks.includes(m2m.get('id')) && !m2m.get('removed') && this.get('id') === m2m.get(main_many_fk);
     });
     run(() => {
       m2m_to_throw_out.forEach((m2m) => {
         run(() => {
-          store.push(join_model, {id: m2m.get('id'), removed: true});
+          store.push(this.OPT_CONF[_associatedModel]['join_model'], {id: m2m.get('id'), removed: true});
         });
       });
       previous_m2m_fks.forEach((pk) => {
-        var m2m_to_keep = store.find(join_model, pk);
+        var m2m_to_keep = store.find(this.OPT_CONF[_associatedModel]['join_model'], pk);
         if (m2m_to_keep.get('id')) {
           run(() => {
-            store.push(join_model, {id: pk, removed: undefined});
+            store.push(this.OPT_CONF[_associatedModel]['join_model'], {id: pk, removed: undefined});
           });
         }
       });
@@ -218,7 +218,7 @@ var many_to_many_rollback = function(_associatedModel, _joinModelName, modelName
 var many_to_many_save = function(_joinModelName, _associatedModel, modelName) {
   return function() {
     //TODO: test main_model
-    const model_name = this.OPT_CONF[_associatedModel]['main_model'] || modelName;
+    // const model_name = this.OPT_CONF[_associatedModel]['main_model'] || modelName;
     const m2m_models = _joinModelName;
     const m2m_models_ids = `${_joinModelName}_ids`;
     const m2m_models_fks = `${_joinModelName}_fks`;
@@ -234,7 +234,7 @@ var many_to_many_save = function(_joinModelName, _associatedModel, modelName) {
           updated_m2m_fks = updated_m2m_fks.concat(join_model.get('id'));
           let new_model;
           run(() => {
-            new_model = this.get('simpleStore').push(model_name, {id: id, m2m_models_fks: updated_m2m_fks});
+            new_model = this.get('simpleStore').push(this.OPT_CONF[_associatedModel]['main_model'] || modelName, {id: id, m2m_models_fks: updated_m2m_fks});
           });
           new_model.set(m2m_models_fks, updated_m2m_fks);
         });
@@ -260,16 +260,16 @@ var many_to_many_save = function(_joinModelName, _associatedModel, modelName) {
  */
 var add_many_to_many = function(_associatedModel, _joinModelName, modelName) {
   return function(many_related) {
-    const relatedModelName = this.OPT_CONF[_associatedModel]['associated_model'];
-    const lookup_pk = this.OPT_CONF[_associatedModel]['associated_pointer'] || this.OPT_CONF[_associatedModel]['associated_model'];
+    // const relatedModelName = this.OPT_CONF[_associatedModel]['associated_model'];
+    const lookup_pk = Ember.String.underscore(this.OPT_CONF[_associatedModel]['associated_pointer'] || this.OPT_CONF[_associatedModel]['associated_model']);
     const many_fk = `${lookup_pk}_pk`;
     const main_many_fk = `${modelName}_pk`;
-    const join_model = this.OPT_CONF[_associatedModel]['join_model'];
+    // const join_model = this.OPT_CONF[_associatedModel]['join_model'];
     const store = this.get('simpleStore');
-    let new_many_related = store.find(relatedModelName, many_related.id);
+    let new_many_related = store.find(this.OPT_CONF[_associatedModel]['associated_model'], many_related.id);
     if(!new_many_related.get('content') || new_many_related.get('isNotDirtyOrRelatedNotDirty')){
       run(() => {
-        new_many_related = store.push(relatedModelName, many_related);
+        new_many_related = store.push(this.OPT_CONF[_associatedModel]['associated_model'], many_related);
         /* jshint ignore:start */
         // new_many_related might be an Ember object
         new_many_related.save && new_many_related.save();
@@ -278,7 +278,7 @@ var add_many_to_many = function(_associatedModel, _joinModelName, modelName) {
     }
     const many_related_pk = new_many_related.get('id');
     //check for existing
-    const existing_join = store.find(join_model).toArray();
+    const existing_join = store.find(this.OPT_CONF[_associatedModel]['join_model']).toArray();
     let existing = existing_join.filter((m2m) => {
       return m2m.get(many_fk) === many_related_pk && m2m.get(main_many_fk) === this.get('id');
     }).objectAt(0);
@@ -288,9 +288,9 @@ var add_many_to_many = function(_associatedModel, _joinModelName, modelName) {
     let new_model;
     run(() => {
       if(existing){
-        new_model = store.push(join_model, {id: existing.get('id'), removed: undefined});
+        new_model = store.push(this.OPT_CONF[_associatedModel]['join_model'], {id: existing.get('id'), removed: undefined});
       } else{
-        new_model = store.push(join_model, new_join_model);
+        new_model = store.push(this.OPT_CONF[_associatedModel]['join_model'], new_join_model);
       }
     });
     return new_model;
@@ -310,7 +310,7 @@ var remove_many_to_many = function(_associatedModel, _joinModelName) {
   return function(many_related_pk) {
     const store = this.get('simpleStore');
     //TODO: test associated_pointer config
-    const lookup_pk = this.OPT_CONF[_associatedModel]['associated_pointer'] || this.OPT_CONF[_associatedModel]['associated_model'];
+    const lookup_pk = Ember.String.underscore(this.OPT_CONF[_associatedModel]['associated_pointer'] || this.OPT_CONF[_associatedModel]['associated_model']);
     const m2m_pk = this.get(_joinModelName).filter((m2m) => {
       return m2m.get(`${lookup_pk}_pk`) === many_related_pk;
     }).objectAt(0).get('id');
