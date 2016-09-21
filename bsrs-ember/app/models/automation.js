@@ -83,6 +83,7 @@ export default Model.extend(OptConf, Validations, {
     return {
       id: this.get('id'),
       description: this.get('description'),
+      events: this.get('event_ids'),
       filters: this.get('pf').map((obj) => obj.serialize())
     };
   },

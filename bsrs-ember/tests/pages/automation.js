@@ -11,6 +11,9 @@ const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
 const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
 const DROPDOWN = options;
 const AF_SELECT_ONE = '.t-automation-pf-select:eq(0) .ember-basic-dropdown-trigger';
+
+const EVENTS = '.t-automation-event-select .ember-power-select-multiple-option';
+
 const PRIORITY = '.t-priority-criteria .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
 const PRIORITIES = '.t-priority-criteria .ember-power-select-multiple-option';
 
@@ -45,6 +48,9 @@ export default create({
   automationFilterOneOptionOneText: text('li:eq(0)', { scope: DROPDOWN }),
   automationFilterOneOptionTwoText: text('li:eq(1)', { scope: DROPDOWN }),
   automationFilterOneOptionThreeText: text('li:eq(2)', { scope: DROPDOWN }),
+
+  eventSelectedOne: text(`${EVENTS}:eq(0)`),
+  eventSelectedTwo: text(`${EVENTS}:eq(1)`),
 
   prioritySelectedOne: text(`${PRIORITIES}:eq(0)`),
   prioritySelectedTwo: text(`${PRIORITIES}:eq(1)`),

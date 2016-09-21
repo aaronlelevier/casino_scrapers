@@ -51,6 +51,7 @@ test('visit new URL and create a new record', assert => {
   selectChoose('.t-priority-criteria', TD.priorityOne);
   xhr(AUTOMATION_URL, 'POST', AF.put({
     id: UUID.value,
+    events:[],
     filters: [{
       id: UUID.value,
       source: PFD.sourceIdOne,

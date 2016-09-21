@@ -26,12 +26,29 @@ var BSRS_automation_FACTORY = (function() {
       }]
     };
   };
+  factory.prototype.generate_put = function(i) {
+    var id = i || this.automation.idOne;
+    return {
+      id: id,
+      description: this.automation.descriptionOne,
+      // TODO: these are pfilters which should just be the actual filter models. ie. Ticket-Prority
+      events: [this.event.idOne],
+      filters: [{
+        id: this.pfilter.idOne,
+        source_id: this.pfilter.sourceIdOne,
+        key: this.pfilter.keyOne,
+        field: this.pfilter.fieldOne,
+        criteria: this.pfilter.criteriaOne,
+        lookups: {},
+      }]
+    };
+  };
   factory.prototype.detail = function(id) {
     return this.generate(id);
   };
   factory.prototype.put = function(automation) {
     var id = automation && automation.id || this.automation.idOne;
-    var response = this.generate(id);
+    var response = this.generate_put(id);
     for(var key in automation) {
       response[key] = automation[key];
     }
@@ -92,6 +109,22 @@ var BSRS_automation_FACTORY = (function() {
       events: [{
         id: `${this.event.idOne}${i}`,
         key: `${this.event.keyOne}${i}`
+      }]
+    };
+  };
+  // AutomaitonEvent power-select: put in this fixture file instead of requring
+  // a new fixture file for this method only
+  factory.prototype.event_search_power_select = function() {
+    return {
+      count: 2,
+      next: null,
+      previous: null,
+      results: [{
+        id: this.event.idOne,
+        key: this.event.keyOne
+      },{
+        id: this.event.idTwo,
+        key: this.event.keyTwo
       }]
     };
   };

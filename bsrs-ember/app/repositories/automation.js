@@ -6,7 +6,7 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
 import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
-import BASEURLS, { AUTOMATION_URL, AUTOMATION_AVAILABLE_FILTERS_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { AUTOMATION_URL, AUTOMATION_AVAILABLE_FILTERS_URL, AUTOMATION_EVENTS_URL } from 'bsrs-ember/utilities/urls';
 
 export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: 'automation',
@@ -22,4 +22,14 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
   getFilters() {
     return PromiseMixin.xhr(`${AUTOMATION_AVAILABLE_FILTERS_URL}`, 'GET').then(response => response);
   },
+  findEvent(search) {
+    let url = AUTOMATION_EVENTS_URL;
+    search = search ? search.trim() : search;
+    if (search) {
+      url += `?search=${search}`;
+    }
+    return PromiseMixin.xhr(url, 'GET').then((response) => {
+      return response.results;
+    });
+  }
 });
