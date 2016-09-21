@@ -2,7 +2,7 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 // import RelaxedMixin from 'bsrs-ember/mixins/validation/relaxed';
-import { validate } from 'ember-cli-simple-validation/mixins/validate';
+// import { validate } from 'ember-cli-simple-validation/mixins/validate';
 // import ParentValidationComponent from 'bsrs-ember/mixins/validation/parent';
 import { task } from 'ember-concurrency';
 
