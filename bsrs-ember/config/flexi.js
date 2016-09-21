@@ -19,13 +19,13 @@ module.exports = {
   columnPrefix: 'col',
 
   // if false, @media css is not included
-  includeMediaCSS: false,
+  includeMediaCSS: true,
 
   // if false, default element styles are not included
-  includeElementCSS: false,
+  includeElementCSS: true,
 
   // if true, will convert layout attributes on non-layout elements to classes as well
-  transformAllElementLayoutAttributes: false,
+  transformAllElementLayoutAttributes: true,
 
   // grid and layout element gutters
   gutterPadding: '.5rem',
