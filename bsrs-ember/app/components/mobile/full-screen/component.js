@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import FullScreenMixin from 'bsrs-ember/mixins/components/full-screen/edit';
 import inject from 'bsrs-ember/utilities/inject';
 
@@ -37,16 +38,20 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
       const hashComponents = this.get('hashComponents');
       hashComponents.forEach((componentObj) => {
         if (activeComponent.title === componentObj.title) {
-          Ember.set(componentObj, 'active', 'active');
+          run(() => {
+            Ember.set(componentObj, 'active', 'active');
+          });
         } else {
-          Ember.set(componentObj, 'active', '');
+          run(() => {
+            Ember.set(componentObj, 'active', '');
+          });
         }
       });
       this.componentStringFunc(activeComponent.component);
     },
-    rollback_model() {
+    // rollback_model() {
 
-    },
+    // },
     cancel_modal() {
       this.set('mobileDialog', false);
     }
