@@ -85,9 +85,18 @@ class BsOAuthSessionDev1Tests(TestCase):
 
     def test_post(self):
         response = self.session.post(self.subscriber_post_url, data=SC_SUBSCRIBER_POST_DATA)
+
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(data['ServiceAutomationID'])
+        # all other fields returned are the same values as data sent
+        def emptyStrIfNone(v):
+            return '' if not v else v
+
+        for k,v in data.items():
+            if k != 'ServiceAutomationID':
+                self.assertEqual(emptyStrIfNone(v), SC_SUBSCRIBER_POST_DATA[k],
+                                 "Key '{}' failed with: {} != {}".format(k, v, SC_SUBSCRIBER_POST_DATA[k]))
 
 
 class BsOAuthSessionSandbox2Tests(TestCase):

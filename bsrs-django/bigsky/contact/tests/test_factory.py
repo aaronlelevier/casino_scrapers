@@ -115,6 +115,15 @@ class FactoryTests(TestCase):
         self.assertTrue(email_mock.was_called)
         self.assertTrue(ph_num_mock.was_called)
 
+    def test_create_address(self):
+        ret = factory.create_address()
+        self.assertIsInstance(ret, Address)
+        self.assertIsInstance(ret.type, AddressType)
+        self.assertIsInstance(ret.state, State)
+        self.assertTrue(ret.state.name)
+        self.assertIsInstance(ret.country, Country)
+        self.assertTrue(ret.country.common_name)
+
     def test_create_contact_state(self):
         ret = factory.create_contact_state()
         self.assertIsInstance(ret, State)

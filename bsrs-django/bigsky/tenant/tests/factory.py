@@ -3,7 +3,7 @@ from django.conf import settings
 from model_mommy import mommy
 
 from contact.models import Email, Address, PhoneNumber
-from contact.tests.factory import create_contact_country
+from contact.tests.factory import create_address, create_contact_country
 from dtd.models import TreeData
 from tenant.models import Tenant
 from utils.create import _generate_chars
@@ -21,7 +21,7 @@ def get_or_create_tenant(company_name=settings.DEFAULT_TENANT_COMPANY_NAME, **kw
             'implementation_email': mommy.make(Email, _fill_optional=['type']),
             'billing_email': mommy.make(Email, _fill_optional=['type']),
             'billing_phone_number': mommy.make(PhoneNumber, _fill_optional=['type']),
-            'billing_address': mommy.make(Address, _fill_optional=['type', 'state', 'country'])
+            'billing_address': create_address()
         }
 
         tenant = mommy.make(Tenant, **defaults)
@@ -41,6 +41,7 @@ SC_SUBSCRIBER_POST_DATA = {
     "Address1": "9246 Lightwave Ave.",
     "Address2": "",
     "Country": "United States",
+    "State": "California",
     "City": "San Diego",
     "Zip": "92123",
     "Email": "test@email.com",

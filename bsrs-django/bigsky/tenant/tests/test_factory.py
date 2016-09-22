@@ -24,7 +24,7 @@ class TenantTests(TestCase):
         self.assertEqual(ret.company_name, settings.DEFAULT_TENANT_COMPANY_NAME)
         self.assertTrue(ret.company_code)
         self.assertEqual(ret.countries.count(), 1)
-        self.assertEqual(ret.countries.first().states.count(), 2)
+        self.assertEqual(ret.countries.first().states.count(), 1)
         # contacts
         self.assertIsNone(ret.implementation_contact)
         self.assertIsInstance(ret.implementation_email, Email)
@@ -36,7 +36,9 @@ class TenantTests(TestCase):
         self.assertIsInstance(ret.billing_address, Address)
         self.assertIsInstance(ret.billing_address.type, AddressType)
         self.assertIsInstance(ret.billing_address.state, State)
+        self.assertTrue(ret.billing_address.state.name)
         self.assertIsInstance(ret.billing_address.country, Country)
+        self.assertTrue(ret.billing_address.country.common_name)
         self.assertEqual(ret.countries.count(), 1)
 
     def test_id(self):
@@ -69,6 +71,7 @@ class TenantTests(TestCase):
             "Address1": "9246 Lightwave Ave.",
             "Address2": "",
             "Country": "United States",
+            "State": "California",
             "City": "San Diego",
             "Zip": "92123",
             "Email": "test@email.com",

@@ -81,6 +81,12 @@ def create_contact_types():
     create_address_types()
 
 
+def create_address():
+    state = create_contact_state()
+    country = create_contact_country()
+    return mommy.make(Address, state=state, country=country, _fill_optional=['type'])
+
+
 def create_contact_state(state_code=STATE_CODE, **kwargs):
     try:
         return State.objects.get(state_code=state_code)
