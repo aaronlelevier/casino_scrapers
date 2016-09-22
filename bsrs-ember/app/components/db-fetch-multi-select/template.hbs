@@ -1,3 +1,20 @@
+{{#if showMessage}}
+    {{#if (v-get model multiAttr "message")}}
+      {{#tether-dialog
+        container-class="tether-dialog-reset"
+        target=(concat "." className)
+        hasOverlay=false
+        attachment="bottom left"
+        targetAttachment="top left"
+        offset="5px 0"
+      }}
+      <div class="validated-input-error-dialog animated flipInX .error">
+       {{t (v-get model multiAttr "message")}}
+     </div>
+      {{/tether-dialog}}
+    {{/if}}
+{{/if}}
+
 {{#power-select-multiple
   selected=selectedAttr
   onchange=(action "selected")

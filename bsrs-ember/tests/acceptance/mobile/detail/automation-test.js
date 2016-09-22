@@ -70,13 +70,10 @@ test('visit mobile detail and update all fields', async assert => {
 });
 
 test('if the automation does not have at least one filter, it is invalid and cannot save', async assert => {
-  clearxhr(listXhr)
+  clearxhr(listXhr);
   await page.visitDetail();
+  automationPage.descriptionFill('');
   assert.equal(currentURL(), DETAIL_URL);
-  Ember.$('.t-mobile-footer-item:eq(1)').click();
-  assert.equal(Ember.$('.t-automation-pf-select').length, 1);
-  Ember.$('.t-del-pf-btn').click();
-  assert.equal(Ember.$('.t-automation-pf-select').length, 0);
   await generalPage.save();
   assert.equal(currentURL(), DETAIL_URL);
 });

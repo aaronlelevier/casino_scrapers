@@ -18,13 +18,11 @@ const Validations = buildValidations({
       message: 'errors.automation.description.min_max'
     })
   ],
-  pf: [
-    validator('length', {
-      min: 1,
-      message: 'errors.automation.pf.length'
-    }),
-    validator('has-many')
-  ]
+  event: validator('length', {
+    min: 1,
+    message: 'errors.automation.event.length'
+  }),
+  pf: validator('has-many')
 });
 
 export default Model.extend(OptConf, Validations, {

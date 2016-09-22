@@ -30,7 +30,21 @@ var DBFetch = Ember.Component.extend({
         }
       });
     }
-  }
+  },
+  // validation
+  attributevalidation: null,
+  classNameBindings: ['showMessage:invalid'],
+  init() {
+    this._super(...arguments);
+    const multiAttr = this.get('multiAttr');
+    Ember.defineProperty(this, 'attributeValidation', Ember.computed.oneWay(`model.validations.attrs.${multiAttr}`));
+    Ember.defineProperty(this, 'value', Ember.computed.alias(`model.${multiAttr}`));
+  },
+  showMessage: Ember.computed('didValidate', function() {
+    return this.get('didValidate');
+  }),
+  isValid: Ember.computed.oneWay('attributeValidation.isValid'),
+  isInvalid: Ember.computed.oneWay('attributeValidation.isInvalid')
 });
 
 export default DBFetch;

@@ -343,12 +343,6 @@ test('remove filter and save - should stay on page because an automation must ha
     let automation = store.find('automation', AD.idOne);
     assert.equal(automation.get('pf').get('length'), 0);
   });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.automation.pf.length'));
-  });
   // add back pfilter w/ 1 criteria to make valid, and save
   xhr(`${AUTOMATION_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
   page.addFilter();

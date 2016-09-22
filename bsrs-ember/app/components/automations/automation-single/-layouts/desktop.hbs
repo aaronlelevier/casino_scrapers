@@ -41,7 +41,13 @@
         </div>
       </section>
     </div>
-    <div class="col-md-12">
+    {{power-select-validation
+      model=model
+      valuePath="event"
+      didValidate=didValidate
+      index="0"
+    }}
+    <div class="col-md-12" id="event0">
       {{db-fetch-multi-select
         model=model
         multiAttr="event"

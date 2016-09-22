@@ -126,3 +126,18 @@ test('clicking cancel button with no edits will take from detail view to list vi
     assert.equal(currentURL(), automation_LIST_URL);
   });
 });
+
+test('events validation - at least 1 event is required', assert => {
+  clearxhr(listXhr);
+  visit(NEW_URL);
+  andThen(() => {
+    assert.equal(currentURL(), NEW_URL);
+  });
+  page.descriptionFill(AD.descriptionTwo);
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), NEW_URL);
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.automation.event.length'));
+  });
+});
