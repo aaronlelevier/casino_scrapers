@@ -3,7 +3,7 @@ import injectRepo from 'bsrs-ember/utilities/inject';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import { task } from 'ember-concurrency';
 
-var automationSingle = Ember.Component.extend(TabMixin, {
+var AutomationSingle = Ember.Component.extend(TabMixin, {
   init() {
     this._super(...arguments);
     this.didValidate = false;
@@ -23,4 +23,4 @@ var automationSingle = Ember.Component.extend(TabMixin, {
   }
 });
 
-export default automationSingle;
+export default AutomationSingle;

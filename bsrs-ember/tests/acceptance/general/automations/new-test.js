@@ -8,6 +8,7 @@ import { waitFor } from 'bsrs-ember/tests/helpers/utilities';
 import random from 'bsrs-ember/models/random';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import AD from 'bsrs-ember/vendor/defaults/automation';
+import ED from 'bsrs-ember/vendor/defaults/automation-event';
 import AF from 'bsrs-ember/vendor/automation_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
@@ -41,6 +42,14 @@ test('visit new URL and create a new record', assert => {
   andThen(() => {
     assert.equal(page.descriptionValue, AD.descriptionOne);
   });
+  // events 
+  let keyword = 'a';
+  xhr(`/api/admin/automation-events/?search=${keyword}`, 'GET', null, {}, 200, AF.event_search_power_select());
+  selectSearch('.t-automation-event-select', keyword);
+  selectChoose('.t-automation-event-select', ED.keyOne);
+  andThen(() => {
+    assert.equal(page.eventSelectedOne.split(/\s+/)[1], ED.keyOne);
+  });
   // filter w/ a criteria
   page.addFilter();
   andThen(() => {
@@ -51,7 +60,7 @@ test('visit new URL and create a new record', assert => {
   selectChoose('.t-priority-criteria', TD.priorityOne);
   xhr(AUTOMATION_URL, 'POST', AF.put({
     id: UUID.value,
-    events:[],
+    events:[ED.idOne],
     filters: [{
       id: UUID.value,
       source: PFD.sourceIdOne,

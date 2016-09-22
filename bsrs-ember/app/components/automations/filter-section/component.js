@@ -7,15 +7,6 @@ export default Ember.Component.extend({
   uuid: injectUUID('uuid'),
   simpleStore: Ember.inject.service(),
   addFilterDisabled: false,
-  init() {
-    this._super(...arguments);
-    const model = this.get('model');
-    const pfilters = model.get('pf');
-    if (pfilters.get('length') === 0) {
-      const id = this.get('uuid').v4();
-      model.add_pf({id: id, lookups: {}});
-    }
-  },
   /* @method _filterResponse
   *  @param {object} response - list api response
   *  @param {int} index - nth db-fetch-power select

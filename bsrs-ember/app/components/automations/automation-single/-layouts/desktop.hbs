@@ -42,7 +42,18 @@
       </section>
     </div>
     <div class="col-md-12">
-
+      {{db-fetch-multi-select
+        model=model
+        multiAttr="event"
+        multiAttrIds="event_ids"
+        selectedAttr=model.event
+        className="t-automation-event-select"
+        displayName="key"
+        add_func="add_event"
+        remove_func="remove_event"
+        repository=repository
+        searchMethod="findEvent"
+      }}
     </div>
     <div class="col-md-12">
       <section>
