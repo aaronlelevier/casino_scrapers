@@ -90,8 +90,10 @@ class TenantDetailTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['billing_address']['type'], str(self.tenant.billing_address.type.id))
         self.assertEqual(data['billing_address']['address'], self.tenant.billing_address.address)
         self.assertEqual(data['billing_address']['city'], self.tenant.billing_address.city)
-        self.assertEqual(data['billing_address']['state'], str(self.tenant.billing_address.state.id))
-        self.assertEqual(data['billing_address']['country'], str(self.tenant.billing_address.country.id))
+        self.assertEqual(data['billing_address']['state']['id'], str(self.tenant.billing_address.state.id))
+        self.assertEqual(data['billing_address']['state']['name'], self.tenant.billing_address.state.name)
+        self.assertEqual(data['billing_address']['country']['id'], str(self.tenant.billing_address.country.id))
+        self.assertEqual(data['billing_address']['country']['name'], self.tenant.billing_address.country.common_name)
         self.assertEqual(data['billing_address']['postal_code'], self.tenant.billing_address.postal_code)
         self.assertEqual(len(data['countries']), 1)
         self.assertEqual(data['countries'][0]['id'], str(self.tenant.countries.first().id))
@@ -129,7 +131,7 @@ class TenantCreateTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['company_code'], new_company_code)
         self.assertEqual(data['company_name'], self.tenant.company_name)
         self.assertEqual(data['dashboard_text'], self.tenant.dashboard_text)
-        self.assertEqual(data['default_currency_id'], str(self.tenant.default_currency.id))
+        self.assertEqual(data['default_currency'], str(self.tenant.default_currency.id))
         # update specific data, not to be included in create
         self.assertNotIn('dt_start_id', data)
         self.assertNotIn('dt_start', data)
@@ -356,14 +358,9 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
         # data
         updated_data = serializer.data
         updated_data.update({
-            'dt_start': {
-                'id': str(dtd.id),
-                'key': dtd.key
-            },
-            'implementation_contact': {
-                'id': str(self.person.id),
-                'fullname': self.person.fullname
-            },
+            'dt_start': str(dtd.id),
+            'implementation_contact': str(self.person.id),
+            'countries': [str(country.id)],
             'implementation_email': {
                 'id': str(implementation_email.id),
                 'type': str(implementation_email.type.id),
@@ -387,11 +384,7 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
                 'state': str(billing_address.state.id),
                 'country': str(billing_address.country.id),
                 'postal_code': billing_address.postal_code
-            },
-            'countries': [{
-                'id': str(country.id),
-                'name': country.common_name
-            }]
+            }
         })
 
         response = self.client.put('/api/admin/tenant/{}/'.format(self.tenant.id), updated_data, format='json')
@@ -399,15 +392,12 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['id'], str(self.tenant.id))
-        self.assertEqual(data['dt_start_id'], updated_data['dt_start']['id'])
-        self.assertEqual(data['dt_start']['id'], updated_data['dt_start']['id'])
-        self.assertEqual(data['dt_start']['key'], updated_data['dt_start']['key'])
-        # counties
+        self.assertEqual(data['dt_start'], updated_data['dt_start'])
+        # related models updated by id only
         self.assertEqual(len(data['countries']), 1)
-        self.assertEqual(data['countries'][0]['id'], str(country.id))
-        self.assertEqual(data['countries'][0]['name'], country.common_name)
-        # contacts
+        self.assertEqual(data['countries'][0], str(country.id))
         self.assertEqual(data['implementation_contact'], updated_data['implementation_contact'])
+        # contacts
         self.assertEqual(data['implementation_email'], updated_data['implementation_email'])
         self.assertEqual(data['billing_email'], updated_data['billing_email'])
         self.assertEqual(data['billing_phone_number'], updated_data['billing_phone_number'])

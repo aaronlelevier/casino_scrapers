@@ -3,7 +3,8 @@ from django.core.mail import send_mail
 from rest_framework import serializers
 
 from contact.models import Email, Address, PhoneNumber
-from contact.serializers import (EmailSerializer, PhoneNumberSerializer, AddressSerializer,
+from contact.serializers import (
+    EmailSerializer, PhoneNumberSerializer, AddressSerializer, AddressUpdateSerializer,
     CountryIdNameSerializer)
 from dtd.models import TreeData
 from dtd.serializers import TreeDataLeafNodeSerializer
@@ -22,7 +23,7 @@ class TenantListSerializer(serializers.ModelSerializer):
         fields = ('id', 'company_code', 'company_name')
 
 
-CREATE_FIELDS = ('id', 'company_code', 'company_name', 'dashboard_text',
+TENANT_FIELDS = ('id', 'company_code', 'company_name', 'dashboard_text',
                   'default_currency', 'implementation_contact_initial',
                   'implementation_email', 'billing_email', 'billing_phone_number',
                   'billing_address')
@@ -44,13 +45,36 @@ class TenantContactsMixin(object):
             if value:
                 try:
                     c = model.objects.get(id=value['id'])
-                    create.update_model(c, value)
                 except model.DoesNotExist:
                     c = model.objects.create(**value)
+                # else:
+                #     create.update_model(c, value)
                 finally:
                     validated_data[key] = c
 
         return validated_data
+
+
+class TenantDetailSerializer(BaseCreateSerializer):
+
+    implementation_email = EmailSerializer()
+    billing_email = EmailSerializer()
+    billing_phone_number = PhoneNumberSerializer()
+    billing_address = AddressSerializer()
+
+    dt_start = TreeDataLeafNodeSerializer(required=False)
+    implementation_contact = PersonSimpleSerializer(required=False)
+    countries = CountryIdNameSerializer(required=False, many=True)
+
+    class Meta:
+        model = Tenant
+        fields = TENANT_FIELDS + ('dt_start', 'implementation_contact', 'countries', 'test_mode')
+
+    def to_representation(self, instance):
+        data = super(TenantDetailSerializer, self).to_representation(instance)
+        data['default_currency_id'] = data['default_currency']
+        data['dt_start_id'] = data['dt_start']['id'] if data['dt_start'] else None
+        return data
 
 
 class TenantCreateSerializer(TenantContactsMixin, BaseCreateSerializer):
@@ -58,11 +82,11 @@ class TenantCreateSerializer(TenantContactsMixin, BaseCreateSerializer):
     implementation_email = EmailSerializer()
     billing_email = EmailSerializer()
     billing_phone_number = PhoneNumberSerializer()
-    billing_address = AddressSerializer()
+    billing_address = AddressUpdateSerializer()
 
     class Meta:
         model = Tenant
-        fields = CREATE_FIELDS
+        fields = TENANT_FIELDS
 
     def create(self, validated_data):
         validated_data = self.update_or_create_nested_contacts(validated_data)
@@ -98,26 +122,17 @@ class TenantCreateSerializer(TenantContactsMixin, BaseCreateSerializer):
             # TODO: should handle failure here with logging, etc...
             pass
 
-    def to_representation(self, instance):
-        data = super(TenantCreateSerializer, self).to_representation(instance)
-        data['default_currency_id'] = data['default_currency']
-        return data
 
+class TenantUpdateSerializer(TenantContactsMixin, BaseCreateSerializer):
 
-class TenantDetailSerializer(TenantCreateSerializer):
-
-    dt_start = TreeDataLeafNodeSerializer(required=False)
-    implementation_contact = PersonSimpleSerializer(required=False)
-    countries = CountryIdNameSerializer(required=False, many=True)
+    implementation_email = EmailSerializer()
+    billing_email = EmailSerializer()
+    billing_phone_number = PhoneNumberSerializer()
+    billing_address = AddressUpdateSerializer()
 
     class Meta:
         model = Tenant
-        fields = CREATE_FIELDS + ('dt_start', 'implementation_contact', 'countries', 'test_mode')
-
-    def to_representation(self, instance):
-        data = super(TenantDetailSerializer, self).to_representation(instance)
-        data['dt_start_id'] = data['dt_start']['id'] if data['dt_start'] else None
-        return data
+        fields = TENANT_FIELDS + ('dt_start', 'implementation_contact', 'countries', 'test_mode')
 
     def update(self, instance, validated_data):
         implementation_contact = validated_data.pop('implementation_contact', {})
@@ -126,28 +141,19 @@ class TenantDetailSerializer(TenantCreateSerializer):
 
         validated_data = self.update_or_create_nested_contacts(validated_data)
 
-        instance = super(TenantDetailSerializer, self).update(instance, validated_data)
+        instance = super(TenantUpdateSerializer, self).update(instance, validated_data)
 
-        instance = self._update_foreign_key(instance, Person, 'implementation_contact', implementation_contact)
-        instance = self._update_foreign_key(instance, TreeData, 'dt_start', dt_start)
+        setattr(instance, 'implementation_contact', implementation_contact)
+        setattr(instance, 'dt_start', dt_start)
         instance = self._update_countries(instance, countries)
         instance.save()
-        return instance
-
-    @staticmethod
-    def _update_foreign_key(instance, model, key, data):
-        if data:
-            obj = model.objects.get(id=data['id'])
-            setattr(instance, key, obj)
-        else:
-            setattr(instance, key, None)
         return instance
 
     @staticmethod
     def _update_countries(instance, countries):
         country_ids = []
         if countries:
-            country_ids = [c['id'] for c in countries]
+            country_ids = [c.id for c in countries]
             # add new
             instance.countries.add(*country_ids)
         # remove old

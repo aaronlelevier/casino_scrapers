@@ -72,7 +72,6 @@ class AddressTypeSerializer(BaseCreateSerializer):
 
 class AddressSerializer(BaseCreateSerializer):
     
-    type = AddressTypeSerializer(read_only=True)
     state = StateIdNameSerializer()
     country = CountryIdNameSerializer()
 
