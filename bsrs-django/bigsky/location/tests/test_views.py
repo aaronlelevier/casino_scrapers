@@ -403,16 +403,11 @@ class LocationDetailTests(APITestCase):
         self.assertEqual(self.data['addresses'][0]['address'], address.address)
         self.assertEqual(self.data['addresses'][0]['city'], address.city)
         self.assertEqual(self.data['addresses'][0]['postal_code'], address.postal_code)
-        # type
-        self.assertEqual(self.data['addresses'][0]['type']['id'], str(address.type.id))
-        self.assertEqual(self.data['addresses'][0]['type']['name'], address.type.name)
-        # state
+        self.assertEqual(self.data['addresses'][0]['type'], str(address.type.id))
         self.assertEqual(self.data['addresses'][0]['state']['id'], str(address.state.id))
         self.assertEqual(self.data['addresses'][0]['state']['name'], address.state.name)
-        # country
         self.assertEqual(self.data['addresses'][0]['country']['id'], str(address.country.id))
         self.assertEqual(self.data['addresses'][0]['country']['name'], address.country.common_name)
-
 
     def test_data__people(self):
         self.assertIsInstance(self.data['people'], list)

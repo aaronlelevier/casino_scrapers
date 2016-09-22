@@ -30,7 +30,7 @@ class CountryViewSetTests(StateCountryViewTestSetupMixin, APITestCase):
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 3)
+        self.assertEqual(data['count'], 2)
         country_data = data['results'][0]
         self.assertIn('id', country_data)
         self.assertIn('common_name', country_data)
@@ -271,8 +271,7 @@ class AddressTests(APITestCase):
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.address.id))
-        self.assertEqual(data['type']['id'], str(self.address.type.id))
-        self.assertEqual(data['type']['name'], self.address.type.name)
+        self.assertEqual(data['type'], str(self.address.type.id))
         self.assertEqual(data['address'], self.address.address)
         self.assertEqual(data['city'], self.address.city)
         self.assertEqual(data['state']['id'], str(self.address.state.id))
