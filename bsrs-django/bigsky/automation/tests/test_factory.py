@@ -19,30 +19,30 @@ from utils.helpers import create_default
 
 class AutomationEventTests(TestCase):
 
-    def test_create_routing_event(self):
-        ret = factory.create_routing_event()
+    def test_create_automation_event(self):
+        ret = factory.create_automation_event()
 
         self.assertIsInstance(ret, AutomationEvent)
         self.assertEqual(ret.key, factory.DEFAULT_ROUTING_EVENT)
 
-    def test_create_routing_event__key(self):
+    def test_create_automation_event__key(self):
         key = 'automation.event.ticket_status_unsatisfactory'
 
-        ret = factory.create_routing_event(key)
+        ret = factory.create_automation_event(key)
 
         self.assertIsInstance(ret, AutomationEvent)
         self.assertEqual(ret.key, key)
 
-    def test_create_routing_event_two(self):
-        ret = factory.create_routing_event_two()
+    def test_create_automation_event_two(self):
+        ret = factory.create_automation_event_two()
 
         self.assertIsInstance(ret, AutomationEvent)
         self.assertEqual(ret.key, factory.DEFAULT_ROUTING_EVENT_TWO)
 
-    def test_create_routing_events(self):
+    def test_create_automation_events(self):
         self.assertEqual(AutomationEvent.objects.count(), 0)
 
-        factory.create_routing_events()
+        factory.create_automation_events()
 
         self.assertEqual(AutomationEvent.objects.count(), len(ROUTING_EVENTS))
 

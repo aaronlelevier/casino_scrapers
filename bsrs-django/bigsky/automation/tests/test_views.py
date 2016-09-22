@@ -14,8 +14,8 @@ from automation.models import AutomationEvent, Automation, ProfileFilter, Availa
 from automation.tests.factory import (
     create_automation, create_available_filters, create_available_filter_location,
     create_ticket_location_filter, create_ticket_categories_mid_level_filter, create_automation,
-    create_ticket_location_state_filter, create_ticket_location_country_filter, create_routing_events,
-    create_routing_event_two)
+    create_ticket_location_state_filter, create_ticket_location_country_filter, create_automation_events,
+    create_automation_event_two)
 from automation.tests.mixins import ViewTestSetupMixin
 from ticket.models import TicketPriority
 from utils.create import _generate_chars
@@ -26,7 +26,7 @@ class AutomationEventTests(APITestCase):
 
     def setUp(self):
         self.person = create_single_person()
-        create_routing_events()
+        create_automation_events()
         self.event = AutomationEvent.objects.first()
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -224,7 +224,7 @@ class AutomationCreateTests(ViewTestSetupMixin, APITestCase):
         self.data['id'] = str(uuid.uuid4())
         self.data['description'] = 'foo'
         # events
-        event = create_routing_event_two()
+        event = create_automation_event_two()
         self.data['events'] = [str(event.id)]
         # dynamic location filter
         location = create_location()
@@ -299,7 +299,7 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
 
     def test_update(self):
         # Base fields update only, no nested updating
-        event = create_routing_event_two()
+        event = create_automation_event_two()
         self.assertNotEqual(self.data['events'], [str(event.id)])
         self.data.update({
             'description': 'foo',

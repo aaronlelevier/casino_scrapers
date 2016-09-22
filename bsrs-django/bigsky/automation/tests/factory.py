@@ -16,18 +16,18 @@ from utils.helpers import create_default
 DEFAULT_ROUTING_EVENT = 'automation.event.ticket_status_new'
 DEFAULT_ROUTING_EVENT_TWO = 'automation.event.ticket_status_complete'
 
-def create_routing_event(key=DEFAULT_ROUTING_EVENT):
+def create_automation_event(key=DEFAULT_ROUTING_EVENT):
     obj, _  = AutomationEvent.objects.get_or_create(key=key)
     return obj
 
 
-def create_routing_event_two(key=DEFAULT_ROUTING_EVENT_TWO):
+def create_automation_event_two(key=DEFAULT_ROUTING_EVENT_TWO):
     obj, _  = AutomationEvent.objects.get_or_create(key=key)
     return obj
 
 
-def create_routing_events():
-    [create_routing_event(key) for key in ROUTING_EVENTS]
+def create_automation_events():
+    [create_automation_event(key) for key in ROUTING_EVENTS]
 
 
 # AvailableFilters
@@ -134,7 +134,7 @@ def create_automation(description=None, tenant=None):
         automation = Automation.objects.create(**kwargs)
 
         # events
-        event = create_routing_event()
+        event = create_automation_event()
         automation.events.add(event)
         # provile_filters
         priority_filter = create_ticket_priority_filter()
@@ -155,4 +155,3 @@ def create_automations():
             automation.save()
 
         automation.filters.add(pf)
-
