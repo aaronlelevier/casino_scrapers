@@ -14,7 +14,7 @@ from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
 from automation.models import (
-    AutomationEvent, ROUTING_EVENTS, Automation, AutomationManager, AutomationQuerySet,
+    AutomationEvent, AUTOMATION_EVENTS, Automation, AutomationManager, AutomationQuerySet,
     AvailableFilter, ProfileFilter)
 from automation.tests.factory import (
     create_automation, create_ticket_priority_filter, create_ticket_categories_filter,
@@ -41,7 +41,7 @@ class AutomationEventTests(TestCase):
 
     def test_key_choices(self):
         field = AutomationEvent._meta.get_field('key')
-        self.assertEqual([(a) for a,b in field.choices], ROUTING_EVENTS)
+        self.assertEqual([(a) for a,b in field.choices], AUTOMATION_EVENTS)
 
     def test_meta(self):
         self.assertEqual(AutomationEvent._meta.ordering, ['key'])

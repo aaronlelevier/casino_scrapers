@@ -7,37 +7,36 @@ from django.db.models import F, Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from automation.choices import AUTOMATION_EVENTS, AUTOMATION_ACTION_TYPES
 from tenant.models import Tenant
 from utils import classproperty
 from utils.fields import MyGenericForeignKey
 from utils.models import BaseQuerySet, BaseManager, BaseModel
 
 
-ROUTING_EVENTS = [
-    'automation.event.ticket_assignee_change',
-    'automation.event.ticket_attachment_add',
-    'automation.event.ticket_category_change',
-    'automation.event.ticket_cc_add',
-    'automation.event.ticket_comment',
-    'automation.event.ticket_location_change',
-    'automation.event.ticket_priority_change',
-    'automation.event.ticket_status_cancelled',
-    'automation.event.ticket_status_complete',
-    'automation.event.ticket_status_deferred',
-    'automation.event.ticket_status_denied',
-    'automation.event.ticket_status_in_progress',
-    'automation.event.ticket_status_new',
-    'automation.event.ticket_status_pending',
-    'automation.event.ticket_status_unsatisfactory'
-]
-
 class AutomationEvent(BaseModel):
 
     key = models.CharField(max_length=100, unique=True,
-                           choices=[(x,x) for x in ROUTING_EVENTS])
+                           choices=[(x,x) for x in AUTOMATION_EVENTS])
 
     class Meta:
         ordering = ['key']
+
+
+class AutomationActionType(BaseModel):
+
+    key = models.CharField(max_length=100, unique=True,
+                           choices=[(x,x) for x in AUTOMATION_ACTION_TYPES])
+
+    class Meta:
+        ordering = ['key']
+
+
+class AutomationAction(BaseModel):
+
+    type = models.ForeignKey(AutomationActionType, related_name="actions")
+    automation = models.ForeignKey("automation.Automation", related_name="actions")
+    content = JSONField(null=True, default={})
 
 
 class AutomationQuerySet(BaseQuerySet):

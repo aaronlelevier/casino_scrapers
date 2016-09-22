@@ -4,7 +4,7 @@ from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
 from automation.models import (AutomationEvent, Automation, ProfileFilter, AvailableFilter,
-    ROUTING_EVENTS)
+    AUTOMATION_EVENTS)
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import TicketPriority
 from utils.create import random_lorem
@@ -27,7 +27,7 @@ def create_automation_event_two(key=DEFAULT_ROUTING_EVENT_TWO):
 
 
 def create_automation_events():
-    [create_automation_event(key) for key in ROUTING_EVENTS]
+    [create_automation_event(key) for key in AUTOMATION_EVENTS]
 
 
 # AvailableFilters

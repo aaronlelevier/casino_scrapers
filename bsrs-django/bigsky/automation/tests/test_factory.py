@@ -9,7 +9,7 @@ from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
 from automation.models import (AutomationEvent, Automation, ProfileFilter, AvailableFilter,
-    ROUTING_EVENTS)
+    AUTOMATION_EVENTS)
 from automation.tests import factory
 from tenant.models import Tenant
 from ticket.models import Ticket, TicketPriority
@@ -44,7 +44,7 @@ class AutomationEventTests(TestCase):
 
         factory.create_automation_events()
 
-        self.assertEqual(AutomationEvent.objects.count(), len(ROUTING_EVENTS))
+        self.assertEqual(AutomationEvent.objects.count(), len(AUTOMATION_EVENTS))
 
 
 class AvailableFilterTests(TestCase):
