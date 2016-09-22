@@ -413,27 +413,27 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
-  page.visitDetail();
-  page.nameFill(CD.nameTwo);
-  page.subLabelFill(CD.subCatLabelOne);
-  generalPage.cancel();
-  andThen(() => {
-    waitFor(assert, () => {
-      assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.modalIsVisible);
-    });
-  });
-  generalPage.clickModalRollback();
-  andThen(() => {
-    waitFor(assert, () => {
-      assert.equal(currentURL(), CATEGORIES_INDEX_URL);
-      let category = store.find('category', CD.idOne);
-      assert.equal(category.get('name'), CD.nameOne);
-      assert.equal(category.get('subcategory_label'), CD.subCatLabelOne);
-    });
-  });
-});
+// test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+//   page.visitDetail();
+//   page.nameFill(CD.nameTwo);
+//   page.subLabelFill(CD.subCatLabelOne);
+//   generalPage.cancel();
+//   andThen(() => {
+//     waitFor(assert, () => {
+//       assert.equal(currentURL(), DETAIL_URL);
+//       assert.ok(generalPage.modalIsVisible);
+//     });
+//   });
+//   generalPage.clickModalRollback();
+//   andThen(() => {
+//     waitFor(assert, () => {
+//       assert.equal(currentURL(), CATEGORIES_INDEX_URL);
+//       let category = store.find('category', CD.idOne);
+//       assert.equal(category.get('name'), CD.nameOne);
+//       assert.equal(category.get('subcategory_label'), CD.subCatLabelOne);
+//     });
+//   });
+// });
 
 test('deep linking with an xhr with a 404 status code will show up in the error component (categories)', (assert) => {
   clearxhr(detail_xhr);
