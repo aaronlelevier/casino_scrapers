@@ -2,7 +2,7 @@ from django.core.mail import send_mail
 
 from rest_framework import serializers
 
-from contact.models import Email, Address, PhoneNumber
+from contact.models import Email, Address, PhoneNumber, Country
 from contact.serializers import (
     EmailSerializer, PhoneNumberSerializer, AddressSerializer, AddressUpdateSerializer,
     CountryIdNameSerializer)
@@ -47,8 +47,8 @@ class TenantContactsMixin(object):
                     c = model.objects.get(id=value['id'])
                 except model.DoesNotExist:
                     c = model.objects.create(**value)
-                # else:
-                #     create.update_model(c, value)
+                else:
+                    create.update_model(c, value)
                 finally:
                     validated_data[key] = c
 
@@ -129,6 +129,8 @@ class TenantUpdateSerializer(TenantContactsMixin, BaseCreateSerializer):
     billing_email = EmailSerializer()
     billing_phone_number = PhoneNumberSerializer()
     billing_address = AddressUpdateSerializer()
+    countries = serializers.PrimaryKeyRelatedField(
+        queryset=Country.objects.all(), required=False, many=True)
 
     class Meta:
         model = Tenant

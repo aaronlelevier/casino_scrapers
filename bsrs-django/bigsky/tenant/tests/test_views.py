@@ -10,12 +10,13 @@ from rest_framework.test import APITestCase
 from accounting.models import Currency
 from contact.models import Email, Address, PhoneNumber, Country
 from contact.serializers import EmailSerializer, AddressSerializer, PhoneNumberSerializer
+from contact.tests.factory import create_address
 from dtd.models import TreeData, DTD_START_KEY
 from person.models import Person
 from person.tests.factory import PASSWORD, create_single_person
 from tenant.oauth import BsOAuthSession, SANDBOX_SC_SUBSCRIBER_POST_URL
 from tenant.models import Tenant
-from tenant.serializers import TenantCreateSerializer, TenantDetailSerializer
+from tenant.serializers import TenantCreateSerializer, TenantUpdateSerializer
 from tenant.tests.factory import SC_SUBSCRIBER_POST_DATA
 
 
@@ -265,27 +266,18 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
     def test_data(self):
         dtd = mommy.make(TreeData)
         currency = mommy.make(Currency, code='FOO')
-        serializer = TenantDetailSerializer(self.tenant)
+        serializer = TenantUpdateSerializer(self.tenant)
         country = mommy.make(Country, common_name='foo')
         updated_data = serializer.data
         updated_data.update({
             'company_code': 'foo',
             'company_name': 'bar',
             'dashboard_text': 'biz',
-            'dt_start': {
-                'id': str(dtd.id),
-                'key': dtd.key
-            },
             'default_currency': str(currency.id),
             'test_mode': False,
-            'implementation_contact': {
-                'id': str(self.person.id),
-                'fullname': self.person.fullname
-            },
-            'countries': [{
-                'id': str(country.id),
-                'name': country.common_name
-            }]
+            'dt_start': str(dtd.id),
+            'implementation_contact': str(self.person.id),
+            'countries': [str(country.id)]
         })
 
         response = self.client.put('/api/admin/tenant/{}/'.format(self.tenant.id), updated_data, format='json')
@@ -296,14 +288,11 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['company_code'], updated_data['company_code'])
         self.assertEqual(data['company_name'], updated_data['company_name'])
         self.assertEqual(data['dashboard_text'], updated_data['dashboard_text'])
-        self.assertEqual(data['default_currency_id'], updated_data['default_currency'])
-        # specific data to update that's not in create
-        self.assertEqual(data['dt_start_id'], updated_data['dt_start']['id'])
-        self.assertEqual(data['dt_start']['id'], updated_data['dt_start']['id'])
-        self.assertEqual(data['dt_start']['key'], updated_data['dt_start']['key'])
+        self.assertEqual(data['default_currency'], updated_data['default_currency'])
+        self.assertEqual(data['implementation_contact_initial'], self.tenant.implementation_contact_initial)
         self.assertFalse(data['test_mode'])
-        self.assertEqual(data['implementation_contact']['id'], str(self.person.id))
-        self.assertEqual(data['implementation_contact']['fullname'], self.person.fullname)
+        self.assertEqual(data['dt_start'], updated_data['dt_start'])
+        self.assertEqual(data['implementation_contact'], str(self.person.id))
         self.assertEqual(len(data['countries']), 1)
         self.assertEqual(data['countries'][0]['id'], str(country.id))
         self.assertEqual(data['countries'][0]['name'], country.common_name)
@@ -348,7 +337,7 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
 
     def test_update_related_models(self):
         dtd = mommy.make(TreeData)
-        serializer = TenantDetailSerializer(self.tenant)
+        serializer = TenantUpdateSerializer(self.tenant)
         country = mommy.make(Country, common_name='foo')
         # contacts
         implementation_email = mommy.make(Email, _fill_optional=['type'])
@@ -403,12 +392,63 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['billing_phone_number'], updated_data['billing_phone_number'])
         self.assertEqual(data['billing_address'], updated_data['billing_address'])
 
-    def test_remove_related_models(self):
-        serializer = TenantDetailSerializer(self.tenant)
+    def test_update_existing_related_models_field(self):
+        # contacts
+        implementation_email = mommy.make(Email, _fill_optional=['type'])
+        billing_email = mommy.make(Email, _fill_optional='type')
+        billing_phone_number = mommy.make(PhoneNumber, _fill_optional=['type'])
+        billing_address = create_address()
+        # data
+        serializer = TenantUpdateSerializer(self.tenant)
         updated_data = serializer.data
         updated_data.update({
-            'dt_start': {},
-            'implementation_contact': {},
+            'implementation_email': {
+                'id': str(self.tenant.implementation_email.id),
+                'type': str(implementation_email.type.id),
+                'email': implementation_email.email
+            },
+            'billing_email': {
+                'id': str(self.tenant.billing_email.id),
+                'type': str(billing_email.type.id),
+                'email': billing_email.email
+            },
+            'billing_phone_number': {
+                'id': str(self.tenant.billing_phone_number.id),
+                'type': str(billing_phone_number.type.id),
+                'number': billing_phone_number.number
+            },
+            'billing_address': {
+                'id': str(self.tenant.billing_address.id),
+                'type': str(billing_address.type.id),
+                'address': billing_address.address,
+                'city': billing_address.city,
+                'state': str(billing_address.state.id),
+                'country': str(billing_address.country.id),
+                'postal_code': billing_address.postal_code
+            }
+        })
+        # pre-test
+        self.assertNotEqual(updated_data['implementation_email']['email'], self.tenant.implementation_email.email)
+        self.assertNotEqual(updated_data['billing_email']['email'], self.tenant.billing_email.email)
+        self.assertNotEqual(updated_data['billing_phone_number']['number'], self.tenant.billing_phone_number.number)
+        self.assertNotEqual(updated_data['billing_address']['address'], self.tenant.billing_address.address)
+
+        response = self.client.put('/api/admin/tenant/{}/'.format(self.tenant.id), updated_data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['id'], str(self.tenant.id))
+        self.assertEqual(data['implementation_email'], updated_data['implementation_email'])
+        self.assertEqual(data['billing_email'], updated_data['billing_email'])
+        self.assertEqual(data['billing_phone_number'], updated_data['billing_phone_number'])
+        self.assertEqual(data['billing_address'], updated_data['billing_address'])
+
+    def test_remove_related_models(self):
+        serializer = TenantUpdateSerializer(self.tenant)
+        updated_data = serializer.data
+        updated_data.update({
+            'dt_start': None,
+            'implementation_contact': None,
             'countries': []
         })
         self.assertIsInstance(self.tenant.dt_start, TreeData)
