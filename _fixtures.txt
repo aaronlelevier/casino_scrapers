@@ -13,4 +13,4 @@ manage.py loaddata fixtures/third_party.json
 manage.py loaddata fixtures/auth.json
 manage.py loaddata fixtures/person.json
 manage.py loaddata fixtures/ticket.json
-manage.py loaddata fixtures/routing.json
+manage.py loaddata fixtures/automation.json

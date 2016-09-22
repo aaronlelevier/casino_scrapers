@@ -42,4 +42,8 @@ wait
 ./manage.py create_tickets
 wait
 ./manage.py dumpdata ticket --indent=2 > fixtures/ticket.json
-./manage.py dumpdata routing --indent=2 > fixtures/routing.json
+
+wait
+./manage.py create_automations
+wait
+./manage.py dumpdata automation --indent=2 > fixtures/automation.json
