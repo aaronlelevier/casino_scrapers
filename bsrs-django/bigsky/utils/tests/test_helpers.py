@@ -8,13 +8,17 @@ from django.contrib.auth.models import ContentType
 from django.test import TestCase
 from django.utils import timezone
 
+from automation.models import ProfileFilter
+from automation.tests.factory import (
+    create_automation, create_ticket_priority_filter, create_ticket_categories_filter)
 from location.models import LocationLevel
 from person import config
 from person.models import Role, PersonStatus
 from person.tests.factory import create_role
 from utils.helpers import (BASE_UUID, model_to_json, model_to_json_select_related,
     model_to_json_prefetch_related, generate_uuid, get_content_type_number, media_path,
-    create_default, local_strftime, queryset_to_json)
+    create_default, local_strftime, queryset_to_json, add_related, remove_related,
+    clear_related)
 
 
 class ModelToJsonTests(TestCase):
@@ -158,3 +162,37 @@ class MiscTestHelperTests(TestCase):
         ret = local_strftime(obj.created, tzname)
 
         self.assertEqual(ret, raw_ret)
+
+
+class RelatedModelCrudHelperTests(TestCase):
+
+    def test_add_related(self):
+        automation = create_automation(with_filters=False)
+        profile_filter = create_ticket_priority_filter()
+        self.assertNotEqual(profile_filter.automation, automation)
+
+        add_related(profile_filter, 'automation', automation)
+
+        self.assertEqual(profile_filter.automation, automation)
+
+    def test_remove_related(self):
+        profile_filter = create_ticket_priority_filter()
+        automation = profile_filter.automation
+
+        remove_related(profile_filter)
+
+        with self.assertRaises(ProfileFilter.DoesNotExist):
+            ProfileFilter.objects.get(id=profile_filter.id)
+
+        self.assertEqual(automation.filters.count(), 0)
+
+    def test_clear_related(self):
+        profile_filter = create_ticket_priority_filter()
+        automation = profile_filter.automation
+        profile_filter_two = create_ticket_categories_filter(
+            automation)
+        self.assertEqual(automation.filters.count(), 2)
+
+        clear_related(automation, 'filters')
+
+        self.assertEqual(automation.filters.count(), 0)

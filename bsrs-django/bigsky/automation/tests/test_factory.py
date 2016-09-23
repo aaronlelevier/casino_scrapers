@@ -12,6 +12,7 @@ from automation.models import (AutomationEvent, Automation, ProfileFilter, Avail
     AUTOMATION_EVENTS)
 from automation.tests import factory
 from tenant.models import Tenant
+from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority
 from utils.create import LOREM_IPSUM_WORDS
 from utils.helpers import create_default
@@ -126,16 +127,24 @@ class AvailableFilterTests(TestCase):
 
 class PriorityFilterTests(TestCase):
 
+    def setUp(self):
+        self.automation = factory.create_automation(with_filters=False)
+
     def test_create_ticket_priority_filter(self):
         priority = create_default(TicketPriority)
         source = factory.create_available_filter_priority()
 
         pf = factory.create_ticket_priority_filter()
 
-        # other fields
+        self.assertIsInstance(pf.automation, Automation)
         self.assertEqual(pf.source, source)
         self.assertEqual(pf.lookups, {})
         self.assertEqual(pf.criteria, [str(priority.id)])
+
+    def test_create_ticket_priority_filter__explicit_automation(self):
+        pf = factory.create_ticket_priority_filter(self.automation)
+
+        self.assertEqual(pf.automation, self.automation)
 
     def test_create_ticket_categories_filter(self):
         category = create_repair_category()
@@ -143,6 +152,7 @@ class PriorityFilterTests(TestCase):
 
         pf = factory.create_ticket_categories_filter()
 
+        self.assertIsInstance(pf.automation, Automation)
         self.assertEqual(pf.source, source)
         self.assertEqual(pf.lookups, {})
         self.assertEqual(pf.criteria, [str(category.id)])
@@ -153,6 +163,7 @@ class PriorityFilterTests(TestCase):
 
         pf = factory.create_ticket_categories_mid_level_filter()
 
+        self.assertIsInstance(pf.automation, Automation)
         self.assertEqual(pf.source, source)
         self.assertEqual(pf.lookups, {})
         self.assertEqual(len(pf.criteria), 1)
@@ -166,6 +177,7 @@ class PriorityFilterTests(TestCase):
 
         pf = factory.create_ticket_location_filter()
 
+        self.assertIsInstance(pf.automation, Automation)
         self.assertEqual(pf.source, source)
         self.assertEqual(pf.lookups, {'filters': 'location_level', 'id': str(location_level.id), 'name': location_level.name})
         self.assertEqual(pf.criteria, [str(location.id)])
@@ -176,6 +188,7 @@ class PriorityFilterTests(TestCase):
 
         pf = factory.create_ticket_location_state_filter()
 
+        self.assertIsInstance(pf.automation, Automation)
         self.assertEqual(pf.source, source)
         self.assertEqual(pf.lookups, {})
         self.assertEqual(pf.criteria, [str(state.id)])
@@ -186,6 +199,7 @@ class PriorityFilterTests(TestCase):
 
         pf = factory.create_ticket_location_country_filter()
 
+        self.assertIsInstance(pf.automation, Automation)
         self.assertEqual(pf.source, source)
         self.assertEqual(pf.lookups, {})
         self.assertEqual(pf.criteria, [str(country.id)])
@@ -209,6 +223,18 @@ class AutomationTests(TestCase):
         self.assertEqual(automation.filters.count(), 2)
         self.assertEqual(automation.filters.filter(source__field='priority').count(), 1)
         self.assertEqual(automation.filters.filter(source__field='categories').count(), 1)
+
+    def test_create_automation__args(self):
+        description = 'foo'
+        tenant = get_or_create_tenant('bar')
+        with_filters = False
+
+        ret = factory.create_automation(description=description, tenant=tenant,
+                                        with_filters=with_filters)
+
+        self.assertEqual(ret.description, description)
+        self.assertEqual(ret.tenant, tenant)
+        self.assertEqual(ret.filters.count(), 0)
 
     def test_create_automations(self):
         self.assertEqual(Automation.objects.count(), 0)

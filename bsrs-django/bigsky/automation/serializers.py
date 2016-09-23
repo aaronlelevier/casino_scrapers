@@ -124,8 +124,7 @@ class AutomationCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
         if filters:
             for f in filters:
-                pf = ProfileFilter.objects.create(**f)
-                instance.filters.add(pf)
+                pf = ProfileFilter.objects.create(automation=instance, **f)
 
         return instance
 
@@ -138,14 +137,14 @@ class AutomationCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
                 try:
                     pf = instance.filters.get(id=f['id'])
                 except ProfileFilter.DoesNotExist:
-                    pf = ProfileFilter.objects.create(**f)
+
+                    pf = ProfileFilter.objects.create(automation=instance, **f)
                 else:
                     pf.criteria = f.get('criteria', [])
                     pf.lookups = f.get('lookups', {})
                     pf.save()
                 finally:
                     filter_ids.append(pf.id)
-                    instance.filters.add(pf)
 
         # # hard delete if not sent
         for x in instance.filters.exclude(id__in=filter_ids):

@@ -24,7 +24,7 @@ from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority, TicketStatus
 from ticket.tests.factory import create_ticket
 from ticket.tests.factory_related import create_ticket_statuses
-from utils.helpers import create_default
+from utils.helpers import create_default, clear_related
 
 
 class SetupMixin(object):
@@ -206,7 +206,7 @@ class AutomationTests(SetupMixin, TestCase):
         self.assertTrue(self.automation.filters.first())
         self.assertTrue(self.automation.has_filters)
 
-        self.automation.filters.clear()
+        clear_related(self.automation, 'filters')
 
         self.assertFalse(self.automation.filters.first())
         self.assertFalse(self.automation.has_filters)

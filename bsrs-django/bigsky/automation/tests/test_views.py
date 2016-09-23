@@ -19,7 +19,7 @@ from automation.tests.factory import (
 from automation.tests.mixins import ViewTestSetupMixin
 from ticket.models import TicketPriority
 from utils.create import _generate_chars
-from utils.helpers import create_default
+from utils.helpers import create_default, add_related, remove_related, clear_related
 
 
 class AutomationEventTests(APITestCase):
@@ -126,8 +126,8 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         location_level = create_top_level_location().location_level
         location_filter = create_ticket_location_filter()
         location_filter.lookups.pop('filters', None)
-        self.automation.filters.clear()
-        self.automation.filters.add(location_filter)
+        clear_related(self.automation, 'filters')
+        add_related(location_filter, 'automation', self.automation)
 
         response = self.client.get('/api/admin/automations/{}/'.format(self.automation.id))
 
@@ -147,7 +147,7 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
     def test_criteria__priority(self):
         priority = create_default(TicketPriority)
         for pf in self.automation.filters.exclude(source__field='priority'):
-            self.automation.filters.remove(pf)
+            remove_related(pf)
 
         response = self.client.get('/api/admin/automations/{}/'.format(self.automation.id))
 
@@ -158,11 +158,11 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['filters'][0]['criteria'][0]['name'], str(priority.name))
 
     def test_criteria__location(self):
-        self.automation.filters.clear()
+        clear_related(self.automation, 'filters')
         self.assertEqual(self.automation.filters.count(), 0)
         location = create_top_level_location()
         location_filter = create_ticket_location_filter()
-        self.automation.filters.add(location_filter)
+        add_related(location_filter, 'automation', self.automation)
 
         response = self.client.get('/api/admin/automations/{}/'.format(self.automation.id))
 
@@ -173,11 +173,11 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['filters'][0]['criteria'][0]['name'], location.name)
 
     def test_criteria__categories(self):
-        self.automation.filters.clear()
+        clear_related(self.automation, 'filters')
         self.assertEqual(self.automation.filters.count(), 0)
         category_filter = create_ticket_categories_mid_level_filter()
         category = Category.objects.get(id=category_filter.criteria[0])
-        self.automation.filters.add(category_filter)
+        add_related(category_filter, 'automation', self.automation)
 
         response = self.client.get('/api/admin/automations/{}/'.format(self.automation.id))
 
@@ -188,11 +188,11 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['filters'][0]['criteria'][0]['name'], category.parents_and_self_as_string())
 
     def test_criteria_state(self):
-        self.automation.filters.clear()
+        clear_related(self.automation, 'filters')
         self.assertEqual(self.automation.filters.count(), 0)
         state_filter = create_ticket_location_state_filter()
         state = State.objects.get(id=state_filter.criteria[0])
-        self.automation.filters.add(state_filter)
+        add_related(state_filter, 'automation', self.automation)
 
         response = self.client.get('/api/admin/automations/{}/'.format(self.automation.id))
 
@@ -203,11 +203,11 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['filters'][0]['criteria'][0]['name'], state.name)
 
     def test_criteria_country(self):
-        self.automation.filters.clear()
+        clear_related(self.automation, 'filters')
         self.assertEqual(self.automation.filters.count(), 0)
         country_filter = create_ticket_location_country_filter()
         country = Country.objects.get(id=country_filter.criteria[0])
-        self.automation.filters.add(country_filter)
+        add_related(country_filter, 'automation', self.automation)
 
         response = self.client.get('/api/admin/automations/{}/'.format(self.automation.id))
 
@@ -291,7 +291,7 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
 
     def setUp(self):
         super(AutomationUpdateTests, self).setUp()
-        self.automation.filters.remove(self.category_filter)
+        remove_related(self.category_filter)
 
     def test_setup(self):
         self.assertEqual(self.automation.filters.count(), 1)
@@ -395,12 +395,12 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(self.automation.filters.first().criteria, criteria_two)
 
     def test_update__nested_update__dynamic(self):
-        self.automation.filters.clear()
+        clear_related(self.automation, 'filters')
         location = create_location()
         criteria_two = [str(location.id)]
         location_filter = create_ticket_location_filter()
         location_af = location_filter.source
-        self.automation.filters.add(location_filter)
+        add_related(location_filter, 'automation', self.automation)
         # pre-test
         self.assertEqual(self.automation.filters.first().source, location_af)
         self.assertNotEqual(self.automation.filters.first().criteria, criteria_two)
@@ -423,12 +423,12 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(self.automation.filters.first().lookups, self.data['filters'][0]['lookups'])
 
     def test_update__nested_update__dynamic__multiple(self):
-        self.automation.filters.clear()
+        clear_related(self.automation, 'filters')
         location_filter = create_ticket_location_filter()
         # filter 1 - will be an existing related record
         location_level = create_location_level('foo')
         location = create_location(location_level)
-        self.automation.filters.add(location_filter)
+        add_related(location_filter, 'automation', self.automation)
         self.assertEqual(self.automation.filters.first().source, location_filter.source)
         self.assertNotEqual(self.automation.filters.first().criteria, [str(location.id)])
         self.data['filters'] = [{
@@ -439,7 +439,7 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
         }]
         # filter 2
         location_filter_two = create_ticket_location_filter()
-        self.automation.filters.add(location_filter_two)
+        add_related(location_filter_two, 'automation', self.automation)
         location_level_two = create_location_level('bar')
         location_two = create_location(location_level)
         self.data['filters'].append({

@@ -77,3 +77,18 @@ def local_strftime(d, tzname=settings.TIME_ZONE):
                            d.second, tzinfo=tzinfo)
     return datetime.datetime.strftime(tzinfo.normalize(dt + dt.utcoffset()),
                                       "%Y-%m-%d %H:%M:%S")
+
+
+# relate model crud methods (add, remove, clear)
+
+def add_related(model, related_model_str, related_model):
+    setattr(model, related_model_str, related_model)
+    model.save()
+
+
+def remove_related(related_model):
+    related_model.delete()
+
+
+def clear_related(model, related_name):
+    getattr(model, related_name).all().delete()

@@ -94,7 +94,6 @@ class Automation(BaseModel):
     # keys
     tenant = models.ForeignKey(Tenant, null=True)
     description = models.CharField(max_length=500)
-    filters = GenericRelation("automation.ProfileFilter")
     events = models.ManyToManyField(AutomationEvent, related_name="automations")
 
     objects = AutomationManager()
@@ -162,6 +161,7 @@ class ProfileFilter(BaseModel):
     expl: Basically ProfileFilter has the serialized value returned by the
         list saved to it, indicating the dynamic filter selected.
     """
+    automation = models.ForeignKey(Automation, related_name="filters")
     source = models.ForeignKey(AvailableFilter,
         help_text="Use to get info on what type of filter, if this is a dynamic filter, use"
                   "the lookup field")
@@ -170,10 +170,6 @@ class ProfileFilter(BaseModel):
                   "this should be a string array")
 
     criteria = JSONField(default=[], help_text="Must be a list. Criteria to match on.")
-    # GenericForeignKey
-    content_type = models.ForeignKey(ContentType, null=True)
-    object_id = models.UUIDField(null=True)
-    content_object = MyGenericForeignKey('content_type', 'object_id')
 
     class Meta:
         ordering = ['id']
