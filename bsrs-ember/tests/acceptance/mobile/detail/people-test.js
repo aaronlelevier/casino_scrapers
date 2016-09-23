@@ -28,7 +28,7 @@ const PEOPLE_PUT_URL = `${PEOPLE_URL}${PD.idOne}/`;
 const LOCATION = '.t-person-locations-select';
 const ROLE = '.t-person-role-select';
 
-moduleForAcceptance('scott Acceptance | mobile people detail test', {
+moduleForAcceptance('Acceptance | mobile people detail test', {
   beforeEach() {
     setWidth('mobile');
     store = this.application.__container__.lookup('service:simpleStore');

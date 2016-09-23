@@ -46,7 +46,7 @@ module('unit: parent-model-category-select component test', {
 //  assert.equal(valid, true);
 //});
 
-test('scott sorted categories will start with the parent and end with the leaf child category', (assert) => {
+test('sorted categories will start with the parent and end with the leaf child category', (assert) => {
     ticket = store.push('ticket', {id: TD.idOne});
     category_one = store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo, children_fks: [], level: 2});
     category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId, children_fks: [CD.idOne], level: 1});
