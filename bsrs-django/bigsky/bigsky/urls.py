@@ -62,6 +62,7 @@ router.register(r'admin/roles', person_views.RoleViewSet)
 router.register(r'admin/automations', automation_views.AutomationViewSet)
 router.register(r'admin/automation-available-filters', automation_views.AvailableFilterViewSet)
 router.register(r'admin/automation-events', automation_views.AutomationEventViewSet)
+router.register(r'admin/automation-action-types', automation_views.AutomationActionTypeViewSet)
 # TENANT
 router.register(r'admin/tenant', tenant_views.TenantViewSet)
 # THIRD PARTY

@@ -246,6 +246,8 @@ class AutomationTests(TestCase):
         self.assertIsInstance(automation.tenant, Tenant)
         # events
         self.assertEqual(automation.events.count(), 1)
+        # actions
+        self.assertEqual(automation.actions.count(), 1)
         # profile_filters
         self.assertEqual(automation.filters.count(), 2)
         self.assertEqual(automation.filters.filter(source__field='priority').count(), 1)

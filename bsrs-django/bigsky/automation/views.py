@@ -1,29 +1,27 @@
 import copy
 
-from rest_framework import permissions, viewsets
+from rest_framework import permissions, viewsets, mixins
 from rest_framework.exceptions import MethodNotAllowed
 
 from location.models import LocationLevel
-from automation.models import AutomationEvent, Automation, AvailableFilter
+from automation.models import AutomationEvent, Automation, AvailableFilter, AutomationActionType
 from automation import serializers as rs
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.views import BaseModelViewSet
 
 
-class AutomationEventViewSet(BaseModelViewSet):
+class AutomationEventViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
 
-    model = AutomationEvent
     queryset = AutomationEvent.objects.all()
+    serializer_class = rs.AutomationEventSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-    def get_serializer_class(self):
-        if self.action == 'list':
-            return rs.AutomationEventSerializer
-        else:
-            raise MethodNotAllowed(method=self.action)
 
-    def perform_destroy(self, instance, override):
-        raise MethodNotAllowed(method=self.action)
+class AutomationActionTypeViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+
+    queryset = AutomationActionType.objects.all()
+    serializer_class = rs.AutomationActionTypeSerializer
+    permission_classes = (permissions.IsAuthenticated,)
 
 
 class AutomationViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):

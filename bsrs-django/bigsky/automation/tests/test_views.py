@@ -10,12 +10,13 @@ from location.models import LocationLevel
 from location.tests.factory import (create_location_levels, create_top_level_location,
     create_location_level, create_location)
 from person.tests.factory import create_single_person, PASSWORD
-from automation.models import AutomationEvent, Automation, ProfileFilter, AvailableFilter
+from automation.models import (AutomationEvent, Automation, ProfileFilter, AvailableFilter,
+    AutomationActionType)
 from automation.tests.factory import (
     create_automation, create_available_filters, create_available_filter_location,
     create_ticket_location_filter, create_ticket_categories_mid_level_filter, create_automation,
     create_ticket_location_state_filter, create_ticket_location_country_filter, create_automation_events,
-    create_automation_event_two)
+    create_automation_event_two, create_automation_action_types)
 from automation.tests.mixins import ViewTestSetupMixin
 from ticket.models import TicketPriority
 from utils.create import _generate_chars
@@ -45,21 +46,29 @@ class AutomationEventTests(APITestCase):
         event = AutomationEvent.objects.get(id=data['results'][0]['id'])
         self.assertEqual(data['results'][0]['key'], event.key)
 
-    def test_detail(self):
-        response = self.client.get('/api/admin/automation-events/{}/'.format(self.event.id))
-        self.assertEqual(response.status_code, 405)
 
-    def test_create(self):
-        response = self.client.post('/api/admin/automation-events/', {}, format='json')
-        self.assertEqual(response.status_code, 405)
+class AutomationActionTypesTests(APITestCase):
 
-    def test_update(self):
-        response = self.client.put('/api/admin/automation-events/{}/'.format(self.event.id), {}, format='json')
-        self.assertEqual(response.status_code, 405)
+    def setUp(self):
+        self.person = create_single_person()
+        create_automation_action_types()
+        self.action_type = AutomationActionType.objects.first()
+        self.client.login(username=self.person.username, password=PASSWORD)
 
-    def test_delete(self):
-        response = self.client.delete('/api/admin/automation-events/{}/'.format(self.event.id))
-        self.assertEqual(response.status_code, 405)
+    def tearDown(self):
+        self.client.logout()
+
+    def test_list(self):
+        self.assertTrue(self.action_type)
+
+        response = self.client.get('/api/admin/automation-action-types/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data['count'] > 0)
+        self.assertEqual(len(data['results'][0]), 2)
+        event = AutomationActionType.objects.get(id=data['results'][0]['id'])
+        self.assertEqual(data['results'][0]['key'], event.key)
 
 
 class AutomationListTests(ViewTestSetupMixin, APITestCase):

@@ -179,6 +179,8 @@ def create_automation(description=None, tenant=None, with_filters=True):
         # events
         event = create_automation_event()
         automation.events.add(event)
+        # actions
+        create_automation_action(automation)
         # provile_filters
         if with_filters:
             create_ticket_priority_filter(automation)

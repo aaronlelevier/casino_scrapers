@@ -6,7 +6,8 @@ from category.models import Category
 from contact.models import State, Country
 from location.models import Location, LocationLevel
 from person.serializers_leaf import PersonSimpleSerializer
-from automation.models import AutomationEvent, Automation, ProfileFilter, AvailableFilter
+from automation.models import (AutomationEvent, Automation, ProfileFilter, AvailableFilter,
+    AutomationActionType)
 from automation.validators import (ProfileFilterFieldValidator, UniqueByTenantValidator,
     AvailableFilterValidator)
 from tenant.mixins import RemoveTenantMixin
@@ -18,6 +19,13 @@ class AutomationEventSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AutomationEvent
+        fields = ('id', 'key')
+
+
+class AutomationActionTypeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = AutomationActionType
         fields = ('id', 'key')
 
 
