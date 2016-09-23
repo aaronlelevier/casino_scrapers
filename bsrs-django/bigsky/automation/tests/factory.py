@@ -3,8 +3,9 @@ from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
+from automation.choices import AUTOMATION_EVENTS, AUTOMATION_ACTION_TYPES
 from automation.models import (AutomationEvent, Automation, ProfileFilter, AvailableFilter,
-    AUTOMATION_EVENTS)
+    AutomationActionType, AutomationAction)
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import TicketPriority
 from utils.create import random_lorem
@@ -28,6 +29,30 @@ def create_automation_event_two(key=DEFAULT_ROUTING_EVENT_TWO):
 
 def create_automation_events():
     [create_automation_event(key) for key in AUTOMATION_EVENTS]
+
+
+# AutomationActionTypes
+
+DEFAULT_AUTOMATION_ACTION_TYPE = 'automation.actions.ticket_assignee'
+DEFAULT_AUTOMATION_ACTION_TYPE_TWO = 'automation.actions.email'
+
+def create_automation_action_type(key=DEFAULT_AUTOMATION_ACTION_TYPE):
+    obj, _ = AutomationActionType.objects.get_or_create(key=key)
+    return obj
+
+
+def create_automation_action_types():
+    [create_automation_action_type(key) for key in AUTOMATION_ACTION_TYPES]
+
+
+# AutomationActions
+
+def create_automation_action(automation=None):
+    if not automation:
+        automation = create_automation(with_filters=False)
+
+    type = create_automation_action_type()
+    return AutomationAction.objects.create(type=type, automation=automation)
 
 
 # AvailableFilters

@@ -8,8 +8,9 @@ from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
+from automation.choices import AUTOMATION_EVENTS, AUTOMATION_ACTION_TYPES
 from automation.models import (AutomationEvent, Automation, ProfileFilter, AvailableFilter,
-    AUTOMATION_EVENTS)
+    AutomationActionType, AutomationAction)
 from automation.tests import factory
 from tenant.models import Tenant
 from tenant.tests.factory import get_or_create_tenant
@@ -46,6 +47,32 @@ class AutomationEventTests(TestCase):
         factory.create_automation_events()
 
         self.assertEqual(AutomationEvent.objects.count(), len(AUTOMATION_EVENTS))
+
+
+class AutomationActionTypeTests(TestCase):
+
+    def test_create_automation_action_type(self):
+        ret = factory.create_automation_action_type()
+
+        self.assertIsInstance(ret, AutomationActionType)
+        self.assertEqual(ret.key, factory.DEFAULT_AUTOMATION_ACTION_TYPE)
+
+    def test_create_automation_action_types(self):
+        self.assertEqual(AutomationActionType.objects.count(), 0)
+
+        factory.create_automation_action_types()
+
+        self.assertEqual(AutomationActionType.objects.count(), len(AUTOMATION_ACTION_TYPES))
+
+
+class AutomationActionTests(TestCase):
+
+    def test_create_automation_action(self):
+        ret = factory.create_automation_action()
+
+        self.assertIsInstance(ret, AutomationAction)
+        self.assertIsInstance(ret.type, AutomationActionType)
+        self.assertIsInstance(ret.automation, Automation)
 
 
 class AvailableFilterTests(TestCase):
