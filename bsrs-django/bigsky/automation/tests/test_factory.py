@@ -73,6 +73,8 @@ class AutomationActionTests(TestCase):
         self.assertIsInstance(ret, AutomationAction)
         self.assertIsInstance(ret.type, AutomationActionType)
         self.assertIsInstance(ret.automation, Automation)
+        self.assertIsInstance(
+            Person.objects.get(id=ret.content['assignee']), Person)
 
 
 class AvailableFilterTests(TestCase):

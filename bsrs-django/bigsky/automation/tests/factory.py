@@ -52,7 +52,9 @@ def create_automation_action(automation=None):
         automation = create_automation(with_filters=False)
 
     type = create_automation_action_type()
-    return AutomationAction.objects.create(type=type, automation=automation)
+    person = create_single_person()
+    return AutomationAction.objects.create(type=type, automation=automation,
+                                           content={'assignee': str(person.id)})
 
 
 # AvailableFilters

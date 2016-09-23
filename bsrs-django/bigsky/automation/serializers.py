@@ -5,9 +5,10 @@ from rest_framework import serializers
 from category.models import Category
 from contact.models import State, Country
 from location.models import Location, LocationLevel
+from person.models import Person
 from person.serializers_leaf import PersonSimpleSerializer
 from automation.models import (AutomationEvent, Automation, ProfileFilter, AvailableFilter,
-    AutomationActionType)
+    AutomationAction, AutomationActionType)
 from automation.validators import (ProfileFilterFieldValidator, UniqueByTenantValidator,
     AvailableFilterValidator)
 from tenant.mixins import RemoveTenantMixin
@@ -27,6 +28,15 @@ class AutomationActionTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = AutomationActionType
         fields = ('id', 'key')
+
+
+class AutomationActionSerializer(BaseCreateSerializer):
+
+    type = AutomationActionTypeSerializer()
+
+    class Meta:
+        model = AutomationAction
+        fields = ('id', 'type', 'content')
 
 
 class AvailableFilterSerializer(serializers.ModelSerializer):
@@ -177,12 +187,28 @@ class AutomationListSerializer(RemoveTenantMixin, BaseCreateSerializer):
 class AutomationDetailSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
     events = AutomationEventSerializer(required=False, many=True)
+    actions = AutomationActionSerializer(required=False, many=True)
     filters = ProfileFilterSerializer(required=False, many=True)
 
     class Meta:
         model = Automation
-        fields = AUTOMATION_FIELDS + ('events', 'filters',)
+        fields = AUTOMATION_FIELDS + ('events', 'actions', 'filters',)
 
     @staticmethod
     def eager_load(queryset):
         return queryset.prefetch_related('events', 'filters', 'filters__source')
+
+    def to_representation(self, instance):
+        init_data = super(AutomationDetailSerializer, self).to_representation(instance)
+        data = copy.copy(init_data)
+
+        for i, action in enumerate(init_data['actions']):
+            if action['type']['key'] == 'automation.actions.ticket_assignee':
+                data['actions'][i]['assignee'] = (Person.objects.get(id=action['content']['assignee'])
+                                                                .to_simple_fullname_dict())
+
+            # this is a storage dict for the data to be decorated onto
+            # the automation action, so remove before returning the data
+            data['actions'][i].pop('content')
+
+        return data
