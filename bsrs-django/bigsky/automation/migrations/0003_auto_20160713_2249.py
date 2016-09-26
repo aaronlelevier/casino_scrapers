@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterModelOptions(
-            name='profilefilter',
+            name='automationfilter',
             options={'ordering': ['id']},
         ),
     ]

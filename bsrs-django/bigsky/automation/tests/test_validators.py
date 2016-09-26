@@ -13,10 +13,10 @@ from automation.tests.factory import create_ticket_location_filter
 from tenant.tests.factory import get_or_create_tenant
 
 
-class ProfileFilterFieldValidatorTests(ViewTestSetupMixin, APITestCase):
+class AutomationFilterFieldValidatorTests(ViewTestSetupMixin, APITestCase):
 
     def setUp(self):
-        super(ProfileFilterFieldValidatorTests, self).setUp()
+        super(AutomationFilterFieldValidatorTests, self).setUp()
 
         self.data['id'] = str(uuid.uuid4())
         self.data['description'] = 'foo'

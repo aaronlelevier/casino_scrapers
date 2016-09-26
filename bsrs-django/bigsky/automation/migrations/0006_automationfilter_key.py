@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name='profilefilter',
+            model_name='automationfilter',
             name='key',
             field=models.CharField(default='admin.placeholder.ticket_priority', help_text='To use for i18n UI key, and also for mapping component used for this filter select', max_length=100),
             preserve_default=False,

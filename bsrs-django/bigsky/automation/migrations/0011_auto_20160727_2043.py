@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='profilefilter',
+            model_name='automationfilter',
             name='criteria',
             field=django.contrib.postgres.fields.jsonb.JSONField(default=[], help_text='Must be a list. Criteria to match on.'),
         ),

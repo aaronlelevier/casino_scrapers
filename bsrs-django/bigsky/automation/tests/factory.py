@@ -4,7 +4,7 @@ from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
 from automation.choices import AUTOMATION_EVENTS, AUTOMATION_ACTION_TYPES
-from automation.models import (AutomationEvent, Automation, ProfileFilter, AutomationFilterType,
+from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationActionType, AutomationAction)
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import TicketPriority
@@ -96,14 +96,14 @@ def create_automation_filter_types():
     create_automation_filter_type_country()
 
 
-# ProfileFilters
+# AutomationFilters
 
 def create_ticket_priority_filter(automation=None):
     if not automation:
         automation = create_automation(with_filters=False)
     priority = create_default(TicketPriority)
     source = create_automation_filter_type_priority()
-    return ProfileFilter.objects.create(
+    return AutomationFilter.objects.create(
         automation=automation, source=source, criteria=[str(priority.id)])
 
 
@@ -112,7 +112,7 @@ def create_ticket_categories_filter(automation=None):
         automation = create_automation(with_filters=False)
     category = create_repair_category()
     source = create_automation_filter_type_categories()
-    return ProfileFilter.objects.create(
+    return AutomationFilter.objects.create(
         automation=automation, source=source, criteria=[str(category.id)])
 
 
@@ -122,7 +122,7 @@ def create_ticket_categories_mid_level_filter(automation=None):
     category = create_repair_category()
     child_category = create_single_category(parent=category)
     source = create_automation_filter_type_categories()
-    return ProfileFilter.objects.create(
+    return AutomationFilter.objects.create(
         automation=automation, source=source, criteria=[str(child_category.id)])
 
 
@@ -132,7 +132,7 @@ def create_ticket_location_filter(automation=None):
     location = create_top_level_location()
     location_level = location.location_level
     source = create_automation_filter_type_location()
-    return ProfileFilter.objects.create(
+    return AutomationFilter.objects.create(
         automation=automation, source=source, criteria=[str(location.id)],
         lookups={'filters': 'location_level',
                  'id': str(location_level.id),
@@ -144,7 +144,7 @@ def create_ticket_location_state_filter(automation=None):
         automation = create_automation(with_filters=False)
     state = create_contact_state()
     source = create_automation_filter_type_state()
-    return ProfileFilter.objects.create(
+    return AutomationFilter.objects.create(
         automation=automation, source=source, criteria=[str(state.id)])
 
 
@@ -153,11 +153,11 @@ def create_ticket_location_country_filter(automation=None):
         automation = create_automation(with_filters=False)
     country = create_contact_country()
     source = create_automation_filter_type_country()
-    return ProfileFilter.objects.create(
+    return AutomationFilter.objects.create(
         automation=automation, source=source, criteria=[str(country.id)])
 
 
-def create_profile_filters():
+def create_automation_filters():
     create_ticket_priority_filter()
     create_ticket_categories_filter()
     create_ticket_location_filter()
@@ -192,7 +192,7 @@ def create_automation(description=None, tenant=None, with_filters=True):
 
 
 def create_automations():
-    for pf in ProfileFilter.objects.all():
+    for pf in AutomationFilter.objects.all():
         automation = pf.automation
 
         if pf.source.key:

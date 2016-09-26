@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name='profilefilter',
+            model_name='automationfilter',
             name='context',
             field=models.CharField(blank=True, default='ticket.ticket', help_text="The namespace of the model to look the field up on. ex: 'app_name.model_name'", max_length=100),
         ),

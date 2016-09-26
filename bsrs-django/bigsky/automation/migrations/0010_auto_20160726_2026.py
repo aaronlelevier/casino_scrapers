@@ -14,23 +14,23 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name='profilefilter',
+            model_name='automationfilter',
             name='context',
         ),
         migrations.RemoveField(
-            model_name='profilefilter',
+            model_name='automationfilter',
             name='field',
         ),
         migrations.RemoveField(
-            model_name='profilefilter',
+            model_name='automationfilter',
             name='key',
         ),
         migrations.RemoveField(
-            model_name='profilefilter',
+            model_name='automationfilter',
             name='key_is_i18n',
         ),
         migrations.AddField(
-            model_name='profilefilter',
+            model_name='automationfilter',
             name='source',
             field=models.ForeignKey(default='52d4fa9f-73d5-4dec-8431-96ada3aee2dd', help_text='Use to get info on what type of filter, if this is a dynamic filter, usethe lookup field', on_delete=django.db.models.deletion.CASCADE, to='automation.AutomationFilterType'),
             preserve_default=False,

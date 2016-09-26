@@ -6,7 +6,7 @@ from rest_framework.exceptions import ValidationError
 from automation.models import Automation
 
 
-class ProfileFilterFieldValidator(object):
+class AutomationFilterFieldValidator(object):
     """Validate that the Model class returned by the 'context' has
     the 'field' and that the 'field' has valid 'criteria'."""
 
@@ -37,7 +37,7 @@ class ProfileFilterFieldValidator(object):
 
 class AutomationFilterTypeValidator(object):
     """Each AutomationFilterType can only be used 1x. Get the AF from the 'id'
-    attr for an Automation's related ProfileFilters in order to check it."""
+    attr for an Automation's related AutomationFilters in order to check it."""
 
     def __call__(self, data):
         filters = data.get('filters', [])

@@ -14,15 +14,15 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name='profilefilter',
+            model_name='automationfilter',
             name='content_type',
         ),
         migrations.RemoveField(
-            model_name='profilefilter',
+            model_name='automationfilter',
             name='object_id',
         ),
         migrations.AddField(
-            model_name='profilefilter',
+            model_name='automationfilter',
             name='automation',
             field=models.ForeignKey(default='147ff1ea-6f0f-423e-9b58-64aa1f93c6d8', on_delete=django.db.models.deletion.CASCADE, related_name='filters', to='automation.Automation'),
             preserve_default=False,

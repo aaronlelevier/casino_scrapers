@@ -7,9 +7,9 @@ from contact.models import State, Country
 from location.models import Location, LocationLevel
 from person.models import Person
 from person.serializers_leaf import PersonSimpleSerializer
-from automation.models import (AutomationEvent, Automation, ProfileFilter, AutomationFilterType,
+from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationAction, AutomationActionType)
-from automation.validators import (ProfileFilterFieldValidator, UniqueByTenantValidator,
+from automation.validators import (AutomationFilterFieldValidator, UniqueByTenantValidator,
     AutomationFilterTypeValidator)
 from tenant.mixins import RemoveTenantMixin
 from ticket.models import TicketPriority
@@ -48,27 +48,27 @@ class AutomationFilterTypeSerializer(serializers.ModelSerializer):
 
 PROFILE_FILTER_FIELDS = ('id', 'lookups', 'criteria', 'source',)
 
-class ProfileFilterUnnestedSerializer(BaseCreateSerializer):
+class AutomationFilterUnnestedSerializer(BaseCreateSerializer):
 
     source = serializers.PrimaryKeyRelatedField(
         queryset=AutomationFilterType.objects.all(), required=False)
 
     class Meta:
-        model = ProfileFilter
-        validators = [ProfileFilterFieldValidator()]
+        model = AutomationFilter
+        validators = [AutomationFilterFieldValidator()]
         fields = PROFILE_FILTER_FIELDS
 
 
-class ProfileFilterSerializer(BaseCreateSerializer):
+class AutomationFilterSerializer(BaseCreateSerializer):
 
     source = AutomationFilterTypeSerializer()
 
     class Meta:
-        model = ProfileFilter
+        model = AutomationFilter
         fields = PROFILE_FILTER_FIELDS
 
     def to_representation(self, instance):
-        init_data = super(ProfileFilterSerializer, self).to_representation(instance)
+        init_data = super(AutomationFilterSerializer, self).to_representation(instance)
         data = copy.copy(init_data)
         source = data.pop('source', {})
         # remove 'lookups' from source b/c both the PF and AF have
@@ -127,7 +127,7 @@ AUTOMATION_FIELDS = ('id', 'tenant', 'description',)
 
 class AutomationCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
-    filters = ProfileFilterUnnestedSerializer(required=False, many=True)
+    filters = AutomationFilterUnnestedSerializer(required=False, many=True)
 
     class Meta:
         model = Automation
@@ -142,7 +142,7 @@ class AutomationCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
         if filters:
             for f in filters:
-                pf = ProfileFilter.objects.create(automation=instance, **f)
+                pf = AutomationFilter.objects.create(automation=instance, **f)
 
         return instance
 
@@ -154,9 +154,9 @@ class AutomationCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
             for f in filters:
                 try:
                     pf = instance.filters.get(id=f['id'])
-                except ProfileFilter.DoesNotExist:
+                except AutomationFilter.DoesNotExist:
 
-                    pf = ProfileFilter.objects.create(automation=instance, **f)
+                    pf = AutomationFilter.objects.create(automation=instance, **f)
                 else:
                     pf.criteria = f.get('criteria', [])
                     pf.lookups = f.get('lookups', {})
@@ -188,7 +188,7 @@ class AutomationDetailSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
     events = AutomationEventSerializer(required=False, many=True)
     actions = AutomationActionSerializer(required=False, many=True)
-    filters = ProfileFilterSerializer(required=False, many=True)
+    filters = AutomationFilterSerializer(required=False, many=True)
 
     class Meta:
         model = Automation

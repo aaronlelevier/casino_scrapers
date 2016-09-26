@@ -8,8 +8,8 @@ class AutomationAdmin(admin.ModelAdmin):
     list_display = ('id', 'description')
 
 
-@admin.register(models.ProfileFilter)
-class ProfileFilterAdmin(admin.ModelAdmin):
+@admin.register(models.AutomationFilter)
+class AutomationFilterAdmin(admin.ModelAdmin):
     list_display = ('id', 'source_key')
 
     def source_key(self, obj):

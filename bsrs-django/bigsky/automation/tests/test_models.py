@@ -15,7 +15,7 @@ from person.models import Person
 from person.tests.factory import create_single_person
 from automation.models import (
     AutomationEvent, AUTOMATION_EVENTS, Automation, AutomationManager, AutomationQuerySet,
-    AutomationFilterType, ProfileFilter)
+    AutomationFilterType, AutomationFilter)
 from automation.tests.factory import (
     create_automation, create_ticket_priority_filter, create_ticket_categories_filter,
     create_automation_filter_types, create_ticket_location_state_filter, create_automation_filter_type_state,
@@ -119,7 +119,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.assertFalse(self.automation.is_match(self.ticket))
         # no assignee
         self.assertIsNone(self.ticket.assignee)
-        # all automation profiles false
+        # all automation filters false
         for automation in Automation.objects.filter(tenant__id=self.tenant.id):
             self.assertFalse(automation.is_match(self.ticket))
 
@@ -255,10 +255,10 @@ class AutomationFilterTypeTests(TestCase):
         self.assertTrue(ret.is_country_filter)
 
 
-class ProfileFilterTests(SetupMixin, TestCase):
+class AutomationFilterTests(SetupMixin, TestCase):
 
     def setUp(self):
-        super(ProfileFilterTests, self).setUp()
+        super(AutomationFilterTests, self).setUp()
 
         self.pf = create_ticket_priority_filter()
         self.cf = create_ticket_categories_filter()
@@ -274,7 +274,7 @@ class ProfileFilterTests(SetupMixin, TestCase):
     def test_meta__ordering(self):
         # order by id, so that way are returned to User in the same order
         # each time if nested in the Automation Detail view
-        self.assertEqual(ProfileFilter._meta.ordering, ['id'])
+        self.assertEqual(AutomationFilter._meta.ordering, ['id'])
 
     def test_is_match__foreign_key__true(self):
         self.assertIn(str(self.ticket.priority.id), self.pf.criteria)
@@ -325,14 +325,14 @@ class ProfileFilterTests(SetupMixin, TestCase):
 
         self.assertFalse(ret)
 
-    @patch("automation.models.ProfileFilter._is_address_match")
+    @patch("automation.models.AutomationFilter._is_address_match")
     def test_is_match__location_state__false__not_a_state_filter(self, mock_func):
         self.assertFalse(self.pf.source.is_state_filter)
         self.assertTrue(self.ticket.location.is_office_or_store)
 
         self.assertFalse(mock_func.called)
 
-    @patch("automation.models.ProfileFilter._is_address_match")
+    @patch("automation.models.AutomationFilter._is_address_match")
     def test_is_match__location_state__false__location_is_not_an_office(self, mock_func):
         state_filter = create_ticket_location_state_filter()
         self.ticket.location.addresses.remove(self.office_address)
@@ -366,14 +366,14 @@ class ProfileFilterTests(SetupMixin, TestCase):
 
         self.assertFalse(ret)
 
-    @patch("automation.models.ProfileFilter._is_address_match")
+    @patch("automation.models.AutomationFilter._is_address_match")
     def test_is_match__location_country__false__no_a_country_filter(self, mock_func):
         self.assertFalse(self.pf.source.is_country_filter)
         self.assertTrue(self.ticket.location.is_office_or_store)
 
         self.assertFalse(mock_func.called)
 
-    @patch("automation.models.ProfileFilter._is_address_match")
+    @patch("automation.models.AutomationFilter._is_address_match")
     def test_is_match__location_country__false__location_is_not_an_office(self, mock_func):
         country_filter = create_ticket_location_country_filter()
         self.ticket.location.addresses.remove(self.office_address)

@@ -11,7 +11,7 @@ from location.tests.factory import (create_location_levels, create_top_level_loc
     create_location_level, create_location)
 from person.models import Person
 from person.tests.factory import create_single_person, PASSWORD
-from automation.models import (AutomationEvent, Automation, ProfileFilter, AutomationFilterType,
+from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationActionType)
 from automation.tests.factory import (
     create_automation, create_automation_filter_types, create_automation_filter_type_location,
@@ -89,7 +89,7 @@ class AutomationListTests(ViewTestSetupMixin, APITestCase):
         event = self.automation.events.first()
         self.assertEqual(data['events'][0]['id'], str(event.id))
         self.assertEqual(data['events'][0]['key'], event.key)
-        # profile_filters
+        # automation_filters
         self.assertTrue(self.automation.filters.first())
         self.assertTrue(data['has_filters'])
 
@@ -120,7 +120,7 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         event = self.automation.events.first()
         self.assertEqual(data['events'][0]['id'], str(event.id))
         self.assertEqual(data['events'][0]['key'], event.key)
-        # profile_filter
+        # automation_filter
         self.assertEqual(len(data['filters']), 2)
         pf = self.automation.filters.get(id=data['filters'][0]['id'])
         af = pf.source
@@ -132,7 +132,7 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['filters'][0]['criteria'][0]['id'], pf.criteria[0])
 
     def test_data__dynamic_source_filter(self):
-        # dynamic available filter for "location" linked to ProfileFilter.source
+        # dynamic available filter for "location" linked to AutomationFilter.source
         location_level = create_top_level_location().location_level
         location_filter = create_ticket_location_filter()
         location_filter.lookups.pop('filters', None)
@@ -273,7 +273,7 @@ class AutomationCreateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['description'], automation.description)
         # events
         self.assertEqual(data['events'], [str(event.id)])
-        # profile_filter
+        # automation_filter
         self.assertEqual(len(data['filters']), 1)
         self.assertEqual(automation.filters.first().source, location_af)
         self.assertEqual(automation.filters.first().criteria, criteria_two)
@@ -401,12 +401,12 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
     def test_update__nested_update(self):
         priority_two = mommy.make(TicketPriority)
         criteria_two = [str(priority_two.id)]
-        profile_filter = self.automation.filters.first()
+        automation_filter = self.automation.filters.first()
         self.assertEqual(self.automation.filters.first().source, self.priority_af)
         self.assertNotEqual(self.automation.filters.first().criteria, criteria_two)
         self.data['filters'] = [{
-            'id': str(profile_filter.id),
-            'source': str(profile_filter.source.id),
+            'id': str(automation_filter.id),
+            'source': str(automation_filter.source.id),
             'criteria': criteria_two
         }]
 
@@ -416,7 +416,7 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(data['filters']), 1)
-        self.assertEqual(self.automation.filters.first(), profile_filter)
+        self.assertEqual(self.automation.filters.first(), automation_filter)
         self.assertEqual(self.automation.filters.first().source, self.priority_af)
         self.assertEqual(self.automation.filters.first().criteria, criteria_two)
 
@@ -486,7 +486,7 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
 
     def test_update__nested_delete(self):
         """
-        Related ProfileFilters are "hard" deleted if they have been
+        Related AutomationFilters are "hard" deleted if they have been
         removed from the Automation.
         """
         self.assertEqual(self.automation.filters.count(), 1)
@@ -499,22 +499,22 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(data['filters']), 0)
-        self.assertFalse(ProfileFilter.objects.filter(id=deleted_id).exists())
-        self.assertFalse(ProfileFilter.objects_all.filter(id=deleted_id).exists())
+        self.assertFalse(AutomationFilter.objects.filter(id=deleted_id).exists())
+        self.assertFalse(AutomationFilter.objects_all.filter(id=deleted_id).exists())
 
     def test_update__other_automation_filters_not_affected(self):
         """
         Confirms that the nested remove clean up loop filters for the related
-        ProfileFilters only for the Automation instance.
+        AutomationFilters only for the Automation instance.
         """
-        mommy.make(ProfileFilter, criteria=self.priority_filter.criteria)
-        init_count = ProfileFilter.objects.count()
+        mommy.make(AutomationFilter, criteria=self.priority_filter.criteria)
+        init_count = AutomationFilter.objects.count()
 
         response = self.client.put('/api/admin/automations/{}/'.format(self.automation.id),
             self.data, format='json')
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(ProfileFilter.objects.count(), init_count)
+        self.assertEqual(AutomationFilter.objects.count(), init_count)
 
 
 class AutomationFilterTypeTests(APITestCase):

@@ -9,7 +9,7 @@ from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
 from automation.choices import AUTOMATION_EVENTS, AUTOMATION_ACTION_TYPES
-from automation.models import (AutomationEvent, Automation, ProfileFilter, AutomationFilterType,
+from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationActionType, AutomationAction)
 from automation.tests import factory
 from tenant.models import Tenant
@@ -233,10 +233,10 @@ class PriorityFilterTests(TestCase):
         self.assertEqual(pf.lookups, {})
         self.assertEqual(pf.criteria, [str(country.id)])
 
-    def test_create_profile_filters(self):
-        self.assertEqual(ProfileFilter.objects.count(), 0)
-        factory.create_profile_filters()
-        self.assertEqual(ProfileFilter.objects.count(), 5)
+    def test_create_automation_filters(self):
+        self.assertEqual(AutomationFilter.objects.count(), 0)
+        factory.create_automation_filters()
+        self.assertEqual(AutomationFilter.objects.count(), 5)
 
 
 class AutomationTests(TestCase):
@@ -250,7 +250,7 @@ class AutomationTests(TestCase):
         self.assertEqual(automation.events.count(), 1)
         # actions
         self.assertEqual(automation.actions.count(), 1)
-        # profile_filters
+        # automation_filters
         self.assertEqual(automation.filters.count(), 2)
         self.assertEqual(automation.filters.filter(source__field='priority').count(), 1)
         self.assertEqual(automation.filters.filter(source__field='categories').count(), 1)
@@ -269,12 +269,12 @@ class AutomationTests(TestCase):
 
     def test_create_automations(self):
         self.assertEqual(Automation.objects.count(), 0)
-        factory.create_profile_filters()
+        factory.create_automation_filters()
 
         factory.create_automations()
 
         self.assertEqual(Automation.objects.count(), 5)
-        # Automations w/ static ProfileFilter.source
+        # Automations w/ static AutomationFilter.source
         self.assertEqual(Automation.objects.exclude(filters__lookups__filters='location_level').count(), 4)
         # priority
         key = 'admin.placeholder.priority_filter_select'

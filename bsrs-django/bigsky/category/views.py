@@ -29,9 +29,9 @@ class CategoryViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet
 
         `/api/admin/categories/category__icontains=<search_key>/`
 
-    3. ProfileFilter power-select endpoint
+    3. AutomationFilter power-select endpoint
 
-        `/api/admin/categories/profile-filter/<search_key>/`
+        `/api/admin/categories/automation-criteria/<search_key>/`
 
     '''
     model = Category
@@ -93,8 +93,8 @@ class CategoryViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet
         return self.get_paginated_response(serializer.data)
 
     @list_route(methods=['GET'], url_path=r"automation-criteria/(?P<search_key>[\w\-]+)")
-    def profile_filter(self, request, search_key=None):
+    def automation_filter(self, request, search_key=None):
         queryset = Category.objects.ordered_parents_and_self_as_strings(search_key)
         queryset = self.paginate_queryset(queryset)
-        serializer = cs.CategoryProfileFilterSerializer(queryset, many=True)
+        serializer = cs.CategoryAutomationFilterSerializer(queryset, many=True)
         return self.get_paginated_response(serializer.data)

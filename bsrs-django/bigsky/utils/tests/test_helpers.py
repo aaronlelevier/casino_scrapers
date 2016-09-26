@@ -8,7 +8,7 @@ from django.contrib.auth.models import ContentType
 from django.test import TestCase
 from django.utils import timezone
 
-from automation.models import ProfileFilter
+from automation.models import AutomationFilter
 from automation.tests.factory import (
     create_automation, create_ticket_priority_filter, create_ticket_categories_filter)
 from location.models import LocationLevel
@@ -168,28 +168,28 @@ class RelatedModelCrudHelperTests(TestCase):
 
     def test_add_related(self):
         automation = create_automation(with_filters=False)
-        profile_filter = create_ticket_priority_filter()
-        self.assertNotEqual(profile_filter.automation, automation)
+        automation_filter = create_ticket_priority_filter()
+        self.assertNotEqual(automation_filter.automation, automation)
 
-        add_related(profile_filter, 'automation', automation)
+        add_related(automation_filter, 'automation', automation)
 
-        self.assertEqual(profile_filter.automation, automation)
+        self.assertEqual(automation_filter.automation, automation)
 
     def test_remove_related(self):
-        profile_filter = create_ticket_priority_filter()
-        automation = profile_filter.automation
+        automation_filter = create_ticket_priority_filter()
+        automation = automation_filter.automation
 
-        remove_related(profile_filter)
+        remove_related(automation_filter)
 
-        with self.assertRaises(ProfileFilter.DoesNotExist):
-            ProfileFilter.objects.get(id=profile_filter.id)
+        with self.assertRaises(AutomationFilter.DoesNotExist):
+            AutomationFilter.objects.get(id=automation_filter.id)
 
         self.assertEqual(automation.filters.count(), 0)
 
     def test_clear_related(self):
-        profile_filter = create_ticket_priority_filter()
-        automation = profile_filter.automation
-        profile_filter_two = create_ticket_categories_filter(
+        automation_filter = create_ticket_priority_filter()
+        automation = automation_filter.automation
+        automation_filter_two = create_ticket_categories_filter(
             automation)
         self.assertEqual(automation.filters.count(), 2)
 

@@ -54,7 +54,7 @@ class AutomationManager(BaseManager):
 
     def process_ticket(self, tenant_id, ticket):
         """
-        for each automation-profile in this Tenant's Automation Profiles
+        for each automation-filter in this Tenant's Automation Filters
           does it match?
             match logic:
               for each profile filter in this Assingment Profile:
@@ -149,16 +149,16 @@ class AutomationFilterType(BaseModel):
         return self.field == 'country'
 
 
-class ProfileFilter(BaseModel):
+class AutomationFilter(BaseModel):
     """
     The first 4 fields are the same as the AutomationFilterType fields, but
     the "lookups" field is different. It will contain criteria for the
     dynamic AutomationFilterType that was selected.
 
     ex: AutomationFilterType.lookups: {'filters': 'location_level'}
-        ProfileFilter.lookups: {'location_level': <location_level_id>}
+        AutomationFilter.lookups: {'location_level': <location_level_id>}
 
-    expl: Basically ProfileFilter has the serialized value returned by the
+    expl: Basically AutomationFilter has the serialized value returned by the
         list saved to it, indicating the dynamic filter selected.
     """
     automation = models.ForeignKey(Automation, related_name="filters")

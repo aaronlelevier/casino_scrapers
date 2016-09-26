@@ -8,12 +8,12 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('automation', '0006_profilefilter_key'),
+        ('automation', '0006_automationfilter_key'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='profilefilter',
+            model_name='automationfilter',
             name='key',
             field=models.CharField(help_text='To use for i18n UI key, and also for mapping component based on selected filter', max_length=100),
         ),

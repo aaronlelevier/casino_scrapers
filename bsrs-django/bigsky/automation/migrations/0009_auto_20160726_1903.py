@@ -18,12 +18,12 @@ class Migration(migrations.Migration):
             name='type',
         ),
         migrations.AddField(
-            model_name='profilefilter',
+            model_name='automationfilter',
             name='key_is_i18n',
             field=models.BooleanField(default=True, help_text="is the 'key' field i18n'able"),
         ),
         migrations.AddField(
-            model_name='profilefilter',
+            model_name='automationfilter',
             name='lookups',
             field=django.contrib.postgres.fields.jsonb.JSONField(default={}, help_text="if used, provide extra lookup information beyond the 'field'this should be a string array", null=True),
         ),
