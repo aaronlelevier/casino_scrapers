@@ -17,24 +17,15 @@ import Ember from 'ember';
  */
 export default Ember.Mixin.create({
   OPT_CONF: {
-    event: {
-      associated_model: 'automation-event',
-      join_model: 'automation-join-event',
-      associated_pointer: 'event'
+    assignee: {
+      collection: 'actions',
+      property: 'person',
+      related_model: 'assignee'
     },
-    action: {
-      associated_model: 'automation-action',
-      join_model: 'automation-join-action',
-      associated_pointer: 'action'
-    },
-    pf: {
-      associated_model: 'pfilter',
-      join_model: 'automation-join-pfilter'
-    },
-    //deserializer
-    criteria: {
-      associated_model: 'criteria',
-      join_model: 'pfilter-join-criteria',
+    type: {
+      collection: 'actions',
+      property: 'automation-action-type',
+      related_model: 'type'
     }
   }
 });
