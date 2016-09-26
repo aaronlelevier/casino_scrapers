@@ -1,0 +1,15 @@
+[
+{
+  "model": "contact.phonenumber",
+  "pk": "017530c4-ce6c-4724-9cfd-37a16e787001",
+  "fields": {
+    "created": "2016-09-26T18:47:40.573Z",
+    "modified": "2016-09-26T18:47:40.573Z",
+    "deleted": null,
+    "content_type": null,
+    "object_id": null,
+    "type": "022530c4-ce6c-4724-9cfd-37a16e787005",
+    "number": "xfVKrWYdmRUVzPbjQIRhxuTGeUFLnsWOqbnrohNUwtcgnHHsSpDWjURTtyfFTmPRNHuoxGYuLUJjFRwSeEdHuXTKEjXuHpNhhlFY"
+  }
+}
+]

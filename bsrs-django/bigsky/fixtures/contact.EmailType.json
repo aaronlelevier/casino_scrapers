@@ -1,32 +1,10 @@
 [
 {
   "model": "contact.emailtype",
-  "pk": "3c917b15-2122-4d12-8039-4cf541d5403a",
+  "pk": "020530c4-ce6c-4724-9cfd-37a16e787001",
   "fields": {
-    "created": "2016-02-03T22:43:05.058Z",
-    "modified": "2016-02-03T22:43:05.058Z",
-    "deleted": null,
-    "name": "admin.emailtype.personal",
-    "order": 0
-  }
-},
-{
-  "model": "contact.emailtype",
-  "pk": "8bd84038-6135-4f8f-bf32-633cec3ec037",
-  "fields": {
-    "created": "2016-02-03T22:43:05.055Z",
-    "modified": "2016-02-03T22:43:05.055Z",
-    "deleted": null,
-    "name": "admin.emailtype.work",
-    "order": 0
-  }
-},
-{
-  "model": "contact.emailtype",
-  "pk": "b720283a-ef34-4997-8518-038e2b8e6c69",
-  "fields": {
-    "created": "2016-02-03T22:43:05.053Z",
-    "modified": "2016-02-03T22:43:05.053Z",
+    "created": "2016-09-26T18:47:40.516Z",
+    "modified": "2016-09-26T18:47:40.516Z",
     "deleted": null,
     "name": "admin.emailtype.location",
     "order": 0
@@ -34,10 +12,32 @@
 },
 {
   "model": "contact.emailtype",
-  "pk": "ebbc80bc-55b8-4968-9bed-2ddf65e85a51",
+  "pk": "020530c4-ce6c-4724-9cfd-37a16e787002",
   "fields": {
-    "created": "2016-04-13T21:57:11.500Z",
-    "modified": "2016-04-13T21:57:11.500Z",
+    "created": "2016-09-26T18:47:40.521Z",
+    "modified": "2016-09-26T18:47:40.521Z",
+    "deleted": null,
+    "name": "admin.emailtype.work",
+    "order": 0
+  }
+},
+{
+  "model": "contact.emailtype",
+  "pk": "020530c4-ce6c-4724-9cfd-37a16e787003",
+  "fields": {
+    "created": "2016-09-26T18:47:40.525Z",
+    "modified": "2016-09-26T18:47:40.525Z",
+    "deleted": null,
+    "name": "admin.emailtype.personal",
+    "order": 0
+  }
+},
+{
+  "model": "contact.emailtype",
+  "pk": "020530c4-ce6c-4724-9cfd-37a16e787004",
+  "fields": {
+    "created": "2016-09-26T18:47:40.529Z",
+    "modified": "2016-09-26T18:47:40.529Z",
     "deleted": null,
     "name": "admin.emailtype.sms",
     "order": 0

@@ -3,7 +3,7 @@ from django.conf import settings
 from model_mommy import mommy
 
 from contact.models import Email, Address, PhoneNumber
-from contact.tests.factory import create_address, create_contact_country
+from contact.tests.factory import create_contact_fixtures, create_contact_country
 from dtd.models import TreeData
 from tenant.models import Tenant
 from utils.create import _generate_chars
@@ -11,6 +11,11 @@ from utils.helpers import generate_uuid
 
 
 def get_or_create_tenant(company_name=settings.DEFAULT_TENANT_COMPANY_NAME, **kwargs):
+    # check if any Emails, which would have been added in the contact
+    # fixtures are present. If not, we need to add the contact fixtures
+    if not Email.objects.first():
+        create_contact_fixtures()
+        
     try:
         tenant = Tenant.objects.get(company_name=company_name)
     except Tenant.DoesNotExist:
@@ -18,10 +23,10 @@ def get_or_create_tenant(company_name=settings.DEFAULT_TENANT_COMPANY_NAME, **kw
             'id': generate_uuid(Tenant),
             'company_name': company_name,
             'company_code': _generate_chars(),
-            'implementation_email': mommy.make(Email, _fill_optional=['type']),
-            'billing_email': mommy.make(Email, _fill_optional=['type']),
-            'billing_phone_number': mommy.make(PhoneNumber, _fill_optional=['type']),
-            'billing_address': create_address()
+            'implementation_email': Email.objects.first(),
+            'billing_email': Email.objects.first(),
+            'billing_phone_number': PhoneNumber.objects.first(),
+            'billing_address': Address.objects.first()
         }
 
         tenant = mommy.make(Tenant, **defaults)

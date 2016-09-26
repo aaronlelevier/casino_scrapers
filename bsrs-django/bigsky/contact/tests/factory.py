@@ -113,3 +113,30 @@ def add_office_to_location(location):
     address.type = office
     address.save()
     location.addresses.add(address)
+
+
+def create_contact_fixtures():
+    """These are base fixtures for models that require a related
+    Contact. i.e. Tenant."""
+    def create_types(static_types, model, model_type):
+        for name in static_types:
+            type_id = generate_uuid(model_type)
+            model_id = generate_uuid(model)
+            try:
+                type_instance = model_type.objects.get(name=name)
+            except model_type.DoesNotExist:
+                type_instance = mommy.make(model_type, id=type_id, name=name)
+        return (model_id, type_instance)
+
+    email_id, email_type = create_types(EMAIL_TYPES, Email, EmailType)
+    ph_id, ph_type = create_types(PHONE_NUMBER_TYPES, PhoneNumber, PhoneNumberType)
+    address_id, address_type = create_types(ADDRESS_TYPES, Address, AddressType)
+
+    mommy.make(Email, id=email_id, type=email_type)
+
+    mommy.make(PhoneNumber, id=ph_id, type=ph_type)
+
+    state = create_contact_state()
+    country = create_contact_country()
+    mommy.make(Address, id=address_id, type=address_type, state=state,
+               country=country, _fill_optional=['address'])

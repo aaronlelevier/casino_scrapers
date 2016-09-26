@@ -16,9 +16,15 @@ wait
 # leaf node
 ./manage.py loaddata fixtures/contact.Country.json
 ./manage.py loaddata fixtures/contact.State.json
+# contact types
 ./manage.py loaddata fixtures/contact.EmailType.json
 ./manage.py loaddata fixtures/contact.PhoneNumberType.json
 ./manage.py loaddata fixtures/contact.AddressType.json
+# contacts
+./manage.py loaddata fixtures/contact.Email.json
+./manage.py loaddata fixtures/contact.PhoneNumber.json
+./manage.py loaddata fixtures/contact.Address.json
+# i18n
 ./manage.py loaddata fixtures/translation.json
 # tenant requires currency and dtd-start
 ./manage.py loaddata fixtures/accounting.Currency.json
@@ -37,6 +43,7 @@ wait
 ./manage.py create_all_people
 wait
 ./manage.py dumpdata person --indent=2 > fixtures/person.json
+./manage.py dumpdata tenant --indent=2 > fixtures/tenant.json
 
 wait
 ./manage.py create_tickets

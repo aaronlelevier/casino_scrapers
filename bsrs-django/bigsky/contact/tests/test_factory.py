@@ -149,3 +149,30 @@ class FactoryTests(TestCase):
         factory.add_office_to_location(location)
 
         self.assertTrue(location.is_office_or_store)
+
+    def test_create_contact_fixtures(self):
+        factory.create_contact_fixtures()
+
+        # email
+        email = Email.objects.first()
+        self.assertTrue(str(email.id).endswith('001'))
+        # phone number
+        ph = PhoneNumber.objects.first()
+        self.assertTrue(str(ph.id).endswith('001'))
+        # address
+        address = Address.objects.first()
+        self.assertTrue(str(address.id).endswith('001'))
+
+        # all types should be created w/ incrementing uuids
+        # email
+        self.assertEqual(EmailType.objects.count(), len(EMAIL_TYPES))
+        for i, obj in enumerate(EmailType.objects.order_by('id')):
+            self.assertEqual(str(obj.id)[-1], str(i+1))
+        # ph
+        self.assertEqual(PhoneNumberType.objects.count(), len(PHONE_NUMBER_TYPES))
+        for i, obj in enumerate(PhoneNumberType.objects.order_by('id')):
+            self.assertEqual(str(obj.id)[-1], str(i+1))
+        # address
+        self.assertEqual(AddressType.objects.count(), len(ADDRESS_TYPES))
+        for i, obj in enumerate(AddressType.objects.order_by('id')):
+            self.assertEqual(str(obj.id)[-1], str(i+1))
