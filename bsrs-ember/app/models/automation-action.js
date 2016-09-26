@@ -10,4 +10,17 @@ export default Model.extend(OptConf, {
     this._super(...arguments);
   },
   simpleStore: Ember.inject.service(),
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'typeIsDirty', function() {
+    return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('typeIsDirty');
+  }),
+  isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+  rollback() {
+    this.rollbackAssignee();
+    this.rollbackType();
+    this._super(...arguments);
+  },
+  saveRelated() {
+    this.saveAssignee();
+    this.saveType();
+  }
 });
