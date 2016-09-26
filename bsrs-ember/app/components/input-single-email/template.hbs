@@ -1,0 +1,24 @@
+<div class="input-group t-address-group">
+  {{#unless noDelete}}
+  <span class="input-group-btn">
+    <button class="t-del-email-btn btn btn-default btn-sm delete" type="button" {{action 'delete' email}}>{{fa-icon "minus"}}</button>
+  </span>
+  {{/unless}}
+  <div class="input-group-btn input-group-select">
+    {{power-select-foreign-key
+      mainModel=email
+      selected=email.email_type
+      change_method='change_email_type'
+      relatedModelName='email-type'
+    }}
+  </div>
+  {{validated-input-multi
+    model=email
+    valuePath="email"
+    count=index
+    className=(concat "t-email-email" index)
+    placeholder=placeholder
+    class=(concat "t-email-email-validator" index)
+    didValidate=didValidate
+  }}
+</div>

@@ -11,7 +11,7 @@ var BSRS_TENANT_DEFAULTS_OBJECT = (function() {
       idGridTwo: '1ee82b8c-89bd-45a2-8d57-5b920c8b0002',
       companyNameOne: 'foobar',
       companyNameTwo: 'bizbaz',
-      companyNameGridOne: 'foobar0',
+      companyNameGridOne: 'foobar1',
       companyNameGridOneReverse: 'foobar10',
       companyNameLastPage2Grid: 'foobar20',
       currencyOne: this.currency.idOne,

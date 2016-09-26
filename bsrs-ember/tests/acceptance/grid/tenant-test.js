@@ -167,10 +167,10 @@ test('clicking header will sort by given property and reset page to 1 (also requ
   andThen(() => {
     assert.equal(find('.t-grid-data:eq(0) .t-tenant-company_name').text().trim(), TD.companyNameOne+'1');
   });
-  click('.t-sort-company_name-dir');
+  click('.t-sort-company-name-dir');
   andThen(() => {
     assert.equal(currentURL(), TENANT_LIST_URL + '?sort=company_name');
-    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
     assert.equal(find('.t-grid-data:eq(0) .t-tenant-company_name').text().trim(), TD.companyNameOne+'1');
   });
 });
@@ -205,20 +205,20 @@ test('multiple sort options appear in the query string as expected', function(as
   visit(TENANT_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), TENANT_LIST_URL);
-    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
     assert.equal(find('.t-grid-data:eq(0) .t-tenant-company_name').text().trim(), TD.companyNameGridOne);
   });
   var sort_one = `${TENANT_URL}?page=1&ordering=company_name`;
   xhr(sort_one ,'GET',null,{},200, TF.sorted_page_one('company_name'));
-  click('.t-sort-company_name-dir');
+  click('.t-sort-company-name-dir');
   andThen(() => {
     assert.equal(currentURL(), TENANT_LIST_URL + '?sort=company_name');
-    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
     assert.equal(find('.t-grid-data:eq(0) .t-tenant-company_name').text().trim(), TD.companyNameGridOne);
   });
   var sort = `${TENANT_URL}?page=1&ordering=-company_name`;
   xhr(sort ,'GET',null,{},200, TF.list_reverse());
-  click('.t-sort-company_name-dir');
+  click('.t-sort-company-name-dir');
   andThen(() => {
     assert.equal(currentURL(), TENANT_LIST_URL + '?sort=-company_name');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);

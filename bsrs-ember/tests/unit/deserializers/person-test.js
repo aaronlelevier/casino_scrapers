@@ -39,6 +39,10 @@ module('unit: person deserializer test', {
       store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.idOne], location_level_fk: LLD.idOne});
       store.push('location-level', {id: LLD.idOne, name: LLD.nameOne, roles: [RD.idOne]});
       person = store.push('person', {id: PD.idOne, status_fk: SD.activeId, role_fk: PD.role});
+      store.push('phone-number-type', {id: PNTD.idOne, name: PNTD.officeName});
+      store.push('phone-number-type', {id: PNTD.idTwo, name: PNTD.mobileName});
+      store.push('email-type', {id: ETD.idOne, name: ETD.workEmail});
+      store.push('email-type', {id: ETD.idTwo, name: ETD.personalEmail});
     });
   }
 });

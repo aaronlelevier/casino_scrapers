@@ -97,7 +97,7 @@ test('visiting admin/location', (assert) => {
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-city0').val(), AD.cityOne);
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-postal-code0').val(), AD.zipOne);
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-country').text().trim(), CD.name);
-    assert.equal(find('.t-address-type-select:eq(1)').text().trim(), t(ATD.shippingName));
+    // assert.equal(find('.t-address-type-select:eq(1)').text().trim(), t(ATD.shippingName));
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-address1').val(), AD.streetTwo);
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-city1').val(), AD.cityTwo);
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code1').val(), AD.zipTwo);
@@ -659,7 +659,7 @@ test('when user changes an attribute on address and clicks cancel we prompt them
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
-      assert.equal(store.find('location', LD.idOne).get('addresses').objectAt(0).get('address_type.id'), ATD.idOne);
+      assert.equal(store.find('location', LD.idOne).get('addresses').objectAt(0).get('address_type.id'), ATD.officeId);
     });
   });
 });
@@ -879,7 +879,7 @@ test('when you deep link to the location detail view you can change the address 
   andThen(() => {
     assert.equal(page.addressTypeSelectedThree, ATD.officeNameText);
   });
-  var addresses = AF.put({id: AD.idOne, type: ATD.idOne});
+  var addresses = AF.put({id: AD.officeId, type: ATD.idOne});
   var response = LF.detail(LD.idOne);
   run(function() {
     addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree, postal_code: AD.zipOne});
@@ -1439,7 +1439,7 @@ test('fill out an address including Country and State', assert => {
   payload.addresses.splice(1,1);
   payload.addresses[0] = {
     id: AD.idTwo,
-    type: ATD.idTwo,
+    type: ATD.shippingId,
     address: AD.streetOne,
     city: AD.cityOne,
     state: stateId,

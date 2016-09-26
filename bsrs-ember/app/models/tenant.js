@@ -30,22 +30,32 @@ export default Model.extend(OptConf, Validations, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('currency', 'tenant');
-    many_to_many.bind(this)('country', 'tenant');
+    belongs_to.bind(this)('billing_phone', 'tenant');
+    belongs_to.bind(this)('billing_email', 'tenant');
+    belongs_to.bind(this)('billing_address', 'tenant');
+    belongs_to.bind(this)('implementation_email', 'tenant');
+    many_to_many.bind(this)('country', 'tenant', {plural:true});
   },
   simpleStore: Ember.inject.service(),
   company_name: attr(''),
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'currencyIsDirty', 'countryIsDirty', function() {
-    return this.get('isDirty') || this.get('currencyIsDirty') || this.get('countryIsDirty');
+  company_code: attr(''),
+  dashboard_text: attr(''),
+  implementation_contact: attr(''),
+  billing_contact: attr(''),
+  billing_phone: '',
+  tenant_countries_fks: [],
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'currencyIsDirty', 'countriesIsDirty', 'billingEmailIsDirty', 'billingPhoneIsDirty', 'implementationEmailIsDirty', 'billingAddressIsDirty', function() {
+    return this.get('isDirty') || this.get('currencyIsDirty') || this.get('countriesIsDirty') || this.get('billingEmailIsDirty') || this.get('billingPhoneIsDirty') || this.get('implementationEmailIsDirty') || this.get('billingAddressIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   rollback() {
     this.rollbackCurrency();
-    this.rollbackCountry();
+    this.rollbackCountries();
     this._super(...arguments);
   },
   saveRelated() {
     this.saveCurrency();
-    this.saveCountry();
+    this.saveCountries();
   },
   removeRecord() {
     run(() => {
@@ -57,7 +67,11 @@ export default Model.extend(OptConf, Validations, {
       id: this.get('id'),
       company_name: this.get('company_name'),
       currency: this.get('currency').get('id'),
-      country: this.get('country_ids'),
+      countries: this.get('countries_ids'),
+      billing_phone: this.get('billing_phone').serialize(),
+      billing_email: this.get('billing_email').serialize(),
+      implementation_email: this.get('implementation_email').serialize(),
+      billing_address: this.get('billing_address').serialize(),
     };
   },
 });

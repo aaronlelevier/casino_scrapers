@@ -25,11 +25,6 @@ var InputMultiEmail = Ember.Component.extend({
       const new_email = this.get('simpleStore').find('email', id);
       new_email.change_email_type({ id: default_type.get('id') });
     },
-    delete(entry) {
-      run(() => {
-        this.get('model').remove_email(entry.get('id'));
-      });
-    }
   }
 });
 

@@ -25,11 +25,6 @@ var InputMultiPhone = Ember.Component.extend({
       const new_phonenumber = this.get('simpleStore').find('phonenumber', id);
       new_phonenumber.change_phone_number_type({ id: default_type.get('id') });
     },
-    delete(entry) {
-      run(() => {
-        this.get('model').remove_phonenumber(entry.get('id'));
-      });
-    }
   }
 });
 

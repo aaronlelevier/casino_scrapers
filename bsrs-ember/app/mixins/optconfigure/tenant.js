@@ -20,11 +20,53 @@ export default Ember.Mixin.create({
     currency: {
       collection: 'tenants',
       property: 'currency',
-      related_model: 'currency',
+    },
+    billing_phone: {
+      collection: 'tenants',
+      property: 'phonenumber',
+      related_model: 'billing_phone',
+    },
+    billing_email: {
+      collection: 'tenants',
+      property: 'email',
+      related_model: 'billing_email',
+    },
+    billing_address: {
+      collection: 'tenants',
+      property: 'address',
+      related_model: 'billing_address',
+    },
+    state: {
+      collection: 'addresses',
+      property: 'state'
     },
     country: {
+      collection: 'addresses',
+      property: 'country'
+    },
+    implementation_email: {
+      collection: 'tenants_implementation',
+      property: 'email',
+      related_model: 'implementation_email',
+    },
+    phone_number_type: {
+      collection: 'phonenumbers',
+      property: 'phone-number-type',
+      related_model: 'phone_number_type',
+    },
+    email_type: {
+      collection: 'emails',
+      property: 'email-type',
+      related_model: 'email_type',
+    },
+    address_type: {
+      collection: 'addresses',
+      property: 'address-type',
+      related_model: 'address_type',
+    },
+    countries: {
       associated_model: 'country',
       join_model: 'tenant-join-country',
-    }
+    },
   }
 });

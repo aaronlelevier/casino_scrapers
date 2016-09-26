@@ -31,6 +31,7 @@ export default Ember.Mixin.create({
       collection: 'locations',
       property: 'state'
     },
+    //TODO collection needs to be phonenumbers
     phone_number_type: {
       collection: 'locations',
       property: 'phone-number-type',

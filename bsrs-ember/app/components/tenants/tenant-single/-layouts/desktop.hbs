@@ -30,7 +30,6 @@
             {{#form-group title="tenant.company_name" for="company_name"}}
               {{validated-input
                 model=model
-                value=model.company_name
                 valuePath="company_name"
                 didValidate=didValidate
                 className="form-control t-tenant-company_name"
@@ -41,7 +40,7 @@
         </div>
         <div class="row">
           <div class="col-md-12 t-currency-code">
-            {{#form-group title="admin.category.label.cost_currency" for="default_currency"}}
+            {{#form-group title="admin.tenant.currency" for="currency"}}
               {{power-select-foreign-key
                 mainModel=model
                 selected=model.currency
@@ -54,7 +53,7 @@
         </div>
         <div class="row">
           <div class="col-md-12">
-            {{#form-group title="tenant.country" for="country"}}
+            {{#form-group title="admin.tenant.countries" for="country"}}
             {{db-fetch-multi-select
               model=model
               multiAttr='country'
@@ -66,6 +65,52 @@
               remove_func="remove_country"
               repository=countryRepo
               searchMethod="findCountry"
+            }}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.tenant.implementation_email" for="implementation_email"}}
+            {{input-single-email 
+              model=model 
+              email=model.implementation_email
+              noDelete=true
+            }}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-6">
+            {{#form-group title="admin.tenant.billing_email" for="billing_email"}}
+            {{input-single-email 
+              model=model 
+              email=model.billing_email
+              noDelete=true
+            }}
+            {{/form-group}}
+          </div>
+          <div class="col-md-6">
+            {{#form-group title="admin.tenant.billing_phonenumber" for="billing_phonenumber"}}
+            {{input-single-phone 
+              model=model 
+              phonenumber=model.billing_phone
+              noDelete=true
+            }}
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            {{#form-group title="admin.tenant.billing_address" for="billing_address"}}
+            {{input-single-address 
+              model=model 
+              address=model.billing_address
+              noDelete=true
             }}
             {{/form-group}}
           </div>

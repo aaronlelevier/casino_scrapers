@@ -1,0 +1,69 @@
+<div class="input-group-vertical t-address-group">
+  <div class="input-group">
+    {{#unless noDelete}}
+    <span class="input-group-btn">
+      <button class="t-del-address-btn btn btn-default btn-sm delete" type="button" {{action 'delete' address}}>{{fa-icon "minus"}}</button>
+    </span>
+    {{/unless}}
+      {{power-select-foreign-key
+        mainModel=address
+        selected=address.address_type
+        change_method='change_address_type'
+        relatedModelName='address-type'
+      }}
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon address-label">{{t "admin.address.address"}}</span>
+      {{validated-input-multi
+        model=address
+        valuePath="address"
+        count=index
+        className=(concat "t-address-address" index)
+        placeholder=placeholder
+        class=(concat "t-address-address-validator" index)
+        didValidate=didValidate
+      }}
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon address-label">{{t "admin.address.city"}}</span>
+    {{input type="text" value=address.city class=(concat "form-control t-address-city" index)}}
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon address-label">{{t "admin.address.state.one"}}</span>
+    {{db-fetch-select
+      model=address
+      selectedAttr=address.state
+      className="t-address-state"
+      displayName="name"
+      change_func="change_state"
+      repository=stateDbFetch
+      searchMethod="findState"
+      valuePath="name"
+    }}
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon address-label">{{t "admin.address.postal_code"}}</span>
+      {{validated-input-multi
+        model=address
+        valuePath="postal_code"
+        count=index
+        className=(concat "t-address-postal-code" index)
+        placeholder=placeholder
+        class=(concat "t-address-postal-code-validator" index)
+        didValidate=didValidate
+      }}
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon address-label">{{t "admin.address.country.one"}}</span>
+    {{db-fetch-select
+      model=address
+      selectedAttr=address.country
+      className="t-address-country"
+      displayName="name"
+      change_func="change_country"
+      repository=countryDbFetch
+      searchMethod="findCountry"
+      valuePath="name"
+    }}
+  </div>
+</div>

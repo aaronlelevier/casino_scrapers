@@ -20,10 +20,7 @@ var BSRS_ADDRESS_FACTORY = (function() {
         id: this.state.id,
         name: this.state.name
       },
-      type: {
-        id: this.addressType.idOne,
-        name: this.addressType.officeName
-      }
+      type: this.addressType.officeId,
     }, {
       id: this.address.idTwo,
       address: this.address.streetTwo,
@@ -37,16 +34,30 @@ var BSRS_ADDRESS_FACTORY = (function() {
         id: this.state.idTwo,
         name: this.state.nameTwo
       },
-      type: {
-        id: this.addressType.idTwo,
-        name: this.addressType.shippingName
-      }
+      type: this.addressType.shippingId,
     }];
+  };
+  factory.prototype.get_belongs_to = function() {
+    return {
+      id: this.address.idOne,
+      address: this.address.streetOne,
+      city: this.address.cityOne,
+      postal_code: this.address.zipOne,
+      country: {
+        id: this.country.id,
+        name: this.country.name
+      },
+      state: {
+        id: this.state.id,
+        name: this.state.name
+      },
+      type: this.addressType.officeId,
+    }
   };
   factory.prototype.get_with_related_ids = function() {
     return [{
       id: this.address.idOne,
-      type: this.addressType.idOne,
+      type: this.addressType.officeId,
       address: this.address.streetOne,
       city: this.address.cityOne,
       state: this.state.id,
@@ -54,7 +65,7 @@ var BSRS_ADDRESS_FACTORY = (function() {
       country: this.country.id,
     }, {
       id: this.address.idTwo,
-      type: this.addressType.idTwo,
+      type: this.addressType.shippingId,
       address: this.address.streetTwo,
       city: this.address.cityTwo,
       state: this.state.idTwo,

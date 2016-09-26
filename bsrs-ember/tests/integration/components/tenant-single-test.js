@@ -61,10 +61,16 @@ test('header - shows new if model.new', function(assert) {
 test('labels are translated', function(assert) {
   this.render(hbs `{{tenants/tenant-single}}`);
   assert.equal(getLabelText('company_name'), trans.t('tenant.company_name'));
-  assert.equal(getLabelText('currency'), trans.t('tenant.currency'));
+  assert.equal(getLabelText('currency'), trans.t('admin.tenant.currency'));
 });
 
 test('placeholders are translated', function(assert) {
   this.render(hbs `{{tenants/tenant-single}}`);
   assert.equal(this.$('.t-tenant-company_name').get(0)['placeholder'], trans.t('tenant.company_name'));
 });
+
+// test('billing information displays', function(assert) {
+//   this.render(hbs `{{tenants/tenant-single}}`);
+//   assert.equal(this.$('.t-tenant-company_name').get(0)['placeholder'], trans.t('tenant.company_name'));
+// });
+
