@@ -25,7 +25,7 @@ var BSRS_TENANT_FACTORY = (function() {
       billing_email: this.email.get_belongs_to(),
       billing_address: this.address.get_belongs_to(),
       implementation_email: this.email.get_belongs_to(),
-      country: [{
+      countries: [{
         id: this.country.id,
         name: this.country.name
       }]
@@ -37,7 +37,7 @@ var BSRS_TENANT_FACTORY = (function() {
       id: id,
       company_name: this.tenant.companyNameOne,
       currency: this.tenant.currencyOne,
-      country: [this.country.id]
+      countries: [this.country.id]
     };
   };
   factory.prototype.detail = function(id) {
@@ -84,7 +84,7 @@ var BSRS_TENANT_FACTORY = (function() {
         id: `${this.tenant.currencyOne.slice(0,-1)}${i}`,
         name: `${this.tenant.name}${i}`,
       },
-      country: [{
+      countries: [{
         id: `${this.country.id.slice(0,-1)}${i}`,
         name: `${this.country.name}${i}`,
       }]

@@ -38,7 +38,7 @@ export default Ember.Object.extend(OptConf, ContactDeserializerMixin, {
     const billing_email = response.billing_email;
     const implementation_email = response.implementation_email;
     const billing_address = response.billing_address;
-    const countries = response.country;
+    const countries = response.countries;
     delete response.currency;
     delete response.billing_phone;
     delete response.billing_email;

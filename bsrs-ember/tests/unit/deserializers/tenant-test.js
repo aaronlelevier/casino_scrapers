@@ -83,7 +83,7 @@ test('existing tenant w/ country, and server returns no country - want no countr
   store.push('country', {id: CountryD.idOne});
   assert.equal(tenant.get('countries').get('length'), 1);
   let json = TF.detail();
-  json.country = [];
+  json.countries = [];
   run(() => {
     deserializer.deserialize(json, TD.idOne);
   });
@@ -98,12 +98,12 @@ test('existing tenant w/ country, and server returns w/ 1 extra country', assert
   store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountryD.idOne]});
   store.push('country', {id: CountryD.idOne});
   let json = TF.detail();
-  json.country.push({id: CountryD.unusedId});
+  json.countries.push({id: CountryD.unusedId});
   run(() => {
     deserializer.deserialize(json, TD.idOne);
   });
   tenant = store.find('tenant', TD.idOne);
-  assert.equal(tenant.get('country').get('length'), 2);
+  assert.equal(tenant.get('countries').get('length'), 2);
   assert.ok(tenant.get('isNotDirty'));
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
