@@ -11,10 +11,10 @@ from location.tests.factory import (create_location_levels, create_top_level_loc
     create_location_level, create_location)
 from person.models import Person
 from person.tests.factory import create_single_person, PASSWORD
-from automation.models import (AutomationEvent, Automation, ProfileFilter, AvailableFilter,
+from automation.models import (AutomationEvent, Automation, ProfileFilter, AutomationFilterType,
     AutomationActionType)
 from automation.tests.factory import (
-    create_automation, create_available_filters, create_available_filter_location,
+    create_automation, create_automation_filter_types, create_automation_filter_type_location,
     create_ticket_location_filter, create_ticket_categories_mid_level_filter, create_automation,
     create_ticket_location_state_filter, create_ticket_location_country_filter, create_automation_events,
     create_automation_event_two, create_automation_action, create_automation_action_types)
@@ -255,7 +255,7 @@ class AutomationCreateTests(ViewTestSetupMixin, APITestCase):
         # dynamic location filter
         location = create_location()
         criteria_two = [str(location.id)]
-        location_af = create_available_filter_location()
+        location_af = create_automation_filter_type_location()
         self.data['filters'] = [{
             'id': str(uuid.uuid4()),
             'source': str(location_af.id),
@@ -284,7 +284,7 @@ class AutomationCreateTests(ViewTestSetupMixin, APITestCase):
         self.data['id'] = str(uuid.uuid4())
         self.data['description'] = 'foo'
         # filter 2
-        location_af = create_available_filter_location()
+        location_af = create_automation_filter_type_location()
         location_level = create_location_level('foo')
         location = create_location(location_level)
         self.data['filters'].append({
@@ -345,7 +345,7 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(len(data['filters']), 0)
 
     def test_update__nested_create(self):
-        af = create_available_filter_location()
+        af = create_automation_filter_type_location()
         self.assertNotEqual(self.automation.filters.first().source, af)
         self.assertNotEqual(self.automation.filters.first().criteria, [str(self.location.id)])
         self.data['filters'] = [{
@@ -369,7 +369,7 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
     def test_update__nested_create__multiple(self):
         # filter 1 - in existing record
         # filter 2
-        location_af = create_available_filter_location()
+        location_af = create_automation_filter_type_location()
         location_level = create_location_level('foo')
         location = create_location(location_level)
         self.data['filters'].append({
@@ -517,22 +517,22 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(ProfileFilter.objects.count(), init_count)
 
 
-class AvailableFilterTests(APITestCase):
+class AutomationFilterTypeTests(APITestCase):
 
     def setUp(self):
         self.person = create_single_person()
         self.tenant = self.person.role.tenant
         self.automation = create_automation(tenant=self.tenant)
         create_location_levels()
-        create_available_filters()
-        self.af = AvailableFilter.objects.first()
+        create_automation_filter_types()
+        self.af = AutomationFilterType.objects.first()
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
         self.client.logout()
 
     def test_list_non_dynamic(self):
-        response = self.client.get('/api/admin/automation-available-filters/')
+        response = self.client.get('/api/admin/automation-automation-filter-types/')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
@@ -546,15 +546,15 @@ class AvailableFilterTests(APITestCase):
         self.assertNotIn('unique_key', priority_data['lookups'])
 
     def test_list__dynamic(self):
-        raw_filter_count = AvailableFilter.objects.count()
-        dynamic_filter_count = AvailableFilter.objects.filter(lookups__filters='location_level').count()
+        raw_filter_count = AutomationFilterType.objects.count()
+        dynamic_filter_count = AutomationFilterType.objects.filter(lookups__filters='location_level').count()
         location_level_filters = LocationLevel.objects.count()
         self.assertEqual(raw_filter_count, 5)
         self.assertEqual(dynamic_filter_count, 1)
         self.assertEqual(location_level_filters, 5)
         desired_count = raw_filter_count - dynamic_filter_count + location_level_filters
 
-        response = self.client.get('/api/admin/automation-available-filters/')
+        response = self.client.get('/api/admin/automation-automation-filter-types/')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
@@ -565,7 +565,7 @@ class AvailableFilterTests(APITestCase):
             if d['lookups']:
                 location_data = d
         location_level = LocationLevel.objects.get(id=location_data['lookups']['id'])
-        location_af = create_available_filter_location()
+        location_af = create_automation_filter_type_location()
         self.assertEqual(location_data['id'], str(location_af.id))
         self.assertEqual(location_data['key'], location_level.name)
         self.assertEqual(location_data['field'], 'location')
@@ -574,7 +574,7 @@ class AvailableFilterTests(APITestCase):
         self.assertEqual(location_data['lookups']['name'], location_level.name)
 
     def test_list_sorted_in_ascending_order_by_key(self):
-        response = self.client.get('/api/admin/automation-available-filters/')
+        response = self.client.get('/api/admin/automation-automation-filter-types/')
 
         data = json.loads(response.content.decode('utf8'))
         prev = None
@@ -584,25 +584,25 @@ class AvailableFilterTests(APITestCase):
             prev = af
 
     def test_detail(self):
-        response = self.client.get('/api/admin/automation-available-filters/{}/'.format(self.af.id))
+        response = self.client.get('/api/admin/automation-automation-filter-types/{}/'.format(self.af.id))
         self.assertEqual(response.status_code, 405)
 
     def test_create(self):
-        response = self.client.post('/api/admin/automation-available-filters/', {}, format='json')
+        response = self.client.post('/api/admin/automation-automation-filter-types/', {}, format='json')
         self.assertEqual(response.status_code, 405)
 
     def test_update(self):
-        response = self.client.put('/api/admin/automation-available-filters/{}/'.format(self.af.id))
+        response = self.client.put('/api/admin/automation-automation-filter-types/{}/'.format(self.af.id))
         self.assertEqual(response.status_code, 405)
 
     def test_delete(self):
-        response = self.client.delete('/api/admin/automation-available-filters/{}/'.format(self.af.id))
+        response = self.client.delete('/api/admin/automation-automation-filter-types/{}/'.format(self.af.id))
         self.assertEqual(response.status_code, 405)
 
     def test_list_non_dynamic_no_llevel(self):
-        AvailableFilter.objects.filter(lookups__filters='location_level').delete()
-        response = self.client.get('/api/admin/automation-available-filters/')
+        AutomationFilterType.objects.filter(lookups__filters='location_level').delete()
+        response = self.client.get('/api/admin/automation-automation-filter-types/')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['count'], AvailableFilter.objects.count())
+        self.assertEqual(data['count'], AutomationFilterType.objects.count())

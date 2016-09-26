@@ -7,10 +7,10 @@ from contact.models import State, Country
 from location.models import Location, LocationLevel
 from person.models import Person
 from person.serializers_leaf import PersonSimpleSerializer
-from automation.models import (AutomationEvent, Automation, ProfileFilter, AvailableFilter,
+from automation.models import (AutomationEvent, Automation, ProfileFilter, AutomationFilterType,
     AutomationAction, AutomationActionType)
 from automation.validators import (ProfileFilterFieldValidator, UniqueByTenantValidator,
-    AvailableFilterValidator)
+    AutomationFilterTypeValidator)
 from tenant.mixins import RemoveTenantMixin
 from ticket.models import TicketPriority
 from utils.serializers import BaseCreateSerializer
@@ -39,10 +39,10 @@ class AutomationActionSerializer(BaseCreateSerializer):
         fields = ('id', 'type', 'content')
 
 
-class AvailableFilterSerializer(serializers.ModelSerializer):
+class AutomationFilterTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = AvailableFilter
+        model = AutomationFilterType
         fields = ('id', 'key', 'field', 'lookups',)
 
 
@@ -51,7 +51,7 @@ PROFILE_FILTER_FIELDS = ('id', 'lookups', 'criteria', 'source',)
 class ProfileFilterUnnestedSerializer(BaseCreateSerializer):
 
     source = serializers.PrimaryKeyRelatedField(
-        queryset=AvailableFilter.objects.all(), required=False)
+        queryset=AutomationFilterType.objects.all(), required=False)
 
     class Meta:
         model = ProfileFilter
@@ -61,7 +61,7 @@ class ProfileFilterUnnestedSerializer(BaseCreateSerializer):
 
 class ProfileFilterSerializer(BaseCreateSerializer):
 
-    source = AvailableFilterSerializer()
+    source = AutomationFilterTypeSerializer()
 
     class Meta:
         model = ProfileFilter
@@ -131,7 +131,7 @@ class AutomationCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
     class Meta:
         model = Automation
-        validators = [AvailableFilterValidator(),
+        validators = [AutomationFilterTypeValidator(),
                       UniqueByTenantValidator('description')]
         fields = AUTOMATION_FIELDS + ('events', 'filters',)
 

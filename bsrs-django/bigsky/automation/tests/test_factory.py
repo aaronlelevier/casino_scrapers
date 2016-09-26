@@ -9,7 +9,7 @@ from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
 from automation.choices import AUTOMATION_EVENTS, AUTOMATION_ACTION_TYPES
-from automation.models import (AutomationEvent, Automation, ProfileFilter, AvailableFilter,
+from automation.models import (AutomationEvent, Automation, ProfileFilter, AutomationFilterType,
     AutomationActionType, AutomationAction)
 from automation.tests import factory
 from tenant.models import Tenant
@@ -77,10 +77,10 @@ class AutomationActionTests(TestCase):
             Person.objects.get(id=ret.content['assignee']), Person)
 
 
-class AvailableFilterTests(TestCase):
+class AutomationFilterTypeTests(TestCase):
 
     def test_default_context(self):
-        ret = factory.create_available_filter_priority()
+        ret = factory.create_automation_filter_type_priority()
 
         # context - populated by default
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
@@ -88,9 +88,9 @@ class AvailableFilterTests(TestCase):
         content_type = ContentType.objects.get(app_label=app_label, model=model)
         self.assertEqual(content_type.model_class(), Ticket)
 
-    def test_create_available_filter_priority(self):
-        ret = factory.create_available_filter_priority()
-        ret_two = factory.create_available_filter_priority()
+    def test_create_automation_filter_type_priority(self):
+        ret = factory.create_automation_filter_type_priority()
+        ret_two = factory.create_automation_filter_type_priority()
         # indempotent
         self.assertEqual(ret, ret_two)
         # attrs
@@ -99,9 +99,9 @@ class AvailableFilterTests(TestCase):
         self.assertEqual(ret.field, 'priority')
         self.assertEqual(ret.lookups, {})
 
-    def test_create_available_filter_categories(self):
-        ret = factory.create_available_filter_categories()
-        ret_two = factory.create_available_filter_categories()
+    def test_create_automation_filter_type_categories(self):
+        ret = factory.create_automation_filter_type_categories()
+        ret_two = factory.create_automation_filter_type_categories()
         # indempotent
         self.assertEqual(ret, ret_two)
         # attrs
@@ -110,9 +110,9 @@ class AvailableFilterTests(TestCase):
         self.assertEqual(ret.field, 'categories')
         self.assertEqual(ret.lookups, {})
 
-    def test_create_available_filter_location(self):
-        ret = factory.create_available_filter_location()
-        ret_two = factory.create_available_filter_location()
+    def test_create_automation_filter_type_location(self):
+        ret = factory.create_automation_filter_type_location()
+        ret_two = factory.create_automation_filter_type_location()
         # indempotent
         self.assertEqual(ret, ret_two)
         # attrs
@@ -121,9 +121,9 @@ class AvailableFilterTests(TestCase):
         self.assertEqual(ret.field, 'location')
         self.assertEqual(ret.lookups, {'filters': 'location_level'})
 
-    def test_create_available_filter_state(self):
-        ret = factory.create_available_filter_state()
-        ret_two = factory.create_available_filter_state()
+    def test_create_automation_filter_type_state(self):
+        ret = factory.create_automation_filter_type_state()
+        ret_two = factory.create_automation_filter_type_state()
         # indempotent
         self.assertEqual(ret, ret_two)
         # attrs
@@ -132,9 +132,9 @@ class AvailableFilterTests(TestCase):
         self.assertEqual(ret.field, 'state')
         self.assertEqual(ret.lookups, {})
 
-    def test_create_available_filter_country(self):
-        ret = factory.create_available_filter_country()
-        ret_two = factory.create_available_filter_country()
+    def test_create_automation_filter_type_country(self):
+        ret = factory.create_automation_filter_type_country()
+        ret_two = factory.create_automation_filter_type_country()
         # indempotent
         self.assertEqual(ret, ret_two)
         # attrs
@@ -143,13 +143,13 @@ class AvailableFilterTests(TestCase):
         self.assertEqual(ret.field, 'country')
         self.assertEqual(ret.lookups, {})
 
-    def test_create_available_filters(self):
-        self.assertEqual(AvailableFilter.objects.count(), 0)
-        factory.create_available_filters()
-        self.assertEqual(AvailableFilter.objects.count(), 5)
+    def test_create_automation_filter_types(self):
+        self.assertEqual(AutomationFilterType.objects.count(), 0)
+        factory.create_automation_filter_types()
+        self.assertEqual(AutomationFilterType.objects.count(), 5)
 
         fields = ['priority', 'categories', 'location', 'state', 'country']
-        ret_fields = AvailableFilter.objects.values_list('field', flat=True)
+        ret_fields = AutomationFilterType.objects.values_list('field', flat=True)
         self.assertEqual(sorted(fields), sorted(ret_fields))
         self.assertEqual(len(set(ret_fields)), 5)
 
@@ -161,7 +161,7 @@ class PriorityFilterTests(TestCase):
 
     def test_create_ticket_priority_filter(self):
         priority = create_default(TicketPriority)
-        source = factory.create_available_filter_priority()
+        source = factory.create_automation_filter_type_priority()
 
         pf = factory.create_ticket_priority_filter()
 
@@ -177,7 +177,7 @@ class PriorityFilterTests(TestCase):
 
     def test_create_ticket_categories_filter(self):
         category = create_repair_category()
-        source = factory.create_available_filter_categories()
+        source = factory.create_automation_filter_type_categories()
 
         pf = factory.create_ticket_categories_filter()
 
@@ -188,7 +188,7 @@ class PriorityFilterTests(TestCase):
 
     def test_create_ticket_categories_mid_level_filter(self):
         category = create_repair_category()
-        source = factory.create_available_filter_categories()
+        source = factory.create_automation_filter_type_categories()
 
         pf = factory.create_ticket_categories_mid_level_filter()
 
@@ -202,7 +202,7 @@ class PriorityFilterTests(TestCase):
     def test_create_ticket_location_filter(self):
         location = create_top_level_location()
         location_level = location.location_level
-        source = factory.create_available_filter_location()
+        source = factory.create_automation_filter_type_location()
 
         pf = factory.create_ticket_location_filter()
 
@@ -213,7 +213,7 @@ class PriorityFilterTests(TestCase):
 
     def test_create_ticket_location_state_filter(self):
         state = create_contact_state()
-        source = factory.create_available_filter_state()
+        source = factory.create_automation_filter_type_state()
 
         pf = factory.create_ticket_location_state_filter()
 
@@ -224,7 +224,7 @@ class PriorityFilterTests(TestCase):
 
     def test_create_ticket_location_state_filter(self):
         country = create_contact_country()
-        source = factory.create_available_filter_country()
+        source = factory.create_automation_filter_type_country()
 
         pf = factory.create_ticket_location_country_filter()
 

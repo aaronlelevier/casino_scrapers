@@ -60,7 +60,7 @@ router.register(r'admin/people', person_views.PersonViewSet)
 router.register(r'admin/roles', person_views.RoleViewSet)
 # ROUTING
 router.register(r'admin/automations', automation_views.AutomationViewSet)
-router.register(r'admin/automation-available-filters', automation_views.AvailableFilterViewSet)
+router.register(r'admin/automation-automation-filter-types', automation_views.AutomationFilterTypeViewSet)
 router.register(r'admin/automation-events', automation_views.AutomationEventViewSet)
 router.register(r'admin/automation-action-types', automation_views.AutomationActionTypeViewSet)
 # TENANT

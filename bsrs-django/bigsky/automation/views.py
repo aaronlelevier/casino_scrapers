@@ -4,7 +4,7 @@ from rest_framework import permissions, viewsets, mixins
 from rest_framework.exceptions import MethodNotAllowed
 
 from location.models import LocationLevel
-from automation.models import AutomationEvent, Automation, AvailableFilter, AutomationActionType
+from automation.models import AutomationEvent, Automation, AutomationFilterType, AutomationActionType
 from automation import serializers as rs
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.views import BaseModelViewSet
@@ -47,15 +47,15 @@ class AutomationViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewS
         return super(AutomationViewSet, self).create(request, *args, **kwargs)
 
 
-class AvailableFilterViewSet(viewsets.ModelViewSet):
+class AutomationFilterTypeViewSet(viewsets.ModelViewSet):
 
-    model = AvailableFilter
-    queryset = AvailableFilter.objects.all()
+    model = AutomationFilterType
+    queryset = AutomationFilterType.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_serializer_class(self):
         if self.action == 'list':
-            return rs.AvailableFilterSerializer
+            return rs.AutomationFilterTypeSerializer
         else:
             raise MethodNotAllowed(method=self.action)
 
@@ -78,7 +78,7 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
 
     def _combine_dynamic_data(self, data, request):
         """
-        Looks for dynamic AvailableFilters. If it finds one, remove that filter
+        Looks for dynamic AutomationFilterTypes. If it finds one, remove that filter
         placeholder, and replace it with dynamic versions of itself.
         """
         data_copy = copy.copy(data)
@@ -91,7 +91,7 @@ class AvailableFilterViewSet(viewsets.ModelViewSet):
         if location_filter:
             filters = []
             for x in LocationLevel.objects.all():
-                filters.append(x.available_filter_data(location_filter['id']))
+                filters.append(x.automation_filter_type_data(location_filter['id']))
             data['results'] += filters
 
         data['results'] = sorted(data['results'], key=lambda x: x['key'])

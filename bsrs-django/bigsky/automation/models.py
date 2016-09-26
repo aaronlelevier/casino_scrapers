@@ -116,10 +116,10 @@ class Automation(BaseModel):
         return all(matches)
 
 
-class AvailableFilter(BaseModel):
+class AutomationFilterType(BaseModel):
     """
     :lookups: (dict)
-        if there's a lookup, use it to generate dynamic AvailableFilters
+        if there's a lookup, use it to generate dynamic AutomationFilterTypes
 
         Idea for structure:
             {
@@ -151,18 +151,18 @@ class AvailableFilter(BaseModel):
 
 class ProfileFilter(BaseModel):
     """
-    The first 4 fields are the same as the AvailableFilter fields, but
+    The first 4 fields are the same as the AutomationFilterType fields, but
     the "lookups" field is different. It will contain criteria for the
-    dynamic AvailableFilter that was selected.
+    dynamic AutomationFilterType that was selected.
 
-    ex: AvailableFilter.lookups: {'filters': 'location_level'}
+    ex: AutomationFilterType.lookups: {'filters': 'location_level'}
         ProfileFilter.lookups: {'location_level': <location_level_id>}
 
     expl: Basically ProfileFilter has the serialized value returned by the
         list saved to it, indicating the dynamic filter selected.
     """
     automation = models.ForeignKey(Automation, related_name="filters")
-    source = models.ForeignKey(AvailableFilter,
+    source = models.ForeignKey(AutomationFilterType,
         help_text="Use to get info on what type of filter, if this is a dynamic filter, use"
                   "the lookup field")
     lookups = JSONField(null=True, default={},

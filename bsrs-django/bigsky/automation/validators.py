@@ -35,8 +35,8 @@ class ProfileFilterFieldValidator(object):
                 raise ValidationError("'{}' not valid. Must be a list of UUIDs".format(self.criteria))
 
 
-class AvailableFilterValidator(object):
-    """Each AvailableFilter can only be used 1x. Get the AF from the 'id'
+class AutomationFilterTypeValidator(object):
+    """Each AutomationFilterType can only be used 1x. Get the AF from the 'id'
     attr for an Automation's related ProfileFilters in order to check it."""
 
     def __call__(self, data):

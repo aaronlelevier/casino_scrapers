@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='profilefilter',
             name='source',
-            field=models.ForeignKey(default='52d4fa9f-73d5-4dec-8431-96ada3aee2dd', help_text='Use to get info on what type of filter, if this is a dynamic filter, usethe lookup field', on_delete=django.db.models.deletion.CASCADE, to='automation.AvailableFilter'),
+            field=models.ForeignKey(default='52d4fa9f-73d5-4dec-8431-96ada3aee2dd', help_text='Use to get info on what type of filter, if this is a dynamic filter, usethe lookup field', on_delete=django.db.models.deletion.CASCADE, to='automation.AutomationFilterType'),
             preserve_default=False,
         ),
     ]

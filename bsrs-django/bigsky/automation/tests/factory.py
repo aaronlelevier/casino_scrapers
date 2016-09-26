@@ -4,7 +4,7 @@ from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
 from automation.choices import AUTOMATION_EVENTS, AUTOMATION_ACTION_TYPES
-from automation.models import (AutomationEvent, Automation, ProfileFilter, AvailableFilter,
+from automation.models import (AutomationEvent, Automation, ProfileFilter, AutomationFilterType,
     AutomationActionType, AutomationAction)
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import TicketPriority
@@ -57,43 +57,43 @@ def create_automation_action(automation=None):
                                            content={'assignee': str(person.id)})
 
 
-# AvailableFilters
+# AutomationFilterTypes
 
-def create_available_filter_priority():
-    obj, _ = AvailableFilter.objects.get_or_create(key='admin.placeholder.priority_filter_select',
+def create_automation_filter_type_priority():
+    obj, _ = AutomationFilterType.objects.get_or_create(key='admin.placeholder.priority_filter_select',
                                                    field='priority')
     return obj
 
 
-def create_available_filter_categories():
-    obj, _ = AvailableFilter.objects.get_or_create(key='admin.placeholder.category_filter_select',
+def create_automation_filter_type_categories():
+    obj, _ = AutomationFilterType.objects.get_or_create(key='admin.placeholder.category_filter_select',
                                                    field='categories')
     return obj
 
 
-def create_available_filter_location():
-    obj, _ = AvailableFilter.objects.get_or_create(field='location',
+def create_automation_filter_type_location():
+    obj, _ = AutomationFilterType.objects.get_or_create(field='location',
                                                    lookups={'filters': 'location_level'})
     return obj
 
 
-def create_available_filter_state():
-    obj, _ = AvailableFilter.objects.get_or_create(key='admin.placeholder.state_filter_select',
+def create_automation_filter_type_state():
+    obj, _ = AutomationFilterType.objects.get_or_create(key='admin.placeholder.state_filter_select',
                                                    field='state')
     return obj
 
-def create_available_filter_country():
-    obj, _ = AvailableFilter.objects.get_or_create(key='admin.placeholder.country_filter_select',
+def create_automation_filter_type_country():
+    obj, _ = AutomationFilterType.objects.get_or_create(key='admin.placeholder.country_filter_select',
                                                    field='country')
     return obj
 
 
-def create_available_filters():
-    create_available_filter_priority()
-    create_available_filter_categories()
-    create_available_filter_location()
-    create_available_filter_state()
-    create_available_filter_country()
+def create_automation_filter_types():
+    create_automation_filter_type_priority()
+    create_automation_filter_type_categories()
+    create_automation_filter_type_location()
+    create_automation_filter_type_state()
+    create_automation_filter_type_country()
 
 
 # ProfileFilters
@@ -102,7 +102,7 @@ def create_ticket_priority_filter(automation=None):
     if not automation:
         automation = create_automation(with_filters=False)
     priority = create_default(TicketPriority)
-    source = create_available_filter_priority()
+    source = create_automation_filter_type_priority()
     return ProfileFilter.objects.create(
         automation=automation, source=source, criteria=[str(priority.id)])
 
@@ -111,7 +111,7 @@ def create_ticket_categories_filter(automation=None):
     if not automation:
         automation = create_automation(with_filters=False)
     category = create_repair_category()
-    source = create_available_filter_categories()
+    source = create_automation_filter_type_categories()
     return ProfileFilter.objects.create(
         automation=automation, source=source, criteria=[str(category.id)])
 
@@ -121,7 +121,7 @@ def create_ticket_categories_mid_level_filter(automation=None):
         automation = create_automation(with_filters=False)
     category = create_repair_category()
     child_category = create_single_category(parent=category)
-    source = create_available_filter_categories()
+    source = create_automation_filter_type_categories()
     return ProfileFilter.objects.create(
         automation=automation, source=source, criteria=[str(child_category.id)])
 
@@ -131,7 +131,7 @@ def create_ticket_location_filter(automation=None):
         automation = create_automation(with_filters=False)
     location = create_top_level_location()
     location_level = location.location_level
-    source = create_available_filter_location()
+    source = create_automation_filter_type_location()
     return ProfileFilter.objects.create(
         automation=automation, source=source, criteria=[str(location.id)],
         lookups={'filters': 'location_level',
@@ -143,7 +143,7 @@ def create_ticket_location_state_filter(automation=None):
     if not automation:
         automation = create_automation(with_filters=False)
     state = create_contact_state()
-    source = create_available_filter_state()
+    source = create_automation_filter_type_state()
     return ProfileFilter.objects.create(
         automation=automation, source=source, criteria=[str(state.id)])
 
@@ -152,7 +152,7 @@ def create_ticket_location_country_filter(automation=None):
     if not automation:
         automation = create_automation(with_filters=False)
     country = create_contact_country()
-    source = create_available_filter_country()
+    source = create_automation_filter_type_country()
     return ProfileFilter.objects.create(
         automation=automation, source=source, criteria=[str(country.id)])
 

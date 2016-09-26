@@ -13,7 +13,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RemoveField(
-            model_name='availablefilter',
+            model_name='automationfiltertype',
             name='key_is_i18n',
         ),
     ]

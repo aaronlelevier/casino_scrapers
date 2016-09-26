@@ -9,12 +9,12 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('automation', '0008_availablefilter'),
+        ('automation', '0008_automationfiltertype'),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='availablefilter',
+            model_name='automationfiltertype',
             name='type',
         ),
         migrations.AddField(

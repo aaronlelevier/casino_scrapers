@@ -15,11 +15,11 @@ from person.models import Person
 from person.tests.factory import create_single_person
 from automation.models import (
     AutomationEvent, AUTOMATION_EVENTS, Automation, AutomationManager, AutomationQuerySet,
-    AvailableFilter, ProfileFilter)
+    AutomationFilterType, ProfileFilter)
 from automation.tests.factory import (
     create_automation, create_ticket_priority_filter, create_ticket_categories_filter,
-    create_available_filters, create_ticket_location_state_filter, create_available_filter_state,
-    create_ticket_location_country_filter, create_available_filter_country)
+    create_automation_filter_types, create_ticket_location_state_filter, create_automation_filter_type_state,
+    create_ticket_location_country_filter, create_automation_filter_type_country)
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority, TicketStatus
 from ticket.tests.factory import create_ticket
@@ -239,19 +239,19 @@ class AutomationTests(SetupMixin, TestCase):
         self.assertFalse(ret)
 
 
-class AvailableFilterTests(TestCase):
+class AutomationFilterTypeTests(TestCase):
 
     def setUp(self):
-        create_available_filters()
+        create_automation_filter_types()
 
     def test_is_state_filter(self):
-        ret = create_available_filter_state()
-        self.assertIsInstance(ret, AvailableFilter)
+        ret = create_automation_filter_type_state()
+        self.assertIsInstance(ret, AutomationFilterType)
         self.assertTrue(ret.is_state_filter)
 
     def test_is_country_filter(self):
-        ret = create_available_filter_country()
-        self.assertIsInstance(ret, AvailableFilter)
+        ret = create_automation_filter_type_country()
+        self.assertIsInstance(ret, AutomationFilterType)
         self.assertTrue(ret.is_country_filter)
 
 

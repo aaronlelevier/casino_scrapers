@@ -192,8 +192,8 @@ class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
         parents = [str(parent.id) for parent in self.parents.all()]
         return {"id": str(self.id), "name": self.name, "children": children, "parents": parents}
 
-    def available_filter_data(self, id):
-        # 'id' is the 'location' AvailableFilter id
+    def automation_filter_type_data(self, id):
+        # 'id' is the 'location' AutomationFilterType id
         return {
             'id': id,
             'key': self.name,

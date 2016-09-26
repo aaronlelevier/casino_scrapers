@@ -15,6 +15,6 @@ class ProfileFilterAdmin(admin.ModelAdmin):
     def source_key(self, obj):
         return obj.source.key or obj.source
 
-@admin.register(models.AvailableFilter)
-class AvailableFilterAdmin(admin.ModelAdmin):
+@admin.register(models.AutomationFilterType)
+class AutomationFilterTypeAdmin(admin.ModelAdmin):
     pass

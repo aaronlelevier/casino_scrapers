@@ -58,10 +58,10 @@ class ProfileFilterFieldValidatorTests(ViewTestSetupMixin, APITestCase):
         )
 
 
-class AvailableFilterValidatorTests(ViewTestSetupMixin, APITestCase):
+class AutomationFilterTypeValidatorTests(ViewTestSetupMixin, APITestCase):
 
     def setUp(self):
-        super(AvailableFilterValidatorTests, self).setUp()
+        super(AutomationFilterTypeValidatorTests, self).setUp()
 
         location_filter = create_ticket_location_filter()
         location_level = create_top_level_location().location_level

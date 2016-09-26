@@ -8,12 +8,12 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('automation', '0012_remove_availablefilter_key_is_i18n'),
+        ('automation', '0012_remove_automationfiltertype_key_is_i18n'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='availablefilter',
+            model_name='automationfiltertype',
             name='field',
             field=models.CharField(help_text="Model field to look up from the Model class specified in the 'context'with the exception of State/Country. This field should also ben uniquebecause Ember case/switches on this field to generate the power-select", max_length=100),
         ),
