@@ -27,6 +27,16 @@ export default Ember.Mixin.create({
       join_model: 'automation-join-action',
       associated_pointer: 'action'
     },
+    type: {
+      collection: 'actions',
+      property: 'automation-action-type',
+      related_model: 'type',
+    },
+    assignee: {
+      collection: 'actions',
+      property: 'person',
+      related_model: 'assignee',
+    },
     pf: {
       associated_model: 'pfilter',
       join_model: 'automation-join-pfilter'

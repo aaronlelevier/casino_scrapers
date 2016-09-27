@@ -36,6 +36,9 @@ var belongs_to_extract_contacts = function(model, store, contact_model_str, cont
     return contact_fks;
 };
 
+/**
+  * @return (object array of join models, object array of models, array of join model ids)
+ */
 var belongs_to = function(_ownerName, modelName, relatedModelName) {
   Ember.defineProperty(this, `setup_${_ownerName}`, undefined, belongs_to_json(modelName, _ownerName, relatedModelName));
 };

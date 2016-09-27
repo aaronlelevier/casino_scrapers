@@ -3,6 +3,8 @@ const { run } = Ember;
 import { test, module } from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import AD from 'bsrs-ember/vendor/defaults/automation';
+import AAD from 'bsrs-ember/vendor/defaults/automation-action';
+import ATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import ED from 'bsrs-ember/vendor/defaults/automation-event';
 import AF from 'bsrs-ember/vendor/automation_fixtures';
 import automationDeserializer from 'bsrs-ember/deserializers/automation';
@@ -11,12 +13,13 @@ import AJFD from 'bsrs-ember/vendor/defaults/automation-join-pfilter';
 import PJCD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import PersonD from 'bsrs-ember/vendor/defaults/person';
 
 var store, automation, deserializer, pfilter, pfilter_unused;
 
 module('unit: automation deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-event', 'model:automation-join-event', 'model:automation-list', 'model:person', 'model:automation-join-pfilter', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:automation-event', 'model:automation-join-event', 'model:automation-list', 'model:person', 'model:automation-join-pfilter', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     deserializer = automationDeserializer.create({ simpleStore: store });
     run(() => {
       automation = store.push('automation', { id: AD.idOne });
@@ -41,6 +44,15 @@ test('deserialize single', assert => {
   assert.equal(automation.get('pf').objectAt(0).get('source_id'), PFD.sourceIdOne);
   assert.equal(automation.get('pf').objectAt(0).get('criteria').get('length'), 1);
   assert.equal(automation.get('pf').objectAt(0).get('criteria').objectAt(0).get('id'), TD.priorityOneId);
+  // actions
+  assert.equal(automation.get('action').get('length'), 1);
+  assert.equal(automation.get('action').objectAt(0).get('id'), AAD.idOne);
+  // action-type
+  assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keyOne);
+  // assignee
+  assert.equal(automation.get('action').objectAt(0).get('assignee.id'), PersonD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('assignee.fullname'), PersonD.fullname);
 });
 
 // test('existing automation w/ pf, and server returns no pf - want no pf b/c that is the most recent', assert => {
