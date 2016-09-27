@@ -22,5 +22,12 @@ export default Model.extend(OptConf, {
   saveRelated() {
     this.saveAssignee();
     this.saveType();
+  },
+  serialize() {
+    return {
+      id: this.get('id'),
+      type: this.get('type.id'),
+      assignee: this.get('assignee.id')
+    };
   }
 });

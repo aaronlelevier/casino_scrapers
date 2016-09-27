@@ -47,6 +47,11 @@ var BSRS_automation_FACTORY = (function() {
       description: this.automation.descriptionOne,
       // TODO: these are pfilters which should just be the actual filter models. ie. Ticket-Prority
       events: [this.event.idOne],
+      actions: [{
+        id: this.action.idOne,
+        type: this.actionType.idOne,
+        assignee: this.person.idOne
+      }],
       filters: [{
         id: this.pfilter.idOne,
         source_id: this.pfilter.sourceIdOne,

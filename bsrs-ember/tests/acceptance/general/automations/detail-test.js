@@ -8,6 +8,8 @@ import config from 'bsrs-ember/config/environment';
 import random from 'bsrs-ember/models/random';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import AD from 'bsrs-ember/vendor/defaults/automation';
+import AAD from 'bsrs-ember/vendor/defaults/automation-action';
+import AATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import AF from 'bsrs-ember/vendor/automation_fixtures';
 import ED from 'bsrs-ember/vendor/defaults/automation-event';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
@@ -52,68 +54,110 @@ test('by clicking record in list view, User is sent to detail view', assert => {
   });
 });
 
-// test('visit detail and update all fields', assert => {
-//   page.visitDetail();
-//   andThen(() => {
-//     assert.equal(currentURL(), DETAIL_URL);
-//     assert.equal(page.descriptionValue, AD.descriptionOne);
-//     assert.equal(page.eventSelectedOne.split(/\s+/)[1], t(ED.keyOne));
-//     assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
-//     assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
-//   });
-//   // criteria
-//   selectChoose('.t-priority-criteria', TD.priorityTwo);
-//   andThen(() => {
-//     assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
-//     assert.equal(page.prioritySelectedTwo.split(/\s+/)[1], t(TD.priorityTwoKey));
-//   });
-//   // description
-//   page.descriptionFill(AD.descriptionTwo);
-//   andThen(() => {
-//     assert.equal(page.descriptionValue, AD.descriptionTwo);
-//     const automation = store.find('automation', AD.idOne);
-//     assert.equal(automation.get('description'), AD.descriptionTwo);
-//   });
-//   // events
-//   let keyword = 'a';
-//   xhr(`/api/admin/automation-events/?search=${keyword}`, 'GET', null, {}, 200, AF.event_search_power_select());
-//   selectSearch('.t-automation-event-select', keyword);
-//   selectChoose('.t-automation-event-select', ED.keyTwo);
-//   andThen(() => {
-//     assert.equal(page.eventSelectedOne.split(/\s+/)[1], ED.keyOne);
-//     assert.equal(page.eventSelectedTwo.split(/\s+/)[1], ED.keyTwo);
-//   });
-//   // pfilters
-//   xhr(`${AUTOMATION_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
-//   page.addFilter();
-//   selectChoose('.t-automation-pf-select:eq(1)', PFD.keyTwo);
-//   xhr(`/api/admin/locations/location__icontains=${keyword}/?location_level=${PFD.lookupsDynamic.id}`, 'GET', null, {}, 200, LF.search_power_select());
-//   selectSearch('.t-ticket-location-select', keyword);
-//   selectChoose('.t-ticket-location-select', LD.storeNameFour);
-//   andThen(() => {
-//     assert.equal(page.locationSelectedOne.split(/\s+/)[1], LD.storeNameFour);
-//   });
-//   let payload = AF.put({
-//     description: AD.descriptionTwo,
-//     events: [ED.idOne, ED.idTwo],
-//     filters: [{
-//       id: PFD.idOne,
-//       source: PFD.sourceIdOne,
-//       criteria: [TD.priorityOneId, TD.priorityTwoId],
-//       lookups: {}
-//     }, {
-//       id: UUID.value,
-//       source: PFD.sourceIdTwo,
-//       criteria: [LD.idFour],
-//       lookups: PFD.lookupsDynamic
-//     }]
-//   });
-//   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
-//   generalPage.save();
-//   andThen(() => {
-//     assert.equal(currentURL(), automation_LIST_URL);
-//   });
-// });
+test('visit detail and update all fields', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(page.descriptionValue, AD.descriptionOne);
+    assert.equal(page.eventSelectedOne.split(/\s+/)[1], t(ED.keyOne));
+    assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
+  });
+  // criteria
+  selectChoose('.t-priority-criteria', TD.priorityTwo);
+  andThen(() => {
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
+    assert.equal(page.prioritySelectedTwo.split(/\s+/)[1], t(TD.priorityTwoKey));
+  });
+  // description
+  page.descriptionFill(AD.descriptionTwo);
+  andThen(() => {
+    assert.equal(page.descriptionValue, AD.descriptionTwo);
+    const automation = store.find('automation', AD.idOne);
+    assert.equal(automation.get('description'), AD.descriptionTwo);
+  });
+  // events
+  let keyword = 'a';
+  xhr(`/api/admin/automation-events/?search=${keyword}`, 'GET', null, {}, 200, AF.event_search_power_select());
+  selectSearch('.t-automation-event-select', keyword);
+  selectChoose('.t-automation-event-select', ED.keyTwo);
+  andThen(() => {
+    assert.equal(page.eventSelectedOne.split(/\s+/)[1], ED.keyOne);
+    assert.equal(page.eventSelectedTwo.split(/\s+/)[1], ED.keyTwo);
+  });
+  // pfilters
+  xhr(`${AUTOMATION_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
+  page.addFilter();
+  selectChoose('.t-automation-pf-select:eq(1)', PFD.keyTwo);
+  xhr(`/api/admin/locations/location__icontains=${keyword}/?location_level=${PFD.lookupsDynamic.id}`, 'GET', null, {}, 200, LF.search_power_select());
+  selectSearch('.t-ticket-location-select', keyword);
+  selectChoose('.t-ticket-location-select', LD.storeNameFour);
+  andThen(() => {
+    assert.equal(page.locationSelectedOne.split(/\s+/)[1], LD.storeNameFour);
+  });
+  let payload = AF.put({
+    description: AD.descriptionTwo,
+    events: [ED.idOne, ED.idTwo],
+    filters: [{
+      id: PFD.idOne,
+      source: PFD.sourceIdOne,
+      criteria: [TD.priorityOneId, TD.priorityTwoId],
+      lookups: {}
+    }, {
+      id: UUID.value,
+      source: PFD.sourceIdTwo,
+      criteria: [LD.idFour],
+      lookups: PFD.lookupsDynamic
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), automation_LIST_URL);
+  });
+});
+
+test('visit detail and update an action types assignee', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    // action type
+    assert.equal(page.actionTypeSelectedOne, t(TD.actionTypeOneKey));
+    // action content - assignee
+    assert.equal(page.actionAssigneeSelectedOne, PD.fullname);
+  });
+  // change assignee
+  let personData = PersonF.search_power_select();
+  let personOneId = personData.results[0].id;
+  let personOneFullname = personData.results[0].fullname;
+  let keyword = 'a';
+  xhr(`${PEOPLE_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, personData);
+  selectSearch('.t-automation-action-assignee-select', keyword);
+  selectChoose('.t-automation-action-assignee-select', personOneFullname);
+  andThen(() => {
+    assert.equal(page.actionAssigneeSelectedOne, personOneFullname);
+  });
+  let payload = AF.put({
+    description: AD.descriptionOne,
+    events: [ED.idOne],
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idOne,
+      assignee: personOneId
+    }],
+    filters: [{
+      id: PFD.idOne,
+      source: PFD.sourceIdOne,
+      lookups: {},
+      criteria: [TD.priorityOneId]
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), automation_LIST_URL);
+  });
+});
 
 test('changing from one dynamic location available filter to another changes the location_level query param', assert => {
   clearxhr(listXhr);

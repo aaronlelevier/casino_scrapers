@@ -3,8 +3,8 @@ var BSRS_AUTOMATION_ACTION_DEFAULTS = (function() {
   };
   factory.prototype.defaults = function() {
     return {
-      idOne: '64a4401d-bfc1-492a-9b58-aa2310a81da0',
-      idTwo: '64a4401d-bfc1-492a-9b58-aa2310a81da1'
+      idOne: 'c2037595-4ff8-4851-b880-eb453fadd9d1',
+      idTwo: 'c2037595-4ff8-4851-b880-eb453fadd9d2'
     };
   };
   return factory;

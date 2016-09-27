@@ -61,6 +61,7 @@ test('visit new URL and create a new record', assert => {
   xhr(AUTOMATION_URL, 'POST', AF.put({
     id: UUID.value,
     events:[ED.idOne],
+    actions: [],
     filters: [{
       id: UUID.value,
       source: PFD.sourceIdOne,

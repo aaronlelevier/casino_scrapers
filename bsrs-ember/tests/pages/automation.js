@@ -11,6 +11,8 @@ const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
 const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
 const DROPDOWN = options;
 const AF_SELECT_ONE = '.t-automation-pf-select:eq(0) .ember-basic-dropdown-trigger';
+const ACTION_TYPE_SELECT_ONE = '.t-automation-action-type-select:eq(0)';
+const ACTION_ASSIGNEE_SELECT_ONE = '.t-automation-action-assignee-select:eq(0)';
 
 const EVENTS = '.t-automation-event-select .ember-power-select-multiple-option';
 
@@ -60,4 +62,10 @@ export default create({
   categorySelectedOne: text(`${CATEGORIES}:eq(0)`),
   stateSelectedOne: text(`${STATES}:eq(0)`),
   countrySelectedOne: text(`${COUNTRIES}:eq(0)`),
+
+  // actions
+  actionTypeOneInput: text(ACTION_TYPE_SELECT_ONE),
+  // actionTypeOneClickDropdown: clickable(ACTION_TYPE_SELECT_ONE), // not using yet
+
+  actionAssigneeSelectedOne: text(ACTION_ASSIGNEE_SELECT_ONE),
 });
