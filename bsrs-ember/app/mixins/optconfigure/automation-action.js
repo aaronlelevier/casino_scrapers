@@ -26,6 +26,11 @@ export default Ember.Mixin.create({
       collection: 'actions',
       property: 'automation-action-type',
       related_model: 'type'
+    },
+    priority: {
+      collection: 'actions',
+      property: 'ticket-priority',
+      related_model: 'priority'
     }
   }
 });

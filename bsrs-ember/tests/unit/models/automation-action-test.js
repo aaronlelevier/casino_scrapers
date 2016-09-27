@@ -5,12 +5,13 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import AAD from 'bsrs-ember/vendor/defaults/automation-action';
 import ATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import PersonD from 'bsrs-ember/vendor/defaults/person';
+import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
 
 var store, action, type, assignee;
 
 moduleFor('model:automation-action', 'Unit | Model | automation-action', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:person', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many']);
+    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:person', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'model:ticket-priority']);
   }
 });
 
@@ -122,3 +123,58 @@ test('saveRelated for assignee to save model and make it clean', assert => {
   assert.equal(action.get('assignee.id'), PersonD.idTwo);
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
 });
+
+// Action - TicketPriority
+
+test('action has a related action priority', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, priority_fk: TP.idOne});
+    store.push('ticket-priority', {id: TP.idOne, key: TP.keyOne, actions: [AAD.idOne]});
+  });
+  assert.equal(action.get('priority.id'), TP.idOne);
+  assert.equal(action.get('priority.key'), TP.keyOne);
+});
+
+test('change_priority and dirty tracking', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, priority_fk: TP.idOne});
+    store.push('ticket-priority', {id: TP.idOne, actions: [AAD.idOne]});
+  });
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(action.get('priorityIsNotDirty'));
+  action.change_priority({id: TP.idTwo});
+  assert.equal(action.get('priority.id'), TP.idTwo);
+  assert.ok(action.get('isDirtyOrRelatedDirty'));
+  assert.ok(action.get('priorityIsDirty'));
+});
+
+test('rollback priority will revert and reboot the dirty priority to clean', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, priority_fk: TP.idOne});
+    store.push('ticket-priority', {id: TP.idOne, actions: [AAD.idOne]});
+  });
+  assert.equal(action.get('priority.id'), TP.idOne);
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+  action.change_priority({id: TP.idTwo});
+  assert.equal(action.get('priority.id'), TP.idTwo);
+  assert.ok(action.get('isDirtyOrRelatedDirty'));
+  action.rollback();
+  assert.equal(action.get('priority.id'), TP.idOne);
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('saveRelated action priority to save model and make it clean', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, priority_fk: TP.idOne});
+    store.push('ticket-priority', {id: TP.idOne, actions: [AAD.idOne]});
+  });
+  assert.equal(action.get('priority.id'), TP.idOne);
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+  action.change_priority({id: TP.idTwo});
+  assert.equal(action.get('priority.id'), TP.idTwo);
+  assert.ok(action.get('isDirtyOrRelatedDirty'));
+  action.saveRelated();
+  assert.equal(action.get('priority.id'), TP.idTwo);
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+});
+
