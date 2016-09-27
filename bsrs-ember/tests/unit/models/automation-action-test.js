@@ -53,7 +53,7 @@ test('rollback type will revert and reboot the dirty type to clean', assert => {
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('saveRelated', assert => {
+test('saveRelated action type to save model and make it clean', assert => {
   run(() => {
     action = store.push('automation-action', {id: AAD.idOne, type_fk: ATD.idOne});
     store.push('automation-action-type', {id: ATD.idOne, actions: [AAD.idOne]});
@@ -108,7 +108,7 @@ test('rollback assignee will revert and reboot the dirty assignee to clean', ass
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('saveRelated', assert => {
+test('saveRelated for assignee to save model and make it clean', assert => {
   run(() => {
     action = store.push('automation-action', {id: AAD.idOne, assignee_fk: PersonD.idOne});
     store.push('person', {id: PersonD.idOne, actions: [AAD.idOne]});

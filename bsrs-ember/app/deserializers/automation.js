@@ -39,38 +39,32 @@ export default Ember.Object.extend(OptConf, {
     let automation = store.push('automation', response);
     const [,eventData,] = this.setup_event(events, automation);
 
-    let actionTypes = [];
-    let assignees = [];
+    let actionTypes = {};
+    let assignees = {};
     actions.forEach((a) => {
       // type
       const type = a.type;
       delete a.type;
-      actionTypes.push(type);
+      actionTypes[a.id] = type;
       a.type_fk = type.id;
       // assignee
       if (a.assignee) {
         const assignee = a.assignee;
         delete a.assignee;
-        assignees.push(assignee);
+        assignees[a.id] = assignee;
         a.assignee_fk = assignee.id;
       }
       // must set as "detail" b/c this is a detail payload
       a.detail = true;
     });
-    const [actionA, actionData, actionB] = this.setup_action(actions, automation);
+    const [,actionData,] = this.setup_action(actions, automation);
     actionData.forEach((ad) => {
       const action = store.find('automation-action', ad.id);
       // type
-      let type;
-      actionTypes.forEach((at) => {
-        if (at.id === action.get('type_fk')) { type = at; }
-      });
+      let type = actionTypes[ad.id];
       this.setup_type(type, action);
       // assignee
-      let assignee;
-      assignees.forEach((a) => {
-        if (a.id === action.get('assignee_fk')) { assignee = a; }
-      });
+      let assignee = assignees[ad.id];
       this.setup_assignee(assignee, action);
     });
 

@@ -55,6 +55,17 @@ test('deserialize single', assert => {
   assert.equal(automation.get('action').objectAt(0).get('assignee.fullname'), PersonD.fullname);
 });
 
+test('deserialize single - action has no assignee', assert => {
+  let json = AF.detail();
+  json.actions[0].assignee = undefined;
+  run(() => {
+    deserializer.deserialize(json, AD.idOne);
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  assert.equal(automation.get('action').get('length'), 1);
+  assert.equal(automation.get('action').objectAt(0).get('assignee'), undefined);
+});
+
 // test('existing automation w/ pf, and server returns no pf - want no pf b/c that is the most recent', assert => {
 //   store.push('automation-join-pfilter', {id: AJFD.idOne, automation_pk: AD.idOne, pfilter_pk: PFD.idOne});
 //   automation = store.push('automation', {id: AD.idOne, automation_pf_fks: [AJFD.idOne]});

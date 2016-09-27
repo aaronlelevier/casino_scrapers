@@ -287,7 +287,7 @@ test('savePf - and add back old pf with same id will keep criteria and wont be d
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('rollback - pf', assert => {
+test('rollbackPf - add a single pf, and do rollback to remove it', assert => {
   run(() => {
     automation = store.push('automation', {id: AD.idOne});
   });
@@ -455,7 +455,7 @@ test('add_action - will create join model and mark model dirty', (assert) => {
   assert.equal(automation.get('action').objectAt(1).get('id'), AAD.idTwo);
 });
 
-test('rollback - action', assert => {
+test('rollback - add action and rollback to remove it and make model clean', assert => {
   run(() => {
     automation = store.push('automation', {id: AD.idOne});
   });
@@ -468,7 +468,7 @@ test('rollback - action', assert => {
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('saveRelated - action', (assert) => {
+test('saveRelated - add action add saveRelated to keep action and make model clean', (assert) => {
   assert.equal(automation.get('event').get('length'), 0);
   automation.add_event({id: ED.idOne});
   assert.equal(automation.get('event').get('length'), 1);
