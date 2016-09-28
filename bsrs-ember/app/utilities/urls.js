@@ -6,6 +6,7 @@ const PREFIX = config.APP.NAMESPACE;
 export const ADMIN_URL = `${PREFIX}/admin/`;
 export const ADMIN_TRANSLATIONS_URL = `${PREFIX}/admin/translations/`;
 export const AUTOMATION_URL = `${PREFIX}/admin/automations/`;
+export const AUTOMATION_ACTION_TYPES_URL = `${PREFIX}/admin/automation-action-types/`;
 export const AUTOMATION_AVAILABLE_FILTERS_URL = `${PREFIX}/admin/automation-available-filters/`;
 export const AUTOMATION_EVENTS_URL = `${PREFIX}/admin/automation-events/`;
 export const ATTACHMENTS_URL = `${PREFIX}/admin/attachments/`;

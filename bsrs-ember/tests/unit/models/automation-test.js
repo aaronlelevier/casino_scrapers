@@ -396,7 +396,6 @@ test('confirm action is related and has join model attr values', (assert) => {
   assert.equal(action.objectAt(0).get('id'), AAD.idOne);
 });
 
-
 test('action property is not dirty when no action present (undefined)', (assert) => {
   run(() => {
     automation = store.push('automation', {id: AD.idOne, automation_action_fks: undefined});

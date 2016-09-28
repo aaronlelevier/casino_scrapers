@@ -147,6 +147,21 @@ var BSRS_automation_FACTORY = (function() {
       }]
     };
   };
+  // AutomaitonActionType - place here for same reason as AutomationEvent
+  factory.prototype.action_search_power_select = function() {
+    return {
+      count: 2,
+      next: null,
+      previous: null,
+      results: [{
+        id: this.actionType.idOne,
+        key: this.actionType.keyOne
+      },{
+        id: this.actionType.idTwo,
+        key: this.actionType.keyTwo
+      }]
+    };
+  };
   return factory;
 })();
 

@@ -122,7 +122,7 @@ test('visit detail and update an action types assignee', assert => {
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     // action type
-    assert.equal(page.actionTypeSelectedOne, t(TD.actionTypeOneKey));
+    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
     // action content - assignee
     assert.equal(page.actionAssigneeSelectedOne, PD.fullname);
   });

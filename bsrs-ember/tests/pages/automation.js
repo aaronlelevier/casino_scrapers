@@ -64,8 +64,9 @@ export default create({
   countrySelectedOne: text(`${COUNTRIES}:eq(0)`),
 
   // actions
-  actionTypeOneInput: text(ACTION_TYPE_SELECT_ONE),
-  // actionTypeOneClickDropdown: clickable(ACTION_TYPE_SELECT_ONE), // not using yet
+  clickAddActionBtn: clickable('.t-add-action-btn'),
+
+  actionTypeSelectedOne: text(ACTION_TYPE_SELECT_ONE),
 
   actionAssigneeSelectedOne: text(ACTION_ASSIGNEE_SELECT_ONE),
 });

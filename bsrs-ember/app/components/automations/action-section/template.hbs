@@ -11,7 +11,8 @@
             tagName="div"
             selected=action.type
             allowClear=false
-            onchange=(action "selected")
+            onchange=(action "setActionType" action)
+            onopen=(action "fetchActions" index)
             searchEnabled=false
             options=options
             labelText="admin.automation.action_type.label"
@@ -28,7 +29,7 @@
         }}
       </div>
     {{/each}}
-    <button class="t-add-action-btn btn-add btn btn-default btn-sm" type="button" disabled={{addFilterDisabled}} {{action "append"}}>
+    <button class="t-add-action-btn btn-add btn btn-default btn-sm" type="button" disabled={{addFilterDisabled}} {{action "addAction"}}>
       <span class="btn-label">{{fa-icon "plus"}} {{t "admin.automation.action.add"}}</span>
     </button>
   </div>

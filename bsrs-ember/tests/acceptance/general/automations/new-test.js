@@ -8,6 +8,7 @@ import { waitFor } from 'bsrs-ember/tests/helpers/utilities';
 import random from 'bsrs-ember/models/random';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import AD from 'bsrs-ember/vendor/defaults/automation';
+import AATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import ED from 'bsrs-ember/vendor/defaults/automation-event';
 import AF from 'bsrs-ember/vendor/automation_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
@@ -15,7 +16,7 @@ import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import page from 'bsrs-ember/tests/pages/automation';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS, { AUTOMATION_URL, automation_LIST_URL, AUTOMATION_AVAILABLE_FILTERS_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { AUTOMATION_URL, automation_LIST_URL, AUTOMATION_AVAILABLE_FILTERS_URL, AUTOMATION_ACTION_TYPES_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
 const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
@@ -72,6 +73,25 @@ test('visit new URL and create a new record', assert => {
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), automation_LIST_URL);
+  });
+});
+
+test('when user creates and automation they should see an empty action', assert => {
+  clearxhr(listXhr);
+  visit(NEW_URL);
+  andThen(() => {
+    assert.equal(currentURL(), NEW_URL);
+    assert.equal(Ember.$('.t-automation-action-type-select .ember-power-select-placeholder').length, 0);
+  });
+  page.clickAddActionBtn();
+  andThen(() => {
+    assert.equal(Ember.$('.t-automation-action-type-select .ember-power-select-placeholder').length, 1);
+  });
+  xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.action_search_power_select());
+  selectChoose('.t-automation-action-type-select', AATD.keyOne);
+  andThen(() => {
+    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
+    assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
   });
 });
 
