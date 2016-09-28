@@ -7,8 +7,11 @@ from django.db.models import F, Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from automation import choices as auto_choices
 from automation.choices import AUTOMATION_EVENTS, AUTOMATION_ACTION_TYPES
+from person.models import Person
 from tenant.models import Tenant
+from ticket.models import TicketPriority
 from utils import classproperty
 from utils.fields import MyGenericForeignKey
 from utils.models import BaseQuerySet, BaseManager, BaseModel
@@ -17,7 +20,7 @@ from utils.models import BaseQuerySet, BaseManager, BaseModel
 class AutomationEvent(BaseModel):
 
     key = models.CharField(max_length=100, unique=True,
-                           choices=[(x,x) for x in AUTOMATION_EVENTS])
+                           choices=[(x,x) for x in auto_choices.AUTOMATION_EVENTS])
 
     class Meta:
         ordering = ['key']
@@ -26,7 +29,7 @@ class AutomationEvent(BaseModel):
 class AutomationActionType(BaseModel):
 
     key = models.CharField(max_length=100, unique=True,
-                           choices=[(x,x) for x in AUTOMATION_ACTION_TYPES])
+                           choices=[(x,x) for x in auto_choices.AUTOMATION_ACTION_TYPES])
 
     class Meta:
         ordering = ['key']
@@ -69,12 +72,24 @@ class AutomationManager(BaseManager):
 
         """
         if ticket.creator and not ticket.creator.role.process_assign:
+            ticket.assignee = ticket.creator
+            ticket.save()
             return True
 
         for automation in self.filter(tenant__id=tenant_id).order_by('description'):
             match = automation.is_match(ticket)
             if match:
+                self.process_actions(automation, ticket)
                 return automation
+
+    def process_actions(self, automation, ticket):
+        for action in automation.actions.all():
+            if action.type.key == auto_choices.ACTIONS_TICKET_ASSIGNEE:
+                ticket.assignee = Person.objects.get(id=action.content['assignee'])
+                ticket.save()
+            elif action.type.key == auto_choices.ACTIONS_TICKET_PRIORITY:
+                ticket.priority = TicketPriority.objects.get(id=action.content['priority'])
+                ticket.save()
 
 
 class Automation(BaseModel):

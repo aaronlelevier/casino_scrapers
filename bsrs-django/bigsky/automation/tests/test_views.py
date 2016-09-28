@@ -229,8 +229,6 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['filters'][0]['criteria'][0]['id'], str(country.id))
         self.assertEqual(data['filters'][0]['criteria'][0]['name'], country.common_name)
 
-    # Actions
-
     def test_assignee_action(self):
         action = self.automation.actions.first()
 
@@ -245,6 +243,7 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['actions'][0]['assignee']['id'], str(assignee.id))
         self.assertEqual(data['actions'][0]['assignee']['fullname'], assignee.fullname)
         self.assertNotIn('content', data['actions'][0])
+
 
 class AutomationCreateTests(ViewTestSetupMixin, APITestCase):
 
