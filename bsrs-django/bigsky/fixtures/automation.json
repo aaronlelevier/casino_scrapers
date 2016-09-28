@@ -141,12 +141,82 @@
 },
 {
   "model": "automation.automationactiontype",
+  "pk": "037e8eb4-540c-4cf9-bbe8-c1a6efd1909b",
+  "fields": {
+    "created": "2016-09-28T18:32:31.328Z",
+    "modified": "2016-09-28T18:32:31.328Z",
+    "deleted": null,
+    "key": "automation.actions.ticket_request"
+  }
+},
+{
+  "model": "automation.automationactiontype",
+  "pk": "4b9c2001-3163-49a2-ba3a-48c7961589a3",
+  "fields": {
+    "created": "2016-09-28T18:32:31.329Z",
+    "modified": "2016-09-28T18:32:31.330Z",
+    "deleted": null,
+    "key": "automation.actions.ticket_status"
+  }
+},
+{
+  "model": "automation.automationactiontype",
+  "pk": "9e9ff6ae-e80b-4e0d-96d9-82f270e7ad7b",
+  "fields": {
+    "created": "2016-09-28T18:32:31.326Z",
+    "modified": "2016-09-28T18:32:31.326Z",
+    "deleted": null,
+    "key": "automation.actions.ticket_priority"
+  }
+},
+{
+  "model": "automation.automationactiontype",
+  "pk": "ad37b983-3757-45b7-9f97-390ce7295c9e",
+  "fields": {
+    "created": "2016-09-28T18:32:31.318Z",
+    "modified": "2016-09-28T18:32:31.318Z",
+    "deleted": null,
+    "key": "automation.actions.email"
+  }
+},
+{
+  "model": "automation.automationactiontype",
+  "pk": "d8223602-2077-4357-8365-77c98e1ddb99",
+  "fields": {
+    "created": "2016-09-28T18:32:31.320Z",
+    "modified": "2016-09-28T18:32:31.320Z",
+    "deleted": null,
+    "key": "automation.actions.text"
+  }
+},
+{
+  "model": "automation.automationactiontype",
+  "pk": "da1ce4d4-196b-44fa-a90a-616430ca61c5",
+  "fields": {
+    "created": "2016-09-28T18:32:31.325Z",
+    "modified": "2016-09-28T18:32:31.325Z",
+    "deleted": null,
+    "key": "automation.actions.ticket_cc"
+  }
+},
+{
+  "model": "automation.automationactiontype",
   "pk": "e037bc41-ee7d-4b30-bee1-897c6961f1a3",
   "fields": {
     "created": "2016-09-26T20:57:47.123Z",
     "modified": "2016-09-26T20:57:47.123Z",
     "deleted": null,
     "key": "automation.actions.ticket_assignee"
+  }
+},
+{
+  "model": "automation.automationactiontype",
+  "pk": "f256fa26-8120-476b-ae51-221005f40c2e",
+  "fields": {
+    "created": "2016-09-28T18:32:31.323Z",
+    "modified": "2016-09-28T18:32:31.323Z",
+    "deleted": null,
+    "key": "automation.actions.ticket_attachment"
   }
 },
 {
@@ -182,12 +252,12 @@
   "pk": "3c5b3bd9-bce5-48fb-9bb0-9b8aaeca0caf",
   "fields": {
     "created": "2016-09-26T20:57:47.369Z",
-    "modified": "2016-09-26T20:57:47.369Z",
+    "modified": "2016-09-28T18:30:07.269Z",
     "deleted": null,
     "type": "e037bc41-ee7d-4b30-bee1-897c6961f1a3",
     "automation": "0f7fb6a5-c435-4d13-9967-2ce300a541c2",
     "content": {
-      "assignee": "034530c4-ce6c-4724-9cfd-37a16e787112"
+      "assignee": "034530c4-ce6c-4724-9cfd-37a16e787001"
     }
   }
 },
@@ -196,7 +266,7 @@
   "pk": "d072774c-08a5-4c95-9784-9615de03e591",
   "fields": {
     "created": "2016-09-26T20:57:47.243Z",
-    "modified": "2016-09-26T20:57:47.243Z",
+    "modified": "2016-09-28T18:29:35.482Z",
     "deleted": null,
     "type": "e037bc41-ee7d-4b30-bee1-897c6961f1a3",
     "automation": "fb7e037b-f1a1-41c2-ab15-aafc92fb7774",
@@ -224,10 +294,10 @@
   "pk": "0f7fb6a5-c435-4d13-9967-2ce300a541c2",
   "fields": {
     "created": "2016-09-26T20:57:47.319Z",
-    "modified": "2016-09-26T20:57:47.454Z",
+    "modified": "2016-09-28T18:30:07.275Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
-    "description": "admin.placeholder.state_filter_select",
+    "description": "aaron's automation",
     "events": [
       "c4c6f9a6-0f86-4f9a-a429-e6f30a9da44f"
     ]
@@ -280,7 +350,7 @@
   "pk": "fb7e037b-f1a1-41c2-ab15-aafc92fb7774",
   "fields": {
     "created": "2016-09-26T20:57:47.192Z",
-    "modified": "2016-09-26T20:57:47.452Z",
+    "modified": "2016-09-28T18:29:35.486Z",
     "deleted": null,
     "tenant": "038530c4-ce6c-4724-9cfd-37a16e787001",
     "description": "admin.placeholder.category_filter_select",
@@ -391,7 +461,7 @@
   "pk": "53f2d154-5933-4a49-a441-e28d66536d26",
   "fields": {
     "created": "2016-09-26T20:57:47.247Z",
-    "modified": "2016-09-26T20:57:47.247Z",
+    "modified": "2016-09-28T18:29:35.475Z",
     "deleted": null,
     "automation": "fb7e037b-f1a1-41c2-ab15-aafc92fb7774",
     "source": "d6176e3d-162d-45f9-baa0-b1d8f1b2c415",
@@ -406,7 +476,7 @@
   "pk": "559ce94d-46c1-4eff-b844-3ed6310b12e3",
   "fields": {
     "created": "2016-09-26T20:57:47.377Z",
-    "modified": "2016-09-26T20:57:47.377Z",
+    "modified": "2016-09-28T18:30:07.264Z",
     "deleted": null,
     "automation": "0f7fb6a5-c435-4d13-9967-2ce300a541c2",
     "source": "5c5945fb-916d-4d05-b048-c074f73536c3",
