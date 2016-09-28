@@ -44,9 +44,11 @@ class AutomationEventTests(TestCase):
     def test_create_automation_events(self):
         self.assertEqual(AutomationEvent.objects.count(), 0)
 
-        factory.create_automation_events()
+        ret = factory.create_automation_events()
 
         self.assertEqual(AutomationEvent.objects.count(), len(AUTOMATION_EVENTS))
+        self.assertIsInstance(ret, list)
+        self.assertIsInstance(ret[0], AutomationEvent)
 
 
 class AutomationActionTypeTests(TestCase):
@@ -60,9 +62,11 @@ class AutomationActionTypeTests(TestCase):
     def test_create_automation_action_types(self):
         self.assertEqual(AutomationActionType.objects.count(), 0)
 
-        factory.create_automation_action_types()
+        ret = factory.create_automation_action_types()
 
         self.assertEqual(AutomationActionType.objects.count(), len(AUTOMATION_ACTION_TYPES))
+        self.assertIsInstance(ret, list)
+        self.assertIsInstance(ret[0], AutomationActionType)
 
 
 class AutomationActionTests(TestCase):

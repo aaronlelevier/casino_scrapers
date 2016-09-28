@@ -13,6 +13,7 @@ from automation.validators import (AutomationFilterFieldValidator, UniqueByTenan
     AutomationFilterTypeValidator)
 from tenant.mixins import RemoveTenantMixin
 from ticket.models import TicketPriority
+from utils.create import update_model
 from utils.serializers import BaseCreateSerializer
 
 
@@ -33,6 +34,13 @@ class AutomationActionTypeSerializer(serializers.ModelSerializer):
 class AutomationActionSerializer(BaseCreateSerializer):
 
     type = AutomationActionTypeSerializer()
+
+    class Meta:
+        model = AutomationAction
+        fields = ('id', 'type', 'content')
+
+
+class AutomationActionUpdateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = AutomationAction
@@ -128,47 +136,69 @@ AUTOMATION_FIELDS = ('id', 'tenant', 'description',)
 class AutomationCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
     filters = AutomationFilterUnnestedSerializer(required=False, many=True)
+    actions = AutomationActionUpdateSerializer(required=False, many=True)
 
     class Meta:
         model = Automation
         validators = [AutomationFilterTypeValidator(),
                       UniqueByTenantValidator('description')]
-        fields = AUTOMATION_FIELDS + ('events', 'filters',)
+        fields = AUTOMATION_FIELDS + ('events', 'filters', 'actions',)
 
     def create(self, validated_data):
-        filters = validated_data.pop('filters')
+        filters = validated_data.pop('filters', [])
+        actions = validated_data.pop('actions', [])
 
         instance = super(AutomationCreateUpdateSerializer, self).create(validated_data)
 
-        if filters:
-            for f in filters:
-                pf = AutomationFilter.objects.create(automation=instance, **f)
+        for f in filters:
+            AutomationFilter.objects.create(automation=instance, **f)
+        for a in actions:
+            AutomationAction.objects.create(automation=instance, **a)
 
         return instance
 
     def update(self, instance, validated_data):
-        filter_ids = []
-        filters = validated_data.pop('filters')
+        filters = validated_data.pop('filters', [])
+        actions = validated_data.pop('actions', [])
 
-        if filters:
-            for f in filters:
-                try:
-                    pf = instance.filters.get(id=f['id'])
-                except AutomationFilter.DoesNotExist:
+        self._crud_related_filters(instance, filters)
+        self._crud_related_actions(instance, actions)
 
-                    pf = AutomationFilter.objects.create(automation=instance, **f)
-                else:
-                    pf.criteria = f.get('criteria', [])
-                    pf.lookups = f.get('lookups', {})
-                    pf.save()
-                finally:
-                    filter_ids.append(pf.id)
+        return super(AutomationCreateUpdateSerializer, self).update(instance, validated_data)
 
-        # # hard delete if not sent
+    def _crud_related_filters(self, instance, filters):
+        filter_ids = set()
+
+        for f in filters:
+            try:
+                pf = instance.filters.get(id=f['id'])
+            except AutomationFilter.DoesNotExist:
+                pf = AutomationFilter.objects.create(automation=instance, **f)
+            else:
+                pf.criteria = f.get('criteria', [])
+                pf.lookups = f.get('lookups', {})
+                pf.save()
+            finally:
+                filter_ids.update([pf.id])
+
         for x in instance.filters.exclude(id__in=filter_ids):
             x.delete(override=True)
 
-        return super(AutomationCreateUpdateSerializer, self).update(instance, validated_data)
+    def _crud_related_actions(self, instance, actions):
+        action_ids = set()
+
+        for a in actions:
+            try:
+                action = instance.actions.get(id=a['id'])
+            except AutomationAction.DoesNotExist:
+                action = AutomationAction.objects.create(automation=instance, **a)
+            else:
+                update_model(action, a)
+            finally:
+                action_ids.update([action.id])
+
+        for x in instance.actions.exclude(id__in=action_ids):
+            x.delete(override=True)
 
 
 class AutomationListSerializer(RemoveTenantMixin, BaseCreateSerializer):

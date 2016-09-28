@@ -28,7 +28,7 @@ def create_automation_event_two(key=DEFAULT_ROUTING_EVENT_TWO):
 
 
 def create_automation_events():
-    [create_automation_event(key) for key in AUTOMATION_EVENTS]
+    return [create_automation_event(key) for key in AUTOMATION_EVENTS]
 
 
 # AutomationActionTypes
@@ -42,7 +42,7 @@ def create_automation_action_type(key=DEFAULT_AUTOMATION_ACTION_TYPE):
 
 
 def create_automation_action_types():
-    [create_automation_action_type(key) for key in AUTOMATION_ACTION_TYPES]
+    return [create_automation_action_type(key) for key in AUTOMATION_ACTION_TYPES]
 
 
 # AutomationActions

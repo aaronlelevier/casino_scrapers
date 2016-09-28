@@ -11,13 +11,15 @@ from location.tests.factory import (create_location_levels, create_top_level_loc
     create_location_level, create_location)
 from person.models import Person
 from person.tests.factory import create_single_person, PASSWORD
+from automation.choices import ACTIONS_TICKET_PRIORITY
 from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationActionType)
 from automation.tests.factory import (
     create_automation, create_automation_filter_types, create_automation_filter_type_location,
     create_ticket_location_filter, create_ticket_categories_mid_level_filter, create_automation,
     create_ticket_location_state_filter, create_ticket_location_country_filter, create_automation_events,
-    create_automation_event_two, create_automation_action, create_automation_action_types)
+    create_automation_event_two, create_automation_action, create_automation_action_types,
+    create_automation_action_type)
 from automation.tests.mixins import ViewTestSetupMixin
 from ticket.models import TicketPriority
 from utils.create import _generate_chars
@@ -262,6 +264,15 @@ class AutomationCreateTests(ViewTestSetupMixin, APITestCase):
             'criteria': criteria_two,
             'lookups': {'id': str(location.location_level.id)}
         }]
+        # actions
+        action_type = create_automation_action_type()
+        self.data['actions'] = [{
+            'id': str(uuid.uuid4()),
+            'type': str(action_type.id),
+            'content': {
+                'assignee': str(self.person.id)
+            }
+        }]
 
         response = self.client.post('/api/admin/automations/', self.data, format='json')
 
@@ -278,6 +289,12 @@ class AutomationCreateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(automation.filters.first().source, location_af)
         self.assertEqual(automation.filters.first().criteria, criteria_two)
         self.assertEqual(automation.filters.first().lookups, {'id': str(location.location_level.id)})
+        # actions
+        self.assertEqual(len(data['actions']), 1)
+        self.assertEqual(data['actions'][0]['id'], self.data['actions'][0]['id'])
+        self.assertEqual(data['actions'][0]['type'], self.data['actions'][0]['type'])
+        self.assertEqual(data['actions'][0]['content'], self.data['actions'][0]['content'])
+        self.assertEqual(data['actions'][0]['content']['assignee'], str(self.person.id))
 
     def test_create__multiple_filters(self):
         # filter 1 (will come w/ `self.data` by default)
@@ -302,6 +319,8 @@ class AutomationCreateTests(ViewTestSetupMixin, APITestCase):
             'criteria': [str(location_two.id)],
             'lookups': {'id': str(location_level_two.id)}
         })
+        # set as empty here, because to be tested separately later for multiple
+        self.data['actions'] = []
 
         response = self.client.post('/api/admin/automations/', self.data, format='json')
 
@@ -311,6 +330,34 @@ class AutomationCreateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(automation.filters.filter(source__field='priority').count(), 1)
         self.assertEqual(automation.filters.filter(source__field='location', lookups={'id': str(location_level.id)}).count(), 1)
         self.assertEqual(automation.filters.filter(source__field='location', lookups={'id': str(location_level_two.id)}).count(), 1)
+
+    def test_create_multiple_actions(self):
+        self.data['id'] = str(uuid.uuid4())
+        self.data['description'] = 'foo'
+        self.data['filters'] = []
+        # actions
+        action_types = create_automation_action_types()
+        self.data['actions'] = [{
+            'id': str(uuid.uuid4()),
+            'type': str(action_types[0].id),
+            'content': {
+                'assingee': str(self.person.id)
+            }
+        },{
+            'id': str(uuid.uuid4()),
+            'type': str(action_types[1].id),
+            'content': {
+                'priority': str(self.ticket_priority.id)
+            }
+        }]
+
+        response = self.client.post('/api/admin/automations/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['actions']), 2)
+        self.assertEqual(data['actions'][0], self.data['actions'][0])
+        self.assertEqual(data['actions'][1], self.data['actions'][1])
 
 
 class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
@@ -332,6 +379,7 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
             'events': [str(event.id)]
         })
         self.data['filters'] = []
+        self.data['actions'] = []
 
         response = self.client.put('/api/admin/automations/{}/'.format(self.automation.id),
             self.data, format='json')
@@ -343,6 +391,7 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['description'], self.data['description'])
         self.assertEqual(data['events'], [str(event.id)])
         self.assertEqual(len(data['filters']), 0)
+        self.assertEqual(len(data['actions']), 0)
 
     def test_update__nested_create(self):
         af = create_automation_filter_type_location()
@@ -484,7 +533,7 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(self.automation.filters.filter(source__field='location', lookups={'id': str(location_level.id)}).count(), 1)
         self.assertEqual(self.automation.filters.filter(source__field='location', lookups={'id': str(location_level_two.id)}).count(), 1)
 
-    def test_update__nested_delete(self):
+    def test_update__nested_deleting_of_filters(self):
         """
         Related AutomationFilters are "hard" deleted if they have been
         removed from the Automation.
@@ -515,6 +564,59 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(AutomationFilter.objects.count(), init_count)
+
+    # AutomationActions
+
+    def test_update__actions__existing(self):
+        self.assertEqual(len(self.data['actions']), 1)
+        new_action_type = create_automation_action_type(ACTIONS_TICKET_PRIORITY)
+        self.data['actions'][0]['type'] = str(new_action_type.id)
+        self.data['actions'][0]['content'] = {'priority': str(self.ticket_priority.id)}
+
+        response = self.client.put('/api/admin/automations/{}/'.format(self.automation.id),
+            self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(data['actions']), 1)
+        self.assertEqual(data['actions'][0]['type'], self.data['actions'][0]['type'])
+        self.assertEqual(data['actions'][0]['content'], self.data['actions'][0]['content'])
+
+    def test_update__actions__add_new(self):
+        new_action_type = create_automation_action_type(ACTIONS_TICKET_PRIORITY)
+        self.data['actions'].append({
+            'id': str(uuid.uuid4()),
+            'type': str(new_action_type.id),
+            'content': {
+                'priority': str(self.ticket_priority.id)
+            }
+        })
+        self.assertEqual(len(self.data['actions']), 2)
+
+        response = self.client.put('/api/admin/automations/{}/'.format(self.automation.id),
+            self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(data['actions']), 2)
+        self.assertEqual(data['actions'][1]['id'], self.data['actions'][1]['id'])
+        self.assertEqual(data['actions'][1]['type'], self.data['actions'][1]['type'])
+        self.assertEqual(data['actions'][1]['content'], self.data['actions'][1]['content'])
+
+    def test_update__nested_deleting_of_actions(self):
+        """Hard delete nested Actions if not present in present in payload."""
+        self.assertEqual(self.automation.actions.count(), 1)
+        deleted_id = self.data['actions'][0]['id']
+        self.data['actions'] = []
+
+        response = self.client.put('/api/admin/automations/{}/'.format(self.automation.id),
+            self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(data['actions']), 0)
+        self.assertFalse(AutomationActionType.objects.filter(id=deleted_id).exists())
+        self.assertFalse(AutomationActionType.objects_all.filter(id=deleted_id).exists())
 
 
 class AutomationFilterTypeTests(APITestCase):

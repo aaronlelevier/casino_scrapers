@@ -146,6 +146,7 @@ class UniqueByTenantValidatorTests(ViewTestSetupMixin, APITestCase):
         self.client.login(username=person.username, password=PASSWORD)
 
         self.data['id'] = str(uuid.uuid4())
+        self.data['actions'] = []
 
         response = self.client.post('/api/admin/automations/', self.data, format='json')
 
