@@ -143,7 +143,9 @@ test('visit detail and update an action types assignee', assert => {
     actions: [{
       id: AAD.idOne,
       type: AATD.idOne,
-      assignee: personOneId
+      content: {
+        assignee: personOneId
+      }
     }],
     filters: [{
       id: PFD.idOne,

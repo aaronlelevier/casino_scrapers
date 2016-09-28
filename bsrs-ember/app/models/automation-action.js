@@ -27,7 +27,9 @@ export default Model.extend(OptConf, {
     return {
       id: this.get('id'),
       type: this.get('type.id'),
-      assignee: this.get('assignee.id')
+      content: {
+        assignee: this.get('assignee.id')
+    }
     };
   }
 });

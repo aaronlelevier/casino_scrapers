@@ -50,7 +50,9 @@ var BSRS_automation_FACTORY = (function() {
       actions: [{
         id: this.action.idOne,
         type: this.actionType.idOne,
-        assignee: this.person.idOne
+        content: {
+          assignee: this.person.idOne
+        }
       }],
       filters: [{
         id: this.pfilter.idOne,
