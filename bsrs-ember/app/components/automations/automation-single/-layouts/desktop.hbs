@@ -48,18 +48,19 @@
       index="0"
     }}
     <div class="col-md-12" id="event0">
-      {{db-fetch-multi-select
-        model=model
-        multiAttr="event"
-        multiAttrIds="event_ids"
-        selectedAttr=model.event
-        className="t-automation-event-select"
-        displayName="key"
-        add_func="add_event"
-        remove_func="remove_event"
-        repository=repository
-        searchMethod="findEvent"
+      {{#power-select-multiple
+        selected=model.event
+        onchange=(action "selectEvents")
+        onopen=(action "fetchEvents")
+        placeholder="Click to select"
+        tagName="div"
+        class="t-automation-event-select"
+        searchEnabled=false
+        options=options
+        as |event|
       }}
+        {{t event.key}}
+      {{/power-select-multiple}}
     </div>
     <div class="col-md-12">
       <section>

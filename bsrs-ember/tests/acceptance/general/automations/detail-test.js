@@ -23,7 +23,7 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import page from 'bsrs-ember/tests/pages/automation';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS, { AUTOMATION_URL, automation_LIST_URL, AUTOMATION_AVAILABLE_FILTERS_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { AUTOMATION_URL, automation_LIST_URL, AUTOMATION_EVENTS_URL, AUTOMATION_AVAILABLE_FILTERS_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
 const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
@@ -77,17 +77,16 @@ test('visit detail and update all fields', assert => {
     assert.equal(automation.get('description'), AD.descriptionTwo);
   });
   // events
-  let keyword = 'a';
-  xhr(`/api/admin/automation-events/?search=${keyword}`, 'GET', null, {}, 200, AF.event_search_power_select());
-  selectSearch('.t-automation-event-select', keyword);
+  xhr(AUTOMATION_EVENTS_URL, 'GET', null, {}, 200, AF.event_search_power_select());
   selectChoose('.t-automation-event-select', ED.keyTwo);
   andThen(() => {
     assert.equal(page.eventSelectedOne.split(/\s+/)[1], ED.keyOne);
     assert.equal(page.eventSelectedTwo.split(/\s+/)[1], ED.keyTwo);
   });
   // pfilters
-  xhr(`${AUTOMATION_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
+  xhr(AUTOMATION_AVAILABLE_FILTERS_URL, 'GET', null, {}, 200, AF.list_pfilters());
   page.addFilter();
+  let keyword = 'a';
   selectChoose('.t-automation-pf-select:eq(1)', PFD.keyTwo);
   xhr(`/api/admin/locations/location__icontains=${keyword}/?location_level=${PFD.lookupsDynamic.id}`, 'GET', null, {}, 200, LF.search_power_select());
   selectSearch('.t-ticket-location-select', keyword);

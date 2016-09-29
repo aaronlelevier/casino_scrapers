@@ -25,14 +25,7 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
   getActionTypes() {
     return PromiseMixin.xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET').then(response => response);
   },
-  findEvent(search) {
-    let url = AUTOMATION_EVENTS_URL;
-    search = search ? search.trim() : search;
-    if (search) {
-      url += `?search=${search}`;
-    }
-    return PromiseMixin.xhr(url, 'GET').then((response) => {
-      return response.results;
-    });
+  getEvents() {
+    return PromiseMixin.xhr(AUTOMATION_EVENTS_URL, 'GET').then(response => response);
   }
 });

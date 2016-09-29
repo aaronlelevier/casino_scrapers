@@ -16,7 +16,7 @@ import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import page from 'bsrs-ember/tests/pages/automation';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS, { AUTOMATION_URL, automation_LIST_URL, AUTOMATION_AVAILABLE_FILTERS_URL, AUTOMATION_ACTION_TYPES_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { AUTOMATION_URL, automation_LIST_URL, AUTOMATION_EVENTS_URL, AUTOMATION_AVAILABLE_FILTERS_URL, AUTOMATION_ACTION_TYPES_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
 const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
@@ -44,9 +44,7 @@ test('visit new URL and create a new record', assert => {
     assert.equal(page.descriptionValue, AD.descriptionOne);
   });
   // events
-  let keyword = 'a';
-  xhr(`/api/admin/automation-events/?search=${keyword}`, 'GET', null, {}, 200, AF.event_search_power_select());
-  selectSearch('.t-automation-event-select', keyword);
+  xhr(AUTOMATION_EVENTS_URL, 'GET', null, {}, 200, AF.event_search_power_select());
   selectChoose('.t-automation-event-select', ED.keyOne);
   andThen(() => {
     assert.equal(page.eventSelectedOne.split(/\s+/)[1], ED.keyOne);
@@ -56,7 +54,7 @@ test('visit new URL and create a new record', assert => {
   andThen(() => {
     assert.equal(find('.t-automation-pf-select').length, 1);
   });
-  xhr(`${AUTOMATION_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
+  xhr(AUTOMATION_AVAILABLE_FILTERS_URL, 'GET', null, {}, 200, AF.list_pfilters());
   selectChoose('.t-automation-pf-select:eq(0)', PFD.keyOneTranslated);
   selectChoose('.t-priority-criteria', TD.priorityOne);
   xhr(AUTOMATION_URL, 'POST', AF.put({
