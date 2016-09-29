@@ -3,6 +3,7 @@
   hbox.detail__head {
     align-items: center;
     height: $mobileHeaderHeight;
+    flex-wrap: nowrap;
   }
   button.detail__head__btn--back {
     height: $headerChildHeight;
@@ -17,6 +18,8 @@
     font-weight: normal;
     margin: 0;
     text-align: center;
+    line-height: $mobileHeaderHeight;
+    @include truncate;
   }
 
   // .bs-dropdown-menu {

@@ -40,15 +40,18 @@ footer.mobile-footer {
   z-index: 1;
   hbox.mobile-footer__wrapper {
     width: 100%;
+    flex-wrap: nowrap;
     div.mobile-footer__item {
       text-align: center;
-      flex: auto;
+      flex: none;
+      color: $medGray;
+      padding: 0 4%;
+      @include truncate;
       a {
         color: $medGray;
         font-size: 1.7rem;
         cursor: pointer;
         text-decoration: none;
-        display: block;
         &.active {
           color: $activeColor;
         }
@@ -57,6 +60,44 @@ footer.mobile-footer {
           font-size: 2.6rem;
         }
       }
+
+      /*
+      This is using CSS3 nth-last-child and sibling (~) selector to calcualte
+      the width depending on the number of siblings.
+
+      There should never be more that 5 items in the footer... if that changes,
+      simply copy, paste and make changes to the nth child and percentages.      
+      */
+
+      /* one item */
+      &:first-child:nth-last-child(1) {
+          width: 100%;
+      }
+
+      /* two items */
+      &:first-child:nth-last-child(2),
+      &:first-child:nth-last-child(2) ~ div.mobile-footer__item {
+          width: 50%;
+      }
+
+      /* three items */
+      &:first-child:nth-last-child(3),
+      &:first-child:nth-last-child(3) ~ div.mobile-footer__item {
+          width: 33.3333%;
+      }
+
+      /* four items */
+      &:first-child:nth-last-child(4),
+      &:first-child:nth-last-child(4) ~ div.mobile-footer__item {
+          width: 25%;
+      }
+
+      /* five items */
+      &:first-child:nth-last-child(5),
+      &:first-child:nth-last-child(5) ~ div.mobile-footer__item {
+          width: 20%;
+      }
+
     }
   }
 }
