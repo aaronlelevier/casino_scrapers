@@ -418,6 +418,10 @@ test('camel utility', assert => {
   assert.equal(str, 'locationLevel');
   str = camel('status');
   assert.equal(str, 'status');
+  str = camel('billing_phone_number');
+  assert.equal(str, 'billingPhoneNumber');
+  str = camel('billing_phone_number_second');
+  assert.equal(str, 'billingPhoneNumberSecond');
 });
 
 test('caps utility', assert => {

@@ -11,7 +11,11 @@ var camel = function(related_model) {
     const character = related_model.charAt(indx+1);
     const upperCaseLetter = character.toUpperCase();
     const rgx = new RegExp(`_${character}`);
-    return related_model.replace(rgx, upperCaseLetter);
+    const camelWord = related_model.replace(rgx, upperCaseLetter);
+    if (camelWord.indexOf('_') > -1) {
+      return camel(camelWord);
+    }
+    return camelWord;
   }
   return related_model;
 };
