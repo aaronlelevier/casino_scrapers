@@ -25,7 +25,6 @@ Router.map(function() {
       this.route('new', {path: 'new/:new_id'});
       this.route('category', {path: '/:category_id'});
     });
-    this.route('notifications');
     this.route('automations', function() {
       this.route('index');
       this.route('new', {path: 'new/:new_id'});
