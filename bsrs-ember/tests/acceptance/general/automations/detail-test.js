@@ -553,3 +553,34 @@ test('select country filter and update automation', assert => {
     assert.equal(currentURL(), automation_LIST_URL);
   });
 });
+
+test('add and delete an action', assert => {
+  // the 'assignee-select' is the first dynamic power-select on the page
+  // and should only be cleared out of the final delete click, that will
+  // insted of removing the last 'action' widget, clears int
+  clearxhr(listXhr);
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(Ember.$('.t-automation-action-type-select').length, 1);
+    assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
+    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
+  });
+  page.clickAddActionBtn();
+  andThen(() => {
+    assert.equal(Ember.$('.t-automation-action-type-select').length, 2);
+    assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
+  });
+  page.clickDeleteActionBtnTwo();
+  andThen(() => {
+    assert.equal(Ember.$('.t-automation-action-type-select').length, 1);
+    assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
+    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
+  });
+  page.clickDeleteActionBtn();
+  andThen(() => {
+    assert.equal(Ember.$('.t-automation-action-type-select').length, 1);
+    assert.equal(Ember.$('.t-automation-action-assignee-select').length, 0);
+    assert.equal(page.actionTypeSelectedOne, 'Click to select');
+  });
+});

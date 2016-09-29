@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import OptConf from 'bsrs-ember/mixins/optconfigure/automation-action';
@@ -29,7 +30,15 @@ export default Model.extend(OptConf, {
       type: this.get('type.id'),
       content: {
         assignee: this.get('assignee.id')
-    }
+      }
     };
+  },
+  remove_type(id) {
+    const store = this.get('simpleStore');
+    let actionsArr = store.find('automation-action-type', id).get('actions');
+    actionsArr.splice(actionsArr.indexOf(this.get('id')), 1);
+    run(() => {
+      store.push('automation-action-type', {id:this.get('id'), actions: actionsArr});
+    });
   }
 });

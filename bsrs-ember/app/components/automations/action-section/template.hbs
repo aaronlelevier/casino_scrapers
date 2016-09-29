@@ -4,7 +4,7 @@
       <div class="input-group-vertical">
         <div class="input-group">
           <span class="input-group-btn">
-            <button class="t-del-action-btn btn btn-default btn-sm delete" type="button" {{action "delete" (model-at model.action index)}}>{{fa-icon "minus"}}</button>
+            <button class="t-del-action-btn btn btn-default btn-sm delete" type="button" {{action "delete" action}}>{{fa-icon "minus"}}</button>
           </span>
           {{#power-select-mobile
             class="t-automation-action-type-select"

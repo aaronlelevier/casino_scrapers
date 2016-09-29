@@ -6,7 +6,7 @@ import AAD from 'bsrs-ember/vendor/defaults/automation-action';
 import ATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import PersonD from 'bsrs-ember/vendor/defaults/person';
 
-var store, action, type, assignee;
+var store, action, actionType, type, assignee;
 
 moduleFor('model:automation-action', 'Unit | Model | automation-action', {
   beforeEach() {
@@ -66,6 +66,17 @@ test('saveRelated action type to save model and make it clean', assert => {
   action.saveRelated();
   assert.equal(action.get('type.id'), ATD.idTwo);
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('remove_type - removes the action type from the action', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, type_fk: ATD.idOne});
+    actionType = store.push('automation-action-type', {id: ATD.idOne, actions: [AAD.idOne]});
+  });
+  assert.equal(action.get('type.id'), ATD.idOne);
+  action.remove_type(ATD.idOne);
+  assert.deepEqual(actionType.get('actions'), []);
+  assert.equal(action.get('type.id'), undefined);
 });
 
 // Action - Assignee

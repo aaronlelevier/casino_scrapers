@@ -65,6 +65,8 @@ export default create({
 
   // actions
   clickAddActionBtn: clickable('.t-add-action-btn'),
+  clickDeleteActionBtn: clickable('.t-del-action-btn:eq(0)'),
+  clickDeleteActionBtnTwo: clickable('.t-del-action-btn:eq(1)'),
 
   actionTypeSelectedOne: text(ACTION_TYPE_SELECT_ONE),
 
