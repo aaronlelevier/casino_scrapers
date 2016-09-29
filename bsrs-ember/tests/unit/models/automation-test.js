@@ -485,12 +485,11 @@ test('rollback - adding an action and setting the type should make the model dir
 /* automation & action type: Start */
 
 test('changing the action type should make the automation model dirty', (assert) => {
-  let automationJoinAction, automationAction, automationActionType;
   run(() => {
-    automationActionType = store.push('automation-action-type', {id: AATD.idOne, key: AATD.keyOne, actions: [AAD.idOne]});
-    automationJoinAction =  store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
-    automationAction =  store.push('automation-action', {id: AAD.idOne, type_fk: AATD.idOne});
     automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AAD.idOne], automation_action_ids: [AAD.idOne]});
+    store.push('automation-action-type', {id: AATD.idOne, key: AATD.keyOne, actions: [AAD.idOne]});
+    store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
+    store.push('automation-action', {id: AAD.idOne, type_fk: AATD.idOne});
   });
   let action = automation.get('action').objectAt(0);
   assert.equal(action.get('type.id'), AATD.idOne);
@@ -502,3 +501,70 @@ test('changing the action type should make the automation model dirty', (assert)
 });
 
 /* automation & action type: End */
+
+/* automation & assignee: Start */
+
+test('changing the assignee should make the automation model dirty', (assert) => {
+  run(() => {
+    automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AAD.idOne], automation_action_ids: [AAD.idOne]});
+    store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
+    store.push('automation-action', {id: AAD.idOne, assignee_fk: PersonD.idOne});
+    store.push('person', {id: PersonD.idOne, actions: [AAD.idOne]});
+  });
+  let action = automation.get('action').objectAt(0);
+  assert.equal(action.get('assignee.id'), PersonD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  action.change_assignee({id: PersonD.idTwo});
+  assert.equal(action.get('assignee.id'), PersonD.idTwo);
+  assert.ok(automation.get('isDirtyOrRelatedDirty'));
+  action.change_assignee({id: PersonD.idOne});
+  assert.equal(action.get('assignee.id'), PersonD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+/* automation & assignee: End */
+
+test('rollback - a change in nested actionType and assigee can be rolled back from the automation', assert => {
+  run(() => {
+    automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AAD.idOne], automation_action_ids: [AAD.idOne]});
+    store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
+    store.push('automation-action', {id: AAD.idOne, assignee_fk: PersonD.idOne, type_fk: AATD.idOne});
+    store.push('person', {id: PersonD.idOne, actions: [AAD.idOne]});
+    store.push('automation-action-type', {id: AATD.idOne, key: AATD.keyOne, actions: [AAD.idOne]});
+  });
+  let action = automation.get('action').objectAt(0);
+  assert.equal(action.get('type.id'), AATD.idOne);
+  assert.equal(action.get('assignee.id'), PersonD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  action.change_type({id: AATD.idTwo});
+  action.change_assignee({id: PersonD.idTwo});
+  assert.equal(action.get('type.id'), AATD.idTwo);
+  assert.equal(action.get('assignee.id'), PersonD.idTwo);
+  assert.ok(automation.get('isDirtyOrRelatedDirty'));
+  automation.rollback();
+  assert.equal(action.get('type.id'), AATD.idOne);
+  assert.equal(action.get('assignee.id'), PersonD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('saveRelated - a change in nested actionType or assignee is saved and entire model tree from automation to type n assignee is clean', assert => {
+  run(() => {
+    automation = store.push('automation', {id: AD.idOne});
+  });
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  automation.add_action({id: AAD.idOne});
+  let action = automation.get('action').objectAt(0);
+  action.change_type({id: AATD.idOne});
+  assert.equal(action.get('type.id'), AATD.idOne);
+  assert.ok(automation.get('isDirtyOrRelatedDirty'));
+  automation.saveRelated();
+  assert.equal(action.get('type.id'), AATD.idOne);
+  assert.ok(action.get('typeIsNotDirty'));
+  assert.ok(automation.get('actionIsNotDirty'));
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  // do same for 'assignee'
+  action.change_assignee({id: PersonD.idOne});
+  assert.ok(automation.get('isDirtyOrRelatedDirty'));
+  automation.saveRelated();
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+});

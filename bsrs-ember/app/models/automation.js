@@ -5,6 +5,7 @@ import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/automation';
+import SaveAndRollbackRelatedMixin from 'bsrs-ember/mixins/model/save-and-rollback-related';
 
 const Validations = buildValidations({
   description: [
@@ -25,7 +26,7 @@ const Validations = buildValidations({
   pf: validator('has-many')
 });
 
-export default Model.extend(OptConf, Validations, {
+export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
   init() {
     this._super(...arguments);
     many_to_many.bind(this)('event', 'automation');
@@ -54,39 +55,20 @@ export default Model.extend(OptConf, Validations, {
     return this.get('isDirty') || this.get('pfIsDirty') || this.get('eventIsDirty') || this.get('actionIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-  rollbackPfContainer() {
-    const pf = this.get('pf');
-    pf.forEach((model) => {
-      model.rollback();
-    });
-  },
   rollback() {
     this.rollbackEvent();
+    this.rollbackRelatedContainer('action');
     this.rollbackAction();
-    this.rollbackPfContainer();
+    this.rollbackRelatedContainer('pf');
     this.rollbackPf();
     this._super(...arguments);
   },
-  savePfContainer() {
-    const pf = this.get('pf');
-    pf.forEach((model) => {
-      model.saveRelated();
-      model.save();
-    });
-  },
-  saveActionContainer() {
-    const action = this.get('action');
-    action.forEach((model) => {
-      model.saveRelated();
-      model.save();
-    });
-  },
   saveRelated() {
     this.saveEvent();
-    this.savePfContainer();
-    this.savePf();
-    this.saveActionContainer();
+    this.saveRelatedContainer('action');
     this.saveAction();
+    this.saveRelatedContainer('pf');
+    this.savePf();
   },
   removeRecord() {
     run(() => {
