@@ -123,7 +123,7 @@ test('add new pfilter, and automation is not dirty until select pfilter which di
   // adds pfilter but not dirty
   assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), trans.t(PFD.keyOne));
   assert.equal(this.$('.t-automation-pf-select').length, 2);
-  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(automation.get('isDirtyOrRelatedDirty'));
   assert.equal(automation.get('pf').get('length'), 2);
   // automation is now dirty
   clickTrigger('.t-automation-pf-select:eq(1)');

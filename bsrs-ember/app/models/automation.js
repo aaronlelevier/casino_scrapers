@@ -2,7 +2,7 @@ import Ember from 'ember';
 const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
-import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
+import { many_to_many, many_to_many_dirty, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/automation';
 import SaveAndRollbackRelatedMixin from 'bsrs-ember/mixins/model/save-and-rollback-related';
@@ -35,22 +35,21 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
   },
   simpleStore: Ember.inject.service(),
   description: attr(''),
-
-    // TODO: remove unlasAddedM2M
-  pfIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('automation_pf'),
+  // pf dirty tracking
+  pfIsDirtyContainer: many_to_many_dirty('automation_pf'),
   pfIsDirty: Ember.computed('pf.@each.{isDirtyOrRelatedDirty}', 'pfIsDirtyContainer', function() {
     const pf = this.get('pf');
     return pf.isAny('isDirtyOrRelatedDirty') || this.get('pfIsDirtyContainer');
   }),
   pfIsNotDirty: Ember.computed.not('pfIsDirty'),
-
+  // action dirty tracking
   actionIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('automation_action'),
   actionIsDirty: Ember.computed('action.@each.{isDirtyOrRelatedDirty}', 'actionIsDirtyContainer', function() {
     const action = this.get('action');
     return action.isAny('isDirtyOrRelatedDirty') || this.get('actionIsDirtyContainer');
   }),
   actionIsNotDirty: Ember.computed.not('actionIsDirty'),
-
+  // (cont.)
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'pfIsDirty', 'eventIsDirty', 'actionIsDirty', function() {
     return this.get('isDirty') || this.get('pfIsDirty') || this.get('eventIsDirty') || this.get('actionIsDirty');
   }),

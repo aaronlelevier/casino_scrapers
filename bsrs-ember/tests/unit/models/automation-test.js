@@ -46,15 +46,16 @@ test('serialize', assert => {
   assert.equal(ret.description, AD.descriptionOne);
 });
 
-test('add pfilter w/ id only and automation is still clean', assert => {
+/* automation & PROFILE_FILTER: Start */
+
+test('add pfilter and automation is dirty', assert => {
   run(() => {
     store.push('pfilter', {id: PFD.idOne});
   });
   automation.add_pf({id: PFD.idOne});
-  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(automation.get('isDirtyOrRelatedDirty'));
 });
 
-/* automation & PROFILE_FILTER: Start */
 test('pfilter property should return all associated pf. also confirm related and join model attr values', (assert) => {
   run(() => {
     store.push('automation-join-pfilter', {id: AJFD.idOne, automation_pk: AD.idOne, pfilter_pk: PFD.idOne});
@@ -124,12 +125,6 @@ test('add_pf - will create join model and mark model dirty', (assert) => {
   assert.deepEqual(automation.get('pf_ids'), [PFD.idOne, PFD.idTwo]);
   assert.equal(automation.get('pf').objectAt(0).get('id'), PFD.idOne);
   assert.equal(automation.get('pf').objectAt(1).get('id'), PFD.idTwo);
-  // adding to 'pf' array on 'automation' doesn't make it dirty, only
-  // if an attr on the 'pf' changes
-  assert.ok(automation.get('pfIsNotDirty'));
-  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
-  pfilter.set('source_id', PFD.sourceIdOne);
-  assert.ok(pfilter.get('isDirty'));
   assert.ok(automation.get('pfIsDirty'));
   assert.ok(automation.get('isDirtyOrRelatedDirty'));
 });
@@ -240,10 +235,12 @@ test('saveRelated - saveRelated should persist the changed event and model shoul
 
 test('save - pfilter and their criteria not dirty when just add new filters but is dirty if add criteria (new location for example)', (assert) => {
   assert.equal(automation.get('pf').get('length'), 0);
-  automation.add_pf({id: PFD.idOne});
-  assert.equal(automation.get('pf').get('length'), 1);
   assert.ok(automation.get('pfIsNotDirty'));
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  automation.add_pf({id: PFD.idOne});
+  assert.equal(automation.get('pf').get('length'), 1);
+  assert.ok(automation.get('pfIsDirty'));
+  assert.ok(automation.get('isDirtyOrRelatedDirty'));
   pf = automation.get('pf').objectAt(0);
   assert.equal(pf.get('criteria').get('length'), 0);
   pf.add_criteria({id: LD.idOne});
@@ -284,8 +281,6 @@ test('savePf - and add back old pf with same id will keep criteria and wont be d
   assert.equal(automation.get('pf').get('length'), 2);
   const pf_two = automation.get('pf').objectAt(1);
   assert.equal(pf_two.get('criteria').get('length'), 1);
-  assert.ok(automation.get('pfIsNotDirty'));
-  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('rollbackPf - add a single pf, and do rollback to remove it', assert => {
@@ -482,9 +477,9 @@ test('rollback - adding an action and setting the type should make the model dir
 
 /* automation & action: End */
 
-/* automation & action type: Start */
+/* nested dirty tracking tests: Start */
 
-test('changing the action type should make the automation model dirty', (assert) => {
+test('actionType - changing the action type should make the automation model dirty', (assert) => {
   run(() => {
     automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AAD.idOne], automation_action_ids: [AAD.idOne]});
     store.push('automation-action-type', {id: AATD.idOne, key: AATD.keyOne, actions: [AAD.idOne]});
@@ -500,11 +495,7 @@ test('changing the action type should make the automation model dirty', (assert)
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-/* automation & action type: End */
-
-/* automation & assignee: Start */
-
-test('changing the assignee should make the automation model dirty', (assert) => {
+test('assignee - changing the assignee should make the automation model dirty', (assert) => {
   run(() => {
     automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AAD.idOne], automation_action_ids: [AAD.idOne]});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
@@ -522,7 +513,21 @@ test('changing the assignee should make the automation model dirty', (assert) =>
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-/* automation & assignee: End */
+test('criteria - when criteria changes, automation is dirty', assert => {
+  run(() => {
+    automation = store.push('automation', {id: AD.idOne, automation_pf_fks: [AJFD.idOne]});
+    store.push('pfilter', {id: PFD.idOne});
+    store.push('automation-join-pfilter', {id: AJFD.idOne, automation_pk: AD.idOne, pfilter_pk: PFD.idOne});
+  });
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  pf = automation.get('pf').objectAt(0);
+  pf.add_criteria({id: CD.idOne});
+  assert.equal(pf.get('criteria').objectAt(0).get('id'), CD.idOne);
+  assert.ok(automation.get('pfIsDirty'));
+  assert.ok(automation.get('isDirtyOrRelatedDirty'));
+});
+
+/* nested dirty tracking tests: End */
 
 test('rollback - a change in nested actionType and assigee can be rolled back from the automation', assert => {
   run(() => {

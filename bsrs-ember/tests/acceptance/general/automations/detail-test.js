@@ -211,7 +211,8 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('when user adds a filter and hits cancel they are not prompted with a modal', (assert) => {
+test('when user adds a filter and hits cancel they are prompted with a modal', (assert) => {
+  clearxhr(listXhr);
   page.visitDetail();
   // a filter is added here, but it's empty, so the automation is still considered
   // clean, and can cancel w/o getting the modal prompt.
@@ -224,8 +225,11 @@ test('when user adds a filter and hits cancel they are not prompted with a modal
   });
   generalPage.cancel();
   andThen(() => {
-    assert.equal(store.find('automation', AD.idOne).get('pf').get('length'), 1);
-    assert.equal(currentURL(), automation_LIST_URL);
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.equal(store.find('automation', AD.idOne).get('pf').get('length'), 2);
+      assert.ok(generalPage.modalIsVisible);
+    });
   });
 });
 
