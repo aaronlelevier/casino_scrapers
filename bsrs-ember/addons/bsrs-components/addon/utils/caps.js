@@ -10,7 +10,11 @@ var caps = function(related_model) {
     const character = related_model.charAt(indx+1);
     const upperCaseLetter = character.toUpperCase();
     const rgx = new RegExp(`_${character}`);
-    return related_model.charAt(0).toUpperCase() + related_model.substr(1).replace(rgx, upperCaseLetter);
+    const cappedWord = related_model.charAt(0).toUpperCase() + related_model.substr(1).replace(rgx, upperCaseLetter);
+    if (cappedWord.indexOf('_') > -1) {
+      return caps(cappedWord);
+    }
+    return cappedWord;
   }
   return related_model.charAt(0).toUpperCase() + related_model.substr(1);
 };

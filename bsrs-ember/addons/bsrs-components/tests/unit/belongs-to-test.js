@@ -427,6 +427,13 @@ test('caps utility', assert => {
   assert.equal(str, 'Status');
 });
 
+test('caps utility - multiple underscores', assert => {
+  let str = caps('billing_phone_number');
+  assert.equal(str, 'BillingPhoneNumber');
+  str = caps('billing_phone_number_second');
+  assert.equal(str, 'BillingPhoneNumberSecond');
+});
+
 test('user has simpleStore', (assert) => {
   const user = store.push('user', {id: 5});
   assert.ok(user.get('simpleStore'));
