@@ -5,7 +5,7 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
 import AD from 'bsrs-ember/vendor/defaults/automation';
 import AF from 'bsrs-ember/vendor/automation_fixtures';
-import BASEURLS, { AUTOMATION_URL, automation_LIST_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { AUTOMATION_URL, AUTOMATION_LIST_URL } from 'bsrs-ember/utilities/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 
 const { run } = Ember;
@@ -30,7 +30,7 @@ test('can click automations from the Dashboard to grid  and then to detail', ass
   });
   generalPage.clickautomations();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
   xhr(API_DETAIL_URL, 'GET', null, {}, 200, AF.detail());
   generalPage.gridItemZeroClick();

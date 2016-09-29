@@ -13,7 +13,7 @@ import automationPage from 'bsrs-ember/tests/pages/automation';
 import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import pageDrawer from 'bsrs-ember/tests/pages/nav-drawer';
-import BASEURLS, { AUTOMATION_URL, automation_LIST_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { AUTOMATION_URL, AUTOMATION_LIST_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
 var store, listXhr;
 
@@ -39,7 +39,7 @@ test('can click from admin to automation grid to detail', async assert => {
   await pageDrawer.clickDrawer();
   await pageDrawer.clickAdmin();
   await generalPage.clickautomations();
-  assert.equal(currentURL(), automation_LIST_URL);
+  assert.equal(currentURL(), AUTOMATION_LIST_URL);
   await generalPage.gridItemZeroClick();
   assert.equal(currentURL(), GRID_DETAIL_URL);
 });
@@ -54,7 +54,7 @@ test('can click through component sections and save to redirect to index', async
   let payload = AF.put({id: AD.idOne});
   xhr(automation_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   await generalPage.save();
-  assert.equal(currentURL(), automation_LIST_URL);
+  assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
 test('visit mobile detail and update all fields', async assert => {
@@ -66,7 +66,7 @@ test('visit mobile detail and update all fields', async assert => {
   assert.equal(automationPage.descriptionValue, AD.descriptionTwo);
   xhr(automation_PUT_URL, 'PUT', AF.put({'description': AD.descriptionTwo, }), {}, 200, AF.list());
   await generalPage.save()
-  assert.equal(currentURL(), automation_LIST_URL);
+  assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
 test('if the automation does not have at least one filter, it is invalid and cannot save', async assert => {
@@ -92,7 +92,7 @@ test('show the filter count on the detail section', async assert => {
 //   assert.equal(currentURL(), DETAIL_URL);
 //   xhr(`${AUTOMATION_URL}${AD.idOne}/`, 'DELETE', null, {}, 204, {});
 //   await generalPage.delete();
-//   assert.equal(currentURL(), automation_LIST_URL);
+//   assert.equal(currentURL(), AUTOMATION_LIST_URL);
 // });
 
 /* jshint ignore:end */

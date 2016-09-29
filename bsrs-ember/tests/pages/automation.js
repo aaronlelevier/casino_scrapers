@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import { create, visitable, fillable, text, value, clickable } from 'ember-cli-page-object';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
-import BASEURLS, { AUTOMATION_URL, automation_LIST_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { AUTOMATION_URL, AUTOMATION_LIST_URL } from 'bsrs-ember/utilities/urls';
 import AD from 'bsrs-ember/vendor/defaults/automation';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
@@ -25,7 +25,7 @@ const STATES = '.t-ticket-state-select .ember-power-select-multiple-option';
 const COUNTRIES = '.t-ticket-country-select .ember-power-select-multiple-option';
 
 export default create({
-  visit: visitable(automation_LIST_URL),
+  visit: visitable(AUTOMATION_LIST_URL),
   visitDetail: visitable(DETAIL_URL),
   headerText: text('.t-automation-header'),
   descriptionValue: value('.t-automation-description'),

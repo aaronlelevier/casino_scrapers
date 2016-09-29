@@ -30,7 +30,7 @@ export const TICKETS_URL = `${PREFIX}/tickets/`;
 export const WOS_URL = `${PREFIX}/work-orders/`;
 
 // App Urls
-export const automation_LIST_URL = '/admin/automations/index';
+export const AUTOMATION_LIST_URL = '/admin/automations/index';
 export const CATEGORY_LIST_URL = '/admin/categories/index';
 export const I18N_LIST_URL = '/admin/translations/index';
 export const LOCATION_LIST_URL = '/admin/locations/index';

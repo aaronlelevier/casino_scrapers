@@ -23,7 +23,7 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import page from 'bsrs-ember/tests/pages/automation';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS, { AUTOMATION_URL, automation_LIST_URL, AUTOMATION_EVENTS_URL, AUTOMATION_AVAILABLE_FILTERS_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { AUTOMATION_URL, AUTOMATION_LIST_URL, AUTOMATION_EVENTS_URL, AUTOMATION_AVAILABLE_FILTERS_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
 const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
@@ -46,7 +46,7 @@ moduleForAcceptance('Acceptance | automation detail test', {
 test('by clicking record in list view, User is sent to detail view', assert => {
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
   generalPage.gridItemZeroClick();
   andThen(() => {
@@ -112,7 +112,7 @@ test('visit detail and update all fields', assert => {
   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
 });
 
@@ -156,7 +156,7 @@ test('amk visit detail and update an actions assignee', assert => {
   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
 });
 
@@ -253,7 +253,7 @@ test('add an empty filter and do a PUT, and the empty filter isnt sent and is si
   generalPage.save();
   andThen(() => {
     assert.equal(store.find('automation', AD.idOne).get('pf').get('length'), 1);
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
 });
 
@@ -286,7 +286,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), automation_LIST_URL);
+      assert.equal(currentURL(), AUTOMATION_LIST_URL);
       var automation = store.find('automation', AD.idOne);
       assert.equal(automation.get('description'), AD.descriptionOne);
     });
@@ -300,7 +300,7 @@ test('clicking cancel button with no edits will take from detail view to list vi
   });
   generalPage.cancel();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
 });
 
@@ -323,7 +323,7 @@ test('when click delete, modal displays and when click ok, automation is deleted
   generalPage.clickModalDelete();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), automation_LIST_URL);
+      assert.equal(currentURL(), AUTOMATION_LIST_URL);
       assert.equal(store.find('automation', AD.idOne).get('length'), undefined);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
@@ -412,7 +412,7 @@ test('remove filter and save - should stay on page because an automation must ha
   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
 });
 
@@ -439,7 +439,7 @@ test('add filter, add criteria, remove filter, cancel', assert => {
   });
   generalPage.cancel();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
 });
 
@@ -477,7 +477,7 @@ test('select category filter and update automation', assert => {
   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
 });
 
@@ -515,7 +515,7 @@ test('select state filter and update automation', assert => {
   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
 });
 
@@ -553,7 +553,7 @@ test('select country filter and update automation', assert => {
   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
 });
 

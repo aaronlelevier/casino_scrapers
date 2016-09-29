@@ -16,7 +16,7 @@ import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import page from 'bsrs-ember/tests/pages/automation';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS, { AUTOMATION_URL, automation_LIST_URL, AUTOMATION_EVENTS_URL, AUTOMATION_AVAILABLE_FILTERS_URL, AUTOMATION_ACTION_TYPES_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { AUTOMATION_URL, AUTOMATION_LIST_URL, AUTOMATION_EVENTS_URL, AUTOMATION_AVAILABLE_FILTERS_URL, AUTOMATION_ACTION_TYPES_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
 const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
@@ -70,7 +70,7 @@ test('visit new URL and create a new record', assert => {
   }), {}, 200, AF.list());
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
 });
 
@@ -102,7 +102,7 @@ test('when user creates and automation and adds an action they should be able to
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), automation_LIST_URL);
+      assert.equal(currentURL(), AUTOMATION_LIST_URL);
       assert.ok(generalPage.modalIsHidden);
     });
   });
@@ -145,7 +145,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), automation_LIST_URL);
+      assert.equal(currentURL(), AUTOMATION_LIST_URL);
     });
   });
 });
@@ -157,7 +157,7 @@ test('clicking cancel button with no edits will take from detail view to list vi
   });
   generalPage.cancel();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
 });
 

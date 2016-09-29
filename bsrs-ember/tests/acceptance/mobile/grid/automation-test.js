@@ -13,7 +13,7 @@ import page from 'bsrs-ember/tests/pages/automation-mobile';
 import automationPage from 'bsrs-ember/tests/pages/automation';
 import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS, { AUTOMATION_URL, automation_LIST_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { AUTOMATION_URL, AUTOMATION_LIST_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
 var store, list_xhr;
 
@@ -43,9 +43,9 @@ test('only renders grid items from server and not other automation objects alrea
   });
   clearxhr(list_xhr);
   xhr(`${AUTOMATION_URL}?page=1`, 'GET', null, {}, 200, AF.list_two());
-  visit(automation_LIST_URL);
+  visit(AUTOMATION_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
     assert.equal(store.find('automation-list').get('length'), 10);
   });
 });
@@ -54,7 +54,7 @@ test('visiting mobile automation grid show correct layout', assert => {
   automationPage.visit();
   andThen(() => {
     const automation = store.findOne('automation-list');
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
     assert.equal(find('.t-mobile-grid-title').text().trim(), '19 '+t('admin.automation.other'));
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').text().trim());
@@ -67,8 +67,8 @@ test('automation description filter will filter down results and reset page to 1
   xhr(`${AUTOMATION_URL}?page=1&description__icontains=${AD.descriptionLastPage2Grid}`, 'GET', null, {}, 200, AF.searched(AD.descriptionLastPage2Grid, 'description'));
   clearxhr(list_xhr);
   xhr(`${AUTOMATION_URL}?page=2`, 'GET', null, {}, 200, AF.list());
-  await visit(automation_LIST_URL+'?page=2');
-  assert.equal(currentURL(), automation_LIST_URL + '?page=2');
+  await visit(AUTOMATION_LIST_URL+'?page=2');
+  assert.equal(currentURL(), AUTOMATION_LIST_URL + '?page=2');
   assert.equal(find('.t-grid-data:eq(0) > div:eq(0)').text().trim(), AD.descriptionGridOne);
   await generalMobilePage.clickFilterOpen();
   await page.clickFilterDescription();
