@@ -410,6 +410,18 @@ test('action property is not dirty when no action present (empty array)', (asser
   assert.ok(automation.get('actionIsNotDirty'));
 });
 
+test('automation is not dirty by adding an action only, but only if that action has field data', assert => {
+  run(() => {
+    automation = store.push('automation', {id: AD.idOne});
+  });
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  automation.add_action({id: AAD.idOne});
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  action = automation.get('action').objectAt(0);
+  action.change_type({id: AATD.idOne});
+  assert.ok(automation.get('isDirtyOrRelatedDirty'));
+});
+
 test('remove_action - will remove join model and mark model as dirty', (assert) => {
   run(() => {
     store.push('automation-action-type', {id: AATD.idOne, key: AATD.keyOne, actions: [AAD.idOne]});

@@ -80,6 +80,11 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
         this.remove_pf(f.get('id'));
       }
     });
+    this.get('action').forEach(a => {
+      if (!a.get('type.id')) {
+        this.remove_action(a.get('id'));
+      }
+    });
     return {
       id: this.get('id'),
       description: this.get('description'),

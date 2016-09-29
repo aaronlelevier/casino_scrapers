@@ -74,15 +74,11 @@ test('visit new URL and create a new record', assert => {
   });
 });
 
-test('when user creates and automation they should see an empty action', assert => {
+test('when user creates an automation they should see an empty action', assert => {
   clearxhr(listXhr);
   visit(NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
-    assert.equal(Ember.$('.t-automation-action-type-select .ember-power-select-placeholder').length, 0);
-  });
-  page.clickAddActionBtn();
-  andThen(() => {
     assert.equal(Ember.$('.t-automation-action-type-select .ember-power-select-placeholder').length, 1);
   });
   xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.action_search_power_select());
@@ -93,9 +89,8 @@ test('when user creates and automation they should see an empty action', assert 
   });
 });
 
-test('when user creates and automation and adds an action they should be able to cancel with no modal', assert => {
+test('when user can visit new automation with, which stats with an empty action widget, and can cancel hit with no modal', assert => {
   visit(NEW_URL);
-  page.clickAddActionBtn();
   andThen(() => {
     assert.equal(Ember.$('.t-automation-action-type-select .ember-power-select-placeholder').length, 1);
   });
