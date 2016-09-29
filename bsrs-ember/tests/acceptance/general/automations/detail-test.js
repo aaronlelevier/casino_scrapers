@@ -117,7 +117,7 @@ test('visit detail and update all fields', assert => {
   });
 });
 
-test('visit detail and update an action types assignee', assert => {
+test('amk visit detail and update an actions assignee', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);

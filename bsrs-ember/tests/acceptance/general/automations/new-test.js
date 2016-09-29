@@ -43,7 +43,7 @@ test('visit new URL and create a new record', assert => {
   andThen(() => {
     assert.equal(page.descriptionValue, AD.descriptionOne);
   });
-  // events 
+  // events
   let keyword = 'a';
   xhr(`/api/admin/automation-events/?search=${keyword}`, 'GET', null, {}, 200, AF.event_search_power_select());
   selectSearch('.t-automation-event-select', keyword);
@@ -92,6 +92,21 @@ test('when user creates and automation they should see an empty action', assert 
   andThen(() => {
     assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
     assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
+  });
+});
+
+test('when user creates and automation and adds an action they should be able to cancel with no modal', assert => {
+  visit(NEW_URL);
+  page.clickAddActionBtn();
+  andThen(() => {
+    assert.equal(Ember.$('.t-automation-action-type-select .ember-power-select-placeholder').length, 1);
+  });
+  generalPage.cancel();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), automation_LIST_URL);
+      assert.ok(generalPage.modalIsHidden);
+    });
   });
 });
 

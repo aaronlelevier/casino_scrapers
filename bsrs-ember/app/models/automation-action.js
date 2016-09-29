@@ -6,9 +6,9 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/automation-action';
 
 export default Model.extend(OptConf, {
   init() {
+    this._super(...arguments);
     belongs_to.bind(this)('type', 'automation-action');
     belongs_to.bind(this)('assignee', 'automation-action');
-    this._super(...arguments);
   },
   simpleStore: Ember.inject.service(),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'typeIsDirty', function() {

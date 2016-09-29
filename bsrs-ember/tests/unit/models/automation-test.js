@@ -9,6 +9,7 @@ import AJED from 'bsrs-ember/vendor/defaults/automation-join-event';
 import AJFD from 'bsrs-ember/vendor/defaults/automation-join-pfilter';
 import AJAD from 'bsrs-ember/vendor/defaults/automation-join-action';
 import AAD from 'bsrs-ember/vendor/defaults/automation-action';
+import AATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import PJCD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
 import PersonD from 'bsrs-ember/vendor/defaults/person';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
@@ -19,7 +20,7 @@ var store, automation, event, action, pfilter, pf;
 moduleFor('model:automation', 'Unit | Model | automation', {
   needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username', 'validator:has-many'],
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-event', 'model:automation-join-event', 'model:automation-join-pfilter', 'model:automation-action', 'model:automation-join-action', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-event', 'model:automation-join-event', 'model:automation-join-pfilter', 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     run(() => {
       automation = store.push('automation', {id: AD.idOne});
     });
@@ -223,7 +224,7 @@ test('rollback - event', assert => {
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('saveRelated - event', (assert) => {
+test('saveRelated - saveRelated should persist the changed event and model should be clean', (assert) => {
   assert.equal(automation.get('event').get('length'), 0);
   automation.add_event({id: ED.idOne});
   assert.equal(automation.get('event').get('length'), 1);
@@ -416,8 +417,9 @@ test('action property is not dirty when no action present (empty array)', (asser
 
 test('remove_action - will remove join model and mark model as dirty', (assert) => {
   run(() => {
+    store.push('automation-action-type', {id: AATD.idOne, key: AATD.keyOne, actions: [AAD.idOne]});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
-    store.push('automation-action', {id: AAD.idOne});
+    store.push('automation-action', {id: AAD.idOne, type_fk: AATD.idOne});
     automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AJAD.idOne]});
   });
   assert.equal(automation.get('action').get('length'), 1);
@@ -454,29 +456,49 @@ test('add_action - will create join model and mark model dirty', (assert) => {
   assert.equal(automation.get('action').objectAt(1).get('id'), AAD.idTwo);
 });
 
-test('rollback - add action and rollback to remove it and make model clean', assert => {
+test('adding an action when there were no actions should not make the model dirty', assert => {
   run(() => {
     automation = store.push('automation', {id: AD.idOne});
   });
   assert.equal(automation.get('action').get('length'), 0);
   automation.add_action({id: AAD.idOne});
   assert.equal(automation.get('action').get('length'), 1);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('rollback - adding an action and setting the type should make the model dirty - rollback should clean', assert => {
+  run(() => {
+    automation = store.push('automation', {id: AD.idOne});
+  });
+  assert.equal(automation.get('action').get('length'), 0);
+  automation.add_action({id: AAD.idOne});
+  assert.equal(automation.get('action').get('length'), 1);
+  automation.get('action').objectAt(0).change_type({id: AATD.idOne, key: AATD.keyOne});
   assert.ok(automation.get('isDirtyOrRelatedDirty'));
   automation.rollback();
   assert.equal(automation.get('action').get('length'), 0);
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('saveRelated - add action add saveRelated to keep action and make model clean', (assert) => {
-  assert.equal(automation.get('event').get('length'), 0);
-  automation.add_event({id: ED.idOne});
-  assert.equal(automation.get('event').get('length'), 1);
-  assert.ok(automation.get('eventIsDirty'));
+/* automation & action: End */
+
+/* automation & action type: Start */
+
+test('changing the action type should make the automation model dirty', (assert) => {
+  let automationJoinAction, automationAction, automationActionType;
+  run(() => {
+    automationActionType = store.push('automation-action-type', {id: AATD.idOne, key: AATD.keyOne, actions: [AAD.idOne]});
+    automationJoinAction =  store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
+    automationAction =  store.push('automation-action', {id: AAD.idOne, type_fk: AATD.idOne});
+    automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AAD.idOne], automation_action_ids: [AAD.idOne]});
+  });
+  let action = automation.get('action').objectAt(0);
+  assert.equal(action.get('type.id'), AATD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  action.change_type({id: AATD.idTwo, key: AATD.keyTwo});
   assert.ok(automation.get('isDirtyOrRelatedDirty'));
-  automation.saveRelated();
-  assert.equal(automation.get('event').get('length'), 1);
-  assert.ok(automation.get('eventIsNotDirty'));
+  action.change_type({id: AATD.idOne, key: AATD.keyOne});
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-/* automation & action: End */
+/* automation & action type: End */

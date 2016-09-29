@@ -27,19 +27,29 @@ const Validations = buildValidations({
 
 export default Model.extend(OptConf, Validations, {
   init() {
-    many_to_many.bind(this)('event', 'automation');
-    many_to_many.bind(this)('action', 'automation');
-    many_to_many.bind(this)('pf', 'automation', {dirty: false});
     this._super(...arguments);
+    many_to_many.bind(this)('event', 'automation');
+    many_to_many.bind(this)('action', 'automation', {dirty: false});
+    many_to_many.bind(this)('pf', 'automation', {dirty: false});
   },
   simpleStore: Ember.inject.service(),
   description: attr(''),
+
+    // TODO: remove unlasAddedM2M
   pfIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('automation_pf'),
   pfIsDirty: Ember.computed('pf.@each.{isDirtyOrRelatedDirty}', 'pfIsDirtyContainer', function() {
     const pf = this.get('pf');
     return pf.isAny('isDirtyOrRelatedDirty') || this.get('pfIsDirtyContainer');
   }),
   pfIsNotDirty: Ember.computed.not('pfIsDirty'),
+
+  actionIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('automation_action'),
+  actionIsDirty: Ember.computed('action.@each.{isDirtyOrRelatedDirty}', 'actionIsDirtyContainer', function() {
+    const action = this.get('action');
+    return action.isAny('isDirtyOrRelatedDirty') || this.get('actionIsDirtyContainer');
+  }),
+  actionIsNotDirty: Ember.computed.not('actionIsDirty'),
+
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'pfIsDirty', 'eventIsDirty', 'actionIsDirty', function() {
     return this.get('isDirty') || this.get('pfIsDirty') || this.get('eventIsDirty') || this.get('actionIsDirty');
   }),
@@ -64,10 +74,19 @@ export default Model.extend(OptConf, Validations, {
       model.save();
     });
   },
+  saveActionContainer() {
+    const action = this.get('action');
+    action.forEach((model) => {
+      model.saveRelated();
+      model.save();
+    });
+  },
   saveRelated() {
     this.saveEvent();
     this.savePfContainer();
     this.savePf();
+    this.saveActionContainer();
+    this.saveAction();
   },
   removeRecord() {
     run(() => {
