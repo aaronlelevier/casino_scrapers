@@ -7,7 +7,7 @@ from automation import choices as auto_choices
 from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationActionType, AutomationAction)
 from tenant.tests.factory import get_or_create_tenant
-from ticket.models import TicketPriority
+from ticket.models import TicketPriority, TicketStatus
 from utils.create import random_lorem
 from utils.helpers import create_default
 
@@ -41,14 +41,74 @@ def create_automation_action_types():
 
 # AutomationActions
 
-def create_automation_action_assignee(automation=None):
-    if not automation:
-        automation = create_automation(with_filters=False)
+NO_RELATED_AUTOMATION_MODELS_KWARGS = {
+    'with_actions': False,
+    'with_filters': False
+}
 
-    type = create_automation_action_type()
+def _get_automation_and_action_type(automation, action_type_key):
+    if not automation:
+        automation = create_automation(**NO_RELATED_AUTOMATION_MODELS_KWARGS)
+    action_type = create_automation_action_type(action_type_key)
+    return (automation, action_type)
+
+
+def create_automation_action_assignee(automation=None):
+    automation, type = _get_automation_and_action_type(automation, auto_choices.ACTIONS_TICKET_ASSIGNEE)
     person = create_single_person()
     return AutomationAction.objects.create(type=type, automation=automation,
                                            content={'assignee': str(person.id)})
+
+
+def create_automation_action_send_email(automation=None):
+    automation, type = _get_automation_and_action_type(automation, auto_choices.ACTIONS_SEND_EMAIL)
+    person = create_single_person()
+    return AutomationAction.objects.create(type=type, automation=automation,
+                                           content={'recipients': [str(person.id)], 'subject': 'foo', 'body': 'bar'})
+
+
+def create_automation_action_send_sms(automation=None):
+    automation, type = _get_automation_and_action_type(automation, auto_choices.ACTIONS_SEND_SMS)
+    person = create_single_person()
+    return AutomationAction.objects.create(type=type, automation=automation,
+                                           content={'recipients': [str(person.id)], 'body': 'bar'})
+
+
+def create_automation_action_priority(automation=None):
+    automation, type = _get_automation_and_action_type(automation, auto_choices.ACTIONS_TICKET_PRIORITY)
+    priority = create_default(TicketPriority)
+    return AutomationAction.objects.create(type=type, automation=automation,
+                                           content={'priority': str(priority.id)})
+
+
+def create_automation_action_status(automation=None):
+    automation, type = _get_automation_and_action_type(automation, auto_choices.ACTIONS_TICKET_STATUS)
+    status = create_default(TicketStatus)
+    return AutomationAction.objects.create(type=type, automation=automation,
+                                           content={'status': str(status.id)})
+
+
+def create_automation_action_request(automation=None):
+    automation, type = _get_automation_and_action_type(automation, auto_choices.ACTIONS_TICKET_REQUEST)
+    return AutomationAction.objects.create(type=type, automation=automation,
+                                           content={'request': 'foo'})
+
+
+def create_automation_action_cc(automation=None):
+    automation, type = _get_automation_and_action_type(automation, auto_choices.ACTIONS_TICKET_CC)
+    person = create_single_person()
+    return AutomationAction.objects.create(type=type, automation=automation,
+                                           content={'ccs': [str(person.id)]})
+
+
+def create_automation_actions():
+    create_automation_action_assignee()
+    create_automation_action_send_email()
+    create_automation_action_send_sms()
+    create_automation_action_priority()
+    create_automation_action_status()
+    create_automation_action_request()
+    create_automation_action_cc()
 
 
 # AutomationFilterTypes
@@ -161,7 +221,7 @@ def create_automation_filters():
 
 # Automations
 
-def create_automation(description=None, tenant=None, with_filters=True):
+def create_automation(description=None, tenant=None, with_actions=True, with_filters=True):
     kwargs = {
         'description': description or random_lorem(1),
         'tenant': tenant or get_or_create_tenant()
@@ -176,7 +236,8 @@ def create_automation(description=None, tenant=None, with_filters=True):
         event = create_automation_event()
         automation.events.add(event)
         # actions
-        create_automation_action_assignee(automation)
+        if with_actions:
+            create_automation_action_assignee(automation)
         # provile_filters
         if with_filters:
             create_ticket_priority_filter(automation)

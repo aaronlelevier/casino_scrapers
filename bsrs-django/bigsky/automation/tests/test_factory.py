@@ -14,7 +14,7 @@ from automation.models import (AutomationEvent, Automation, AutomationFilter, Au
 from automation.tests import factory
 from tenant.models import Tenant
 from tenant.tests.factory import get_or_create_tenant
-from ticket.models import Ticket, TicketPriority
+from ticket.models import Ticket, TicketPriority, TicketStatus
 from utils.create import LOREM_IPSUM_WORDS
 from utils.helpers import create_default
 
@@ -75,10 +75,67 @@ class AutomationActionTests(TestCase):
         ret = factory.create_automation_action_assignee()
 
         self.assertIsInstance(ret, AutomationAction)
-        self.assertIsInstance(ret.type, AutomationActionType)
-        self.assertIsInstance(ret.automation, Automation)
+        self.assertEqual(ret.type.key, auto_choices.ACTIONS_TICKET_ASSIGNEE)
         self.assertIsInstance(
             Person.objects.get(id=ret.content['assignee']), Person)
+
+    def test_create_automation_action_send_email(self):
+        ret = factory.create_automation_action_send_email()
+
+        self.assertIsInstance(ret, AutomationAction)
+        self.assertEqual(ret.type.key, auto_choices.ACTIONS_SEND_EMAIL)
+        # content
+        self.assertEqual(len(ret.content), 3)
+        self.assertEqual(len(ret.content['recipients']), 1)
+        self.assertIsInstance(
+            Person.objects.get(id=ret.content['recipients'][0]), Person)
+        self.assertIsInstance(ret.content['subject'], str)
+        self.assertIsInstance(ret.content['body'], str)
+
+    def test_create_automation_action_send_sms(self):
+        ret = factory.create_automation_action_send_sms()
+
+        self.assertIsInstance(ret, AutomationAction)
+        self.assertEqual(ret.type.key, auto_choices.ACTIONS_SEND_SMS)
+        # content
+        self.assertEqual(len(ret.content), 2)
+        self.assertEqual(len(ret.content['recipients']), 1)
+        self.assertIsInstance(
+            Person.objects.get(id=ret.content['recipients'][0]), Person)
+        self.assertIsInstance(ret.content['body'], str)
+
+    def test_create_automation_action_priority(self):
+        ret = factory.create_automation_action_priority()
+        self.assertEqual(ret.type.key, auto_choices.ACTIONS_TICKET_PRIORITY)
+        self.assertIsInstance(
+            TicketPriority.objects.get(id=ret.content['priority']), TicketPriority)
+
+    def test_create_automation_action_status(self):
+        ret = factory.create_automation_action_status()
+        self.assertEqual(ret.type.key, auto_choices.ACTIONS_TICKET_STATUS)
+        self.assertIsInstance(
+            TicketStatus.objects.get(id=ret.content['status']), TicketStatus)
+
+    def test_create_automation_action_request(self):
+        ret = factory.create_automation_action_request()
+        self.assertEqual(ret.type.key, auto_choices.ACTIONS_TICKET_REQUEST)
+        self.assertIsInstance(ret.content['request'], str)
+
+    def test_create_automation_action_cc(self):
+        ret = factory.create_automation_action_cc()
+        self.assertEqual(ret.type.key, auto_choices.ACTIONS_TICKET_CC)
+        self.assertEqual(len(ret.content['ccs']), 1)
+        self.assertIsInstance(
+            Person.objects.get(id=ret.content['ccs'][0]), Person)
+
+    def test_create_automation_actions(self):
+        factory.create_automation_actions()
+
+        actions = AutomationAction.objects.all()
+        self.assertEqual(actions.count(), len(auto_choices.AUTOMATION_ACTION_TYPES))
+        for a in actions:
+            self.assertIn(a.type.key, auto_choices.AUTOMATION_ACTION_TYPES,
+                "{} not in {}".format(a.type.key, auto_choices.AUTOMATION_ACTION_TYPES))
 
 
 class AutomationFilterTypeTests(TestCase):
@@ -263,12 +320,14 @@ class AutomationTests(TestCase):
         description = 'foo'
         tenant = get_or_create_tenant('bar')
         with_filters = False
+        with_actions = False
 
         ret = factory.create_automation(description=description, tenant=tenant,
-                                        with_filters=with_filters)
+                                        with_actions=with_actions, with_filters=with_filters)
 
         self.assertEqual(ret.description, description)
         self.assertEqual(ret.tenant, tenant)
+        self.assertEqual(ret.actions.count(), 0)
         self.assertEqual(ret.filters.count(), 0)
 
     def test_create_automations(self):

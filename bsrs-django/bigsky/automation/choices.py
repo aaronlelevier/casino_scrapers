@@ -36,20 +36,18 @@ AUTOMATION_EVENTS = [
 
 # AutomationActions
 
-ACTIONS_EMAIL = 'automation.actions.email'
-ACTIONS_TEXT = 'automation.actions.text'
 ACTIONS_TICKET_ASSIGNEE = 'automation.actions.ticket_assignee'
-ACTIONS_TICKET_ATTACHMENT = 'automation.actions.ticket_attachment'
+ACTIONS_SEND_EMAIL = 'automation.actions.send_email'
+ACTIONS_SEND_SMS = 'automation.actions.send_sms'
 ACTIONS_TICKET_CC = 'automation.actions.ticket_cc'
 ACTIONS_TICKET_PRIORITY = 'automation.actions.ticket_priority'
 ACTIONS_TICKET_REQUEST = 'automation.actions.ticket_request'
 ACTIONS_TICKET_STATUS = 'automation.actions.ticket_status'
 
 AUTOMATION_ACTION_TYPES = [
-    ACTIONS_EMAIL,
-    ACTIONS_TEXT,
     ACTIONS_TICKET_ASSIGNEE,
-    ACTIONS_TICKET_ATTACHMENT,
+    ACTIONS_SEND_EMAIL,
+    ACTIONS_SEND_SMS,
     ACTIONS_TICKET_CC,
     ACTIONS_TICKET_PRIORITY,
     ACTIONS_TICKET_REQUEST,
