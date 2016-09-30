@@ -40,9 +40,7 @@ def get_or_create_tenant(company_name=settings.DEFAULT_TENANT_COMPANY_NAME, **kw
 
 
 SC_SUBSCRIBER_POST_DATA = {
-    "PrimaryUser": "foo",
-    "Password": "bar",
-    "ClientName": "biz",
+    "Name": "foo",
     "Address1": "9246 Lightwave Ave.",
     "Address2": "",
     "Country": "United States",
@@ -52,6 +50,5 @@ SC_SUBSCRIBER_POST_DATA = {
     "Email": "test@email.com",
     "Phone": "858-715-5000",
     "Fax": "858-715-5001",
-    "ContactName": "Bob",
-    "IsActive": True
+    "ContactName": "Bob"
 }

@@ -65,9 +65,7 @@ class TenantTests(TestCase):
 
     def test_sc_subscriber_post_data(self):
         raw_sc_subscriber_post_data = {
-            "PrimaryUser": "foo",
-            "Password": "bar",
-            "ClientName": "biz",
+            "Name": "foo",
             "Address1": "9246 Lightwave Ave.",
             "Address2": "",
             "Country": "United States",
@@ -77,8 +75,7 @@ class TenantTests(TestCase):
             "Email": "test@email.com",
             "Phone": "858-715-5000",
             "Fax": "858-715-5001",
-            "ContactName": "Bob",
-            "IsActive": True
+            "ContactName": "Bob"
         }
 
         self.assertEqual(factory.SC_SUBSCRIBER_POST_DATA, raw_sc_subscriber_post_data)
