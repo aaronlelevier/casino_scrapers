@@ -14,6 +14,8 @@ import PJCD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
 import PersonD from 'bsrs-ember/vendor/defaults/person';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import CD from 'bsrs-ember/vendor/defaults/criteria';
+import AutomationModel from 'bsrs-ember/models/automation';
 
 var store, automation, event, action, pfilter, pf;
 
@@ -44,6 +46,15 @@ test('serialize', assert => {
   let ret = automation.serialize();
   assert.equal(ret.id, AD.idOne);
   assert.equal(ret.description, AD.descriptionOne);
+});
+
+test('NewMixin is mixed into the Automation Model, so on save will set _new_ keys to undefined, and future CRUD will be PUTs', assert => {
+  let model = AutomationModel.create({new: true, new_pk: true});
+  assert.equal(model.get('new'), true);
+  assert.equal(model.get('new_pk'), true);
+  model.save();
+  assert.equal(model.get('new'), undefined);
+  assert.equal(model.get('new_pk'), undefined);
 });
 
 /* automation & PROFILE_FILTER: Start */

@@ -6,6 +6,7 @@ import { many_to_many, many_to_many_dirty, many_to_many_dirty_unlessAddedM2M } f
 import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/automation';
 import SaveAndRollbackRelatedMixin from 'bsrs-ember/mixins/model/save-and-rollback-related';
+import NewMixin from 'bsrs-ember/mixins/model/new';
 
 const Validations = buildValidations({
   description: [
@@ -26,7 +27,7 @@ const Validations = buildValidations({
   pf: validator('has-many')
 });
 
-export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
+export default Model.extend(OptConf, Validations, NewMixin, SaveAndRollbackRelatedMixin, {
   init() {
     this._super(...arguments);
     many_to_many.bind(this)('event', 'automation');
