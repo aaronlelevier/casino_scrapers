@@ -59,7 +59,7 @@ test('visit detail and update all fields', assert => {
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(page.descriptionValue, AD.descriptionOne);
-    assert.equal(page.eventSelectedOne.split(/\s+/)[1], t(ED.keyOne));
+    assert.equal(page.eventSelectedOne.replace('× ', ''), t(ED.keyOne));
     assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
     assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
   });
@@ -78,10 +78,10 @@ test('visit detail and update all fields', assert => {
   });
   // events
   xhr(AUTOMATION_EVENTS_URL, 'GET', null, {}, 200, AF.event_search_power_select());
-  selectChoose('.t-automation-event-select', ED.keyTwo);
+  selectChoose('.t-automation-event-select', t(ED.keyTwo));
   andThen(() => {
-    assert.equal(page.eventSelectedOne.split(/\s+/)[1], ED.keyOne);
-    assert.equal(page.eventSelectedTwo.split(/\s+/)[1], ED.keyTwo);
+    assert.equal(page.eventSelectedOne.replace('× ', ''), t(ED.keyOne));
+    assert.equal(page.eventSelectedTwo.replace('× ', ''), t(ED.keyTwo));
   });
   // pfilters
   xhr(AUTOMATION_AVAILABLE_FILTERS_URL, 'GET', null, {}, 200, AF.list_pfilters());
@@ -116,7 +116,7 @@ test('visit detail and update all fields', assert => {
   });
 });
 
-test('amk visit detail and update an actions assignee', assert => {
+test('visit detail and update an actions assignee', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);

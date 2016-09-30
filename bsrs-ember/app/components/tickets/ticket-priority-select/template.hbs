@@ -1,11 +1,14 @@
-{{#power-select-multiple
-  options=options
-  selected=model.criteria
-  onchange=(action "update")
-  searchEnabled=false
-  placeholder="admin.placeholder.priority_filter_select"
-  class="t-priority-criteria"
-  as |criteria|
-}}
-  {{t criteria.name}}
-{{/power-select-multiple}}
+<div class="input-group">
+  <span class="input-group-addon address-label">{{t "admin.automation.priorities"}}</span>
+  {{#power-select-multiple
+    options=options
+    selected=model.criteria
+    onchange=(action "update")
+    searchEnabled=false
+    placeholder="admin.placeholder.priority_filter_select"
+    class="t-priority-criteria"
+    as |criteria|
+  }}
+    {{t criteria.name}}
+  {{/power-select-multiple}}
+</div>

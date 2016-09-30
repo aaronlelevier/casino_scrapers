@@ -1,7 +1,10 @@
-{{db-fetch-multi-select-criteria
-  model=model
-  className="t-ticket-category-select"
-  placeholder=(t "admin.placeholder.category_filter_select")
-  repository=repository
-  searchMethod="findautomationCriteria"
-}}
+<div class="input-group">
+  <span class="input-group-addon address-label">{{t "admin.automation.categories"}}</span>
+  {{db-fetch-multi-select-criteria
+    model=model
+    className="t-ticket-category-select"
+    placeholder=(t "admin.placeholder.category_filter_select")
+    repository=repository
+    searchMethod="findautomationCriteria"
+  }}
+</div>
