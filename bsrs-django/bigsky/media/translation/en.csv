@@ -36,20 +36,25 @@ en,admin.amount,Amount,Amount,,"'admin.amount':'Amount',",Amount,Amount
 en,admin.amount_and_default_value,Amount: {{value}},Amount: {{value}},,"'admin.amount_and_default_value':'Amount: {{value}}',",Amount: {{value_var_,Amount: _value_var_
 en,admin.approval.one,Approval,Approval,,"'admin.approval.one':'Approval',",Approval,Approval
 en,admin.approval.other,Approvals,Approvals,,"'admin.approval.other':'Approvals',",Approvals,Approvals
-en,admin.assignment.assignee,Assignee,Assignee,,"'admin.assignment.assignee':'Assignee',",Assignee,
-en,admin.assignment.description,Description,Description,,"'admin.assignment.description':'Description',",Description,
-en,admin.assignment.detail,Assignment Profile,Assignment Profile,,"'admin.assignment.detail':'Assignment Profile',",Assignment Profile,
-en,admin.assignment.filters,Filters,Filters,,"'admin.assignment.filters':'Filters',",Filters,
-en,admin.assignment.filtersApplied.one,There is {{count}} filter applied,There is {{count}} filter applied,,"'admin.assignment.filtersApplied.one':'There is {{count}} filter applied',",There is {{count_var_ filter applied,There is _count_var_ filter applied
-en,admin.assignment.filtersApplied.other,There are {{count}} filters applied,There are {{count}} filters applied,,"'admin.assignment.filtersApplied.other':'There are {{count}} filters applied',",There are {{count_var_ filters applied,There are _count_var_ filters applied
-en,admin.assignment.one,Assignment Profile,Assignment Profile,,"'admin.assignment.one':'Assignment Profile',",Assignment Profile,Assignment Profile
-en,admin.assignment.other,Assignment Profiles,Assignment Profiles,,"'admin.assignment.other':'Assignment Profiles',",Assignment Profiles,Assignment Profiles
-en,admin.assignment.pf.add,Add,Add,,"'admin.assignment.pf.add':'Add',",Add,
-en,admin.assignment.placeholder.available_filter,Please select a filter,Please select a filter,,"'admin.assignment.placeholder.available_filter':'Please select a filter',",Please select a filter,
-en,admin.assignment.search,Search Assignment Profiles,Search Assignment Profiles,,"'admin.assignment.search':'Search Assignment Profiles',",Search Assignment Profiles,Search Assignment Profiles
-en,admin.assignment.section.details,Details,Details,,"'admin.assignment.section.details':'Details',",Details,Details
-en,admin.assignment.section.filters,Filters,Filters,,"'admin.assignment.section.filters':'Filters',",Filters,Filters
-en,admin.assignment.selected_in,selected in:,selected in:,,"'admin.assignment.selected_in':'selected in:',",selected in:,selected in:
+en,admin.automation,Automations,Automations,,"'admin.automation':'Automations',",Automations,Automations
+en,admin.automation.action.add,Action,Action,,"'admin.automation.action.add':'Action',",Action,Action
+en,admin.automation.actions,Actions,Actions,,"'admin.automation.actions':'Actions',",Actions,Actions
+en,admin.automation.assignee,Assignee,Assignee,,"'admin.automation.assignee':'Assignee',",Assignee,
+en,admin.automation.description,Description,Description,,"'admin.automation.description':'Description',",Description,
+en,admin.automation.detail,Automation,Automation,,"'admin.automation.detail':'Automation',",Automation,
+en,admin.automation.events,Events,Events,,"'admin.automation.events':'Events',",Events,
+en,admin.automation.filters,Filters,Filters,,"'admin.automation.filters':'Filters',",Filters,
+en,admin.automation.filtersApplied.one,There is {{count}} filter applied,There is {{count}} filter applied,,"'admin.automation.filtersApplied.one':'There is {{count}} filter applied',",There is {{count_var_ filter applied,There is _count_var_ filter applied
+en,admin.automation.filtersApplied.other,There are {{count}} filters applied,There are {{count}} filters applied,,"'admin.automation.filtersApplied.other':'There are {{count}} filters applied',",There are {{count_var_ filters applied,There are _count_var_ filters applied
+en,admin.automation.new,New Automation,New Automation,,"'admin.automation.new':'New Automation',",New Automation,New Automation
+en,admin.automation.one,Automation,Automation,,"'admin.automation.one':'Automation',",Automation,Automation
+en,admin.automation.other,Automations,Automations,,"'admin.automation.other':'Automations',",Automations,Automations
+en,admin.automation.pf.add,Filter,Filter,,"'admin.automation.pf.add':'Filter',",Filter,
+en,admin.automation.placeholder.available_filter,Please select a filter,Please select a filter,,"'admin.automation.placeholder.available_filter':'Please select a filter',",Please select a filter,
+en,admin.automation.search,Search Automations,Search Automations,,"'admin.automation.search':'Search Automations',",Search Automations,Search Automations
+en,admin.automation.section.details,Details,Details,,"'admin.automation.section.details':'Details',",Details,Details
+en,admin.automation.section.filters,Filters,Filters,,"'admin.automation.section.filters':'Filters',",Filters,Filters
+en,admin.automation.selected_in,selected in:,selected in:,,"'admin.automation.selected_in':'selected in:',",selected in:,selected in:
 en,admin.category.label.children,Sub Categories,Sub Categories,,"'admin.category.label.children':'Sub Categories',",Sub Categories,Sub Categories
 en,admin.category.label.cost_amount,Cost Amount,Cost Amount,,"'admin.category.label.cost_amount':'Cost Amount',",Cost Amount,Cost Amount
 en,admin.category.label.cost_code,Cost Code,Cost Code,,"'admin.category.label.cost_code':'Cost Code',",Cost Code,Cost Code
@@ -77,8 +82,8 @@ en,admin.company.one,Company,Company,,"'admin.company.one':'Company',",Company,C
 en,admin.company.other,Companies,Companies,,"'admin.company.other':'Companies',",Companies,Companies
 en,admin.contractor.one,Contractor,Contractor,,"'admin.contractor.one':'Contractor',",Contractor,Contractor
 en,admin.contractor.other,Contractors,Contractors,,"'admin.contractor.other':'Contractors',",Contractors,Contractors
-en,admin.contractorAssignment.one,Contractor Assignment,Contractor Assignment,,"'admin.contractorAssignment.one':'Contractor Assignment',",Contractor Assignment,Contractor Assignment
-en,admin.contractorAssignment.other,Contractor Assignments,Contractor Assignments,,"'admin.contractorAssignment.other':'Contractor Assignments',",Contractor Assignments,Contractor Assignments
+en,admin.contractorautomation.one,Contractor automation,Contractor automation,,"'admin.contractorautomation.one':'Contractor automation',",Contractor automation,Contractor automation
+en,admin.contractorautomation.other,Contractor automations,Contractor automations,,"'admin.contractorautomation.other':'Contractor automations',",Contractor automations,Contractor automations
 en,admin.currency.eur,EUR,EUR,,"'admin.currency.eur':'EUR',",EUR,EUR
 en,admin.currency.jpy,JPY,JPY,,"'admin.currency.jpy':'JPY',",JPY,JPY
 en,admin.currency.usd,USD,USD,,"'admin.currency.usd':'USD',",USD,USD
@@ -139,8 +144,8 @@ en,admin.emailtype.location,Location,Location,,"'admin.emailtype.location':'Loca
 en,admin.emailtype.personal,Personal,Personal,,"'admin.emailtype.personal':'Personal',",Personal,Personal
 en,admin.emailtype.sms,SMS,SMS,,"'admin.emailtype.sms':'SMS',",Work,Work
 en,admin.emailtype.work,Work,Work,,"'admin.emailtype.work':'Work',",Work,Work
-en,admin.general.one,General Setting,General Setting,,"'admin.general.one':'General Setting',",General Setting,General Setting
-en,admin.general.other,General Settings,General Settings,,"'admin.general.other':'General Settings',",General Settings,General Settings
+en,admin.general.one,Tenant,Tenant,,"'admin.general.one':'Tenant',",Tenant,Tenant
+en,admin.general.other,Tenants,Tenants,,"'admin.general.other':'Tenants',",Tenants,Tenants
 en,admin.invoice.draft,Draft,Draft,,"'admin.invoice.draft':'Draft',",Draft,Draft
 en,admin.invoice.new,New,New,,"'admin.invoice.new':'New',",New,New
 en,admin.invoice.select_assign.all,All,All,,"'admin.invoice.select_assign.all':'All',",All,All
@@ -254,6 +259,8 @@ en,admin.role.new,New Role,New Role,,"'admin.role.new':'New Role',",New Role,New
 en,admin.role.one,Role,Role,,"'admin.role.one':'Role',",Role,Role
 en,admin.role.other,Roles,Roles,,"'admin.role.other':'Roles',",Roles,Roles
 en,admin.role.search,Search Role,Search Role,,"'admin.role.search':'Search Role',",Search Role,Search Role
+en,admin.role.section.detail,Role Details,Role Details,,"'admin.role.section.detail':'Role Details',",Role Details,Role Details
+en,admin.role.section.settings,Role Settings,Role Settings,,"'admin.role.section.settings':'Role Settings',",Role Settings,Role Settings
 en,admin.role.type.internal,Internal,Internal,,"'admin.role.type.internal':'Internal',",Internal,Internal
 en,admin.role.type.third_party,Third Party,Third Party,,"'admin.role.type.third_party':'Third Party',",Third Party,Third Party
 en,admin.setting.company_code,Company Code,Company Code,,"'admin.setting.company_code':'Company Code',",Company Code,Company Code
@@ -278,6 +285,14 @@ en,admin.setting.test_contractor_phone,Test Contractor Phone,Test Contractor Pho
 en,admin.setting.test_mode,Test Mode,Test Mode,,"'admin.setting.test_mode':'Test Mode',",Test Mode,Test Mode
 en,admin.template.one,Template,Template,,"'admin.template.one':'Template',",Template,Template
 en,admin.template.other,Templates,Templates,,"'admin.template.other':'Templates',",Templates,Templates
+en,admin.tenant.billing,Billing,Billing,,"'admin.tenant.billing':'Billing',",Billing,Billing
+en,admin.tenant.billing_address,Billing Address,Billing Address,,"'admin.tenant.billing_address':'Billing Address',",Billing Address,Billing Address
+en,admin.tenant.billing_email,Billing Email,Billing Email,,"'admin.tenant.billing_email':'Billing Email',",Billing Email,Billing Email
+en,admin.tenant.billing_phonenumber,Billing Phone Number,Billing Phone Number,,"'admin.tenant.billing_phonenumber':'Billing Phone Number',",Billing Phone Number,Billing Phone Number
+en,admin.tenant.countries,Countries,Countries,,"'admin.tenant.countries':'Countries',",Countries,Countries
+en,admin.tenant.currency,Currency,Currency,,"'admin.tenant.currency':'Currency',",Currency,Currency
+en,admin.tenant.implementation,Implementation,Implementation,,"'admin.tenant.implementation':'Implementation',",Implementation,Implementation
+en,admin.tenant.implementation_email,Implementation Email,Implementation Email,,"'admin.tenant.implementation_email':'Implementation Email',",Implementation Email,Implementation Email
 en,admin.third_party.label.name,Name,Name,,"'admin.third_party.label.name':'Name',",Name,Name
 en,admin.third_party.label.number,Number,Number,,"'admin.third_party.label.number':'Number',",Number,Number
 en,admin.third_party.status.active,Inactive,Inactive,,"'admin.third_party.status.active':'Inactive',",Inactive,Inactive
@@ -295,6 +310,21 @@ en,admin.work_order.close.do_not_display,Do not display,Do not display,,"'admin.
 en,admin.work_order.close.unchecked,Unchecked,Unchecked,,"'admin.work_order.close.unchecked':'Unchecked',",Work,Work
 en,attachment.fail,File failed to upload,File failed to upload,,"'attachment.fail':'File failed to upload',",Work,Work
 en,attachment.too_large,File is too large,File is too large,,"'attachment.too_large':'File is too large',",Work,Work
+en,automation.event.ticket_assignee_change,Ticket Assignee Change,Ticket Assignee Change,,"'automation.event.ticket_assignee_change':'Ticket Assignee Change',",Work,Work
+en,automation.event.ticket_attachment_add,Ticket Attachment,Ticket Attachment,,"'automation.event.ticket_attachment_add':'Ticket Attachment',",Work,Work
+en,automation.event.ticket_category_change,Ticket Category Change,Ticket Category Change,,"'automation.event.ticket_category_change':'Ticket Category Change',",Work,Work
+en,automation.event.ticket_cc_add,Ticket CC Change,Ticket CC Change,,"'automation.event.ticket_cc_add':'Ticket CC Change',",Work,Work
+en,automation.event.ticket_comment,Ticket Comment,Ticket Comment,,"'automation.event.ticket_comment':'Ticket Comment',",Work,Work
+en,automation.event.ticket_location_change,Ticket Location Change,Ticket Location Change,,"'automation.event.ticket_location_change':'Ticket Location Change',",Work,Work
+en,automation.event.ticket_priority_change,Ticket Priority Change,Ticket Priority Change,,"'automation.event.ticket_priority_change':'Ticket Priority Change',",Work,Work
+en,automation.event.ticket_status_cancelled,Ticket: Status Cancelled,Ticket: Status Cancelled,,"'automation.event.ticket_status_cancelled':'Ticket: Status Cancelled',",Work,Work
+en,automation.event.ticket_status_complete,Ticket: Status Complete,Ticket: Status Complete,,"'automation.event.ticket_status_complete':'Ticket: Status Complete',",Work,Work
+en,automation.event.ticket_status_deferred,Ticket: Status Deferred,Ticket: Status Deferred,,"'automation.event.ticket_status_deferred':'Ticket: Status Deferred',",Work,Work
+en,automation.event.ticket_status_denied,Ticket: Status Denied,Ticket: Status Denied,,"'automation.event.ticket_status_denied':'Ticket: Status Denied',",Work,Work
+en,automation.event.ticket_status_in_progress,Ticket: Status In Progress,Ticket: Status In Progress,,"'automation.event.ticket_status_in_progress':'Ticket: Status In Progress',",Work,Work
+en,automation.event.ticket_status_new,Ticket: Status New,Ticket: Status New,,"'automation.event.ticket_status_new':'Ticket: Status New',",Work,Work
+en,automation.event.ticket_status_pending,Ticket: Status Pending,Ticket: Status Pending,,"'automation.event.ticket_status_pending':'Ticket: Status Pending',",Work,Work
+en,automation.event.ticket_status_unsatisfactory,Ticket: Status Unsatisfactory,Ticket: Status Unsatisfactory,,"'automation.event.ticket_status_unsatisfactory':'Ticket: Status Unsatisfactory',",Work,Work
 en,button.add,Add new {{model}},Add new {{model}},,"'button.add':'Add new {{model}}',",Add new {{model_var_,Add new _model_var_
 en,button.upload,Attach file,Attach file,,"'button.upload':'Attach file',",Attach file,Attach file
 en,crud.cancel.button,Cancel,Cancel,,"'crud.cancel.button':'Cancel',",Cancel,Cancel
@@ -331,15 +361,18 @@ en,dt.new,New,New,,"'dt.new':'New',",New,New
 en,dt.placeholder_submit,Leave blank if Submit,Leave blank if Submit,,"'dt.placeholder_submit':'Leave blank if Submit',",Leave blank if Submit,Leave blank if Submit
 en,dt.start,Start,Start,,"'dt.start':'Start',",Start,Start
 en,dt.ticket.launch,Launch Ticket Decision Tree,Launch Ticket Decision Tree,,"'dt.ticket.launch':'Launch Ticket Decision Tree',",Launch Ticket Decision Tree,Launch Ticket Decision Tree
-en,errors.assignment.assignee,Please select an Assignee,Please select an Assignee,,"'errors.assignment.assignee':'Please select an Assignee',",Please select an Assignee,
-en,errors.assignment.description.min_max,Description must be at least 5 charachters long,Description must be at least 5 charachters long,,"'errors.assignment.description.min_max':'Description must be at least 5 charachters long',",Description must be at least 5 charachters long,
-en,errors.assignment.pf.criteria.length,Must have at least one criteria,Must have at least one criteria,,"'errors.assignment.pf.criteria.length':'Must have at least one criteria',",Must have at least one criteria,Must have at least one criteria
-en,errors.assignment.pf.length,Must have at least one filter,Must have at least one filter,,"'errors.assignment.pf.length':'Must have at least one filter',",Must have at least one filter,Must have at least one filter
-en,errors.assignment.pf.length,Please add at least one filter,Please add at least one filter,,"'errors.assignment.pf.length':'Please add at least one filter',",Please add at least one filter,
+en,errors.automation.assignee,Please select an Assignee,Please select an Assignee,,"'errors.automation.assignee':'Please select an Assignee',",Please select an Assignee,
+en,errors.automation.description.min_max,Description must be at least 5 charachters long,Description must be at least 5 charachters long,,"'errors.automation.description.min_max':'Description must be at least 5 charachters long',",Description must be at least 5 charachters long,
+en,errors.automation.pf.criteria.length,Must have at least one criteria,Must have at least one criteria,,"'errors.automation.pf.criteria.length':'Must have at least one criteria',",Must have at least one criteria,Must have at least one criteria
+en,errors.automation.pf.length,Please add at least one filter,Please add at least one filter,,"'errors.automation.pf.length':'Please add at least one filter',",Please add at least one filter,
 en,errors.dtd.description,Description must be provided,Description must be provided,,"'errors.dtd.description':'Description must be provided',",Description must be provided,Description must be provided
 en,errors.dtd.key,Key must be provided,Key must be provided,,"'errors.dtd.key':'Key must be provided',",Key must be provided,Key must be provided
 en,errors.dtd.key.length,Key must less than 12 characters,Key must less than 12 characters,,"'errors.dtd.key.length':'Key must less than 12 characters',",Key must less than 12 characters,Key must less than 12 characters
 en,errors.link.text,Text must be provided,Text must be provided,,"'errors.link.text':'Text must be provided',",Text must be provided,Text must be provided
+en,errors.location.location_level,Location Level must be provided. ,Location Level must be provided. ,,"'errors.location.location_level':'Location Level must be provided.',",Location Level must be provided. ,Location Level must be provided. 
+en,errors.location.name,Name must be provided. ,Name must be provided. ,,"'errors.location.name':'Name must be provided.',",Name must be provided. ,Name must be provided. 
+en,errors.location.number,Number must be provided. ,Number must be provided. ,,"'errors.location.number':'Number must be provided.',",Number must be provided. ,Number must be provided. 
+en,errors.location.status,Status must be provided. ,Status must be provided. ,,"'errors.location.status':'Status must be provided.',",Status must be provided. ,Status must be provided. 
 en,errors.person.first_name,First name must be provided. ,First name must be provided. ,,"'errors.person.first_name':'First name must be provided.',",First name must be provided. ,First name must be provided. 
 en,errors.person.first_name.length,Max length of 30,Max length of 30,,"'errors.person.first_name.length':'Max length of 30',",Max length of 30,Max length of 30
 en,errors.person.last_name,Last name must be provided. Max length 30,Last name must be provided. Max length 30,,"'errors.person.last_name':'Last name must be provided. Max length 30',",Last name must be provided. Max length 30,Last name must be provided. Max length 30
@@ -350,9 +383,14 @@ en,errors.person.password.length,Password cannot be more than 15 characters,Pass
 en,errors.person.username,Username must be provided,Username must be provided,,"'errors.person.username':'Username must be provided',",Username must be provided,Username must be provided
 en,errors.profile.description,Description must be provided,Description must be provided,,"'errors.profile.description':'Description must be provided',",Description must be provided,Description must be provided
 en,errors.profile.description.min_max,Must be between 5 and 500 characters,Must be between 5 and 500 characters,,"'errors.profile.description.min_max':'Must be between 5 and 500 characters',",Must be between 5 and 500 characters,Must be between 5 and 500 characters
+en,errors.role.name,Name must be provided,Name must be provided,,"'errors.role.name':'Name must be provided',",Name must be provided,Name must be provided
 en,errors.ticket.assignee,Assignee must be provided,Assignee must be provided,,"'errors.ticket.assignee':'Assignee must be provided',",Assignee must be provided,Assignee must be provided
+en,errors.ticket.location,Location must be provided,Location must be provided,,"'errors.ticket.location':'Location must be provided',",Location must be provided,Location must be provided
+en,errors.ticket.priority,Priority must be provided,Priority must be provided,,"'errors.ticket.priority':'Priority must be provided',",Priority must be provided,Priority must be provided
 en,errors.ticket.request,Request must be provided,Request must be provided,,"'errors.ticket.request':'Request must be provided',",Request must be provided,Request must be provided
 en,errors.ticket.request.length,Request must be at least 5 characters,Request must be at least 5 characters,,"'errors.ticket.request.length':'Request must be at least 5 characters',",Request must be at least 5 characters,Request must be at least 5 characters
+en,errors.ticket.requester,Requester must be provided,Requester must be provided,,"'errors.ticket.requester':'Requester must be provided',",Requester must be provided,Requester must be provided
+en,errors.ticket.status,Status must be provided,Status must be provided,,"'errors.ticket.status':'Status must be provided',",Status must be provided,Status must be provided
 en,general.new,New,New,,"'general.new':'New',",New,New
 en,grid.export,Export,Export,,"'grid.export':'Export',",Export,Export
 en,grid.filter,Filter,Filter,,"'grid.filter':'Filter',",Filter,Filter
@@ -405,6 +443,7 @@ en,ticket.search,Search Tickets,Search Tickets,,"'ticket.search':'Search Tickets
 en,ticket.section.activity,Activity,Activity,,"'ticket.section.activity':'Activity',",Activity,Activity
 en,ticket.section.details,Details,Details,,"'ticket.section.details':'Details',",Details,Details
 en,ticket.section.location,Location,Location,,"'ticket.section.location':'Location',",Location,Location
+en,ticket.section.request,Request,Request,,"'ticket.section.request':'Request',",Request,Request
 en,ticket.status.cancelled,Cancelled,Cancelled,,"'ticket.status.cancelled':'Cancelled',",Cancelled,Cancelled
 en,ticket.status.closed,Closed,Closed,,"'ticket.status.closed':'Closed',",Closed,Closed
 en,ticket.status.complete,Complete,Complete,,"'ticket.status.complete':'Complete',",Complete,Complete
