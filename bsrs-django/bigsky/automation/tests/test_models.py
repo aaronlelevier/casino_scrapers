@@ -15,7 +15,7 @@ from person.models import Person
 from person.tests.factory import create_single_person
 from automation import choices as auto_choices
 from automation.models import (
-    AutomationEvent, AUTOMATION_EVENTS, Automation, AutomationManager, AutomationQuerySet,
+    AutomationEvent, Automation, AutomationManager, AutomationQuerySet,
     AutomationFilterType, AutomationFilter, AutomationAction)
 from automation.tests.factory import (
     create_automation, create_ticket_priority_filter, create_ticket_categories_filter,
@@ -43,7 +43,7 @@ class AutomationEventTests(TestCase):
 
     def test_key_choices(self):
         field = AutomationEvent._meta.get_field('key')
-        self.assertEqual([(a) for a,b in field.choices], AUTOMATION_EVENTS)
+        self.assertEqual([(a) for a,b in field.choices], auto_choices.AUTOMATION_EVENTS)
 
     def test_meta(self):
         self.assertEqual(AutomationEvent._meta.ordering, ['key'])

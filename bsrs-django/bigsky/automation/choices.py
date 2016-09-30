@@ -1,22 +1,23 @@
 # AutomationEvents
 
-EVENT_TICKET_ATTACHMENT_ADD = 'automation.event.ticket_assignee_change'
-EVENT_TICKET_CATEGORY_CHANGE = 'automation.event.ticket_attachment_add'
-EVENT_TICKET_CC_ADD = 'automation.event.ticket_category_change'
-EVENT_TICKET_COMMENT = 'automation.event.ticket_cc_add'
-EVENT_TICKET_LOCATION_CHANGE = 'automation.event.ticket_comment'
-EVENT_TICKET_PRIORITY_CHANGE = 'automation.event.ticket_location_change'
-EVENT_TICKET_STATUS_CANCELLED = 'automation.event.ticket_priority_change'
-EVENT_TICKET_STATUS_COMPLETE = 'automation.event.ticket_status_cancelled'
-EVENT_TICKET_STATUS_DEFERRED = 'automation.event.ticket_status_complete'
-EVENT_TICKET_STATUS_DENIED = 'automation.event.ticket_status_deferred'
-EVENT_TICKET_STATUS_IN_PROGRESS = 'automation.event.ticket_status_denied'
-EVENT_TICKET_STATUS_NEW = 'automation.event.ticket_status_in_progress'
-EVENT_TICKET_STATUS_PENDING = 'automation.event.ticket_status_new'
-EVENT_TICKET_STATUS_UNSATISFACTORY = 'automation.event.ticket_status_pending'
+EVENT_TICKET_ASSIGNEE_CHANGE = 'automation.event.ticket_assignee_change'
+EVENT_TICKET_ATTACHMENT_ADD = 'automation.event.ticket_attachment_add'
+EVENT_TICKET_CATEGORY_CHANGE = 'automation.event.ticket_category_change'
+EVENT_TICKET_CC_ADD = 'automation.event.ticket_cc_add'
+EVENT_TICKET_COMMENT = 'automation.event.ticket_comment'
+EVENT_TICKET_LOCATION_CHANGE = 'automation.event.ticket_location_change'
+EVENT_TICKET_PRIORITY_CHANGE = 'automation.event.ticket_priority_change'
+EVENT_TICKET_STATUS_CANCELLED = 'automation.event.ticket_status_cancelled'
+EVENT_TICKET_STATUS_COMPLETE = 'automation.event.ticket_status_complete'
+EVENT_TICKET_STATUS_DEFERRED = 'automation.event.ticket_status_deferred'
+EVENT_TICKET_STATUS_DENIED = 'automation.event.ticket_status_denied'
+EVENT_TICKET_STATUS_IN_PROGRESS = 'automation.event.ticket_status_in_progress'
+EVENT_TICKET_STATUS_NEW = 'automation.event.ticket_status_new'
+EVENT_TICKET_STATUS_PENDING = 'automation.event.ticket_status_pending'
 EVENT_TICKET_STATUS_UNSATISFACTORY = 'automation.event.ticket_status_unsatisfactory'
 
 AUTOMATION_EVENTS = [
+    EVENT_TICKET_ASSIGNEE_CHANGE,
     EVENT_TICKET_ATTACHMENT_ADD,
     EVENT_TICKET_CATEGORY_CHANGE,
     EVENT_TICKET_CC_ADD,

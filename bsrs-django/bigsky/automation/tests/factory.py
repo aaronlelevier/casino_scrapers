@@ -3,7 +3,7 @@ from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
-from automation.choices import AUTOMATION_EVENTS, AUTOMATION_ACTION_TYPES
+from automation import choices as auto_choices
 from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationActionType, AutomationAction)
 from tenant.tests.factory import get_or_create_tenant
@@ -14,40 +14,34 @@ from utils.helpers import create_default
 
 # AutomationEvents
 
-DEFAULT_ROUTING_EVENT = 'automation.event.ticket_status_new'
-DEFAULT_ROUTING_EVENT_TWO = 'automation.event.ticket_status_complete'
-
-def create_automation_event(key=DEFAULT_ROUTING_EVENT):
+def create_automation_event(key=auto_choices.EVENT_TICKET_STATUS_NEW):
     obj, _  = AutomationEvent.objects.get_or_create(key=key)
     return obj
 
 
-def create_automation_event_two(key=DEFAULT_ROUTING_EVENT_TWO):
+def create_automation_event_two(key=auto_choices.EVENT_TICKET_STATUS_COMPLETE):
     obj, _  = AutomationEvent.objects.get_or_create(key=key)
     return obj
 
 
 def create_automation_events():
-    return [create_automation_event(key) for key in AUTOMATION_EVENTS]
+    return [create_automation_event(key) for key in auto_choices.AUTOMATION_EVENTS]
 
 
 # AutomationActionTypes
 
-DEFAULT_AUTOMATION_ACTION_TYPE = 'automation.actions.ticket_assignee'
-DEFAULT_AUTOMATION_ACTION_TYPE_TWO = 'automation.actions.email'
-
-def create_automation_action_type(key=DEFAULT_AUTOMATION_ACTION_TYPE):
+def create_automation_action_type(key=auto_choices.ACTIONS_TICKET_ASSIGNEE):
     obj, _ = AutomationActionType.objects.get_or_create(key=key)
     return obj
 
 
 def create_automation_action_types():
-    return [create_automation_action_type(key) for key in AUTOMATION_ACTION_TYPES]
+    return [create_automation_action_type(key) for key in auto_choices.AUTOMATION_ACTION_TYPES]
 
 
 # AutomationActions
 
-def create_automation_action(automation=None):
+def create_automation_action_assignee(automation=None):
     if not automation:
         automation = create_automation(with_filters=False)
 
@@ -182,7 +176,7 @@ def create_automation(description=None, tenant=None, with_filters=True):
         event = create_automation_event()
         automation.events.add(event)
         # actions
-        create_automation_action(automation)
+        create_automation_action_assignee(automation)
         # provile_filters
         if with_filters:
             create_ticket_priority_filter(automation)

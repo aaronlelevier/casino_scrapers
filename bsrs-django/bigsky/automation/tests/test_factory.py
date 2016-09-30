@@ -8,7 +8,7 @@ from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
-from automation.choices import AUTOMATION_EVENTS, AUTOMATION_ACTION_TYPES
+from automation import choices as auto_choices
 from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationActionType, AutomationAction)
 from automation.tests import factory
@@ -25,7 +25,7 @@ class AutomationEventTests(TestCase):
         ret = factory.create_automation_event()
 
         self.assertIsInstance(ret, AutomationEvent)
-        self.assertEqual(ret.key, factory.DEFAULT_ROUTING_EVENT)
+        self.assertEqual(ret.key, auto_choices.EVENT_TICKET_STATUS_NEW)
 
     def test_create_automation_event__key(self):
         key = 'automation.event.ticket_status_unsatisfactory'
@@ -39,14 +39,14 @@ class AutomationEventTests(TestCase):
         ret = factory.create_automation_event_two()
 
         self.assertIsInstance(ret, AutomationEvent)
-        self.assertEqual(ret.key, factory.DEFAULT_ROUTING_EVENT_TWO)
+        self.assertEqual(ret.key, auto_choices.EVENT_TICKET_STATUS_COMPLETE)
 
     def test_create_automation_events(self):
         self.assertEqual(AutomationEvent.objects.count(), 0)
 
         ret = factory.create_automation_events()
 
-        self.assertEqual(AutomationEvent.objects.count(), len(AUTOMATION_EVENTS))
+        self.assertEqual(AutomationEvent.objects.count(), len(auto_choices.AUTOMATION_EVENTS))
         self.assertIsInstance(ret, list)
         self.assertIsInstance(ret[0], AutomationEvent)
 
@@ -57,22 +57,22 @@ class AutomationActionTypeTests(TestCase):
         ret = factory.create_automation_action_type()
 
         self.assertIsInstance(ret, AutomationActionType)
-        self.assertEqual(ret.key, factory.DEFAULT_AUTOMATION_ACTION_TYPE)
+        self.assertEqual(ret.key, auto_choices.ACTIONS_TICKET_ASSIGNEE)
 
     def test_create_automation_action_types(self):
         self.assertEqual(AutomationActionType.objects.count(), 0)
 
         ret = factory.create_automation_action_types()
 
-        self.assertEqual(AutomationActionType.objects.count(), len(AUTOMATION_ACTION_TYPES))
+        self.assertEqual(AutomationActionType.objects.count(), len(auto_choices.AUTOMATION_ACTION_TYPES))
         self.assertIsInstance(ret, list)
         self.assertIsInstance(ret[0], AutomationActionType)
 
 
 class AutomationActionTests(TestCase):
 
-    def test_create_automation_action(self):
-        ret = factory.create_automation_action()
+    def test_create_automation_action_assignee(self):
+        ret = factory.create_automation_action_assignee()
 
         self.assertIsInstance(ret, AutomationAction)
         self.assertIsInstance(ret.type, AutomationActionType)

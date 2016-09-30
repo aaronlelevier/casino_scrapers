@@ -8,7 +8,6 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from automation import choices as auto_choices
-from automation.choices import AUTOMATION_EVENTS, AUTOMATION_ACTION_TYPES
 from person.models import Person
 from tenant.models import Tenant
 from ticket.models import TicketPriority

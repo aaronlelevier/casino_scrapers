@@ -18,7 +18,7 @@ from automation.tests.factory import (
     create_automation, create_automation_filter_types, create_automation_filter_type_location,
     create_ticket_location_filter, create_ticket_categories_mid_level_filter, create_automation,
     create_ticket_location_state_filter, create_ticket_location_country_filter, create_automation_events,
-    create_automation_event_two, create_automation_action, create_automation_action_types,
+    create_automation_event_two, create_automation_action_types,
     create_automation_action_type)
 from automation.tests.mixins import ViewTestSetupMixin
 from ticket.models import TicketPriority
