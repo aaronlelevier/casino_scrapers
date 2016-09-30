@@ -393,7 +393,7 @@ test('remove filter and save - should stay on page because an automation must ha
     assert.equal(automation.get('pf').get('length'), 0);
   });
   // add back pfilter w/ 1 criteria to make valid, and save
-  xhr(`${AUTOMATION_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
+  xhr(AUTOMATION_AVAILABLE_FILTERS_URL, 'GET', null, {}, 200, AF.list_pfilters());
   page.addFilter();
   selectChoose('.t-automation-pf-select:eq(0)', PFD.keyOneTranslated);
   selectChoose('.t-priority-criteria', TD.priorityOne);
