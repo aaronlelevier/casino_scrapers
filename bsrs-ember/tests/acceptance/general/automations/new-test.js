@@ -45,9 +45,10 @@ test('visit new URL and create a new record', assert => {
   });
   // events
   xhr(AUTOMATION_EVENTS_URL, 'GET', null, {}, 200, AF.event_search_power_select());
-  selectChoose('.t-automation-event-select', ED.keyOne);
+  selectChoose('.t-automation-event-select', ED.keyOneValue);
   andThen(() => {
-    assert.equal(page.eventSelectedOne.split(/\s+/)[1], ED.keyOne);
+    let v = page.eventSelectedOne;
+    assert.equal(page.eventSelectedOne.split('× ')[1], ED.keyOneValue);
   });
   // filter w/ a criteria
   page.addFilter();

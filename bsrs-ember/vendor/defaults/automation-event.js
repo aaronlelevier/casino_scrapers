@@ -6,7 +6,9 @@ var BSRS_ROUTING_EVENT_DEFAULTS = (function() {
       idOne: '64a4401d-bfc1-492a-9b58-aa2310a81da0',
       idTwo: '64a4401d-bfc1-492a-9b58-aa2310a81da1',
       keyOne: 'automation.event.ticket_status_new',
-      keyTwo: 'automation.event.ticket_status_deferred'
+      keyOneValue: 'Ticket: Status New',
+      keyTwo: 'automation.event.ticket_status_deferred',
+      keyTwoValue: 'Ticket: Status Deferred',
     };
   };
   return factory;

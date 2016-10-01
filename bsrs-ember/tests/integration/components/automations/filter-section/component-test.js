@@ -205,6 +205,5 @@ test('ticket-priority-select is not searchable', function(assert) {
   this.model = automation;
   this.render(hbs`{{automations/filter-section model=model}}`);
   assert.equal(this.$('.t-priority-criteria').length, 1);
-  // would be '.ember-power-select-trigger-multiple-input' if it was searchEnabled
-  assert.equal(this.$('.ember-power-select-multiple-trigger').length, 1);
+  assert.equal(this.$('.ember-power-select-multiple-trigger').length, 2);
 });

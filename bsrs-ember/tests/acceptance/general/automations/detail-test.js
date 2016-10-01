@@ -54,7 +54,7 @@ test('by clicking record in list view, User is sent to detail view', assert => {
   });
 });
 
-test('visit detail and update all fields', assert => {
+test('detail and update all fields', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -78,10 +78,10 @@ test('visit detail and update all fields', assert => {
   });
   // events
   xhr(AUTOMATION_EVENTS_URL, 'GET', null, {}, 200, AF.event_search_power_select());
-  selectChoose('.t-automation-event-select', t(ED.keyTwo));
+  selectChoose('.t-automation-event-select', ED.keyTwoValue);
   andThen(() => {
-    assert.equal(page.eventSelectedOne.replace('× ', ''), t(ED.keyOne));
-    assert.equal(page.eventSelectedTwo.replace('× ', ''), t(ED.keyTwo));
+    assert.equal(page.eventSelectedOne.split('× ')[1], ED.keyOneValue);
+    assert.equal(page.eventSelectedTwo.split('× ')[1], ED.keyTwoValue);
   });
   // pfilters
   xhr(AUTOMATION_AVAILABLE_FILTERS_URL, 'GET', null, {}, 200, AF.list_pfilters());

@@ -12,5 +12,5 @@ export default function missingMessage(locale, key /*, data */) {
   // tests, and tests harder to debug.
 
   // Ember.Logger.warn('Missing translation: ' + key);
-  return key + '*';
+  return key;
 }
