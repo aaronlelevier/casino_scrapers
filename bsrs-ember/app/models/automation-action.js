@@ -20,20 +20,23 @@ export default Model.extend(OptConf, Validations, {
     this._super(...arguments);
     belongs_to.bind(this)('type', 'automation-action');
     belongs_to.bind(this)('assignee', 'automation-action');
+    belongs_to.bind(this)('priority', 'automation-action');
   },
   simpleStore: Ember.inject.service(),
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'typeIsDirty', function() {
-    return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('typeIsDirty');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'typeIsDirty', 'priorityIsDirty', function() {
+    return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('typeIsDirty') || this.get('priorityIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   rollback() {
-    this.rollbackAssignee();
     this.rollbackType();
+    this.rollbackAssignee();
+    this.rollbackPriority();
     this._super(...arguments);
   },
   saveRelated() {
-    this.saveAssignee();
     this.saveType();
+    this.saveAssignee();
+    this.savePriority();
   },
   serialize() {
     return {

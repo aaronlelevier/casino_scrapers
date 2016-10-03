@@ -6,7 +6,7 @@ var BSRS_AUTOMATION_ACTION_TYPE_DEFAULTS = (function() {
       idOne: '64a4401d-bfc1-492a-9b58-aa2310a81da568',
       idTwo: '64a4401d-bfc1-492a-9b58-aa2310a81da636',
       keyOne: 'automation.actions.ticket_assignee',
-      keyTwo: 'automation.actions.ticket_cc'
+      keyTwo: 'automation.actions.ticket_priority'
     };
   };
   return factory;

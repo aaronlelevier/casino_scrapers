@@ -22,6 +22,11 @@ export default Ember.Mixin.create({
       property: 'person',
       related_model: 'assignee'
     },
+    priority: {
+      collection: 'actions',
+      property: 'ticket-priority',
+      related_model: 'priority'
+    },
     type: {
       collection: 'actions',
       property: 'automation-action-type',

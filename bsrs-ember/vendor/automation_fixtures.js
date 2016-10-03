@@ -1,5 +1,5 @@
 var BSRS_automation_FACTORY = (function() {
-  var factory = function(automation, event, pfilter, action, actionType, ticket, person, config) {
+  var factory = function(automation, event, pfilter, action, actionType, ticket, person, priority, config) {
     this.automation = automation;
     this.event = event;
     this.pfilter = pfilter;
@@ -7,6 +7,7 @@ var BSRS_automation_FACTORY = (function() {
     this.actionType = actionType;
     this.ticket = ticket;
     this.person = person;
+    this.priority = priority;
     this.config = config;
   };
   factory.prototype.generate = function(i) {
@@ -66,6 +67,21 @@ var BSRS_automation_FACTORY = (function() {
   };
   factory.prototype.detail = function(id) {
     return this.generate(id);
+  };
+  factory.prototype.detailPriority = function(id) {
+    let automation = this.detail(id);
+    automation.actions = [{
+      id: this.action.idTwo,
+      type: {
+        id: this.actionType.idTwo,
+        key: this.actionType.keyTwo
+      },
+      priority: {
+        id: this.priority.idOne,
+        name: this.priority.keyOne
+      }
+    }];
+    return automation;
   };
   factory.prototype.put = function(automation) {
     var id = automation && automation.id || this.automation.idOne;
@@ -177,17 +193,18 @@ if (typeof window === 'undefined') {
   var actionType = require('./defaults/automation-action-type');
   var ticket = require('./defaults/ticket');
   var person = require('./defaults/person');
+  var priority = require('./defaults/ticket-priority');
   var config = require('../config/environment');
   objectAssign(BSRS_automation_FACTORY.prototype, mixin.prototype);
-  module.exports = new BSRS_automation_FACTORY(automation, event, pfilter, action, actionType, ticket, person, config);
+  module.exports = new BSRS_automation_FACTORY(automation, event, pfilter, action, actionType, ticket, person, priority, config);
 }
 else {
   define('bsrs-ember/vendor/automation_fixtures',
-    ['exports', 'bsrs-ember/vendor/defaults/automation', 'bsrs-ember/vendor/defaults/automation-event', 'bsrs-ember/vendor/defaults/pfilter', 'bsrs-ember/vendor/defaults/automation-action', 'bsrs-ember/vendor/defaults/automation-action-type', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
-    function(exports, automation, event, pfilter, action, actionType, ticket, person, mixin, config) {
+    ['exports', 'bsrs-ember/vendor/defaults/automation', 'bsrs-ember/vendor/defaults/automation-event', 'bsrs-ember/vendor/defaults/pfilter', 'bsrs-ember/vendor/defaults/automation-action', 'bsrs-ember/vendor/defaults/automation-action-type', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/defaults/ticket-priority', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
+    function(exports, automation, event, pfilter, action, actionType, ticket, person, priority, mixin, config) {
       'use strict';
       Object.assign(BSRS_automation_FACTORY.prototype, mixin.prototype);
-      return new BSRS_automation_FACTORY(automation, event, pfilter, action, actionType, ticket, person, config);
+      return new BSRS_automation_FACTORY(automation, event, pfilter, action, actionType, ticket, person, priority, config);
     }
   );
 }

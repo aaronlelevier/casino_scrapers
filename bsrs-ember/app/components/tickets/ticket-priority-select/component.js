@@ -15,7 +15,8 @@ export default Ember.Component.extend({
       const new_selection_ids = new_selection.mapBy('id');
       new_selection.forEach((new_model) => {
         if(!old_selection_ids.includes(new_model.id)) {
-          model[add_func](new_model);
+          const pojoNewModel = {id: new_model.get('id'), name: new_model.get('name')};
+          model[add_func](pojoNewModel);
         }
       });
       old_selection.forEach((old_model) => {

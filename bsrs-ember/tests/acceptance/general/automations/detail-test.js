@@ -21,6 +21,7 @@ import SF from 'bsrs-ember/vendor/state_fixtures';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
+import TPD from 'bsrs-ember/vendor/defaults/ticket-priority';
 import page from 'bsrs-ember/tests/pages/automation';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { AUTOMATION_URL, AUTOMATION_LIST_URL, AUTOMATION_EVENTS_URL, AUTOMATION_AVAILABLE_FILTERS_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';

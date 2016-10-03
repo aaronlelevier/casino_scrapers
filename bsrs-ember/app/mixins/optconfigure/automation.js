@@ -32,11 +32,6 @@ export default Ember.Mixin.create({
       property: 'automation-action-type',
       related_model: 'type',
     },
-    assignee: {
-      collection: 'actions',
-      property: 'person',
-      related_model: 'assignee',
-    },
     pf: {
       associated_model: 'pfilter',
       join_model: 'automation-join-pfilter'
@@ -45,6 +40,16 @@ export default Ember.Mixin.create({
     criteria: {
       associated_model: 'criteria',
       join_model: 'pfilter-join-criteria',
+    },
+    assignee: {
+      collection: 'actions',
+      property: 'person',
+      related_model: 'assignee',
+    },
+    priority: {
+      collection: 'actions',
+      property: 'ticket-priority',
+      related_model: 'priority',
     }
   }
 });

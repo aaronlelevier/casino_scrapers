@@ -5,12 +5,13 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import AAD from 'bsrs-ember/vendor/defaults/automation-action';
 import ATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import PersonD from 'bsrs-ember/vendor/defaults/person';
+import TPD from 'bsrs-ember/vendor/defaults/ticket-priority';
 
-var store, action, actionType, type, assignee;
+var store, action, actionType, type, assignee, priority;
 
 moduleFor('model:automation-action', 'Unit | Model | automation-action', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:person', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type']);
+    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:person', 'model:ticket-priority', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type']);
   }
 });
 
@@ -159,4 +160,58 @@ test('type validation - assignee - if the type is assignee, a related assignee i
   // changing to a different type should remove the 'assignee required' validation
   action.change_type({id: ATD.idTwo, key: ATD.keyTwo});
   assert.equal(action.get('validations.isValid'), true);
+});
+
+// Action - Priority
+
+test('action has a related priority', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, priority_fk: ATD.idOne});
+    store.push('ticket-priority', {id: TPD.idOne, key: TPD.keyOne, actions: [AAD.idOne]});
+  });
+  assert.equal(action.get('priority.id'), TPD.idOne);
+  assert.equal(action.get('priority.key'), TPD.keyOne);
+});
+
+test('change_priority and dirty tracking', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne});
+    priority = store.push('ticket-priority', {id: TPD.idOne});
+  });
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(action.get('priorityIsNotDirty'));
+  action.change_priority({id: TPD.idOne});
+  assert.equal(action.get('priority.id'), TPD.idOne);
+  assert.ok(action.get('isDirtyOrRelatedDirty'));
+  assert.ok(action.get('priorityIsDirty'));
+});
+
+test('rollback priority will revert and reboot the dirty priority to clean', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, priority_fk: TPD.idOne});
+    store.push('ticket-priority', {id: TPD.idOne, actions: [AAD.idOne]});
+  });
+  assert.equal(action.get('priority.id'), TPD.idOne);
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+  action.change_priority({id: TPD.idTwo});
+  assert.equal(action.get('priority.id'), TPD.idTwo);
+  assert.ok(action.get('isDirtyOrRelatedDirty'));
+  action.rollback();
+  assert.equal(action.get('priority.id'), TPD.idOne);
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('saveRelated for priority to save model and make it clean', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, priority_fk: TPD.idOne});
+    store.push('ticket-priority', {id: TPD.idOne, actions: [AAD.idOne]});
+  });
+  assert.equal(action.get('priority.id'), TPD.idOne);
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+  action.change_priority({id: TPD.idTwo});
+  assert.equal(action.get('priority.id'), TPD.idTwo);
+  assert.ok(action.get('isDirtyOrRelatedDirty'));
+  action.saveRelated();
+  assert.equal(action.get('priority.id'), TPD.idTwo);
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
 });

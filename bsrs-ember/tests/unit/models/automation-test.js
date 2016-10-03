@@ -15,6 +15,7 @@ import PersonD from 'bsrs-ember/vendor/defaults/person';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import CD from 'bsrs-ember/vendor/defaults/criteria';
+import TPD from 'bsrs-ember/vendor/defaults/ticket-priority';
 import AutomationModel from 'bsrs-ember/models/automation';
 
 var store, automation, event, action, actionType, pfilter, pf;
@@ -22,7 +23,7 @@ var store, automation, event, action, actionType, pfilter, pf;
 moduleFor('model:automation', 'Unit | Model | automation', {
   needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username', 'validator:has-many', 'validator:automation-action-type'],
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-event', 'model:automation-join-event', 'model:automation-join-pfilter', 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-event', 'model:automation-join-event', 'model:automation-join-pfilter', 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'model:person', 'model:person-current', 'model:ticket-priority', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     run(() => {
       automation = store.push('automation', {id: AD.idOne});
     });
@@ -545,6 +546,24 @@ test('assignee - changing the assignee should make the automation model dirty', 
   assert.ok(automation.get('isDirtyOrRelatedDirty'));
   action.change_assignee({id: PersonD.idOne});
   assert.equal(action.get('assignee.id'), PersonD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('priority - changing the priority should make the automation model dirty', (assert) => {
+  run(() => {
+    automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AAD.idOne], automation_action_ids: [AAD.idOne]});
+    store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
+    store.push('automation-action', {id: AAD.idOne, priority_fk: TPD.idOne});
+    store.push('ticket-priority', {id: TPD.idOne, actions: [AAD.idOne]});
+  });
+  let action = automation.get('action').objectAt(0);
+  assert.equal(action.get('priority.id'), TPD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  action.change_priority({id: TPD.idTwo});
+  assert.equal(action.get('priority.id'), TPD.idTwo);
+  assert.ok(automation.get('isDirtyOrRelatedDirty'));
+  action.change_priority({id: TPD.idOne});
+  assert.equal(action.get('priority.id'), TPD.idOne);
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
 });
 
