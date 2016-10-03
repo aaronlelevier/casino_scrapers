@@ -10,7 +10,7 @@ var store, action, actionType, type, assignee;
 
 moduleFor('model:automation-action', 'Unit | Model | automation-action', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:person', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many']);
+    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:person', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type']);
   }
 });
 
@@ -132,4 +132,31 @@ test('saveRelated for assignee to save model and make it clean', assert => {
   action.saveRelated();
   assert.equal(action.get('assignee.id'), PersonD.idTwo);
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+// validations
+
+test('type validation - action must have a type to be valid', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, foo: 'bar'});
+  });
+  assert.equal(action.get('validations.isValid'), false);
+  action.change_type({id: ATD.idOne});
+  assert.equal(action.get('validations.isValid'), true);
+});
+
+test('type validation - assignee - if the type is assignee, a related assignee is required', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne});
+  });
+  assert.equal(action.get('validations.isValid'), false);
+  action.change_type({id: ATD.idTwo});
+  assert.equal(action.get('validations.isValid'), true);
+  action.change_type({id: ATD.idOne, key: ATD.keyOne});
+  assert.equal(action.get('validations.isValid'), false);
+  action.change_assignee({id: PersonD.idOne});
+  assert.equal(action.get('validations.isValid'), true);
+  // changing to a different type should remove the 'assignee required' validation
+  action.change_type({id: ATD.idTwo, key: ATD.keyTwo});
+  assert.equal(action.get('validations.isValid'), true);
 });

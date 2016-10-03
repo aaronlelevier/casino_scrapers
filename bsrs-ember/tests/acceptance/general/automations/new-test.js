@@ -58,10 +58,35 @@ test('visit new URL and create a new record', assert => {
   xhr(AUTOMATION_AVAILABLE_FILTERS_URL, 'GET', null, {}, 200, AF.list_pfilters());
   selectChoose('.t-automation-pf-select:eq(0)', PFD.keyOneTranslated);
   selectChoose('.t-priority-criteria', TD.priorityOne);
+  // action w/ a type
+  xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.action_search_power_select());
+  selectChoose('.t-automation-action-type-select', AATD.keyOne);
+  andThen(() => {
+    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
+    assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
+  });
+    // change assignee
+  let personData = PersonF.search_power_select();
+  let personOneId = personData.results[0].id;
+  let personOneFullname = personData.results[0].fullname;
+  let keyword = 'a';
+  xhr(`${PEOPLE_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, personData);
+  selectSearch('.t-automation-action-assignee-select', keyword);
+  selectChoose('.t-automation-action-assignee-select', personOneFullname);
+  andThen(() => {
+    assert.equal(page.actionAssigneeSelectedOne, personOneFullname);
+  });
+  // POSt
   xhr(AUTOMATION_URL, 'POST', AF.put({
     id: UUID.value,
     events:[ED.idOne],
-    actions: [],
+    actions: [{
+      id: UUID.value,
+      type: AATD.idOne,
+      content: {
+        assignee: personOneId
+      }
+    }],
     filters: [{
       id: UUID.value,
       source: PFD.sourceIdOne,
@@ -157,17 +182,33 @@ test('clicking cancel button with no edits will take from detail view to list vi
   });
 });
 
-test('events validation - at least 1 event is required', assert => {
+test('validation - at least one event is required, each action must have a type', assert => {
   clearxhr(listXhr);
   visit(NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
+    assert.equal($('.validated-input-error-dialog').length, 0);
   });
   page.descriptionFill(AD.descriptionTwo);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.automation.event.length'));
+    assert.equal($('.validated-input-error-dialog').length, 2);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.automation.event.length'));
+    assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), t('errors.automation.type'));
+  });
+  // set to type 'assignee', and should see an 'assignee required msg' b/c assignee not yet selected
+  xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.action_search_power_select());
+  selectChoose('.t-automation-action-type-select', AATD.keyOne);
+  andThen(() => {
+    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
+    assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
+  });
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), NEW_URL);
+    assert.equal($('.validated-input-error-dialog').length, 2);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.automation.event.length'));
+    assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), t('errors.automation.type.assignee'));
   });
 });

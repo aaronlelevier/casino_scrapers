@@ -17,10 +17,10 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import CD from 'bsrs-ember/vendor/defaults/criteria';
 import AutomationModel from 'bsrs-ember/models/automation';
 
-var store, automation, event, action, pfilter, pf;
+var store, automation, event, action, actionType, pfilter, pf;
 
 moduleFor('model:automation', 'Unit | Model | automation', {
-  needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username', 'validator:has-many'],
+  needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username', 'validator:has-many', 'validator:automation-action-type'],
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-event', 'model:automation-join-event', 'model:automation-join-pfilter', 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     run(() => {
@@ -496,6 +496,18 @@ test('rollback - adding an action and setting the type should make the model dir
   automation.rollback();
   assert.equal(automation.get('action').get('length'), 0);
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('action - validations - if an automation has an action, that action must be valid', assert => {
+  run(() => {
+    automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AJAD.idOne]});
+  });
+  assert.equal(automation.get('validations.attrs.action.isValid'), true);
+  automation.add_action({id: AAD.idOne});
+  assert.equal(automation.get('validations.attrs.action.isValid'), false);
+  actionType = automation.get('action').objectAt(0);
+  actionType.change_type({id: AATD.idOne});
+  assert.equal(automation.get('validations.attrs.action.isValid'), true);
 });
 
 /* automation & action: End */

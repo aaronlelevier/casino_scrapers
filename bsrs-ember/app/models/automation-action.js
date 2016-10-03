@@ -2,9 +2,20 @@ import Ember from 'ember';
 const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
+import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/automation-action';
 
-export default Model.extend(OptConf, {
+const Validations = buildValidations({
+  type: [
+    validator('presence', {
+      presence: true,
+      message: 'errors.automation.type'
+    }),
+    validator('automation-action-type')
+  ]
+});
+
+export default Model.extend(OptConf, Validations, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('type', 'automation-action');

@@ -24,6 +24,7 @@ const Validations = buildValidations({
     min: 1,
     message: 'errors.automation.event.length'
   }),
+  action: validator('has-many'),
   pf: validator('has-many')
 });
 
