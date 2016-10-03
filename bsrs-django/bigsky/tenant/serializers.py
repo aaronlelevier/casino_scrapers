@@ -72,7 +72,6 @@ class TenantDetailSerializer(BaseCreateSerializer):
 
     def to_representation(self, instance):
         data = super(TenantDetailSerializer, self).to_representation(instance)
-        data['default_currency_id'] = data['default_currency']
         data['dt_start_id'] = data['dt_start']['id'] if data['dt_start'] else None
         return data
 
