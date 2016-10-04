@@ -115,7 +115,7 @@ class TenantCreateSerializer(TenantContactsMixin, BaseCreateSerializer):
         })
         sc_response = session.post(SANDBOX_SC_SUBSCRIBER_POST_URL, data=data)
         if sc_response['status_code'] == 201:
-            instance.scid = sc_response['content']['ServiceAutomationID']
+            instance.scid = sc_response['content']['id']
             instance.save()
         else:
             # TODO: should handle failure here with logging, etc...

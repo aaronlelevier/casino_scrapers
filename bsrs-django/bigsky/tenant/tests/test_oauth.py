@@ -8,6 +8,7 @@ from requests_oauthlib import OAuth2Session
 
 from tenant import oauth
 from tenant.tests.factory import SC_SUBSCRIBER_POST_DATA
+from utils.create import _generate_chars
 
 
 class RequestsOAuthTests(TestCase):
@@ -83,21 +84,14 @@ class BsOAuthSessionDev1Tests(TestCase):
         self.session.get(self.subscriber_post_url)
         self.assertTrue(mock_func.called)
 
-    # NOTE: (ayl) Failing until SC updates the Subscriber URL endpoint
-    # def test_post(self):
-    #     response = self.session.post(self.subscriber_post_url, data=SC_SUBSCRIBER_POST_DATA)
+    def test_post(self):
+        SC_SUBSCRIBER_POST_DATA['name'] = _generate_chars()
 
-    #     self.assertEqual(response.status_code, 201)
-    #     data = json.loads(response.content.decode('utf8'))
-    #     self.assertTrue(data['ServiceAutomationID'])
-    #     # all other fields returned are the same values as data sent
-    #     def emptyStrIfNone(v):
-    #         return '' if not v else v
+        response = self.session.post(self.subscriber_post_url, data=SC_SUBSCRIBER_POST_DATA)
 
-    #     for k,v in data.items():
-    #         if k != 'ServiceAutomationID':
-    #             self.assertEqual(emptyStrIfNone(v), SC_SUBSCRIBER_POST_DATA[k],
-    #                              "Key '{}' failed with: {} != {}".format(k, v, SC_SUBSCRIBER_POST_DATA[k]))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 201, data)
+        self.assertTrue(data['id'])
 
 
 class BsOAuthSessionSandbox2Tests(TestCase):

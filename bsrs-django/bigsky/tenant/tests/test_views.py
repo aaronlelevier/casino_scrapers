@@ -248,7 +248,7 @@ class TenantCreateEmailAndRemoteCallsTests(TenantSetUpMixin, APITestCase):
             'status_code': 201,
             'content': SC_SUBSCRIBER_POST_DATA
         }
-        sc_response['content']['ServiceAutomationID'] = str(uuid.uuid4())
+        sc_response['content']['id'] = str(uuid.uuid4())
         mock_post.return_value = sc_response
 
         response = self.client.post('/api/admin/tenant/', self.init_data, format='json')
@@ -258,7 +258,7 @@ class TenantCreateEmailAndRemoteCallsTests(TenantSetUpMixin, APITestCase):
         tenant = Tenant.objects.get(id=data['id'])
         # mocks
         self.assertTrue(mock_post.called)
-        self.assertEqual(str(tenant.scid), sc_response['content']['ServiceAutomationID'])
+        self.assertEqual(str(tenant.scid), sc_response['content']['id'])
 
 
 class TenantUpdateTests(TenantSetUpMixin, APITestCase):
