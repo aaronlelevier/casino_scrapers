@@ -10,6 +10,11 @@ const AutomationActionType = BaseValidator.extend({
             return 'errors.automation.type.assignee';
           }
         break;
+        case 'automation.actions.ticket_priority':
+          if (!model.get('priority')) {
+            return 'errors.automation.type.priority';
+          }
+        break;
       }
     }
     return true;
@@ -18,7 +23,7 @@ const AutomationActionType = BaseValidator.extend({
 
 AutomationActionType.reopenClass({
   getDependentsFor(attribute, options) {
-    return ['model.assignee'];
+    return ['model.assignee', 'model.priority'];
   }
 });
 

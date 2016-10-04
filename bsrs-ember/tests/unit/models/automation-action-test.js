@@ -151,14 +151,20 @@ test('type validation - assignee - if the type is assignee, a related assignee i
     action = store.push('automation-action', {id: AAD.idOne});
   });
   assert.equal(action.get('validations.isValid'), false);
-  action.change_type({id: ATD.idTwo});
-  assert.equal(action.get('validations.isValid'), true);
   action.change_type({id: ATD.idOne, key: ATD.keyOne});
   assert.equal(action.get('validations.isValid'), false);
   action.change_assignee({id: PersonD.idOne});
   assert.equal(action.get('validations.isValid'), true);
-  // changing to a different type should remove the 'assignee required' validation
+});
+
+test('type validation - priority - if the type is priority, a related priority is required', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne});
+  });
+  assert.equal(action.get('validations.isValid'), false);
   action.change_type({id: ATD.idTwo, key: ATD.keyTwo});
+  assert.equal(action.get('validations.isValid'), false);
+  action.change_priority({id: TPD.idOne});
   assert.equal(action.get('validations.isValid'), true);
 });
 

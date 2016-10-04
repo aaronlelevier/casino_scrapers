@@ -403,7 +403,7 @@ test('remove filter and save - should stay on page because an automation must ha
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.equal($('[data-test-id="validation-pf0"]').length, 0);
   });
   // criteria is required (unless auto-assign)
   page.filterOnePriorityOneRemove();
@@ -414,8 +414,7 @@ test('remove filter and save - should stay on page because an automation must ha
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.automation.pf.criteria.length'));
+    assert.equal($('[data-test-id="validation-pf0"]').text().trim(), t('errors.automation.pf.criteria.length'));
   });
   // have to have at lease 1 pfilter per automation
   page.deleteFilter();

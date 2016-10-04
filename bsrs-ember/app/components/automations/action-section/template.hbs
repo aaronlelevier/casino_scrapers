@@ -1,12 +1,13 @@
-{{power-select-validation
-  model=model
-  valuePath="action"
-  didValidate=didValidate
-}}
 <div class="row">
   <div class="col-md-12">
     {{#each model.action as |action index|}}
-      <div class="input-group-vertical">
+      {{power-select-validation
+        model=model
+        valuePath="action"
+        didValidate=didValidate
+        index=index
+      }}
+      <div class="input-group-vertical" data-validation-target={{concat "action" index}}>
         <div class="input-group">
           <span class="input-group-btn">
             <button class="t-del-action-btn btn btn-default btn-sm delete" type="button" {{action "delete" action}}>{{fa-icon "minus"}}</button>
@@ -29,8 +30,6 @@
         {{component (automation-action action.type)
           model=action
           didValidate=didValidate
-          id=(concat "action" index)
-          index=index
         }}
       </div>
     {{/each}}

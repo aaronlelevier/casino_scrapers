@@ -187,15 +187,13 @@ test('validation - at least one event is required, each action must have a type'
   visit(NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
-    assert.equal($('.validated-input-error-dialog').length, 0);
   });
   page.descriptionFill(AD.descriptionTwo);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
-    assert.equal($('.validated-input-error-dialog').length, 2);
-    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.automation.event.length'));
-    assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), t('errors.automation.type'));
+    assert.equal($('[data-test-id="validation-event0"]').text().trim(), t('errors.automation.event.length'));
+    assert.equal($('[data-test-id="validation-action0"]').text().trim(), t('errors.automation.type'));
   });
   // set to type 'assignee', and should see an 'assignee required msg' b/c assignee not yet selected
   xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.action_search_power_select());
@@ -207,8 +205,27 @@ test('validation - at least one event is required, each action must have a type'
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
-    assert.equal($('.validated-input-error-dialog').length, 2);
-    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.automation.event.length'));
-    assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), t('errors.automation.type.assignee'));
+    assert.equal($('[data-test-id="validation-event0"]').text().trim(), t('errors.automation.event.length'));
+    assert.equal($('[data-test-id="validation-action0"]').text().trim(), t('errors.automation.type.assignee'));
+  });
+});
+
+test('validation - if type is priority, a ticket priority must be selected', assert => {
+  clearxhr(listXhr);
+  visit(NEW_URL);
+  andThen(() => {
+    assert.equal(currentURL(), NEW_URL);
+    assert.equal($('[data-test-id="validation-action0"]').length, 0);
+  });
+  xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.action_search_power_select());
+  selectChoose('.t-automation-action-type-select', AATD.keyTwo);
+  andThen(() => {
+    assert.equal(page.actionTypeSelectedOne, AATD.keyTwo);
+    assert.equal(Ember.$('.t-ticket-priority-select').length, 1);
+  });
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), NEW_URL);
+    assert.equal($('[data-test-id="validation-action0"]').text().trim(), t('errors.automation.type.priority'));
   });
 });

@@ -1,4 +1,4 @@
-<span id={{valuePath}} />
+<span data-validation-target={{valuePath}}></span>
 {{#power-select-mobile
   class=(concat relatedModelName '-select' ' t-' relatedModelName '-select' (if showMessage ' invalid'))
   tagName="div"
@@ -16,7 +16,7 @@
 {{#if showMessage}}
   {{#tether-dialog
     container-class="tether-dialog-reset"
-    target=(concat "#" valuePath)
+    target=(concat "[data-validation-target=" valuePath "]")
     hasOverlay=false
     attachment="bottom left"
     targetAttachment="top left"

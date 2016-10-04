@@ -39,13 +39,13 @@ export default Model.extend(OptConf, Validations, {
     this.savePriority();
   },
   serialize() {
-    let content = {};
+    let content;
     switch (this.get('type.key')) {
       case 'automation.actions.ticket_assignee':
-        content.assignee = this.get('assignee.id');
+        content = {assignee: this.get('assignee.id')};
         break;
       case 'automation.actions.ticket_priority':
-        content.priority = this.get('priority.id');
+        content = {priority: this.get('priority.id')};
         break;
     }
     return {

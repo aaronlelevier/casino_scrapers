@@ -2,15 +2,15 @@
     {{#if (v-get model valuePath "message")}}
       {{#tether-dialog
         container-class="tether-dialog-reset"
-        target=(concat "#" valuePath index)
+        target=(concat "[data-validation-target=" valuePath index "]")
         hasOverlay=false
         attachment="bottom left"
         targetAttachment="top left"
         offset="5px 0"
       }}
-      <div class="validated-input-error-dialog animated flipInX .error">
+      <div class="validated-input-error-dialog animated flipInX .error" data-test-id={{concat "validation-" valuePath index}}>
        {{t (v-get model valuePath "message")}}
-     </div>
+      </div>
       {{/tether-dialog}}
     {{/if}}
 {{/if}}
