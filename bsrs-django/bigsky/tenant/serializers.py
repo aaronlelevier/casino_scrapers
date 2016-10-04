@@ -1,6 +1,7 @@
 from django.core.mail import send_mail
 
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from contact.models import Email, Address, PhoneNumber, Country
 from contact.serializers import (
@@ -118,8 +119,7 @@ class TenantCreateSerializer(TenantContactsMixin, BaseCreateSerializer):
             instance.scid = sc_response['content']['id']
             instance.save()
         else:
-            # TODO: should handle failure here with logging, etc...
-            pass
+            raise ValidationError("Error creating subscriber")
 
 
 class TenantUpdateSerializer(TenantContactsMixin, BaseCreateSerializer):
