@@ -6,8 +6,8 @@ import { ValidationComponentInit, ValidationComponentPieces } from 'bsrs-ember/m
 /* @class ValidatedInputMulti - for inputs in a loop where valuePath is not a string but actual field value
  * eg. phonenumber
  * didValidate - trigger showMessage and can show msg if clicked save
- * API
- * idz - ember-tether attachment
+ * -- API -- 
+ * idz - ember-tether attachment.  Need count to ensure no duplicate ids
  * class - component test class or css class
  * className - class on input field
  * valuePath - m2m model on main model :: "phonenumbers" on location model

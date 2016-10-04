@@ -17,14 +17,15 @@ import Ember from 'ember';
  */
 export default Ember.Mixin.create({
   OPT_CONF: {
-    currency: {
+    default_currency: {
       collection: 'tenants',
       property: 'currency',
+      related_model: 'default_currency',
     },
-    billing_phone: {
+    billing_phone_number: {
       collection: 'tenants',
       property: 'phonenumber',
-      related_model: 'billing_phone',
+      related_model: 'billing_phone_number',
     },
     billing_email: {
       collection: 'tenants',

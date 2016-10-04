@@ -17,11 +17,11 @@ var BSRS_TENANT_FACTORY = (function() {
       dashboard_text: this.tenant.dashboardTextOne,
       implementation_contact: this.tenant.implementationContactOne,
       billing_contact: this.tenant.billingContactOne,
-      currency: {
+      default_currency: {
         id: this.tenant.currencyOne,
         name: this.tenant.name
       },
-      billing_phone: this.phonenumber.get_belongs_to(),
+      billing_phone_number: this.phonenumber.get_belongs_to(),
       billing_email: this.email.get_belongs_to(),
       billing_address: this.address.get_belongs_to(),
       implementation_email: this.email.get_belongs_to(),
@@ -36,8 +36,14 @@ var BSRS_TENANT_FACTORY = (function() {
     return {
       id: id,
       company_name: this.tenant.companyNameOne,
-      currency: this.tenant.currencyOne,
-      countries: [this.country.id]
+      default_currency: this.tenant.currencyOne,
+      countries: [this.country.id],
+      implementation_contact: this.tenant.implementationContactOne,
+      billing_contact: this.tenant.billingContactOne,
+      billing_phone_number: this.phonenumber.get_belongs_to(),
+      billing_email: this.email.get_belongs_to(),
+      implementation_email: this.email.get_belongs_to(),
+      billing_address: this.address.put_belongs_to(),
     };
   };
   factory.prototype.detail = function(id) {
@@ -46,7 +52,7 @@ var BSRS_TENANT_FACTORY = (function() {
   factory.prototype.put = function(tenant) {
     var id = tenant && tenant.id || this.tenant.idOne;
     var response = this.generate_put(id);
-    response.currency = response.currency.id;
+    response.default_currency = response.default_currency.id;
     for(var key in tenant) {
       response[key] = tenant[key];
     }
@@ -80,14 +86,8 @@ var BSRS_TENANT_FACTORY = (function() {
     return {
       id: `${this.tenant.idOne.slice(0,-1)}${i}`,
       company_name: `${this.tenant.companyNameOne}${i}`,
-      currency: {
-        id: `${this.tenant.currencyOne.slice(0,-1)}${i}`,
-        name: `${this.tenant.name}${i}`,
-      },
-      countries: [{
-        id: `${this.country.id.slice(0,-1)}${i}`,
-        name: `${this.country.name}${i}`,
-      }]
+      company_code: `${this.tenant.companyCodeOne}${i}`,
+      test_mode: this.tenant.test_mode,
     };
   };
   return factory;

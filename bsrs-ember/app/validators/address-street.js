@@ -2,7 +2,7 @@ import BaseValidator from 'ember-cp-validations/validators/base';
 
 export var address_name_validation = function(value) {
     let address_pattern = /^[0-9a-z.,@*&#\-\{\}\[\]\(\)\s]+$/i;
-    if (value.length < 3) {
+    if (!value || value.length < 3) {
         return false;
     }
     return (value.match(address_pattern) !== null);

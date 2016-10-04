@@ -21,6 +21,8 @@ var BSRS_TENANT_DEFAULTS_OBJECT = (function() {
       nameOne: this.currency.nameOne,
       nameGridOne: this.currency.name+'0',
       nameGridTen: this.currency.name+'9',
+      implementationContactOne: 'Sue',
+      billingContactOne: 'Bill',
       
       // LEGACY
       // Initial

@@ -58,7 +58,7 @@ test('visit detail and update all fields', assert => {
   andThen(() => {
     assert.equal(page.currencyInput, CD.nameEuro);
   });
-  xhr(API_DETAIL_URL, 'PUT', TF.put({company_name: TD.companyNameTwo, currency: CD.idEuro}), {}, 200, TF.list());
+  xhr(API_DETAIL_URL, 'PUT', TF.put({company_name: TD.companyNameTwo, default_currency: CD.idEuro}), {}, 200, TF.list());
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), TENANT_LIST_URL);

@@ -7,8 +7,8 @@ import ContactDeserializerMixin from 'bsrs-ember/mixins/deserializer/contact';
 export default Ember.Object.extend(OptConf, ContactDeserializerMixin, {
   init() {
     this._super(...arguments);
-    belongs_to.bind(this)('currency');
-    belongs_to.bind(this)('billing_phone');
+    belongs_to.bind(this)('default_currency');
+    belongs_to.bind(this)('billing_phone_number');
     belongs_to.bind(this)('billing_email');
     belongs_to.bind(this)('implementation_email');
     belongs_to.bind(this)('billing_address');
@@ -28,25 +28,25 @@ export default Ember.Object.extend(OptConf, ContactDeserializerMixin, {
   },
   _deserializeSingle(response) {
     const store = this.get('simpleStore');
-    response.currency_fk = response.currency.id;
-    response.billing_phone_fk = response.billing_phone.id;
+    response.default_currency_fk = response.default_currency.id;
+    response.billing_phone_number_fk = response.billing_phone_number.id;
     response.billing_email_fk = response.billing_email.id;
     response.implementation_email_fk = response.implementation_email.id;
     response.billing_address_fk = response.billing_address.id;
-    const currency = response.currency;
-    const billing_phone = response.billing_phone;
+    const currency = response.default_currency;
+    const billing_phone_number = response.billing_phone_number;
     const billing_email = response.billing_email;
     const implementation_email = response.implementation_email;
     const billing_address = response.billing_address;
     const countries = response.countries;
-    delete response.currency;
-    delete response.billing_phone;
+    delete response.default_currency;
+    delete response.billing_phone_number;
     delete response.billing_email;
     delete response.implementation_email;
     delete response.billing_address;
     delete response.countries;
     // setup contact to type relationship
-    this.extract_single_phonenumber(billing_phone);
+    this.extract_single_phonenumber(billing_phone_number);
     this.extract_single_email(billing_email);
     this.extract_single_email(implementation_email);
     this.extract_single_address(billing_address);
@@ -55,9 +55,9 @@ export default Ember.Object.extend(OptConf, ContactDeserializerMixin, {
     // TODO: (ayl) both these related models are optional, so need 'if' check n tests
     // use blocking if properties not required
     // if (currency) {
-      this.setup_currency(currency, tenant);
+      this.setup_default_currency(currency, tenant);
     // }
-      this.setup_billing_phone(billing_phone, tenant);
+      this.setup_billing_phone_number(billing_phone_number, tenant);
       this.setup_billing_email(billing_email, tenant);
       this.setup_implementation_email(implementation_email, tenant);
       this.setup_billing_address(billing_address, tenant);

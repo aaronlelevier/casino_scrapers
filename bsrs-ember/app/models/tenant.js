@@ -18,19 +18,61 @@ const Validations = buildValidations({
       message: 'errors.tenant.company_name.min_max'
     })
   ],
-  currency: [
+  company_code: validator('presence', {
+    presence: true,
+    message: 'errors.tenant.company_code'
+  }),
+  dashboard_text: validator('presence', {
+    presence: true,
+    message: 'errors.tenant.dashboard_text'
+  }),
+  default_currency: validator('presence', {
+    presence: true,
+    message: 'errors.tenant.default_currency'
+  }),
+  billing_contact: validator('presence', {
+    presence: true,
+    message: 'errors.tenant.billing_contact'
+  }),
+  implementation_contact: validator('presence', {
+    presence: true,
+    message: 'errors.tenant.implementation_contact'
+  }),
+  implementation_email: [
     validator('presence', {
       presence: true,
-      message: 'errors.tenant.currency'
+      message: 'errors.tenant.implementation_email'
     }),
+    validator('belongs-to'),
+  ],
+  billing_phone_number: [
+    validator('presence', {
+      presence: true,
+      message: 'errors.tenant.billing_phone_number'
+    }),
+    validator('belongs-to'),
+  ],
+  billing_email: [
+    validator('presence', {
+      presence: true,
+      message: 'errors.tenant.billing_email'
+    }),
+    validator('belongs-to'),
+  ],
+  billing_address: [
+    validator('presence', {
+      presence: true,
+      message: 'errors.tenant.billing_address'
+    }),
+    validator('belongs-to'),
   ],
 });
 
 export default Model.extend(OptConf, Validations, {
   init() {
     this._super(...arguments);
-    belongs_to.bind(this)('currency', 'tenant');
-    belongs_to.bind(this)('billing_phone', 'tenant');
+    belongs_to.bind(this)('default_currency', 'tenant');
+    belongs_to.bind(this)('billing_phone_number', 'tenant');
     belongs_to.bind(this)('billing_email', 'tenant');
     belongs_to.bind(this)('billing_address', 'tenant');
     belongs_to.bind(this)('implementation_email', 'tenant');
@@ -42,19 +84,21 @@ export default Model.extend(OptConf, Validations, {
   dashboard_text: attr(''),
   implementation_contact: attr(''),
   billing_contact: attr(''),
-  billing_phone: '',
+  billing_phone_number_fk: '',
+  billing_email_fk: '',
+  billing_address_fk: '',
   tenant_countries_fks: [],
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'currencyIsDirty', 'countriesIsDirty', 'billingEmailIsDirty', 'billingPhoneIsDirty', 'implementationEmailIsDirty', 'billingAddressIsDirty', function() {
-    return this.get('isDirty') || this.get('currencyIsDirty') || this.get('countriesIsDirty') || this.get('billingEmailIsDirty') || this.get('billingPhoneIsDirty') || this.get('implementationEmailIsDirty') || this.get('billingAddressIsDirty');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'defaultCurrencyIsDirty', 'countriesIsDirty', 'billingEmailIsDirty', 'billingPhoneNumberIsDirty', 'implementationEmailIsDirty', 'billingAddressIsDirty', function() {
+    return this.get('isDirty') || this.get('defaultCurrencyIsDirty') || this.get('countriesIsDirty') || this.get('billingEmailIsDirty') || this.get('billingPhoneNumberIsDirty') || this.get('implementationEmailIsDirty') || this.get('billingAddressIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   rollback() {
-    this.rollbackCurrency();
+    this.rollbackDefaultCurrency();
     this.rollbackCountries();
     this._super(...arguments);
   },
   saveRelated() {
-    this.saveCurrency();
+    this.saveDefaultCurrency();
     this.saveCountries();
   },
   removeRecord() {
@@ -66,9 +110,13 @@ export default Model.extend(OptConf, Validations, {
     return {
       id: this.get('id'),
       company_name: this.get('company_name'),
-      currency: this.get('currency').get('id'),
+      company_code: this.get('company_code'),
+      dashboard_text: this.get('dashboard_text'),
+      default_currency: this.get('default_currency').get('id'),
       countries: this.get('countries_ids'),
-      billing_phone: this.get('billing_phone').serialize(),
+      implementation_contact: this.get('implementation_contact'),
+      billing_contact: this.get('billing_contact'),
+      billing_phone_number: this.get('billing_phone_number').serialize(),
       billing_email: this.get('billing_email').serialize(),
       implementation_email: this.get('implementation_email').serialize(),
       billing_address: this.get('billing_address').serialize(),

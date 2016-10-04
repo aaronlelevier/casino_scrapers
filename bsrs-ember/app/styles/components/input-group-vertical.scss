@@ -3,12 +3,24 @@
 	*{
 		font-size: 1.2rem;
 	}
-	select{
-		-webkit-appearance: none;
-		-moz-appearance: none;
-		appearance: none;
+	.ember-power-select-trigger,
+	.input-group-addon,
+	.form-control,
+	.btn{
+		border-radius: 0;
 	}
-	.input-group{
+	.ember-basic-dropdown-trigger{
+		&[aria-expanded="true"]{
+			z-index: 3;
+			border-radius: 0;
+		}
+	}
+	.btn-default{
+		width: 100%;
+		border: $borderStyle;
+		border-radius: 0;
+	}
+	.input-group, .input-group-row {
 		margin-bottom: -1px;
 		.checkbox{
 			border: $borderStyle;
@@ -28,40 +40,33 @@
 			font-size: 0.9em;
 			@include truncate;
 		}
-		&:first-child button{
-			border-radius: 3px 0 0 0;
-		}
-		&:first-child select{
-			border-radius: 0 3px 0 0;
+		&:first-child {
+      /* eg. contact address section:: first-child may only have one child (first/last-child below) if no delete btn */
+      :last-child {
+        .ember-power-select-trigger {
+          border-top-right-radius: $borderRadius;
+          margin-left: -1px;
+        }
+      }
+      :first-child {
+        button, .ember-power-select-trigger {
+          border-top-right-radius: $borderRadius;
+          margin-left: 0;
+        }
+      }
 		}
 		&:first-child input{
-			border-radius: 0 3px 0 0;
+			border-top-right-radius: $borderRadius;
 		}
-		&:last-child button{
-			border-radius: 0 0 3px 3px;
+		&:last-child button{ // add-btn in decision tree
+			border-top-right-radius: $borderRadius;
+			border-bottom-right-radius: $borderRadius;
 		}
 		&:last-child .input-group-addon{
-			border-radius: 0 0 0 3px;
+			border-bottom-left-radius: $borderRadius;
 		}
 		&:last-child .form-control{
-			border-radius: 0 0 3px 0;
+			border-bottom-right-radius: $borderRadius;
 		}
-	}
-	.ember-power-select-trigger,
-	.input-group-addon,
-	.form-control,
-	.btn{
-		border-radius: 0;
-	}
-	.ember-basic-dropdown-trigger{
-		&[aria-expanded="true"]{
-			z-index: 3;
-			border-radius: 0;
-		}
-	}
-	.btn-default{
-		width: 100%;
-		border: $borderStyle;
-		border-radius: 0;
 	}
 }

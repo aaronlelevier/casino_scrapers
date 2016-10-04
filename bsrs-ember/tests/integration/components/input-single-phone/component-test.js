@@ -34,7 +34,7 @@ test('pass noDelete as true, no delete button', function(assert) {
 test('setup for belongsTo works', function(assert) {
   let tenant, phonenumber;
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, billing_phone_fk: PND.idOne});
+    tenant = store.push('tenant', {id: TD.idOne, billing_phone_number_fk: PND.idOne});
     store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, tenants: [TD.idOne]});
     phonenumber = store.push('phonenumber', {id: PND.idOne, phone_number_type_fk: PNTD.idOne});
     store.push('phone-number-type', {id: PNTD.idOne, name: PNTD.officeName, phonenumbers: [PND.idOne]});

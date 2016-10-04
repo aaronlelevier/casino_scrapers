@@ -17,6 +17,7 @@ import { ValidationComponentInit, ValidationComponentPieces } from 'bsrs-ember/m
 export default Ember.Component.extend(ValidationComponentPieces, ValidationComponentInit, {
   type: 'text',
   focusedOut: false,
+  tageName: '',
   // attributeValidation: null,
   // classNameBindings: ['showMessage:invalid'],
   // init() {

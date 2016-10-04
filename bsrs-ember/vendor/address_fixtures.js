@@ -38,20 +38,21 @@ var BSRS_ADDRESS_FACTORY = (function() {
     }];
   };
   factory.prototype.get_belongs_to = function() {
+    /* used for eg. in the tenant get */
     return {
       id: this.address.idOne,
+      type: this.addressType.officeId,
       address: this.address.streetOne,
       city: this.address.cityOne,
+      state: {
+        id: this.state.id,
+        name: this.state.name
+      },
       postal_code: this.address.zipOne,
       country: {
         id: this.country.id,
         name: this.country.name
       },
-      state: {
-        id: this.state.id,
-        name: this.state.name
-      },
-      type: this.addressType.officeId,
     }
   };
   factory.prototype.get_with_related_ids = function() {
@@ -86,6 +87,18 @@ var BSRS_ADDRESS_FACTORY = (function() {
       }
     });
     return addresses;
+  };
+  factory.prototype.put_belongs_to = function() {
+    /* used for eg. in the tenant get */
+    return {
+      id: this.address.idOne,
+      type: this.addressType.officeId,
+      address: this.address.streetOne,
+      city: this.address.cityOne,
+      state: this.state.id,
+      postal_code: this.address.zipOne,
+      country: this.country.id,
+    }
   };
   return factory;
 })();

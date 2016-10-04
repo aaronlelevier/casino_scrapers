@@ -9,6 +9,12 @@
   .input-group-select{
     font-size: 1em; // Needed due to render in place true on power select
   }
+  &:last-child {
+    input, .ember-power-select-trigger {
+      border-top-right-radius: $borderRadius;
+      border-bottom-right-radius: $borderRadius;
+    }
+  }
   .input-group-btn{
     .ember-power-select-trigger{
       font-size: 1.3rem;
@@ -25,10 +31,12 @@
       }
     }
     &:last-child{
-      .ember-power-select-trigger{
-        border-radius: $borderRadiusRight;
+      input, .ember-power-select-trigger{
+        border-top-right-radius: $borderRadius;
+        border-bottom-right-radius: $borderRadius;
         &[aria-expanded="true"]{
-          border-radius: $borderRadiusTopRight;
+          border-bottom-right-radius: 0;
+          // border-radius: $borderRadiusTopRight;
         }
       }
     }

@@ -13,6 +13,7 @@ import ED from 'bsrs-ember/vendor/defaults/email';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
 import AD from 'bsrs-ember/vendor/defaults/address';
 import SD from 'bsrs-ember/vendor/defaults/state';
+import CD from 'bsrs-ember/vendor/defaults/country';
 import ATD from 'bsrs-ember/vendor/defaults/address-type';
 
 var store, tenant, deserializer;
@@ -37,16 +38,22 @@ test('deserialize single', assert => {
   });
   assert.equal(tenant.get('id'), TD.idOne);
   assert.equal(tenant.get('company_name'), TD.companyNameOne);
-  assert.equal(tenant.get('currency_fk'), TD.currencyOne);
-  assert.equal(tenant.get('currency').get('id'), TD.currencyOne);
-  assert.equal(tenant.get('currency').get('name'), TD.name);
-  assert.equal(tenant.get('billing_phone_fk'), PND.idOne);
-  assert.equal(tenant.get('billing_phone').get('id'), PND.idOne);
-  assert.equal(tenant.get('billing_phone').get('number'), PND.numberOne);
-  assert.equal(tenant.get('billing_phone').get('detail'), true);
-  assert.equal(tenant.get('billing_phone').get('phone_number_type').get('id'), PNTD.officeId);
-  assert.equal(tenant.get('billing_phone').get('phone_number_type').get('name'), PNTD.officeName);
-  assert.equal(tenant.get('billing_phone').get('phone_number_type_fk'), PNTD.officeId);
+  assert.equal(tenant.get('company_code'), TD.companyCodeOne);
+  assert.equal(tenant.get('dashboard_text'), TD.dashboardTextOne);
+  assert.equal(tenant.get('implementation_contact'), TD.implementationContactOne);
+  assert.equal(tenant.get('billing_contact'), TD.billingContactOne);
+  assert.equal(tenant.get('default_currency_fk'), TD.currencyOne);
+  assert.equal(tenant.get('default_currency').get('id'), TD.currencyOne);
+  assert.equal(tenant.get('default_currency').get('name'), TD.name);
+  assert.equal(tenant.get('countries').get('length'), 1);
+  assert.equal(tenant.get('countries').objectAt(0).get('name'), CountryD.nameOne);
+  assert.equal(tenant.get('billing_phone_number_fk'), PND.idOne);
+  assert.equal(tenant.get('billing_phone_number').get('id'), PND.idOne);
+  assert.equal(tenant.get('billing_phone_number').get('number'), PND.numberOne);
+  assert.equal(tenant.get('billing_phone_number').get('detail'), true);
+  assert.equal(tenant.get('billing_phone_number').get('phone_number_type').get('id'), PNTD.officeId);
+  assert.equal(tenant.get('billing_phone_number').get('phone_number_type').get('name'), PNTD.officeName);
+  assert.equal(tenant.get('billing_phone_number').get('phone_number_type_fk'), PNTD.officeId);
   assert.equal(tenant.get('billing_email_fk'), ED.idOne);
   assert.equal(tenant.get('billing_email').get('id'), ED.idOne);
   assert.equal(tenant.get('billing_email').get('email'), ED.emailOne);
@@ -76,6 +83,8 @@ test('deserialize single', assert => {
   assert.equal(tenant.get('implementation_email').get('email_type_fk'), ETD.workId);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
+
+/* Countries */
 
 test('existing tenant w/ country, and server returns no country - want no country b/c that is the most recent', assert => {
   store.push('tenant-join-country', {id: TenantJoinCountryD.idOne, tenant_pk: TD.idOne, country_pk: CountryD.idOne});
@@ -122,6 +131,230 @@ test('existing tenant w/ country and get same country', assert => {
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
+/* Contact */
+
+test('existing billing_phone_number same number different type (change from mobile to office)', assert => {
+  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, billing_phone_number_fk: PND.idOne});
+  store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, tenants: [TD.idOne]});
+  store.push('phone-number-type', {id: PNTD.mobileId, name: PNTD.mobileName, phonenumbers: [PND.idOne]});
+  store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountryD.idOne]});
+  const json = TF.detail();
+  run(() => {
+    deserializer.deserialize(json, TD.idOne);
+  });
+  tenant = store.find('tenant', TD.idOne);
+  assert.equal(tenant.get('billing_phone_number').get('id'), PND.idOne);
+  assert.equal(tenant.get('billing_phone_number').get('number'), PND.numberOne);
+  assert.equal(tenant.get('billing_phone_number').get('phone_number_type').get('id'), PNTD.officeId); //idOne is the same as officeId
+  assert.equal(tenant.get('billing_phone_number').get('phone_number_type').get('name'), PNTD.officeName);
+  assert.ok(tenant.get('isNotDirty'));
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('existing billing_phone_number same number same type', assert => {
+  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, billing_phone_number_fk: PND.idOne});
+  store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, tenants: [TD.idOne]});
+  store.push('phone-number-type', {id: PNTD.officeId, name: PNTD.officeName, phonenumbers: [PND.idOne]});
+  store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountryD.idOne]});
+  const json = TF.detail();
+  run(() => {
+    deserializer.deserialize(json, TD.idOne);
+  });
+  tenant = store.find('tenant', TD.idOne);
+  assert.equal(tenant.get('billing_phone_number').get('id'), PND.idOne);
+  assert.equal(tenant.get('billing_phone_number').get('number'), PND.numberOne);
+  assert.equal(tenant.get('billing_phone_number').get('phone_number_type').get('id'), PNTD.officeId); //idOne is the same as officeId
+  assert.equal(tenant.get('billing_phone_number').get('phone_number_type').get('name'), PNTD.officeName);
+  assert.ok(tenant.get('isNotDirty'));
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('existing billing_phone_number different number same type', assert => {
+  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, billing_phone_number_fk: PND.idOne});
+  store.push('phonenumber', {id: PND.idOne, number: PND.numberTwo, tenants: [TD.idOne]});
+  store.push('phone-number-type', {id: PNTD.officeId, name: PNTD.officeName, phonenumbers: [PND.idOne]});
+  store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountryD.idOne]});
+  const json = TF.detail();
+  run(() => {
+    deserializer.deserialize(json, TD.idOne);
+  });
+  tenant = store.find('tenant', TD.idOne);
+  assert.equal(tenant.get('billing_phone_number').get('id'), PND.idOne);
+  assert.equal(tenant.get('billing_phone_number').get('number'), PND.numberOne);
+  assert.equal(tenant.get('billing_phone_number').get('phone_number_type').get('id'), PNTD.officeId); //idOne is the same as officeId
+  assert.equal(tenant.get('billing_phone_number').get('phone_number_type').get('name'), PNTD.officeName);
+  assert.ok(tenant.get('isNotDirty'));
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('existing billing_email same email different type (change from personal to office)', assert => {
+  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, billing_email_fk: ED.idOne});
+  store.push('email', {id: ED.idOne, email: ED.emailOne, tenants: [TD.idOne]});
+  store.push('email-type', {id: ETD.personalId, name: ETD.personalName, emails: [ED.idOne]});
+  store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountryD.idOne]});
+  const json = TF.detail();
+  run(() => {
+    deserializer.deserialize(json, TD.idOne);
+  });
+  tenant = store.find('tenant', TD.idOne);
+  assert.equal(tenant.get('billing_email').get('id'), ED.idOne);
+  assert.equal(tenant.get('billing_email').get('email'), ED.emailOne);
+  assert.equal(tenant.get('billing_email').get('email_type').get('id'), ETD.workId);
+  assert.equal(tenant.get('billing_email').get('email_type').get('name'), ETD.workName);
+  assert.ok(tenant.get('isNotDirty'));
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('existing billing_email same email same type', assert => {
+  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, billing_email_fk: ED.idOne});
+  store.push('email', {id: ED.idOne, email: ED.emailOne, tenants: [TD.idOne]});
+  store.push('email-type', {id: ETD.workId, name: ETD.workName, emails: [ED.idOne]});
+  store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountryD.idOne]});
+  const json = TF.detail();
+  run(() => {
+    deserializer.deserialize(json, TD.idOne);
+  });
+  tenant = store.find('tenant', TD.idOne);
+  assert.equal(tenant.get('billing_email').get('id'), ED.idOne);
+  assert.equal(tenant.get('billing_email').get('email'), ED.emailOne);
+  assert.equal(tenant.get('billing_email').get('email_type').get('id'), ETD.workId);
+  assert.equal(tenant.get('billing_email').get('email_type').get('name'), ETD.workName);
+  assert.ok(tenant.get('isNotDirty'));
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('existing billing_email different email same type', assert => {
+  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, billing_email_fk: ED.idOne});
+  store.push('email', {id: ED.idOne, email: ED.emailTwo, tenants: [TD.idOne]});
+  store.push('email-type', {id: ETD.workId, name: ETD.workName, emails: [ED.idOne]});
+  store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountryD.idOne]});
+  const json = TF.detail();
+  run(() => {
+    deserializer.deserialize(json, TD.idOne);
+  });
+  tenant = store.find('tenant', TD.idOne);
+  assert.equal(tenant.get('billing_email').get('id'), ED.idOne);
+  assert.equal(tenant.get('billing_email').get('email'), ED.emailOne);
+  assert.equal(tenant.get('billing_email').get('email_type').get('id'), ETD.workId);
+  assert.equal(tenant.get('billing_email').get('email_type').get('name'), ETD.workName);
+  assert.ok(tenant.get('isNotDirty'));
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('existing implementation_email same email different type (change from personal to office)', assert => {
+  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, implementation_email_fk: ED.idOne});
+  store.push('email', {id: ED.idOne, email: ED.emailOne, tenants: [TD.idOne]});
+  store.push('email-type', {id: ETD.personalId, name: ETD.personalName, emails: [ED.idOne]});
+  store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountryD.idOne]});
+  const json = TF.detail();
+  run(() => {
+    deserializer.deserialize(json, TD.idOne);
+  });
+  tenant = store.find('tenant', TD.idOne);
+  assert.equal(tenant.get('implementation_email').get('id'), ED.idOne);
+  assert.equal(tenant.get('implementation_email').get('email'), ED.emailOne);
+  assert.equal(tenant.get('implementation_email').get('email_type').get('id'), ETD.workId);
+  assert.equal(tenant.get('implementation_email').get('email_type').get('name'), ETD.workName);
+  assert.ok(tenant.get('isNotDirty'));
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+test('existing implementation_email same email same type', assert => {
+  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, implementation_email_fk: ED.idOne});
+  store.push('email', {id: ED.idOne, email: ED.emailOne, tenants: [TD.idOne]});
+  store.push('email-type', {id: ETD.workId, name: ETD.workName, emails: [ED.idOne]});
+  store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountryD.idOne]});
+  const json = TF.detail();
+  run(() => {
+    deserializer.deserialize(json, TD.idOne);
+  });
+  tenant = store.find('tenant', TD.idOne);
+  assert.equal(tenant.get('implementation_email').get('id'), ED.idOne);
+  assert.equal(tenant.get('implementation_email').get('email'), ED.emailOne);
+  assert.equal(tenant.get('implementation_email').get('email_type').get('id'), ETD.workId);
+  assert.equal(tenant.get('implementation_email').get('email_type').get('name'), ETD.workName);
+  assert.ok(tenant.get('isNotDirty'));
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+test('existing implementation_email different email same type', assert => {
+  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, implementation_email_fk: ED.idOne});
+  store.push('email', {id: ED.idOne, email: ED.emailTwo, tenants: [TD.idOne]});
+  store.push('email-type', {id: ETD.workId, name: ETD.workName, emails: [ED.idOne]});
+  store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountryD.idOne]});
+  const json = TF.detail();
+  run(() => {
+    deserializer.deserialize(json, TD.idOne);
+  });
+  tenant = store.find('tenant', TD.idOne);
+  assert.equal(tenant.get('implementation_email').get('id'), ED.idOne);
+  assert.equal(tenant.get('implementation_email').get('email'), ED.emailOne);
+  assert.equal(tenant.get('implementation_email').get('email_type').get('id'), ETD.workId);
+  assert.equal(tenant.get('implementation_email').get('email_type').get('name'), ETD.workName);
+  assert.ok(tenant.get('isNotDirty'));
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('existing billing_address same address different type (change from shipping to office)', assert => {
+  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, billing_address_fk: AD.idOne});
+  store.push('address', {id: AD.idOne, address: AD.streetOne, city: AD.cityOne, state_fk: SD.idOne, country_fk: CD.idOne, tenants: [TD.idOne]});
+  store.push('state', {id: SD.idOne, name: SD.nameOne, addresses: [AD.idOne]});
+  store.push('country', {id: CD.idOne, name: CD.nameOne, addresses: [AD.idOne]});
+  store.push('address-type', {id: ATD.shippingId, name: ATD.personalName, addresses: [AD.idOne]});
+  store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountryD.idOne]});
+  const json = TF.detail();
+  run(() => {
+    deserializer.deserialize(json, TD.idOne);
+  });
+  tenant = store.find('tenant', TD.idOne);
+  assert.equal(tenant.get('billing_address').get('id'), AD.idOne);
+  assert.equal(tenant.get('billing_address').get('address'), AD.streetOne);
+  assert.equal(tenant.get('billing_address').get('city'), AD.cityOne);
+  assert.equal(tenant.get('billing_address').get('postal_code'), AD.zipOne);
+  assert.equal(tenant.get('billing_address').get('state').get('id'), SD.idOne);
+  assert.equal(tenant.get('billing_address').get('state').get('name'), SD.nameOne);
+  assert.equal(tenant.get('billing_address').get('country').get('id'), CD.idOne);
+  assert.equal(tenant.get('billing_address').get('country').get('name'), CD.nameOne);
+  assert.equal(tenant.get('billing_address').get('address_type').get('id'), ATD.officeId);
+  assert.equal(tenant.get('billing_address').get('address_type').get('name'), ATD.officeName);
+  assert.ok(tenant.get('isNotDirty'));
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('existing billing_address same address same type', assert => {
+  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, billing_address_fk: AD.idOne});
+  store.push('address', {id: AD.idOne, address: AD.streetOne, tenants: [TD.idOne]});
+  store.push('address-type', {id: ATD.officeId, name: ATD.officeName, addresses: [AD.idOne]});
+  store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountryD.idOne]});
+  const json = TF.detail();
+  run(() => {
+    deserializer.deserialize(json, TD.idOne);
+  });
+  tenant = store.find('tenant', TD.idOne);
+  assert.equal(tenant.get('billing_address').get('id'), AD.idOne);
+  assert.equal(tenant.get('billing_address').get('address'), AD.streetOne);
+  assert.equal(tenant.get('billing_address').get('address_type').get('id'), ATD.officeId); //idOne is the same as officeId
+  assert.equal(tenant.get('billing_address').get('address_type').get('name'), ATD.officeName);
+  assert.ok(tenant.get('isNotDirty'));
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('existing billing_address different address same type', assert => {
+  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, billing_address_fk: AD.idOne});
+  store.push('address', {id: AD.idOne, address: AD.addressTwo, tenants: [TD.idOne]});
+  store.push('address-type', {id: ATD.officeId, name: ATD.officeName, addresses: [AD.idOne]});
+  store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountryD.idOne]});
+  const json = TF.detail();
+  run(() => {
+    deserializer.deserialize(json, TD.idOne);
+  });
+  tenant = store.find('tenant', TD.idOne);
+  assert.equal(tenant.get('billing_address').get('id'), AD.idOne);
+  assert.equal(tenant.get('billing_address').get('address'), AD.streetOne);
+  assert.equal(tenant.get('billing_address').get('address_type').get('id'), ATD.officeId); //idOne is the same as officeId
+  assert.equal(tenant.get('billing_address').get('address_type').get('name'), ATD.officeName);
+  assert.ok(tenant.get('isNotDirty'));
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+
 test('deserialize list', assert => {
   let json = TF.list();
   run(() => {
@@ -131,6 +364,6 @@ test('deserialize list', assert => {
   tenant = store.find('tenant-list').objectAt(0);
   assert.equal(tenant.get('id'), TD.idOne);
   assert.equal(tenant.get('company_name'), TD.companyNameOne+'1');
-  assert.equal(tenant.get('currency').id, `${TD.currencyOne.slice(0,-1)}1`);
-  assert.equal(tenant.get('currency').name, TD.name+'1');
+  assert.equal(tenant.get('company_code'), TD.companyCodeOne+'1');
+  assert.equal(tenant.get('test_mode'), TD.test_mode);
 });

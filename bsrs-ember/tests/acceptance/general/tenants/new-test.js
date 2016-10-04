@@ -54,7 +54,7 @@ test('visit new URL and create a new record', assert => {
   const countryName = countryData.results[1].name;
   xhr(`${COUNTRY_URL}tenant/?search=${keyword}`, 'GET', null, {}, 200, countryData);
   selectSearch('.t-tenant-country-select', keyword);
-  selectChoose('.t-tenant-country-select', countryName);
+  selectChoose('.t-tenant-country-select', 'Merica1');
   andThen(() => {
     assert.ok(page.countrySelectedOne.indexOf(countryName) > -1);
   });
