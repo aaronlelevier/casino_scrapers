@@ -43,7 +43,8 @@ export default Model.extend(OptConf, Validations, {
       id: this.get('id'),
       type: this.get('type.id'),
       content: {
-        assignee: this.get('assignee.id')
+        assignee: this.get('assignee.id'),
+        priority: this.get('priority.id')
       }
     };
   },

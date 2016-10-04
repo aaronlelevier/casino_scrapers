@@ -13,7 +13,7 @@ const DROPDOWN = options;
 const AF_SELECT_ONE = '.t-automation-pf-select:eq(0) .ember-basic-dropdown-trigger';
 const ACTION_TYPE_SELECT_ONE = '.t-automation-action-type-select:eq(0)';
 const ACTION_ASSIGNEE_SELECT_ONE = '.t-automation-action-assignee-select:eq(0)';
-const ACTION_PRIORITY_SELECT_ONE = '.t-automation-action-priority-select:eq(0)';
+const ACTION_PRIORITY_SELECT_ONE = '.t-ticket-priority-select:eq(0)';
 
 const EVENTS = '.t-automation-event-select .ember-power-select-multiple-option';
 

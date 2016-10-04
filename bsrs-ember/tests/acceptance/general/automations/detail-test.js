@@ -161,6 +161,37 @@ test('visit detail and update an actions assignee', assert => {
   });
 });
 
+test('get an action priority and update it to a new priority', assert => {
+  clearxhr(detailXhr);
+  xhr(API_DETAIL_URL, 'GET', null, {}, 200, AF.detailPriority());
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    // // action type
+    assert.equal(page.actionTypeSelectedOne, AATD.keyTwo);
+    // action content - priority
+    assert.equal(page.actionPrioritySelectedOne, TPD.priorityOne);
+  });
+  selectChoose('.t-ticket-priority-select', TPD.priorityTwo);
+  andThen(() => {
+    assert.equal(page.actionPrioritySelectedOne, TPD.priorityTwo);
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idTwo,
+      type: AATD.idTwo,
+      content: {
+        priority: TPD.idTwo,
+      }
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+});
+
 test('changing from one dynamic location available filter to another changes the location_level query param', assert => {
   clearxhr(listXhr);
   page.visitDetail();

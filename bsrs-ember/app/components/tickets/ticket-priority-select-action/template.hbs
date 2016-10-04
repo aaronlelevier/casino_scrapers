@@ -1,0 +1,9 @@
+<div class="input-group">
+  <span class="input-group-addon address-label">{{t "admin.automation.priorities"}}</span>
+    {{power-select-foreign-key
+      mainModel=model
+      selected=model.priority
+      change_method="change_priority"
+      relatedModelName="ticket-priority"
+    }}
+</div>

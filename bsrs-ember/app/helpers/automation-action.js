@@ -6,6 +6,8 @@ export function automationAction(params/*, hash*/) {
     switch (params[0].get('key')) {
       case 'automation.actions.ticket_assignee':
         return 'tickets/ticket-assignee-select';
+      case 'automation.actions.ticket_priority':
+        return 'tickets/ticket-priority-select-action';
     }
   }
 }
