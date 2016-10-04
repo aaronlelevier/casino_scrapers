@@ -149,7 +149,7 @@ test('when you click cancel, you are redirected to the ticket list view', async 
   assert.equal(currentURL(), TICKET_URL);
 });
 
-test('aaron validation works for assignee if ticket status is not draft', async assert => {
+test('validation works for assignee if ticket status is not draft', async assert => {
   clearxhr(list_xhr);
   detail_data.assignee = null;
   await page.visitDetail();

@@ -445,7 +445,7 @@ test('save and rollback combined test', (assert) => {
   const link_2 = dtd.get('links').objectAt(1);
   link_2.change_destination({id: DTD.idOne});
   // Priority
-  link.change_priority(TP.idOne);
+  link.change_priority({id: TP.idOne});
   assert.equal(link.get('priority.id'), TP.idOne);
   link.change_status(TS.idOne);
   assert.equal(link.get('status.id'), TS.idOne);
@@ -464,10 +464,8 @@ test('save and rollback combined test', (assert) => {
   assert.ok(dtd.get('fieldsIsNotDirty'));
   assert.equal(dtd.get('fields').get('length'), 2);
   assert.ok(dtd.get('linksIsNotDirty'));
-  dtd.remove_link(LINK.idOne);
-  assert.ok(dtd.get('linksIsDirty'));
-  assert.equal(dtd.get('links').get('length'), 1);
-  link.change_priority(TP.idTwo);
+  assert.equal(dtd.get('links').get('length'), 2);
+  link.change_priority({id: TP.idTwo});
   assert.equal(link.get('priority.id'), TP.idTwo);
   link.change_status(TS.idTwo);
   assert.equal(link.get('status.id'), TS.idTwo);
@@ -481,6 +479,14 @@ test('save and rollback combined test', (assert) => {
   assert.ok(dtd.get('linksIsNotDirty'));
   assert.ok(dtd.get('fieldsIsNotDirty'));
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('rollback - priority can be rolled back', assert => {
+  assert.equal(link.get('priority.id'), undefined);
+  link.change_priority({id: TP.idOne});
+  assert.equal(link.get('priority.id'), TP.idOne);
+  link.rollback();
+  assert.equal(link.get('priority.id'), undefined);
 });
 
 //ATTACHMENT
