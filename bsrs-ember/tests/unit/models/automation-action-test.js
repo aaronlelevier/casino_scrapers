@@ -215,3 +215,15 @@ test('saveRelated for priority to save model and make it clean', assert => {
   assert.equal(action.get('priority.id'), TPD.idTwo);
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
 });
+
+test('serialize - should only send the content fields that are relevant based on the type', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne});
+  });
+  action.change_assignee({id: PersonD.idOne});
+  action.change_priority({id: TPD.idOne});
+  action.change_type({id: ATD.idOne, key: ATD.keyOne});
+  assert.deepEqual(action.serialize().content, {assignee: PersonD.idOne});
+  action.change_type({id: ATD.idTwo, key: ATD.keyTwo});
+  assert.deepEqual(action.serialize().content, {priority: TPD.idOne});
+});
