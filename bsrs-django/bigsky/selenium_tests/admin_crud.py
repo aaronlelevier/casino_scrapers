@@ -112,37 +112,55 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         page.find_new_link().click()
         # description
         description = rand_chars()
+
         automation = InputHelper(description=description)
         self.wait_for_xhr_request("t-automation-description")
         self._fill_in(automation)
-        # assignee
-        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-assignee-select ')]/div")
+
+        # event
+        event_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-event-select ')]/div")
+        event_dropdown.click()
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
+        # pf
+        add_filter_btn = self.driver.find_element_by_class_name("t-add-pf-btn")
+        add_filter_btn.click()
+        filter_type_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-pf-select ')]/div")
+        filter_type_dropdown.click()
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
+        # criteria
+        criteria_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-location-select ')]/div")
+        criteria_dropdown.click()
+        criteria_input = self.wait_for_xhr_request("ember-power-select-trigger-multiple-input")
+        criteria_input.send_keys('a')
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
+
+        # action - assignee
+        action_type_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-action-type-select ')]/div")
+        action_type_dropdown.click()
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]//li[3]").click()
+
+        # action - assignee
+        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-action-assignee-select ')]/div")
         assignee_dropdown.click()
         assignee_input = self.wait_for_xhr_request("ember-power-select-search-input")
         assignee_input.send_keys('a')
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
         time.sleep(2)
         self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
-        # pf
-        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-pf-select ')]/div")
-        assignee_dropdown.click()
-        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
-        time.sleep(2)
-        self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
-        # criteria
-        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-location-select ')]/div")
-        assignee_dropdown.click()
-        assignee_input = self.wait_for_xhr_request("ember-power-select-trigger-multiple-input")
-        assignee_input.send_keys('a')
-        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
-        time.sleep(2)
-        self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
+
         # save
         self.gen_elem_page.click_save_btn()
 
         # Find in list
         automation = page.find_list_data()
-        self.driver.refresh()
         list_view = page.find_list_name()
         time.sleep(2)
         page.click_name_in_list(description, list_view)
@@ -154,14 +172,14 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         automation_input = self.wait_for_xhr_request("t-automation-description")
         automation_input.clear()
         self._fill_in(automation)
-        # assignee
-        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-assignee-select ')]/div")
-        assignee_dropdown.click()
-        assignee_input = self.wait_for_xhr_request("ember-power-select-search-input")
-        assignee_input.send_keys('a')
+
+        # event
+        event_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-event-select ')]/div")
+        event_dropdown.click()
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
         time.sleep(2)
-        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]//li[2]").click()
+        self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]//li[2]").click()
+
         # pf
         assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-pf-select ')]/div")
         assignee_dropdown.click()
@@ -176,12 +194,21 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
         time.sleep(2)
         self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
+
+        # action - assignee
+        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-action-assignee-select ')]/div")
+        assignee_dropdown.click()
+        assignee_input = self.wait_for_xhr_request("ember-power-select-search-input")
+        assignee_input.send_keys('a')
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]//li[2]").click()
+
         # save
         self.gen_elem_page.click_save_btn()
 
         # Find in list
         automation = page.find_list_data()
-            # self.driver.refresh()
         list_view = page.find_list_name()
         page.click_name_in_list(description, list_view)
 
