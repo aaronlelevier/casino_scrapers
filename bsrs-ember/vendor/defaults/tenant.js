@@ -18,6 +18,7 @@ var BSRS_TENANT_DEFAULTS_OBJECT = (function() {
       companyNameGridOne: 'foobar1',
       companyNameGridOneReverse: 'foobar10',
       companyNameLastPage2Grid: 'foobar20',
+      dashboardTextOne: 'welcome',
       currencyOne: this.currency.idOne,
       currencyTwo: this.currency.idTwo,
       currencySelectOne: this.currency.idBoy,
