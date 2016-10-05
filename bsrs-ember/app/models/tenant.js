@@ -103,7 +103,6 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
   }),
   billingEmailIsNotDirty: Ember.computed.not('billingEmailIsDirty'),
   implementationEmailIsDirty: Ember.computed('implementation_email.isDirtyOrRelatedDirty', function(){
-    console.log('here');
     return this.get('implementation_email.isDirtyOrRelatedDirty');
   }),
   implementationEmailIsNotDirty: Ember.computed.not('implementationEmailIsDirty'),
@@ -114,6 +113,10 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
   rollback() {
     this.rollbackDefaultCurrency();
     this.rollbackCountries();
+    this.rollbackImplementationEmail();
+    this.rollbackBillingEmail();
+    this.rollbackBillingPhoneNumber();
+    this.rollbackBillingAddress();
     this._super(...arguments);
   },
   saveRelated() {

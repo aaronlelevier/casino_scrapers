@@ -240,6 +240,8 @@ test('rollbackBillingPhoneNumber - billing_phone_number - tenant will set billin
   tenant.change_billing_phone_number({id: other_billing_phone_number.get('id')});
   assert.equal(tenant.get('billing_phone_number_fk'), PND.idOne);
   assert.equal(tenant.get('billing_phone_number.id'), PND.idTwo);
+  let phonenumber = tenant.get('billing_phone_number');
+  phonenumber.change_phone_number_type({id: PNTD.idOne});
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
   assert.ok(tenant.get('billingPhoneNumberIsDirty'));
   tenant.rollbackBillingPhoneNumber();
@@ -291,8 +293,11 @@ test('saveBillingEmail - email - tenant will set email_fk to current email id', 
   tenant.change_billing_email({id: other_email.get('id')});
   assert.equal(tenant.get('billing_email_fk'), ED.idOne);
   assert.equal(tenant.get('billing_email.id'), ED.idTwo);
+  let email = tenant.get('billing_email');
+  email.change_email_type({id: ETD.idOne});
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
   assert.ok(tenant.get('billingEmailIsDirty'));
+  tenant.saveRelatedSingle('billing_email');
   tenant.saveBillingEmail();
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(!tenant.get('billingEmailIsDirty'));
@@ -312,6 +317,8 @@ test('rollbackBillingEmail - email - tenant will set email to current email_fk',
   tenant.change_billing_email({id: other_email.get('id')});
   assert.equal(tenant.get('billing_email_fk'), ED.idOne);
   assert.equal(tenant.get('billing_email.id'), ED.idTwo);
+  let email = tenant.get('billing_email');
+  email.change_email_type({id: ETD.idOne});
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
   assert.ok(tenant.get('billingEmailIsDirty'));
   tenant.rollbackBillingEmail();
@@ -363,8 +370,11 @@ test('saveBillingAddress - address - tenant will set address_fk to current addre
   tenant.change_billing_address({id: other_address.get('id')});
   assert.equal(tenant.get('billing_address_fk'), AD.idOne);
   assert.equal(tenant.get('billing_address.id'), AD.idTwo);
+  let address = tenant.get('billing_address');
+  address.change_address_type({id: ATD.idOne});
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
   assert.ok(tenant.get('billingAddressIsDirty'));
+  tenant.saveRelatedSingle('billing_address');
   tenant.saveBillingAddress();
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(!tenant.get('billingAddressIsDirty'));
@@ -384,6 +394,8 @@ test('rollbackBillingAddress - address - tenant will set address to current addr
   tenant.change_billing_address({id: other_address.get('id')});
   assert.equal(tenant.get('billing_address_fk'), AD.idOne);
   assert.equal(tenant.get('billing_address.id'), AD.idTwo);
+  let address = tenant.get('billing_address');
+  address.change_address_type({id: ATD.idOne});
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
   assert.ok(tenant.get('billingAddressIsDirty'));
   tenant.rollbackBillingAddress();
@@ -434,8 +446,11 @@ test('saveImplementationEmail - email - tenant will set email_fk to current emai
   tenant.change_implementation_email({id: other_email.get('id')});
   assert.equal(tenant.get('implementation_email_fk'), ED.idOne);
   assert.equal(tenant.get('implementation_email.id'), ED.idTwo);
+  let email = tenant.get('implementation_email');
+  email.change_email_type({id: ETD.idOne});
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
   assert.ok(tenant.get('implementationEmailIsDirty'));
+  tenant.saveRelatedSingle('implementation_email');
   tenant.saveImplementationEmail();
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(!tenant.get('implementationEmailIsDirty'));
@@ -455,6 +470,8 @@ test('rollbackImplementationEmail - email - tenant will set email to current ema
   tenant.change_implementation_email({id: other_email.get('id')});
   assert.equal(tenant.get('implementation_email_fk'), ED.idOne);
   assert.equal(tenant.get('implementation_email.id'), ED.idTwo);
+  let email = tenant.get('implementation_email');
+  email.change_email_type({id: ETD.idOne});
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
   assert.ok(tenant.get('implementationEmailIsDirty'));
   tenant.rollbackImplementationEmail();
@@ -715,6 +732,41 @@ test('rollback - currency and countries', assert => {
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
   tenant.rollback();
   assert.equal(tenant.get('countries').get('length'), 0);
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('rollback - related contact models', assert => {
+  run(() => {
+    tenant = store.push('tenant', {id: TD.idOne});
+  });
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+  // implementation email
+  tenant.change_implementation_email({id: ED.idOne});
+  let implementation_email = tenant.get('implementation_email');
+  implementation_email.change_email_type({id: ETD.idOne});
+  assert.ok(tenant.get('implementationEmailIsDirty'));
+  // billing email
+  tenant.change_billing_email({id: ED.idOne});
+  let billing_email = tenant.get('billing_email');
+  billing_email.change_email_type({id: ETD.idOne});
+  assert.ok(tenant.get('billingEmailIsDirty'));
+  // billing phone
+  tenant.change_billing_phone_number({id: ED.idOne});
+  let billing_phone_number = tenant.get('billing_phone_number');
+  billing_phone_number.change_phone_number_type({id: ETD.idOne});
+  assert.ok(tenant.get('billingPhoneNumberIsDirty'));
+  // billing address
+  tenant.change_billing_address({id: ED.idOne});
+  let billing_address = tenant.get('billing_address');
+  billing_address.change_address_type({id: ETD.idOne});
+  assert.ok(tenant.get('billingAddressIsDirty'));
+  // all is dirty
+  assert.ok(tenant.get('isDirtyOrRelatedDirty'));
+  tenant.rollback();
+  assert.ok(tenant.get('implementationEmailIsNotDirty'));
+  assert.ok(tenant.get('billingEmailIsNotDirty'));
+  assert.ok(tenant.get('billingPhoneNumberIsNotDirty'));
+  assert.ok(tenant.get('billingAddressIsNotDirty'));
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 

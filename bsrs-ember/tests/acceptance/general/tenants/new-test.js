@@ -89,7 +89,6 @@ test('visit new URL and create a new record', assert => {
   const countryData = CountryF.list_power_select();
   const countryId = countryData.results[1].id;
   const countryName = countryData.results[1].name;
-  console.log(countryName);
   xhr(`${COUNTRY_URL}tenant/?search=${keyword}`, 'GET', null, {}, 200, countryData);
 
   // billing country
