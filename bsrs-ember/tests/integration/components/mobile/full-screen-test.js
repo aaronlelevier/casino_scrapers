@@ -7,7 +7,7 @@ import repository from 'bsrs-ember/tests/helpers/repository';
 
 let store;
 
-moduleForComponent('mobile/full-screen', 'amk Integration | Component | full-screen', {
+moduleForComponent('mobile/full-screen', 'Integration | Component | full-screen', {
   integration: true,
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:person']);

@@ -11,6 +11,10 @@ var BSRS_TENANT_DEFAULTS_OBJECT = (function() {
       idGridTwo: '1ee82b8c-89bd-45a2-8d57-5b920c8b0002',
       companyNameOne: 'foobar',
       companyNameTwo: 'bizbaz',
+      companyCodeOne: 'foo-bar',
+      companyCodeTwo: 'biz-baz',
+      companyDashboardTextOne: 'welcome',
+      companyDashboardTextTwo: 'hiya',
       companyNameGridOne: 'foobar1',
       companyNameGridOneReverse: 'foobar10',
       companyNameLastPage2Grid: 'foobar20',
@@ -22,8 +26,13 @@ var BSRS_TENANT_DEFAULTS_OBJECT = (function() {
       nameGridOne: this.currency.name+'0',
       nameGridTen: this.currency.name+'9',
       implementationContactOne: 'Sue',
+      implementationContactTwo: 'Tom',
+      implementationEmailOne: 'sue@email.com',
+      implementationEmailTwo: 'tom@email.com',
+      billingContactOne: 'Hank',
+      billingContactTwo: 'Marge',
       billingContactOne: 'Bill',
-      
+
       // LEGACY
       // Initial
       id: '63774987-65d2-4475-b998-091059c90e10',

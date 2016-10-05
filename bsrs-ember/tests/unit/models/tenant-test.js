@@ -183,23 +183,28 @@ test('related billing_phone_number should return one billing_phone_number for a 
   });
   assert.equal(tenant.get('billing_phone_number').get('id'), PND.idOne);
 });
-test('change_billing_phone_number - will update the tenants billing_phone_number and dirty the model', (assert) => {
-  let other_billing_phone_number;
+test('change_billing_phone_number - will update the tenants billing_phone_number and setting type will dirty the model', (assert) => {
+  let related_phone;
   run(() => {
     tenant = store.push('tenant', {id: TD.idOne, billing_phone_number_fk: undefined});
     store.push('phonenumber', {id: PND.idOne, tenants: []});
-    other_billing_phone_number = store.push('phonenumber', {id: PND.idTwo, tenants: []});
   });
+
   assert.equal(tenant.get('billing_phone_number'), undefined);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(tenant.get('billingPhoneNumberIsNotDirty'));
   tenant.change_billing_phone_number({id: PND.idOne});
   assert.equal(tenant.get('billing_phone_number_fk'), undefined);
   assert.equal(tenant.get('billing_phone_number.id'), PND.idOne);
-  assert.equal(tenant.get('isDirtyOrRelatedDirty'), true);
-  assert.equal(tenant.get('billingPhoneNumberIsDirty'), true);
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(tenant.get('billingPhoneNumberIsNotDirty'));
+  related_phone = tenant.get('billing_phone_number');
+  related_phone.change_phone_number_type({id: PNTD.idOne});
+  assert.ok(tenant.get('isDirtyOrRelatedDirty'));
+  assert.ok(tenant.get('billingPhoneNumberIsDirty'));
+
 });
-test('saveBillingPhoneNumber - billing_phone_number - tenant will set billing_phone_number_fk to current billing_phone_number id', (assert) => {
+test('amk saveBillingPhoneNumber - billing_phone_number - tenant will set billing_phone_number_fk to current billing_phone_number id', (assert) => {
   let other_billing_phone_number;
   run(() => {
     tenant = store.push('tenant', {id: TD.idOne, billing_phone_number_fk: PND.idOne});
@@ -210,10 +215,12 @@ test('saveBillingPhoneNumber - billing_phone_number - tenant will set billing_ph
   assert.equal(tenant.get('billing_phone_number_fk'), PND.idOne);
   assert.equal(tenant.get('billing_phone_number.id'), PND.idOne);
   tenant.change_billing_phone_number({id: other_billing_phone_number.get('id')});
+  other_billing_phone_number.change_phone_number_type({id: PNTD.idOne});
   assert.equal(tenant.get('billing_phone_number_fk'), PND.idOne);
   assert.equal(tenant.get('billing_phone_number.id'), PND.idTwo);
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
   assert.ok(tenant.get('billingPhoneNumberIsDirty'));
+  tenant.saveRelatedSingle('billing_phone_number');
   tenant.saveBillingPhoneNumber();
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(!tenant.get('billingPhoneNumberIsDirty'));
@@ -251,12 +258,11 @@ test('related billing email should return one email for a tenant', (assert) => {
   assert.equal(tenant.get('billing_email').get('id'), ED.idOne);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
-test('change_billing_email - will update the tenants email and dirty the model', (assert) => {
-  let other_email;
+test('change_billing_email - should update the tenants email and  setting the type or email should dirty the model', (assert) => {
+  let related_email;
   run(() => {
     tenant = store.push('tenant', {id: TD.idOne, billing_email_fk: undefined});
     store.push('email', {id: ED.idOne, tenants: []});
-    other_email = store.push('email', {id: ED.idTwo, tenants: []});
   });
   assert.equal(tenant.get('billing_email'), undefined);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
@@ -264,8 +270,13 @@ test('change_billing_email - will update the tenants email and dirty the model',
   tenant.change_billing_email({id: ED.idOne});
   assert.equal(tenant.get('billing_email_fk'), undefined);
   assert.equal(tenant.get('billing_email.id'), ED.idOne);
-  assert.equal(tenant.get('isDirtyOrRelatedDirty'), true);
-  assert.equal(tenant.get('billingEmailIsDirty'), true);
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(tenant.get('billingEmailIsNotDirty'));
+  related_email = tenant.get('billing_email');
+  related_email.change_email_type({id: ETD.idOne});
+  assert.ok(tenant.get('isDirtyOrRelatedDirty'));
+  assert.ok(tenant.get('billingEmailIsDirty'));
+
 });
 test('saveBillingEmail - email - tenant will set email_fk to current email id', (assert) => {
   let other_email;
@@ -319,12 +330,11 @@ test('related billing address should return one address for a tenant', (assert) 
   assert.equal(tenant.get('billing_address').get('id'), AD.idOne);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
-test('change_billing_address - will update the tenants address and dirty the model', (assert) => {
-  let other_address;
+test('change_billing_address - will update the tenants address and setting the type should dirty the model', (assert) => {
+  let related_address;
   run(() => {
     tenant = store.push('tenant', {id: TD.idOne, billing_address_fk: undefined});
     store.push('address', {id: AD.idOne, tenants: []});
-    other_address = store.push('address', {id: AD.idTwo, tenants: []});
   });
   assert.equal(tenant.get('billing_address'), undefined);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
@@ -332,8 +342,13 @@ test('change_billing_address - will update the tenants address and dirty the mod
   tenant.change_billing_address({id: AD.idOne});
   assert.equal(tenant.get('billing_address_fk'), undefined);
   assert.equal(tenant.get('billing_address.id'), AD.idOne);
-  assert.equal(tenant.get('isDirtyOrRelatedDirty'), true);
-  assert.equal(tenant.get('billingAddressIsDirty'), true);
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(tenant.get('billingAddressIsNotDirty'));
+  related_address = tenant.get('billing_address');
+  related_address.change_address_type({id: ATD.idOne});
+  assert.ok(tenant.get('isDirtyOrRelatedDirty'));
+  assert.ok(tenant.get('billingAddressIsDirty'));
+
 });
 test('saveBillingAddress - address - tenant will set address_fk to current address id', (assert) => {
   let other_address;
@@ -387,12 +402,11 @@ test('related implementation email should return one email for a tenant', (asser
   assert.equal(tenant.get('implementation_email').get('id'), ED.idOne);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
-test('change_implementation_email - will update the tenants_implementation email and dirty the model', (assert) => {
-  let other_email;
+test('change_implementation_email - should update the tenants_implementation email and dirty the model when type or email are set', (assert) => {
+  let related_email;
   run(() => {
     tenant = store.push('tenant', {id: TD.idOne, implementation_email_fk: undefined});
     store.push('email', {id: ED.idOne, tenants_implementation: []});
-    other_email = store.push('email', {id: ED.idTwo, tenants_implementation: []});
   });
   assert.equal(tenant.get('implementation_email'), undefined);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
@@ -400,8 +414,12 @@ test('change_implementation_email - will update the tenants_implementation email
   tenant.change_implementation_email({id: ED.idOne});
   assert.equal(tenant.get('implementation_email_fk'), undefined);
   assert.equal(tenant.get('implementation_email.id'), ED.idOne);
-  assert.equal(tenant.get('isDirtyOrRelatedDirty'), true);
-  assert.equal(tenant.get('implementationEmailIsDirty'), true);
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(tenant.get('implementationEmailIsNotDirty'));
+  related_email = tenant.get('implementation_email');
+  related_email.change_email_type({id: ETD.idOne});
+  assert.ok(tenant.get('isDirtyOrRelatedDirty'));
+  assert.ok(tenant.get('implementationEmailIsDirty'));
 });
 test('saveImplementationEmail - email - tenant will set email_fk to current email id', (assert) => {
   let other_email;
@@ -598,7 +616,7 @@ test('rollbackCountries - countries - multiple tenants with the same countries w
 
 /* Over Arching Test of saveRelated / rollBack */
 
-test('saveRelated - change currency and countries', assert => {
+test('saveRelated currency - change currency and save', assert => {
   // currency
   run(() => {
     inactive_currency = store.push('currency', {id: CurrencyD.idTwo, tenants: []});
@@ -608,6 +626,8 @@ test('saveRelated - change currency and countries', assert => {
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
   tenant.saveRelated();
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+test('saveRelated countries - change countries and save', assert => {
   // countries
   assert.equal(tenant.get('countries').get('length'), 0);
   run(() => {
@@ -617,6 +637,57 @@ test('saveRelated - change currency and countries', assert => {
   assert.equal(tenant.get('countries').get('length'), 1);
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
   tenant.saveRelated();
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+test('saveRelated implemention email - change email and save', assert => {
+  // implementation email
+  tenant.change_implementation_email({id: ED.idOne});
+  let email = tenant.get('implementation_email');
+  email.change_email_type({id: ETD.idOne});
+  assert.equal(tenant.get('implementation_email.id'), ED.idOne);
+  assert.ok(tenant.get('isDirtyOrRelatedDirty'));
+  assert.ok(email.get('emailTypeIsDirty'));
+  tenant.saveRelated();
+  assert.ok(tenant.get('implementationEmailIsNotDirty'));
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('saveRelated billing email - change email and save', assert => {
+  // implementation email
+  tenant.change_billing_email({id: ED.idOne});
+  let email = tenant.get('billing_email');
+  email.change_email_type({id: ETD.idOne});
+  assert.equal(tenant.get('billing_email.id'), ED.idOne);
+  assert.ok(tenant.get('isDirtyOrRelatedDirty'));
+  assert.ok(email.get('emailTypeIsDirty'));
+  tenant.saveRelated();
+  assert.ok(tenant.get('billingEmailIsNotDirty'));
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('saveRelated billing phone - change phone and save', assert => {
+  // implementation email
+  tenant.change_billing_phone_number({id: PND.idOne});
+  let phone = tenant.get('billing_phone_number');
+  phone.change_phone_number_type({id: PNTD.idOne});
+  assert.equal(tenant.get('billing_phone_number.id'), PND.idOne);
+  assert.ok(tenant.get('isDirtyOrRelatedDirty'));
+  assert.ok(phone.get('phoneNumberTypeIsDirty'));
+  tenant.saveRelated();
+  assert.ok(tenant.get('billingPhoneNumberIsNotDirty'));
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('saveRelated billing address - change address and save', assert => {
+  // implementation email
+  tenant.change_billing_address({id: AD.idOne});
+  let address = tenant.get('billing_address');
+  address.change_address_type({id: ATD.idOne});
+  assert.equal(tenant.get('billing_address.id'), AD.idOne);
+  assert.ok(tenant.get('isDirtyOrRelatedDirty'));
+  assert.ok(address.get('addressTypeIsDirty'));
+  tenant.saveRelated();
+  assert.ok(tenant.get('billingAddressIsNotDirty'));
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
@@ -671,4 +742,3 @@ test('tenant validations', assert => {
   assert.ok(attrs.get('billing_address'));
   assert.deepEqual(attrs.get('billing_address').get('content')[0].get('messages'), ['errors.tenant.billing_address']);
 });
-

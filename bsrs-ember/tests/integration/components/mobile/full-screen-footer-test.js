@@ -2,7 +2,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
 
-moduleForComponent('mobile/full-screen', 'amk Integration | Component | full-screen-footer', {
+moduleForComponent('mobile/full-screen', 'Integration | Component | full-screen-footer', {
   integration: true
 });
 

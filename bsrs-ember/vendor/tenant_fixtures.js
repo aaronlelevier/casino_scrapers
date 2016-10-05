@@ -36,6 +36,8 @@ var BSRS_TENANT_FACTORY = (function() {
     return {
       id: id,
       company_name: this.tenant.companyNameOne,
+      company_code: this.tenant.companyCodeOne,
+      dashboard_text: this.tenant.companyDashboardTextOne,
       default_currency: this.tenant.currencyOne,
       countries: [this.country.id],
       implementation_contact: this.tenant.implementationContactOne,
@@ -52,7 +54,6 @@ var BSRS_TENANT_FACTORY = (function() {
   factory.prototype.put = function(tenant) {
     var id = tenant && tenant.id || this.tenant.idOne;
     var response = this.generate_put(id);
-    response.default_currency = response.default_currency.id;
     for(var key in tenant) {
       response[key] = tenant[key];
     }

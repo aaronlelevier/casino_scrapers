@@ -7,21 +7,47 @@ import TD from 'bsrs-ember/vendor/defaults/tenant';
 const BASE_URL = BASEURLS.BASE_TENANT_URL;
 const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
 const CURRENCY = '.t-currency-select';
+const IMP_EMAIL = '.t-email-email:eq(0)';
+const IMP_EMAIL_TYPE = '.t-email-type-select:eq(0)';
+const BILL_EMAIL = '.t-email-email:eq(1)';
+const BILL_PHONE = '.t-phonenumber-number:eq(0)';
+const BILL_PHONE_TYPE = '.t-phone-number-type-select:eq(0)';
+const BILL_EMAIL_TYPE = '.t-email-type-select:eq(0)';
 
 const COUNTRIES = '.t-tenant-country-select .ember-power-select-multiple-option';
 
 export default create({
   visit: visitable(TENANT_LIST_URL),
   visitDetail: visitable(DETAIL_URL),
+  headerTitleText: text('.t-tenant-header'),
   companyNameValue: value('.t-tenant-company_name'),
   companyNameFill: fillable('.t-tenant-company_name'),
+  companyCodeValue: value('.t-tenant-company_code'),
+  companyCodeFill: fillable('.t-tenant-company_code'),
   companyNameGridOne: text('.t-tenant-company_name:eq(0)'),
   companyNameSortText: text('.t-sort-company-name'),
+  companyDashboardTextValue: value('.t-tenant-dashboard_text'),
+  companyDashboardTextFill: fillable('.t-tenant-dashboard_text'),
+  companyImplementationContactValue: value('.t-tenant-implementation_contact'),
+  companyImplementationContactFill: fillable('.t-tenant-implementation_contact'),
+  companyImplementationEmailValue: value(IMP_EMAIL),
+  companyImplementationEmailFill: fillable(IMP_EMAIL),
+  companyImplementationEmailTypeValue: text(IMP_EMAIL_TYPE),
+  companyBillingContactValue: value('.t-tenant-billing_contact'),
+  companyBillingContactFill: fillable('.t-tenant-billing_contact'),
+  companyBillingEmailValue: value(BILL_EMAIL),
+  companyBillingEmailFill: fillable(BILL_EMAIL),
+  companyBillingPhoneValue: value(BILL_PHONE),
+  companyBillingPhoneFill: fillable(BILL_PHONE),
+  companyBillingEmailTypeValue: text(BILL_EMAIL_TYPE),
+  companyBillingAddressFill: fillable('.t-address-address'),
+  companyBillingCityFill: fillable('.t-address-city'),
+  companyBillingZipFill: fillable('.t-address-postal-code'),
 
   currencyInput: text(CURRENCY),
   currencySortText: text('.t-sort-currency-name'),
   currencyGridOne: text('.t-tenant-currency-name:eq(0)'),
 
   countrySelectedOne: text(`${COUNTRIES}:eq(0)`),
-  
+
 });
