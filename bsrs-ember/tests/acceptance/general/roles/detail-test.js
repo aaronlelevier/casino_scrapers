@@ -14,6 +14,7 @@ import CD from 'bsrs-ember/vendor/defaults/category';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currency';
 import TD from 'bsrs-ember/vendor/defaults/tenant';
 import CF from 'bsrs-ember/vendor/category_fixtures';
+import TF from 'bsrs-ember/vendor/tenant_fixtures';
 import config from 'bsrs-ember/config/environment';
 import page from 'bsrs-ember/tests/pages/role';
 import personPage from 'bsrs-ember/tests/pages/person';
@@ -28,7 +29,7 @@ const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_roles_url;
 const ROLE_URL = ROLE_LIST_URL;
 const DETAIL_URL = BASE_URL + '/' + RD.idOne;
-const SETTINGS_URL = BASEURLS.base_setting_url;
+const TENANTS_URL = BASEURLS.BASE_TENANT_URL;
 const LETTER_A = {keyCode: 65};
 const LETTER_S = {keyCode: 83};
 const LETTER_R = {keyCode: 82};
@@ -390,10 +391,10 @@ test('for inherited field, can click link-to to get to inherited setting', (asse
     assert.equal(settingPage.dashboardTextInheritedFrom, 'Inherited from: ' + TD.inherits_from_general);
     assert.equal(settingPage.dashboardTextValue, '');
   });
-  xhr(`${PREFIX}/admin/tenant/${TD.id}/`, 'GET', null, {}, 200, {});
+  xhr(`${PREFIX}/admin/tenants/${TD.id}/`, 'GET', null, {}, 200, TF.detail());
   settingPage.dashboardTextInheritedFromClick();
   andThen(() => {
-    assert.equal(currentURL(), `${SETTINGS_URL}/${TD.id}`);
+    assert.equal(currentURL(), `${TENANTS_URL}/${TD.id}`);
   });
 });
 
