@@ -23,7 +23,9 @@ def get_or_create_tenant(company_name=settings.DEFAULT_TENANT_COMPANY_NAME, **kw
             'id': generate_uuid(Tenant),
             'company_name': company_name,
             'company_code': _generate_chars(),
+            'implementation_contact_initial': _generate_chars(),
             'implementation_email': Email.objects.first(),
+            'billing_contact': _generate_chars(),
             'billing_email': Email.objects.first(),
             'billing_phone_number': PhoneNumber.objects.first(),
             'billing_address': Address.objects.first()

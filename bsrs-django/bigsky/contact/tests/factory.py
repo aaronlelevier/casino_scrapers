@@ -134,9 +134,9 @@ def create_contact_fixtures():
 
     mommy.make(Email, id=email_id, type=email_type)
 
-    mommy.make(PhoneNumber, id=ph_id, type=ph_type)
+    mommy.make(PhoneNumber, id=ph_id, type=ph_type, number='123-456-7890')
 
     state = create_contact_state()
     country = create_contact_country()
     mommy.make(Address, id=address_id, type=address_type, state=state,
-               country=country, _fill_optional=['address'])
+               country=country, _fill_optional=['address', 'city', 'postal_code'])

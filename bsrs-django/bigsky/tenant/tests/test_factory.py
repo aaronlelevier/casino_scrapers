@@ -26,9 +26,10 @@ class TenantTests(TestCase):
         self.assertEqual(ret.countries.count(), 1)
         self.assertEqual(ret.countries.first().states.count(), 1)
         # contacts
-        self.assertIsNone(ret.implementation_contact)
+        self.assertTrue(ret.implementation_contact_initial)
         self.assertIsInstance(ret.implementation_email, Email)
         self.assertIsInstance(ret.implementation_email.type, EmailType)
+        self.assertTrue(ret.billing_contact)
         self.assertIsInstance(ret.billing_email, Email)
         self.assertIsInstance(ret.billing_email.type, EmailType)
         self.assertIsInstance(ret.billing_phone_number, PhoneNumber)

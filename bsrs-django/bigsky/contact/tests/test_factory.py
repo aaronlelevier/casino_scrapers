@@ -159,9 +159,14 @@ class FactoryTests(TestCase):
         # phone number
         ph = PhoneNumber.objects.first()
         self.assertTrue(str(ph.id).endswith('001'))
+        self.assertEqual(len(ph.number.split('-')[0]), 3)
+        self.assertEqual(len(ph.number.split('-')[1]), 3)
+        self.assertEqual(len(ph.number.split('-')[2]), 4)
         # address
         address = Address.objects.first()
         self.assertTrue(str(address.id).endswith('001'))
+        self.assertTrue(address.city)
+        self.assertTrue(address.postal_code)
 
         # all types should be created w/ incrementing uuids
         # email
