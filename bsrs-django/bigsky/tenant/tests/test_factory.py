@@ -5,7 +5,6 @@ from contact.models import (
     Email, EmailType, Address, AddressType, PhoneNumber, PhoneNumberType, State, Country)
 from dtd.models import TreeData, DTD_START_KEY
 from dtd.tests.factory import create_tree_data
-from person.models import Person
 from person.tests.factory import create_single_person
 from tenant.models import Tenant
 from tenant.tests import factory

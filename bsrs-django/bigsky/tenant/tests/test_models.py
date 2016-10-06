@@ -1,7 +1,6 @@
 from django.test import TestCase
 
 from accounting.models import Currency
-from tenant import oauth
 from tenant.models import Tenant
 from tenant.tests.factory import get_or_create_tenant
 
