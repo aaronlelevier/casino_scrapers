@@ -6,9 +6,9 @@ var BSRS_TENANT_DEFAULTS_OBJECT = (function() {
   factory.prototype.defaults = function() {
     return {
       idZero: '1ee82b8c-89bd-45a2-8d57-5b920c8b0000',
-      idOne: '1ee82b8c-89bd-45a2-8d57-5b920c8b0001',
-      idTwo: '2cc82b8c-89bd-45a2-8d57-5b920c8b0002',
-      idGridTwo: '1ee82b8c-89bd-45a2-8d57-5b920c8b0002',
+      idOne: '1ee82b8c-89bd-45a2-8d57-5b920c8b0000',
+      idTwo: '2cc82b8c-89bd-45a2-8d57-5b920c8b0001',
+      idGridTwo: '1ee82b8c-89bd-45a2-8d57-5b920c8b0001',
       companyNameOne: 'foobar',
       companyNameTwo: 'bizbaz',
       companyCodeOne: 'foo-bar',

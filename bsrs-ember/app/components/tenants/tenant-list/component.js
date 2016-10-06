@@ -12,23 +12,20 @@ export default GridViewComponent.extend({
       isSearchable: true
     },
     {
-      field: 'currency.name',
-      headerLabel: 'tenant.label.currency',
+      field: 'company_code',
+      headerLabel: 'tenant.label.company_code',
       headerIsTranslatable: true,
       isSortable: true,
       isFilterable: true,
       isSearchable: true
     },
     {
-      field: 'country.name',
-      headerLabel: 'tenant.label.country',
+      field: 'test_mode',
+      headerLabel: 'tenant.label.test_mode',
       headerIsTranslatable: true,
       isSortable: true,
       isFilterable: true,
-      isSearchable: true,
-      classNames: ['tenant-currency'],
-      filterComponent: 'grid/filters/currency-select-grid',
-      powerSelect: true
+      isSearchable: true
     }
   ]
 });

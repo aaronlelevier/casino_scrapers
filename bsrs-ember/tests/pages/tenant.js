@@ -22,6 +22,8 @@ export default create({
   headerTitleText: text('.t-tenant-header'),
   companyNameValue: value('.t-tenant-company_name'),
   companyNameFill: fillable('.t-tenant-company_name'),
+  companyCodeGridOne: text('.t-tenant-company_code:eq(0)'),
+  companyCodeSortText: text('.t-sort-company-code'),
   companyCodeValue: value('.t-tenant-company_code'),
   companyCodeFill: fillable('.t-tenant-company_code'),
   companyNameGridOne: text('.t-tenant-company_name:eq(0)'),
@@ -46,8 +48,9 @@ export default create({
 
   currencyInput: text(CURRENCY),
   currencySortText: text('.t-sort-currency-name'),
-  currencyGridOne: text('.t-tenant-currency-name:eq(0)'),
 
   countrySelectedOne: text(`${COUNTRIES}:eq(0)`),
 
+  testModeGridOne: value('.t-tenant-test_mode:eq(0)'),
+  testModeSortText: text('.t-sort-test-mode'),
 });

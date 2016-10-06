@@ -360,10 +360,10 @@ test('deserialize list', assert => {
   run(() => {
     deserializer.deserialize(json);
   });
-  assert.equal(store.find('tenant-list').get('length'), 9);
+  assert.equal(store.find('tenant-list').get('length'), 10);
   tenant = store.find('tenant-list').objectAt(0);
   assert.equal(tenant.get('id'), TD.idOne);
-  assert.equal(tenant.get('company_name'), TD.companyNameOne+'1');
-  assert.equal(tenant.get('company_code'), TD.companyCodeOne+'1');
+  assert.equal(tenant.get('company_name'), TD.companyNameOne+'0');
+  assert.equal(tenant.get('company_code'), TD.companyCodeOne+'0');
   assert.equal(tenant.get('test_mode'), TD.test_mode);
 });

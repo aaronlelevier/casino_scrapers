@@ -25,7 +25,7 @@ const ROUTE_NAME_DETAIL = 'admin.tenants.tenant';
 const ROUTE_NAME_INDEX = 'admin.tenants.index';
 const ID_ONE = TD.idOne;
 const ID_TWO = TD.idTwo;
-const ID_GRID_TWO = TD.idGridTwo;
+const ID_GRID_TWO = TD.idGriTwo;
 const EDIT_FIELD_VALUE = TD.companyNameTwo;
 
 // Fixed
@@ -42,7 +42,7 @@ moduleForAcceptance('Acceptance | tab tenant test', {
     // Edit based on module
     const detail_data = TF.detail(ID_ONE);
     detail_xhr = xhr(`${TENANT_URL}${ID_ONE}/`, 'GET', null, {}, 200, detail_data);
-    detail_data_two = TF.detail(ID_GRID_TWO);
+    detail_data_two = TF.detail(TD.idGridTwo);
     list_data = TF.list();
   },
 });
@@ -147,13 +147,13 @@ test('clicking on a new model from the grid view will not dirty the original tab
   andThen(() => {
     assert.equal(currentURL(), TENANT_LIST_URL);
   });
-  detail_xhr = xhr(`${TENANT_URL}${ID_GRID_TWO}/`, 'GET', null, {}, 200, detail_data_two);
+  detail_xhr = xhr(`${TENANT_URL}${TD.idGridTwo}/`, 'GET', null, {}, 200, detail_data_two);
   generalPage.gridItemOneClick();
   andThen(() => {
-    assert.equal(currentURL(), `${BASE_URL}/${ID_GRID_TWO}`);
+    assert.equal(currentURL(), `${BASE_URL}/${TD.idGridTwo}`);
     let model = store.find(MODEL, ID_ONE);
     assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
-    let obj_two = store.find(MODEL, ID_GRID_TWO);
+    let obj_two = store.find(MODEL, TD.idGridTwo);
     assert.ok(obj_two.get('isNotDirtyOrRelatedNotDirty'));
   });
 });

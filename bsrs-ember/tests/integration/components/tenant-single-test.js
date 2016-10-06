@@ -76,14 +76,12 @@ test('validation works', function(assert) {
   // assert.equal($('.t-validation-billing_contact').text().trim(), 'errors.tenant.billing_contact');
 });
 
-test('header - shows detail if not model.new', function(assert) {
+test('header - shows company_name if present on the model', function(assert) {
   this.render(hbs `{{tenants/tenant-single model=model}}`);
   assert.equal(this.$('.t-tenant-header').text().trim(), TD.companyNameOne);
-});
-
-test('header - shows new if there is no company name', function(assert) {
-  this.set('model', model);
-  model.set('company_name', '');
+  run(() => {
+    store.push('tenant', {id: TD.idOne, company_name: undefined});
+  });
   this.render(hbs `{{tenants/tenant-single model=model}}`);
   assert.equal(this.$('.t-tenant-header').text().trim(), trans.t('tenant.new'));
 });

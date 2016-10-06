@@ -61,7 +61,7 @@ var BSRS_TENANT_FACTORY = (function() {
   };
   factory.prototype.list = function() {
     var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
-    return this._list(1, page_size);
+    return this._list(0, page_size);
   };
   factory.prototype.list_two = function() {
     var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
