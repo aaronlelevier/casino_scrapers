@@ -18,7 +18,7 @@ import TenantJoinCountriesD from 'bsrs-ember/vendor/defaults/tenant-join-country
 
 var store, tenant, currency, inactive_currency;
 
-moduleFor('model:tenant', 'amk Unit | Model | tenant', {
+moduleFor('model:tenant', 'Unit | Model | tenant', {
   needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username', 'validator:address-street', 'validator:address-postal', 'validator:belongs-to'],
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:tenant', 'model:tenant-join-country', 'model:country', 'model:currency', 'model:phonenumber', 'model:phone-number-type', 'model:email', 'model:email-type', 'model:address', 'model:state', 'model:address-type', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);

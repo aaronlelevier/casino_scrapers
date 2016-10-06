@@ -16,11 +16,12 @@ dump.rdb
 so_*
 db.sqlite3
 
-# See http://help.github.com/ignore-files/ for more about ignoring files. 
+# See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # compiled output
 dist/
 tmp/
+npm-debug.log
 
 # dependencies
 node_modules/

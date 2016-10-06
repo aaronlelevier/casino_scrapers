@@ -74,10 +74,10 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('default_currency', 'tenant');
-    belongs_to.bind(this)('billing_phone_number', 'tenant', {dirty: false});
-    belongs_to.bind(this)('billing_email', 'tenant', {dirty: false});
-    belongs_to.bind(this)('billing_address', 'tenant', {dirty: false});
-    belongs_to.bind(this)('implementation_email', 'tenant', {dirty: false});
+    belongs_to.bind(this)('billing_phone_number', 'tenant', {dirty: false, track_related_model: true});
+    belongs_to.bind(this)('billing_email', 'tenant', {dirty: false, track_related_model: true});
+    belongs_to.bind(this)('billing_address', 'tenant', {dirty: false, track_related_model: true});
+    belongs_to.bind(this)('implementation_email', 'tenant', {dirty: false, track_related_model: true});
     many_to_many.bind(this)('country', 'tenant', {plural:true});
   },
   simpleStore: Ember.inject.service(),
@@ -90,22 +90,6 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
   billing_email_fk: '',
   billing_address_fk: '',
   tenant_countries_fks: [],
-  billingAddressIsDirty: Ember.computed('billing_address.isDirtyOrRelatedDirty', function(){
-    return this.get('billing_address.isDirtyOrRelatedDirty');
-  }),
-  billingAddressIsNotDirty: Ember.computed.not('billingAddressIsDirty'),
-  billingPhoneNumberIsDirty: Ember.computed('billing_phone_number.isDirtyOrRelatedDirty', function(){
-    return this.get('billing_phone_number.isDirtyOrRelatedDirty');
-  }),
-  billingPhoneNumberIsNotDirty: Ember.computed.not('billingPhoneNumberIsDirty'),
-  billingEmailIsDirty: Ember.computed('billing_email.isDirtyOrRelatedDirty', function(){
-    return this.get('billing_email.isDirtyOrRelatedDirty');
-  }),
-  billingEmailIsNotDirty: Ember.computed.not('billingEmailIsDirty'),
-  implementationEmailIsDirty: Ember.computed('implementation_email.isDirtyOrRelatedDirty', function(){
-    return this.get('implementation_email.isDirtyOrRelatedDirty');
-  }),
-  implementationEmailIsNotDirty: Ember.computed.not('implementationEmailIsDirty'),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'defaultCurrencyIsDirty', 'countriesIsDirty', 'billingEmailIsDirty', 'billingPhoneNumberIsDirty', 'implementationEmailIsDirty', 'billingAddressIsDirty', function() {
     return this.get('isDirty') || this.get('defaultCurrencyIsDirty') || this.get('countriesIsDirty') || this.get('billingEmailIsDirty') || this.get('billingPhoneNumberIsDirty') || this.get('implementationEmailIsDirty') || this.get('billingAddressIsDirty');
   }),
