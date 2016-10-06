@@ -46,6 +46,7 @@ export default Ember.Mixin.create({
       property: 'country'
     },
     implementation_email: {
+      //unique reverse lookup key to the tenant
       collection: 'tenants_implementation',
       property: 'email',
       related_model: 'implementation_email',

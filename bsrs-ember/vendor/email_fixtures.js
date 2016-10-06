@@ -14,9 +14,9 @@ var BSRS_EMAIL_FACTORY = (function() {
       type: this.email_type.idTwo,
     }];
   };
-  factory.prototype.get_belongs_to = function() {
+  factory.prototype.get_belongs_to = function(id) {
     return {
-      id: this.email.idOne,
+      id: id || this.email.idOne,
       email: this.email.emailOne,
       type: this.email_type.workId,
     };

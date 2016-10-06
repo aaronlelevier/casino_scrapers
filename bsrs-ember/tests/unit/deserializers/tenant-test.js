@@ -74,8 +74,8 @@ test('deserialize single', assert => {
   assert.equal(tenant.get('billing_address').get('address_type').get('id'), ATD.officeId);
   assert.equal(tenant.get('billing_address').get('address_type').get('name'), ATD.officeName);
   assert.equal(tenant.get('billing_address').get('address_type_fk'), ATD.officeId);
-  assert.equal(tenant.get('implementation_email_fk'), ED.idOne);
-  assert.equal(tenant.get('implementation_email').get('id'), ED.idOne);
+  assert.equal(tenant.get('implementation_email_fk'), ED.idTwo);
+  assert.equal(tenant.get('implementation_email').get('id'), ED.idTwo);
   assert.equal(tenant.get('implementation_email').get('email'), ED.emailOne);
   assert.equal(tenant.get('implementation_email').get('detail'), true);
   assert.equal(tenant.get('implementation_email').get('email_type').get('id'), ETD.workId);
@@ -242,8 +242,8 @@ test('existing billing_email different email same type', assert => {
 });
 
 test('existing implementation_email same email different type (change from personal to office)', assert => {
-  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, implementation_email_fk: ED.idOne});
-  store.push('email', {id: ED.idOne, email: ED.emailOne, tenants: [TD.idOne]});
+  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, implementation_email_fk: ED.idTwo});
+  store.push('email', {id: ED.idTwo, email: ED.emailOne, tenants_implementation: [TD.idOne]});
   store.push('email-type', {id: ETD.personalId, name: ETD.personalName, emails: [ED.idOne]});
   store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountryD.idOne]});
   const json = TF.detail();
@@ -251,7 +251,7 @@ test('existing implementation_email same email different type (change from perso
     deserializer.deserialize(json, TD.idOne);
   });
   tenant = store.find('tenant', TD.idOne);
-  assert.equal(tenant.get('implementation_email').get('id'), ED.idOne);
+  assert.equal(tenant.get('implementation_email').get('id'), ED.idTwo);
   assert.equal(tenant.get('implementation_email').get('email'), ED.emailOne);
   assert.equal(tenant.get('implementation_email').get('email_type').get('id'), ETD.workId);
   assert.equal(tenant.get('implementation_email').get('email_type').get('name'), ETD.workName);
@@ -259,8 +259,8 @@ test('existing implementation_email same email different type (change from perso
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 test('existing implementation_email same email same type', assert => {
-  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, implementation_email_fk: ED.idOne});
-  store.push('email', {id: ED.idOne, email: ED.emailOne, tenants: [TD.idOne]});
+  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, implementation_email_fk: ED.idTwo});
+  store.push('email', {id: ED.idTwo, email: ED.emailOne, tenants_implementation: [TD.idOne]});
   store.push('email-type', {id: ETD.workId, name: ETD.workName, emails: [ED.idOne]});
   store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountryD.idOne]});
   const json = TF.detail();
@@ -268,7 +268,7 @@ test('existing implementation_email same email same type', assert => {
     deserializer.deserialize(json, TD.idOne);
   });
   tenant = store.find('tenant', TD.idOne);
-  assert.equal(tenant.get('implementation_email').get('id'), ED.idOne);
+  assert.equal(tenant.get('implementation_email').get('id'), ED.idTwo);
   assert.equal(tenant.get('implementation_email').get('email'), ED.emailOne);
   assert.equal(tenant.get('implementation_email').get('email_type').get('id'), ETD.workId);
   assert.equal(tenant.get('implementation_email').get('email_type').get('name'), ETD.workName);
@@ -276,8 +276,8 @@ test('existing implementation_email same email same type', assert => {
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 test('existing implementation_email different email same type', assert => {
-  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, implementation_email_fk: ED.idOne});
-  store.push('email', {id: ED.idOne, email: ED.emailTwo, tenants: [TD.idOne]});
+  tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, implementation_email_fk: ED.idTwo});
+  store.push('email', {id: ED.idTwo, email: ED.emailTwo, tenants: [TD.idOne]});
   store.push('email-type', {id: ETD.workId, name: ETD.workName, emails: [ED.idOne]});
   store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountryD.idOne]});
   const json = TF.detail();
@@ -285,7 +285,7 @@ test('existing implementation_email different email same type', assert => {
     deserializer.deserialize(json, TD.idOne);
   });
   tenant = store.find('tenant', TD.idOne);
-  assert.equal(tenant.get('implementation_email').get('id'), ED.idOne);
+  assert.equal(tenant.get('implementation_email').get('id'), ED.idTwo);
   assert.equal(tenant.get('implementation_email').get('email'), ED.emailOne);
   assert.equal(tenant.get('implementation_email').get('email_type').get('id'), ETD.workId);
   assert.equal(tenant.get('implementation_email').get('email_type').get('name'), ETD.workName);
