@@ -21,7 +21,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 
 var store, model, trans;
 
-moduleForComponent('tenant-single', ' integration: tenant-single test', {
+moduleForComponent('tenant-single', 'integration: tenant-single test', {
   integration: true,
   setup() {
     page.setContext(this);
@@ -46,7 +46,7 @@ moduleForComponent('tenant-single', ' integration: tenant-single test', {
   }
 });
 
-test('scott validation works', function(assert) {
+test('validation works', function(assert) {
   // like new form
   run(function() {
     model = store.push('tenant', {id: TD.idOne, company_name: undefined, billing_phone_number_fk: PND.idOne, billing_email_fk: ED.idOne, implementation_email_fk: ED.idOne, billing_address_fk: AD.idOne});
@@ -78,12 +78,12 @@ test('scott validation works', function(assert) {
 
 test('header - shows detail if not model.new', function(assert) {
   this.render(hbs `{{tenants/tenant-single model=model}}`);
-  assert.equal(this.$('.t-tenant-header').text().trim(), trans.t('tenant.detail'));
+  assert.equal(this.$('.t-tenant-header').text().trim(), TD.companyNameOne);
 });
 
-test('header - shows new if model.new', function(assert) {
-  model.set('new', true);
+test('header - shows new if there is no company name', function(assert) {
   this.set('model', model);
+  model.set('company_name', '');
   this.render(hbs `{{tenants/tenant-single model=model}}`);
   assert.equal(this.$('.t-tenant-header').text().trim(), trans.t('tenant.new'));
 });
