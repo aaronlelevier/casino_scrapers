@@ -42,12 +42,13 @@ footer.mobile-footer {
     width: 100%;
     flex-wrap: nowrap;
     div.mobile-footer__item {
-      text-align: center;
       flex: none;
-      color: $medGray;
-      padding: 0 4%;
-      @include truncate;
       a {
+        display: block;
+        color: $medGray;
+        text-align: center;
+        padding: 0 4%;
+        @include truncate;
         color: $medGray;
         font-size: 1.7rem;
         cursor: pointer;
@@ -66,7 +67,7 @@ footer.mobile-footer {
       the width depending on the number of siblings.
 
       There should never be more that 5 items in the footer... if that changes,
-      simply copy, paste and make changes to the nth child and percentages.      
+      simply copy, paste and make changes to the nth child and percentages.
       */
 
       /* one item */

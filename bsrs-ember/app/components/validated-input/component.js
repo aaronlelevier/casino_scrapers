@@ -6,7 +6,7 @@ import { ValidationComponentInit, ValidationComponentPieces } from 'bsrs-ember/m
 /* @class ValidatedInput
 * didValidate - trigger showMessage and can show mwwage if
 * API
-* - 'model' 
+* - 'model'
 * - 'count' if multiple so can have many ids
 * - 'maxlength' for html5 validation
 * - 'valuePath'
@@ -30,7 +30,7 @@ export default Ember.Component.extend(ValidationComponentPieces, ValidationCompo
   //   return this.get('localDidValidate') || this.get('focusedOut');
   // }),
   // localDidValidate: Ember.computed('didValidate', function() {
-  //   // Create local didValidate boolean so that can show err msg right away on save and 
+  //   // Create local didValidate boolean so that can show err msg right away on save and
   //   // set back when fill in input
   //   return this.get('didValidate') && this.get('isInvalid');
   // }),
@@ -38,8 +38,8 @@ export default Ember.Component.extend(ValidationComponentPieces, ValidationCompo
   // isInvalid: computed.oneWay('attributeValidation.isInvalid'),
   setFocusedOut: task(function * () {
     yield timeout(1500);
-    if (this.get('isInvalid')) { 
-      this.set('focusedOut', true); 
+    if (this.get('isInvalid')) {
+      this.set('focusedOut', true);
     }
   }).restartable(),
   actions: {

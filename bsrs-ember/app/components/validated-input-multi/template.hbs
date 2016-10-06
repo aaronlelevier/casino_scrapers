@@ -10,16 +10,16 @@
 {{#if showMessage}}
   {{#if (v-get model valuePath "message")}}
     {{#tether-dialog
+      constraints=(array (hash to="scrollParent" pin=true attachment="together"))
       container-class="tether-dialog-reset"
       target=(concat "#" idz)
       hasOverlay=false
       attachment="bottom left"
       targetAttachment="top left"
-      offset="5px 0"
     }}
-    <div class="validated-input-error-dialog animated flipInX error">
-     {{t (v-get model valuePath "message")}}
-    </div>
+      <div class="validated-input-error-dialog animated flipInX error">
+        {{t (v-get model valuePath "message")}}
+      </div>
     {{/tether-dialog}}
   {{/if}}
 {{/if}}

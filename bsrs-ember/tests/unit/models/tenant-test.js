@@ -204,7 +204,7 @@ test('change_billing_phone_number - will update the tenants billing_phone_number
   assert.ok(tenant.get('billingPhoneNumberIsDirty'));
 
 });
-test('amk saveBillingPhoneNumber - billing_phone_number - tenant will set billing_phone_number_fk to current billing_phone_number id', (assert) => {
+test('saveBillingPhoneNumber - billing_phone_number - tenant will set billing_phone_number_fk to current billing_phone_number id', (assert) => {
   let other_billing_phone_number;
   run(() => {
     tenant = store.push('tenant', {id: TD.idOne, billing_phone_number_fk: PND.idOne});
