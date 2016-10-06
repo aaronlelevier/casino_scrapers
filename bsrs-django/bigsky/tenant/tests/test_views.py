@@ -41,7 +41,7 @@ class TenantSetUpMixin(object):
 class TenantListTests(TenantSetUpMixin, APITestCase):
 
     def test_data(self):
-        response = self.client.get('/api/admin/tenant/')
+        response = self.client.get('/api/admin/tenants/')
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -57,7 +57,7 @@ class TenantDetailTests(TenantSetUpMixin, APITestCase):
     def test_data(self):
         self.assertEqual(self.tenant.company_name, settings.DEFAULT_TENANT_COMPANY_NAME)
 
-        response = self.client.get('/api/admin/tenant/{}/'.format(self.tenant.id))
+        response = self.client.get('/api/admin/tenants/{}/'.format(self.tenant.id))
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -78,6 +78,7 @@ class TenantDetailTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['implementation_email']['type'], str(self.tenant.implementation_email.type.id))
         self.assertEqual(data['implementation_email']['email'], self.tenant.implementation_email.email)
         # billing
+        self.assertEqual(data['billing_contact'], self.tenant.billing_contact)
         self.assertEqual(data['billing_email']['id'], str(self.tenant.billing_email.id))
         self.assertEqual(data['billing_email']['type'], str(self.tenant.billing_email.type.id))
         self.assertEqual(data['billing_email']['email'], self.tenant.billing_email.email)
@@ -123,7 +124,7 @@ class TenantCreateTests(TenantSetUpMixin, APITestCase):
         self.assertTrue(init_data['billing_address'])
         self.assertTrue(init_data['billing_phone_number'])
 
-        response = self.client.post('/api/admin/tenant/', init_data, format='json')
+        response = self.client.post('/api/admin/tenants/', init_data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201)
@@ -185,7 +186,7 @@ class TenantCreateTests(TenantSetUpMixin, APITestCase):
             'billing_phone_number': billing_phone_number
         })
 
-        response = self.client.post('/api/admin/tenant/', init_data, format='json')
+        response = self.client.post('/api/admin/tenants/', init_data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201)
@@ -218,7 +219,7 @@ class TenantCreateEmailAndRemoteCallsTests(TenantSetUpMixin, APITestCase):
         }
         mock_post.return_value = sc_response
 
-        response = self.client.post('/api/admin/tenant/', self.init_data, format='json')
+        response = self.client.post('/api/admin/tenants/', self.init_data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201)
@@ -235,7 +236,7 @@ class TenantCreateEmailAndRemoteCallsTests(TenantSetUpMixin, APITestCase):
         }
         mock_post.return_value = sc_response
 
-        response = self.client.post('/api/admin/tenant/', self.init_data, format='json')
+        response = self.client.post('/api/admin/tenants/', self.init_data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201, data)
@@ -260,7 +261,7 @@ class TenantCreateEmailAndRemoteCallsTests(TenantSetUpMixin, APITestCase):
         }
         mock_post.return_value = sc_response
 
-        response = self.client.post('/api/admin/tenant/', self.init_data, format='json')
+        response = self.client.post('/api/admin/tenants/', self.init_data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201)
@@ -273,7 +274,7 @@ class TenantCreateEmailAndRemoteCallsTests(TenantSetUpMixin, APITestCase):
     def test_sc_to_post_api__error_occurred(self, mock_post):
         mock_post.return_value = {'status_code': 400}
 
-        response = self.client.post('/api/admin/tenant/', self.init_data, format='json')
+        response = self.client.post('/api/admin/tenants/', self.init_data, format='json')
 
         self.assertEqual(response.status_code, 400)
         data = json.loads(response.content.decode('utf8'))
@@ -299,7 +300,7 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
             'countries': [str(country.id)]
         })
 
-        response = self.client.put('/api/admin/tenant/{}/'.format(self.tenant.id), updated_data, format='json')
+        response = self.client.put('/api/admin/tenants/{}/'.format(self.tenant.id), updated_data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
@@ -395,7 +396,7 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
             }
         })
 
-        response = self.client.put('/api/admin/tenant/{}/'.format(self.tenant.id), updated_data, format='json')
+        response = self.client.put('/api/admin/tenants/{}/'.format(self.tenant.id), updated_data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
@@ -452,7 +453,7 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
         self.assertNotEqual(updated_data['billing_phone_number']['number'], self.tenant.billing_phone_number.number)
         self.assertNotEqual(updated_data['billing_address']['address'], self.tenant.billing_address.address)
 
-        response = self.client.put('/api/admin/tenant/{}/'.format(self.tenant.id), updated_data, format='json')
+        response = self.client.put('/api/admin/tenants/{}/'.format(self.tenant.id), updated_data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
@@ -474,7 +475,7 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
         self.assertIsInstance(self.tenant.implementation_contact, Person)
         self.assertTrue(self.tenant.countries.exists())
 
-        response = self.client.put('/api/admin/tenant/{}/'.format(self.tenant.id), updated_data, format='json')
+        response = self.client.put('/api/admin/tenants/{}/'.format(self.tenant.id), updated_data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
@@ -487,7 +488,7 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
 class TenantDeleteTests(TenantSetUpMixin, APITestCase):
 
     def test_delete(self):
-        response = self.client.delete('/api/admin/tenant/{}/'.format(self.tenant.id))
+        response = self.client.delete('/api/admin/tenants/{}/'.format(self.tenant.id))
         self.assertEqual(response.status_code, 204)
 
 
@@ -498,7 +499,7 @@ class TenantPermissionTests(TenantSetUpMixin, APITestCase):
         self.client.login(username=self.person_two.username, password=PASSWORD)
         self.assertNotEqual(self.person.role.tenant, self.person_two.role.tenant)
 
-        response = self.client.get('/api/admin/tenant/{}/'.format(self.tenant.id))
+        response = self.client.get('/api/admin/tenants/{}/'.format(self.tenant.id))
 
         self.assertEqual(response.status_code, 403)
 
@@ -509,6 +510,6 @@ class TenantPermissionTests(TenantSetUpMixin, APITestCase):
         self.client.login(username=self.person_two.username, password=PASSWORD)
         self.assertNotEqual(self.person.role.tenant, self.person_two.role.tenant)
 
-        response = self.client.get('/api/admin/tenant/{}/'.format(self.tenant.id))
+        response = self.client.get('/api/admin/tenants/{}/'.format(self.tenant.id))
 
         self.assertEqual(response.status_code, 200)

@@ -133,6 +133,7 @@ def create_contact_fixtures():
     address_id, address_type = create_types(ADDRESS_TYPES, Address, AddressType)
 
     mommy.make(Email, id=email_id, type=email_type)
+    mommy.make(Email, id=str(email_id)[:-1]+'2', type=email_type)
 
     mommy.make(PhoneNumber, id=ph_id, type=ph_type, number='123-456-7890')
 

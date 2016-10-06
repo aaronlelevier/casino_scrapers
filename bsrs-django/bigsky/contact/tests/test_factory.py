@@ -154,8 +154,11 @@ class FactoryTests(TestCase):
         factory.create_contact_fixtures()
 
         # email
-        email = Email.objects.first()
-        self.assertTrue(str(email.id).endswith('001'))
+        email = Email.objects.order_by('id')[0]
+        self.assertTrue(str(email.id).endswith('001'), str(email.id))
+        # email 2
+        email_two = Email.objects.order_by('id')[1]
+        self.assertTrue(str(email_two.id).endswith('002'), str(email_two.id))
         # phone number
         ph = PhoneNumber.objects.first()
         self.assertTrue(str(ph.id).endswith('001'))

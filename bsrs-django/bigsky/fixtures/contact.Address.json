@@ -9,10 +9,10 @@
     "content_type": null,
     "object_id": null,
     "type": "016530c4-ce6c-4724-9cfd-37a16e787004",
-    "address": "OepERnxEGKMfmRZdRNPsmYeEGdcbAnctHYOXBlPijwyRODmbpDTczOCNuzZDANFzJNMRIFVzCwrcDXXTWKdzBAPEOvaMeOywyFMQoknzinVXepGAXZJMGNNrySVOPEbxkkxLrjAGSVsOokpTVQSckvPAefYTLzFPtGGmNJKRyZrSlZbrjyDbOjYcCTilAksQsSZinqMUrXCYDmYnidbtqUCJpEyZteBEFSLGWWHvZtlZbBobRxVuPQjHGgffHFfuFyqXTacdAoqtYVxejwWOwBDaSTuBOYYqQHtYOgJMngwx",
-    "city": null,
+    "address": "123 St.",
+    "city": "San Diego",
     "state": "2f193a90-a270-48b7-8752-b4c5ad19156c",
-    "postal_code": null,
+    "postal_code": "92126",
     "country": "61760373-0b13-4a1e-8abe-8166ca841e01"
   }
 }
