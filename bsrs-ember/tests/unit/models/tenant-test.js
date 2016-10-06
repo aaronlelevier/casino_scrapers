@@ -18,7 +18,7 @@ import TenantJoinCountriesD from 'bsrs-ember/vendor/defaults/tenant-join-country
 
 var store, tenant, currency, inactive_currency;
 
-moduleFor('model:tenant', 'Unit | Model | tenant', {
+moduleFor('model:tenant', 'amk Unit | Model | tenant', {
   needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username', 'validator:address-street', 'validator:address-postal', 'validator:belongs-to'],
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:tenant', 'model:tenant-join-country', 'model:country', 'model:currency', 'model:phonenumber', 'model:phone-number-type', 'model:email', 'model:email-type', 'model:address', 'model:state', 'model:address-type', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
@@ -52,11 +52,11 @@ test('dirty test | dashboard_text', assert => {
   assert.equal(tenant.get('isDirty'), false);
 });
 
-test('dirty test | implementation_contact', assert => {
+test('dirty test | implementation_contact_initial', assert => {
   assert.equal(tenant.get('isDirty'), false);
-  tenant.set('implementation_contact', 'wat');
+  tenant.set('implementation_contact_initial', 'wat');
   assert.equal(tenant.get('isDirty'), true);
-  tenant.set('implementation_contact', '');
+  tenant.set('implementation_contact_initial', '');
   assert.equal(tenant.get('isDirty'), false);
 });
 
@@ -785,8 +785,8 @@ test('tenant validations', assert => {
   assert.deepEqual(attrs.get('default_currency').get('messages'), ['errors.tenant.default_currency']);
   assert.ok(attrs.get('billing_contact'));
   assert.deepEqual(attrs.get('billing_contact').get('messages'), ['errors.tenant.billing_contact']);
-  assert.ok(attrs.get('implementation_contact'));
-  assert.deepEqual(attrs.get('implementation_contact').get('messages'), ['errors.tenant.implementation_contact']);
+  assert.ok(attrs.get('implementation_contact_initial'));
+  assert.deepEqual(attrs.get('implementation_contact_initial').get('messages'), ['errors.tenant.implementation_contact_initial']);
   assert.ok(attrs.get('billing_phone_number'));
   assert.deepEqual(attrs.get('billing_phone_number').get('content')[0].get('messages'), ['errors.tenant.billing_phone_number']);
   assert.ok(attrs.get('billing_email'));

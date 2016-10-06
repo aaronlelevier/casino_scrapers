@@ -36,9 +36,9 @@ const Validations = buildValidations({
     presence: true,
     message: 'errors.tenant.billing_contact'
   }),
-  implementation_contact: validator('presence', {
+  implementation_contact_initial: validator('presence', {
     presence: true,
-    message: 'errors.tenant.implementation_contact'
+    message: 'errors.tenant.implementation_contact_initial'
   }),
   implementation_email: [
     validator('presence', {
@@ -84,7 +84,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
   company_name: attr(''),
   company_code: attr(''),
   dashboard_text: attr(''),
-  implementation_contact: attr(''),
+  implementation_contact_initial: attr(''),
   billing_contact: attr(''),
   billing_phone_number_fk: '',
   billing_email_fk: '',
@@ -144,7 +144,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
       dashboard_text: this.get('dashboard_text'),
       default_currency: this.get('default_currency').get('id'),
       countries: this.get('countries_ids'),
-      implementation_contact: this.get('implementation_contact'),
+      implementation_contact_initial: this.get('implementation_contact_initial'),
       billing_contact: this.get('billing_contact'),
       billing_phone_number: this.get('billing_phone_number').serialize(),
       billing_email: this.get('billing_email').serialize(),

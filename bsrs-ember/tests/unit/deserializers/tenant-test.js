@@ -40,7 +40,7 @@ test('deserialize single', assert => {
   assert.equal(tenant.get('company_name'), TD.companyNameOne);
   assert.equal(tenant.get('company_code'), TD.companyCodeOne);
   assert.equal(tenant.get('dashboard_text'), TD.dashboardTextOne);
-  assert.equal(tenant.get('implementation_contact'), TD.implementationContactOne);
+  assert.equal(tenant.get('implementation_contact_initial'), TD.implementationContactInitialOne);
   assert.equal(tenant.get('billing_contact'), TD.billingContactOne);
   assert.equal(tenant.get('default_currency_fk'), TD.currencyOne);
   assert.equal(tenant.get('default_currency').get('id'), TD.currencyOne);

@@ -21,7 +21,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 
 var store, model, trans;
 
-moduleForComponent('tenant-single', 'integration: tenant-single test', {
+moduleForComponent('tenant-single', 'amk integration: tenant-single test', {
   integration: true,
   setup() {
     page.setContext(this);
@@ -69,10 +69,10 @@ test('validation works', function(assert) {
   generalPage.save();
   $input = this.$('.invalid');
   assert.equal($input.length, 11);
+  assert.equal($('.t-validation-implementation_contact_initial').text().trim(), 'errors.tenant.implementation_contact_initial');
   // assert.equal($('.t-validation-company_name').text().trim(), 'errors.tenant.company_name');
   // assert.equal($('.t-validation-company_code').text().trim(), 'errors.tenant.company_code');
   // assert.equal($('.t-validation-dashboard_text').text().trim(), 'errors.tenant.dashboard_text');
-  // assert.equal($('.t-validation-implementation_contact').text().trim(), 'errors.tenant.implementation_contact');
   // assert.equal($('.t-validation-billing_contact').text().trim(), 'errors.tenant.billing_contact');
 });
 

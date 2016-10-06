@@ -16,7 +16,7 @@ var BSRS_TENANT_FACTORY = (function() {
       company_name: this.tenant.companyNameOne,
       company_code: this.tenant.companyCodeOne,
       dashboard_text: this.tenant.dashboardTextOne,
-      implementation_contact: this.tenant.implementationContactOne,
+      implementation_contact_initial: this.tenant.implementationContactInitialOne,
       billing_contact: this.tenant.billingContactOne,
       default_currency: {
         id: this.tenant.currencyOne,
@@ -41,7 +41,7 @@ var BSRS_TENANT_FACTORY = (function() {
       dashboard_text: this.tenant.companyDashboardTextOne,
       default_currency: this.tenant.currencyOne,
       countries: [this.country.id],
-      implementation_contact: this.tenant.implementationContactOne,
+      implementation_contact_initial: this.tenant.implementationContactInitialOne,
       billing_contact: this.tenant.billingContactOne,
       billing_phone_number: this.phonenumber.get_belongs_to(),
       billing_email: this.email.get_belongs_to(this.email_defaults.idOne),

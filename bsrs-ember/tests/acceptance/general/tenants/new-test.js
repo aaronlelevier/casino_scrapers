@@ -62,7 +62,7 @@ test('visit new URL and create a new record', assert => {
   //fill in required fields to pass validation
   page.companyCodeFill(TD.companyCodeOne);
   page.companyDashboardTextFill(TD.companyDashboardTextOne);
-  page.companyImplementationContactFill(TD.implementationContactOne);
+  page.companyImplementationContactFill(TD.implementationContactInitialOne);
   selectChoose('.t-email-type-select:eq(0)', ETD.workName);
   page.companyImplementationEmailFill(ED.emailOne);
   page.companyBillingContactFill(TD.billingContactOne);
