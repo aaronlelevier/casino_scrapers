@@ -46,6 +46,15 @@ moduleForComponent('tenant-single', 'amk integration: tenant-single test', {
   }
 });
 
+test('scidOne read only is populated', function(assert) {
+  run(function() {
+    model = store.push('tenant', {id: TD.idOne, scid: TD.scidOne});
+  });
+  this.set('model', model);
+  this.render(hbs `{{tenants/tenant-single model=model}}`);
+  assert.equal($('[data-test-id="tenant-scid"]').text().trim(), TD.scidOne);
+});
+
 test('validation works', function(assert) {
   // like new form
   run(function() {

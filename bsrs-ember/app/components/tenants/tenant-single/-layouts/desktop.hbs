@@ -53,6 +53,13 @@
         </div>
         <div class="row">
           <div class="col-md-12">
+            {{#form-group title="tenant.scid" for="scid"}}
+              <span data-test-id="tenant-scid">{{model.scid}}</span>
+            {{/form-group}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
             {{#form-group title="tenant.dashboard_text" for="dashboard_text"}}
               {{validated-input
                 model=model

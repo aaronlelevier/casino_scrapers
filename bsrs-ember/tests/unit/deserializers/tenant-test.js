@@ -37,6 +37,7 @@ test('deserialize single', assert => {
     deserializer.deserialize(json, TD.idOne);
   });
   assert.equal(tenant.get('id'), TD.idOne);
+  assert.equal(tenant.get('scid'), TD.scidOne);
   assert.equal(tenant.get('company_name'), TD.companyNameOne);
   assert.equal(tenant.get('company_code'), TD.companyCodeOne);
   assert.equal(tenant.get('dashboard_text'), TD.dashboardTextOne);

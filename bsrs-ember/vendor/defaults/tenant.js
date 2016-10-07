@@ -37,6 +37,7 @@ var BSRS_TENANT_DEFAULTS_OBJECT = (function() {
       // LEGACY
       // Initial
       id: '63774987-65d2-4475-b998-091059c90e10',
+      scidOne: 2672783746,
       company_code: 'one',
       company_name: 'Andys Pianos',
       dashboard_text: '# Welcome',

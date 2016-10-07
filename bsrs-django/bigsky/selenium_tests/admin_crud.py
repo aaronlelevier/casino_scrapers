@@ -734,5 +734,9 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         tenant_page.click_name_in_list(company_name_text, list_view)
         time.sleep(2)
 
+        # ensure scid is present
+        scid = self.driver.find_element_by_css_selector('[data-test-id="tenant-scid"]')
+        assert len(scid.text) == 10
+
 if __name__ == "__main__":
     unittest.main()

@@ -13,6 +13,7 @@ var BSRS_TENANT_FACTORY = (function() {
     var id = i || this.tenant.idOne;
     return {
       id: id,
+      scid: this.tenant.scidOne,
       company_name: this.tenant.companyNameOne,
       company_code: this.tenant.companyCodeOne,
       dashboard_text: this.tenant.dashboardTextOne,
