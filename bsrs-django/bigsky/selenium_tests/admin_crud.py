@@ -610,6 +610,122 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
     #     # This is failing because a Grid View page # allows you to go to that page,
     #     # but there are no records on that page
     #     # person_page.assert_name_not_in_list(username, new_person=None)
+    def test_tenant(self):
+        ### CREATE
+        # Go to Person Area
+        tenant_link = self.nav_page.find_tenant_link()
+        tenant_link.click()
+        # Create Person Page Object
+        tenant_page = ModelContactPage(
+            driver = self.driver,
+            new_link = "t-add-new",
+            list_name = "t-tenant-company_name",
+            list_data = "t-grid-data"
+        )
+        # Go to Create Person view
+        tenant_page.find_new_link().click()
+
+        # fill in all fields
+        company_name = self.driver.find_element_by_class_name('t-tenant-company_name')
+        company_name.send_keys("company_name_"+rand_num())
+
+        company_code = self.driver.find_element_by_class_name('t-tenant-company_code')
+        company_code.send_keys("company_code_"+rand_num())
+
+        dashboard_text = self.driver.find_element_by_class_name('t-tenant-dashboard_text')
+        dashboard_text.send_keys("welcome")
+
+        # select a Currency
+        currency = self.driver.find_element_by_class_name('t-currency-select')
+        currency.click()
+        currency_option = self.driver.find_element_by_class_name('ember-power-select-options')
+        time.sleep(2)
+        currency_option.click()
+
+        # select a Country
+        country_dropdown = self.driver.find_element_by_class_name('t-tenant-country-select')
+        country_dropdown.click()
+        country_input = self.wait_for_xhr_request("ember-power-select-trigger-multiple-input")
+        country_input.send_keys('a')
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
+
+        implementation_contact_initial = self.driver.find_element_by_class_name('t-tenant-implementation_contact_initial')
+        implementation_contact_initial.send_keys("Shanaya")
+
+        # select an Implementation Email Type
+        implementation_contact_email_type = self.driver.find_element_by_class_name("t-email-type-select")
+        implementation_contact_email_type.click()
+        implementation_contact_email_type_option = self.driver.find_element_by_class_name('ember-power-select-options')
+        time.sleep(2)
+        implementation_contact_email_type_option.click()
+
+        implementation_contact_email = self.driver.find_element_by_class_name("t-email-email")
+        implementation_contact_email.send_keys("shanaya@twaine.com")
+
+        billing_contact = self.driver.find_element_by_class_name('t-tenant-billing_contact')
+        billing_contact.send_keys("John Wayne")
+
+        # select a billing address type
+        billing_address_type = self.driver.find_element_by_class_name("t-address-type-select")
+        billing_address_type.click()
+        billing_address_type_option = self.driver.find_element_by_class_name('ember-power-select-options')
+        time.sleep(2)
+        billing_address_type_option.click()
+
+        billing_address = self.driver.find_element_by_class_name('t-address-address')
+        billing_address.send_keys("1436 Fake Street")
+
+        billing_city = self.driver.find_element_by_class_name('t-address-city')
+        billing_city.send_keys("Springfield")
+
+        # select a State
+        billing_state_dropdown = self.driver.find_element_by_class_name("t-address-state")
+        billing_state_dropdown.click()
+        billing_state_input = self.wait_for_xhr_request("ember-power-select-search-input")
+        billing_state_input.send_keys('a')
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
+
+        billing_zip = self.driver.find_element_by_class_name('t-address-postal-code')
+        billing_zip.send_keys("65497")
+
+        # select a Billing Country
+        billing_country_dropdown = self.driver.find_element_by_class_name("t-address-country")
+        billing_country_dropdown.click()
+        billing_country_input = self.wait_for_xhr_request("ember-power-select-search-input")
+        billing_country_input.send_keys('a')
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
+
+        # select an Billing Email Type
+        billing_email_type = self.driver.find_elements_by_class_name("t-email-type-select")[1]
+        # self.driver.execute_script('arguments[0].scrollTop = arguments[0].scrollHeight', billing_email_type)
+        billing_email_type.click()
+        billing_email_type_option = self.driver.find_element_by_class_name('ember-power-select-options')
+        time.sleep(2)
+        billing_email_type_option.click()
+
+        billing_email = self.driver.find_elements_by_class_name("t-email-email")[1]
+        billing_email.send_keys("johnwayne@western.com")
+
+        # select an Billing Phone Type
+        billing_phone_type = self.driver.find_element_by_class_name("t-phone-number-type-select")
+        billing_phone_type.click()
+        billing_phone_type_option = self.driver.find_element_by_class_name('ember-power-select-options')
+        time.sleep(2)
+        billing_phone_type_option.click()
+
+        billing_phone = self.driver.find_element_by_class_name("t-phonenumber-number")
+        billing_phone.send_keys("649-975-8223")
+
+        import pdb;pdb.set_trace()
+
+        # save
+        self.gen_elem_page.click_save_btn()
 
 if __name__ == "__main__":
     unittest.main()

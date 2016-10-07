@@ -8,16 +8,16 @@ class NavPage(JavascriptMixin):
 
     def click_admin(self):
         self.wait_for_xhr_request("t-nav-admin").click()
-    
+
     def find_people_link(self):
         return self.wait_for_xhr_request("t-nav-admin-people")
-    
+
     def find_location_link(self):
         return self.wait_for_xhr_request("t-nav-admin-location")
-    
+
     def find_location_level_link(self):
         return self.wait_for_xhr_request("t-nav-admin-location-level")
-    
+
     def find_role_link(self):
         return self.wait_for_xhr_request("t-nav-admin-role")
 
@@ -26,3 +26,6 @@ class NavPage(JavascriptMixin):
 
     def find_automation_profiles_link(self):
         return self.wait_for_xhr_request("t-nav-admin-automation-profiles")
+
+    def find_tenant_link(self):
+        return self.wait_for_xhr_request("t-nav-tenants")
