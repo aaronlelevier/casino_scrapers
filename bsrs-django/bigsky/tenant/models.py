@@ -12,7 +12,7 @@ class Tenant(BaseModel):
                  'billing_email', 'billing_phone_number', 'implementation_contact_initial',
                  'implementation_email']
 
-    scid = models.UUIDField(null=True,
+    scid = models.IntegerField(null=True, unique=True,
         help_text="id of SC primary key record of the subscriber. Will be null on initial BS create")
     company_code = models.CharField(max_length=100, unique=True,
         help_text="Short code used to identify customer")
@@ -51,13 +51,15 @@ class Tenant(BaseModel):
     @property
     def sc_post_data(self):
         return {
+            "Name": self.company_name,
             "Address1": self.billing_address.address,
             "Address2": "",
             "Country": self.billing_address.country.common_name,
+            "State": self.billing_address.state.name,
             "City": self.billing_address.city,
             "Zip": self.billing_address.postal_code,
             "Email": self.implementation_email.email,
             "Phone": self.billing_phone_number.number,
             "Fax": "",
-            "ContactName": self.implementation_contact_initial,
+            "ContactName": self.implementation_contact_initial
         }

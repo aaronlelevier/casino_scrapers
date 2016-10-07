@@ -1,10 +1,12 @@
 import json
 from mock import patch
+import random
 import uuid
 
 from django.conf import settings
 
 from model_mommy import mommy
+from pretend import stub
 from rest_framework.test import APITestCase
 
 from accounting.models import Currency
@@ -13,7 +15,7 @@ from contact.serializers import EmailSerializer, AddressSerializer, PhoneNumberS
 from contact.tests.factory import create_address
 from dtd.models import TreeData, DTD_START_KEY
 from person.tests.factory import PASSWORD, create_single_person
-from tenant.oauth import BsOAuthSession, SANDBOX_SC_SUBSCRIBER_POST_URL
+from tenant.oauth import BsOAuthSession, DEV_SC_SUBSCRIBER_POST_URL
 from tenant.models import Tenant
 from tenant.serializers import TenantCreateSerializer
 
@@ -62,6 +64,7 @@ class TenantDetailTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.tenant.id))
+        self.assertEqual(data['scid'], self.tenant.scid)
         self.assertEqual(data['company_code'], self.tenant.company_code)
         self.assertEqual(data['company_name'], self.tenant.company_name)
         self.assertEqual(data['dashboard_text'], self.tenant.dashboard_text)
@@ -205,10 +208,7 @@ class TenantCreateEmailAndRemoteCallsTests(TenantSetUpMixin, APITestCase):
     @patch("tenant.serializers.TenantCreateSerializer._send_mail")
     @patch("tenant.serializers.TenantCreateSerializer._sc_create")
     def test_send_email_and_sc_create(self, mock_sc_create, mock_send_mail, mock_post):
-        sc_response = {
-            'status_code': 201,
-            'content': {'id': str(uuid.uuid4())}
-        }
+        sc_response = stub(status_code=201, content=json.dumps({'id': random.randint(0,100)}).encode('utf8'))
         mock_post.return_value = sc_response
 
         response = self.client.post('/api/admin/tenants/', self.init_data, format='json')
@@ -222,10 +222,7 @@ class TenantCreateEmailAndRemoteCallsTests(TenantSetUpMixin, APITestCase):
 
     @patch("tenant.serializers.BsOAuthSession.post")
     def test_sc_to_post_api(self, mock_post):
-        sc_response = {
-            'status_code': 201,
-            'content': {'id': str(uuid.uuid4())}
-        }
+        sc_response = stub(status_code=201, content=json.dumps({'id': random.randint(0,100)}).encode('utf8'))
         mock_post.return_value = sc_response
 
         response = self.client.post('/api/admin/tenants/', self.init_data, format='json')
@@ -234,23 +231,13 @@ class TenantCreateEmailAndRemoteCallsTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(response.status_code, 201, data)
         tenant = Tenant.objects.get(id=data['id'])
         # mocks
-        self.assertEqual(mock_post.call_args[0][0], SANDBOX_SC_SUBSCRIBER_POST_URL)
+        self.assertEqual(mock_post.call_args[0][0], DEV_SC_SUBSCRIBER_POST_URL)
         session = BsOAuthSession()
-        post_data = tenant.sc_post_data
-        post_data.update({
-            "PrimaryUser": session.username,
-            "Password": session.password,
-            "ClientName": session.client_id,
-            "IsActive": True
-        })
-        self.assertEqual(mock_post.call_args_list[0][1]['data'], post_data)
+        self.assertEqual(mock_post.call_args_list[0][1]['data'], tenant.sc_post_data)
 
     @patch("tenant.serializers.BsOAuthSession.post")
     def test_sc_to_post_api__use_response_to_set_scid(self, mock_post):
-        sc_response = {
-            'status_code': 201,
-            'content': {'id': str(uuid.uuid4())}
-        }
+        sc_response = stub(status_code=201, content=json.dumps({'id': random.randint(0,100)}).encode('utf8'))
         mock_post.return_value = sc_response
 
         response = self.client.post('/api/admin/tenants/', self.init_data, format='json')
@@ -260,11 +247,12 @@ class TenantCreateEmailAndRemoteCallsTests(TenantSetUpMixin, APITestCase):
         tenant = Tenant.objects.get(id=data['id'])
         # mocks
         self.assertTrue(mock_post.called)
-        self.assertEqual(str(tenant.scid), sc_response['content']['id'])
+        data = json.loads(sc_response.content.decode('utf8'))
+        self.assertEqual(tenant.scid, data['id'])
 
     @patch("tenant.serializers.BsOAuthSession.post")
     def test_sc_to_post_api__error_occurred(self, mock_post):
-        mock_post.return_value = {'status_code': 400}
+        mock_post.return_value = stub(status_code=400)
 
         response = self.client.post('/api/admin/tenants/', self.init_data, format='json')
 

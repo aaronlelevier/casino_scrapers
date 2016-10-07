@@ -28,15 +28,17 @@ class TenantTests(TestCase):
     def test_sc_post_data(self):
         tenant = get_or_create_tenant()
         raw_ret = {
+            "Name": tenant.company_name,
             "Address1": tenant.billing_address.address,
             "Address2": "",
             "Country": tenant.billing_address.country.common_name,
+            "State": tenant.billing_address.state.name,
             "City": tenant.billing_address.city,
             "Zip": tenant.billing_address.postal_code,
             "Email": tenant.implementation_email.email,
             "Phone": tenant.billing_phone_number.number,
             "Fax": "",
-            "ContactName": tenant.implementation_contact_initial,
+            "ContactName": tenant.implementation_contact_initial
         }
 
         ret = tenant.sc_post_data

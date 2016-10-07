@@ -1,3 +1,5 @@
+import random
+
 from django.conf import settings
 
 from model_mommy import mommy
@@ -21,6 +23,7 @@ def get_or_create_tenant(company_name=settings.DEFAULT_TENANT_COMPANY_NAME, **kw
     except Tenant.DoesNotExist:
         defaults = {
             'id': generate_uuid(Tenant),
+            'scid': random.randint(0,100),
             'company_name': company_name,
             'company_code': _generate_chars(),
             'implementation_contact_initial': _generate_chars(),

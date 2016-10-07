@@ -17,7 +17,7 @@ class TenantTests(TestCase):
 
         ret = factory.get_or_create_tenant()
 
-        self.assertIsNone(ret.scid)
+        self.assertTrue(ret.scid)
         self.assertIsInstance(ret, Tenant)
         self.assertIsInstance(ret.dt_start, TreeData)
         self.assertEqual(ret.company_name, settings.DEFAULT_TENANT_COMPANY_NAME)

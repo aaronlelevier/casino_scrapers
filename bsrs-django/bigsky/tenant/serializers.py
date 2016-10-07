@@ -1,3 +1,5 @@
+import json
+
 from django.core.mail import send_mail
 
 from rest_framework import serializers
@@ -9,7 +11,7 @@ from contact.serializers import (
     EmailSerializer, PhoneNumberSerializer, AddressSerializer, AddressUpdateSerializer,
     CountryIdNameSerializer)
 from tenant.models import Tenant
-from tenant.oauth import BsOAuthSession, SANDBOX_SC_SUBSCRIBER_POST_URL
+from tenant.oauth import BsOAuthSession, DEV_SC_SUBSCRIBER_POST_URL
 from utils import create
 from utils.serializers import BaseCreateSerializer
 
@@ -65,7 +67,7 @@ class TenantDetailSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Tenant
-        fields = TENANT_FIELDS
+        fields = TENANT_FIELDS + ('scid',)
 
 
 class TenantCreateSerializer(TenantContactsMixin, BaseCreateSerializer):
@@ -88,31 +90,24 @@ class TenantCreateSerializer(TenantContactsMixin, BaseCreateSerializer):
         self._sc_create(instance)
         return instance
 
-    # TODO: update this w/ email template when ready
+    # TODO: update this w/ email template / django send_mail when ready
     def _send_mail(self, email):
-        send_mail(
-            'Subject here',
-            'Here is the message.',
-            'test@email.com',
-            [email],
-            fail_silently=False,
-        )
+        pass
 
     def _sc_create(self, instance):
         session = BsOAuthSession()
-        data = instance.sc_post_data
-        data.update({
-            "PrimaryUser": session.username,
-            "Password": session.password,
-            "ClientName": session.client_id,
-            "IsActive": True
-        })
-        sc_response = session.post(SANDBOX_SC_SUBSCRIBER_POST_URL, data=data)
-        if sc_response['status_code'] == 201:
-            instance.scid = sc_response['content']['id']
-            instance.save()
-        else:
-            raise ValidationError("Error creating subscriber")
+        tries = 3
+        for i in range(tries):
+            sc_response = session.post(DEV_SC_SUBSCRIBER_POST_URL, data=instance.sc_post_data)
+
+            if sc_response.status_code == 201:
+                data = json.loads(sc_response.content.decode('utf8'))
+                instance.scid = data['id']
+                instance.save()
+                break;
+            else:
+                if tries == i+1: # b/c range() 0 indexed
+                    raise ValidationError("Error creating subscriber")
 
     def update(self, instance, validated_data):
         countries = validated_data.pop('countries', [])

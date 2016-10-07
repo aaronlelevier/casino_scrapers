@@ -90,7 +90,8 @@ class BsOAuthSessionDev1Tests(TestCase):
         response = self.session.post(self.subscriber_post_url, data=SC_SUBSCRIBER_POST_DATA)
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(response.status_code, 201, data)
+        self.assertEqual(response.status_code, 201,
+            "Error: {}; Random name: {}".format(data, SC_SUBSCRIBER_POST_DATA['name']))
         self.assertTrue(data['id'])
 
 
