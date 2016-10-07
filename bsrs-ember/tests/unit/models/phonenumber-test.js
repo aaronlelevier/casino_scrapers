@@ -42,11 +42,11 @@ test('type - isDirty and related dirty tests', assert => {
   });
   assert.equal(phonenumber.get('phone_number_type').get('id'), PTD.idOne);
   assert.ok(phonenumber.get('isNotDirty'));
-  assert.ok(phonenumber.get('phoneNumber_typeIsNotDirty'));
+  assert.ok(phonenumber.get('phoneNumberTypeIsNotDirty'));
   assert.ok(phonenumber.get('isNotDirtyOrRelatedNotDirty'));
   phonenumber.change_phone_number_type({id: PTD.idTwo});
   assert.ok(phonenumber.get('isNotDirty'));
-  assert.ok(phonenumber.get('phoneNumber_typeIsNotDirty'));
+  assert.ok(phonenumber.get('phoneNumberTypeIsNotDirty'));
   assert.ok(phonenumber.get('isDirtyOrRelatedDirty'));
 });
 

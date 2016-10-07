@@ -369,7 +369,7 @@ test('deserialize - phonenumber, phonenumber_type - no existing relationship', a
   assert.equal(phonenumber_two.get('phone_number_type').get('id'), PNTD.idOne);
   assert.equal(phonenumber_two.get('phone_number_type').get('name'), PNTD.officeName);
   // dirty checking
-  assert.ok(phonenumber_one.get('phoneNumber_typeIsNotDirty'));
+  assert.ok(phonenumber_one.get('phoneNumberTypeIsNotDirty'));
   assert.ok(phonenumber_one.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
 });
@@ -399,7 +399,7 @@ test('deserialize - phonenumber, phonenumber_type - existing relationship', asse
   assert.equal(phonenumber_two.get('phone_number_type').get('id'), PNTD.idOne);
   assert.equal(phonenumber_two.get('phone_number_type').get('name'), PNTD.officeName);
   // dirty checking
-  assert.ok(phonenumber_one.get('phoneNumber_typeIsNotDirty'));
+  assert.ok(phonenumber_one.get('phoneNumberTypeIsNotDirty'));
   assert.ok(phonenumber_one.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
 });

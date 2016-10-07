@@ -285,7 +285,7 @@ test('related phone number model is dirty when phone number is dirty (and phone 
   assert.ok(phone_number.get('isNotDirty'));
   assert.ok(person.get('phonenumbersIsNotDirty'));
   phone_number.change_phone_number_type({id: PNTD.idTwo});
-  assert.ok(phone_number.get('phoneNumber_typeIsDirty'));
+  assert.ok(phone_number.get('phoneNumberTypeIsDirty'));
   assert.ok(person.get('phonenumbersIsDirty'));
 });
 

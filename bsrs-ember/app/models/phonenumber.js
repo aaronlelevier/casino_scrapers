@@ -24,15 +24,15 @@ var PhoneNumberModel = Model.extend(Validations, OptConf, {
     let number = this.get('number');
     return typeof number === 'undefined' || number.trim() === '';
   }),
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumber_typeIsDirty', function() {
-    return this.get('isDirty') || this.get('phoneNumber_typeIsDirty');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumberTypeIsDirty', function() {
+    return this.get('isDirty') || this.get('phoneNumberTypeIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   saveRelated() {
-    this.savePhoneNumber_type();
+    this.savePhoneNumberType();
   },
   rollback() {
-    this.rollbackPhoneNumber_type();
+    this.rollbackPhoneNumberType();
     this._super(...arguments);
   },
   serialize() {
