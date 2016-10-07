@@ -6,13 +6,68 @@ import AAD from 'bsrs-ember/vendor/defaults/automation-action';
 import ATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import PersonD from 'bsrs-ember/vendor/defaults/person';
 import TPD from 'bsrs-ember/vendor/defaults/ticket-priority';
+import TS from 'bsrs-ember/vendor/defaults/ticket-status';
 
 var store, action, actionType, type, assignee, priority;
 
 moduleFor('model:automation-action', 'Unit | Model | automation-action', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:person', 'model:ticket-priority', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type']);
+    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:person', 'model:ticket-priority', 'model:ticket-status', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type']);
   }
+});
+
+// Action - Ticket status
+
+test('action has a related ticket status', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, status_fk: TS.idOne});
+    store.push('ticket-status', {id: TS.idOne, name: TS.nameOne, actions: [AAD.idOne]});
+  });
+  assert.equal(action.get('status.id'), TS.idOne);
+  assert.equal(action.get('status.name'), TS.nameOne);
+});
+
+test('change_status and dirty tracking', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, status_fk: TS.idOne});
+    store.push('ticket-status', {id: TS.idOne, name: TS.nameOne, actions: [AAD.idOne]});
+  });
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(action.get('statusIsNotDirty'));
+  action.change_status({id: TS.idTwo});
+  assert.equal(action.get('status.id'), TS.idTwo);
+  assert.ok(action.get('isDirtyOrRelatedDirty'));
+  assert.ok(action.get('statusIsDirty'));
+});
+
+test('rollback status will revert and reboot the dirty type to clean', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, status_fk: TS.idOne});
+    store.push('ticket-status', {id: TS.idOne, name: TS.nameOne, actions: [AAD.idOne]});
+  });
+  assert.equal(action.get('status.id'), TS.idOne);
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+  action.change_status({id: TS.idTwo});
+  assert.equal(action.get('status.id'), TS.idTwo);
+  assert.ok(action.get('isDirtyOrRelatedDirty'));
+  action.rollback();
+  assert.equal(action.get('status.id'), TS.idOne);
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('saveRelated action status to save model and make it clean', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, status_fk: TS.idOne});
+    store.push('ticket-status', {id: TS.idOne, name: TS.nameOne, actions: [AAD.idOne]});
+  });
+  assert.equal(action.get('status.id'), TS.idOne);
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+  action.change_status({id: TS.idTwo});
+  assert.equal(action.get('status.id'), TS.idTwo);
+  assert.ok(action.get('isDirtyOrRelatedDirty'));
+  action.saveRelated();
+  assert.equal(action.get('status.id'), TS.idTwo);
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 // Action - ActionType

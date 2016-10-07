@@ -87,6 +87,7 @@ module.exports = function(defaults) {
     app.import('vendor/defaults/ticket_activity.js');
     app.import('vendor/defaults/ticket-join-person.js');
     app.import('vendor/defaults/ticket-priority.js');
+    app.import('vendor/defaults/ticket-status.js');
     app.import('vendor/defaults/ticket.js');
     app.import('vendor/defaults/translation.js');
     app.import('vendor/dtd_fixtures.js');

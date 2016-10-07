@@ -50,6 +50,11 @@ export default Ember.Mixin.create({
       collection: 'actions',
       property: 'ticket-priority',
       related_model: 'priority',
+    },
+    status: {
+      collection: 'actions',
+      property: 'ticket-status',
+      related_model: 'status'
     }
   }
 });

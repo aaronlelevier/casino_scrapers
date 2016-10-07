@@ -21,22 +21,25 @@ export default Model.extend(OptConf, Validations, {
     belongs_to.bind(this)('type', 'automation-action');
     belongs_to.bind(this)('assignee', 'automation-action');
     belongs_to.bind(this)('priority', 'automation-action');
+    belongs_to.bind(this)('status', 'automation-action');
   },
   simpleStore: Ember.inject.service(),
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'typeIsDirty', 'priorityIsDirty', function() {
-    return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('typeIsDirty') || this.get('priorityIsDirty');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'typeIsDirty', 'priorityIsDirty', 'statusIsDirty', function() {
+    return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('typeIsDirty') || this.get('priorityIsDirty') || this.get('statusIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   rollback() {
     this.rollbackType();
     this.rollbackAssignee();
     this.rollbackPriority();
+    this.rollbackStatus();
     this._super(...arguments);
   },
   saveRelated() {
     this.saveType();
     this.saveAssignee();
     this.savePriority();
+    this.saveStatus();
   },
   serialize() {
     let content;

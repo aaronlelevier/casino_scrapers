@@ -11,6 +11,7 @@ export default Ember.Object.extend(OptConf, {
     belongs_to.bind(this)('type');
     belongs_to.bind(this)('assignee');
     belongs_to.bind(this)('priority');
+    belongs_to.bind(this)('status');
     many_to_many.bind(this)('pf', 'automation');
     many_to_many.bind(this)('criteria', 'pfilter');
   },
@@ -43,6 +44,7 @@ export default Ember.Object.extend(OptConf, {
     let actionTypes = {};
     let assignees = {};
     let priorities = {};
+    let statuses = {};
     actions.forEach((a) => {
       // type
       const type = a.type;
@@ -63,6 +65,13 @@ export default Ember.Object.extend(OptConf, {
         priorities[a.id] = priority;
         a.priority_fk = priority.id;
       }
+      //status
+      if(a.status) {
+        const status = a.status;
+        delete a.status;
+        statuses[a.id] = status;
+        a.status_fk = status.id;
+      }
       // must set as "detail" b/c this is a detail payload
       a.detail = true;
     });
@@ -78,6 +87,9 @@ export default Ember.Object.extend(OptConf, {
       // priority
       let priority = priorities[ad.id];
       this.setup_priority(priority, action);
+      // status
+      let status = statuses[ad.id];
+      this.setup_status(status, action);
     });
 
     const [,pfs,] = this.setup_pf(filters, automation);

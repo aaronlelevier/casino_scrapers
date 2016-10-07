@@ -31,6 +31,11 @@ export default Ember.Mixin.create({
       collection: 'actions',
       property: 'automation-action-type',
       related_model: 'type'
+    },
+    status: {
+      collection: 'actions',
+      property: 'ticket-status',
+      related_model: 'status'
     }
   }
 });
