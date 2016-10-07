@@ -626,8 +626,9 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         tenant_page.find_new_link().click()
 
         # fill in all fields
+        company_name_text = "company_name_"+rand_num()
         company_name = self.driver.find_element_by_class_name('t-tenant-company_name')
-        company_name.send_keys("company_name_"+rand_num())
+        company_name.send_keys(company_name_text)
 
         company_code = self.driver.find_element_by_class_name('t-tenant-company_code')
         company_code.send_keys("company_code_"+rand_num())
@@ -722,10 +723,16 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         billing_phone = self.driver.find_element_by_class_name("t-phonenumber-number")
         billing_phone.send_keys("649-975-8223")
 
-        import pdb;pdb.set_trace()
+        # import pdb;pdb.set_trace()
 
         # save
         self.gen_elem_page.click_save_btn()
+        time.sleep(5)
+        # Find in list
+        tenant = tenant_page.find_list_data()
+        list_view = tenant_page.find_list_name()
+        tenant_page.click_name_in_list(company_name_text, list_view)
+        time.sleep(2)
 
 if __name__ == "__main__":
     unittest.main()
