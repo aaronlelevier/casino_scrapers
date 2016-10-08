@@ -8,7 +8,8 @@ cd $SCRIPT_DIR
 cd ../
 
 function npmInstall {
-    npm install --no-optional
+    npm cache clean
+    npm install
     NPM_INSTALL=$?
     echo $NPM_INSTALL
     if [ "$NPM_INSTALL" == 1 ]; then
