@@ -23,7 +23,7 @@ export default Ember.Component.extend({
   actions: {
     selected(person) {
       this.set('selectedPerson', person);
-      this.attrs.updateGridFilterParams(person);
+      this.get('updateGridFilterParams')(person);
     }
   }
 });

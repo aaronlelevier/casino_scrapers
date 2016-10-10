@@ -17,7 +17,7 @@ var UpdateFind = Ember.Mixin.create({
       return criteria.split(':')[0];
     });
     /* if not in array, append column and new column:value */
-    if(Ember.$.inArray(column, keysOnlyArray) === -1) {
+    if(!keysOnlyArray.includes(column)) {
       newFind = find && find.length > 0 ? find + ',' + hash : hash;
     } else {
       /* otherwise build RegExp object (/location.name:\w*,?/) and clear it out or replace the existing with new hash */

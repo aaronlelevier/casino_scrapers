@@ -20,7 +20,7 @@ var PowerSelectActionComponent = Ember.Component.extend({
     * @param obj - option model. May be null if clear out select
     */
     selected(obj) {
-      const action = this.attrs.action;
+      const action = this.get('action');
       const val = obj ? obj.get('text') : null;
       action(val, this.get('ticket'), obj);
       this.set('objSelected', obj);

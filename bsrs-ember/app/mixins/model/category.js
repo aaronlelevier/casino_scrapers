@@ -26,7 +26,7 @@ var CategoriesMixin = Ember.Mixin.create({
     }
     const children_ids = children.mapBy('id');
     const index = this.get('categories_ids').reduce((found, category_pk) => {
-      return found > -1 ? found : Ember.$.inArray(category_pk, children_ids);
+      return found > -1 ? found : children_ids.includes(category_pk);
     }, -1);
     const child = children.objectAt(index);
     this.construct_category_tree(child, child_nodes);
@@ -68,7 +68,7 @@ var CategoriesMixin = Ember.Mixin.create({
     let store = this.get('simpleStore');
     let model_pk = this.get('id');
     let m2m_models = this.get('model_categories').filter((m2m) => {
-      return m2m.get('model_pk') === model_pk && Ember.$.inArray(m2m.get('category_pk'), parent_ids) === -1;
+      return m2m.get('model_pk') === model_pk && !parent_ids.includes(m2m.get('category_pk'));
     });
     m2m_models.forEach((m2m) => {
       run(() => {

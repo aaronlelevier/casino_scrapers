@@ -50,13 +50,13 @@ export default Ember.Component.extend({
   }),
   actions: {
     sortBy(field) {
-      this.attrs.sortBy(field);
+      this.get('sortBy')(field);
     },
     toggleFilterModal(placeholder) {
       // if(this.get('column.headerIsTranslatable')){
       //     placeholder = this.get('i18n').t(placeholder);
       // }
-      this.attrs.toggleFilterModal(placeholder);
+      this.get('toggleFilterModal')(placeholder);
     }
   }
 });

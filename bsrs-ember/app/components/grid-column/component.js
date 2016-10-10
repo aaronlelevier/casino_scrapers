@@ -19,10 +19,10 @@ export default Ember.Component.extend({
     }),
     actions: {
         sortBy(column) {
-            this.attrs.sortBy(column);
+            this.get('sortBy')(column);
         },
         toggleFilterModal(column) {
-            this.attrs.toggleFilterModal(column);
+            this.get('toggleFilterModal')(column);
         }
     }
 });

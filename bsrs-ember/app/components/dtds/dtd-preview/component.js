@@ -115,7 +115,7 @@ export default Ember.Component.extend({
   onFieldUpdate(child, eventName, {field, num, value, ticket}) {
     let fieldsObj = this.get('fieldsObj');
     fieldsObj.set(field.get('id'), { num: num, value: value, label: field.get('label'), required: field.get('required') });
-    this.attrs.updateRequest(fieldsObj, ticket);
+    this.get('updateRequest')(fieldsObj, ticket);
   },
   /*
    * @method onSelectUpdate
@@ -133,7 +133,7 @@ export default Ember.Component.extend({
       optionValues = [option_id];
     }
     fieldsObj.set(field.get('id'), { num: num, value: value, label: field.get('label'), required: field.get('required'), optionValues: optionValues });
-    this.attrs.updateRequest(fieldsObj, ticket);
+    this.get('updateRequest')(fieldsObj, ticket);
   },
   /*
    * @method onOptionUpdate
@@ -165,7 +165,7 @@ export default Ember.Component.extend({
     }, '');
     fieldValue = fieldValue.trim().replace(/\s+/g, ', ');
     fieldsObj.set(field.get('id'), { num: num, value: fieldValue, label: field.get('label'), required: field.get('required'), optionValues: optionValues });
-    this.attrs.updateRequest(fieldsObj, ticket);
+    this.get('updateRequest')(fieldsObj, ticket);
   },
   actions: {
     /*
@@ -175,7 +175,7 @@ export default Ember.Component.extend({
      */
     linkClick(link, ticket, model, action) {
       const fieldsObj = this.get('fieldsObj');
-      this.attrs.linkClick(link, ticket, model, action, fieldsObj);
+      this.get('linkClick')(link, ticket, model, action, fieldsObj);
     }
   }
 });

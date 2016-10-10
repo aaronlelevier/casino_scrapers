@@ -10,7 +10,7 @@ export default Ember.Component.extend({
   classNames: ['mobile-footer flex-item--none'],
   actions: {
     renderSection(componentObj){
-      this.attrs.renderSection(componentObj);
+      this.get('renderSection')(componentObj);
     }
   }
 });

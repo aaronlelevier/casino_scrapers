@@ -23,7 +23,7 @@ export default Ember.Component.extend(TabMixin, {
       const model = this.get('model');
       if (this.get('model.validations.isValid')) {
         const tab = this.tab();
-        this.attrs.save(tab, undefined, update);
+        this.get('save')(tab, undefined, update);
         if(model.get('new')){
           this.sendAction('editDTD');
         }

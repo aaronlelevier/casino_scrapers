@@ -16,7 +16,7 @@ export default Ember.Component.extend({
   }),
   actions: {
     close(tab){
-      this.attrs.close(tab);
+      this.get('close')(tab);
     },
     /*
      * rollback_model
@@ -42,10 +42,10 @@ export default Ember.Component.extend({
       // REDIRECT BACK TO APPLICATION ROUTE
       /* When closing single tab should send 'closeTab' action */
       if (tab.get('tabType') === 'multiple' || closeTabAction === 'closeTab') {
-        this.attrs.closeTabMaster(tab, {action:'closeTab'});
+        this.get('closeTabMaster')(tab, {action:'closeTab'});
       } else {
         /* Otherwise should not close the tab for single tabTypes, thus send rollback action that will prevent closing tab in closeTab method of tab service */
-        this.attrs.closeTabMaster(tab, {action:'rollback'});
+        this.get('closeTabMaster')(tab, {action:'rollback'});
       }
     },
     cancel_modal() {
@@ -61,7 +61,7 @@ export default Ember.Component.extend({
         return deleteCB();//don't want to transition if only deleting an attachment
       }
       deleteCB();
-      this.attrs.closeTabMaster(tab, {action:action, confirmed:true});//call closeTabMaster action again w/ different action to closeTab
+      this.get('closeTabMaster')(tab, {action:action, confirmed:true});//call closeTabMaster action again w/ different action to closeTab
     },
   }
 });

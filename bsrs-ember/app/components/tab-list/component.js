@@ -4,7 +4,7 @@ var TabList = Ember.Component.extend({
   homeModalShowing: false,
   actions: {
     closeTab(tab){
-      this.attrs.closeTabMaster(tab, {action:'closeTab'});
+      this.get('closeTabMaster')(tab, {action:'closeTab'});
     },
     homeModalShowing() {
       this.toggleProperty('homeModalShowing');

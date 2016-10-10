@@ -3,7 +3,7 @@ import Ember from 'ember';
 var SaveFiltersetMixin = Ember.Mixin.create({
   actions: {
     invokeSaveFilterSet() {
-      this.attrs.save_filterset(this.get('filtersetName')).then(() => {
+      this.get('save_filterset')(this.get('filtersetName')).then(() => {
         this.toggleProperty('savingFilter');
         this.set('filtersetName', '');
         this.set('logMsg', '');

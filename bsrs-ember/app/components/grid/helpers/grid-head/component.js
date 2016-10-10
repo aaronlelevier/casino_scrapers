@@ -36,7 +36,7 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
     * takes no params and sends command to repository
     */
     exportGrid(){
-      this.attrs.exportGrid();
+      this.get('exportGrid')();
     },
     // searchGrid() {
       // this.toggleProperty('showSaveFilterInput');

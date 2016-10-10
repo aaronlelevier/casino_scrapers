@@ -10,7 +10,7 @@ var TabMixin = Ember.Mixin.create({
   actions: {
     cancel() {
       /* jshint ignore:start */
-      this.attrs.close ? this.sendAction('close', this.tab(), {action: 'cancel'}) : this.attrs.close(this.tab(), {action: 'cancel'});
+      this.attrs.close ? this.sendAction('close', this.tab(), {action: 'cancel'}) : this.get('close')(this.tab(), {action: 'cancel'});
       /* jshint ignore:end */
     }
   }

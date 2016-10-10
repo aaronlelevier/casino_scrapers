@@ -14,7 +14,7 @@ export default Ember.Component.extend({
     * @param {string} column_field - un translated value ex// ticket.priority.emergency
     */
     updateCheckbox(column_field) {
-      this.attrs.updateGridFilterParams(column_field);
+      this.get('updateGridFilterParams')(column_field);
     },
   },
   /* test classes START */

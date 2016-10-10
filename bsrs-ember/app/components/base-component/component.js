@@ -10,7 +10,7 @@ var BaseComponent = Ember.Component.extend({
       this.sendAction('cancel');
     },
     delete() {
-      this.attrs.delete();
+      this.get('delete')();
     },
   }
 });
