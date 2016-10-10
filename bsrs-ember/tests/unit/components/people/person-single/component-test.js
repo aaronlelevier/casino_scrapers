@@ -1,5 +1,6 @@
 import Ember from 'ember';
-import {test, module} from 'bsrs-ember/tests/helpers/qunit';
+const { run } = Ember;
+import { moduleForComponent, test } from 'ember-qunit';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PersonSingleComponent from 'bsrs-ember/components/people/person-single/component';
@@ -10,9 +11,11 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import PERSON_LD from 'bsrs-ember/vendor/defaults/person-location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 
-var store, location_repo, eventbus, tabList, run = Ember.run;
+var store, location_repo, eventbus, tabList;
 
-module('unit: person-single component test', {
+moduleForComponent('people/person-single', 'Unit | Component | people/person single', {
+    needs: ['validator:presence', 'validator:has-many'],
+    unit: true,
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:location-level', 'model:location', 'model:person-location', 'service:eventbus', 'service:tab-list', 'service:error']);
         eventbus = this.container.lookup('service:eventbus');
@@ -22,21 +25,22 @@ module('unit: person-single component test', {
     }
 });
 
-test('locations computed will be filtered by person.role.location_level', (assert) => {
-    let location_two, m2m_two, location_three, m2m_four;
-    let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.id, location_pk: LD.idOne});
-    let m2m_three = store.push('person-location', {id: PERSON_LD.idThree, person_pk: PD.unusedId, location_pk: LD.idTwo});
-    let role = store.push('role', {id: RD.idTwo, name: RD.nameTwo, people: [PD.id], location_level_fk: LLD.idOne});
-    let role_invalid = store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.unusedId], location_level_fk: LLD.idTwo});
-    let person = store.push('person', {id: PD.id, role_fk: RD.idTwo, person_locations_fks: [PERSON_LD.idOne]});
-    let person_two = store.push('person', {id: PD.unusedId, role_fk: RD.idOne, person_locations_fks: [PERSON_LD.idThree]});
-    let location_one = store.push('location', {id: LD.idOne, name: LD.storeName, person_locations_fks: [PERSON_LD.idOne], location_level_fk: LLD.idOne});
-    let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idTwo], locations: [LD.idOne]});
-    let location_level_two = store.push('location-level', {id: LLD.idTwo, name: LLD.nameDistrict, roles: [RD.idOne], locations: []});
+test('locations computed will be filtered by person.role.location_level', function(assert) {
+    let person, person_two, role, role_invalid, location_two, m2m_two, location_three, m2m_four, location_level, location_level_two;
+    run(() => {
+        store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.id, location_pk: LD.idOne});
+        store.push('person-location', {id: PERSON_LD.idThree, person_pk: PD.unusedId, location_pk: LD.idTwo});
+        role = store.push('role', {id: RD.idTwo, name: RD.nameTwo, people: [PD.id], location_level_fk: LLD.idOne});
+        role_invalid = store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.unusedId], location_level_fk: LLD.idTwo});
+        person = store.push('person', {id: PD.id, role_fk: RD.idTwo, person_locations_fks: [PERSON_LD.idOne]});
+        person_two = store.push('person', {id: PD.unusedId, role_fk: RD.idOne, person_locations_fks: [PERSON_LD.idThree]});
+        store.push('location', {id: LD.idOne, name: LD.storeName, person_locations_fks: [PERSON_LD.idOne], location_level_fk: LLD.idOne});
+        location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idTwo], locations: [LD.idOne]});
+        location_level_two = store.push('location-level', {id: LLD.idTwo, name: LLD.nameDistrict, roles: [RD.idOne], locations: []});
+    });
     let location_level_fk = person.get('location_level_fk');
     let person_locations_children = store.find('location', {location_level_fk: location_level_fk});
-    let subject = PersonSingleComponent.create({model: person, location_repo: location_repo, eventbus: eventbus, tabList: tabList, person_locations_children: person_locations_children});
-    let location_select = PersonLocationSelect.create({selectedAttr: person.get('locations'), model: person, repository: location_repo});
+    let subject = this.subject({model: person, location_repo: location_repo, eventbus: eventbus, tabList: tabList, person_locations_children: person_locations_children});
     run(function() {
         location_two = store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, person_locations_fks: [PERSON_LD.idTwo], location_level_fk: LLD.idOne});
         m2m_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.id, location_pk: LD.idTwo});

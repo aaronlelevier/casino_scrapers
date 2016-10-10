@@ -1,20 +1,23 @@
 import Ember from 'ember';
-import {test, module} from 'bsrs-ember/tests/helpers/qunit';
+const { run } = Ember;
+import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import ParentTicketCategorySelect from 'bsrs-ember/components/parent-model-category-select/component';
+// import ParentTicketCategorySelect from 'bsrs-ember/components/parent-model-category-select/component';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CCD from 'bsrs-ember/vendor/defaults/category-children';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 
-var store, eventbus, ticket, category_one, category_two, category_three, run = Ember.run;
+var store, eventbus, ticket, category_one, category_two, category_three;
 
-module('unit: parent-model-category-select component test', {
-  beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:person', 'model:ticket', 'model:category', 'model:model-category', 'model:category-children', 'model:uuid', 'service:eventbus', 'service:i18n']);
-    eventbus = this.container.lookup('service:eventbus');
-  }
+moduleForComponent('parent-model-category-select', 'Unit | Component | parent model category select', {
+    needs: ['validator:presence'],
+    unit: true,
+    beforeEach() {
+        store = module_registry(this.container, this.registry, ['model:person', 'model:ticket', 'model:category', 'model:model-category', 'model:category-children', 'model:uuid', 'service:eventbus', 'service:i18n']);
+        eventbus = this.container.lookup('service:eventbus');
+    }
 });
 
 ////TODO: change_category_tree should just pass plain JS object
@@ -25,7 +28,7 @@ module('unit: parent-model-category-select component test', {
 //  category_one = store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo});
 //  category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId});
 //  category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: null});
-//  let subject = ParentTicketCategorySelect.create({ticket: ticket, eventbus: eventbus});
+//  let subject = this.subject({ticket: ticket, eventbus: eventbus});
 //  assert.equal(ticket.get('categories').get('length'), 0);
 //  let valid = subject.get('valid');
 //  assert.equal(valid, false);
@@ -46,12 +49,14 @@ module('unit: parent-model-category-select component test', {
 //  assert.equal(valid, true);
 //});
 
-test('sorted categories will start with the parent and end with the leaf child category', (assert) => {
-    ticket = store.push('ticket', {id: TD.idOne});
-    category_one = store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo, children_fks: [], level: 2});
-    category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId, children_fks: [CD.idOne], level: 1});
-    category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: null, children_fks: [CD.idTwo], level: 0});
-    let subject = ParentTicketCategorySelect.create({ticket: ticket, eventbus: eventbus});
+test('sorted categories will start with the parent and end with the leaf child category', function(assert) {
+    run(() => {
+        ticket = store.push('ticket', {id: TD.idOne});
+        category_one = store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo, children_fks: [], level: 2});
+        category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId, children_fks: [CD.idOne], level: 1});
+        category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: null, children_fks: [CD.idTwo], level: 0});
+    });
+    let subject = this.subject({ticket: ticket, eventbus: eventbus});
     assert.equal(ticket.get('categories').get('length'), 0);
     ticket.change_category_tree({id: CD.unusedId});
     assert.equal(ticket.get('categories').get('length'), 1);

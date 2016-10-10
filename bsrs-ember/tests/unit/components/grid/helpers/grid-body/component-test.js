@@ -1,8 +1,8 @@
 import Ember from 'ember';
-import {test, module} from 'bsrs-ember/tests/helpers/qunit';
+const { run } = Ember;
+import { moduleForComponent, test } from 'ember-qunit';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import GridViewComponent from 'bsrs-ember/components/grid/helpers/grid-body/component';
 
 var proxy = function() {
     return Ember.ArrayProxy.extend({
@@ -29,7 +29,10 @@ var columns_with_role = [
 
 var store, eventbus, requested;
 
-module('unit: grid-view test', {
+moduleForComponent('grid/helpers/grid-body', 'Unit | Component | grid/helpers/grid body', {
+    // Specify the other units that are required for this test
+    // needs: ['component:foo', 'helper:bar'],
+    unit: true,
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:person', 'service:eventbus', 'model:role']);
         eventbus = this.container.lookup('service:eventbus');
@@ -37,9 +40,9 @@ module('unit: grid-view test', {
     }
 });
 
-// test('knows how to sort a list of people even when sortable column is null', (assert) => {
+// test('knows how to sort a list of people even when sortable column is null', function(assert) {
 //     store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: PEOPLE_DEFAULTS.username, title: PEOPLE_DEFAULTS.title});
-//     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns});
+//     var subject = this.subject({model: store.find('person'), eventbus: eventbus, columns: columns});
 //     var people = subject.get('searched_content');
 //     assert.equal(people.get('length'), 1);
 //     store.push('person', {id: 1, username: 'wat', title: PEOPLE_DEFAULTS.title});
@@ -50,11 +53,11 @@ module('unit: grid-view test', {
 //     assert.equal(people.get('length'), 3);
 // });
 
-// test('sorted content is sorted by the defaultSort provided if no other value is specified and breaks cache when sort is updated', (assert) => {
+// test('sorted content is sorted by the defaultSort provided if no other value is specified and breaks cache when sort is updated', function(assert) {
 //     store.push('person', {id: 3, username: 'abc', first_name: PEOPLE_DEFAULTS.first_name, last_name: ''});
 //     store.push('person', {id: 1, username: 'def', title: PEOPLE_DEFAULTS.title});
 //     store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: 'zzz', title: PEOPLE_DEFAULTS.title});
-//     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, defaultSort: ['id'], columns: columns});
+//     var subject = this.subject({model: store.find('person'), eventbus: eventbus, defaultSort: ['id'], columns: columns});
 //     var people = subject.get('sorted_content');
 //     assert.equal(people.objectAt(0).get('id'), 1);
 //     assert.equal(people.objectAt(1).get('id'), 2);
@@ -72,11 +75,11 @@ module('unit: grid-view test', {
 //     assert.equal(people.objectAt(3).get('id'), 2);
 // });
 
-// test('sort property may be an array (introduced when removing optimized rendering in grid)', (assert) => {
+// test('sort property may be an array (introduced when removing optimized rendering in grid)', function(assert) {
 //     store.push('person', {id: 3, username: 'abc', first_name: PEOPLE_DEFAULTS.first_name, last_name: ''});
 //     store.push('person', {id: 1, username: 'def', title: PEOPLE_DEFAULTS.title});
 //     store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: 'zzz', title: PEOPLE_DEFAULTS.title});
-//     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, defaultSort: ['id'], columns: columns});
+//     var subject = this.subject({model: store.find('person'), eventbus: eventbus, defaultSort: ['id'], columns: columns});
 //     var people = subject.get('sorted_content');
 //     assert.equal(people.objectAt(0).get('id'), 1);
 //     assert.equal(people.objectAt(1).get('id'), 2);
@@ -94,7 +97,7 @@ module('unit: grid-view test', {
 //     assert.equal(people.objectAt(3).get('id'), 2);
 // });
 
-// test('given a list of people and page number, should only return those people on that page', (assert) => {
+// test('given a list of people and page number, should only return those people on that page', function(assert) {
 //     store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
 //     store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
 //     store.push('person', {id: 2, username: 'zzz', first_name: '', last_name: ''});
@@ -109,7 +112,7 @@ module('unit: grid-view test', {
 //     var model = store.find('person');
 //     model.set('count', 3);
 //     requested.pushObject(1);
-//     var subject = GridViewComponent.create({requested: requested, model: model, page_size: 2, eventbus: eventbus, defaultSort: ['id'], columns: columns});
+//     var subject = this.subject({requested: requested, model: model, page_size: 2, eventbus: eventbus, defaultSort: ['id'], columns: columns});
 //     var people = subject.get('paginated_content');
 //     assert.equal(subject.get('page'), undefined);
 //     assert.equal(people.get('length'), 10);
@@ -123,11 +126,11 @@ module('unit: grid-view test', {
 // });
 
 
-// test('searched content allows you to look through searchable keys and filter accordingly', (assert) => {
+// test('searched content allows you to look through searchable keys and filter accordingly', function(assert) {
 //     store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer'});
 //     store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups'});
 //     store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier'});
-//     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns});
+//     var subject = this.subject({model: store.find('person'), eventbus: eventbus, columns: columns});
 //     var people = subject.get('searched_content');
 //     assert.equal(people.get('length'), 3);
 //     subject.set('search', 'scot');
@@ -177,11 +180,13 @@ module('unit: grid-view test', {
 //     assert.equal(people.objectAt(3).get('id'), 3);
 // });
 
-test('found content allows you to look through searchable keys and filter accordingly', (assert) => {
-    store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'azd', title: 'scott newcomer'});
-    store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'yzq', title: 'toran billups'});
-    store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'zed', title: 'aaron lelevier'});
-    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns});
+test('found content allows you to look through searchable keys and filter accordingly', function(assert) {
+    run(() => {
+        store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'azd', title: 'scott newcomer'});
+        store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'yzq', title: 'toran billups'});
+        store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'zed', title: 'aaron lelevier'});
+    });
+    var subject = this.subject({model: store.find('person'), eventbus: eventbus, columns: columns});
     var people = subject.get('found_content');
     assert.equal(people.get('length'), 3);
     subject.set('find', 'title:sco');
@@ -200,16 +205,18 @@ test('found content allows you to look through searchable keys and filter accord
     assert.equal(people.get('length'), 3);
 });
 
-test('found will filter out null objects when that column is searched on explicitly', (assert) => {
-    store.push('person', {id: 1, first_name: '', last_name: '', username: 'aaron', title: 'abz'});
-    store.push('person', {id: 2, first_name: '', last_name: '', username: 'aute', title: 'abc'});
-    store.push('person', {id: 3, first_name: '', last_name: '', username: 'veniam', title: null});
-    store.push('person', {id: 4, first_name: '', last_name: '', username: 'cupidatat', title: null});
-    store.push('person', {id: 5, first_name: '', last_name: '', username: 'laborum.', title: null});
-    store.push('person', {id: 6, first_name: '', last_name: '', username: 'pariatur', title: null});
-    store.push('person', {id: 7, first_name: '', last_name: '', username: 'voluptate', title: null});
-    store.push('person', {id: 8, first_name: '', last_name: '', username: 'adipisicing', title: null});
-    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns});
+test('found will filter out null objects when that column is searched on explicitly', function(assert) {
+    run(() => {
+        store.push('person', {id: 1, first_name: '', last_name: '', username: 'aaron', title: 'abz'});
+        store.push('person', {id: 2, first_name: '', last_name: '', username: 'aute', title: 'abc'});
+        store.push('person', {id: 3, first_name: '', last_name: '', username: 'veniam', title: null});
+        store.push('person', {id: 4, first_name: '', last_name: '', username: 'cupidatat', title: null});
+        store.push('person', {id: 5, first_name: '', last_name: '', username: 'laborum.', title: null});
+        store.push('person', {id: 6, first_name: '', last_name: '', username: 'pariatur', title: null});
+        store.push('person', {id: 7, first_name: '', last_name: '', username: 'voluptate', title: null});
+        store.push('person', {id: 8, first_name: '', last_name: '', username: 'adipisicing', title: null});
+    });
+    var subject = this.subject({model: store.find('person'), eventbus: eventbus, columns: columns});
     subject.set('find', 'username:a');
     var people = subject.get('found_content');
     assert.equal(people.get('length'), 8);
@@ -224,16 +231,18 @@ test('found will filter out null objects when that column is searched on explici
     assert.equal(people.objectAt(0).get('id'), 1);
 });
 
-test('found filter will only match those exactly in all columns', (assert) => {
-    store.push('person', {id: 1, foo: 'baa', username: 'xyzz', title: 'deaa'});
-    store.push('person', {id: 2, foo: 'bab', username: 'xyyy', title: 'deaa'});
-    store.push('person', {id: 3, foo: 'babc', username: 'xyyx', title: 'deaa'});
-    store.push('person', {id: 4, foo: 'babcd', username: 'xyyw', title: 'deaa'});
-    store.push('person', {id: 5, foo: 'babcde', username: 'xyyv1', title: 'deaab'});
-    store.push('person', {id: 6, foo: 'babcde', username: 'xyyv2', title: 'deaabc'});
-    store.push('person', {id: 7, foo: 'babcde', username: 'xyyv3', title: 'deaabcd'});
-    store.push('person', {id: 8, foo: 'babcdeq', username: 'xyyv4', title: 'deaabcde'});
-    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns});
+test('found filter will only match those exactly in all columns', function(assert) {
+    run(() => {
+        store.push('person', {id: 1, foo: 'baa', username: 'xyzz', title: 'deaa'});
+        store.push('person', {id: 2, foo: 'bab', username: 'xyyy', title: 'deaa'});
+        store.push('person', {id: 3, foo: 'babc', username: 'xyyx', title: 'deaa'});
+        store.push('person', {id: 4, foo: 'babcd', username: 'xyyw', title: 'deaa'});
+        store.push('person', {id: 5, foo: 'babcde', username: 'xyyv1', title: 'deaab'});
+        store.push('person', {id: 6, foo: 'babcde', username: 'xyyv2', title: 'deaabc'});
+        store.push('person', {id: 7, foo: 'babcde', username: 'xyyv3', title: 'deaabcd'});
+        store.push('person', {id: 8, foo: 'babcdeq', username: 'xyyv4', title: 'deaabcde'});
+    });
+    var subject = this.subject({model: store.find('person'), eventbus: eventbus, columns: columns});
     subject.set('find', 'username:x');
     var people = subject.get('found_content');
     assert.equal(people.get('length'), 8);
@@ -267,11 +276,13 @@ test('found filter will only match those exactly in all columns', (assert) => {
     assert.equal(people.get('length'), 0);
 });
 
-test('found content is case insensitive when building regex', (assert) => {
-    store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'azd', title: 'scott newcomer'});
-    store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'yzq', title: 'toran billups'});
-    store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'zed', title: 'aaron lelevier'});
-    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns});
+test('found content is case insensitive when building regex', function(assert) {
+    run(() => {
+        store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'azd', title: 'scott newcomer'});
+        store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'yzq', title: 'toran billups'});
+        store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'zed', title: 'aaron lelevier'});
+    });
+    var subject = this.subject({model: store.find('person'), eventbus: eventbus, columns: columns});
     var people = subject.get('found_content');
     assert.equal(people.get('length'), 3);
     subject.set('find', 'title:Sco');
@@ -291,21 +302,23 @@ test('found content is case insensitive when building regex', (assert) => {
 });
 
 
-test('given a dynamic list of people and page number, should return the correct records starting deeper and working backwards', (assert) => {
-    store.push('person', {id: 11, username: 'zzz1'});
-    store.push('person', {id: 12, username: 'zzz2'});
-    store.push('person', {id: 13, username: 'zzz3'});
-    store.push('person', {id: 14, username: 'zzz4'});
-    store.push('person', {id: 15, username: 'zzz5'});
-    store.push('person', {id: 16, username: 'zzz6'});
-    store.push('person', {id: 17, username: 'zzz7'});
-    store.push('person', {id: 18, username: 'zzz8'});
-    store.push('person', {id: 19, username: 'zzz9'});
-    store.push('person', {id: 20, username: 'zzz99'});
+test('given a dynamic list of people and page number, should return the correct records starting deeper and working backwards', function(assert) {
+    run(() => {
+        store.push('person', {id: 11, username: 'zzz1'});
+        store.push('person', {id: 12, username: 'zzz2'});
+        store.push('person', {id: 13, username: 'zzz3'});
+        store.push('person', {id: 14, username: 'zzz4'});
+        store.push('person', {id: 15, username: 'zzz5'});
+        store.push('person', {id: 16, username: 'zzz6'});
+        store.push('person', {id: 17, username: 'zzz7'});
+        store.push('person', {id: 18, username: 'zzz8'});
+        store.push('person', {id: 19, username: 'zzz9'});
+        store.push('person', {id: 20, username: 'zzz99'});
+    });
     var model = store.find('person');
     model.set('count', 187);
     requested.pushObject(3);
-    var subject = GridViewComponent.create({requested: requested, model: model, page_size: 10, page: 3, eventbus: eventbus, defaultSort: ['id'], columns: columns});
+    var subject = this.subject({requested: requested, model: model, page_size: 10, page: 3, eventbus: eventbus, defaultSort: ['id'], columns: columns});
     var content = subject.get('paginated_content');
     assert.equal(content.get('length'), 10);
     assert.equal(content.objectAt(0).get('id'), 11);
@@ -313,16 +326,18 @@ test('given a dynamic list of people and page number, should return the correct 
     requested.pushObject(2);
     subject.set('page', 2);
     model.set('count', 187);
-    store.push('person', {id: 3, username: 'abc3'});
-    store.push('person', {id: 1, username: 'abc1'});
-    store.push('person', {id: 2, username: 'abc2'});
-    store.push('person', {id: 4, username: 'abc4'});
-    store.push('person', {id: 5, username: 'abc5'});
-    store.push('person', {id: 6, username: 'abc6'});
-    store.push('person', {id: 7, username: 'abc7'});
-    store.push('person', {id: 8, username: 'abc8'});
-    store.push('person', {id: 9, username: 'abc9'});
-    store.push('person', {id: 10, username: 'abc99'});
+    run(() => {
+        store.push('person', {id: 3, username: 'abc3'});
+        store.push('person', {id: 1, username: 'abc1'});
+        store.push('person', {id: 2, username: 'abc2'});
+        store.push('person', {id: 4, username: 'abc4'});
+        store.push('person', {id: 5, username: 'abc5'});
+        store.push('person', {id: 6, username: 'abc6'});
+        store.push('person', {id: 7, username: 'abc7'});
+        store.push('person', {id: 8, username: 'abc8'});
+        store.push('person', {id: 9, username: 'abc9'});
+        store.push('person', {id: 10, username: 'abc99'});
+    });
     content = subject.get('paginated_content');
     assert.equal(content.get('length'), 10);
     assert.equal(content.objectAt(0).get('id'), 11);
@@ -330,7 +345,7 @@ test('given a dynamic list of people and page number, should return the correct 
 });
 
 //SCOTT: not sure these are applicable anymore.  Grid only displays what it is given
-// test('given another dynamic list of people and page number, should return the correct records starting deeper and working backwards', (assert) => {
+// test('given another dynamic list of people and page number, should return the correct records starting deeper and working backwards', function(assert) {
 //     store.push('person', {id: 21, username: 'zzz1'});
 //     store.push('person', {id: 22, username: 'zzz2'});
 //     store.push('person', {id: 23, username: 'zzz3'});
@@ -344,7 +359,7 @@ test('given a dynamic list of people and page number, should return the correct 
 //     var model = store.find('person');
 //     model.set('count', 187);
 //     requested.pushObject(5);
-//     var subject = GridViewComponent.create({requested: requested, model: model, page_size: 10, page: 5, eventbus: eventbus, defaultSort: ['id'], columns: columns});
+//     var subject = this.subject({requested: requested, model: model, page_size: 10, page: 5, eventbus: eventbus, defaultSort: ['id'], columns: columns});
 //     var content = subject.get('paginated_content');
 //     assert.equal(content.get('length'), 10);
 //     assert.equal(content.objectAt(0).get('id'), 21);
@@ -385,7 +400,7 @@ test('given a dynamic list of people and page number, should return the correct 
 //     assert.equal(content.objectAt(9).get('id'), 10);
 // });
 
-// test('requesting pages in order still returns the correct results even when the same page is viewed twice', (assert) => {
+// test('requesting pages in order still returns the correct results even when the same page is viewed twice', function(assert) {
 //     store.push('person', {id: 3, username: 'abc3'});
 //     store.push('person', {id: 1, username: 'abc1'});
 //     store.push('person', {id: 2, username: 'abc2'});
@@ -399,7 +414,7 @@ test('given a dynamic list of people and page number, should return the correct 
 //     var model = store.find('person');
 //     model.set('count', 187);
 //     requested.pushObject(1);
-//     var subject = GridViewComponent.create({requested: requested, model: model, page_size: 10, page: 1, eventbus: eventbus, defaultSort: ['id'], columns: columns});
+//     var subject = this.subject({requested: requested, model: model, page_size: 10, page: 1, eventbus: eventbus, defaultSort: ['id'], columns: columns});
 //     var content = subject.get('paginated_content');
 //     assert.equal(content.get('length'), 10);
 //     //content is not sorted anymore so first one is 3
@@ -526,13 +541,13 @@ test('given a dynamic list of people and page number, should return the correct 
 //     assert.equal(content.objectAt(9).get('id'), 90);
 // });
 
-// test('searched content allows you to look through related models', (assert) => {
+// test('searched content allows you to look through related models', function(assert) {
 //     store.push('role', {id: 1, name: 'role1', people: [1,2]});
 //     store.push('role', {id: 2, name: 'role2', people: [3]});
 //     store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer', role_fk: 1});
 //     store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups', role_fk: 1});
 //     store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier', role_fk: 2});
-//     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns_with_role});
+//     var subject = this.subject({model: store.find('person'), eventbus: eventbus, columns: columns_with_role});
 //     var people = subject.get('searched_content');
 //     assert.equal(people.get('length'), 3);
 //     subject.set('search', '1');
@@ -545,13 +560,15 @@ test('given a dynamic list of people and page number, should return the correct 
 //     assert.equal(people.get('length'), 3);
 // });
 
-test('found content allows you to look through related models', (assert) => {
-    store.push('role', {id: 1, name: 'role1', people: [1,2]});
-    store.push('role', {id: 2, name: 'role2', people: [3]});
-    store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer', role_fk: 1});
-    store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups', role_fk: 1});
-    store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier', role_fk: 2});
-    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, columns: columns_with_role});
+test('found content allows you to look through related models', function(assert) {
+    run(() => {
+        store.push('role', {id: 1, name: 'role1', people: [1,2]});
+        store.push('role', {id: 2, name: 'role2', people: [3]});
+        store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer', role_fk: 1});
+        store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups', role_fk: 1});
+        store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier', role_fk: 2});
+    });
+    var subject = this.subject({model: store.find('person'), eventbus: eventbus, columns: columns_with_role});
     var people = subject.get('found_content');
     assert.equal(people.get('length'), 3);
     subject.set('find', 'role.name:2');
@@ -560,13 +577,13 @@ test('found content allows you to look through related models', (assert) => {
     assert.equal(people.objectAt(0).get('title'), 'aaron lelevier');
 });
 
-// test('sorted content is sorted related models', (assert) => {
+// test('sorted content is sorted related models', function(assert) {
 //     store.push('role', {id: 1, name: 'zzz', people: [1,2]});
 //     store.push('role', {id: 2, name: 'aaa', people: [3]});
 //     store.push('person', {id: 3, username: 'abc', first_name: PEOPLE_DEFAULTS.first_name, last_name: '', role_fks: 1});
 //     store.push('person', {id: 1, username: 'def', title: PEOPLE_DEFAULTS.title, role_fk: 1});
 //     store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: 'zzz', title: PEOPLE_DEFAULTS.title, role_fk: 2});
-//     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, defaultSort: ['id'], columns: columns_with_role});
+//     var subject = this.subject({model: store.find('person'), eventbus: eventbus, defaultSort: ['id'], columns: columns_with_role});
 //     var people = subject.get('sorted_content');
 //     assert.equal(people.objectAt(0).get('id'), 1);
 //     assert.equal(people.objectAt(1).get('id'), 2);

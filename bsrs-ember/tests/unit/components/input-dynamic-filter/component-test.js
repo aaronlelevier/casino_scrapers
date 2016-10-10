@@ -1,8 +1,7 @@
 import Ember from 'ember';
-import {test, module} from 'qunit';
+import { moduleForComponent, test } from 'ember-qunit';
 import PhoneNumber from 'bsrs-ember/models/phonenumber';
 import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number';
-import InputDynamicFilter from 'bsrs-ember/components/input-dynamic-filter/component';
 
 var FakeService = Ember.Object.extend({
     init: function() {
@@ -16,17 +15,16 @@ var FakeService = Ember.Object.extend({
     }
 });
 
-module('unit: input-dynamic-filter test');
+moduleForComponent('input-dynamic-filter', 'Unit | Component | input dynamic filter', {
+  // needs: ['component:foo', 'helper:bar'],
+  unit: true
+});
 
-test('will not fire off message when value is null', (assert) => {
+test('will not fire off message when value is null', function(assert) {
   var done = assert.async();
   var stub = FakeService.create();
   var foo = Ember.Object.create();
-  var subject = InputDynamicFilter.create({
-    obj: foo,
-    prop: 'bar',
-    eventbus: stub
-  });
+  var subject = this.subject({ obj: foo, prop: 'bar', eventbus: stub });
   subject.set('value', null);
   setTimeout(function() {
       assert.equal(stub.hits(), 0);
