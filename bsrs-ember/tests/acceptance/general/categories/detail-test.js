@@ -157,55 +157,55 @@ test('when editing the category name to invalid, it checks for validation', (ass
   });
 });
 
-// test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', (assert) => {
-//   clearxhr(list_xhr);
-//   page.visitDetail();
-//   page.nameFill(CD.nameTwo);
-//   generalPage.cancel();
-//   andThen(() => {
-//     waitFor(assert, () => {
-//       assert.equal(currentURL(), DETAIL_URL);
-//       // assert.ok(generalPage.modalIsVisible, 'modal is visible');
-//       // assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'), 'text for title');
-//       // assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'), 'text for body');
-//       // assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'), 'rollback btn');
-//       // assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'), 'cancel btn');
-//     });
-//   });
-//   generalPage.clickModalCancel();
-//   andThen(() => {
-//     waitFor(assert, () => {
-//       assert.equal(currentURL(), DETAIL_URL);
-//       // assert.equal(find('.t-category-name').val(), CD.nameTwo);
-//       // assert.throws(Ember.$('.ember-modal-dialog'), 'modal dialog isnt there');
-//     });
-//   });
-// });
+test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', (assert) => {
+  clearxhr(list_xhr);
+  page.visitDetail();
+  page.nameFill(CD.nameTwo);
+  generalPage.cancel();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(generalPage.modalIsVisible, 'modal is visible');
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'), 'text for title');
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'), 'text for body');
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'), 'rollback btn');
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'), 'cancel btn');
+    });
+  });
+  generalPage.clickModalCancel();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.equal(find('.t-category-name').val(), CD.nameTwo);
+      assert.throws(Ember.$('.ember-modal-dialog'), 'modal dialog isnt there');
+    });
+  });
+});
 
-// /* jshint ignore:start */
-// test('when click delete, modal displays and when click ok, category is deleted and removed from store', async assert => {
-//   await page.visitDetail();
-//   await generalPage.delete();
-//   andThen(() => {
-//     waitFor(assert, () => {
-//       assert.equal(currentURL(), DETAIL_URL);
-//       assert.ok(Ember.$('.ember-modal-dialog'));
-//       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
-//       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.delete.confirm', {module: 'category'}));
-//       assert.equal(Ember.$('.t-modal-delete-btn').text().trim(), t('crud.delete.button'));
-//     });
-//   });
-//   xhr(`${PREFIX}${BASE_URL}/${CD.idOne}/`, 'DELETE', null, {}, 204, {});
-//   generalPage.clickModalDelete();
-//   andThen(() => {
-//     waitFor(assert, () => {
-//       assert.equal(currentURL(), CATEGORIES_INDEX_URL);
-//       assert.equal(store.find('category', CD.idOne).get('length'), undefined);
-//       assert.throws(Ember.$('.ember-modal-dialog'));
-//     });
-//   });
-// });
-// /* jshint ignore:end */
+/* jshint ignore:start */
+test('when click delete, modal displays and when click ok, category is deleted and removed from store', async assert => {
+  await page.visitDetail();
+  await generalPage.delete();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.delete.confirm', {module: 'category'}));
+      assert.equal(Ember.$('.t-modal-delete-btn').text().trim(), t('crud.delete.button'));
+    });
+  });
+  xhr(`${PREFIX}${BASE_URL}/${CD.idOne}/`, 'DELETE', null, {}, 204, {});
+  generalPage.clickModalDelete();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), CATEGORIES_INDEX_URL);
+      assert.equal(store.find('category', CD.idOne).get('length'), undefined);
+      assert.throws(Ember.$('.ember-modal-dialog'));
+    });
+  });
+});
+/* jshint ignore:end */
 
 test('cost_amount - is not required', (assert) => {
   page.visitDetail();
@@ -259,7 +259,7 @@ test('clicking and typing into power select for categories children will fire of
     assert.equal(page.categoryOptionLength, 1);
     assert.equal(find(`${CATEGORY_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
     let category = store.find('category', CD.idOne);
-    assert.ok(category.get('isDirtyOrRelatedDirty'));
+    assert.ok(category.get('isDirtyOrRelatedDirty'), 'isDirtyOrRelatedDirty after changing children');
   });
   let url = PREFIX + DETAIL_URL + '/';
   let response = CF.detail(CD.idOne);
@@ -413,27 +413,27 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-// test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
-//   page.visitDetail();
-//   page.nameFill(CD.nameTwo);
-//   page.subLabelFill(CD.subCatLabelOne);
-//   generalPage.cancel();
-//   andThen(() => {
-//     waitFor(assert, () => {
-//       assert.equal(currentURL(), DETAIL_URL);
-//       assert.ok(generalPage.modalIsVisible);
-//     });
-//   });
-//   generalPage.clickModalRollback();
-//   andThen(() => {
-//     waitFor(assert, () => {
-//       assert.equal(currentURL(), CATEGORIES_INDEX_URL);
-//       let category = store.find('category', CD.idOne);
-//       assert.equal(category.get('name'), CD.nameOne);
-//       assert.equal(category.get('subcategory_label'), CD.subCatLabelOne);
-//     });
-//   });
-// });
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+  page.visitDetail();
+  page.nameFill(CD.nameTwo);
+  page.subLabelFill(CD.subCatLabelOne);
+  generalPage.cancel();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(generalPage.modalIsVisible);
+    });
+  });
+  generalPage.clickModalRollback();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), CATEGORIES_INDEX_URL);
+      let category = store.find('category', CD.idOne);
+      assert.equal(category.get('name'), CD.nameOne);
+      assert.equal(category.get('subcategory_label'), CD.subCatLabelOne);
+    });
+  });
+});
 
 test('deep linking with an xhr with a 404 status code will show up in the error component (categories)', (assert) => {
   clearxhr(detail_xhr);
