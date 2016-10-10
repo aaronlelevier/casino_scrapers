@@ -14,20 +14,27 @@ var CategoriesMixin = Ember.Mixin.create({
   model_categories_no_filter: Ember.computed(function() {
     return this.get('simpleStore').find('model-category').filterBy('model_pk', this.get('id'));
   }),
+  /*
+   * this method is used for on the fly validation check to see if at end of cat tree
+   * @param {object} category - this is the parent passed in from the ticket-categories validator and the child if recursive func passes child
+   * Need to figure out why two if statements are there
+  */
   construct_category_tree(category, child_nodes=[]) {
-    //this method is used for on the fly validation check to see if at end of cat tree
     child_nodes.push(category);
     const children = category ? category.get('children') : [];
     if(children.get('length') === 0 && child_nodes.get('length') > 1) {
       return;
     }
+    // if at end of category tree b/c no children, return last child node
     if(children.get('length') === 0) {
       return child_nodes.objectAt(0) ? child_nodes : undefined;
     }
+    // children for this specific category
     const children_ids = children.mapBy('id');
+    // loop through models categories and see if this specific category has children that are in the categories_ids array and return that index
     const index = this.get('categories_ids').reduce((found, category_pk) => {
-      return found > -1 ? found : children_ids.includes(category_pk);
-    }, -1);
+      return found !== false ? found : children_ids.includes(category_pk) ? children_ids.indexOf(category_pk) : false;
+    }, false);
     const child = children.objectAt(index);
     this.construct_category_tree(child, child_nodes);
     return child_nodes.filter((node) => {
