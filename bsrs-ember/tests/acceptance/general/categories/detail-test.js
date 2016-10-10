@@ -59,7 +59,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     let category = store.find('category', CD.idOne);
-    assert.ok(category.get('isNotDirty'));
+    assert.ok(category.get('isNotDirty'), 'is not dirty');
     assert.equal(page.nameInput, CD.nameOne);
     assert.equal(page.descriptionInput, CD.descriptionRepair);
     assert.equal(page.labelInput, CD.labelOne);
@@ -87,7 +87,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
   page.costCodeFill(CD.costCodeTwo);
   andThen(() => {
     let category = store.find('category', CD.idOne);
-    assert.ok(category.get('isDirty'));
+    assert.ok(category.get('isDirty'), 'is dirty after fill in');
   });
   let list = CF.list();
   list.results[0].name = CD.nameTwo;
@@ -108,7 +108,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
     assert.equal(category.get('label'), CD.labelTwo);
     assert.equal(category.get('cost_amount'), CD.costAmountTwo);
     assert.equal(category.get('cost_code'), CD.costCodeTwo);
-    assert.ok(category.get('isNotDirty'));
+    assert.ok(category.get('isNotDirty'), 'is not dirty last');
   });
 });
 
