@@ -1,4 +1,4 @@
-from rest_framework import exceptions, permissions, viewsets
+from rest_framework import permissions, viewsets
 
 from tenant.models import Tenant
 from tenant.permissions import TenantPermissions
@@ -6,9 +6,7 @@ from tenant import serializers as ts
 
 
 class TenantViewSet(viewsets.ModelViewSet):
-    """
-    Only `GET` and `PUT` supported.
-    """
+
     queryset = Tenant.objects.all()
     permission_classes = (permissions.IsAuthenticated, TenantPermissions)
 

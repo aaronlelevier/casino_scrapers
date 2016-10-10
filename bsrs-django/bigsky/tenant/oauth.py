@@ -100,3 +100,6 @@ class BsOAuthSession(object):
 
     def post(self, url, data):
         return self.oauth.post(url, data=data)
+
+    def put(self, url, data):
+        return self.oauth.put(url, data=data)
