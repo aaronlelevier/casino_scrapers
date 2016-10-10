@@ -9,6 +9,7 @@ cd ../
 
 function npmInstall {
     npm cache clean
+    bower cache clean
     npm install
     NPM_INSTALL=$?
     echo $NPM_INSTALL

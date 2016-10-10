@@ -88,6 +88,7 @@ cd ../../bsrs-ember
 wait
 echo "NPM INSTALL"
 npm cache clean
+bower cache clean
 npm install
 TEST=$?; if [ "$TEST" == 1 ]; then echo "npm install failed"; exit $TEST; fi
 
