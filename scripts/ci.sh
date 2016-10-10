@@ -30,7 +30,9 @@ if ! [ "$TEST_EMBER" == "false" ];
 fi
 
 function npmInstall {
-    npm install --no-optional
+    npm cache clean
+    bower cache clean
+    npm install
     NPM_INSTALL=$?
     echo $NPM_INSTALL
     if [ "$NPM_INSTALL" == 1 ]; then

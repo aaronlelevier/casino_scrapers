@@ -17,7 +17,7 @@ var CategorySingle = TabRoute.extend(FindById, {
     const hashComponents = [
       {'title': this.get('i18n').t('admin.category.section.details'), 'component': 'categories/detail-section', active: 'active'},
       {'title': this.get('i18n').t('admin.category.section.cost'), 'component': 'categories/cost-section'},
-      {'title': this.get('i18n').t('admin.category.section.other'), 'component': 'categories/other-section', active: ''},
+      {'title': this.get('i18n').t('admin.category.section.other'), 'component': 'categories/other-section'},
     ];
     return this.findByIdScenario(category, pk, {hashComponents:hashComponents, repository: repository});
   },

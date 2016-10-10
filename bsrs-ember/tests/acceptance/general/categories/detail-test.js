@@ -188,19 +188,19 @@ test('when click delete, modal displays and when click ok, category is deleted a
   await generalPage.delete();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), DETAIL_URL);
+      assert.equal(currentURL(), DETAIL_URL, 'at detail url');
       assert.ok(Ember.$('.ember-modal-dialog'), 'modal should show');
-      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
-      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.delete.confirm', {module: 'category'}));
-      assert.equal(Ember.$('.t-modal-delete-btn').text().trim(), t('crud.delete.button'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'), 'title shows');
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.delete.confirm', {module: 'category'}), 'body shows');
+      assert.equal(Ember.$('.t-modal-delete-btn').text().trim(), t('crud.delete.button'), 'button shows');
     });
   });
   xhr(`${PREFIX}${BASE_URL}/${CD.idOne}/`, 'DELETE', null, {}, 204, {});
   generalPage.clickModalDelete();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), CATEGORIES_INDEX_URL);
-      assert.equal(store.find('category', CD.idOne).get('length'), undefined);
+      assert.equal(currentURL(), CATEGORIES_INDEX_URL, 'at index url');
+      assert.equal(store.find('category', CD.idOne).get('length'), undefined, 'category removed from store');
       // assert.throws(Ember.$('.ember-modal-dialog'), 'should not be there');
     });
   });
