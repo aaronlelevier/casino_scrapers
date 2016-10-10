@@ -32,6 +32,10 @@ const Validations = buildValidations({
     presence: true,
     message: 'errors.tenant.default_currency'
   }),
+  countries: validator('length', {
+    min: 1,
+    message: 'errors.tenant.countries'
+  }),
   billing_contact: validator('presence', {
     presence: true,
     message: 'errors.tenant.billing_contact'
@@ -86,9 +90,9 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
   dashboard_text: attr(''),
   implementation_contact_initial: attr(''),
   billing_contact: attr(''),
-  billing_phone_number_fk: '',
-  billing_email_fk: '',
-  billing_address_fk: '',
+  billing_phone_number_fk: undefined,
+  billing_email_fk: undefined,
+  billing_address_fk: undefined,
   tenant_countries_fks: [],
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'defaultCurrencyIsDirty', 'countriesIsDirty', 'billingEmailIsDirty', 'billingPhoneNumberIsDirty', 'implementationEmailIsDirty', 'billingAddressIsDirty', function() {
     return this.get('isDirty') || this.get('defaultCurrencyIsDirty') || this.get('countriesIsDirty') || this.get('billingEmailIsDirty') || this.get('billingPhoneNumberIsDirty') || this.get('implementationEmailIsDirty') || this.get('billingAddressIsDirty');

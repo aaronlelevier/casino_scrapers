@@ -18,6 +18,7 @@ import { ValidationComponentInit, ValidationComponentPieces } from 'bsrs-ember/m
 var ValidatedInputMulti = Ember.Component.extend(ValidationComponentInit, ValidationComponentPieces, {
   type: 'text',
   focusedOut: false,
+  tageName: '',
   // attributeValidation: null,
   // classNameBindings: ['showMessage:invalid'],
   // init() {

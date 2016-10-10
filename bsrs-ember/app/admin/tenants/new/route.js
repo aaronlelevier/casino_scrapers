@@ -12,13 +12,26 @@ export default TabNewRoute.extend({
   model(params) {
     let new_pk = parseInt(params.new_id, 10);
     const repository = this.get('repository');
-    let model = this.get('simpleStore').find('automation', {new_pk: new_pk}).objectAt(0);
+    let model = this.get('simpleStore').find('tenant', {new_pk: new_pk}).objectAt(0);
     if(!model){
-      model = repository.create(new_pk);
-      model.change_implementation_email({id: this.get('uuid').v4()});
-      model.change_billing_email({id: this.get('uuid').v4()});
-      model.change_billing_phone_number({id: this.get('uuid').v4()});
-      model.change_billing_address({id: this.get('uuid').v4()});
+
+      const id1 = this.get('uuid').v4();
+      const id2 = this.get('uuid').v4();
+      const id3 = this.get('uuid').v4();
+      const id4 = this.get('uuid').v4();
+
+      model = repository.create(new_pk, {
+        billing_address_fk: id1,
+        billing_email_fk: id2,
+        billing_phone_number_fk: id3,
+        implementation_email_fk: id4,
+      });
+
+      model.change_billing_address({id: id1});
+      model.change_billing_email({id: id2});
+      model.change_billing_phone_number({id: id3});
+      model.change_implementation_email({id: id4});
+
     }
     return Ember.RSVP.hash({
       model,

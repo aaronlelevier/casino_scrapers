@@ -783,6 +783,8 @@ test('tenant validations', assert => {
   assert.deepEqual(attrs.get('dashboard_text').get('messages'), ['errors.tenant.dashboard_text']);
   assert.ok(attrs.get('default_currency'));
   assert.deepEqual(attrs.get('default_currency').get('messages'), ['errors.tenant.default_currency']);
+  assert.ok(attrs.get('countries'));
+  assert.deepEqual(attrs.get('countries').get('messages'), ['errors.tenant.countries']);
   assert.ok(attrs.get('billing_contact'));
   assert.deepEqual(attrs.get('billing_contact').get('messages'), ['errors.tenant.billing_contact']);
   assert.ok(attrs.get('implementation_contact_initial'));

@@ -14,14 +14,14 @@ import ETD from 'bsrs-ember/vendor/defaults/email-type';
 import AD from 'bsrs-ember/vendor/defaults/address';
 import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import CD from 'bsrs-ember/vendor/defaults/country';
-import SD from 'bsrs-ember/vendor/defaults/country';
+import SD from 'bsrs-ember/vendor/defaults/state';
 import TenantJoinCountriesD from 'bsrs-ember/vendor/defaults/tenant-join-country';
 import page from 'bsrs-ember/tests/pages/tenant';
 import generalPage from 'bsrs-ember/tests/pages/general';
 
 var store, model, trans;
 
-moduleForComponent('tenant-single', 'amk integration: tenant-single test', {
+moduleForComponent('tenant-single', 'integration: tenant-single test', {
   integration: true,
   setup() {
     page.setContext(this);
@@ -60,8 +60,8 @@ test('validation works', function(assert) {
   run(function() {
     model = store.push('tenant', {id: TD.idOne, company_name: undefined, billing_phone_number_fk: PND.idOne, billing_email_fk: ED.idOne, implementation_email_fk: ED.idOne, billing_address_fk: AD.idOne});
     store.push('currency', {id: CurrencyD.idOne, tenants: []});
-    store.push('tenant-join-country', {id: TenantJoinCountriesD.idOne, tenant_pk: TD.idOne, country_pk: CountriesD.idOne});
-    store.push('country', {id: CountriesD.idOne});
+    // store.push('tenant-join-country', {id: TenantJoinCountriesD.idOne, tenant_pk: TD.idOne, country_pk: CountriesD.idOne});
+    // store.push('country', {id: CountriesD.idOne});
     store.push('phonenumber', {id: PND.idOne, number: undefined, tenants: [TD.idOne]});
     store.push('phone-number-type', {id: PNTD.idOne, name: PNTD.officeName, phonenumbers: [PND.idOne]});
     store.push('email', {id: ED.idOne, email: undefined, tenants: [TD.idOne], tenants_implementation: [TD.idOne]});
@@ -77,12 +77,13 @@ test('validation works', function(assert) {
   assert.equal($input.length, 0);
   generalPage.save();
   $input = this.$('.invalid');
-  assert.equal($input.length, 11);
+  assert.equal($input.length, 14);
   assert.equal($('.t-validation-implementation_contact_initial').text().trim(), 'errors.tenant.implementation_contact_initial');
-  // assert.equal($('.t-validation-company_name').text().trim(), 'errors.tenant.company_name');
-  // assert.equal($('.t-validation-company_code').text().trim(), 'errors.tenant.company_code');
-  // assert.equal($('.t-validation-dashboard_text').text().trim(), 'errors.tenant.dashboard_text');
-  // assert.equal($('.t-validation-billing_contact').text().trim(), 'errors.tenant.billing_contact');
+  assert.equal($('.t-validation-company_name').text().trim(), 'errors.tenant.company_name');
+  assert.equal($('.t-validation-company_code').text().trim(), 'errors.tenant.company_code');
+  assert.equal($('.t-validation-default_currency').text().trim(), 'errors.tenant.default_currency');
+  assert.equal($('.t-validation-countries').text().trim(), 'errors.tenant.countries');
+  assert.equal($('.t-validation-billing_contact').text().trim(), 'errors.tenant.billing_contact');
 });
 
 test('header - shows company_name if present on the model', function(assert) {

@@ -6,6 +6,8 @@ import hbs from 'htmlbars-inline-precompile';
 import TD from 'bsrs-ember/vendor/defaults/tenant';
 import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import AD from 'bsrs-ember/vendor/defaults/address';
+import CD from 'bsrs-ember/vendor/defaults/country';
+import SD from 'bsrs-ember/vendor/defaults/state';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LADD from 'bsrs-ember/vendor/defaults/location-join-address';
 import generalPage from 'bsrs-ember/tests/pages/general';
@@ -35,12 +37,11 @@ test('setup for belongsTo works', function(assert) {
   let tenant, address;
   run(() => {
     tenant = store.push('tenant', {id: TD.idOne, billing_address_fk: AD.idOne});
-    store.push('address', {id: AD.idOne, address: AD.streetOne, tenants: [TD.idOne]});
-    address = store.push('address', {id: AD.idOne, address_type_fk: ATD.idOne});
+    address = store.push('address', {id: AD.idOne, address_type_fk: ATD.idOne, address: AD.streetOne, tenants: [TD.idOne]});
     store.push('address-type', {id: ATD.idOne, name: ATD.officeName, addresses: [AD.idOne]});
   });
   this.model = tenant;
-  this.address=address;
+  this.address = address;
   this.render(hbs`{{input-single-address model=model address=address}}`);
   assert.equal(this.$('.t-address-type-select').text().trim(), trans.t(ATD.officeName));
   assert.equal(this.$('.t-address-address').val(), AD.streetOne);
@@ -66,4 +67,27 @@ test('setup for m2m works and can delete', function(assert) {
   // dont get two way db
   // assert.equal(this.$('.t-address-type-select').text().trim(), trans.t(ATD.officeName));
   // assert.equal(this.$('.t-address-address0').val(), '');
+});
+
+test('address validation', function(assert) {
+  let tenant, address;
+  run(() => {
+    tenant = store.push('tenant', {id: TD.idOne, billing_address_fk: AD.idOne});
+    address = store.push('address', {
+      id: AD.idOne,
+      tenants: [TD.idOne]
+    });
+  });
+  this.model = tenant;
+  this.address = tenant.get('billing_address');
+  this.index = 0;
+  this.render(hbs`{{input-single-address model=model address=address index=index didValidate=true}}`);
+
+  assert.equal($('.t-validation-address').text().trim(), 'errors.address.address');
+  assert.equal($('.t-validation-city').text().trim(), 'errors.address.city');
+  assert.equal($('.t-validation-postal_code').text().trim(), 'errors.address.postal_code');
+  assert.equal($('.t-validation-country').text().trim(), 'errors.address.country');
+  assert.equal($('.t-validation-state').text().trim(), 'errors.address.state');
+  assert.equal($('.t-validation-address_type').text().trim(), 'errors.address.type');
+
 });

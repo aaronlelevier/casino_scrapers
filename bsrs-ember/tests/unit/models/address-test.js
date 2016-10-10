@@ -10,6 +10,7 @@ import SD from 'bsrs-ember/vendor/defaults/country';
 var store, address;
 
 moduleFor('model:address', 'Unit | Model | address', {
+  needs: ['validator:presence', 'validator:length', 'validator:address-street', 'validator:address-postal', 'validator:belongs-to'],
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:address', 'model:address-type', 'model:country', 'model:state']);
     run(() => {
@@ -282,3 +283,50 @@ test('serialize', assert => {
   assert.equal(data.postal_code, address.get('postal_code'));
   assert.equal(data.country, address.get('country').get('id'));
 });
+
+test('address validations', assert => {
+  run(() => {
+    address = store.push('address', {id: AD.idOne});
+  });
+  const attrs = address.get('validations').get('attrs');
+  assert.equal(address.get('validations.attrs.address_type.isValid'), false);
+  assert.equal(address.get('validations.attrs.address.isValid'), false);
+  assert.equal(address.get('validations.attrs.city.isValid'), false);
+  assert.equal(address.get('validations.attrs.state.isValid'), false);
+  assert.equal(address.get('validations.attrs.postal_code.isValid'), false);
+  assert.equal(address.get('validations.attrs.country.isValid'), false);
+
+  run(() => {
+    address = store.push('address', {
+      id: AD.idOne,
+      type: AD.typeOne,
+      address: AD.streetOne,
+      city: AD.cityOne,
+      postal_code: AD.zipOne,
+      country_fk: CD.idOne,
+      state_fk: SD.idOne,
+      address_type_fk: ATD.idOne
+    });
+    country = store.push('country', {
+      id: CD.idOne,
+      addresses: [AD.idOne]
+    });
+    state = store.push('state', {
+      id: SD.idOne,
+      addresses: [AD.idOne]
+    });
+    address_type = store.push('address-type', {
+      id: ATD.idOne,
+      addresses: [AD.idOne]
+    });
+  });
+
+  assert.equal(address.get('validations.attrs.address_type.isValid'), true);
+  assert.equal(address.get('validations.attrs.address.isValid'), true);
+  assert.equal(address.get('validations.attrs.city.isValid'), true);
+  assert.equal(address.get('validations.attrs.state.isValid'), true);
+  assert.equal(address.get('validations.attrs.postal_code.isValid'), true);
+  assert.equal(address.get('validations.attrs.country.isValid'), true);
+
+});
+>>>>>>> 45ea9ce... [WIP] Contact validations.

@@ -74,6 +74,11 @@
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.tenant.currency" for="currency"}}
+              {{power-select-validation
+                model=model
+                valuePath="default_currency"
+                didValidate=didValidate
+              }}
               {{power-select-foreign-key
                 mainModel=model
                 model=model
@@ -90,18 +95,25 @@
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.tenant.countries" for="country"}}
-            {{db-fetch-multi-select
-              model=model
-              multiAttr="countries"
-              multiAttrIds="countries_ids"
-              selectedAttr=model.countries
-              className="t-tenant-country-select"
-              displayName="name"
-              add_func="add_country"
-              remove_func="remove_country"
-              repository=countryRepo
-              searchMethod="findCountry"
-            }}
+              {{power-select-validation
+                model=model
+                valuePath="countries"
+                didValidate=didValidate
+              }}
+              {{db-fetch-multi-select
+                model=model
+                multiAttr="countries"
+                multiAttrIds="countries_ids"
+                selectedAttr=model.countries
+                className="t-tenant-country-select"
+                displayName="name"
+                add_func="add_country"
+                remove_func="remove_country"
+                repository=countryRepo
+                searchMethod="findCountry"
+                didValidate=didValidate
+                valuePath="countries"
+              }}
             {{/form-group}}
           </div>
         </div>

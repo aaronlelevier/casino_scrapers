@@ -9,17 +9,23 @@
       selected=address.address_type
       change_method='change_address_type'
       relatedModelName='address-type'
+      model=address
+      didValidate=didValidate
+      valuePath="address_type"
     }}
   </div>
   {{else}}
-  <div class="input-group-row">
-    {{power-select-foreign-key
-      mainModel=address
-      selected=address.address_type
-      change_method='change_address_type'
-      relatedModelName='address-type'
-    }}
-  </div>
+    <div class="input-group-row">
+      {{power-select-foreign-key
+        mainModel=address
+        selected=address.address_type
+        change_method='change_address_type'
+        relatedModelName='address-type'
+        model=address
+        didValidate=didValidate
+        valuePath="address_type"
+      }}
+    </div>
   {{/unless}}
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.address"}}</span>
@@ -35,7 +41,14 @@
   </div>
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.city"}}</span>
-    {{input type="text" value=address.city class=(concat "form-control t-address-city" index)}}
+    {{validated-input
+      type="text"
+      value=address.city
+      className=(concat "form-control t-address-city" index)
+      model=address
+      didValidate=didValidate
+      valuePath="city"
+    }}
   </div>
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.state.one"}}</span>
@@ -47,7 +60,8 @@
       change_func="change_state"
       repository=stateDbFetch
       searchMethod="findState"
-      valuePath="name"
+      valuePath="state"
+      didValidate=didValidate
     }}
   </div>
   <div class="input-group">
@@ -72,7 +86,8 @@
       change_func="change_country"
       repository=countryDbFetch
       searchMethod="findCountry"
-      valuePath="name"
+      valuePath="country"
+      didValidate=didValidate
     }}
   </div>
 </div>

@@ -6,6 +6,7 @@
     "FormData",
     "uploadFile",
     "ajax",
+    "patchIncrement",
     "patchRandom",
     "pagination",
     "pagination2",

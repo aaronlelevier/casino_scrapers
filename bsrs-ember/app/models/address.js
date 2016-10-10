@@ -5,8 +5,24 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/address';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 const Validations = buildValidations({
+  address_type: validator('presence', {
+    presence: true,
+    message: 'errors.address.type'
+  }),
   address: validator('address-street'),
+  city: validator('presence', {
+    presence: true,
+    message: 'errors.address.city'
+  }),
+  state: validator('presence', {
+    presence: true,
+    message: 'errors.address.state'
+  }),
   postal_code: validator('address-postal'),
+  country: validator('presence', {
+    presence: true,
+    message: 'errors.address.country'
+  }),
 });
 
 var AddressModel = Model.extend(Validations, OptConf, {

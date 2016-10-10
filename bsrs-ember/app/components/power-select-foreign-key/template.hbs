@@ -1,4 +1,4 @@
-<span id={{valuePath}} />
+<span id={{valuePath}}></span>
 {{#power-select-mobile
   class=(concat relatedModelName '-select' ' t-' relatedModelName '-select' (if showMessage ' invalid'))
   tagName="div"
@@ -22,7 +22,7 @@
     attachment="bottom left"
     targetAttachment="top left"
   }}
-    <div class="validated-input-error-dialog animated flipInX error">
+    <div class="validated-input-error-dialog animated flipInX error {{concat "t-validation-" valuePath}}">
       {{t (v-get model valuePath "message")}}
     </div>
   {{/tether-dialog}}

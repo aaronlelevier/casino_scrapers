@@ -29,7 +29,7 @@ const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_TENANT_URL;
 const NEW_URL = `${BASE_URL}/new/1`;
 
-var store, listXhr;
+var store, listXhr, counter = 0;
 
 moduleForAcceptance('Acceptance | tenant new test', {
   beforeEach() {
@@ -41,6 +41,9 @@ moduleForAcceptance('Acceptance | tenant new test', {
 });
 
 test('visit new URL and create a new record', assert => {
+  andThen(() => {
+    patchIncrement(counter);
+  });
   visit(NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
@@ -101,32 +104,33 @@ test('visit new URL and create a new record', assert => {
   andThen(() => {
     assert.ok(page.countrySelectedOne.indexOf(countryName) > -1);
   });
+
   xhr(TENANT_URL, 'POST', TF.put({
-    id: UUID.value,
+    id: 5,
     countries: [countryId],
-    billing_phone_number: {
-      id: UUID.value,
-      number: PD.numberOne,
-      type: PTD.idOne
-    },
-    billing_email: {
-      id: UUID.value,
-      email: ED.emailOne,
-      type: ETD.workId
-    },
-    implementation_email: {
-      id: UUID.value,
-      email: ED.emailOne,
-      type: ETD.workId
-    },
     billing_address: {
-      id: UUID.value,
+      id: 4,
       type: ATD.officeId,
       address: AD.streetOne,
       city: AD.cityOne,
       state: stateId,
       postal_code: AD.zipOne,
       country: countryId
+    },
+    billing_email: {
+      id: 2,
+      email: ED.emailOne,
+      type: ETD.workId
+    },
+    billing_phone_number: {
+      id: 3,
+      number: PD.numberOne,
+      type: PTD.idOne
+    },
+    implementation_email: {
+      id: 1,
+      email: ED.emailOne,
+      type: ETD.workId
     }
   }), {}, 200, TF.list());
 
