@@ -1,5 +1,6 @@
 import LD from 'bsrs-ember/vendor/defaults/location';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
+import AD from 'bsrs-ember/vendor/defaults/address';
 import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import ED from 'bsrs-ember/vendor/defaults/email';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
@@ -19,7 +20,7 @@ var new_put_payload = {
     addresses: []
 };
 
-var addresses = {id: UUID.value, type: ATD.shippingId, address: '34 2nd St', postal_code: '12345' };
+var addresses = {id: UUID.value, type: ATD.shippingId, address: AD.streetOne, city: AD.cityOne};
 var address_put_payload = {
     id: UUID.value, 
     name: LD.storeName, 
