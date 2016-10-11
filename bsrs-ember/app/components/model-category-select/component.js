@@ -37,7 +37,7 @@ var TicketCategories = Ember.Component.extend({
         return;
       }
       const cat_ids = ticket.get('categories_ids');
-      if(Ember.$.inArray(category.id, cat_ids) === -1){
+      if(!cat_ids.includes(category.id)){
         ticket.change_category_tree(category);
       }
     },
