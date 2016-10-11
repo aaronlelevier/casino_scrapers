@@ -74,11 +74,6 @@
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.tenant.currency" for="currency"}}
-              {{power-select-validation
-                model=model
-                valuePath="default_currency"
-                didValidate=didValidate
-              }}
               {{power-select-foreign-key
                 mainModel=model
                 model=model

@@ -29,7 +29,7 @@ const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_TENANT_URL;
 const NEW_URL = `${BASE_URL}/new/1`;
 
-var store, listXhr, counter = 0;
+var store, listXhr;
 
 moduleForAcceptance('Acceptance | tenant new test', {
   beforeEach() {
@@ -42,7 +42,7 @@ moduleForAcceptance('Acceptance | tenant new test', {
 
 test('visit new URL and create a new record', assert => {
   andThen(() => {
-    patchIncrement(counter);
+    patchIncrement(0);
   });
   visit(NEW_URL);
   andThen(() => {
@@ -109,7 +109,7 @@ test('visit new URL and create a new record', assert => {
     id: 5,
     countries: [countryId],
     billing_address: {
-      id: 4,
+      id: 1,
       type: ATD.officeId,
       address: AD.streetOne,
       city: AD.cityOne,
@@ -128,7 +128,7 @@ test('visit new URL and create a new record', assert => {
       type: PTD.idOne
     },
     implementation_email: {
-      id: 1,
+      id: 4,
       email: ED.emailOne,
       type: ETD.workId
     }

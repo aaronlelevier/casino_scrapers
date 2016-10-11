@@ -156,8 +156,8 @@ var belongs_to_dirty = function(_ownerName) {
 var belongs_to_track_related_model = function(_ownerName) {
   return Ember.computed(`${_ownerName}.isDirtyOrRelatedDirty`, function(){
     return this.get(`${_ownerName}.isDirtyOrRelatedDirty`);
-  })
-}
+  });
+};
 
 
 /**
