@@ -138,7 +138,7 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, NewMixin, OptCo
   phonenumbersIsDirty: Ember.computed('phonenumbers.@each.{isDirtyOrRelatedDirty}', 'phonenumbersIsDirtyContainer', function() {
     const phonenumbers = this.get('phonenumbers');
     return phonenumbers.isAny('isDirtyOrRelatedDirty') || this.get('phonenumbersIsDirtyContainer');
-  }),
+  }).readOnly(),
   phonenumbersIsNotDirty: Ember.computed.not('phonenumbersIsDirty'),
   rollbackPhonenumbersContainer() {
     const phonenumbers = this.get('phonenumbers');
@@ -177,7 +177,7 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, NewMixin, OptCo
   emailsIsDirty: Ember.computed('emails.@each.{isDirtyOrRelatedDirty}', 'emailsIsDirtyContainer', function() {
     const emails = this.get('emails');
     return emails.isAny('isDirtyOrRelatedDirty') || this.get('emailsIsDirtyContainer');
-  }),
+  }).readOnly(),
   emailsIsNotDirty: Ember.computed.not('emailsIsDirty'),
   rollbackEmailsContainer() {
     const emails = this.get('emails');
@@ -213,7 +213,7 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, NewMixin, OptCo
   },
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'emailsIsDirty', 'phonenumbersIsDirty', 'roleIsDirty', 'locationsIsDirty', 'statusIsDirty', 'localeIsDirty', function() {
     return ( this.get('detail') || this.get('new') ) && ( this.get('isDirty') || this.get('phonenumbersIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty') || this.get('statusIsDirty') || this.get('emailsIsDirty') || this.get('localeIsDirty') );
-  }),
+  }).readOnly(),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   clearPassword() {
     this.set('password', '');

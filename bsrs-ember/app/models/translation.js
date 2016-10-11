@@ -31,7 +31,7 @@ var TranslationModel = Model.extend(NewMixin, {
   isDirtyOrRelatedDirty: computed('localeIsDirty', function() {
     // when this has an attr itself update the line below... this.get('isDirty') || this.get('localeIsDirty')
     return this.get('localeIsDirty');
-  }),
+  }).readOnly(),
   isNotDirtyOrRelatedNotDirty: computed.not('isDirtyOrRelatedDirty'),
   saveRelated() {
     this.saveLocales();

@@ -63,7 +63,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin
   phonenumbersIsDirty: Ember.computed('phonenumbers.@each.{isDirtyOrRelatedDirty}', 'phonenumbersIsDirtyContainer', function() {
     const phonenumbers = this.get('phonenumbers');
     return phonenumbers.isAny('isDirtyOrRelatedDirty') || this.get('phonenumbersIsDirtyContainer');
-  }),
+  }).readOnly(),
   phonenumbersIsNotDirty: Ember.computed.not('phonenumbersIsDirty'),
   rollbackPhonenumbersContainer() {
     const phonenumbers = this.get('phonenumbers');
@@ -102,7 +102,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin
   emailsIsDirty: Ember.computed('emails.@each.{isDirtyOrRelatedDirty}', 'emailsIsDirtyContainer', function() {
     const emails = this.get('emails');
     return emails.isAny('isDirtyOrRelatedDirty') || this.get('emailsIsDirtyContainer');
-  }),
+  }).readOnly(),
   emailsIsNotDirty: Ember.computed.not('emailsIsDirty'),
   rollbackEmailsContainer() {
     const emails = this.get('emails');
@@ -141,7 +141,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin
   addressesIsDirty: Ember.computed('addresses.@each.{isDirtyOrRelatedDirty}', 'addressesIsDirtyContainer', function() {
     const addresses = this.get('addresses');
     return addresses.isAny('isDirtyOrRelatedDirty') || this.get('addressesIsDirtyContainer');
-  }),
+  }).readOnly(),
   addressesIsNotDirty: Ember.computed.not('addressesIsDirty'),
   rollbackAddressesContainer() {
     const addresses = this.get('addresses');
@@ -177,7 +177,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin
   },
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'statusIsDirty', 'phonenumbersIsDirty', 'addressesIsDirty', 'emailsIsDirty', 'childrenIsDirty', 'parentsIsDirty', function() {
     return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('statusIsDirty') || this.get('phonenumbersIsDirty') || this.get('addressesIsDirty') || this.get('emailsIsDirty') || this.get('childrenIsDirty') || this.get('parentsIsDirty');
-  }),
+  }).readOnly(),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   saveRelated() {
     this.saveLocationLevel();

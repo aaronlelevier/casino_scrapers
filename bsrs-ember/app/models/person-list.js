@@ -16,7 +16,7 @@ export default Ember.Object.extend(RoleMixin, OptConf, {
   }),
   isDirtyOrRelatedDirty: Ember.computed('person.isDirtyOrRelatedDirty', function() {
     return this.get('person').get('isDirtyOrRelatedDirty');
-  }),
+  }).readOnly(),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   fullname: Ember.computed('first_name', 'last_name', function() {
     const first_name = this.get('first_name');

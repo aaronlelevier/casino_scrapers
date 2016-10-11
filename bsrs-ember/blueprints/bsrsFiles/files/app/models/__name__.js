@@ -36,7 +36,7 @@ export default Model.extend(OptConf, Validations, {
   <%= firstPropertySnake %>: attr(''),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', '<%= secondPropertyCamel %>IsDirty', '<%= thirdPropertyCamel %>IsDirty', function() {
     return this.get('isDirty') || this.get('<%= secondPropertyCamel %>IsDirty') || this.get('<%= thirdPropertyCamel %>IsDirty');
-  }),
+  }).readOnly(),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   rollback() {
     this.rollback<%= secondPropertyTitle %>();

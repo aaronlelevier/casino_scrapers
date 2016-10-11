@@ -147,7 +147,7 @@ var belongs_to_dirty = function(_ownerName) {
     if(!has_many && fk) {
       return true;
     }
-  });
+  }).readOnly();
 };
 
 

@@ -39,7 +39,7 @@ var RoleModel = Model.extend(OptConf, NewMixin, Validations, {
   role_categories_fks: [],
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'categoriesIsDirty', function() {
     return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('categoriesIsDirty');
-  }),
+  }).readOnly(),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   serialize() {
     const location_level = this.get('location_level');

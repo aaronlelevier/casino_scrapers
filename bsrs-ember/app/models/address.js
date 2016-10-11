@@ -28,7 +28,7 @@ var AddressModel = Model.extend(Validations, OptConf, {
   }),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'countryIsDirty', 'stateIsDirty', 'addressTypeIsDirty', function() {
     return this.get('isDirty') || this.get('countryIsDirty') || this.get('stateIsDirty') || this.get('addressTypeIsDirty');
-  }),
+  }).readOnly(),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   saveRelated() {
     this.saveCountry();

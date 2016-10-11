@@ -35,7 +35,7 @@ var CategoryModel = Model.extend(NewMixin, Validations, TranslationMixin, OptCon
   category_children_fks: [],
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'childrenIsDirty', function() {
     return this.get('isDirty') || this.get('childrenIsDirty');
-  }),
+  }).readOnly(),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   serialize() {
     const cost_amount = this.get('cost_amount') || null;
@@ -58,7 +58,7 @@ var CategoryModel = Model.extend(NewMixin, Validations, TranslationMixin, OptCon
       return parent_id === category.get('id');
     };
     return simpleStore.find('category', filter);
-  }),
+  }).readOnly(),
   removeRecord() {
     run(() => {
       this.get('simpleStore').remove('category', this.get('id'));

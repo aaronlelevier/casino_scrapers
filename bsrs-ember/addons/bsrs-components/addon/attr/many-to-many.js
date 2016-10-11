@@ -78,7 +78,7 @@ var many_to_many_generator = function(modelName, _associatedModel) {
       return m2m.get(`${modelName}_pk`) === this.get('id') && !m2m.get('removed');
     };
     return this.get('simpleStore').find(this.OPT_CONF[_associatedModel]['join_model'], filter);
-  });
+  }).readOnly();
 };
 
 
@@ -91,7 +91,7 @@ var many_to_many_generator = function(modelName, _associatedModel) {
 var many_to_many_ids = function(_joinModelName) {
   return Ember.computed(`${_joinModelName}.[]`, function() {
     return this.get(`${_joinModelName}`).mapBy('id');
-  });
+  }).readOnly();
 };
 
 
@@ -112,7 +112,7 @@ var many_models = function(_joinModelName, _associatedModel) {
       return many_related_pks.includes(many_related.get('id'));
     };
     return this.get('simpleStore').find(this.OPT_CONF[_associatedModel]['associated_model'], filter.bind(many_relateds));
-  });
+  }).readOnly();
 };
 
 
@@ -125,7 +125,7 @@ var many_models = function(_joinModelName, _associatedModel) {
 var many_models_ids = function(_associatedModel) {
   return Ember.computed(`${_associatedModel}.[]`, function() {
     return this.get(_associatedModel).mapBy('id');
-  });
+  }).readOnly();
 };
 
 
@@ -144,7 +144,7 @@ var many_to_many_dirty = function(_joinModelName) {
     const many_relateds_ids = this.get(m2m_ids);
     const previous_m2m_fks = this.get(m2m_fks) || [];
     return equal(many_relateds_ids, previous_m2m_fks) ? false : true;
-  });
+  }).readOnly();
 };
 
 
@@ -167,7 +167,7 @@ var many_to_many_dirty_unlessAddedM2M = function(_joinModelName) {
       return false;
     }
     return equal(many_relateds_ids, previous_m2m_fks) ? false : true;
-  });
+  }).readOnly();
 };
 
 

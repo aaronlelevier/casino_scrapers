@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { get } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 //start-non-standard
@@ -78,16 +79,16 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
   dtd_fk: undefined,
   /*start-non-standard*/ @computed('status') /*end-non-standard*/
   status_class(status){
-    const name = this.get('status.name');
+    const name = get(this, 'status.name');
     return name ? name.replace(/\./g, '-') : '';
   },
   priority_class: Ember.computed('priority', function(){
-    const name = this.get('priority.name');
+    const name = get(this, 'priority.name');
     return name ? name.replace(/\./g, '-') : '';
   }),
   rollbackAssignee() {
     const { assignee, assignee_fk } = this.getProperties('assignee', 'assignee_fk');
-    if(assignee && assignee.get('id') !== assignee_fk) {
+    if(assignee && get(assignee, 'id') !== assignee_fk) {
       const assignee_object = {id: assignee_fk};
       this.change_assignee(assignee_object);
     }
@@ -106,33 +107,31 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     run(() => {
       simpleStore.push('ticket', {id: id, previous_attachments_fks: ticket_attachments_fks});
     });
-    this.get('attachments').forEach((attachment) => {
+    get(this, 'attachments').forEach((attachment) => {
       attachment.save();
     });
   },
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'locationIsDirty', 'attachmentsIsDirty', function() {
-    return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('statusIsDirty') || this.get('priorityIsDirty') || this.get('ccIsDirty') || this.get('categoriesIsDirty') || this.get('locationIsDirty') || this.get('attachmentsIsDirty');
-  }),
+  isDirtyOrRelatedDirty: Ember.computed.or('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'locationIsDirty', 'attachmentsIsDirty').readOnly(), 
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   remove_assignee: function() {
-    const ticket_id = this.get('id');
-    const store = this.get('simpleStore');
-    const old_assignee = this.get('assignee');
+    const ticket_id = get(this, 'id');
+    const store = get(this, 'simpleStore');
+    const old_assignee = get(this, 'assignee');
     if(old_assignee) {
-      const old_assignee_tickets = old_assignee.get('assigned_tickets') || [];
+      const old_assignee_tickets = get(old_assignee, 'assigned_tickets') || [];
       const updated_old_assignee_tickets = old_assignee_tickets.filter((id) => {
         return id !== ticket_id;
       });
       run(() => {
-        store.push('person', {id: old_assignee.get('id'), assigned_tickets: updated_old_assignee_tickets});
+        store.push('person', {id: get(old_assignee, 'id'), assigned_tickets: updated_old_assignee_tickets});
       });
     }
   },
   person_status_role_setup(person_json) {
-    const store = this.get('simpleStore');
+    const store = get(this, 'simpleStore');
     const role = store.find('role', person_json.role);
     delete person_json.role;
-    person_json.role_fk = role.get('id');
+    person_json.role_fk = get(role, 'id');
     person_json.status_fk = person_json.status;
     delete person_json.status;
     let pushed_person;
@@ -150,23 +149,23 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
   },
   attachmentsIsNotDirty: Ember.computed.not('attachmentsIsDirty'),
   attachmentsIsDirty: Ember.computed('attachment_ids.[]', 'previous_attachments_fks.[]', function() {
-    const attachment_ids = this.get('attachment_ids') || [];
-    const previous_attachments_fks = this.get('previous_attachments_fks') || [];
-    if(attachment_ids.get('length') !== previous_attachments_fks.get('length')) {
+    const attachment_ids = get(this, 'attachment_ids') || [];
+    const previous_attachments_fks = get(this, 'previous_attachments_fks') || [];
+    if(attachment_ids.get('length') !== get(previous_attachments_fks, 'length')) {
       return true;
     }
     return equal(attachment_ids, previous_attachments_fks) ? false : true;
-  }),
+  }).readOnly(),
   attachments: Ember.computed('ticket_attachments_fks.[]', function() {
-    const related_fks = this.get('ticket_attachments_fks');
+    const related_fks = get(this, 'ticket_attachments_fks');
     const filter = function(attachment) {
       return related_fks.includes(attachment.get('id'));
     };
-    return this.get('simpleStore').find('attachment', filter);
-  }),
+    return get(this, 'simpleStore').find('attachment', filter);
+  }).readOnly(),
   attachment_ids: Ember.computed('attachments.[]', function() {
-    return this.get('attachments').mapBy('id');
-  }),
+    return get(this, 'attachments').mapBy('id');
+  }).readOnly(),
   remove_attachment(attachment_id) {
     let { simpleStore, id, ticket_attachments_fks = [] } = this.getProperties('simpleStore', 'id', 'ticket_attachments_fks');
     const attachment = simpleStore.find('attachment', attachment_id);
@@ -190,43 +189,43 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     const { id, simpleStore } = this.getProperties('id', 'simpleStore');
     let payload = {
       id: id,
-      request: this.get('request'),
-      status: this.get('status.id'),
+      request: get(this, 'request'),
+      status: get(this, 'status.id'),
       priority: this.get('priority.id'),
-      cc: this.get('cc_ids'),
-      categories: this.get('sorted_categories').mapBy('id'),
-      requester: this.get('requester'),
-      assignee: this.get('assignee.id'),
-      location: this.get('location.id'),
-      attachments: this.get('attachment_ids'),
-      dt_path: this.get('dt_path'),
+      cc: get(this, 'cc_ids'),
+      categories: get(this, 'sorted_categories').mapBy('id'),
+      requester: get(this, 'requester'),
+      assignee: get(this, 'assignee.id'),
+      location: get(this, 'location.id'),
+      attachments: get(this, 'attachment_ids'),
+      dt_path: get(this, 'dt_path'),
     };
     if (this.get('comment')) {
-      payload.comment = this.get('comment');
+      payload.comment = get(this, 'comment');
       run(() => {
         simpleStore.push('ticket', {id: id, comment: ''});
       });
     }
-    if(!this.get('created')) { this.createdAt(); }
+    if(!get(this, 'created')) { this.createdAt(); }
     return payload;
   },
   patchFields: ['request'],
   patchSerialize(link) {
-    const dirtyFields = this.get('patchFields').map((field) => {
-      const state = this.get('_oldState');
+    const dirtyFields = get(this, 'patchFields').map((field) => {
+      const state = get(this, '_oldState');
       if(field in state) {
         return field;
       }
     });
     let payload = {
-      id: this.get('id'),
-      priority: link && link.get('priority.id'),
-      status: link && link.get('status.id'),
-      categories: link && link.get('sorted_categories').mapBy('id'),
-      dt_path: this.get('dt_path')
+      id: get(this, 'id'),
+      priority: link && get(link, 'priority.id'),
+      status: link && get(link, 'status.id'),
+      categories: link && get(link, 'sorted_categories').mapBy('id'),
+      dt_path: get(this, 'dt_path')
     };
     dirtyFields.forEach((field) => {
-      payload[field] = this.get(field);
+      payload[field] = get(this, field);
     });
     return payload;
   },
@@ -234,12 +233,12 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     const date = new Date();
     const iso = date.toISOString();
     run(() => {
-      this.get('simpleStore').push('ticket', {id: this.get('id'), created: iso});
+      get(this, 'simpleStore').push('ticket', {id: get(this, 'id'), created: iso});
     });
   },
   removeRecord() {
     run(() => {
-      this.get('simpleStore').remove('ticket', this.get('id'));
+      get(this, 'simpleStore').remove('ticket', get(this, 'id'));
     });
   },
   rollback() {

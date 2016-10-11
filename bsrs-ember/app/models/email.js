@@ -26,7 +26,7 @@ var EmailModel = Model.extend(Validations, OptConf, {
   }),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'emailTypeIsDirty', function() {
     return this.get('isDirty') || this.get('emailTypeIsDirty');
-  }),
+  }).readOnly(),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   saveRelated() {
     this.saveEmailType();

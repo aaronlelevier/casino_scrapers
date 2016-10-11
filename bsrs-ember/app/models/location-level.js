@@ -21,7 +21,7 @@ var LocationLevel = Model.extend(NewMixin, Validations, {
   parent_fks: [],
   isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
     return this.get('isDirty');
-  }),
+  }).readOnly(),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   rollback() {
     this.rollbackChildren();

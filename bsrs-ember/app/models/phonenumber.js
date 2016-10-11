@@ -26,7 +26,7 @@ var PhoneNumberModel = Model.extend(Validations, OptConf, {
   }),
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumberTypeIsDirty', function() {
     return this.get('isDirty') || this.get('phoneNumberTypeIsDirty');
-  }),
+  }).readOnly(),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   saveRelated() {
     this.savePhoneNumberType();
