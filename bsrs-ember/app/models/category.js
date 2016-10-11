@@ -36,7 +36,7 @@ var CategoryModel = Model.extend(NewMixin, Validations, TranslationMixin, OptCon
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'childrenIsDirty', function() {
     return this.get('isDirty') || this.get('childrenIsDirty');
   }).readOnly(),
-  isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+  isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty').readOnly(),
   serialize() {
     const cost_amount = this.get('cost_amount') || null;
     return {
@@ -51,7 +51,7 @@ var CategoryModel = Model.extend(NewMixin, Validations, TranslationMixin, OptCon
       children: this.get('children_ids')
     };
   },
-  parent: Ember.computed.alias('parent_belongs_to.firstObject'),
+  parent: Ember.computed.alias('parent_belongs_to.firstObject').readOnly(),
   parent_belongs_to: Ember.computed('parent_id', function() {
     const { parent_id, simpleStore } = this.getProperties('parent_id', 'simpleStore');
     const filter = function(category) {

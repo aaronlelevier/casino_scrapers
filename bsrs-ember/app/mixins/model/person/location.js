@@ -11,7 +11,7 @@ var LocationMixin = Ember.Mixin.create({
       let location_level = role.get('location_level');
       return location_level ? location_level.get('id') : undefined;
     }
-  }),
+  }).readOnly(),
   /*
   * store push of a location from power select needs to setup llevel if change role
   */

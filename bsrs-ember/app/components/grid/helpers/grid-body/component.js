@@ -45,7 +45,7 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, {
       }).uniq();
     }
     return searched_content;
-  }),
+  }).readOnly(),
   paginated_content: Ember.computed('found_content.[]', function() {
     const requested = this.get('requested');
     const page = parseInt(this.get('page')) || 1;
@@ -54,7 +54,7 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, {
     const max = (pages.indexOf(page) + 1) * page_size;
     const found_content = this.get('found_content');
     return found_content.slice(0, Math.max(page_size, 10));
-  }),
+  }).readOnly(),
   paginated_content_mobile: Ember.computed('found_content.[]', function() {
     const requested = this.get('requested');
     const page = parseInt(this.get('page')) || 1;
@@ -63,7 +63,7 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, {
     const max = (pages.indexOf(page) + 1) * page_size;
     const found_content = this.get('found_content');
     return found_content;
-  }),
+  }).readOnly(),
   actions: {
     keyup(search) {
       Ember.run.scheduleOnce('actions', this, function() {

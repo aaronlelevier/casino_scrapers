@@ -139,7 +139,7 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, NewMixin, OptCo
     const phonenumbers = this.get('phonenumbers');
     return phonenumbers.isAny('isDirtyOrRelatedDirty') || this.get('phonenumbersIsDirtyContainer');
   }).readOnly(),
-  phonenumbersIsNotDirty: Ember.computed.not('phonenumbersIsDirty'),
+  phonenumbersIsNotDirty: Ember.computed.not('phonenumbersIsDirty').readOnly(),
   rollbackPhonenumbersContainer() {
     const phonenumbers = this.get('phonenumbers');
     phonenumbers.forEach((model) => {
@@ -214,7 +214,7 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, NewMixin, OptCo
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'emailsIsDirty', 'phonenumbersIsDirty', 'roleIsDirty', 'locationsIsDirty', 'statusIsDirty', 'localeIsDirty', function() {
     return ( this.get('detail') || this.get('new') ) && ( this.get('isDirty') || this.get('phonenumbersIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty') || this.get('statusIsDirty') || this.get('emailsIsDirty') || this.get('localeIsDirty') );
   }).readOnly(),
-  isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+  isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty').readOnly(),
   clearPassword() {
     this.set('password', '');
   },

@@ -1,9 +1,6 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
-// import RelaxedMixin from 'bsrs-ember/mixins/validation/relaxed';
-// import { validate } from 'ember-cli-simple-validation/mixins/validate';
-// import ParentValidationComponent from 'bsrs-ember/mixins/validation/parent';
 import { task } from 'ember-concurrency';
 
 var TicketSingleComponent = Ember.Component.extend(TabMixin, {
@@ -13,7 +10,6 @@ var TicketSingleComponent = Ember.Component.extend(TabMixin, {
   },
   personRepo: inject('person'),
   locationRepo: inject('location'),
-  // child_components: ['parent-model-category-select'],
   activityRepository: inject('activity'),
   classNameBindings: ['mobile:mobile-meta-data'],
   continueDTId: Ember.computed(function() {
@@ -22,15 +18,12 @@ var TicketSingleComponent = Ember.Component.extend(TabMixin, {
     return last_dt[0]['dtd']['id'];
   }),
   saveTask: task(function * (update, updateActivities) {
-    // this.set('submitted', true);
-    // if (this.all_components_valid()) {
-      if (this.get('model.validations.isValid')) {
-        const tab = this.tab();
-        const activities = yield this.get('save')(tab, this.get('activityRepository'), update, updateActivities);
-        if (activities && updateActivities) {
-          this.set('activities', activities);
-        }
-      // }
+    if (this.get('model.validations.isValid')) {
+      const tab = this.tab();
+      const activities = yield this.get('save')(tab, this.get('activityRepository'), update, updateActivities);
+      if (activities && updateActivities) {
+        this.set('activities', activities);
+      }
     }
     this.set('didValidate', true);
   }),

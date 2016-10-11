@@ -10,7 +10,7 @@ var LocationLevelMixin = Ember.Mixin.create({
     };
     const llevels = this.get('simpleStore').find('location-level', filter);
     return llevels.objectAt(0);
-  }),
+  }).readOnly(),
   remove_children_parents() {
     const id = this.get('id');
     const store = this.get('simpleStore');

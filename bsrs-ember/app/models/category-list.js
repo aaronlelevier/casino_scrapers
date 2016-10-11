@@ -9,8 +9,8 @@ export default Ember.Object.extend({
     }),
     isDirtyOrRelatedDirty: Ember.computed('category.isDirtyOrRelatedDirty', function() {
         return this.get('category').get('isDirtyOrRelatedDirty');
-    }),
-    isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+    }).readOnly(),
+    isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty').readOnly(),
 }); 
 
 

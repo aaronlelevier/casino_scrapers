@@ -19,7 +19,7 @@ var GridViewController = Ember.Controller.extend({
       result = !model.filter_exists(routeName, {search: search, find: find, sort: sort}) && result;
     });
     return active && result;
-  }),
+  }).readOnly(),
   actions: {
     save_filterset(name) {
       const { routeName, repositoryFilterset } = this.getProperties('routeName', 'repositoryFilterset');

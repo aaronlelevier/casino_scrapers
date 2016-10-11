@@ -112,7 +112,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     });
   },
   isDirtyOrRelatedDirty: Ember.computed.or('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'locationIsDirty', 'attachmentsIsDirty').readOnly(), 
-  isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+  isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty').readOnly(),
   remove_assignee: function() {
     const ticket_id = get(this, 'id');
     const store = get(this, 'simpleStore');
@@ -147,7 +147,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
     this.person_status_role_setup(new_assignee);
     this.change_assignee_container(new_assignee.id);
   },
-  attachmentsIsNotDirty: Ember.computed.not('attachmentsIsDirty'),
+  attachmentsIsNotDirty: Ember.computed.not('attachmentsIsDirty').readOnly(),
   attachmentsIsDirty: Ember.computed('attachment_ids.[]', 'previous_attachments_fks.[]', function() {
     const attachment_ids = get(this, 'attachment_ids') || [];
     const previous_attachments_fks = get(this, 'previous_attachments_fks') || [];

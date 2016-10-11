@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-import ChildValidationComponent from 'bsrs-ember/mixins/validation/child';
 
 export default Ember.Component.extend({
   tabList: Ember.inject.service(),

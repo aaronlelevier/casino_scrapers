@@ -7,7 +7,7 @@ export default Ember.Component.extend({
     const field = this.get('column.filterModelName');
     const store = this.get('simpleStore');
     return store.find(field);
-  }),
+  }).readOnly(),
   actions: {
     /*  @method updateCheckbox
     * closure action sent up to grid-header-column-mobile

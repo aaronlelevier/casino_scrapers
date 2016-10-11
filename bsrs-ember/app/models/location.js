@@ -103,7 +103,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin
     const emails = this.get('emails');
     return emails.isAny('isDirtyOrRelatedDirty') || this.get('emailsIsDirtyContainer');
   }).readOnly(),
-  emailsIsNotDirty: Ember.computed.not('emailsIsDirty'),
+  emailsIsNotDirty: Ember.computed.not('emailsIsDirty').readOnly(),
   rollbackEmailsContainer() {
     const emails = this.get('emails');
     emails.forEach((model) => {
@@ -142,7 +142,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin
     const addresses = this.get('addresses');
     return addresses.isAny('isDirtyOrRelatedDirty') || this.get('addressesIsDirtyContainer');
   }).readOnly(),
-  addressesIsNotDirty: Ember.computed.not('addressesIsDirty'),
+  addressesIsNotDirty: Ember.computed.not('addressesIsDirty').readOnly(),
   rollbackAddressesContainer() {
     const addresses = this.get('addresses');
     addresses.forEach((model) => {
@@ -178,7 +178,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'statusIsDirty', 'phonenumbersIsDirty', 'addressesIsDirty', 'emailsIsDirty', 'childrenIsDirty', 'parentsIsDirty', function() {
     return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('statusIsDirty') || this.get('phonenumbersIsDirty') || this.get('addressesIsDirty') || this.get('emailsIsDirty') || this.get('childrenIsDirty') || this.get('parentsIsDirty');
   }).readOnly(),
-  isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+  isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty').readOnly(),
   saveRelated() {
     this.saveLocationLevel();
     this.saveStatus();
