@@ -513,34 +513,10 @@ test('invalid addresss prevent save and must click delete to navigate away', (as
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
   });
-  page.addressThirdFillIn('34');
-  triggerEvent('.t-address-address2', 'keyup', {keyCode: 65});
-  andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.notOk(page.addressZeroValidationErrorVisible);
-    assert.notOk(page.addressOneValidationErrorVisible);
-    assert.ok(page.addressTwoValidationErrorVisible);
-  });
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal($('.validated-input-error-dialog').length, 2);
-    assert.notOk(page.addressZeroValidationErrorVisible);
-    assert.notOk(page.addressOneValidationErrorVisible);
-    assert.ok(page.addressTwoValidationErrorVisible);
-  });
-  page.addressThirdFillIn('');
-  triggerEvent('.t-address-address2', 'keyup', {keyCode: 65});
-  andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 2);
-    assert.notOk(page.addressZeroValidationErrorVisible);
-    assert.notOk(page.addressOneValidationErrorVisible);
-    assert.ok(page.addressTwoValidationErrorVisible);
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal($('.validated-input-error-dialog').length, 2);
+    assert.equal($('.validated-input-error-dialog').length, 5);
     assert.notOk(page.addressZeroValidationErrorVisible);
     assert.notOk(page.addressOneValidationErrorVisible);
     assert.ok(page.addressTwoValidationErrorVisible);
@@ -548,8 +524,6 @@ test('invalid addresss prevent save and must click delete to navigate away', (as
   click('.t-del-address-btn:eq(2)');
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
-    assert.notOk(page.addressZeroValidationErrorVisible);
-    assert.notOk(page.addressOneValidationErrorVisible);
   });
   var response = LF.detail(LD.idOne);
   var payload = LF.put({id: LD.idOne});
@@ -876,13 +850,31 @@ test('when you deep link to the location detail view you can change the address 
   selectChoose('.t-address-type-select:eq(2)', ATD.officeNameText);
   page.addressThirdFillIn(AD.streetThree);
   page.addressPostalCodeThirdFillIn(AD.zipOne);
+  page.addressCityThirdFill(AD.cityOne);
+  let keyword = 'a';
+  let countryListResults = CF.list_power_select();
+  let countryId = countryListResults.results[0].id;
+  let countryName = countryListResults.results[0].name;
+  xhr(`/api/countries/tenant/?search=${keyword}`, 'GET', null, {}, 200, countryListResults);
+  selectSearch('.t-address-country:eq(2)', keyword);
+  selectChoose('.t-address-country:eq(2)', countryName);
+
+  // State
+  keyword = 'a';
+  let stateListResults = SF.list_power_select();
+  let stateId = stateListResults.results[0].id;
+  let stateName = stateListResults.results[0].name;
+  xhr(`/api/states/tenant/?search=${keyword}`, 'GET', null, {}, 200, stateListResults);
+  selectSearch('.t-address-state:eq(2)', keyword);
+  selectChoose('.t-address-state:eq(2)', stateName);
+
   andThen(() => {
     assert.equal(page.addressTypeSelectedThree, ATD.officeNameText);
   });
   var addresses = AF.put({id: AD.officeId, type: ATD.idOne});
   var response = LF.detail(LD.idOne);
   run(function() {
-    addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree, postal_code: AD.zipOne});
+    addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree, postal_code: AD.zipOne , city: AD.cityOne , state: stateId, country: countryId});
   });
   var payload = LF.put({id: LD.idOne, status: LD.status, addresses: addresses});
   xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
@@ -1452,4 +1444,3 @@ test('fill out an address including Country and State', assert => {
     assert.equal(currentURL(), LOCATION_URL);
   });
 });
-  

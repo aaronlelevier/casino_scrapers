@@ -102,6 +102,7 @@ export default PageObject.create({
   addressThirdFillIn: fillable('.t-address-address2'),
   addressFillIn: fillable('.t-address-address0'),
   addressCityFill: fillable('.t-address-city0'),
+  addressCityThirdFill: fillable('.t-address-city2'),
   addressPostalCodeFillIn: fillable('.t-address-postal-code0'),
   addressPostalCodeThirdFillIn: fillable('.t-address-postal-code2'),
 

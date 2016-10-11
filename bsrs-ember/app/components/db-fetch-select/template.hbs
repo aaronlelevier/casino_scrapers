@@ -1,4 +1,4 @@
-<span id={{valuePath}}></span>
+<span id={{if count (concat valuePath count) valuePath}}></span>
 {{#power-select
   selected=selectedAttr
   class=className
@@ -15,7 +15,7 @@
   {{#tether-dialog
     constraints=(array (hash to="scrollParent" pin=true attachment="together"))
     container-class="tether-dialog-reset"
-    target=(concat "#" valuePath)
+    target=(concat "#" (if count (concat valuePath count) valuePath))
     hasOverlay=false
     attachment="bottom left"
     targetAttachment="top left"
