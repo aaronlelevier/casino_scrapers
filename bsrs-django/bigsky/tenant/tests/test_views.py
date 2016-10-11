@@ -76,7 +76,13 @@ class TenantViewTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 2)
-        data = data['results'][0]
+        # check on which response data is 'self.tenant' b/c 2 tenants required
+        # for the test suite, but order isn't guaranteed
+        if data['results'][0]['id'] == str(self.tenant.id):
+            data = data['results'][0]
+        else:
+            data = data['results'][1]
+
         self.assertEqual(data['id'], str(self.tenant.id))
         self.assertEqual(data['company_code'], self.tenant.company_code)
         self.assertEqual(data['company_name'], self.tenant.company_name)
