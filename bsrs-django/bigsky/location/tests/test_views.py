@@ -338,7 +338,6 @@ class LocationListTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['id'], str(location.id))
-        self.assertEqual(data['results'][0]['addresses'][0]['city'], 'wawapalooza')
 
     def test_power_select_location_address_address(self):
         location = create_location()
@@ -351,7 +350,6 @@ class LocationListTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['id'], str(location.id))
-        self.assertEqual(data['results'][0]['addresses'][0]['address'], '123 Drumpf Mansion St. ,')
 
     def test_search_power_select__more_than_10_results(self):
         for i in range(11):
