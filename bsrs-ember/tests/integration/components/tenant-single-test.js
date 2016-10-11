@@ -46,7 +46,15 @@ moduleForComponent('tenant-single', 'integration: tenant-single test', {
   }
 });
 
-test('scidOne read only is populated', function(assert) {
+test('scid - read only is populated if in detail, otherwise in create it is not present', function(assert) {
+  // create
+  run(function() {
+    model = store.push('tenant', {id: TD.idOne, scid: undefined});
+  });
+  this.set('model', model);
+  this.render(hbs `{{tenants/tenant-single model=model}}`);
+  assert.equal($('[data-test-id="tenant-scid"]').length, 0);
+  // detail
   run(function() {
     model = store.push('tenant', {id: TD.idOne, scid: TD.scidOne});
   });
@@ -104,8 +112,3 @@ test('placeholders are translated', function(assert) {
   this.render(hbs `{{tenants/tenant-single}}`);
   assert.equal(this.$('.t-tenant-company_name').get(0)['placeholder'], trans.t('tenant.company_name'));
 });
-
-// test('billing information displays', function(assert) {
-//   this.render(hbs `{{tenants/tenant-single}}`);
-//   assert.equal(this.$('.t-tenant-company_name').get(0)['placeholder'], trans.t('tenant.company_name'));
-// });

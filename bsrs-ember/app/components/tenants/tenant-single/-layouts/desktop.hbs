@@ -25,6 +25,15 @@
   <div class="row">
     <div class="col-md-12">
       <section>
+        {{#if model.scid}}
+          <div class="row">
+            <div class="col-md-12">
+              {{#form-group title="tenant.scid" for="scid"}}
+                <p data-test-id="tenant-scid">{{model.scid}}</p>
+              {{/form-group}}
+            </div>
+          </div>
+        {{/if}}
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="tenant.company_name" for="company_name"}}
@@ -48,13 +57,6 @@
                 className="form-control t-tenant-company_code"
                 placeholder=(t "tenant.company_code")
               }}
-            {{/form-group}}
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            {{#form-group title="tenant.scid" for="scid"}}
-              <span data-test-id="tenant-scid">{{model.scid}}</span>
             {{/form-group}}
           </div>
         </div>
