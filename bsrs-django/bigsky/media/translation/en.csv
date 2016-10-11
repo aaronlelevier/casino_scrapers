@@ -402,7 +402,7 @@ en,errors.profile.description.min_max,Must be between 5 and 500 characters,Must 
 en,errors.role.name,Name must be provided,Name must be provided,,"'errors.role.name':'Name must be provided',",Name must be provided,Name must be provided
 en,errors.tenant.billing_contact,Billing Contact must be provided,Billing Contact must be provided,,"'errors.tenant.billing_contact':'Billing Contact must be provided',",Billing Contact must be provided,Billing Contact must be provided
 en,errors.tenant.billing_contact,Billing Contact required,Billing Contact required,,"'errors.tenant.billing_contact':'Billing Contact required',",Billing Contact required,Billing Contact required
-en,errors.tenant.company_code,Company Code must be provided,Company Code must be provided,,"'errors.tenant.company_code':'Company Code must be provided',",Company Code must be provided,Company Code must be provided
+en,errors.tenant.company_code,Company Code,Company Code,,"'errors.tenant.company_code':'Company Code',",Company Code,Company Code
 en,errors.tenant.company_name,Company Name must be provided,Company Name must be provided,,"'errors.tenant.company_name':'Company Name must be provided',",Company Name must be provided,Company Name must be provided
 en,errors.tenant.countries,Company Code must be provided,Company Code must be provided,,"'errors.tenant.countries':'Company Code must be provided',",Company Code must be provided,Company Code must be provided
 en,errors.tenant.dashboard_text,Dashboard Text must be provided,Dashboard Text must be provided,,"'errors.tenant.dashboard_text':'Dashboard Text must be provided',",Dashboard Text must be provided,Dashboard Text must be provided

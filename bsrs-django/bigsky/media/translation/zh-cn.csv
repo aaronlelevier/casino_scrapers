@@ -402,7 +402,7 @@ zh-cn,errors.profile.description.min_max,Must be between 5 and 500 characters,Mu
 zh-cn,errors.role.name,Name must be provided,Name must be provided,Name must be provided,必须提供姓名,必须提供姓名,必须提供姓名,必须提供姓名,"'errors.role.name':'必须提供姓名',",
 zh-cn,errors.tenant.billing_contact,Billing Contact must be provided,Billing Contact must be provided,Billing Contact must be provided,必须提供开票联系,必须提供开票联系,必须提供开票联系,必须提供开票联系,"'errors.tenant.billing_contact':'必须提供开票联系',",
 zh-cn,errors.tenant.billing_contact,Billing Contact required,Billing Contact required,Billing Contact required,需要开票联系,需要开票联系,需要开票联系,需要开票联系,"'errors.tenant.billing_contact':'需要开票联系',",
-zh-cn,errors.tenant.company_code,Company Code must be provided,Company Code must be provided,Company Code must be provided,公司代码必须提供,公司代码必须提供,公司代码必须提供,公司代码必须提供,"'errors.tenant.company_code':'公司代码必须提供',",
+zh-cn,errors.tenant.company_code,Company Code,Company Code,Company Code,公司代码,公司代码,公司代码,公司代码,"'errors.tenant.company_code':'公司代码',",
 zh-cn,errors.tenant.company_name,Company Name must be provided,Company Name must be provided,Company Name must be provided,必须提供公司名称,必须提供公司名称,必须提供公司名称,必须提供公司名称,"'errors.tenant.company_name':'必须提供公司名称',",
 zh-cn,errors.tenant.countries,Company Code must be provided,Company Code must be provided,Company Code must be provided,公司代码必须提供,公司代码必须提供,公司代码必须提供,公司代码必须提供,"'errors.tenant.countries':'公司代码必须提供',",
 zh-cn,errors.tenant.dashboard_text,Dashboard Text must be provided,Dashboard Text must be provided,Dashboard Text must be provided,必须提供仪表板文本,必须提供仪表板文本,必须提供仪表板文本,必须提供仪表板文本,"'errors.tenant.dashboard_text':'必须提供仪表板文本',",
