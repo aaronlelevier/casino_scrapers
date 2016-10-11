@@ -325,6 +325,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         add_address_btn.click()
         location_page.find_address_new_entry_send_keys(1, old_street_two, old_city_two, old_zip_two)
         self.gen_elem_page.click_save_btn()
+
         # Go to newly created Location's Detail view
         time.sleep(2)
         self.driver_wait.find_elements_by_class_name(location_page.list_data)
@@ -736,7 +737,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
 
         # ensure scid is present
         scid = self.driver.find_element_by_css_selector('[data-test-id="tenant-scid"]')
-        assert len(scid.text) == 10
+        assert len(scid.get_attribute("value")) == 10
 
 if __name__ == "__main__":
     unittest.main()

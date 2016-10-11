@@ -60,7 +60,7 @@ test('scid - read only is populated if in detail, otherwise in create it is not 
   });
   this.set('model', model);
   this.render(hbs `{{tenants/tenant-single model=model}}`);
-  assert.equal($('[data-test-id="tenant-scid"]').text().trim(), TD.scidOne);
+  assert.equal($('[data-test-id="tenant-scid"]').val(), TD.scidOne);
 });
 
 test('validation works', function(assert) {
