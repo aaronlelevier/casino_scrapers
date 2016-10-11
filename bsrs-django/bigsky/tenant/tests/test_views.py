@@ -288,8 +288,7 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['default_currency'], updated_data['default_currency'])
         self.assertEqual(data['implementation_contact_initial'], self.tenant.implementation_contact_initial)
         self.assertEqual(len(data['countries']), 1)
-        self.assertEqual(data['countries'][0]['id'], str(country.id))
-        self.assertEqual(data['countries'][0]['name'], country.common_name)
+        self.assertEqual(data['countries'][0], str(country.id))
         # implementation
         self.assertEqual(data['implementation_contact_initial'], self.tenant.implementation_contact_initial)
         self.assertEqual(data['implementation_email']['id'], str(self.tenant.implementation_email.id))
@@ -304,23 +303,6 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['billing_phone_number']['type'], str(self.tenant.billing_phone_number.type.id))
         self.assertEqual(data['billing_phone_number']['number'], self.tenant.billing_phone_number.number)
 
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 2)
-        # check on which response data is 'self.tenant' b/c 2 tenants required
-        # for the test suite, but order isn't guaranteed
-        if data['results'][0]['id'] == str(self.tenant.id):
-            data = data['results'][0]
-        else:
-            data = data['results'][1]
-
-        self.assertEqual(data['id'], str(self.tenant.id))
-        self.assertEqual(data['company_code'], self.tenant.company_code)
-        self.assertEqual(data['company_name'], self.tenant.company_name)
-        self.assertEqual(data['dashboard_text'], self.tenant.dashboard_text)
-        self.assertEqual(data['dt_start'], str(self.tenant.dt_start.id))
-        self.assertEqual(data['default_currency'], str(self.tenant.default_currency.id))
-        self.assertEqual(data['test_mode'], self.tenant.test_mode)
         self.assertEqual(data['billing_address']['id'], str(self.tenant.billing_address.id))
         self.assertEqual(data['billing_address']['type'], str(self.tenant.billing_address.type.id))
         self.assertEqual(data['billing_address']['address'], self.tenant.billing_address.address)
