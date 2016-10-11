@@ -102,7 +102,7 @@ test('category is dirty when child is added or removed (starting with one child)
     assert.equal(category.get('children').get('length'), 1);
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
     const cat_two = store.push('category', {id:9});
-    category.add_children(cat_two);
+    category.add_children({id: 9});
     assert.equal(category.get('children').get('length'), 2);
     assert.ok(category.get('category_children_fks'), [8,9]);
     assert.ok(category.get('isDirtyOrRelatedDirty'));
