@@ -13,20 +13,18 @@ import LEMD from 'bsrs-ember/vendor/defaults/location-join-email';
 import LADD from 'bsrs-ember/vendor/defaults/location-join-address';
 import ED from 'bsrs-ember/vendor/defaults/email';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
-import EF from 'bsrs-ember/vendor/email_fixtures';
+// import EF from 'bsrs-ember/vendor/email_fixtures';
 import PND from 'bsrs-ember/vendor/defaults/phone-number';
 import PNTD from 'bsrs-ember/vendor/defaults/phone-number-type';
-import PNF from 'bsrs-ember/vendor/phone_number_fixtures';
 import AND from 'bsrs-ember/vendor/defaults/address';
 import ANF from 'bsrs-ember/vendor/address_fixtures';
-import PD from 'bsrs-ember/vendor/defaults/person';
 import CD from 'bsrs-ember/vendor/defaults/country';
 import SD from 'bsrs-ember/vendor/defaults/state';
 import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import LocationDeserializer from 'bsrs-ember/deserializers/location';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 
-var store, location_unused, location_level_deserializer, subject, location_status, location_status_two, location_level;
+var store, location_unused, location_level_deserializer, subject, location_status, location_level;
 
 module('unit: location deserializer test', {
   beforeEach() {
@@ -35,7 +33,7 @@ module('unit: location deserializer test', {
     subject = LocationDeserializer.create({simpleStore: store, LocationLevelDeserializer: location_level_deserializer});
     run(function() {
       location_status = store.push('location-status', {id: LDS.openId, name: LDS.openName, locations: [LD.idOne]});
-      location_status_two = store.push('location-status', {id: LDS.closedId, name: LDS.closedName, locations: []});
+      store.push('location-status', {id: LDS.closedId, name: LDS.closedName, locations: []});
       location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, locations: [LD.idOne]});
     });
   }
@@ -61,10 +59,9 @@ test('location deserializer returns correct data with already present location_l
 });
 
 test('location deserializer returns correct data with no current location_level (list)', (assert) => {
-  let location;
   let json = [LF.generate_list(LD.unusedId)];
   let response = {'count':1,'next':null,'previous':null,'results': json};
-  location = store.push('location-list', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
+  store.push('location-list', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
   run(() => {
     subject.deserialize(response);
   });
@@ -74,9 +71,8 @@ test('location deserializer returns correct data with no current location_level 
 });
 
 test('(2) location deserializer returns correct data with already present location_level (detail)', (assert) => {
-  let location;
   let json = LF.generate(LD.unusedId);
-  location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
+  store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
   run(() => {
     subject.deserialize(json, LD.unusedId);
   });
@@ -88,9 +84,8 @@ test('(2) location deserializer returns correct data with already present locati
 });
 
 test('location deserializer returns correct data with no current location_level (detail)', (assert) => {
-  let location;
   let json = LF.generate(LD.unusedId);
-  location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
+  store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
   run(() => {
     subject.deserialize(json, LD.unusedId);
   });
@@ -101,9 +96,8 @@ test('location deserializer returns correct data with no current location_level 
 });
 
 test('location array in location level will not be duplicated and deserializer returns correct data with already present location_level (detail)', (assert) => {
-  let location;
   let json = LF.generate(LD.idOne);
-  location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
+  store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
   run(() => {
     subject.deserialize(json, LD.idOne);
   });

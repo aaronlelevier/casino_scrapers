@@ -1,6 +1,5 @@
 import Ember from 'ember';
 const { run } = Ember;
-import injectStore from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 
 var DtdFieldComponent = Ember.Component.extend({
@@ -22,7 +21,6 @@ var DtdFieldComponent = Ember.Component.extend({
       });
     },
     delete(field) {
-      const fields = this.get('model').get('fields');
       run(() => {
         this.get('model').remove_field(field.get('id'));
       });

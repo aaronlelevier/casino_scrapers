@@ -2,11 +2,9 @@ import Ember from 'ember';
 const { run } = Ember;
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import PD from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CCD from 'bsrs-ember/vendor/defaults/category-children';
-import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 
 var store;
 
@@ -20,11 +18,11 @@ moduleForComponent('model-category-select', 'Unit | Component | model category s
 
 
 test('categories_selected will always return the correct category object based on index', function(assert) {
-    let ticket, category_huh, category_rando, category_top_level, category_two, category_one;
+    let ticket, category_rando, category_top_level, category_two, category_one;
     run(() => {
         ticket = store.push('ticket', {id: TD.idOne});
         //rando child
-        category_huh = store.push('category', {id: CD.idLossPreventionChild, name: CD.nameLossPreventionChild, parent_id: CD.idWatChild, level: 3});
+        store.push('category', {id: CD.idLossPreventionChild, name: CD.nameLossPreventionChild, parent_id: CD.idWatChild, level: 3});
         //new 2nd level
         category_rando = store.push('category', {id: CD.idWatChild, name: CD.nameWatChild, parent_id: CD.unusedId, level: 1});
         store.push('category-children', {id: CD.idOne, category_pk: CD.idWatChild, children_pk: CD.idLossPreventionChild});

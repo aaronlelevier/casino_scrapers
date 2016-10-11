@@ -12,11 +12,10 @@ import TCD from 'bsrs-ember/vendor/defaults/model-category';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
-import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 
 
-var store, ticket, link, uuid;
+var store, ticket, link;
 
 module('unit: ticket test', {
   beforeEach() {
@@ -161,7 +160,6 @@ test('status will save correctly as undefined', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne, status_fk: undefined});
   store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: []});
   ticket.saveRelated();
-  let status = ticket.get('status');
   assert.equal(ticket.get('status_fk'), undefined);
 });
 

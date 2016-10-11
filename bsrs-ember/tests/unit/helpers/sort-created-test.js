@@ -5,7 +5,7 @@ import { test, module } from 'bsrs-ember/tests/helpers/qunit';
 import TAD from 'bsrs-ember/vendor/defaults/ticket_activity';
 const { run } = Ember;
 
-let activity, store;
+let store;
 
 module('Unit | Helper | sort created', {
   beforeEach() {

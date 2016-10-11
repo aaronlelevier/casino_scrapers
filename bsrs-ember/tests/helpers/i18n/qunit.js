@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import {module as qunitModule, test} from 'bsrs-ember/tests/helpers/qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';

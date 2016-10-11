@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import TRANSLATION_DEFAULTS from 'bsrs-ember/vendor/defaults/translation';
 import LOCALE_DEFAULTS from 'bsrs-ember/vendor/defaults/locale';
@@ -61,7 +60,6 @@ test('_deserializeSingle - translation', (assert) => {
 });
 
 test('_deserializeSingle - translation.locales attr is an array of "locale-translation" objects', (assert) => {
-    var locale_trans;
     let response = TRANSLATION_FIXTURES.get();
     // extra "locale-translation" in the "store" that should not be associated with the 
     // translation b/c the translation-key is different
@@ -70,7 +68,7 @@ test('_deserializeSingle - translation.locales attr is an array of "locale-trans
         locale: LOCALE_TRANSLATION_DEFAULTS.localeOther,
         translation: LOCALE_TRANSLATION_DEFAULTS.translationOther
     };
-    locale_trans = store.push('locale-translation', model);
+    store.push('locale-translation', model);
     subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
     let translation = store.find('translation', TRANSLATION_DEFAULTS.keyOneGrid);
     assert.ok(translation);

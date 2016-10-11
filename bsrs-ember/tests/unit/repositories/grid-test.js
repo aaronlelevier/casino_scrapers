@@ -2,16 +2,15 @@ import Ember from 'ember';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import GridRepository from 'bsrs-ember/mixins/repositories/grid';
 
 var FakeRepo = Ember.Object.extend(GridRepository);
 
-var store, original_xhr, expected_endpoint;
+var original_xhr, expected_endpoint;
 
 module('unit: grid repository test', {
   beforeEach(assert) {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:grid-count']);
+    module_registry(this.container, this.registry, ['model:ticket', 'model:grid-count']);
     original_xhr = PromiseMixin.xhr;
     PromiseMixin.xhr = function(endpoint) {
       assert.equal(endpoint, expected_endpoint);

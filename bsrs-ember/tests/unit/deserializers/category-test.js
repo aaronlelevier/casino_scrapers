@@ -6,7 +6,7 @@ import CD from 'bsrs-ember/vendor/defaults/category';
 import CCD from 'bsrs-ember/vendor/defaults/category-children';
 import CategoryDeserializer from 'bsrs-ember/deserializers/category';
 
-var store, subject, category, category_unused, run = Ember.run;
+var store, subject, category, run = Ember.run;
 
 module('unit: category deserializer test', {
     beforeEach() {
@@ -18,7 +18,7 @@ module('unit: category deserializer test', {
 test('category deserializer returns correct data with existing category (list)', (assert) => {
     category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
                               label: CD.labelOne});
-    category_unused = store.push('category-list', {id: CD.unusedId, name: CD.nameTwo, description: CD.descriptionMaintenance});
+    store.push('category-list', {id: CD.unusedId, name: CD.nameTwo, description: CD.descriptionMaintenance});
     let json = [CF.generate(CD.idOne), CF.generate(CD.unusedId)];
     let response = {'count':2,'next':null,'previous':null,'results': json};
     run(() => {
@@ -92,7 +92,7 @@ test('category deserializer returns correct data with existing category and diff
 });
 
 test('category deserializer returns correct data with existing category and same children (detail)', (assert) => {
-    let category = store.push('category', {id: CD.idOne, name: CD.nameOne, category_children_fks: [CCD.idOne]});
+    store.push('category', {id: CD.idOne, name: CD.nameOne, category_children_fks: [CCD.idOne]});
     store.push('category', {id: CD.idChild});
     store.push('category-children', {id: CCD.idOne, category_pk: CD.idOne, children_pk: CD.idChild});
     let json = CF.generate(CD.idOne);
@@ -104,7 +104,7 @@ test('category deserializer returns correct data with existing category and same
 });
 
 test('category deserializer returns correct data with existing category that has no children (detail)', (assert) => {
-    let category = store.push('category', {id: CD.idOne, name: CD.nameOne});
+    store.push('category', {id: CD.idOne, name: CD.nameOne});
     let json = CF.generate(CD.idOne);
     json.children = [];
     run(() => {

@@ -1,7 +1,5 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
-import config from 'bsrs-ember/config/environment';
-import injectStore from 'bsrs-ember/utilities/store';
 import TabRoute from 'bsrs-ember/route/tab/route';
 import FindById from 'bsrs-ember/mixins/route/findById';
 

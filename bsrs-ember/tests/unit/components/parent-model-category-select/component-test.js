@@ -2,21 +2,16 @@ import Ember from 'ember';
 const { run } = Ember;
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-// import ParentTicketCategorySelect from 'bsrs-ember/components/parent-model-category-select/component';
-import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import CD from 'bsrs-ember/vendor/defaults/category';
-import CCD from 'bsrs-ember/vendor/defaults/category-children';
-import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 
-var store, eventbus, ticket, category_one, category_two, category_three;
+var store, ticket, category_one, category_two, category_three;
 
 moduleForComponent('parent-model-category-select', 'Unit | Component | parent model category select', {
     needs: ['validator:presence'],
     unit: true,
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:ticket', 'model:category', 'model:model-category', 'model:category-children', 'model:uuid', 'service:eventbus', 'service:i18n']);
-        eventbus = this.container.lookup('service:eventbus');
     }
 });
 
@@ -56,7 +51,6 @@ test('sorted categories will start with the parent and end with the leaf child c
         category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId, children_fks: [CD.idOne], level: 1});
         category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: null, children_fks: [CD.idTwo], level: 0});
     });
-    let subject = this.subject({ticket: ticket, eventbus: eventbus});
     assert.equal(ticket.get('categories').get('length'), 0);
     ticket.change_category_tree({id: CD.unusedId});
     assert.equal(ticket.get('categories').get('length'), 1);

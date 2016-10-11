@@ -1,7 +1,5 @@
 import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
-import PhoneNumber from 'bsrs-ember/models/phonenumber';
-import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number';
 
 var FakeService = Ember.Object.extend({
     init: function() {

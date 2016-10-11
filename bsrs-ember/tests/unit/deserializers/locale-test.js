@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import LOCALE_DEFAULTS from 'bsrs-ember/vendor/defaults/locale';
 import LocaleDeserializer from 'bsrs-ember/deserializers/locale';

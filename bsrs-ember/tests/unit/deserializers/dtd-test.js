@@ -13,15 +13,15 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 import CD from 'bsrs-ember/vendor/defaults/category';
 
-var store, subject, category, category_unused, dtd, dtd_link, priority, status, run = Ember.run;
+var store, subject, dtd, run = Ember.run;
 
 module('unit: dtd deserializer test', {
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-list', 'model:dtd-link', 'model:link', 'model:dtd-field', 'model:field', 'model:option', 'model:field-option', 'model:link-priority-list', 'model:ticket-priority', 'model:ticket-status', 'model:category', 'model:category-children', 'model:model-category', 'model:attachment', 'service:i18n']);
     subject = DTDDeserializer.create({simpleStore: store});
     run(() => {
-      priority = store.push('ticket-priority', {id: TP.priorityOneId, name: TP.priorityOne});
-      status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
+      store.push('ticket-priority', {id: TP.priorityOneId, name: TP.priorityOne});
+      store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
     });
   }
 });
@@ -84,11 +84,11 @@ test('dtd deserializer returns correct data', (assert) => {
 test('dtd deserializer removes m2m dtd-link when server is diff from client', (assert) => {
   const json = DTDF.generate(DTD.idOne);
   assert.ok(json.fields);
-  let dtd, dtd_link;
+  let dtd;
   run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, dtd_links_fks: [DTDL.idOne]});
     store.push('link', {id: LINK.idTwo});
-    dtd_link = store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idTwo});
+    store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idTwo});
   });
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(dtd.get('fields').get('length'), 0);
@@ -108,7 +108,7 @@ test('dtd new definitions from server will not dirty model if clean', (assert) =
   run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, dtd_links_fks: [DTDL.idOne]});
     store.push('link', {id: LINK.idTwo});
-    dtd_link = store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idTwo});
+    store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idTwo});
   });
   const json = DTDF.generate(DTD.idOne, DTD.keyTwo);
   run(() => {
@@ -363,8 +363,8 @@ test('link-category m2m is added after deserialize single (starting with existin
     let dtd = store.push('dtd', {id: DTD.idOne, dtd_links_fks: [DTDL.idOne]});
     let link = store.push('link', {id: LINK.idOne, model_categories_fks: [TICKET_CD.idOne]});
     store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
-    let m2m = store.push('model-category', {id: TICKET_CD.idOne, model_pk: link_id, category_pk: CD.idGridOne});
-    let category = store.push('category', {id: CD.idGridOne, name: CD.nameLossPreventionChild});
+    store.push('model-category', {id: TICKET_CD.idOne, model_pk: link_id, category_pk: CD.idGridOne});
+    store.push('category', {id: CD.idGridOne, name: CD.nameLossPreventionChild});
     assert.equal(link.get('categories.length'), 1);
     assert.equal(link.get('model_categories_fks').length, 1);
     assert.ok(link.get('categoriesIsNotDirty'));

@@ -2,10 +2,9 @@ import Ember from 'ember';
 const { run } = Ember;
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import { dtd_payload, dtd_payload_link } from 'bsrs-ember/tests/helpers/payloads/dtd';
 import OD from 'bsrs-ember/vendor/defaults/option';
 
-var store, option, uuid;
+var store, option;
 
 module('unit: option test', {
     beforeEach() {

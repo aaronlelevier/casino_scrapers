@@ -27,7 +27,6 @@ export default Ember.Component.extend({
      */
     const dt_id = this.get('model').get('id');
     const fields = this.get('model.fields');
-    const existing_ticket_request = this.get('ticket.request');
     const dt_path = this.get('ticket.dt_path');
     const fieldsObj = this.get('fieldsObj') || new Map();
     //Initial Map() setup - Current DTD
@@ -78,7 +77,7 @@ export default Ember.Component.extend({
    * uses the num property to increment required length
    * needs to only look at fieldObjs that are specific to a dtd.  User can not fill out all required fields and can navigate backwards and not have links disabled
    */
-  fieldsCompleted: Ember.computed('ticket.requestValues.[]', function() {
+  fieldsCompleted: computed('ticket.requestValues.[]', function() {
     const objs = this.get('fieldsObj').values();
     const model_id = this.get('model').get('id');
     let len = 0;

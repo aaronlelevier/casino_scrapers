@@ -1,7 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
-import CurrencyDefaults from 'bsrs-ember/vendor/defaults/currencies';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LOCALED from 'bsrs-ember/vendor/defaults/locale';
 import PD from 'bsrs-ember/vendor/defaults/person';
@@ -9,7 +8,6 @@ import SD from 'bsrs-ember/vendor/defaults/status';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import ED from 'bsrs-ember/vendor/defaults/email';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
-import PNF from 'bsrs-ember/vendor/phone_number_fixtures';
 import PNTD from 'bsrs-ember/vendor/defaults/phone-number-type';
 import PND from 'bsrs-ember/vendor/defaults/phone-number';
 import PPHD from 'bsrs-ember/vendor/defaults/person-join-phonenumber';
@@ -21,7 +19,7 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import PERSON_LD from 'bsrs-ember/vendor/defaults/person-location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 
-var store, uuid, person, role;
+var store, person, role;
 
 module('unit: model | person test', {
   beforeEach() {
@@ -55,13 +53,13 @@ test('fullname property is a computed of first and last', (assert) => {
 
 /* LOCALE */
 test('related locale should return one locale for a person', (assert) => {
-  let locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
+  store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(person.get('localeIsNotDirty'));
 });
 
 test('change_locale will update the persons locale and dirty the model', (assert) => {
-  let locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
+  store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
   let inactive_locale = store.push('locale', {id: LOCALED.idTwo, name: LOCALED.nameTwo, people: []});
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(person.get('locale_fk'), LOCALED.idOne);
@@ -74,7 +72,7 @@ test('change_locale will update the persons locale and dirty the model', (assert
 });
 
 test('save person will set locale_fk to current locale id', (assert) => {
-  let locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
+  store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
   let inactive_locale = store.push('locale', {id: LOCALED.idTwo, name: LOCALED.nameTwo, people: []});
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(person.get('locale_fk'), LOCALED.idOne);
@@ -92,7 +90,7 @@ test('save person will set locale_fk to current locale id', (assert) => {
 });
 
 test('rollback person will set locale to current locale_fk', (assert) => {
-  let locale = store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
+  store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
   let inactive_locale = store.push('locale', {id: LOCALED.idTwo, name: LOCALED.nameTwo, people: []});
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(person.get('locale_fk'), LOCALED.idOne);
@@ -113,14 +111,14 @@ test('rollback person will set locale to current locale_fk', (assert) => {
 
 /* STATUS */
 test('related status should return one status for a person', (assert) => {
-  let status = store.push('status', {id: SD.activeId, name: SD.activeName});
+  store.push('status', {id: SD.activeId, name: SD.activeName});
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(person.get('statusIsNotDirty'));
   assert.ok(person.get('roleIsNotDirty'));
 });
 
 test('change_status will update the persons status and dirty the model', (assert) => {
-  let status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [PD.idOne]});
+  store.push('status', {id: SD.activeId, name: SD.activeName, people: [PD.idOne]});
   let inactive_status = store.push('status', {id: SD.inactiveId, name: SD.inactiveName, people: []});
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(person.get('status_fk'), SD.activeId);
@@ -133,7 +131,7 @@ test('change_status will update the persons status and dirty the model', (assert
 });
 
 test('save person will set status_fk to current status id', (assert) => {
-  let status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [PD.idOne]});
+  store.push('status', {id: SD.activeId, name: SD.activeName, people: [PD.idOne]});
   let inactive_status = store.push('status', {id: SD.inactiveId, name: SD.inactiveName, people: []});
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(person.get('status_fk'), SD.activeId);
@@ -151,7 +149,7 @@ test('save person will set status_fk to current status id', (assert) => {
 });
 
 test('rollback person will set status to current status_fk', (assert) => {
-  let status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [PD.idOne]});
+  store.push('status', {id: SD.activeId, name: SD.activeName, people: [PD.idOne]});
   let inactive_status = store.push('status', {id: SD.inactiveId, name: SD.inactiveName, people: []});
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(person.get('status_fk'), SD.activeId);
@@ -310,12 +308,12 @@ test('save related will iterate over each phone number and save that model', (as
 });
 
 test('savePhonenumbers will remove any phone number model with no (valid) value', (assert) => {
-  let first_phone_number, second_phone_number, third_phone_number, person;
+  let first_phone_number, second_phone_number, person;
   run(() => {
     person = store.push('person', {id: PD.idOne, person_phonenumbers_fks: [PPHD.idOne, PPHD.idTwo, PPHD.idThree]});
     first_phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, phone_number_type_fk: PNTD.officeId});
     second_phone_number = store.push('phonenumber', {id: PND.idTwo, number: PND.numberTwo, phone_number_type_fk: PNTD.mobileId});
-    third_phone_number = store.push('phonenumber', {id: PND.idThree, phone_number_type_fk: PNTD.mobileId});
+    store.push('phonenumber', {id: PND.idThree, phone_number_type_fk: PNTD.mobileId});
     store.push('phone-number-type', {id: PNTD.officeId, phonenumbers: [PND.idOne]});
     store.push('phone-number-type', {id: PNTD.mobileId, phonenumbers: [PND.idTwo, PND.idThree]});
     store.push('person-join-phonenumber', {id: PPHD.idOne, phonenumber_pk: PND.idOne, person_pk: PD.idOne});
@@ -1310,7 +1308,7 @@ test('when email is removed after render, the person model is dirty (two emails)
 
 test('rollback role will reset the previously used role when switching from one role to another', (assert) => {
   person = store.push('person', {id: PD.idOne, role_fk: RD.idTwo});
-  let guest_role = store.push('role', {id: RD.idTwo, name: RD.nameTwo, people: [PD.unusedId, PD.idOne]});
+  store.push('role', {id: RD.idTwo, name: RD.nameTwo, people: [PD.unusedId, PD.idOne]});
   let admin_role = store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.unusedId]});
   let another_role = store.push('role', {id: 'af34ee9b-833c-4f3e-a584-b6851d1e04b3', name: 'another', people: [PD.unusedId]});
   assert.ok(person.get('isNotDirty'));
@@ -1362,7 +1360,7 @@ test('rollback role will reset the previously used role when switching from one 
 test('locations property should return all associated locations or empty array', (assert) => {
   let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
   person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne]});
-  let location = store.push('location', {id: LD.idOne, name: LD.storeName, person_locations_fks: [PERSON_LD.idOne]});
+  store.push('location', {id: LD.idOne, name: LD.storeName, person_locations_fks: [PERSON_LD.idOne]});
   let locations = person.get('locations');
   assert.equal(locations.get('length'), 1);
   assert.equal(locations.objectAt(0).get('name'), LD.storeName);
@@ -1439,7 +1437,7 @@ test('locations property will update when the m2m array suddenly has the person 
 test('locations property will update when the m2m array suddenly has the person pk', (assert) => {
   store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
   person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne]});
-  let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
   let location_two = {id: LD.idTwo, person_locations_fks: []};
   assert.equal(person.get('locations').get('length'), 1);
   person.add_location(location_two);
@@ -1449,9 +1447,9 @@ test('locations property will update when the m2m array suddenly has the person 
 });
 
 test('locations property will update when the m2m array suddenly removes the person', (assert) => {
-  let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
+  store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
   person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne]});
-  let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
   assert.equal(person.get('locations').get('length'), 1);
   person.remove_location(LD.idOne);
   assert.equal(person.get('locations').get('length'), 0);
@@ -1511,7 +1509,7 @@ test('when location is suddenly assigned it shows as a dirty relationship (start
 test('when location is suddently assigned it shows as a dirty relationship (starting with legit value)', (assert) => {
   store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
   person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne]});
-  let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
   let location_two = {id: LD.idTwo, person_locations_fks: []};
   assert.equal(person.get('locations').get('length'), 1);
   assert.ok(person.get('locationsIsNotDirty'));
@@ -1524,9 +1522,9 @@ test('when location is suddently assigned it shows as a dirty relationship (star
 });
 
 test('when location is suddently removed it shows as a dirty relationship', (assert) => {
-  let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
+  store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
   person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne]});
-  let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
   assert.equal(person.get('locations').get('length'), 1);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -1537,11 +1535,11 @@ test('when location is suddently removed it shows as a dirty relationship', (ass
 });
 
 test('when location is suddently removed it shows as a dirty relationship (when it has multiple locations to begin with)', (assert) => {
-  let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
+  store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
   store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
   person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne, PERSON_LD.idTwo]});
-  let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
-  let location_two = store.push('location', {id: LD.idTwo, person_locations_fks: [PERSON_LD.idTwo]});
+  store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  store.push('location', {id: LD.idTwo, person_locations_fks: [PERSON_LD.idTwo]});
   assert.equal(person.get('locations').get('length'), 2);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -1552,11 +1550,11 @@ test('when location is suddently removed it shows as a dirty relationship (when 
 });
 
 test('rollback location will reset the previously used locations when switching from valid locations to nothing', (assert) => {
-  let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
-  let m2m_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
+  store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
+  store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
   person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne, PERSON_LD.idTwo]});
-  let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
-  let location_two = store.push('location', {id: LD.idTwo, person_locations_fks: [PERSON_LD.idTwo]});
+  store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  store.push('location', {id: LD.idTwo, person_locations_fks: [PERSON_LD.idTwo]});
   assert.equal(person.get('locations').get('length'), 2);
   assert.ok(person.get('isNotDirty'));
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -1582,11 +1580,11 @@ test('rollback location will reset the previously used locations when switching 
 });
 
 test('rollback location will reset the previous locations when switching from one location to another and saving in between each step', (assert) => {
-  let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
-  let m2m_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
+  store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
+  store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
   person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne, PERSON_LD.idTwo]});
   let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
-  let location_two = store.push('location', {id: LD.idTwo, person_locations_fks: [PERSON_LD.idTwo]});
+  store.push('location', {id: LD.idTwo, person_locations_fks: [PERSON_LD.idTwo]});
   let location_three = {id: LD.unusedId, person_locations_fks: [PERSON_LD.idThree]};
   let location_four = {id: LD.anotherId, person_locations_fks: [PERSON_LD.idFour]};
   assert.equal(person.get('locations').get('length'), 2);
@@ -1636,13 +1634,13 @@ test('rollback location will reset the previous locations when switching from on
 });
 
 test('location_ids computed returns a flat list of ids for each location', (assert) => {
-  let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
-  let m2m_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
+  store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
+  store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
   let person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne, PERSON_LD.idTwo]});
-  let location = store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
-  let location_two = store.push('location', {id: LD.idTwo, person_locations_fks: [PERSON_LD.idTwo]});
-  let location_three = store.push('location', {id: LD.unusedId, person_locations_fks: [PERSON_LD.idThree]});
-  let location_four = store.push('location', {id: LD.anotherId, person_locations_fks: [PERSON_LD.idFour]});
+  store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+  store.push('location', {id: LD.idTwo, person_locations_fks: [PERSON_LD.idTwo]});
+  store.push('location', {id: LD.unusedId, person_locations_fks: [PERSON_LD.idThree]});
+  store.push('location', {id: LD.anotherId, person_locations_fks: [PERSON_LD.idFour]});
   assert.equal(person.get('locations').get('length'), 2);
   assert.deepEqual(person.get('locations_ids'), [LD.idOne, LD.idTwo]);
   person.remove_location(LD.idOne);
@@ -1787,12 +1785,12 @@ test('location_ids computed returns a flat list of ids for each location', (asse
 test('person-location join models are correctly filtered on for the current User when calling change_role and updating a Users Locations', (assert) => {
   store.push('location-level', {id: LLD.idOne, roles: [RD.idOne, RD.idTwo], locations: [LD.idOne]});
   store.push('location-level', {id: LLD.idTwo, roles: [RD.idOne, RD.idTwo], locations: []});
-  let old_role = store.push('role', {id: RD.idOne, people: [PD.idOne], location_level_fk: LLD.idTwo});
+  store.push('role', {id: RD.idOne, people: [PD.idOne], location_level_fk: LLD.idTwo});
   let new_role = store.push('role', {id: RD.idTwo, people: [], location_level_fk: LLD.idOne});
-  let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
-  let m2m_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.unusedId, location_pk: LD.idOne});
+  store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
+  store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.unusedId, location_pk: LD.idOne});
   person = store.push('person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne]});
-  let location = store.push('location', {id: LD.idOne, name: LD.storeName, person_locations_fks: [PERSON_LD.idOne], location_level_fk: LLD.idOne});
+  store.push('location', {id: LD.idOne, name: LD.storeName, person_locations_fks: [PERSON_LD.idOne], location_level_fk: LLD.idOne});
   assert.equal(person.get('locations').get('length'), 1);
   person.change_role(new_role);
   assert.equal(person.get('locations').get('length'), 1);

@@ -16,7 +16,6 @@ var DtdLinkComponent = Ember.Component.extend({
       });
     },
     delete(option) {
-      const options = this.get('model').get('options');
       run(() => {
         this.get('model').remove_option(option.get('id'));
       });

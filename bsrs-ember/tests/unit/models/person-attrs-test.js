@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import Person from 'bsrs-ember/models/person';
 import PD from 'bsrs-ember/vendor/defaults/person';

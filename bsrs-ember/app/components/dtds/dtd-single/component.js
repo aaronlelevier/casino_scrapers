@@ -2,7 +2,6 @@ import Ember from 'ember';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import inject from 'bsrs-ember/utilities/inject';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-import injectStore from 'bsrs-ember/utilities/store';
 
 export default Ember.Component.extend(TabMixin, {
   init() {

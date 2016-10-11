@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
-import injectStore from 'bsrs-ember/utilities/store';
 import TabRoute from 'bsrs-ember/route/tab/route';
 import FindById from 'bsrs-ember/mixins/route/findById';
 
@@ -10,8 +9,7 @@ var RoleRoute = TabRoute.extend(FindById, {
   module: 'role',
   templateModelField: 'name',
   i18n: Ember.inject.service(),
-  model(params, transition) {
-    const store = this.get('simpleStore');
+  model(params) {
     const pk = params.role_id;
     const repository = this.get('repository');
     let role = repository.fetch(pk);

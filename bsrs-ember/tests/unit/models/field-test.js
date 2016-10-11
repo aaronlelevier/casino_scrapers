@@ -2,11 +2,10 @@ import Ember from 'ember';
 const { run } = Ember;
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import { dtd_payload, dtd_payload_field } from 'bsrs-ember/tests/helpers/payloads/dtd';
 import FD from 'bsrs-ember/vendor/defaults/field';
 import OD from 'bsrs-ember/vendor/defaults/option';
 
-var store, field, option, uuid;
+var store, field, option;
 
 module('unit: dtd field test', {
     beforeEach() {

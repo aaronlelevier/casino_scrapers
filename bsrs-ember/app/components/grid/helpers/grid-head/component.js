@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import UpdateFind from 'bsrs-ember/mixins/update-find';
-import inject from 'bsrs-ember/utilities/inject';
 import SaveFiltersetMixin from 'bsrs-ember/mixins/components/grid/save-filterset';
 
 export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {

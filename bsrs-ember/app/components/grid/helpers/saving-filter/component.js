@@ -3,10 +3,7 @@ import config from 'bsrs-ember/config/environment';
 import SortBy from 'bsrs-ember/mixins/sort-by';
 import FilterBy from 'bsrs-ember/mixins/filter-by';
 import UpdateFind from 'bsrs-ember/mixins/update-find';
-import regex_property from 'bsrs-ember/utilities/regex-property';
 import SaveFiltersetMixin from 'bsrs-ember/mixins/components/grid/save-filterset';
-
-const PAGE_SIZE = config.APP.PAGE_SIZE;
 
 var SavingFilterComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, SaveFiltersetMixin, {
   error: Ember.inject.service(),

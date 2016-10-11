@@ -32,7 +32,7 @@ export default Ember.Component.extend({
       Ember.run.debounce(this, this._loadMoreIfNeeded, 10);
     });
   },
-  _unbindEvent(eventName) {
+  _unbindEvent() {
     this.get('_scrollable').off('scroll');
   },
   /* @method _selfOffsetFromTop

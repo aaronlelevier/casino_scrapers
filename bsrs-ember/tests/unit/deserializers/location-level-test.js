@@ -81,7 +81,7 @@ test('location level correctly deserialized if has no children and store locatio
 test('location level updates children_fks array when new location level is pushed into store', (assert) => {
     location_level = store.push('location-level', { id: LLD.idOne, name: LLD.nameCompany, children_fks: [LLD.idTwo] });
     location_level_two = store.push('location-level', { id: LLD.idTwo, name: LLD.nameDistrict });
-    let location_level_three = store.push('location-level', {id: LLD.unusedId, name: LLD.nameRegion});
+    store.push('location-level', {id: LLD.unusedId, name: LLD.nameRegion});
     let json = LLF.generate(LLD.idOne);
     assert.equal(location_level.get('children.length'), 1);
     json.children = [LLD.idTwo, LLD.unusedId];
@@ -147,7 +147,7 @@ test('location level correctly deserialized if has no parents and store location
 test('location level updates parent_fks array when new location level is pushed into store', (assert) => {
     location_level = store.push('location-level', { id: LLD.idOne, name: LLD.nameCompany, parent_fks: [LLD.idTwo] });
     location_level_two = store.push('location-level', { id: LLD.idTwo, name: LLD.nameDistrict });
-    let location_level_three = store.push('location-level', {id: LLD.unusedId, name: LLD.nameRegion});
+    store.push('location-level', {id: LLD.unusedId, name: LLD.nameRegion});
     let json = LLF.generate(LLD.idOne);
     assert.equal(location_level.get('parents.length'), 1);
     json.parents = [LLD.idTwo, LLD.unusedId];

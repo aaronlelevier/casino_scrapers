@@ -1,12 +1,10 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
-import injectStore from 'bsrs-ember/utilities/store';
-import injectRepo from 'bsrs-ember/utilities/inject';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 import moment from 'moment';
 const { Route, inject } = Ember;
 
-var ApplicationRoute = Ember.Route.extend({
+var ApplicationRoute = Route.extend({
   RoleDeserializer: injectDeserializer('role'),
   PersonDeserializer: injectDeserializer('person'),
   personCurrent: inject.service(),
@@ -79,7 +77,7 @@ var ApplicationRoute = Ember.Route.extend({
       store.push('filterset', filterset);
     });
     const locale_list = Ember.$('[data-preload-locales]').data('configuration');
-    locale_list.forEach((model, index) => {
+    locale_list.forEach((model) => {
       store.push('locale', model);
     });
     const person_current = Ember.$.extend(true, [], Ember.$('[data-preload-person-current]').data('configuration'));
@@ -107,7 +105,7 @@ var ApplicationRoute = Ember.Route.extend({
     return this.get('translationsFetcher').fetch();
 
   },
-  setupController(controller, hash) {
+  setupController(controller) {
     controller.set('tabs', this.get('simpleStore').find('tab'));
   },
   afterModel(){
@@ -122,7 +120,7 @@ var ApplicationRoute = Ember.Route.extend({
     Ember.$('.loading-image').addClass('bounceOut');
   },
   actions: {
-    error(error, transition) {
+    error(error) {
       if(error){
         /* intermediateTransitionTo does not modify the url or window history so when page is refreshed, they are redirected to route user intended */
         return this.intermediateTransitionTo('error');

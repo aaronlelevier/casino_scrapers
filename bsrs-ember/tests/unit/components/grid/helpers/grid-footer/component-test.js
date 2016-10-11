@@ -1,7 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
 import { moduleForComponent, test } from 'ember-qunit';
-import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
 var proxy = function() {
@@ -18,13 +17,6 @@ var columns = [
     {field: 'fullname', headerLabel: 'Name', isSortable: true, isFilterable: true, isSearchable: true},
     {field: 'username', headerLabel: 'Username', isSortable: true, isFilterable: true, isSearchable: true},
     {field: 'title', headerLabel: 'Title', isSortable: true, isFilterable: true, isSearchable: true}
-];
-
-var columns_with_role = [
-    {field: 'fullname', headerLabel: 'Name', isSortable: true, isFilterable: true, isSearchable: true},
-    {field: 'username', headerLabel: 'Username', isSortable: true, isFilterable: true, isSearchable: true},
-    {field: 'title', headerLabel: 'Title', isSortable: true, isFilterable: true, isSearchable: true},
-    {field: 'role.name', headerLabel: 'Role', isSortable: true, isFilterable: true, isSearchable: true}
 ];
 
 var store, eventbus, requested;

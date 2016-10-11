@@ -5,7 +5,7 @@ var ccAddRemove = Ember.Component.extend({
     const i18n_string = this.get('i18nString');
     if (i18n_string) {
       const str = i18n_string.string;
-      const [beg_string, first_var, middle, timestamp] = str.split('$');
+      const [beg_string, _, middle, timestamp] = str.split('$');
       this.set('begString', beg_string.trim());
       this.set('timestamp', timestamp.trim());
       this.set('middle', middle.trim());
