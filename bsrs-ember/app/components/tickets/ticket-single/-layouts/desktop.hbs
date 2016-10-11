@@ -1,14 +1,12 @@
 <article class="main">
   <div class="form">
-    <header>
-      {{base-component
-        model=model
-        save="save"
-        cancel="cancel"
-        delete=delete
-        btnDisabled=saveTask.isRunning
-      }}
-    </header>
+    {{base-component
+      model=model
+      save="save"
+      cancel="cancel"
+      delete=delete
+      btnDisabled=saveTask.isRunning
+    }}
     <section class="docSection container-fluid">
       <div class="row">
         {{#if (eq model.status.name "ticket.status.draft")}}
@@ -29,8 +27,8 @@
                 {{timestamp-created model=model}}
               </div>
               <div class="col-md-12 ticket-categories">
-                {{parent-model-category-select 
-                  model=model 
+                {{parent-model-category-select
+                  model=model
                   didValidate=didValidate
                   valuePath="categories"
                 }}
@@ -66,34 +64,34 @@
     <section>
       <div class="col-md-12">
         {{#form-group title="ticket.label.location-name" for="location"}}
-        {{db-fetch-select 
-          model=model 
-          selectedAttr=model.location 
-          className="t-ticket-location-select" 
-          displayName="name" 
-          change_func="change_location" 
-          remove_func="remove_location" 
-          repository=locationRepo 
-          searchMethod="findTicket" 
-          valuePath="location" 
-          didValidate=didValidate 
+        {{db-fetch-select
+          model=model
+          selectedAttr=model.location
+          className="t-ticket-location-select"
+          displayName="name"
+          change_func="change_location"
+          remove_func="remove_location"
+          repository=locationRepo
+          searchMethod="findTicket"
+          valuePath="location"
+          didValidate=didValidate
           errorClass="error t-ticket-location-error"
         }}
         {{/form-group}}
       </div>
       <div class="col-md-12">
         {{#form-group title="ticket.label.assignee-fullname" for="assignee"}}
-          {{db-fetch-select 
-            model=model 
-            selectedAttr=model.assignee 
-            className="t-ticket-assignee-select" 
-            displayName="fullname" 
-            change_func="change_assignee" 
-            remove_func="remove_assignee" 
-            repository=personRepo 
-            searchMethod="findPeople" 
-            valuePath="assignee" 
-            didValidate=didValidate 
+          {{db-fetch-select
+            model=model
+            selectedAttr=model.assignee
+            className="t-ticket-assignee-select"
+            displayName="fullname"
+            change_func="change_assignee"
+            remove_func="remove_assignee"
+            repository=personRepo
+            searchMethod="findPeople"
+            valuePath="assignee"
+            didValidate=didValidate
           }}
         {{/form-group}}
       </div>

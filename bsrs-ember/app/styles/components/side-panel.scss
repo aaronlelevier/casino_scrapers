@@ -33,5 +33,8 @@ aside.side-panel {
     background-color: $lightGray;
     border: $borderStyle;
     border-width: 0 1px 0 0;
+    section{
+      padding: 15px 0;
+    }
   }//menu
 }

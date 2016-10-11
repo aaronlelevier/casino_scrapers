@@ -1,39 +1,41 @@
-<div class="col-md-12">
-  <section>
-    <div class="row">
-      <div class="col-md-12">
-        {{#form-group title="admin.category.label.name" for="name"}}
-        {{validated-input
-          model=model
-          valuePath="name"
-          didValidate=didValidate
-          className="t-category-name"
-          placeholder=(t "admin.category.label.name")
-          class="t-category-name-validator"
-        }}
-        {{/form-group}}
+<div class="row">
+  <div class="col-md-12">
+    <section>
+      <div class="row">
+        <div class="col-md-12">
+          {{#form-group title="admin.category.label.name" for="name"}}
+          {{validated-input
+            model=model
+            valuePath="name"
+            didValidate=didValidate
+            className="t-category-name"
+            placeholder=(t "admin.category.label.name")
+            class="t-category-name-validator"
+          }}
+          {{/form-group}}
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        {{#form-group title="admin.category.label.description" for="category_description"}}
-        {{input type="text" placeholder=(t "admin.category.label.description") value=model.description class="form-control t-category-description" id="category_description"}}
-        {{/form-group}}
+      <div class="row">
+        <div class="col-md-12">
+          {{#form-group title="admin.category.label.description" for="category_description"}}
+          {{input type="text" placeholder=(t "admin.category.label.description") value=model.description class="form-control t-category-description" id="category_description"}}
+          {{/form-group}}
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        {{#form-group title="admin.category.label.label" for="category_label"}}
-        {{input type="text" placeholder=(t "admin.category.label.label") value=model.label class="form-control t-category-label" id="category_label"}}
-        {{/form-group}}
+      <div class="row">
+        <div class="col-md-12">
+          {{#form-group title="admin.category.label.label" for="category_label"}}
+          {{input type="text" placeholder=(t "admin.category.label.label") value=model.label class="form-control t-category-label" id="category_label"}}
+          {{/form-group}}
+        </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        {{#form-group title="admin.category.label.subcategory_label" for="subcategory_label"}}
-        {{input type="text" value=model.subcategory_label placeholder=(t "admin.category.label.subcategory_label") class="form-control t-category-subcategory-label" id="subcategory_label"}}
-        {{/form-group}}
+      <div class="row">
+        <div class="col-md-12">
+          {{#form-group title="admin.category.label.subcategory_label" for="subcategory_label"}}
+          {{input type="text" value=model.subcategory_label placeholder=(t "admin.category.label.subcategory_label") class="form-control t-category-subcategory-label" id="subcategory_label"}}
+          {{/form-group}}
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+  </div>
 </div>

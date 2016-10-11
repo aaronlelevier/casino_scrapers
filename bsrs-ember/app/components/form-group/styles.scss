@@ -1,17 +1,12 @@
 & {
-	margin: 5px 0 0;
 	label{
 		font-weight: normal;
 		font-size: 0.9em;
 		color: $darkGray;
+		margin: 0;
 		@include truncate;
 	}
-	.checkbox{
-
-	}
 	.mobile-form-group {
-		label {
-			margin: 0;
-		}
+		display: inline;
 	}
 }

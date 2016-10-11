@@ -3,8 +3,8 @@
     <h1></h1>
   </header>
   <menu class="t-side-menu">
-    {{tickets/ticket-new/side-section 
-      model=model 
+    {{tickets/ticket-new/side-section
+      model=model
       didValidate=didValidate
       personRepo=personRepo
       locationRepo=locationRepo
@@ -17,13 +17,11 @@
 
 <article class="main">
   <div class="form">
-    <header>
-      {{base-component
-        model=model
-        save="save"
-        cancel="cancel"
-      }}
-    </header>
+    {{base-component
+      model=model
+      save="save"
+      cancel="cancel"
+    }}
 
     <section class="docSection container-fluid">
       <div class="row">
@@ -35,7 +33,7 @@
           </section>
         </div>
         <div class="col-md-12">
-          {{tickets/ticket-new/detail-section 
+          {{tickets/ticket-new/detail-section
             model=model
             didValidate=didValidate
             submitted=submitted

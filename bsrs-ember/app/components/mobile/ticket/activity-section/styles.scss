@@ -76,7 +76,7 @@
     margin: 0 0 0 8%;
     padding: 4% 4% 4% 8%;
     position: relative;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     @include borderStyle(0 0 1px);
 
     .activity-icon {
@@ -112,20 +112,6 @@
     &.activity-attachment_add,
     &.activity-comment {
       .activity-wrap {
-        padding: 15px 0;
-        font-size: 1.4rem;
-        .activity-icon {
-          height: 50px;
-          line-height: 45px;
-          width: 50px;
-          left: -25px;
-          top: 15px;
-          font-size: 2rem;
-        }
-        .activity-timestamp {
-          display: block;
-          font-size: 1.2rem;
-        }
         .activity-comment {
           padding: 15px 0 5px;
           display: block;

@@ -11,7 +11,8 @@ footer{
       }
     }
   }
-  .t-page-count{
+  .page-count{
+    padding-left: 6px;
     @include truncate;
     width: 100%;
   }
