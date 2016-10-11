@@ -450,6 +450,12 @@ en,tenant.dashboard_text,Dashboard Text,Dashboard Text,,"'tenant.dashboard_text'
 en,tenant.implementation_contact_initial,Initial Implementation Contact Name,Initial Implementation Contact Name,,"'tenant.implementation_contact_initial':'Initial Implementation Contact Name',",Initial Implementation Contact Name,Initial Implementation Contact Name
 en,tenant.new,New Tenant,New Tenant,,"'tenant.new':'New Tenant',",New Tenant,New Tenant
 en,tenant.scid,Service Channel ID,Service Channel ID,,"'tenant.scid':'Service Channel ID',",Service Channel ID,Service Channel ID
+en,tenant.one,Tenant,Tenant,,"'tenant.one':'Tenant',",Tenant,Tenant
+en,tenant.search,Search Tenants,Search Tenants,,"'tenant.search':'Search Tenants',",Search Tenants,Search Tenants
+en,tenant.label.company_name,Company Name,Company Name,,"'tenant.label.company_name':'Company Name',",Company Name,Company Name
+en,tenant.label.company_code,Company Code,Company Code,,"'tenant.label.company_code':'Company Code',",Company Code,Company Code
+en,tenant.label.test_mode,Test Mode,Test Mode,,"'tenant.label.test_mode':'Test Mode',",Test Mode,Test Mode
+en,tenant.other,Tenants,Tenants,,"'tenant.other':'Tenants',",Tenants,Tenants
 en,ticket.continue,Continue,Continue,,"'ticket.continue':'Continue',",Continue,Continue
 en,ticket.created,{{requester}} created this ticket {{timestamp}},{{requester}} created this ticket {{timestamp}},,"'ticket.created':'{{requester}} created this ticket {{timestamp}}',",{{requester_var_ created this ticket {{timestamp_var_,_requester_var_ created this ticket _timestamp_var_
 en,ticket.label.assignee-fullname,Assignee,Assignee,,"'ticket.label.assignee-fullname':'Assignee',",Assignee,Assignee
