@@ -64,7 +64,7 @@ moduleForAcceptance('Acceptance | role detail', {
   },
 });
 
-test('clicking a persons name will redirect to the given detail view', (assert) => {
+test('clicking a roles name will redirect to the given detail view', (assert) => {
   page.visitRoles();
   andThen(() => {
     assert.equal(currentURL(), ROLE_URL);

@@ -74,8 +74,10 @@ moduleForAcceptance('Acceptance | ticket detail', {
 test('clicking a tickets will redirect to the given detail view and can save to ensure validation mixins are working (completed ticket)', async assert => {
   await page.visit();
   assert.equal(currentURL(), TICKET_URL);
+  assert.equal(find('.t-nav-tickets').hasClass('active'), true);
   await click('.t-grid-data:eq(0)');
   assert.equal(currentURL(), DETAIL_URL);
+  assert.equal(find('.t-nav-tickets').hasClass('active'), true);
   assert.equal(find('.t-dt-continue').text(), '');
   assert.equal(page.ccSelected.indexOf(PD.first_name), 2);
   assert.equal(find('.t-ticket-header').text().trim().split('  ')[0].trim(), 'Toilet Leak');
