@@ -8,6 +8,8 @@ export function automationAction(params/*, hash*/) {
         return 'tickets/ticket-assignee-select';
       case 'automation.actions.ticket_priority':
         return 'tickets/ticket-priority-select-action';
+      case 'automation.actions.ticket_status':
+        return 'tickets/ticket-status-select-action';
     }
   }
 }

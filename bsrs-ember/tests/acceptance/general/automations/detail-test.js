@@ -22,6 +22,7 @@ import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TPD from 'bsrs-ember/vendor/defaults/ticket-priority';
+import TSD from 'bsrs-ember/vendor/defaults/ticket-status';
 import page from 'bsrs-ember/tests/pages/automation';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { AUTOMATION_URL, AUTOMATION_LIST_URL, AUTOMATION_EVENTS_URL, AUTOMATION_AVAILABLE_FILTERS_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
@@ -182,6 +183,35 @@ test('get an action priority and update it to a new priority', assert => {
       type: AATD.idTwo,
       content: {
         priority: TPD.idTwo,
+      }
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+});
+
+test('get an action status and update it to a new status', assert => {
+  clearxhr(detailXhr);
+  xhr(API_DETAIL_URL, 'GET', null, {}, 200, AF.detailStatus());
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(page.actionTypeSelectedOne, AATD.keyThree);
+    assert.equal(page.actionStatusSelectedOne, TSD.keyOneValue);
+  });
+  selectChoose('.t-ticket-status-select', TSD.keyTwoValue);
+  andThen(() => {
+    assert.equal(page.actionStatusSelectedOne, TSD.keyTwoValue);
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idThree,
+      type: AATD.idThree,
+      content: {
+        status: TSD.idTwo,
       }
     }]
   });

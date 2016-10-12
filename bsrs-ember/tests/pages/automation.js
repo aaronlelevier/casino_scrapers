@@ -14,6 +14,7 @@ const AF_SELECT_ONE = '.t-automation-pf-select:eq(0) .ember-basic-dropdown-trigg
 const ACTION_TYPE_SELECT_ONE = '.t-automation-action-type-select:eq(0)';
 const ACTION_ASSIGNEE_SELECT_ONE = '.t-automation-action-assignee-select:eq(0)';
 const ACTION_PRIORITY_SELECT_ONE = '.t-ticket-priority-select:eq(0)';
+const ACTION_STATUS_SELECT_ONE = '.t-ticket-status-select:eq(0)';
 
 const EVENTS = '.t-automation-event-select .ember-power-select-multiple-option';
 
@@ -73,4 +74,5 @@ export default create({
 
   actionAssigneeSelectedOne: text(ACTION_ASSIGNEE_SELECT_ONE),
   actionPrioritySelectedOne: text(ACTION_PRIORITY_SELECT_ONE),
+  actionStatusSelectedOne: text(ACTION_STATUS_SELECT_ONE),
 });

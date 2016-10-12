@@ -50,6 +50,9 @@ export default Model.extend(OptConf, Validations, {
       case 'automation.actions.ticket_priority':
         content = {priority: this.get('priority.id')};
         break;
+      case 'automation.actions.ticket_status':
+        content = {status: this.get('status.id')};
+        break;
     }
     return {
       id: this.get('id'),

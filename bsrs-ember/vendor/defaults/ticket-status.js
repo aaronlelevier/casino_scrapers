@@ -3,10 +3,14 @@ var BSRS_STATUS_DEFAULTS_OBJECT = (function() {
   };
   factory.prototype.defaults = function() {
     return {
-      idOne: 'dfe28a24-307f-4da0-85e7-cdac016808c0',
-      idTwo: '2a4c8c9c-7acb-44ca-af95-62a84e410e09',
+      idOne: '5ab9b1fb-c624-4214-bb4c-16567b3d37e6',
+      idTwo: 'dfa1f64f-d0d7-4915-be85-54b8c38d3aeb',
       nameOne: 'ticket.status.new',
-      nameTwo: 'ticket.status.draft'
+      nameTwo: 'ticket.status.draft',
+      keyOne: 'ticket.status.new',
+      keyTwo: 'ticket.status.draft',
+      keyOneValue: 'New',
+      keyTwoValue: 'Draft'
     };
   };
   return factory;
