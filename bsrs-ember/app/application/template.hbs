@@ -1,1 +1,24 @@
 {{application-layout tabs=tabs closeTabMaster="closeTabMaster"}}
+
+{{#if modalIsShowing}}
+{{#modal-dialog translucentOverlay=true}}
+  <div>
+    <div class="modal-header">
+      <h4 class="modal-title t-modal-title">{{if (is-equal action 'closeTab' 'cancel') (t 'crud.discard_changes') (t 'crud.delete.title')}}</h4>
+    </div>
+    <div class="modal-body t-modal-body">
+      <p>{{if (is-equal action 'closeTab' 'cancel') (t 'crud.discard_changes_confirm') (t 'crud.delete.confirm' module=module)}}</p>
+    </div>
+    <div class="modal-footer t-modal-footer">
+      <button type="button" class="btn btn-default t-modal-cancel-btn" {{action "cancel_modal"}}>{{t 'crud.no'}}</button>
+      {{#if (is-equal action 'closeTab')}}
+        <button type="button" class="btn btn-primary t-modal-rollback-btn" {{action "rollback_model"}}>{{t 'crud.close_tab'}}</button>
+      {{else if (is-equal action 'cancel')}}
+        <button type="button" class="btn btn-primary t-modal-rollback-btn" {{action "rollback_model"}}>{{t 'crud.yes'}}</button>
+      {{else if (is-equal action 'delete' 'deleteAttachment')}}
+        <button type="button" class="btn btn-primary t-modal-delete-btn" {{action "delete_model"}}>{{t 'crud.delete.button'}}</button>
+      {{/if}}
+    </div>
+  </div>
+{{/modal-dialog}}
+{{/if}}

@@ -133,13 +133,15 @@ var ApplicationRoute = Route.extend({
       const model = this.get('simpleStore').find(tab.get('module'), tab_id);
       const tabService = this.get('tabList');
       if (tabService.showModal(tab, action, confirmed)) {
-        tab.toggleProperty('modalIsShowing');
-        tabService.set('action', action);
+        this.controller.set('action', action);
+        this.controller.set('module', tab.get('module'));
+        this.controller.toggleProperty('showModal');
         this.trx.attemptedTabModel = tab;
         this.trx.attemptedTransitionModel = model;
         this.trx.attemptedAction = 'closeTabMaster';
         this.trx.closeTabAction = action;
         this.trx.deleteCB = deleteCB;
+        this.trx.tabService = tabService;
 
       } else {
         /* rollback if contact info */
@@ -172,7 +174,6 @@ var ApplicationRoute = Route.extend({
       };
       const service = this.get('tabList');
       const tab = service.findTab(id);
-      // this.sendAction('delete', this.tab(), deleteCB);
       this.send('closeTabMaster', tab, {action:'delete', deleteCB:deleteCB});
     },
     deleteAttachment(tab, callback){
