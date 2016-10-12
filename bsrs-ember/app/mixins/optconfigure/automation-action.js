@@ -36,6 +36,11 @@ export default Ember.Mixin.create({
       collection: 'actions',
       property: 'ticket-status',
       related_model: 'status'
+    },
+    sendemail: {
+      collection: 'actions',
+      property: 'sendemail',
+      related_model: 'sendemail'
     }
   }
 });

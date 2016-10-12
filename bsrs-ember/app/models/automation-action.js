@@ -4,6 +4,7 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/automation-action';
+import SaveAndRollbackRelatedMixin from 'bsrs-ember/mixins/model/save-and-rollback-related';
 
 const Validations = buildValidations({
   type: [
@@ -15,17 +16,22 @@ const Validations = buildValidations({
   ]
 });
 
-export default Model.extend(OptConf, Validations, {
+export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('type', 'automation-action');
+    // optional related models based upon the "type"
     belongs_to.bind(this)('assignee', 'automation-action');
     belongs_to.bind(this)('priority', 'automation-action');
     belongs_to.bind(this)('status', 'automation-action');
+    belongs_to.bind(this)('sendemail', 'automation-action');
   },
   simpleStore: Ember.inject.service(),
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'typeIsDirty', 'priorityIsDirty', 'statusIsDirty', function() {
-    return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('typeIsDirty') || this.get('priorityIsDirty') || this.get('statusIsDirty');
+  sendemailIsDirtyContainer: Ember.computed('sendemailIsDirty', 'sendemail.isDirtyOrRelatedDirty', function() {
+    return this.get('sendemailIsDirty') || this.get('sendemail.isDirtyOrRelatedDirty');
+  }),
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'typeIsDirty', 'priorityIsDirty', 'statusIsDirty', 'sendemailIsDirtyContainer', function() {
+    return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('typeIsDirty') || this.get('priorityIsDirty') || this.get('statusIsDirty') || this.get('sendemailIsDirtyContainer');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   rollback() {
@@ -33,6 +39,7 @@ export default Model.extend(OptConf, Validations, {
     this.rollbackAssignee();
     this.rollbackPriority();
     this.rollbackStatus();
+    this.rollbackSendemail();
     this._super(...arguments);
   },
   saveRelated() {
@@ -40,6 +47,8 @@ export default Model.extend(OptConf, Validations, {
     this.saveAssignee();
     this.savePriority();
     this.saveStatus();
+    this.saveRelatedBelongsTo('sendemail');
+    this.saveSendemail();
   },
   serialize() {
     let content;
