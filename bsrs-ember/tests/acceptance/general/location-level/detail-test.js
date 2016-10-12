@@ -39,10 +39,12 @@ test('clicking on a location levels name will redirect them to the detail view',
   page.visit();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
+    assert.equal(find('.t-nav-admin-location-level').hasClass('active'), true);
   });
   click('.t-grid-data:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-nav-admin-location-level').hasClass('active'), true);
   });
 });
 

@@ -44,12 +44,14 @@ test('clicking a categories name will redirect to the given detail view', (asser
   page.visit();
   andThen(() => {
     assert.equal(currentURL(), CATEGORIES_INDEX_URL);
+    assert.equal(find('.t-nav-admin-category').hasClass('active'), true);
   });
   const detail_data = CF.detail(CD.idGridOne);
   xhr(CATEGORIES_URL + CD.idGridOne + '/', 'GET', null, {}, 200, detail_data);
   click('.t-grid-data:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), GRID_DETAIL_URL);
+    assert.equal(find('.t-nav-admin-category').hasClass('active'), true);
   });
 });
 

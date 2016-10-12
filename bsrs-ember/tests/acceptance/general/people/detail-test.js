@@ -72,10 +72,12 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
   page.visitPeople();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(find('.t-nav-admin-people').hasClass('active'), true);
   });
   click('.t-grid-data:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-nav-admin-people').hasClass('active'), true);
   });
 });
 

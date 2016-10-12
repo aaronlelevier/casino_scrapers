@@ -15,7 +15,6 @@ import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import TD from 'bsrs-ember/vendor/defaults/tenant';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/utilities/urls';
 import page from 'bsrs-ember/tests/pages/role';
 import personPage from 'bsrs-ember/tests/pages/person';
 import generalPage from 'bsrs-ember/tests/pages/general';
@@ -23,11 +22,12 @@ import settingPage from 'bsrs-ember/tests/pages/settings';
 import inputCurrencyPage from 'bsrs-ember/tests/pages/input-currency';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
 import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
+import BASEURLS, { ROLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_roles_url;
-const ROLE_URL = BASE_URL + '/index';
+const ROLE_URL = ROLE_LIST_URL;
 const DETAIL_URL = BASE_URL + '/' + RD.idOne;
 const SETTINGS_URL = BASEURLS.base_setting_url;
 const LETTER_A = {keyCode: 65};
@@ -62,6 +62,19 @@ moduleForAcceptance('Acceptance | role detail', {
       dashboard_text: null
     };
   },
+});
+
+test('clicking a persons name will redirect to the given detail view', (assert) => {
+  page.visitRoles();
+  andThen(() => {
+    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(find('.t-nav-admin-role').hasClass('active'), true);
+  });
+  click('.t-grid-data:eq(0)');
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-nav-admin-role').hasClass('active'), true);
+  });
 });
 
 test('when you deep link to the role detail view you get bound attrs', (assert) => {

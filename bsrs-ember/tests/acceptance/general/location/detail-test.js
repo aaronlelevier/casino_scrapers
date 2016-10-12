@@ -59,10 +59,12 @@ test('clicking on a locations name will redirect them to the detail view', (asse
   page.visit();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
+    assert.equal(find('.t-nav-admin-location').hasClass('active'), true);
   });
   click('.t-grid-data:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-nav-admin-location').hasClass('active'), true);
   });
 });
 
