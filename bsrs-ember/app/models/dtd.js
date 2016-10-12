@@ -3,6 +3,7 @@ const { run } = Ember;
 import inject from 'bsrs-ember/utilities/store';
 import equal from 'bsrs-ember/utilities/equal';
 import OptConf from 'bsrs-ember/mixins/optconfigure/dtd';
+import AttachmentMixin from 'bsrs-ember/mixins/model/attachment';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
@@ -25,14 +26,14 @@ const Validations = buildValidations({
   }),
 });
 
-var DTDModel = Model.extend(Validations, OptConf, {
+var DTDModel = Model.extend(Validations, OptConf, AttachmentMixin, {
   init() {
     many_to_many.bind(this)('link', 'dtd', {plural:true, dirty:false});
     many_to_many.bind(this)('field', 'dtd', {plural:true, dirty:false});
     this._super(...arguments);
   },
   simpleStore: Ember.inject.service(),
-  dtd_attachments_fks: [],
+  current_attachment_fks: [],
   previous_attachments_fks: [],
   key: attr(''),
   description: attr(''),
@@ -131,62 +132,22 @@ var DTDModel = Model.extend(Validations, OptConf, {
       this.get('simpleStore').remove('dtd', this.get('id'));
     });
   },
-  //Attachments: TODO make into a reusable mixin
-  attachmentsIsNotDirty: Ember.computed.not('attachmentsIsDirty'),
-  attachmentsIsDirty: Ember.computed('attachment_ids.[]', 'previous_attachments_fks.[]', function() {
-    const attachment_ids = this.get('attachment_ids') || [];
-    const previous_attachments_fks = this.get('previous_attachments_fks') || [];
-    if(attachment_ids.get('length') !== previous_attachments_fks.get('length')) {
-      return true;
-    }
-    return equal(attachment_ids, previous_attachments_fks) ? false : true;
-  }),
-  attachments: Ember.computed('dtd_attachments_fks.[]', function() {
-    const related_fks = this.get('dtd_attachments_fks');
-    const filter = (attachment) => {
-      return Ember.$.inArray(attachment.get('id'), related_fks) > -1;
-    };
-    return this.get('simpleStore').find('attachment', filter);
-  }),
-  attachment_ids: Ember.computed('attachments.[]', function() {
-    return this.get('attachments').mapBy('id');
-  }),
   remove_attachment(attachment_id) {
-    const store = this.get('simpleStore');
-    const attachment = store.find('attachment', attachment_id);
-    attachment.set('rollback', true);
-    const current_fks = this.get('dtd_attachments_fks') || [];
-    const updated_fks = current_fks.filter((id) => {
-      return id !== attachment_id;
-    });
+    const updated_fks = this._super(attachment_id);
     run(() => {
-      store.push('dtd', {id: this.get('id'), dtd_attachments_fks: updated_fks});
+      this.get('simpleStore').push('dtd', {id: this.get('id'), current_attachment_fks: updated_fks});
     });
   },
   add_attachment(attachment_id) {
-    const store = this.get('simpleStore');
-    const attachment = store.find('attachment', attachment_id);
-    attachment.set('rollback', undefined);
-    const current_fks = this.get('dtd_attachments_fks') || [];
+    const current_fks = this._super(attachment_id);
     run(() => {
-      store.push('dtd', {id: this.get('id'), dtd_attachments_fks: current_fks.concat(attachment_id).uniq()});
-    });
-  },
-  rollbackAttachments() {
-    const dtd_attachments_fks = this.get('dtd_attachments_fks');
-    const previous_attachments_fks = this.get('previous_attachments_fks');
-    dtd_attachments_fks.forEach((id) => {
-      this.remove_attachment(id);
-    });
-    previous_attachments_fks.forEach((id) => {
-      this.add_attachment(id);
+      this.get('simpleStore').push('dtd', {id: this.get('id'), current_attachment_fks: current_fks.concat(attachment_id).uniq()});
     });
   },
   saveAttachments() {
-    const store = this.get('simpleStore');
-    const fks = this.get('dtd_attachments_fks');
+    const fks = this.get('current_attachment_fks');
     run(() => {
-      store.push('dtd', {id: this.get('id'), previous_attachments_fks: fks});
+      this.get('simpleStore').push('dtd', {id: this.get('id'), previous_attachments_fks: fks});
     });
     this.get('attachments').forEach((attachment) => {
       attachment.save();

@@ -53,7 +53,7 @@ test('upload will post form data, show progress bar and on save append the attac
   assert.equal(find(PROGRESS_BAR).length, 1);
   const dtd = store.find('dtd', DTD.idOne);
   assert.equal(dtd.get('attachments').get('length'), 1);
-  assert.deepEqual(dtd.get('dtd_attachments_fks'), [1]);
+  assert.deepEqual(dtd.get('current_attachment_fks'), [1]);
   assert.ok(dtd.get('isDirtyOrRelatedDirty'));
   assert.equal(find('.t-dtd-preview-attachment > a').text().trim(), 'wat.jpg');
   assert.equal(find('.t-dtd-preview-attachment > a').attr('href'), `/media/attachments/images/full/wat.jpg`);

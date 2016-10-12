@@ -310,7 +310,7 @@ test('attachment added for each attachment on dtd', (assert) => {
 });
 
 test('attachment added for each attachment on dtd (when dtd has existing attachments)', (assert) => {
-    dtd = store.push('dtd', {id: DTD.idOne, dtd_attachments_fks: [DTD.attachmentTwoId], previous_attachments_fks: [DTD.attachmentTwoId]});
+    dtd = store.push('dtd', {id: DTD.idOne, current_attachment_fks: [DTD.attachmentTwoId], previous_attachments_fks: [DTD.attachmentTwoId]});
     store.push('attachment', {id: DTD.attachmentTwoId});
     assert.equal(dtd.get('attachments').get('length'), 1);
     const json = DTDF.generate(DTD.idOne);

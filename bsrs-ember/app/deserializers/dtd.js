@@ -32,8 +32,8 @@ var DTDDeserializer = Ember.Object.extend({
     let existing = store.find('dtd', id);
     if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
       // Prep and Attachments
-      response.dtd_attachments_fks = extract_attachments(response, store);
-      response.previous_attachments_fks = response.dtd_attachments_fks;
+      response.current_attachment_fks = extract_attachments(response, store);
+      response.previous_attachments_fks = response.current_attachment_fks;
       delete response.attachments;
       let link_json = response.links;
       delete response.links;

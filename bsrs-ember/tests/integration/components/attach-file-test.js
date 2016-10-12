@@ -18,7 +18,7 @@ test('progress bar should transform from green to blue once upload is complete',
     assert.expect(5);
     run(function() {
         attachment = store.push('attachment', {id: 7, percent: 25, new: true});
-        ticket = store.push('ticket', {id: TD.idOne, ticket_attachments_fks: [7], previous_attachments_fks: []});
+        ticket = store.push('ticket', {id: TD.idOne, current_attachment_fks: [7], previous_attachments_fks: []});
     });
     this.set('model', ticket);
     this.render(hbs`{{tickets/ticket-comments-and-file-upload model=model}}`);

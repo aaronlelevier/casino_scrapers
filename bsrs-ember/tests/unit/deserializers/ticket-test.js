@@ -805,7 +805,7 @@ test('attachment added for each attachment on ticket', (assert) => {
 });
 
 test('attachment added for each attachment on ticket (when ticket has existing attachments)', (assert) => {
-  ticket = store.push('ticket', {id: TD.idOne, ticket_attachments_fks: [TD.attachmentTwoId], previous_attachments_fks: [TD.attachmentTwoId]});
+  ticket = store.push('ticket', {id: TD.idOne, current_attachment_fks: [TD.attachmentTwoId], previous_attachments_fks: [TD.attachmentTwoId]});
   ticket.save();
   store.push('attachment', {id: TD.attachmentTwoId});
   assert.equal(ticket.get('attachments').get('length'), 1);

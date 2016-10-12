@@ -10,6 +10,7 @@ import CategoriesMixin from 'bsrs-ember/mixins/model/category';
 import TicketLocationMixin from 'bsrs-ember/mixins/model/ticket/location';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
+import AttachmentMixin from 'bsrs-ember/mixins/model/attachment';
 import { belongs_to, change_belongs_to } from 'bsrs-components/attr/belongs-to';
 import { many_to_many } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
@@ -49,7 +50,7 @@ const Validations = buildValidations({
 
 const { run } = Ember;
 
-var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, OptConf, Validations, {
+var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, OptConf, Validations, AttachmentMixin, {
   init() {
     this.requestValues = []; //store array of values to be sent in dt post or put request field
     belongs_to.bind(this)('status', 'ticket', {bootstrapped:true});
@@ -71,7 +72,7 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
   ticket_cc_fks: [],
   model_categories_fks: [],
   previous_attachments_fks: [],
-  ticket_attachments_fks: [],
+  current_attachment_fks: [],
   status_fk: undefined,
   priority_fk: undefined,
   location_fk: undefined,
@@ -92,24 +93,6 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
       const assignee_object = {id: assignee_fk};
       this.change_assignee(assignee_object);
     }
-  },
-  rollbackAttachments() {
-    const { ticket_attachments_fks, previous_attachments_fks } = this.getProperties('ticket_attachments_fks', 'previous_attachments_fks');
-    ticket_attachments_fks.forEach((id) => {
-      this.remove_attachment(id);
-    });
-    previous_attachments_fks.forEach((id) => {
-      this.add_attachment(id);
-    });
-  },
-  saveAttachments() {
-    const { simpleStore, id, ticket_attachments_fks = [] } = this.getProperties('simpleStore', 'id', 'ticket_attachments_fks');
-    run(() => {
-      simpleStore.push('ticket', {id: id, previous_attachments_fks: ticket_attachments_fks});
-    });
-    get(this, 'attachments').forEach((attachment) => {
-      attachment.save();
-    });
   },
   isDirtyOrRelatedDirty: Ember.computed.or('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'locationIsDirty', 'attachmentsIsDirty').readOnly(), 
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty').readOnly(),
@@ -146,44 +129,6 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
   change_assignee(new_assignee) {
     this.person_status_role_setup(new_assignee);
     this.change_assignee_container(new_assignee.id);
-  },
-  attachmentsIsNotDirty: Ember.computed.not('attachmentsIsDirty').readOnly(),
-  attachmentsIsDirty: Ember.computed('attachment_ids.[]', 'previous_attachments_fks.[]', function() {
-    const attachment_ids = get(this, 'attachment_ids') || [];
-    const previous_attachments_fks = get(this, 'previous_attachments_fks') || [];
-    if(attachment_ids.get('length') !== get(previous_attachments_fks, 'length')) {
-      return true;
-    }
-    return equal(attachment_ids, previous_attachments_fks) ? false : true;
-  }).readOnly(),
-  attachments: Ember.computed('ticket_attachments_fks.[]', function() {
-    const related_fks = get(this, 'ticket_attachments_fks');
-    const filter = function(attachment) {
-      return related_fks.includes(attachment.get('id'));
-    };
-    return get(this, 'simpleStore').find('attachment', filter);
-  }).readOnly(),
-  attachment_ids: Ember.computed('attachments.[]', function() {
-    return get(this, 'attachments').mapBy('id');
-  }).readOnly(),
-  remove_attachment(attachment_id) {
-    let { simpleStore, id, ticket_attachments_fks = [] } = this.getProperties('simpleStore', 'id', 'ticket_attachments_fks');
-    const attachment = simpleStore.find('attachment', attachment_id);
-    attachment.set('rollback', true);
-    const updated_fks = ticket_attachments_fks.filter(function(id) {
-      return id !== attachment_id;
-    });
-    run(() => {
-      simpleStore.push('ticket', {id: id, ticket_attachments_fks: updated_fks});
-    });
-  },
-  add_attachment(attachment_id) {
-    let { simpleStore, id, ticket_attachments_fks = [] } = this.getProperties('simpleStore', 'id', 'ticket_attachments_fks');
-    const attachment = simpleStore.find('attachment', attachment_id);
-    attachment.set('rollback', undefined);
-    run(() => {
-      simpleStore.push('ticket', {id: id, ticket_attachments_fks: ticket_attachments_fks.concat(attachment_id).uniq()});
-    });
   },
   serialize() {
     const { id, simpleStore } = this.getProperties('id', 'simpleStore');
@@ -239,6 +184,27 @@ var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, O
   removeRecord() {
     run(() => {
       get(this, 'simpleStore').remove('ticket', get(this, 'id'));
+    });
+  },
+  remove_attachment(attachment_id) {
+    const updated_fks = this._super(attachment_id);
+    run(() => {
+      this.get('simpleStore').push('ticket', {id: this.get('id'), current_attachment_fks: updated_fks});
+    });
+  },
+  add_attachment(attachment_id) {
+    const current_fks = this._super(attachment_id);
+    run(() => {
+      this.get('simpleStore').push('ticket', {id: this.get('id'), current_attachment_fks: current_fks.concat(attachment_id).uniq()});
+    });
+  },
+  saveAttachments() {
+    const fks = this.get('current_attachment_fks');
+    run(() => {
+      this.get('simpleStore').push('ticket', {id: this.get('id'), previous_attachments_fks: fks});
+    });
+    this.get('attachments').forEach((attachment) => {
+      attachment.save();
     });
   },
   rollback() {

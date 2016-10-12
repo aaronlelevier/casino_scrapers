@@ -39,8 +39,8 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     let assignee_json = response.assignee;
     response.assignee_fk = response.assignee ? response.assignee.id : undefined;
     delete response.assignee;
-    response.ticket_attachments_fks = extract_attachments(response, store);
-    response.previous_attachments_fks = response.ticket_attachments_fks;
+    response.current_attachment_fks = extract_attachments(response, store);
+    response.previous_attachments_fks = response.current_attachment_fks;
     delete response.attachments;
     const categories_json = response.categories;
     delete response.categories;

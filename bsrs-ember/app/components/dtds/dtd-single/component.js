@@ -41,9 +41,9 @@ export default Ember.Component.extend(TabMixin, {
         const repository = this.get('attachmentRepository');
         repository.upload(id, files[i], model).then((attachment) => {
           model.get('attachments').findBy('id', id).set('percent', 100);
-          const current_dtd_attachments_fks = model.get('dtd_attachments_fks');
-          const updated_dtd_attachment_fks = current_dtd_attachments_fks.concat(attachment.id).uniq();
-          store.push('dtd', {id: model.get('id'), dtd_attachments_fks: updated_dtd_attachment_fks});
+          const current_attachment_fks = model.get('current_attachment_fks');
+          const updated_dtd_attachment_fks = current_attachment_fks.concat(attachment.id).uniq();
+          store.push('dtd', {id: model.get('id'), current_attachment_fks: updated_dtd_attachment_fks});
           store.push('attachment', attachment);
         }).catch(() => {
           this.get('error').logErr('attachment.fail', 'dtd-single');

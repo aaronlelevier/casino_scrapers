@@ -1254,11 +1254,11 @@ test('there is no leaky state when instantiating ticket (set)', (assert) => {
 });
 
 test('attachments property returns associated array or empty array', (assert) => {
-  ticket = store.push('ticket', {id: TD.idOne, ticket_attachments_fks: []});
+  ticket = store.push('ticket', {id: TD.idOne, current_attachment_fks: []});
   assert.equal(ticket.get('attachments').get('length'), 0);
   run(function() {
     store.push('attachment', {id: 8});
-    store.push('ticket', {id: TD.idOne, ticket_attachments_fks: [8]});
+    store.push('ticket', {id: TD.idOne, current_attachment_fks: [8]});
   });
   assert.equal(ticket.get('attachments').get('length'), 1);
   run(function() {
@@ -1267,7 +1267,7 @@ test('attachments property returns associated array or empty array', (assert) =>
   assert.equal(ticket.get('attachments').get('length'), 1);
   run(function() {
     store.push('attachment', {id: 7});
-    ticket = store.push('ticket', {id: TD.idOne, ticket_attachments_fks: [8, 7]});
+    ticket = store.push('ticket', {id: TD.idOne, current_attachment_fks: [8, 7]});
   });
   assert.equal(ticket.get('attachments').get('length'), 2);
 });
@@ -1277,28 +1277,28 @@ test('add_attachment will add the attachment id to the tickets fks array', funct
   let attachment = store.push('attachment', {id: 8});
   assert.equal(ticket.get('attachments').get('length'), 0);
   ticket.add_attachment(8);
-  assert.deepEqual(ticket.get('ticket_attachments_fks'), [8]);
+  assert.deepEqual(ticket.get('current_attachment_fks'), [8]);
   assert.equal(ticket.get('attachments').get('length'), 1);
   ticket.add_attachment(8);
-  assert.deepEqual(ticket.get('ticket_attachments_fks'), [8]);
+  assert.deepEqual(ticket.get('current_attachment_fks'), [8]);
   assert.equal(ticket.get('attachments').get('length'), 1);
 });
 
 test('remove_attachment will remove ticket_fk from the attachment', function(assert) {
-  ticket = store.push('ticket', {id: TD.idOne, ticket_attachments_fks: [8]});
+  ticket = store.push('ticket', {id: TD.idOne, current_attachment_fks: [8]});
   let attachment = store.push('attachment', {id: 8});
   assert.equal(ticket.get('attachments').get('length'), 1);
-  assert.deepEqual(ticket.get('ticket_attachments_fks'), [8]);
+  assert.deepEqual(ticket.get('current_attachment_fks'), [8]);
   ticket.remove_attachment(8);
-  assert.deepEqual(ticket.get('ticket_attachments_fks'), []);
+  assert.deepEqual(ticket.get('current_attachment_fks'), []);
   assert.equal(ticket.get('attachments').get('length'), 0);
   ticket.remove_attachment(8);
-  assert.deepEqual(ticket.get('ticket_attachments_fks'), []);
+  assert.deepEqual(ticket.get('current_attachment_fks'), []);
   assert.equal(ticket.get('attachments').get('length'), 0);
 });
 
 test('add and remove attachment work as expected', function(assert) {
-  ticket = store.push('ticket', {id: TD.idOne, ticket_attachments_fks: []});
+  ticket = store.push('ticket', {id: TD.idOne, current_attachment_fks: []});
   let attachment = store.push('attachment', {id: 8});
   assert.equal(ticket.get('attachments').get('length'), 0);
   ticket.remove_attachment(8);
@@ -1310,7 +1310,7 @@ test('add and remove attachment work as expected', function(assert) {
 });
 
 test('ticket is dirty or related is dirty when attachment is added or removed (starting with none)', (assert) => {
-  ticket = store.push('ticket', {id: TD.idOne, ticket_attachments_fks: [], previous_attachments_fks: []});
+  ticket = store.push('ticket', {id: TD.idOne, current_attachment_fks: [], previous_attachments_fks: []});
   let attachment = store.push('attachment', {id: 8});
   assert.equal(ticket.get('attachments').get('length'), 0);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -1328,7 +1328,7 @@ test('ticket is dirty or related is dirty when attachment is added or removed (s
 });
 
 test('ticket is dirty or related is dirty when attachment is added or removed (starting with one attachment)', (assert) => {
-  ticket = store.push('ticket', {id: TD.idOne, ticket_attachments_fks: [8], previous_attachments_fks: [8]});
+  ticket = store.push('ticket', {id: TD.idOne, current_attachment_fks: [8], previous_attachments_fks: [8]});
   let attachment = store.push('attachment', {id: 8, ticket_fk: TD.idOne});
   assert.equal(ticket.get('attachments').get('length'), 1);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -1343,7 +1343,7 @@ test('ticket is dirty or related is dirty when attachment is added or removed (s
 });
 
 test('rollback attachments will revert and reboot the dirty attachments to clean', (assert) => {
-  ticket = store.push('ticket', {id: TD.idOne, ticket_attachments_fks: [8], previous_attachments_fks: [8]});
+  ticket = store.push('ticket', {id: TD.idOne, current_attachment_fks: [8], previous_attachments_fks: [8]});
   store.push('attachment', {id: 8, ticket_fk: TD.idOne});
   store.push('attachment', {id: 9});
   assert.equal(ticket.get('attachments').get('length'), 1);
@@ -1375,7 +1375,7 @@ test('rollback attachments will revert and reboot the dirty attachments to clean
 });
 
 test('attachments should be dirty even when the number of previous matches current', (assert) => {
-  ticket = store.push('ticket', {id: TD.idOne, ticket_attachments_fks: [8], previous_attachments_fks: [8]});
+  ticket = store.push('ticket', {id: TD.idOne, current_attachment_fks: [8], previous_attachments_fks: [8]});
   store.push('attachment', {id: 8, ticket_fk: TD.idOne});
   store.push('attachment', {id: 9});
   assert.equal(ticket.get('attachments').get('length'), 1);
@@ -1389,7 +1389,7 @@ test('attachments should be dirty even when the number of previous matches curre
 });
 
 test('ticket is not dirty after save and save related (starting with none)', (assert) => {
-  ticket = store.push('ticket', {id: TD.idOne, ticket_attachments_fks: [], previous_attachments_fks: []});
+  ticket = store.push('ticket', {id: TD.idOne, current_attachment_fks: [], previous_attachments_fks: []});
   let attachment = store.push('attachment', {id: 8});
   assert.equal(ticket.get('attachments').get('length'), 0);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
