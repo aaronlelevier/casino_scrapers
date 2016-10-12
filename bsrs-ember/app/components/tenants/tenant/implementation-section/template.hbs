@@ -1,0 +1,26 @@
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="tenant.implementation_contact_initial" for="implementation_contact_initial"}}
+      {{validated-input
+        model=model
+        valuePath="implementation_contact_initial"
+        didValidate=didValidate
+        className="form-control t-tenant-implementation_contact_initial"
+        placeholder=(t "tenant.implementation_contact_initial")
+      }}
+    {{/form-group}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="admin.tenant.implementation_email" for="implementation_email"}}
+      {{input-single-email
+        model=model
+        email=model.implementation_email
+        noDelete=true
+        valuePath="implementation_email"
+        didValidate=didValidate
+      }}
+    {{/form-group}}
+  </div>
+</div>

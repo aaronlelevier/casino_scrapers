@@ -13,8 +13,9 @@ export default TabRoute.extend(FindById, {
     const model = this.get('simpleStore').find('tenant', pk);
     /* Mobile - put data needed in hasComponents (ie status, otherXhrs) */
     const hashComponents = [
-      {'title': 'components/tenant/detail-section', 'component': 'tenant/components/tenant/detail-section', active: 'active'},
-      {'title': 'components/tenant/billing-section', 'component': 'tenant/components/tenant/billing-section', active: ''},
+      {'title': 'components/tenant/detail-section', 'component': 'components/tenant/detail-section', active: 'active'},
+      {'title': 'components/tenant/implementation-section', 'component': 'components/tenant/implementation-section', active: ''},
+      {'title': 'components/tenant/billing-section', 'component': 'components/tenant/billing-section', active: ''},
     ];
     return this.findByIdScenario(model, pk, { hashComponents:hashComponents, repository: this.get('repository') });
   },

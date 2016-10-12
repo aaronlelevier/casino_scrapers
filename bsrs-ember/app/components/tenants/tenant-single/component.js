@@ -8,12 +8,6 @@ export default Ember.Component.extend(TabMixin, {
     this._super(...arguments);
     this.didValidate = false;
   },
-  simpleStore: Ember.inject.service(),
-  currencyRepo: injectRepo('currency'),
-  countryRepo: injectRepo('country-db-fetch'),
-  currencies: Ember.computed(function() {
-    return this.get('simpleStore').find('currency');
-  }),
   saveTask: task(function * () {
     if (this.get('model.validations.isValid')) {
       const tab = this.tab();

@@ -1,0 +1,49 @@
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="tenant.billing_contact" for="billing_contact"}}
+      {{validated-input
+        model=model
+        valuePath="billing_contact"
+        didValidate=didValidate
+        className="form-control t-tenant-billing_contact"
+        placeholder=(t "tenant.billing_contact")
+      }}
+    {{/form-group}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="admin.tenant.billing_address" for="billing_address"}}
+    {{input-single-address
+      model=model
+      address=model.billing_address
+      noDelete=true
+      didValidate=didValidate
+    }}
+    {{/form-group}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="admin.tenant.billing_email" for="billing_email"}}
+    {{input-single-email
+      model=model
+      email=model.billing_email
+      noDelete=true
+      didValidate=didValidate
+    }}
+    {{/form-group}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="admin.tenant.billing_phonenumber" for="billing_phonenumber"}}
+    {{input-single-phone
+      model=model
+      phonenumber=model.billing_phone_number
+      noDelete=true
+      didValidate=didValidate
+    }}
+    {{/form-group}}
+  </div>
+</div>
