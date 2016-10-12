@@ -1,11 +1,17 @@
 import Ember from 'ember';
 import PageObject from 'bsrs-ember/tests/page-object';
+import config from 'bsrs-ember/config/environment';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import BASEURLS, { ROLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
 let { text, visitable, fillable, clickable, count, value, hasClass } = PageObject;
+
+const PREFIX = config.APP.NAMESPACE;
+const BASE_ROLES_URL = BASEURLS.base_roles_url;
+const DETAIL_URL = `${BASE_ROLES_URL}/${RD.idOne}`;
 const ROLETYPE = '.t-role-role-type .ember-basic-dropdown-trigger';
 const ROLETYPE_DROPDOWN = options;
 const LOCATIONLEVEL = '.t-location-level-select .ember-basic-dropdown-trigger';
@@ -17,6 +23,8 @@ const CATEGORY_DROPDOWN = options;
 
 
 export default PageObject.create({
+  visitRoles: visitable(ROLE_LIST_URL),
+  visitDetail: visitable(DETAIL_URL),
   categoryClickDropdown: clickable(CATEGORY),
   categorySelectText: text('.t-role-category-select .ember-basic-dropdown-trigger'),
   categorySelected: text(CATEGORY_ONE),
