@@ -517,13 +517,16 @@ test('action - validations - if an automation has an action, that action must be
 
 test('actionType - changing the action type should make the automation model dirty', (assert) => {
   run(() => {
-    automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AAD.idOne], automation_action_ids: [AAD.idOne]});
+    automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AJAD.idOne]});
     store.push('automation-action-type', {id: AATD.idOne, key: AATD.keyOne, actions: [AAD.idOne]});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
     store.push('automation-action', {id: AAD.idOne, type_fk: AATD.idOne});
   });
   let action = automation.get('action').objectAt(0);
   assert.equal(action.get('type.id'), AATD.idOne);
+  assert.deepEqual(automation.get('automation_action_ids'), [AJAD.idOne]);
+  assert.deepEqual(automation.get('automation_action_fks'), [AJAD.idOne]);
+  assert.ok(automation.get('actionIsNotDirty'));
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
   action.change_type({id: AATD.idTwo, key: AATD.keyTwo});
   assert.ok(automation.get('isDirtyOrRelatedDirty'));
@@ -533,7 +536,7 @@ test('actionType - changing the action type should make the automation model dir
 
 test('assignee - changing the assignee should make the automation model dirty', (assert) => {
   run(() => {
-    automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AAD.idOne], automation_action_ids: [AAD.idOne]});
+    automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AJAD.idOne]});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
     store.push('automation-action', {id: AAD.idOne, assignee_fk: PersonD.idOne});
     store.push('person', {id: PersonD.idOne, actions: [AAD.idOne]});
@@ -551,7 +554,7 @@ test('assignee - changing the assignee should make the automation model dirty', 
 
 test('priority - changing the priority should make the automation model dirty', (assert) => {
   run(() => {
-    automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AAD.idOne], automation_action_ids: [AAD.idOne]});
+    automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AJAD.idOne]});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
     store.push('automation-action', {id: AAD.idOne, priority_fk: TPD.idOne});
     store.push('ticket-priority', {id: TPD.idOne, actions: [AAD.idOne]});
@@ -585,7 +588,7 @@ test('criteria - when criteria changes, automation is dirty', assert => {
 
 test('rollback - a change in nested actionType and assigee can be rolled back from the automation', assert => {
   run(() => {
-    automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AAD.idOne], automation_action_ids: [AAD.idOne]});
+    automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AJAD.idOne]});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
     store.push('automation-action', {id: AAD.idOne, assignee_fk: PersonD.idOne, type_fk: AATD.idOne});
     store.push('person', {id: PersonD.idOne, actions: [AAD.idOne]});
