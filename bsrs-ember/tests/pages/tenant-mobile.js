@@ -6,7 +6,6 @@ import BASEURLS from 'bsrs-ember/utilities/urls';
 
 const BASE_URL = BASEURLS.BASE_TENANT_URL;
 const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
-const CURRENCY = '.t-tenant-currency-select';
 
 export default create({
   visitDetail: visitable(DETAIL_URL),
@@ -21,5 +20,8 @@ export default create({
   // priorityTwoIsChecked: () => Ember.$('.t-checkbox-list input:eq(1)').is(':checked'),
   // priorityThreeIsChecked: () => Ember.$('.t-checkbox-list input:eq(2)').is(':checked'),
   // priorityFourIsChecked: () => Ember.$('.t-checkbox-list input:eq(3)').is(':checked'),
-  currencyInput: text(CURRENCY),
+  currencyInput: text('.t-currency-select'),
+
+  companyName: value('.t-tenant-company_name'),
+  companyNameFill: fillable('.t-tenant-company_name'),
 });
