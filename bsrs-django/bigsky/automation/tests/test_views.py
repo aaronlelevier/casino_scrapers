@@ -18,10 +18,11 @@ from automation.tests.factory import (
     create_automation, create_automation_filter_types, create_automation_filter_type_location,
     create_ticket_location_filter, create_ticket_categories_mid_level_filter, create_automation,
     create_ticket_location_state_filter, create_ticket_location_country_filter, create_automation_events,
-    create_automation_event_two, create_automation_action_types,
-    create_automation_action_type)
+    create_automation_event_two, create_automation_action_types, create_automation_action_priority,
+    create_automation_action_type, create_automation_action_status, create_automation_action_send_email,
+    create_automation_action_send_sms)
 from automation.tests.mixins import ViewTestSetupMixin
-from ticket.models import TicketPriority
+from ticket.models import TicketPriority, TicketStatus
 from utils.create import _generate_chars
 from utils.helpers import create_default, add_related, remove_related, clear_related
 
@@ -229,7 +230,7 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['filters'][0]['criteria'][0]['id'], str(country.id))
         self.assertEqual(data['filters'][0]['criteria'][0]['name'], country.common_name)
 
-    def test_assignee_action(self):
+    def test_action_assignee(self):
         action = self.automation.actions.first()
 
         response = self.client.get('/api/admin/automations/{}/'.format(self.automation.id))
@@ -242,6 +243,71 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         assignee = Person.objects.get(id=action.content['assignee'])
         self.assertEqual(data['actions'][0]['assignee']['id'], str(assignee.id))
         self.assertEqual(data['actions'][0]['assignee']['fullname'], assignee.fullname)
+        self.assertNotIn('content', data['actions'][0])
+
+    def test_action_priority(self):
+        action = create_automation_action_priority()
+
+        response = self.client.get('/api/admin/automations/{}/'.format(action.automation.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['actions']), 1)
+        self.assertEqual(data['actions'][0]['id'], str(action.id))
+        self.assertEqual(data['actions'][0]['type']['id'], str(action.type.id))
+        self.assertEqual(data['actions'][0]['type']['key'], action.type.key)
+        priority = TicketPriority.objects.get(id=action.content['priority'])
+        self.assertEqual(data['actions'][0]['priority']['id'], str(priority.id))
+        self.assertEqual(data['actions'][0]['priority']['name'], priority.name)
+        self.assertNotIn('content', data['actions'][0])
+
+    def test_action_status(self):
+        action = create_automation_action_status()
+
+        response = self.client.get('/api/admin/automations/{}/'.format(action.automation.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['actions']), 1)
+        self.assertEqual(data['actions'][0]['id'], str(action.id))
+        self.assertEqual(data['actions'][0]['type']['id'], str(action.type.id))
+        self.assertEqual(data['actions'][0]['type']['key'], action.type.key)
+        status = TicketStatus.objects.get(id=action.content['status'])
+        self.assertEqual(data['actions'][0]['status']['id'], str(status.id))
+        self.assertEqual(data['actions'][0]['status']['name'], status.name)
+        self.assertNotIn('content', data['actions'][0])
+
+    def test_action_send_email(self):
+        action = create_automation_action_send_email()
+
+        response = self.client.get('/api/admin/automations/{}/'.format(action.automation.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['actions']), 1)
+        self.assertEqual(data['actions'][0]['id'], str(action.id))
+        self.assertEqual(data['actions'][0]['type']['id'], str(action.type.id))
+        self.assertEqual(data['actions'][0]['type']['key'], action.type.key)
+        self.assertEqual(len(data['actions'][0]['recipients']), 1)
+        person = Person.objects.get(id=action.content['recipients'][0])
+        self.assertEqual(data['actions'][0]['recipients'][0]['id'], str(person.id))
+        self.assertEqual(data['actions'][0]['recipients'][0]['fullname'], person.fullname)
+        self.assertEqual(data['actions'][0]['subject'], action.content['subject'])
+        self.assertEqual(data['actions'][0]['body'], action.content['body'])
+        self.assertNotIn('content', data['actions'][0])
+
+    def test_action_send_sms(self):
+        action = create_automation_action_send_sms()
+
+        response = self.client.get('/api/admin/automations/{}/'.format(action.automation.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['actions']), 1)
+        self.assertEqual(data['actions'][0]['id'], str(action.id))
+        self.assertEqual(data['actions'][0]['type']['id'], str(action.type.id))
+        self.assertEqual(data['actions'][0]['type']['key'], action.type.key)
+        self.assertEqual(len(data['actions'][0]['recipients']), 1)
+        person = Person.objects.get(id=action.content['recipients'][0])
+        self.assertEqual(data['actions'][0]['recipients'][0]['id'], str(person.id))
+        self.assertEqual(data['actions'][0]['recipients'][0]['fullname'], person.fullname)
+        self.assertEqual(data['actions'][0]['body'], action.content['body'])
         self.assertNotIn('content', data['actions'][0])
 
 

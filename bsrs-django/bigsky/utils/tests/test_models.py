@@ -186,6 +186,27 @@ class BaseNameModelTests(TestCase):
         )
 
 
+class DefaultToDictMixinTests(TestCase):
+
+    def setUp(self):
+        self.status = create_default(TicketStatus)
+
+    def test_to_dict(self):
+        ret = self.status.to_dict()
+
+        self.assertEqual(len(ret), 3)
+        self.assertEqual(ret['id'], str(self.status.id))
+        self.assertEqual(ret['name'], self.status.name)
+        self.assertTrue(ret['default'])
+
+    def test_to_dict_id_name(self):
+        ret = self.status.to_dict_id_name()
+
+        self.assertEqual(len(ret), 2)
+        self.assertEqual(ret['id'], str(self.status.id))
+        self.assertEqual(ret['name'], self.status.name)
+
+
 class TesterPermissionTests(TestCase):
 
     def setUp(self):

@@ -7,12 +7,13 @@ from contact.models import State, Country
 from location.models import Location, LocationLevel
 from person.models import Person
 from person.serializers_leaf import PersonSimpleSerializer
+from automation import choices
 from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationAction, AutomationActionType)
 from automation.validators import (AutomationFilterFieldValidator, UniqueByTenantValidator,
     AutomationFilterTypeValidator)
 from tenant.mixins import RemoveTenantMixin
-from ticket.models import TicketPriority
+from ticket.models import TicketPriority, TicketStatus
 from utils.create import update_model
 from utils.serializers import BaseCreateSerializer
 
@@ -38,6 +39,32 @@ class AutomationActionSerializer(BaseCreateSerializer):
     class Meta:
         model = AutomationAction
         fields = ('id', 'type', 'content')
+
+    def to_representation(self, instance):
+        init_data = super(AutomationActionSerializer, self).to_representation(instance)
+        data = copy.copy(init_data)
+
+        key = data['type']['key']
+        if key == choices.ACTIONS_TICKET_ASSIGNEE:
+            data['assignee'] = Person.objects.get(id=data['content']['assignee']).to_simple_fullname_dict()
+        elif key == choices.ACTIONS_TICKET_PRIORITY:
+            data['priority'] = TicketPriority.objects.get(id=data['content']['priority']).to_dict_id_name()
+        elif key == choices.ACTIONS_TICKET_STATUS:
+            data['status'] = TicketStatus.objects.get(id=data['content']['status']).to_dict_id_name()
+        elif key == choices.ACTIONS_SEND_EMAIL:
+            data.update(data['content'])
+            data['recipients'] = (Person.objects.filter(id__in=data['content']['recipients'])
+                                                .values('id', 'fullname'))
+        elif key == choices.ACTIONS_SEND_SMS:
+            data.update(data['content'])
+            data['recipients'] = (Person.objects.filter(id__in=data['content']['recipients'])
+                                                .values('id', 'fullname'))
+
+        # this is a storage dict for the data to be decorated onto
+        # the automation action, so remove before returning the data
+        data.pop('content')
+
+        return data
 
 
 class AutomationActionUpdateSerializer(BaseCreateSerializer):
@@ -227,18 +254,3 @@ class AutomationDetailSerializer(RemoveTenantMixin, BaseCreateSerializer):
     @staticmethod
     def eager_load(queryset):
         return queryset.prefetch_related('events', 'filters', 'filters__source')
-
-    def to_representation(self, instance):
-        init_data = super(AutomationDetailSerializer, self).to_representation(instance)
-        data = copy.copy(init_data)
-
-        for i, action in enumerate(init_data['actions']):
-            if action['type']['key'] == 'automation.actions.ticket_assignee':
-                data['actions'][i]['assignee'] = (Person.objects.get(id=action['content']['assignee'])
-                                                                .to_simple_fullname_dict())
-
-            # this is a storage dict for the data to be decorated onto
-            # the automation action, so remove before returning the data
-            data['actions'][i].pop('content')
-
-        return data
