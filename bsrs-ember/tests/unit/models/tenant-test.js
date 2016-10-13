@@ -15,6 +15,7 @@ import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import CD from 'bsrs-ember/vendor/defaults/country';
 import SD from 'bsrs-ember/vendor/defaults/state';
 import PD from 'bsrs-ember/vendor/defaults/person';
+import DD from 'bsrs-ember/vendor/defaults/dtd';
 import TenantJoinCountriesD from 'bsrs-ember/vendor/defaults/tenant-join-country';
 
 var store, tenant, currency, inactive_currency;
@@ -22,7 +23,7 @@ var store, tenant, currency, inactive_currency;
 moduleFor('model:tenant', 'Unit | Model | tenant', {
   needs: ['validator:presence', 'validator:length', 'validator:has-many', 'validator:format', 'validator:unique-username', 'validator:address-street', 'validator:address-postal', 'validator:belongs-to'],
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:tenant', 'model:tenant-join-country', 'model:person', 'model:country', 'model:currency', 'model:phonenumber', 'model:phone-number-type', 'model:email', 'model:email-type', 'model:address', 'model:state', 'model:address-type', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:tenant', 'model:tenant-join-country', 'model:dtd', 'model:person', 'model:country', 'model:currency', 'model:phonenumber', 'model:phone-number-type', 'model:email', 'model:email-type', 'model:address', 'model:state', 'model:address-type', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     run(() => {
       tenant = store.push('tenant', {id: TD.idOne});
     });
@@ -542,6 +543,52 @@ test('rollback - implementation_contact - rolls back any changes for the impleme
   tenant.rollback();
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(tenant.get('implementation_contact.id'), undefined);
+});
+
+/* DTD */
+test('related implementation contact should return one contact for a tenant', (assert) => {
+  run(() => {
+    tenant = store.push('tenant', {id: TD.idOne, dtd_start_fk: DD.idOne});
+    store.push('dtd', {id: DD.idOne, tenants_dtd_start: [TD.idOne]});
+  });
+  assert.equal(tenant.get('dtd_start').get('id'), DD.idOne);
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('change_dtd_start changes the dtd_start property on the tenant', (assert) => {
+  run(() => {
+    tenant = store.push('tenant', {id: TD.idOne});
+  });
+  assert.equal(tenant.get('dtd_start'), undefined);
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+  tenant.change_dtd_start({id: DD.idOne});
+  assert.ok(tenant.get('isDirtyOrRelatedDirty'));
+});
+
+test('saveRelated - dtd_start - saves the new contact, and the tenant is clean', (assert) => {
+  run(() => {
+    tenant = store.push('tenant', {id: TD.idOne});
+  });
+  assert.equal(tenant.get('dtd_start'), undefined);
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+  tenant.change_dtd_start({id: DD.idOne});
+  assert.ok(tenant.get('isDirtyOrRelatedDirty'));
+  tenant.saveRelated();
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('rollback - dtd_start - rolls back any changes for the dtd_start', (assert) => {
+  run(() => {
+    tenant = store.push('tenant', {id: TD.idOne});
+  });
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(tenant.get('dtd_start.id'), undefined);
+  tenant.change_dtd_start({id: DD.idOne});
+  assert.equal(tenant.get('dtd_start.id'), DD.idOne);
+  assert.ok(tenant.get('isDirtyOrRelatedDirty'));
+  tenant.rollback();
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(tenant.get('dtd_start.id'), undefined);
 });
 
 /* COUNTRIES */

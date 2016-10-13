@@ -57,6 +57,11 @@ export default Ember.Mixin.create({
       property: 'person',
       related_model: 'implementation_contact',
     },
+    dtd_start: {
+      collection: 'tenants_dtd_start',
+      property: 'dtd',
+      related_model: 'dtd_start'
+    },
     phone_number_type: {
       collection: 'phonenumbers',
       property: 'phone-number-type',

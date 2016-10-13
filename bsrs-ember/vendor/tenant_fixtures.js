@@ -1,9 +1,10 @@
 var BSRS_TENANT_FACTORY = (function() {
-  var factory = function(tenant, currency, country, person, phonenumber, email, email_defaults, address, config) {
+  var factory = function(tenant, currency, country, person, dtd, phonenumber, email, email_defaults, address, config) {
     this.tenant = tenant;
     this.currency = currency;
     this.country = country;
     this.person = person;
+    this.dtd = dtd;
     this.phonenumber = phonenumber;
     this.email = email;
     this.email_defaults = email_defaults;
@@ -36,6 +37,10 @@ var BSRS_TENANT_FACTORY = (function() {
         id: this.person.id,
         fullname: this.person.fullname
       },
+      dtd_start: {
+        id: this.dtd.idOne,
+        description: this.dtd.descriptionStart
+      },
       countries: [{
         id: this.country.id,
         name: this.country.name
@@ -67,6 +72,7 @@ var BSRS_TENANT_FACTORY = (function() {
       billing_email: this.email.get_belongs_to(this.email_defaults.idOne),
       implementation_email: this.email.get_belongs_to(this.email_defaults.idTwo),
       billing_address: this.address.put_belongs_to(),
+      dtd_start: this.dtd.idOne
     };
   };
   factory.prototype.post = function(tenant) {
@@ -136,21 +142,22 @@ if (typeof window === 'undefined') {
   var currency = require('./defaults/currency');
   var country = require('./defaults/country');
   var person = require('./defaults/person');
+  var dtd = require('./defaults/dtd');
   var phonenumber = require('../vendor/phone_number_fixtures');
   var email_defaults = require('../vendor/defaults/email');
   var email = require('../vendor/email_fixtures');
   var address = require('../vendor/address_fixtures');
   var config = require('../config/environment');
   objectAssign(BSRS_TENANT_FACTORY.prototype, mixin.prototype);
-  module.exports = new BSRS_TENANT_FACTORY(tenant, currency, country, person, phonenumber, email, email_defaults, address, config);
+  module.exports = new BSRS_TENANT_FACTORY(tenant, currency, country, person, dtd, phonenumber, email, email_defaults, address, config);
 }
 else {
   define('bsrs-ember/vendor/tenant_fixtures',
-    ['exports', 'bsrs-ember/vendor/defaults/tenant', 'bsrs-ember/vendor/defaults/currency', 'bsrs-ember/vendor/defaults/country', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/phone_number_fixtures', 'bsrs-ember/vendor/email_fixtures', 'bsrs-ember/vendor/defaults/email', 'bsrs-ember/vendor/address_fixtures', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
-    function(exports, tenant, currency, country, person, phonenumber, email, email_defaults, address, mixin, config) {
+    ['exports', 'bsrs-ember/vendor/defaults/tenant', 'bsrs-ember/vendor/defaults/currency', 'bsrs-ember/vendor/defaults/country', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/defaults/dtd', 'bsrs-ember/vendor/phone_number_fixtures', 'bsrs-ember/vendor/email_fixtures', 'bsrs-ember/vendor/defaults/email', 'bsrs-ember/vendor/address_fixtures', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
+    function(exports, tenant, currency, country, person, dtd, phonenumber, email, email_defaults, address, mixin, config) {
       'use strict';
       Object.assign(BSRS_TENANT_FACTORY.prototype, mixin.prototype);
-      return new BSRS_TENANT_FACTORY(tenant, currency, country, person, phonenumber, email, email_defaults, address, config);
+      return new BSRS_TENANT_FACTORY(tenant, currency, country, person, dtd, phonenumber, email, email_defaults, address, config);
     }
   );
 }

@@ -13,6 +13,7 @@ export default Ember.Object.extend(OptConf, ContactDeserializerMixin, {
     belongs_to.bind(this)('implementation_email');
     belongs_to.bind(this)('implementation_contact');
     belongs_to.bind(this)('billing_address');
+    belongs_to.bind(this)('dtd_start');
     belongs_to.bind(this)('state');
     belongs_to.bind(this)('country');
     belongs_to.bind(this)('phone_number_type');
@@ -35,12 +36,14 @@ export default Ember.Object.extend(OptConf, ContactDeserializerMixin, {
     response.implementation_email_fk = response.implementation_email.id;
     response.implementation_contact_fk = response.implementation_contact.id;
     response.billing_address_fk = response.billing_address.id;
+    response.dtd_start_fk = response.dtd_start.id;
     const currency = response.default_currency;
     const billing_phone_number = response.billing_phone_number;
     const billing_email = response.billing_email;
     const implementation_email = response.implementation_email;
     const implementation_contact = response.implementation_contact;
     const billing_address = response.billing_address;
+    const dtd_start = response.dtd_start;
     const countries = response.countries;
     delete response.default_currency;
     delete response.billing_phone_number;
@@ -48,6 +51,7 @@ export default Ember.Object.extend(OptConf, ContactDeserializerMixin, {
     delete response.implementation_email;
     delete response.implementation_contact;
     delete response.billing_address;
+    delete response.dtd_start;
     delete response.countries;
     // setup contact to type relationship
     this.extract_single_phonenumber(billing_phone_number);
@@ -66,6 +70,7 @@ export default Ember.Object.extend(OptConf, ContactDeserializerMixin, {
       this.setup_implementation_email(implementation_email, tenant);
       this.setup_implementation_contact(implementation_contact, tenant);
       this.setup_billing_address(billing_address, tenant);
+      this.setup_dtd_start(dtd_start, tenant);
     // if (countrys) {
       this.setup_countries(countries, tenant);
     // }

@@ -83,6 +83,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     belongs_to.bind(this)('billing_address', 'tenant', {dirty: false, track_related_model: true});
     belongs_to.bind(this)('implementation_email', 'tenant', {dirty: false, track_related_model: true});
     belongs_to.bind(this)('implementation_contact', 'tenant');
+    belongs_to.bind(this)('dtd_start', 'tenant');
     many_to_many.bind(this)('country', 'tenant', {plural:true});
   },
   simpleStore: Ember.inject.service(),
@@ -97,8 +98,8 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
   billing_address_fk: undefined,
   implementation_contact_fk: undefined,
   tenant_countries_fks: [],
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'defaultCurrencyIsDirty', 'countriesIsDirty', 'billingEmailIsDirty', 'billingPhoneNumberIsDirty', 'implementationEmailIsDirty', 'implementationContactIsDirty', 'billingAddressIsDirty', function() {
-    return this.get('isDirty') || this.get('defaultCurrencyIsDirty') || this.get('countriesIsDirty') || this.get('billingEmailIsDirty') || this.get('billingPhoneNumberIsDirty') || this.get('implementationEmailIsDirty') || this.get('implementationContactIsDirty') || this.get('billingAddressIsDirty');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'defaultCurrencyIsDirty', 'countriesIsDirty', 'billingEmailIsDirty', 'billingPhoneNumberIsDirty', 'implementationEmailIsDirty', 'implementationContactIsDirty', 'billingAddressIsDirty', 'dtdStartIsDirty', function() {
+    return this.get('isDirty') || this.get('defaultCurrencyIsDirty') || this.get('countriesIsDirty') || this.get('billingEmailIsDirty') || this.get('billingPhoneNumberIsDirty') || this.get('implementationEmailIsDirty') || this.get('implementationContactIsDirty') || this.get('billingAddressIsDirty') || this.get('dtdStartIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   remove_implementation_contact(id) {
@@ -117,6 +118,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     this.rollbackBillingEmail();
     this.rollbackBillingPhoneNumber();
     this.rollbackBillingAddress();
+    this.rollbackDtdStart();
     this._super(...arguments);
   },
   saveRelated() {
@@ -131,6 +133,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     this.saveBillingEmail();
     this.saveRelatedSingle('billing_phone_number');
     this.saveBillingPhoneNumber();
+    this.saveDtdStart();
   },
   removeRecord() {
     run(() => {
@@ -155,6 +158,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     if (!this.get('new')) {
       data.test_mode = this.get('test_mode');
       data.implementation_contact = this.get('implementation_contact.id');
+      data.dtd_start = this.get('dtd_start.id');
     }
     return data;
   },

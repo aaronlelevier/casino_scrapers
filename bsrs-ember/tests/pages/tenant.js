@@ -57,5 +57,8 @@ export default create({
   testModeClick: clickable('.t-tenant-test_mode'),
 
   implementationContact: text('.t-tenant-implementation_contact-select'),
-  clearImplementationContact: clickable('.t-tenant-implementation_contact-select .ember-power-select-clear-btn')
+  clearImplementationContact: clickable('.t-tenant-implementation_contact-select .ember-power-select-clear-btn'),
+
+  dtdStart: text('.t-tenant-dtd_start-select'),
+
 });

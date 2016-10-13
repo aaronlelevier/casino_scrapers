@@ -105,4 +105,22 @@
       {{/form-group}}
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-12">
+      {{#form-group title="admin.tenant.label.dtd_start" for="dtd_start"}}
+        {{db-fetch-select
+          model=model
+          selectedAttr=model.dtd_start
+          className="t-tenant-dtd_start-select"
+          displayName="description"
+          change_func="change_dtd_start"
+          remove_func="remove_dtd_start"
+          repository=dtdRepo
+          searchMethod="findDTD"
+          valuePath="dtd_start"
+          didValidate=didValidate
+        }}
+      {{/form-group}}
+    </div>
+  </div>
 {{/unless}}

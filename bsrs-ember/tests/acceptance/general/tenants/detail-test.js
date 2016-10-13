@@ -9,11 +9,13 @@ import TD from 'bsrs-ember/vendor/defaults/tenant';
 import TF from 'bsrs-ember/vendor/tenant_fixtures';
 import CF from 'bsrs-ember/vendor/currency_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/currency';
+import DD from 'bsrs-ember/vendor/defaults/dtd';
+import DF from 'bsrs-ember/vendor/dtd_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import page from 'bsrs-ember/tests/pages/tenant';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS, { TENANT_URL, TENANT_LIST_URL, CURRENCIES_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { TENANT_URL, TENANT_LIST_URL, CURRENCIES_URL, PEOPLE_URL, DTD_URL } from 'bsrs-ember/utilities/urls';
 
 const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_TENANT_URL;
@@ -52,6 +54,7 @@ test('visit detail and update all fields', assert => {
     // fields that only exist on the detail/update record, and not the create
     assert.equal(find('.t-tenant-test_mode').prop('checked'), TD.testModeFalse);
     assert.ok(page.implementationContact.indexOf(PD.fullname) > -1);
+    assert.equal(page.dtdStart, DD.descriptionStart);
   });
   // company_name
   page.companyNameFill(TD.companyNameTwo);
@@ -83,11 +86,23 @@ test('visit detail and update all fields', assert => {
   andThen(() => {
     assert.ok(page.implementationContact.indexOf(personFullname) > -1);
   });
+  // dtd_start
+  const dtdData = DF.list();
+  const dtdId = dtdData.results[0].id;
+  const dtdDescription = dtdData.results[0].description;
+  xhr(`${DTD_URL}?search=${keyword}`, 'GET', null, {}, 200, dtdData);
+  selectSearch('.t-tenant-dtd_start-select', keyword);
+  selectChoose('.t-tenant-dtd_start-select', dtdDescription);
+  andThen(() => {
+    assert.equal(page.dtdStart, dtdDescription);
+  });
+  // PUT
   const payload = TF.put({
     company_name: TD.companyNameTwo,
     default_currency: CD.idEuro,
     test_mode: TD.testModeTrue,
-    implementation_contact: PD.idTwo
+    implementation_contact: PD.idTwo,
+    dtd_start: dtdId
   });
   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, TF.list());
   generalPage.save();
