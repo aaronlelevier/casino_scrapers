@@ -9,9 +9,11 @@ import TD from 'bsrs-ember/vendor/defaults/tenant';
 import TF from 'bsrs-ember/vendor/tenant_fixtures';
 import CF from 'bsrs-ember/vendor/currency_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/currency';
+import PD from 'bsrs-ember/vendor/defaults/person';
+import PF from 'bsrs-ember/vendor/people_fixtures';
 import page from 'bsrs-ember/tests/pages/tenant';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS, { TENANT_URL, TENANT_LIST_URL, CURRENCIES_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { TENANT_URL, TENANT_LIST_URL, CURRENCIES_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
 const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_TENANT_URL;
@@ -49,6 +51,7 @@ test('visit detail and update all fields', assert => {
     assert.equal(page.currencyInput, TD.name);
     // fields that only exist on the detail/update record, and not the create
     assert.equal(find('.t-tenant-test_mode').prop('checked'), TD.testModeFalse);
+    assert.ok(page.implementationContact.indexOf(PD.fullname) > -1);
   });
   // company_name
   page.companyNameFill(TD.companyNameTwo);
@@ -65,10 +68,26 @@ test('visit detail and update all fields', assert => {
   andThen(() => {
     assert.equal(find('.t-tenant-test_mode').prop('checked'), TD.testModeTrue);
   });
+  // implementation_contact - optionally remove first, then add back to show that
+  // remove works as well
+  page.clearImplementationContact();
+  andThen(() => {
+    assert.equal(page.implementationContact, 'Click to select');
+  });
+  const keyword = 'a';
+  const personData = PF.get_for_power_select(PD.idTwo, PD.nameTwo, PD.lastNameTwo);
+  const personFullname = PD.nameTwo + ' ' + PD.lastNameTwo;
+  xhr(`${PEOPLE_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, personData);
+  selectSearch('.t-tenant-implementation_contact-select', keyword);
+  selectChoose('.t-tenant-implementation_contact-select', personFullname);
+  andThen(() => {
+    assert.ok(page.implementationContact.indexOf(personFullname) > -1);
+  });
   const payload = TF.put({
     company_name: TD.companyNameTwo,
     default_currency: CD.idEuro,
-    test_mode: TD.testModeTrue
+    test_mode: TD.testModeTrue,
+    implementation_contact: PD.idTwo
   });
   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, TF.list());
   generalPage.save();

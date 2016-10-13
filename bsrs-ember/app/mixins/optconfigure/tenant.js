@@ -51,6 +51,12 @@ export default Ember.Mixin.create({
       property: 'email',
       related_model: 'implementation_email',
     },
+    implementation_contact: {
+      //unique reverse lookup key to the tenant
+      collection: 'tenants_implementation_contact',
+      property: 'person',
+      related_model: 'implementation_contact',
+    },
     phone_number_type: {
       collection: 'phonenumbers',
       property: 'phone-number-type',

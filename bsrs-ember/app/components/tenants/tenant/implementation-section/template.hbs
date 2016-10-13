@@ -24,3 +24,24 @@
     {{/form-group}}
   </div>
 </div>
+{{#unless model.new}}
+  <div class="row">
+    <div class="col-md-12">
+      {{#form-group title="admin.tenant.label.implementation_contact" for="implementation_contact"}}
+        {{db-fetch-select
+          model=model
+          selectedAttr=model.implementation_contact
+          className="t-tenant-implementation_contact-select"
+          displayName="fullname"
+          change_func="change_implementation_contact"
+          remove_func="remove_implementation_contact"
+          repository=personRepo
+          searchMethod="findPeople"
+          valuePath="implementation_contact"
+          allowClear=true
+          didValidate=didValidate
+        }}
+      {{/form-group}}
+    </div>
+  </div>
+{{/unless}}

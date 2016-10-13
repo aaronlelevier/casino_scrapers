@@ -11,6 +11,7 @@ export default Ember.Object.extend(OptConf, ContactDeserializerMixin, {
     belongs_to.bind(this)('billing_phone_number');
     belongs_to.bind(this)('billing_email');
     belongs_to.bind(this)('implementation_email');
+    belongs_to.bind(this)('implementation_contact');
     belongs_to.bind(this)('billing_address');
     belongs_to.bind(this)('state');
     belongs_to.bind(this)('country');
@@ -32,17 +33,20 @@ export default Ember.Object.extend(OptConf, ContactDeserializerMixin, {
     response.billing_phone_number_fk = response.billing_phone_number.id;
     response.billing_email_fk = response.billing_email.id;
     response.implementation_email_fk = response.implementation_email.id;
+    response.implementation_contact_fk = response.implementation_contact.id;
     response.billing_address_fk = response.billing_address.id;
     const currency = response.default_currency;
     const billing_phone_number = response.billing_phone_number;
     const billing_email = response.billing_email;
     const implementation_email = response.implementation_email;
+    const implementation_contact = response.implementation_contact;
     const billing_address = response.billing_address;
     const countries = response.countries;
     delete response.default_currency;
     delete response.billing_phone_number;
     delete response.billing_email;
     delete response.implementation_email;
+    delete response.implementation_contact;
     delete response.billing_address;
     delete response.countries;
     // setup contact to type relationship
@@ -60,6 +64,7 @@ export default Ember.Object.extend(OptConf, ContactDeserializerMixin, {
       this.setup_billing_phone_number(billing_phone_number, tenant);
       this.setup_billing_email(billing_email, tenant);
       this.setup_implementation_email(implementation_email, tenant);
+      this.setup_implementation_contact(implementation_contact, tenant);
       this.setup_billing_address(billing_address, tenant);
     // if (countrys) {
       this.setup_countries(countries, tenant);

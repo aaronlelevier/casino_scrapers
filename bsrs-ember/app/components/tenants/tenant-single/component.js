@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import injectRepo from 'bsrs-ember/utilities/inject';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import { task } from 'ember-concurrency';
 

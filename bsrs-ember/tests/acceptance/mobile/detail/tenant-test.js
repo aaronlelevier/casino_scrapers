@@ -64,8 +64,6 @@ test('can click through component sections and save to redirect to index', async
 test('visit mobile detail and update all fields', async assert => {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
-  // return pauseTest()
-  // debugger
   assert.equal(tenantpage.companyName, TD.companyNameOne);
   assert.equal(tenantpage.currencyInput, TD.name);
   // // company_name

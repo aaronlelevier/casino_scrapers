@@ -82,6 +82,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     belongs_to.bind(this)('billing_email', 'tenant', {dirty: false, track_related_model: true});
     belongs_to.bind(this)('billing_address', 'tenant', {dirty: false, track_related_model: true});
     belongs_to.bind(this)('implementation_email', 'tenant', {dirty: false, track_related_model: true});
+    belongs_to.bind(this)('implementation_contact', 'tenant');
     many_to_many.bind(this)('country', 'tenant', {plural:true});
   },
   simpleStore: Ember.inject.service(),
@@ -94,15 +95,25 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
   billing_phone_number_fk: undefined,
   billing_email_fk: undefined,
   billing_address_fk: undefined,
+  implementation_contact_fk: undefined,
   tenant_countries_fks: [],
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'defaultCurrencyIsDirty', 'countriesIsDirty', 'billingEmailIsDirty', 'billingPhoneNumberIsDirty', 'implementationEmailIsDirty', 'billingAddressIsDirty', function() {
-    return this.get('isDirty') || this.get('defaultCurrencyIsDirty') || this.get('countriesIsDirty') || this.get('billingEmailIsDirty') || this.get('billingPhoneNumberIsDirty') || this.get('implementationEmailIsDirty') || this.get('billingAddressIsDirty');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'defaultCurrencyIsDirty', 'countriesIsDirty', 'billingEmailIsDirty', 'billingPhoneNumberIsDirty', 'implementationEmailIsDirty', 'implementationContactIsDirty', 'billingAddressIsDirty', function() {
+    return this.get('isDirty') || this.get('defaultCurrencyIsDirty') || this.get('countriesIsDirty') || this.get('billingEmailIsDirty') || this.get('billingPhoneNumberIsDirty') || this.get('implementationEmailIsDirty') || this.get('implementationContactIsDirty') || this.get('billingAddressIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+  remove_implementation_contact(id) {
+    const store = this.get('simpleStore');
+    let contactsArr = store.find('person', id).get('tenants_implementation_contact');
+    contactsArr.splice(contactsArr.indexOf(this.get('id')), 1);
+    run(() => {
+      store.push('person', {id:this.get('id'), tenants_implementation_contact: contactsArr});
+    });
+  },
   rollback() {
     this.rollbackDefaultCurrency();
     this.rollbackCountries();
     this.rollbackImplementationEmail();
+    this.rollbackImplementationContact();
     this.rollbackBillingEmail();
     this.rollbackBillingPhoneNumber();
     this.rollbackBillingAddress();
@@ -113,6 +124,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     this.saveCountries();
     this.saveRelatedSingle('implementation_email');
     this.saveImplementationEmail();
+    this.saveImplementationContact();
     this.saveRelatedSingle('billing_address');
     this.saveBillingAddress();
     this.saveRelatedSingle('billing_email');
@@ -142,6 +154,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     };
     if (!this.get('new')) {
       data.test_mode = this.get('test_mode');
+      data.implementation_contact = this.get('implementation_contact.id');
     }
     return data;
   },

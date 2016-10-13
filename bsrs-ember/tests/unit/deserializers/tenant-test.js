@@ -15,12 +15,13 @@ import AD from 'bsrs-ember/vendor/defaults/address';
 import SD from 'bsrs-ember/vendor/defaults/state';
 import CD from 'bsrs-ember/vendor/defaults/country';
 import ATD from 'bsrs-ember/vendor/defaults/address-type';
+import PD from 'bsrs-ember/vendor/defaults/person';
 
 var store, tenant, deserializer;
 
 module('unit: tenant deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:tenant', 'model:tenant-list', 'model:currency', 'model:tenant-join-country', 'model:country', 'model:phonenumber', 'model:email', 'model:address', 'model:state', 'model:phone-number-type', 'model:email-type', 'model:address-type', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:tenant', 'model:tenant-list', 'model:person', 'model:currency', 'model:tenant-join-country', 'model:country', 'model:phonenumber', 'model:email', 'model:address', 'model:state', 'model:phone-number-type', 'model:email-type', 'model:address-type', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     deserializer = TDeserializer.create({ simpleStore: store });
     run(() => {
       tenant = store.push('tenant', { id: TD.idOne });
@@ -83,6 +84,8 @@ test('deserialize single', assert => {
   assert.equal(tenant.get('implementation_email').get('email_type').get('id'), ETD.workId);
   assert.equal(tenant.get('implementation_email').get('email_type').get('name'), ETD.workName);
   assert.equal(tenant.get('implementation_email').get('email_type_fk'), ETD.workId);
+  assert.equal(tenant.get('implementation_contact').get('id'), PD.id);
+  assert.equal(tenant.get('implementation_contact').get('fullname'), PD.fullname);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 

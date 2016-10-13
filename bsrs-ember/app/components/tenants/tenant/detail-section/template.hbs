@@ -92,3 +92,17 @@
     {{/form-group}}
   </div>
 </div>
+{{#unless model.new}}
+  <div class="row">
+    <div class="col-md-12">
+      {{#form-group title="admin.tenant.label.test_mode" for="test_mode"}}
+      <div class="checkbox">
+        <label>
+          {{input type="checkbox" checked=model.test_mode class="form-control t-tenant-test_mode"}}
+          <span></span>
+        </label>
+      </div>
+      {{/form-group}}
+    </div>
+  </div>
+{{/unless}}
