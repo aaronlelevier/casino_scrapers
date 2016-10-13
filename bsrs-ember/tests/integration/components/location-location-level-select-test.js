@@ -34,7 +34,7 @@ moduleForComponent('location location-level-select', 'integration: location loca
 
 test('should render a selectbox with bound options', function(assert) {
   this.set('model', locationz);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.location_level change_method='change_location_level' relatedModelName='location-level' notTranslated=true}}`);
+  this.render(hbs`{{power-select-foreign-key model=model selected=model.location_level change_method='change_location_level' relatedModelName='location-level' notTranslated=true}}`);
   let $component = this.$(COMPONENT);
   clickTrigger();
   assert.equal($(DROPDOWN).length, 1);
@@ -44,7 +44,7 @@ test('should render a selectbox with bound options', function(assert) {
 
 test('should be able to select new location level when one doesnt exist', function(assert) {
   this.set('model', locationz);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.location_level change_method='change_location_level' relatedModelName='location-level' notTranslated=true}}`);
+  this.render(hbs`{{power-select-foreign-key model=model selected=model.location_level change_method='change_location_level' relatedModelName='location-level' notTranslated=true}}`);
   let $component = this.$(COMPONENT);
   clickTrigger();
   assert.equal($(DROPDOWN).length, 1);
@@ -64,7 +64,7 @@ test('should be able to select same location level when location already has a l
     store.push('location-level', {id: LLD.idOne, locations: [LD.idOne]});
   });
   this.set('model', locationz);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.location_level change_method='change_location_level' relatedModelName='location-level' notTranslated=true}}`);
+  this.render(hbs`{{power-select-foreign-key model=model selected=model.location_level change_method='change_location_level' relatedModelName='location-level' notTranslated=true}}`);
   let $component = this.$(COMPONENT);
   assert.equal($component.find(SELECTED).text().trim(), LLD.nameCompany);
   clickTrigger();
@@ -85,7 +85,7 @@ test('should be able to select new location level when location already has a lo
     store.push('location-level', {id: LLD.idOne, locations: [LD.idOne]});
   });
   this.set('model', locationz);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.location_level change_method='change_location_level' relatedModelName='location-level' notTranslated=true}}`);
+  this.render(hbs`{{power-select-foreign-key model=model selected=model.location_level change_method='change_location_level' relatedModelName='location-level' notTranslated=true}}`);
   let $component = this.$(COMPONENT);
   assert.equal($component.find(SELECTED).text().trim(), LLD.nameCompany);
   clickTrigger();

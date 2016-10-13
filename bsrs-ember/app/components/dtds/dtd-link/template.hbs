@@ -44,7 +44,7 @@
     <div class="input-group">
       <span class="input-group-addon">{{t "admin.dtd.label.link.priority"}}</span>
       {{power-select-foreign-key 
-        mainModel=link 
+        model=link 
         selected=link.priority 
         change_method="change_priority" 
         relatedModelName="ticket-priority" 
@@ -54,7 +54,7 @@
     <div class="input-group">
       <span class="input-group-addon">{{t "admin.dtd.label.link.status"}}</span>
       {{power-select-foreign-key 
-        mainModel=link 
+        model=link 
         selected=link.status 
         change_method="change_status" 
         relatedModelName="ticket-status" 

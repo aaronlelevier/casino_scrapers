@@ -5,7 +5,7 @@
       <button class="t-del-address-btn btn btn-default btn-sm delete" type="button" {{action 'delete' address}}>{{fa-icon "minus"}}</button>
     </span>
       {{power-select-foreign-key
-        mainModel=address
+        model=address
         selected=address.address_type
         change_method='change_address_type'
         relatedModelName='address-type'

@@ -15,7 +15,7 @@
         </div>
         <div class="ticket-action status">
           {{power-select-foreign-key 
-            mainModel=model 
+            model=model 
             selected=model.status 
             change_method="change_status" 
             relatedModelName="ticket-status"
@@ -23,7 +23,7 @@
         </div>
         <div class="ticket-action priority">
           {{power-select-foreign-key 
-            mainModel=model 
+            model=model 
             selected=model.priority 
             change_method="change_priority" 
             relatedModelName="ticket-priority"

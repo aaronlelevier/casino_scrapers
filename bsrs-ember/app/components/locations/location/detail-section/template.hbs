@@ -32,7 +32,6 @@
       <div class="col-md-12">
         {{#form-group title="admin.location.label.location_level" for="location_location_level_select"}}
           {{power-select-foreign-key 
-            mainModel=model 
             model=model 
             selected=model.location_level 
             change_method="change_location_level" 
@@ -48,7 +47,6 @@
       <div class="col-md-12">
         {{#form-group title="admin.location.label.status-name" for="location_status"}}
           {{power-select-foreign-key 
-            mainModel=model 
             model=model 
             selected=model.status 
             change_method="change_status" 

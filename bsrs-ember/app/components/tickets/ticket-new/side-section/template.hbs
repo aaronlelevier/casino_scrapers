@@ -18,7 +18,7 @@
   <div class="col-md-12">
     {{#form-group title="ticket.label.priority-name" for="priority"}}
       {{power-select-foreign-key 
-        mainModel=model 
+        model=model 
         selected=model.priority 
         change_method="change_priority" 
         relatedModelName="ticket-priority"
@@ -31,7 +31,7 @@
   <div class="col-md-12">
     {{#form-group title="ticket.label.status-name" for="status"}}
       {{power-select-foreign-key 
-        mainModel=model 
+        model=model 
         selected=model.status 
         change_method="change_status" 
         relatedModelName="ticket-status"

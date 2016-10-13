@@ -27,7 +27,6 @@
     <div class="col-md-12">
       {{#form-group title="admin.location.label.location_level" for="role_location_level_select"}}
         {{power-select-foreign-key 
-          mainModel=model 
           model=model 
           selected=model.location_level 
           change_method="change_location_level" 

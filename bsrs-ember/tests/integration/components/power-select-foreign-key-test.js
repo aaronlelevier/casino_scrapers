@@ -32,7 +32,7 @@ moduleForComponent('power-select-foreign-key', 'integration: power-select-foreig
 //   let priorities = Ember.A([]);
 //   this.set('ticket', ticket);
 //   this.set('priorities', priorities);
-//   this.render(hbs`{{power-select-foreign-key mainModel=ticket selected=ticket.priority change_method='change_priority' relatedModelName='ticket-priority'}}`);
+//   this.render(hbs`{{power-select-foreign-key model=ticket selected=ticket.priority change_method='change_priority' relatedModelName='ticket-priority'}}`);
 //   let $component = this.$(COMPONENT);
 //   clickTrigger();
 //   assert.equal($(DROPDOWN).length, 1);
@@ -46,7 +46,7 @@ test('should render a selectbox with bound options', function(assert) {
   let priorities = store.find('ticket-priority');
   priority_one.set('tickets', [TD.idOne]);
   this.set('ticket', ticket);
-  this.render(hbs`{{power-select-foreign-key mainModel=ticket selected=ticket.priority change_method='change_priority' relatedModelName='ticket-priority'}}`);
+  this.render(hbs`{{power-select-foreign-key model=ticket selected=ticket.priority change_method='change_priority' relatedModelName='ticket-priority'}}`);
   let $component = this.$(COMPONENT);
   assert.equal($component.find(PowerSelect).text().trim(), trans.t(TD.priorityOneKey));
   clickTrigger();
@@ -60,7 +60,7 @@ test('should render a selectbox with bound options', function(assert) {
 test('should be able to select new priority when one doesnt exist', function(assert) {
   let priorities = store.find('ticket-priority');
   this.set('ticket', ticket);
-  this.render(hbs`{{power-select-foreign-key mainModel=ticket selected=ticket.priority change_method='change_priority' relatedModelName='ticket-priority'}}`);
+  this.render(hbs`{{power-select-foreign-key model=ticket selected=ticket.priority change_method='change_priority' relatedModelName='ticket-priority'}}`);
   let $component = this.$(COMPONENT);
   assert.equal($('.ember-power-select-placeholder').text().trim(), trans.t('power.select.select'));
   clickTrigger();
@@ -80,7 +80,7 @@ test('should be able to select same priority when ticket already has a priority'
   let priorities = store.find('ticket-priority');
   priority_one.set('tickets', [TD.idOne]);
   this.set('ticket', ticket);
-  this.render(hbs`{{power-select-foreign-key mainModel=ticket selected=ticket.priority change_method='change_priority' relatedModelName='ticket-priority'}}`);
+  this.render(hbs`{{power-select-foreign-key model=ticket selected=ticket.priority change_method='change_priority' relatedModelName='ticket-priority'}}`);
   let $component = this.$(COMPONENT);
   assert.equal($component.find(PowerSelect).text().trim(), trans.t(TD.priorityOneKey));
   clickTrigger();
@@ -100,7 +100,7 @@ test('should be able to select new priority when ticket already has a priority',
   let priorities = store.find('ticket-priority');
   priority_one.set('tickets', [TD.idOne]);
   this.set('ticket', ticket);
-  this.render(hbs`{{power-select-foreign-key mainModel=ticket selected=ticket.priority change_method='change_priority' relatedModelName='ticket-priority'}}`);
+  this.render(hbs`{{power-select-foreign-key model=ticket selected=ticket.priority change_method='change_priority' relatedModelName='ticket-priority'}}`);
   let $component = this.$(COMPONENT);
   assert.equal($component.find(PowerSelect).text().trim(), trans.t(TD.priorityOneKey));
   clickTrigger();
@@ -120,7 +120,7 @@ test('should be able to select new priority when ticket already has a priority',
 test('clear-btn not present by default', function(assert) {
   let priorities = Ember.A([]);
   this.set('ticket', ticket);
-  this.render(hbs`{{power-select-foreign-key mainModel=ticket selected=ticket.priority change_method='change_priority' relatedModelName='ticket-priority'}}`);
+  this.render(hbs`{{power-select-foreign-key model=ticket selected=ticket.priority change_method='change_priority' relatedModelName='ticket-priority'}}`);
   let $component = this.$(COMPONENT);
   assert.equal($component.find('.ember-power-select-clear-btn').length, 0);
 });
@@ -129,7 +129,7 @@ test('clear-btn present if clear=true', function(assert) {
   priority_one.set('tickets', [TD.idOne]);
   let priorities = store.find('ticket-priority');
   this.set('ticket', ticket);
-  this.render(hbs`{{power-select-foreign-key mainModel=ticket selected=ticket.priority change_method='change_priority' relatedModelName='ticket-priority' clear=true}}`);
+  this.render(hbs`{{power-select-foreign-key model=ticket selected=ticket.priority change_method='change_priority' relatedModelName='ticket-priority' clear=true}}`);
   let $component = this.$(COMPONENT);
   assert.equal($component.find('.ember-power-select-clear-btn').length, 1);
 });

@@ -7,7 +7,7 @@ var PowerSelectFKComponent = Ember.Component.extend({
     selected(obj) {
       let change_method_name = this.get('change_method');
       run(() => {
-        this.get('mainModel')[change_method_name](obj ? obj.get('id') : null);
+        this.get('model')[change_method_name](obj ? obj.get('id') : null);
       });
     }
   },

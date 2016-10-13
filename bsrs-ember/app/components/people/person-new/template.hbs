@@ -75,7 +75,7 @@
           <div class="col-md-12">
             {{#form-group title="admin.person.label.language" for="locale"}}
             {{power-select-foreign-key 
-              mainModel=model 
+              model=model 
               selected=selectedLocale 
               change_method="change_locale" 
               relatedModelName="locale"

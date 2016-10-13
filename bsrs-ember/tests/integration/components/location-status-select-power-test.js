@@ -32,7 +32,7 @@ test('should render a selectbox with bound options (defaulted to open on new tem
   let all_statuses = store.find('location-status');
   status_one.set('locations', [LD.idOne]);
   this.set('model', location_one);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModelName='location-status'}}`);
+  this.render(hbs`{{power-select-foreign-key model=model selected=model.status change_method='change_status' relatedModelName='location-status'}}`);
   let $component = this.$(`${COMPONENT}`);
   assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(LDS.openName));
   clickTrigger();
@@ -46,7 +46,7 @@ test('should be able to select same status when location already has a status', 
   let all_statuses = store.find('location-status');
   status_one.set('locations', [LD.idOne]);
   this.set('model', location_one);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModelName='location-status'}}`);
+  this.render(hbs`{{power-select-foreign-key model=model selected=model.status change_method='change_status' relatedModelName='location-status'}}`);
   let $component = this.$(`${COMPONENT}`);
   assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(LDS.openName));
   clickTrigger();
@@ -64,7 +64,7 @@ test('should be able to select new status when location already has a status', f
   let all_statuses = store.find('location-status');
   status_one.set('locations', [LD.idOne]);
   this.set('model', location_one);
-  this.render(hbs`{{power-select-foreign-key mainModel=model selected=model.status change_method='change_status' relatedModelName='location-status'}}`);
+  this.render(hbs`{{power-select-foreign-key model=model selected=model.status change_method='change_status' relatedModelName='location-status'}}`);
   let $component = this.$(`${COMPONENT}`);
   assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(LDS.openName));
   clickTrigger();
