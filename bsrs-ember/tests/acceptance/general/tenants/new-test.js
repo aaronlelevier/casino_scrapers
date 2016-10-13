@@ -105,7 +105,7 @@ test('visit new URL and create a new record', assert => {
     assert.ok(page.countrySelectedOne.indexOf(countryName) > -1);
   });
 
-  xhr(TENANT_URL, 'POST', TF.put({
+  xhr(TENANT_URL, 'POST', TF.post({
     id: 5,
     countries: [countryId],
     billing_address: {

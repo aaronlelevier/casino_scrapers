@@ -47,6 +47,8 @@ test('visit detail and update all fields', assert => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(page.companyNameValue, TD.companyNameOne);
     assert.equal(page.currencyInput, TD.name);
+    // fields that only exist on the detail/update record, and not the create
+    assert.equal(find('.t-tenant-test_mode').prop('checked'), TD.testModeFalse);
   });
   // company_name
   page.companyNameFill(TD.companyNameTwo);
@@ -58,7 +60,17 @@ test('visit detail and update all fields', assert => {
   andThen(() => {
     assert.equal(page.currencyInput, CD.nameEuro);
   });
-  xhr(API_DETAIL_URL, 'PUT', TF.put({company_name: TD.companyNameTwo, default_currency: CD.idEuro}), {}, 200, TF.list());
+  // test_mode
+  page.testModeClick();
+  andThen(() => {
+    assert.equal(find('.t-tenant-test_mode').prop('checked'), TD.testModeTrue);
+  });
+  const payload = TF.put({
+    company_name: TD.companyNameTwo,
+    default_currency: CD.idEuro,
+    test_mode: TD.testModeTrue
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, TF.list());
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), TENANT_LIST_URL);

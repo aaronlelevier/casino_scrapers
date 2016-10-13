@@ -68,6 +68,14 @@ test('dirty test | billing_contact', assert => {
   assert.equal(tenant.get('isDirty'), false);
 });
 
+test('dirty test | test_mode', assert => {
+  assert.equal(tenant.get('isDirty'), false);
+  tenant.set('test_mode', 'wat');
+  assert.equal(tenant.get('isDirty'), true);
+  tenant.set('test_mode', '');
+  assert.equal(tenant.get('isDirty'), false);
+});
+
 test('serialize', assert => {
   run(() => {
     tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, default_currency_fk: CurrencyD.idOne, billing_phone_number_fk: PND.idOne, billing_email_fk: ED.idOne, implementation_email_fk: ED.idOne});

@@ -90,6 +90,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
   dashboard_text: attr(''),
   implementation_contact_initial: attr(''),
   billing_contact: attr(''),
+  test_mode: attr(''),
   billing_phone_number_fk: undefined,
   billing_email_fk: undefined,
   billing_address_fk: undefined,
@@ -125,7 +126,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     });
   },
   serialize() {
-    return {
+    let data = {
       id: this.get('id'),
       company_name: this.get('company_name'),
       company_code: this.get('company_code'),
@@ -139,5 +140,9 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
       implementation_email: this.get('implementation_email').serialize(),
       billing_address: this.get('billing_address').serialize(),
     };
+    if (!this.get('new')) {
+      data.test_mode = this.get('test_mode');
+    }
+    return data;
   },
 });

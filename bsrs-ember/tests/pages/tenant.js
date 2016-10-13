@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { create, visitable, fillable, text, value } from 'ember-cli-page-object';
+import { create, visitable, fillable, text, value, clickable } from 'ember-cli-page-object';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BASEURLS, { TENANT_URL, TENANT_LIST_URL } from 'bsrs-ember/utilities/urls';
 import TD from 'bsrs-ember/vendor/defaults/tenant';
@@ -53,4 +53,7 @@ export default create({
 
   testModeGridOne: value('.t-tenant-test_mode:eq(0)'),
   testModeSortText: text('.t-sort-test-mode'),
+  // detail test_mode
+  testModeClick: clickable('.t-tenant-test_mode'),
+
 });

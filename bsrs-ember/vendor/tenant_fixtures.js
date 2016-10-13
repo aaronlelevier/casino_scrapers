@@ -9,6 +9,9 @@ var BSRS_TENANT_FACTORY = (function() {
     this.address = address;
     this.config = config;
   };
+  factory.prototype.detail = function(id) {
+    return this.generate(id);
+  };
   factory.prototype.generate = function(i) {
     var id = i || this.tenant.idOne;
     return {
@@ -19,6 +22,7 @@ var BSRS_TENANT_FACTORY = (function() {
       dashboard_text: this.tenant.dashboardTextOne,
       implementation_contact_initial: this.tenant.implementationContactInitialOne,
       billing_contact: this.tenant.billingContactOne,
+      test_mode: false,
       default_currency: {
         id: this.tenant.currencyOne,
         name: this.tenant.name
@@ -33,7 +37,41 @@ var BSRS_TENANT_FACTORY = (function() {
       }]
     };
   };
+  factory.prototype.put = function(tenant) {
+    var id = tenant && tenant.id || this.tenant.idOne;
+    var response = this.generate_put(id);
+    for(var key in tenant) {
+      response[key] = tenant[key];
+    }
+    return response;
+  };
   factory.prototype.generate_put = function(i) {
+    var id = i || this.tenant.idOne;
+    return {
+      id: id,
+      company_name: this.tenant.companyNameOne,
+      company_code: this.tenant.companyCodeOne,
+      dashboard_text: this.tenant.companyDashboardTextOne,
+      default_currency: this.tenant.currencyOne,
+      countries: [this.country.id],
+      implementation_contact_initial: this.tenant.implementationContactInitialOne,
+      billing_contact: this.tenant.billingContactOne,
+      test_mode: this.tenant.testModeFalse,
+      billing_phone_number: this.phonenumber.get_belongs_to(),
+      billing_email: this.email.get_belongs_to(this.email_defaults.idOne),
+      implementation_email: this.email.get_belongs_to(this.email_defaults.idTwo),
+      billing_address: this.address.put_belongs_to(),
+    };
+  };
+  factory.prototype.post = function(tenant) {
+    var id = tenant && tenant.id || this.tenant.idOne;
+    var response = this.generate_post(id);
+    for(var key in tenant) {
+      response[key] = tenant[key];
+    }
+    return response;
+  };
+  factory.prototype.generate_post = function(i) {
     var id = i || this.tenant.idOne;
     return {
       id: id,
@@ -49,17 +87,6 @@ var BSRS_TENANT_FACTORY = (function() {
       implementation_email: this.email.get_belongs_to(this.email_defaults.idTwo),
       billing_address: this.address.put_belongs_to(),
     };
-  };
-  factory.prototype.detail = function(id) {
-    return this.generate(id);
-  };
-  factory.prototype.put = function(tenant) {
-    var id = tenant && tenant.id || this.tenant.idOne;
-    var response = this.generate_put(id);
-    for(var key in tenant) {
-      response[key] = tenant[key];
-    }
-    return response;
   };
   factory.prototype.list = function() {
     var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
