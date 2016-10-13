@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { get } = Ember;
 
 export default Ember.Component.extend({
   classNameBindings: ['className', 'mobileFilterInput'],
@@ -6,8 +7,8 @@ export default Ember.Component.extend({
   init(){
     this._super(...arguments);
     this.mobileFilterInput = false;
-    const existingFilter = this.get('gridFilterParams')[this.get('column.field')];
-    const existingIdInObject = this.get('gridIdInParams')[this.get('column.field')];
+    const existingFilter = this.get('gridFilterParams')[this.get('column.field').split('.')[0]];
+    const existingIdInObject = this.get('gridIdInParams')[this.get('column.field').split('.')[0]];
     if(existingFilter || (existingIdInObject && existingIdInObject.length)) {
       this.set('initialVal', existingFilter);
       this.set('mobileFilterInput', true);
@@ -44,29 +45,10 @@ export default Ember.Component.extend({
     /* @method updategridIdInParams
     * @param {string} val - from input
     * column.field is the key that will go into update_find_query/update_id_in function in grid-head
+    * route action in route/grid
     */
-    updateGridFilterParams(val) {
-      const column = this.get('column');
-      if(column.multiple) {
-        const gridIdInParams = this.get('gridIdInParams');
-        const idArray = gridIdInParams[column.field] || [];
-        const indx = idArray.indexOf(val);
-        if(indx > -1) {
-          // Remove Checkbox
-          idArray.splice(indx, 1);
-        } else {
-          // Add Checkbox
-          gridIdInParams[column.field] = idArray.concat(val);
-        }
-      } else if (column.powerSelect) {
-        // Power select
-        const gridIdInParams = this.get('gridIdInParams');
-        gridIdInParams[column.field] = val;
-      } else {
-        // Input item
-        const gridFilterParams = this.get('gridFilterParams');
-        gridFilterParams[column.field] = val;
-      }
+    updateGridFilterObj(val) {
+      this.get('updateGridFilterParams')(get(this, 'column'), val);
     }
   }
 });

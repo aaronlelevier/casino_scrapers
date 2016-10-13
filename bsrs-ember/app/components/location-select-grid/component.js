@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { get } = Ember;
 import inject from 'bsrs-ember/utilities/inject';
 import { task, timeout } from 'ember-concurrency';
 import config from 'bsrs-ember/config/environment';
@@ -10,20 +11,13 @@ export default Ember.Component.extend({
   searchRepo: task(function * (search) {
     if (Ember.isBlank(search)) { return []; }
     yield timeout(DEBOUNCE_MS);
-    const repo = this.get('repository');
+    const repo = get(this, 'repository');
     const json = yield repo.findTicket(search);
     return json;
   }).restartable(),
-  selectedLocation: Ember.computed(function() {
-    const gridIdInParams = this.get('gridIdInParams');
-    if ('location.name' in gridIdInParams) {
-      return gridIdInParams['location.name'];
-    }
-  }),
   actions: {
     selected(location) {
-      this.set('selectedLocation', location);
-      this.get('updateGridFilterParams')(location);
+      get(this, 'updateGridFilterParams')(get(this, 'column'), location);
     }
   }
 });

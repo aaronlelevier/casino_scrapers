@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { get } = Ember;
 import inject from 'bsrs-ember/utilities/inject';
 import { task, timeout } from 'ember-concurrency';
 import config from 'bsrs-ember/config/environment';
@@ -14,16 +15,9 @@ export default Ember.Component.extend({
     const json = yield repo.findPeople(search);
     return json;
   }).restartable(),
-  selectedPerson: Ember.computed(function() {
-    const gridIdInParams = this.get('gridIdInParams');
-    if ('assignee.fullname' in gridIdInParams) {
-      return gridIdInParams['assignee.fullname'];
-    }
-  }),
   actions: {
     selected(person) {
-      this.set('selectedPerson', person);
-      this.get('updateGridFilterParams')(person);
+      this.get('updateGridFilterParams')(get(this, 'column'), person);
     }
   }
 });

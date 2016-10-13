@@ -36,7 +36,10 @@ test('clicking filter on a column head column will display an input with no valu
   this.column = { field: 'location.name', isFilterable: true };
   this.gridFilterParams = {};
   this.gridIdInParams = {};
-  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridIdInParams=gridIdInParams gridFilterParams=gridFilterParams}}`);
+  this.updateGridFilterParams = (column, value) => {
+    this.gridFilterParams[column.field] = value;   
+  };
+  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridIdInParams=gridIdInParams gridFilterParams=gridFilterParams updateGridFilterParams=updateGridFilterParams}}`);
   assert.equal(this.$('input').length, 0);
   this.$('.t-filter-location-name').click();
   assert.equal(this.$('input').length, 1);
@@ -56,9 +59,12 @@ test('classNameBinding works if toggle mobileFilterInput', function(assert) {
 
 test('clicking filter on a column head column will display an input with existing value', function(assert) {
   this.column = { field: 'location.name' };
-  this.gridFilterParams = { 'location.name': 'dowat1'};
+  this.gridFilterParams = { 'location': 'dowat1'};
   this.gridIdInParams = {};
-  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridIdInParams=gridIdInParams gridFilterParams=gridFilterParams}}`);
+  this.updateGridFilterParams = (column, value) => {
+    this.gridFilterParams[column.field] = value;   
+  };
+  this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridIdInParams=gridIdInParams gridFilterParams=gridFilterParams updateGridFilterParams=updateGridFilterParams}}`);
   assert.equal(this.$('input').length, 1);
   assert.equal(this.$('input').val(), 'dowat1');
   this.$('input').val('dowat').trigger('keyup');

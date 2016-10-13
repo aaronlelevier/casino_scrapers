@@ -216,11 +216,11 @@ test('cost_amount - is not required', (assert) => {
   page.labelFill(CD.labelOne);
   page.amountFill('');
   andThen(() => {
-    $('.t-amount').focusout();
+    Ember.$('.t-amount').focusout();
   });
   andThen(() => {
     const category = store.find('category', CD.idOne);
-    assert.equal(category.get('cost_amount'), '');
+    assert.equal(category.get('cost_amount'), '', 'cost amount is blank');
   });
   page.costCodeFill(CD.costCodeOne);
   page.subLabelFill(CD.subCatLabelTwo);

@@ -2,7 +2,15 @@
   <div class="input-group-addon t-currency-symbol">
     {{currencyObject.symbol}}
   </div>
-  {{input type="text" placeholder=(if placeholder placeholder (t "admin.amount_and_default_value" value=placeholderAmount)) focus-out="format_currency" value=bound_field class="form-control t-amount" id="amount" disabled=editPrivilege}}
+  {{input 
+    type="text" 
+    placeholder=(if placeholder placeholder (t "admin.amount_and_default_value" value=placeholderAmount)) 
+    focus-out="format_currency" 
+    value=bound_field 
+    class="form-control t-amount" 
+    id="amount" 
+    disabled=editPrivilege
+  }}
   {{#power-select
     selected=currencyObject
     options=currencyObjects

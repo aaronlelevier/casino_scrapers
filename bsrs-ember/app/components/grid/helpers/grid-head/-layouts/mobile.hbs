@@ -24,7 +24,7 @@
       <section class="mobile-main flex-item--auto">
         {{#each columns as |column|}}
           {{#if column.isFilterable}}
-            {{grid/helpers/grid-header-column-mobile tagName="div" column=column gridFilterParams=gridFilterParams gridIdInParams=gridIdInParams find=find toggleFilterModal=(action "toggleFilterModal") }}
+            {{grid/helpers/grid-header-column-mobile tagName="div" column=column gridFilterParams=gridFilterParams gridIdInParams=gridIdInParams find=find toggleFilterModal=(action "toggleFilterModal") updateGridFilterParams=updateGridFilterParams}}
           {{/if}}
         {{/each}}
       </section>

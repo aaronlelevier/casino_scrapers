@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { get, set } = Ember;
 import set_filter_model_attrs from 'bsrs-ember/utilities/filter-model-attrs';
 import inject from 'bsrs-ember/utilities/inject';
 
@@ -12,19 +13,19 @@ var GridViewRoute = Ember.Route.extend({
   personCurrent: Ember.inject.service(),
   filtersetRepository: inject('filterset'),
   init() {
-    /* MOBILE PROPERTIES */
+    /* MOBILE PROPERTIES - objects are needed to hold values until filter action is instantiated. No instant updating in mobile like we have in desktop */
     this._super(...arguments);
     /* @property gridFilterParams
     * object that holds key of type string ('location.name') and value of type string ('wat')
     * passed as a property to grid-header-column component
     */
-    this.gridFilterParams = {};
+    this.gridFilterParams = Ember.Object.create();
     /* @property gridIdInParams
     * used for model specific searches where request url will look like location__id__in=x,x,x
     * object that holds key of type string ('location.name') and pipe separated ids
     * for power selects, value is [obj, obj] b/c need to preserve object if return to filter
     */
-    this.gridIdInParams = {};
+    this.gridIdInParams = Ember.Object.create();
     /*
      * @property {obj} filterModel
      * object that holds 'find' query state
@@ -84,7 +85,34 @@ var GridViewRoute = Ember.Route.extend({
   },
   actions: {
     exportGrid(find, search, sort) {
-      this.get('repository').exportGrid(find, search, sort);
+      get(this, 'repository').exportGrid(find, search, sort);
+    },
+    /* @ method updateGridFilterParams
+     * @param {object} column - 'description' or 'location.name'
+     * @param {obj} val - e.g. location class or if gridFilterParams it is a string
+     */
+    updateGridFilterParams(column, val) {
+      const fieldName = column.field.includes('.') ? column.field.split('.')[0] : column.field;
+      if(column.multiple) {
+        const gridIdInParams = get(this, 'gridIdInParams');
+        const idArray = gridIdInParams[fieldName] || [];
+        const indx = idArray.indexOf(val);
+        if(indx > -1) {
+          // Remove Checkbox
+          idArray.splice(indx, 1);
+        } else {
+          // Add Checkbox
+          set(gridIdInParams, fieldName, idArray.concat(val));
+        }
+      } else if (column.powerSelect) {
+        // Power select
+        const gridIdInParams = get(this, 'gridIdInParams');
+        set(gridIdInParams, fieldName, val);
+      } else {
+        // Input item
+        const gridFilterParams = get(this, 'gridFilterParams');
+        set(gridFilterParams, column.field, val);
+      }
     }
   }
 });

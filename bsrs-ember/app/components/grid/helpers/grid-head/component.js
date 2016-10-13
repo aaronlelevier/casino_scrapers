@@ -43,11 +43,13 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
     /*
     * @method filterGrid
     * takes gridFilterParams && gridIdInParams object and turns values into a string
+    * calls grid route model hook after find or id_in are set
     */
     filterGrid() {
       this.toggleProperty('mobileFilter');
       /* shows input box in horizontal scroll of save filterset */
       this.toggleProperty('showSaveFilterInput');
+
       /* 'find' query param */
       const find = this.get('find');
       const gridFilterParams = this.get('gridFilterParams');
@@ -55,6 +57,7 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
       Object.keys(gridFilterParams).forEach((key) => {
         finalFilter += this.update_find_query(key, gridFilterParams[key], find);
       });
+
       /* 'id_in' query param - pipe separated model types, comma separated list of model's ids that were filtered */
       const idInParams = this.get('gridIdInParams');
       let finalIdInFilter = '';
@@ -70,6 +73,7 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
           return prev += `${val},`;
         }, '') + '|');
       });
+
       // enter if block if initial state or reset or query params had previous values that were removed
       if (!finalFilter && !finalIdInFilter) {
         // if initial state, do not reset grid and keep local cache of grid data

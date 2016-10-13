@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { get, set } = Ember;
 
 export default Ember.Component.extend({
   currency: Ember.inject.service(),
@@ -10,12 +11,12 @@ export default Ember.Component.extend({
    * model.currencyField is an FK to a currency object loaded on boot
   */
   currencyObject: Ember.computed('model.auth_currency', 'model.cost_currency', function() {
-    let store = this.get('simpleStore');
-    let currencyField = this.get('currencyField');
-    let inheritsFrom = this.get('inheritsFrom');
-    let currency_service = this.get('currency');
-    if (this.get(`model.${currencyField}`)) {
-      return store.find('currency', this.get(`model.${currencyField}`));
+    let store = get(this, 'simpleStore');
+    let currencyField = get(this, 'currencyField');
+    let inheritsFrom = get(this, 'inheritsFrom');
+    let currency_service = get(this, 'currency');
+    if (get(this, `model.${currencyField}`)) {
+      return store.find('currency', get(this, `model.${currencyField}`));
     } else if (inheritsFrom) {
       return currency_service.getPersonCurrency();
     }
@@ -25,18 +26,18 @@ export default Ember.Component.extend({
    * power select dropdown list of currencies
   */
   currencyObjects: Ember.computed(function() {
-    let currency_service = this.get('currency');
+    let currency_service = get(this, 'currency');
     return currency_service.getCurrencies();
   }),
   init() {
     this._super(...arguments);
-    const field = this.get('field');
+    const field = get(this, 'field');
     Ember.defineProperty(this, 'bound_field', Ember.computed('model.' + field, function() {
-      const currency_service = this.get('currency');
+      const currency_service = get(this, 'currency');
       // get currency from store based on currencyField API ('auth_currency')
-      const precision = this.get('currencyObject').get('decimal_digits');
+      const precision = get(this, 'currencyObject').get('decimal_digits');
       // 'field' is the actual Decimal Field on the backend ('auth_amount')
-      return currency_service.format_currency(this.get('model').get(field), precision);
+      return currency_service.format_currency(get(this, 'model').get(field), precision);
     }));
   },
   // initialize: Ember.on('init', function() {
@@ -55,22 +56,22 @@ export default Ember.Component.extend({
   // }),
   // bound_field: Ember.computed.alias('model.field'),
   placeholderAmount: Ember.computed(function() {
-    const currency = this.get('currencyObject');
-    const field = this.get('field');
-    let amount = currency.get(`model.${field}`) ? currency.get(`model.${field}`) : 0;
-    return parseFloat(amount).toFixed(currency.get('decimal_digits'));
+    const currency = get(this, 'currencyObject');
+    const field = get(this, 'field');
+    let amount = get(currency, `model.${field}`) ? get(currency, `model.${field}`) : 0;
+    return parseFloat(amount).toFixed(get(currency, 'decimal_digits'));
   }),
   actions: {
     format_currency() {
-      const field = this.get('field');
-      const currency_service = this.get('currency');
-      const precision = this.get('currencyObject').get('decimal_digits');
-      this.set('model.' + field, currency_service.format_currency(this.get('bound_field'), precision));
+      const field = get(this, 'field');
+      const currency_service = get(this, 'currency');
+      const precision = get(this, 'currencyObject').get('decimal_digits');
+      set(this, 'model.' + field, currency_service.format_currency(get(this, 'bound_field'), precision));
     },
     selected(obj) {
-      const model = this.get('model');
-      const currencyField = this.get('currencyField');
-      model.set(currencyField, obj.get('id'));
+      const model = get(this, 'model');
+      const currencyField = get(this, 'currencyField');
+      model.set(currencyField, get(obj, 'id'));
     }
   }
 });

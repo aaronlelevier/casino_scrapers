@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { run } = Ember;
+const { run, get, set } = Ember;
 import FullScreenMixin from 'bsrs-ember/mixins/components/full-screen/edit';
 import inject from 'bsrs-ember/utilities/inject';
 
@@ -13,13 +13,13 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
   },
   componentString: '',
   componentStringFunc(componentString) {
-    const hashComponents = this.get('hashComponents');
+    const hashComponents = get(this, 'hashComponents');
     componentString = componentString || hashComponents[0].component;
     this.set('componentString', componentString);
   },
   actions: {
     save(update) {
-      if (this.get('model.validations.isValid')) {
+      if (get(this, 'model.validations.isValid')) {
         const promise = this._super(update);
         if (promise.then) {
           return promise.then((activities) => {
@@ -29,21 +29,21 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
       }
     },
     delete() {
-      this.sendAction('delete', this.get('model'), this.get('repository'));
+      this.sendAction('delete', get(this, 'model'), get(this, 'repository'));
     },
     /*
     * Called from clicking on footer item
     */
     renderSection(activeComponent) {
-      const hashComponents = this.get('hashComponents');
+      const hashComponents = get(this, 'hashComponents');
       hashComponents.forEach((componentObj) => {
         if (activeComponent.title === componentObj.title) {
           run(() => {
-            Ember.set(componentObj, 'active', 'active');
+            set(componentObj, 'active', 'active');
           });
         } else {
           run(() => {
-            Ember.set(componentObj, 'active', '');
+            set(componentObj, 'active', '');
           });
         }
       });
@@ -53,7 +53,7 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
 
     // },
     cancel_modal() {
-      this.set('mobileDialog', false);
+      set(this, 'mobileDialog', false);
     }
   }
 });
