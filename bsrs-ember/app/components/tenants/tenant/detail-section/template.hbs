@@ -14,13 +14,18 @@
 <div class="row">
   <div class="col-md-12">
     {{#form-group title="tenant.company_code" for="company_code"}}
-      {{validated-input
-        model=model
-        valuePath="company_code"
-        didValidate=didValidate
-        className="form-control t-tenant-company_code"
-        placeholder=(t "tenant.company_code")
-      }}
+      <div class="input-group">
+        {{validated-input
+          model=model
+          valuePath="company_code"
+          didValidate=didValidate
+          className="form-control t-tenant-company_code"
+          placeholder=(t "tenant.company_code")
+        }}
+        <span class="input-group-addon hint" data-test-id="company_code_hint">
+          https://<strong>{{if model.company_code model.company_code "_____"}}</strong>.servicechannel.com
+        </span>
+      </div>
     {{/form-group}}
   </div>
 </div>

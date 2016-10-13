@@ -21,7 +21,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 
 var store, model, trans;
 
-moduleForComponent('tenant-single', 'integration: tenant-single test', {
+moduleForComponent('tenant-single', 'amk integration: tenant-single test', {
   integration: true,
   setup() {
     page.setContext(this);
@@ -111,4 +111,19 @@ test('labels are translated', function(assert) {
 test('placeholders are translated', function(assert) {
   this.render(hbs `{{tenants/tenant-single}}`);
   assert.equal(this.$('.t-tenant-company_name').get(0)['placeholder'], trans.t('tenant.company_name'));
+});
+
+test('url hint should be bound to the company code value on the model', function(assert) {
+  // like new form
+  run(function() {
+    model = store.push('tenant', {id: TD.idOne, company_code: undefined});
+  });
+  this.set('model', model);
+  this.render(hbs `{{tenants/tenant-single model=model}}`);
+  assert.equal(this.$('[data-test-id="company_code_hint"]').text().trim(), 'https://_____.servicechannel.com');
+  run(() => {
+    store.push('tenant', {id: TD.idOne, company_code: TD.companyCodeOne});
+  });
+  this.render(hbs `{{tenants/tenant-single model=model}}`);
+  assert.equal(this.$('[data-test-id="company_code_hint"]').text().trim(), `https://${TD.companyCodeOne}.servicechannel.com`);
 });
