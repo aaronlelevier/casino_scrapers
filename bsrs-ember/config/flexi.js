@@ -8,7 +8,7 @@ module.exports = {
   breakpoints: [
     { name: 'mobile', prefix: 'xs', begin: 0 },
     // { name: 'tablet', prefix: 'sm', begin: 768 },
-    { name: 'desktop', prefix: 'md', begin: 668 }, //668 is iphone 6 landscape
+    { name: 'desktop', prefix: 'md', begin: 600 }, //SN: 600 for testing purposes right now 10/12/2016...668 is iphone 6 landscape
     { name: 'huge', prefix: 'lg', begin: 1200 }
   ],
 
