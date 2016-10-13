@@ -16,11 +16,11 @@ class Tenant(BaseModel):
         help_text="id of SC primary key record of the subscriber. Will be null on initial BS create")
     company_code = models.CharField(max_length=100, unique=True,
         help_text="Short code used to identify customer")
-    company_name = models.CharField(max_length=100,
+    company_name = models.CharField(max_length=100, unique=True,
         help_text="Full customer company name")
     dashboard_text = models.TextField(blank=True, default="Welcome",
         help_text="Converts to HTML for display on Welcome page. Role inherits this field")
-    dt_start = models.ForeignKey("dtd.TreeData", related_name="tenants", null=True,
+    dtd_start = models.ForeignKey("dtd.TreeData", related_name="tenants", null=True,
         help_text="key to starting decision tree record")
     default_currency = models.ForeignKey(Currency, related_name="tenants", null=True,
         help_text="key to default currency")

@@ -15,5 +15,7 @@ class TenantViewSet(viewsets.ModelViewSet):
             return ts.TenantListSerializer
         elif self.action == 'retrieve':
             return ts.TenantDetailSerializer
-        else:
+        elif self.action == 'create':
             return ts.TenantCreateSerializer
+        else:
+            return ts.TenantUpdateSerializer

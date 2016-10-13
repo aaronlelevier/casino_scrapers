@@ -8,6 +8,8 @@ from contact.models import Email, Address, PhoneNumber, Country
 from contact.serializers import (
     EmailSerializer, PhoneNumberSerializer, AddressSerializer, AddressUpdateSerializer,
     CountryIdNameSerializer)
+from dtd.serializers import TreeDataListSerializer
+from person.serializers_leaf import PersonSimpleSerializer
 from tenant.models import Tenant
 from tenant.oauth import BsOAuthSession, DEV_SC_SUBSCRIBER_POST_URL
 from utils import create
@@ -59,13 +61,14 @@ class TenantDetailSerializer(BaseCreateSerializer):
     billing_email = EmailSerializer()
     billing_phone_number = PhoneNumberSerializer()
     billing_address = AddressSerializer()
-
+    implementation_contact = PersonSimpleSerializer()
+    dtd_start = TreeDataListSerializer()
     default_currency = CurrencyIdNameSerializer()
     countries = CountryIdNameSerializer(required=False, many=True)
 
     class Meta:
         model = Tenant
-        fields = TENANT_FIELDS + ('scid',)
+        fields = TENANT_FIELDS + ('scid', 'test_mode', 'implementation_contact', 'dtd_start',)
 
 
 class TenantCreateSerializer(TenantContactsMixin, BaseCreateSerializer):
@@ -107,11 +110,18 @@ class TenantCreateSerializer(TenantContactsMixin, BaseCreateSerializer):
                 if tries == i+1: # b/c range() 0 indexed
                     raise ValidationError("Error creating subscriber")
 
+
+class TenantUpdateSerializer(TenantCreateSerializer):
+
+    class Meta:
+        model = Tenant
+        fields = TENANT_FIELDS + ('test_mode', 'implementation_contact', 'dtd_start',)
+
     def update(self, instance, validated_data):
         countries = validated_data.pop('countries', [])
         validated_data = self.update_or_create_nested_contacts(validated_data)
 
-        instance = super(TenantCreateSerializer, self).update(instance, validated_data)
+        instance = super(TenantUpdateSerializer, self).update(instance, validated_data)
 
         instance = self._update_countries(instance, countries)
         instance.save()

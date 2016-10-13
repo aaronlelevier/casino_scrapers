@@ -21,7 +21,7 @@ class TenantTests(TestCase):
         self.assertTrue(tenant.company_code)
         self.assertTrue(tenant.company_name)
         self.assertEqual(tenant.dashboard_text, "Welcome")
-        self.assertIsNone(tenant.dt_start)
+        self.assertIsNone(tenant.dtd_start)
         self.assertEqual(tenant.default_currency, usd)
         self.assertFalse(tenant.test_mode)
 

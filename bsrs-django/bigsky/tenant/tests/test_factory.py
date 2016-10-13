@@ -5,6 +5,7 @@ from contact.models import (
     Email, EmailType, Address, AddressType, PhoneNumber, PhoneNumberType, State, Country)
 from dtd.models import TreeData, DTD_START_KEY
 from dtd.tests.factory import create_tree_data
+from person.models import Person
 from person.tests.factory import create_single_person
 from tenant.models import Tenant
 from tenant.tests import factory
@@ -19,7 +20,7 @@ class TenantTests(TestCase):
 
         self.assertTrue(ret.scid)
         self.assertIsInstance(ret, Tenant)
-        self.assertIsInstance(ret.dt_start, TreeData)
+        self.assertIsInstance(ret.dtd_start, TreeData)
         self.assertEqual(ret.company_name, settings.DEFAULT_TENANT_COMPANY_NAME)
         self.assertTrue(ret.company_code)
         self.assertEqual(ret.countries.count(), 1)
@@ -40,6 +41,8 @@ class TenantTests(TestCase):
         self.assertIsInstance(ret.billing_address.country, Country)
         self.assertTrue(ret.billing_address.country.common_name)
         self.assertEqual(ret.countries.count(), 1)
+        self.assertFalse(ret.test_mode)
+        self.assertIsInstance(ret.dtd_start, TreeData)
 
     def test_id(self):
         ret = factory.get_or_create_tenant()

@@ -38,7 +38,7 @@ def get_or_create_tenant(company_name=settings.DEFAULT_TENANT_COMPANY_NAME, **kw
 
         tenant.countries.add(create_contact_country())
     finally:
-        kwargs.update({'dt_start': TreeData.objects.get_start()})
+        kwargs.update({'dtd_start': TreeData.objects.get_start()})
         tenant, _ = Tenant.objects.update_or_create(id=tenant.id, defaults=kwargs)
 
     return tenant

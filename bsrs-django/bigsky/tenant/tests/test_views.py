@@ -17,7 +17,7 @@ from dtd.models import TreeData, DTD_START_KEY
 from person.tests.factory import PASSWORD, create_single_person
 from tenant.oauth import BsOAuthSession, DEV_SC_SUBSCRIBER_POST_URL
 from tenant.models import Tenant
-from tenant.serializers import TenantCreateSerializer
+from tenant.serializers import TenantCreateSerializer, TenantUpdateSerializer
 
 
 class TenantSetUpMixin(object):
@@ -98,6 +98,13 @@ class TenantDetailTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['countries'][0]['id'], str(self.tenant.countries.first().id))
         self.assertEqual(data['countries'][0]['name'], self.tenant.countries.first().common_name)
 
+        self.assertFalse(data['test_mode'])
+        self.assertEqual(data['implementation_contact']['id'], str(self.tenant.implementation_contact.id))
+        self.assertEqual(data['implementation_contact']['fullname'], self.tenant.implementation_contact.fullname)
+        self.assertEqual(data['dtd_start']['id'], str(self.tenant.dtd_start.id))
+        self.assertEqual(data['dtd_start']['key'], self.tenant.dtd_start.key)
+        self.assertEqual(data['dtd_start']['description'], self.tenant.dtd_start.description)
+
 
 class TenantCreateTests(TenantSetUpMixin, APITestCase):
 
@@ -111,11 +118,13 @@ class TenantCreateTests(TenantSetUpMixin, APITestCase):
     def test_data(self):
         new_id = str(uuid.uuid4())
         new_company_code = 'foo'
+        new_company_name = 'bar'
         serializer = TenantCreateSerializer(self.tenant)
         init_data = serializer.data
         init_data.update({
             'id': new_id,
-            'company_code': new_company_code
+            'company_code': new_company_code,
+            'company_name': new_company_name
         })
         self.assertTrue(init_data['implementation_email'])
         self.assertTrue(init_data['billing_email'])
@@ -128,7 +137,7 @@ class TenantCreateTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(data['id'], new_id)
         self.assertEqual(data['company_code'], new_company_code)
-        self.assertEqual(data['company_name'], self.tenant.company_name)
+        self.assertEqual(data['company_name'], new_company_name)
         self.assertEqual(data['dashboard_text'], self.tenant.dashboard_text)
         self.assertEqual(data['default_currency'], str(self.tenant.default_currency.id))
         # countries
@@ -159,6 +168,7 @@ class TenantCreateTests(TenantSetUpMixin, APITestCase):
     def test_create_nested_contacts(self):
         new_id = str(uuid.uuid4())
         new_company_code = 'foo'
+        new_company_name = 'bar'
         serializer = TenantCreateSerializer(self.tenant)
         # contacts
         implementation_email = EmailSerializer(mommy.make(Email)).data
@@ -175,6 +185,7 @@ class TenantCreateTests(TenantSetUpMixin, APITestCase):
         init_data.update({
             'id': new_id,
             'company_code': new_company_code,
+            'company_name': new_company_name,
             'implementation_email': implementation_email,
             'billing_email': billing_email,
             'billing_address': billing_address,
@@ -197,11 +208,13 @@ class TenantCreateEmailAndRemoteCallsTests(TenantSetUpMixin, APITestCase):
         super(TenantCreateEmailAndRemoteCallsTests, self).setUp()
         new_id = str(uuid.uuid4())
         new_company_code = 'foo'
+        new_company_name = 'bar'
         serializer = TenantCreateSerializer(self.tenant)
         self.init_data = serializer.data
         self.init_data.update({
             'id': new_id,
             'company_code': new_company_code,
+            'company_name': new_company_name
         })
 
     @patch("tenant.serializers.BsOAuthSession.post")
@@ -266,7 +279,7 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
     def test_data(self):
         dtd = mommy.make(TreeData)
         currency = mommy.make(Currency, code='FOO')
-        serializer = TenantCreateSerializer(self.tenant)
+        serializer = TenantUpdateSerializer(self.tenant)
         country = mommy.make(Country, common_name='foo')
         updated_data = serializer.data
         updated_data.update({
@@ -311,9 +324,13 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['billing_address']['country'], str(self.tenant.billing_address.country.id))
         self.assertEqual(data['billing_address']['postal_code'], self.tenant.billing_address.postal_code)
 
+        self.assertFalse(data['test_mode'])
+        self.assertEqual(data['implementation_contact'], str(self.tenant.implementation_contact.id))
+        self.assertEqual(data['dtd_start'], str(self.tenant.dtd_start.id))
+
     def test_update_related_models(self):
         dtd = mommy.make(TreeData)
-        serializer = TenantCreateSerializer(self.tenant)
+        serializer = TenantUpdateSerializer(self.tenant)
         country = mommy.make(Country, common_name='foo')
         # contacts
         implementation_email = mommy.make(Email, _fill_optional=['type'])
@@ -371,7 +388,7 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
         billing_phone_number = mommy.make(PhoneNumber, _fill_optional=['type'])
         billing_address = create_address()
         # data
-        serializer = TenantCreateSerializer(self.tenant)
+        serializer = TenantUpdateSerializer(self.tenant)
         updated_data = serializer.data
         updated_data.update({
             'implementation_email': {
@@ -416,7 +433,7 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['billing_address'], updated_data['billing_address'])
 
     def test_remove_related_models(self):
-        serializer = TenantCreateSerializer(self.tenant)
+        serializer = TenantUpdateSerializer(self.tenant)
         updated_data = serializer.data
         updated_data.update({
             'countries': []
