@@ -105,6 +105,19 @@ class TenantDetailTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['dtd_start']['key'], self.tenant.dtd_start.key)
         self.assertEqual(data['dtd_start']['description'], self.tenant.dtd_start.description)
 
+    def test_optional_values(self):
+        self.tenant.implementation_contact = None
+        self.tenant.dtd_start = None
+        self.tenant.save()
+
+        response = self.client.get('/api/admin/tenants/{}/'.format(self.tenant.id))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['id'], str(self.tenant.id))
+        self.assertIsNone(data['implementation_contact'])
+        self.assertIsNone(data['dtd_start'])
+
 
 class TenantCreateTests(TenantSetUpMixin, APITestCase):
 

@@ -34,9 +34,9 @@ export default Ember.Object.extend(OptConf, ContactDeserializerMixin, {
     response.billing_phone_number_fk = response.billing_phone_number.id;
     response.billing_email_fk = response.billing_email.id;
     response.implementation_email_fk = response.implementation_email.id;
-    response.implementation_contact_fk = response.implementation_contact.id;
+    response.implementation_contact_fk = response.implementation_contact ? response.implementation_contact.id : undefined;
     response.billing_address_fk = response.billing_address.id;
-    response.dtd_start_fk = response.dtd_start.id;
+    response.dtd_start_fk = response.dtd_start ? response.dtd_start.id : undefined;
     const currency = response.default_currency;
     const billing_phone_number = response.billing_phone_number;
     const billing_email = response.billing_email;

@@ -611,9 +611,8 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
     #     # This is failing because a Grid View page # allows you to go to that page,
     #     # but there are no records on that page
     #     # person_page.assert_name_not_in_list(username, new_person=None)
-    def test_tenant(self):
-        ### CREATE
-        # Go to Person Area
+
+    def test_tenant_update(self):
         tenant_link = self.nav_page.find_tenant_link()
         tenant_link.click()
         # Create Person Page Object
@@ -623,7 +622,44 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
             list_name = "t-tenant-company_name",
             list_data = "t-grid-data"
         )
-        # Go to Create Person view
+        self.wait_for_xhr_request('t-grid-data').click()
+
+        self.wait_for_xhr_request('t-tenant-company_name')
+
+        implementation_contact_dropdown = self.driver.find_element_by_class_name('t-tenant-implementation_contact-select')
+        implementation_contact_dropdown.click()
+        implementation_contact_input = self.wait_for_xhr_request("ember-power-select-trigger-multiple-input")
+        implementation_contact_input.send_keys('a')
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
+
+        dtd_start_dropdown = self.driver.find_element_by_class_name('t-tenant-dtd_start-select')
+        dtd_start_dropdown.click()
+        dtd_start_input = self.wait_for_xhr_request("ember-power-select-trigger-multiple-input")
+        dtd_start_input.send_keys('a')
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
+
+        # save
+        self.gen_elem_page.click_save_btn()
+        time.sleep(5)
+        # redirected to list
+        tenant_page.find_list_data()
+
+    def test_tenant(self):
+        tenant_link = self.nav_page.find_tenant_link()
+        tenant_link.click()
+        # Create Person Page Object
+        tenant_page = ModelContactPage(
+            driver = self.driver,
+            new_link = "t-add-new",
+            list_name = "t-tenant-company_name",
+            list_data = "t-grid-data"
+        )
+
+        ### CREATE
         tenant_page.find_new_link().click()
 
         # fill in all fields
@@ -724,8 +760,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         billing_phone = self.driver.find_element_by_class_name("t-phonenumber-number")
         billing_phone.send_keys("649-975-8223")
 
-        # import pdb;pdb.set_trace()
-
         # save
         self.gen_elem_page.click_save_btn()
         time.sleep(5)
@@ -738,6 +772,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # ensure scid is present
         scid = self.driver.find_element_by_css_selector('[data-test-id="tenant-scid"]')
         assert len(scid.get_attribute("value")) == 10
+
 
 if __name__ == "__main__":
     unittest.main()

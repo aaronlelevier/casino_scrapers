@@ -92,6 +92,18 @@ test('deserialize single', assert => {
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
+test('deserialize single - handle option foreign keys to implementation_contact and dtd_start', assert => {
+  let json = TF.detail();
+  json.implementation_contact = null;
+  json.dtd_start = null;
+  run(() => {
+    deserializer.deserialize(json, TD.idOne);
+  });
+  assert.equal(tenant.get('id'), TD.idOne);
+  assert.notOk(tenant.get('implementation_contact'));
+  assert.notOk(tenant.get('dtd_start'));
+});
+
 /* Countries */
 
 test('existing tenant w/ country, and server returns no country - want no country b/c that is the most recent', assert => {
