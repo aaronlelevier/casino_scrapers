@@ -21,7 +21,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 
 var store, model, trans;
 
-moduleForComponent('tenant-single', 'amk integration: tenant-single test', {
+moduleForComponent('tenant-single', 'integration: tenant-single test', {
   integration: true,
   setup() {
     page.setContext(this);
