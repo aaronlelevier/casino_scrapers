@@ -60,6 +60,7 @@ select.form-control{
 .btn:focus,
 .btn:active {
   outline: none !important;
+  border-color: $activeColor;
 }
 
 

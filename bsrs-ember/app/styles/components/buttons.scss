@@ -1,18 +1,20 @@
-.btn-delete	{
-	&:hover{
-		color: $deleteColor !important;
-	}
-}
 .btn-add,
-.btn-add:hover,
-.btn-add:focus {
+.btn-add:hover {
 	background-color: $lightGray;
 	border-color: $gray;
 	color: $darkGray;
-	&:active{
-		background-color: $gray;
-		border-color: $gray;
+	&:active,
+	&:focus{
+		background-color: $lightGray;
+		border-color: $activeColor;
 		color: $dark;
+	}
+}
+.btn-delete	{
+	&:active,
+	&:focus,
+	&:hover{
+		color: $deleteColor !important;
 	}
 }
 .btn-file {
