@@ -25,13 +25,17 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     belongs_to.bind(this)('priority', 'automation-action');
     belongs_to.bind(this)('status', 'automation-action');
     belongs_to.bind(this)('sendemail', 'automation-action');
+    belongs_to.bind(this)('sendsms', 'automation-action');
   },
   simpleStore: Ember.inject.service(),
   sendemailIsDirtyContainer: Ember.computed('sendemailIsDirty', 'sendemail.isDirtyOrRelatedDirty', function() {
     return this.get('sendemailIsDirty') || this.get('sendemail.isDirtyOrRelatedDirty');
   }),
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'typeIsDirty', 'priorityIsDirty', 'statusIsDirty', 'sendemailIsDirtyContainer', function() {
-    return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('typeIsDirty') || this.get('priorityIsDirty') || this.get('statusIsDirty') || this.get('sendemailIsDirtyContainer');
+  sendsmsIsDirtyContainer: Ember.computed('sendsmsIsDirty', 'sendsms.isDirtyOrRelatedDirty', function() {
+    return this.get('sendsmsIsDirty') || this.get('sendsms.isDirtyOrRelatedDirty');
+  }),
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'typeIsDirty', 'priorityIsDirty', 'statusIsDirty', 'sendemailIsDirtyContainer', 'sendsmsIsDirtyContainer', function() {
+    return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('typeIsDirty') || this.get('priorityIsDirty') || this.get('statusIsDirty') || this.get('sendemailIsDirtyContainer') || this.get('sendsmsIsDirtyContainer');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   rollback() {
@@ -40,6 +44,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     this.rollbackPriority();
     this.rollbackStatus();
     this.rollbackSendemail();
+    this.rollbackSendsms();
     this._super(...arguments);
   },
   saveRelated() {
@@ -49,6 +54,8 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     this.saveStatus();
     this.saveRelatedBelongsTo('sendemail');
     this.saveSendemail();
+    this.saveRelatedBelongsTo('sendsms');
+    this.saveSendsms();
   },
   serialize() {
     let content;
