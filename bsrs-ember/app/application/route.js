@@ -199,7 +199,7 @@ var ApplicationRoute = Route.extend({
            this.send('closeTabMaster', tab, {action:'closeTab'});
         } else if (update && updateActivities) {
           //TICKET sends update in args
-          return activityRepository.find('ticket', 'tickets', pk);
+          return activityRepository.find('ticket', 'tickets', pk, model);
         }
       }, (xhr) => {
         if(xhr.status === 400) {

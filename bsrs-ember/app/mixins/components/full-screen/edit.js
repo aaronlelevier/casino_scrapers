@@ -11,8 +11,9 @@ export default Ember.Mixin.create({
       // const action = persisted === true ? 'insert' : 'update';
       return repository['update'](model).then(() => {
         if (update) {
-          const pk = this.get('model').get('id');
-          return this.get('activityRepository').find('ticket', 'tickets', pk);
+          const model = this.get('model');
+          const pk = model.get('id');
+          return this.get('activityRepository').find('ticket', 'tickets', pk, model);
         } else {
           const redirectRoute = this.get('redirectRoute');
           this.sendAction('close', model, redirectRoute);
