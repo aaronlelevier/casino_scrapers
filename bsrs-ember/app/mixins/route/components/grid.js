@@ -64,8 +64,10 @@ var GridViewRoute = Ember.Route.extend({
     set_filter_model_attrs(this.filterModel, query.find);
     let model;
     if (this.get('device').get('isMobile')) {
+      this.controllerFor(routeName).set('infinityIsLoading', true);
       return new Ember.RSVP.Promise((resolve, reject) => {
         return repository.findWithQueryMobile(query.page, query.search, query.find, query.id_in, special_url).then((model) => {
+          this.controllerFor(routeName).set('infinityIsLoading', false);
           resolve({ count, model, requested, filtersets, routeName, search, repository });
         });
       });

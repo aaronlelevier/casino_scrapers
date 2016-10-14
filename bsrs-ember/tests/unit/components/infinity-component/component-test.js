@@ -46,3 +46,25 @@ test('_canLoadMore returns true if no count (initialLoad)', function(assert) {
   const bool = component._canLoadMore();
   assert.equal(bool, true);
 });
+
+test('infinityIsLoading prevents incrementing page', function(assert) {
+  const component = this.subject();
+  component.set('page', 10);
+  component._canLoadMore = () => true;
+  component._shouldLoadMore = () => true;
+  component.infinityIsLoading = false;
+  component._loadMoreIfNeeded();
+  assert.equal(component.get('page'), 11);
+
+  component._canLoadMore = () => true;
+  component._shouldLoadMore = () => true;
+  component.infinityIsLoading = false;
+  component._loadMoreIfNeeded();
+  assert.equal(component.get('page'), 12);
+
+  component._canLoadMore = () => true;
+  component._shouldLoadMore = () => true;
+  component.infinityIsLoading = true;
+  component._loadMoreIfNeeded();
+  assert.equal(component.get('page'), 12);
+});

@@ -9,6 +9,7 @@ var GridViewController = Ember.Controller.extend({
   find: undefined,
   search: undefined,
   id_in: undefined,
+  infinityIsLoading: false,
   repositoryFilterset: inject('filterset'),
   queryParams: ['page', 'sort', 'search', 'find', 'id_in'],
   hasActiveFilterSet: Ember.computed('filtersets.[]', 'sort', 'find', 'search', function() {

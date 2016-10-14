@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { get, set } = Ember;
 import config from 'bsrs-ember/config/environment';
 
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -20,7 +21,7 @@ export default Ember.Component.extend({
   willDestroyElement() {
     this._super(...arguments);
     this._unbindEvent();
-    this.get('simpleStore').clear(`${this.get('noun')}-list`);
+    this.get('simpleStore').clear(`${get(this, 'noun')}-list`);
   },
   /* sets scrollable container that has css overflow:scroll */
   _setupScrollableContainer() {
@@ -36,7 +37,7 @@ export default Ember.Component.extend({
     this.get('_scrollable').off('scroll');
   },
   /* @method _selfOffsetFromTop
-  * distance from position of component to top
+  * distance from position of component to top.  Component exists near bottom of page
   * increases as grid items fill in and add to grid
   * position: returns object {top: px, left: px} relative to next offset parent (that has a position)
   * offset: returns object {top: px, left: px} relative to document
@@ -44,17 +45,19 @@ export default Ember.Component.extend({
   _selfOffsetFromTop() {
     return this.$().position().top;
   },
-  /* add the section.main height && distance from top */
-  /* scrollTop is # of pixels content of an element is scrolled upwards */
+  /* add the section.mobile-main height && distance from top */
+  /* scrollTop is # of pixels content of an element is scrolled upwards.  I.e. from top of element to visible part of screen */
   _bottomOfScrollableOffset() {
     // 507 + increasing number
     return this.get('_scrollable').height() + this.get('_scrollable').scrollTop();
   },
+  /* @method _triggerOffset
+   */
   _triggerOffset() {
     return this._selfOffsetFromTop() - this.get('triggerOffset');
   },
   /* @method _shouldLoadMore
-  * shouldLoadMore when the scrollable container is scrolled the same amount of pixels that is greater than the (static) distance of this component form the top
+  * shouldLoadMore when the scrollable container is scrolled the same amount of pixels that is greater than the (static) distance of this component from the top
   */
   _shouldLoadMore() {
     return this._bottomOfScrollableOffset() > this._triggerOffset();
@@ -69,14 +72,15 @@ export default Ember.Component.extend({
   },
   /* @method _loadMoreIfNeeded
   * increment page (start at 1) after reach infinity-component
+  * infinityIsLoading - set in grid route mixin and turned off when response returns.  Prevents eagerly incrementing 'page' before the response comes back
   */
   _loadMoreIfNeeded() {
-    const canLoadMore = this._canLoadMore();
-    if (this._shouldLoadMore() && canLoadMore && !this.get('reachedInfinity')) {
+    // const canLoadMore = this._canLoadMore();
+    if (this._shouldLoadMore() && this._canLoadMore() && !get(this, 'infinityIsLoading') && !get(this, 'reachedInfinity')) {
       const page = this.get('page');
-      this.set('page', page + 1);
-    } else if (!canLoadMore) {
-      this.set('reachedInfinity', true);
+      set(this, 'page', page + 1);
+    } else if (!this._canLoadMore()) {
+      set(this, 'reachedInfinity', true);
     }
   },
 });
