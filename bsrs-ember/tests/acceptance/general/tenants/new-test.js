@@ -49,6 +49,10 @@ test('visit new URL and create a new record', assert => {
     assert.equal(currentURL(), NEW_URL);
     //title
     assert.equal(page.headerTitleText, t('tenant.new'));
+    assert.equal(page.emailTypeOne, ETD.workName);
+    assert.equal(page.emailTypeTwo, ETD.workName);
+    assert.equal(page.phoneTypeOne, PTD.officeNameValue);
+    assert.equal(page.addressTypeOne, ATD.officeNameText);
   });
   // company_name
   page.companyNameFill(TD.companyNameOne);

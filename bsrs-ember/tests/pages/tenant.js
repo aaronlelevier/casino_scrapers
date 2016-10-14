@@ -61,4 +61,8 @@ export default create({
 
   dtdStart: text('.t-tenant-dtd_start-select'),
 
+  emailTypeOne: text('.t-email-type-select:eq(0)'),
+  emailTypeTwo: text('.t-email-type-select:eq(1)'),
+  phoneTypeOne: text('.t-phone-number-type-select:eq(0)'),
+  addressTypeOne: text('.t-address-type-select:eq(0)'),
 });
