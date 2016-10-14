@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/store';
 
 let CurrencyService = Ember.Service.extend({
   simpleStore: Ember.inject.service(),

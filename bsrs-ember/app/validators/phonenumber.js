@@ -55,7 +55,7 @@ const Phonenumber = BaseValidator.extend({
    * @param {string} attribute - field on ticket model
    * want to prevent user from saving a ticket if the status is draft or new, let them save the form
   */
-  validate(value, options, model, attribute) {
+  validate(value, options, model) {
     return true;
     // return value.reduce((prev, phonenumber) => {
     //   return !phoneIsAllowedRegion(phonenumber.get('number')) ? 'admin.person.label.phone_number_region' : !phoneIsValidFormat(phonenumber.get('number')) ? 'admin.person.label.phone_number.one' : prev ? prev : true;

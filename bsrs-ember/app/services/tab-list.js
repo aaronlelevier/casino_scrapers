@@ -1,6 +1,5 @@
 import Ember from 'ember';
 const { run } = Ember;
-import inject from 'bsrs-ember/utilities/store';
 
 export default Ember.Service.extend({
   simpleStore: Ember.inject.service(),
@@ -12,13 +11,13 @@ export default Ember.Service.extend({
    * @param {string} action 
    */
   redirectRoute(tab, action, confirmed, transitionFunc) {
-    const prev = this.get('previousLocation');
+    this.get('previousLocation');
     // if (prev && !prev.split('.')[0].includes(tab.get('module'))) {
     //   return transitionFunc(prev);
     // }
     const redirectRoute = tab.get('redirectRoute');
     const closeTabRedirect = tab.get('closeTabRedirect');
-    const deleteRedirect = tab.get('deleteRedirect');
+    // const deleteRedirect = tab.get('deleteRedirect');
     const tabType = tab.get('tabType');
     /* Need to fix this */
     if (action === 'closeTab') {
@@ -90,7 +89,6 @@ export default Ember.Service.extend({
    */
   rollbackAll(tab) {
     const models = this.get('simpleStore').find(tab.get('moduleList'));
-    const arr = [];
     models.forEach((listModel) => {
       if (listModel.get('model.id')) {
         listModel.get('model').rollback();

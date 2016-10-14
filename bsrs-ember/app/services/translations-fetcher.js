@@ -5,7 +5,6 @@ import config from 'bsrs-ember/config/environment';
 const { Service, inject } = Ember;
 
 const PREFIX = config.APP.NAMESPACE;
-const LOCALE = config.i18n.currentLocale;
 const PATH = PREFIX + '/translations/?locale=';
 
 export default Service.extend({

@@ -1,4 +1,3 @@
-import Ember from 'ember';
 // @public
 //
 // Generate a 'missing template' message that will be used

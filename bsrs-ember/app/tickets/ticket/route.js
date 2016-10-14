@@ -2,11 +2,6 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import TabRoute from 'bsrs-ember/route/tab/route';
 import FindById from 'bsrs-ember/mixins/route/findById';
-import PriorityMixin from 'bsrs-ember/mixins/route/priority';
-import StatusMixin from 'bsrs-ember/mixins/route/status';
-//start-non-standard
-import computed from 'ember-computed-decorators';
-//end-non-standard
 
 var TicketSingleRoute = TabRoute.extend(FindById, {
   activityRepository: inject('activity'),
@@ -22,7 +17,7 @@ var TicketSingleRoute = TabRoute.extend(FindById, {
   redirectRoute: 'tickets.index',
   module: 'ticket',
   templateModelField: 'categories',
-  model(params, transition) {
+  model(params) {
     const pk = params.ticket_id;
     const repository = this.get('repository');
     let ticket = repository.fetch(pk);
