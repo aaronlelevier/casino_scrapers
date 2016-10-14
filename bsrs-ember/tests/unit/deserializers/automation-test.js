@@ -16,12 +16,13 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import PersonD from 'bsrs-ember/vendor/defaults/person';
 import TPD from 'bsrs-ember/vendor/defaults/ticket-priority';
 import TSD from 'bsrs-ember/vendor/defaults/ticket-status';
+import SED from 'bsrs-ember/vendor/defaults/sendemail';
 
 var store, automation, deserializer, pfilter, pfilter_unused;
 
 module('unit: automation deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:automation-event', 'model:automation-join-event', 'model:automation-list', 'model:person', 'model:automation-join-pfilter', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'model:ticket-priority', 'model:ticket-status', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:automation-event', 'model:automation-join-event', 'model:automation-list', 'model:person', 'model:automation-join-pfilter', 'model:pfilter', 'model:sendemail', 'model:criteria', 'model:pfilter-join-criteria', 'model:ticket-priority', 'model:ticket-status', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     deserializer = automationDeserializer.create({ simpleStore: store });
     run(() => {
       automation = store.push('automation', { id: AD.idOne });
@@ -58,37 +59,60 @@ test('deserialize single', assert => {
 });
 
 test('deserialize single - priority', assert => {
-  const json = AF.detailPriority();
+  const json = AF.detail();
+  json.actions[0].priority = { id: TPD.idOne, name: TPD.keyOne };
   run(() => {
     deserializer.deserialize(json, AD.idOne);
   });
   assert.equal(automation.get('id'), AD.idOne);
   // actions
   assert.equal(automation.get('action').get('length'), 1);
-  assert.equal(automation.get('action').objectAt(0).get('id'), AAD.idTwo);
+  assert.equal(automation.get('action').objectAt(0).get('id'), AAD.idOne);
   // action-type
-  assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idTwo);
-  assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keyTwo);
+  assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keyOne);
   // priority
   assert.equal(automation.get('action').objectAt(0).get('priority.id'), TPD.idOne);
   assert.equal(automation.get('action').objectAt(0).get('priority.name'), TPD.keyOne);
 });
 
 test('deserialize single - status', assert => {
-  const json = AF.detailStatus();
+  const json = AF.detail();
+  json.actions[0].status = { id: TSD.idOne, name: TSD.keyOne };
   run(() => {
     deserializer.deserialize(json, AD.idOne);
   });
   assert.equal(automation.get('id'), AD.idOne);
   // actions
   assert.equal(automation.get('action').get('length'), 1);
-  assert.equal(automation.get('action').objectAt(0).get('id'), AAD.idThree);
+  assert.equal(automation.get('action').objectAt(0).get('id'), AAD.idOne);
   // action-type
-  assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idThree);
-  assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keyThree);
-  // priority
+  assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keyOne);
+  // status
   assert.equal(automation.get('action').objectAt(0).get('status.id'), TSD.idOne);
   assert.equal(automation.get('action').objectAt(0).get('status.name'), TSD.keyOne);
+  const status = store.find('ticket-status', TSD.idOne);
+  assert.deepEqual(status.get('actions'), [AAD.idOne]);
+});
+
+test('deserialize single - sendemail', assert => {
+  const json = AF.detail();
+  json.actions[0].sendemail = { id: SED.idOne, subject: SED.subjectOne };
+  run(() => {
+    deserializer.deserialize(json, AD.idOne);
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  // actions
+  assert.equal(automation.get('action').get('length'), 1);
+  assert.equal(automation.get('action').objectAt(0).get('id'), AAD.idOne);
+  // action-type
+  assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keyOne);
+  // sendemail
+  assert.equal(automation.get('action').objectAt(0).get('sendemail_fk'), SED.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('sendemail').get('id'), SED.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('sendemail').get('name'), SED.keyOne);
 });
 
 test('deserialize single - action has no assignee', assert => {

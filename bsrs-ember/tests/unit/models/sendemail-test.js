@@ -20,18 +20,24 @@ moduleFor('model:sendemail', 'Unit | Model | sendEmail', {
 
 test('dirty test | subject', assert => {
   assert.equal(sendEmail.get('isDirty'), false);
+  assert.equal(sendEmail.get('isDirtyOrRelatedDirty'), false);
   sendEmail.set('subject', 'wat');
   assert.equal(sendEmail.get('isDirty'), true);
+  assert.equal(sendEmail.get('isDirtyOrRelatedDirty'), true);
   sendEmail.set('subject', '');
   assert.equal(sendEmail.get('isDirty'), false);
+  assert.equal(sendEmail.get('isDirtyOrRelatedDirty'), false);
 });
 
 test('dirty test | body', assert => {
   assert.equal(sendEmail.get('isDirty'), false);
+  assert.equal(sendEmail.get('isDirtyOrRelatedDirty'), false);
   sendEmail.set('body', 'wat');
   assert.equal(sendEmail.get('isDirty'), true);
+  assert.equal(sendEmail.get('isDirtyOrRelatedDirty'), true);
   sendEmail.set('body', '');
   assert.equal(sendEmail.get('isDirty'), false);
+  assert.equal(sendEmail.get('isDirtyOrRelatedDirty'), false);
 });
 
 /* sendEmail & recipients: Start */
@@ -89,11 +95,22 @@ test('add_recipient - will create join model and mark model dirty', (assert) => 
   assert.equal(sendEmail.get('recipient').objectAt(1).get('id'), PD.idTwo);
 });
 
+test('rollback - primitive', assert => {
+  assert.equal(sendEmail.get('subject'), undefined);
+  assert.equal(sendEmail.get('isDirty'), false);
+  assert.equal(sendEmail.get('isDirtyOrRelatedDirty'), false);
+  sendEmail.set('subject', 'wat');
+  assert.equal(sendEmail.get('isDirty'), true);
+  assert.equal(sendEmail.get('isDirtyOrRelatedDirty'), true);
+  sendEmail.rollback();
+  assert.equal(sendEmail.get('subject'), undefined);
+  assert.equal(sendEmail.get('isDirty'), false);
+  assert.equal(sendEmail.get('isDirtyOrRelatedDirty'), false);
+});
+
 test('rollback - recipient', assert => {
-  run(() => {
-    sendEmail = store.push('sendemail', {id: SED.idOne});
-  });
   assert.equal(sendEmail.get('recipient').get('length'), 0);
+  assert.ok(sendEmail.get('isNotDirtyOrRelatedNotDirty'));
   sendEmail.add_recipient({id: PD.idOne});
   assert.equal(sendEmail.get('recipient').get('length'), 1);
   assert.ok(sendEmail.get('isDirtyOrRelatedDirty'));
@@ -104,6 +121,7 @@ test('rollback - recipient', assert => {
 
 test('saveRelated - saveRelated should persist the changed recipient and model should be clean', (assert) => {
   assert.equal(sendEmail.get('recipient').get('length'), 0);
+  assert.ok(sendEmail.get('isNotDirtyOrRelatedNotDirty'));
   sendEmail.add_recipient({id: PD.idOne});
   assert.equal(sendEmail.get('recipient').get('length'), 1);
   assert.ok(sendEmail.get('recipientIsDirty'));

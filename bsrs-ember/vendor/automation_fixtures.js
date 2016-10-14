@@ -69,36 +69,6 @@ var BSRS_automation_FACTORY = (function() {
   factory.prototype.detail = function(id) {
     return this.generate(id);
   };
-  factory.prototype.detailPriority = function(id) {
-    let automation = this.detail(id);
-    automation.actions = [{
-      id: this.action.idTwo,
-      type: {
-        id: this.actionType.idTwo,
-        key: this.actionType.keyTwo
-      },
-      priority: {
-        id: this.priority.idOne,
-        name: this.priority.keyOne
-      }
-    }];
-    return automation;
-  };
-  factory.prototype.detailStatus = function(id) {
-    let automation = this.detail(id);
-    automation.actions = [{
-      id: this.action.idThree,
-      type: {
-        id: this.actionType.idThree,
-        key: this.actionType.keyThree
-      },
-      status: {
-        id: this.status.idOne,
-        name: this.status.keyOne
-      }
-    }];
-    return automation;
-  };
   factory.prototype.put = function(automation) {
     var id = automation && automation.id || this.automation.idOne;
     var response = this.generate_put(id);

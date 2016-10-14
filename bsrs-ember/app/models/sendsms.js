@@ -11,7 +11,7 @@ export default Model.extend(OptConf, {
   },
   simpleStore: Ember.inject.service(),
   message: attr(''),
-  isDirtyOrRelatedDirty: Ember.computed('recipientIsDirty', function() {
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'recipientIsDirty', function() {
     return this.get('isDirty') || this.get('recipientIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),

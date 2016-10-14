@@ -164,7 +164,10 @@ test('visit detail and update an actions assignee', assert => {
 
 test('get an action priority and update it to a new priority', assert => {
   clearxhr(detailXhr);
-  xhr(API_DETAIL_URL, 'GET', null, {}, 200, AF.detailPriority());
+  const json = AF.detail();
+  json.actions[0]['type'] = { id: AATD.idTwo, key: AATD.keyTwo };
+  json.actions[0]['priority'] = { id: TPD.idOne, name: TPD.keyOne };
+  xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -179,7 +182,7 @@ test('get an action priority and update it to a new priority', assert => {
   });
   let payload = AF.put({
     actions: [{
-      id: AAD.idTwo,
+      id: AAD.idOne,
       type: AATD.idTwo,
       content: {
         priority: TPD.idTwo,
@@ -195,7 +198,10 @@ test('get an action priority and update it to a new priority', assert => {
 
 test('get an action status and update it to a new status', assert => {
   clearxhr(detailXhr);
-  xhr(API_DETAIL_URL, 'GET', null, {}, 200, AF.detailStatus());
+  const json = AF.detail();
+  json.actions[0]['type'] = { id: AATD.idThree, key: AATD.keyThree };
+  json.actions[0]['status'] = { id: TSD.idOne, name: TSD.keyOne };
+  xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -208,7 +214,7 @@ test('get an action status and update it to a new status', assert => {
   });
   let payload = AF.put({
     actions: [{
-      id: AAD.idThree,
+      id: AAD.idOne,
       type: AATD.idThree,
       content: {
         status: TSD.idTwo,

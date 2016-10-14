@@ -6,12 +6,14 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/automation';
 export default Ember.Object.extend(OptConf, {
   init() {
     this._super(...arguments);
+    // relationship bindings give us a method called setup_.....
     many_to_many.bind(this)('event', 'automation');
     many_to_many.bind(this)('action', 'automation');
     belongs_to.bind(this)('type');
     belongs_to.bind(this)('assignee');
     belongs_to.bind(this)('priority');
     belongs_to.bind(this)('status');
+    belongs_to.bind(this)('sendemail');
     many_to_many.bind(this)('pf', 'automation');
     many_to_many.bind(this)('criteria', 'pfilter');
   },
@@ -45,6 +47,7 @@ export default Ember.Object.extend(OptConf, {
     let assignees = {};
     let priorities = {};
     let statuses = {};
+    let sendemails = {};
     actions.forEach((a) => {
       // type
       const type = a.type;
@@ -72,9 +75,17 @@ export default Ember.Object.extend(OptConf, {
         statuses[a.id] = status;
         a.status_fk = status.id;
       }
+      //sendemail
+      if(a.sendemail){
+        const sendemail = a.sendemail;
+        delete a.sendemail;
+        sendemails[a.id] = sendemail;
+        a.sendemail_fk = sendemail.id;
+      }
       // must set as "detail" b/c this is a detail payload
       a.detail = true;
     });
+    // push in the actions in the store and those are returned
     const [,actionData,] = this.setup_action(actions, automation);
     actionData.forEach((ad) => {
       const action = store.find('automation-action', ad.id);
@@ -87,9 +98,12 @@ export default Ember.Object.extend(OptConf, {
       // priority
       let priority = priorities[ad.id];
       this.setup_priority(priority, action);
-      // status
+      // status - adds the action id to the array of 'actions' in the status model
       let status = statuses[ad.id];
       this.setup_status(status, action);
+      //sendemail
+      let sendemail = sendemails[ad.id];
+      this.setup_sendemail(sendemail, action);
     });
 
     const [,pfs,] = this.setup_pf(filters, automation);

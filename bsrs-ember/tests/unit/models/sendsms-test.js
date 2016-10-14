@@ -20,10 +20,13 @@ moduleFor('model:sendsms', 'Unit | Model | sendSms', {
 
 test('dirty test | message', assert => {
   assert.equal(sendSms.get('isDirty'), false);
+  assert.equal(sendSms.get('isDirtyOrRelatedDirty'), false);
   sendSms.set('message', 'wat');
   assert.equal(sendSms.get('isDirty'), true);
+  assert.equal(sendSms.get('isDirtyOrRelatedDirty'), true);
   sendSms.set('message', '');
   assert.equal(sendSms.get('isDirty'), false);
+  assert.equal(sendSms.get('isDirtyOrRelatedDirty'), false);
 });
 
 /* sendSms & recipients: Start */
@@ -39,6 +42,7 @@ test('recipient property should return all associated recipients, and also confi
   assert.deepEqual(sendSms.get('recipient_ids'), [PD.idOne]);
   assert.deepEqual(sendSms.get('sendsms_recipient_ids'), [SMSJRD.idOne]);
   assert.equal(recipient.objectAt(0).get('id'), PD.idOne);
+  assert.ok(sendSms.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('remove_recipient - will remove join model and mark model as dirty', (assert) => {
@@ -82,10 +86,8 @@ test('add_recipient - will create join model and mark model dirty', (assert) => 
 });
 
 test('rollback - recipient', assert => {
-  run(() => {
-    sendSms = store.push('sendsms', {id: SMSD.idOne});
-  });
   assert.equal(sendSms.get('recipient').get('length'), 0);
+  assert.ok(sendSms.get('isNotDirtyOrRelatedNotDirty'));
   sendSms.add_recipient({id: PD.idOne});
   assert.equal(sendSms.get('recipient').get('length'), 1);
   assert.ok(sendSms.get('isDirtyOrRelatedDirty'));
@@ -94,8 +96,22 @@ test('rollback - recipient', assert => {
   assert.ok(sendSms.get('isNotDirtyOrRelatedNotDirty'));
 });
 
+test('rollback - primitive', assert => {
+  assert.equal(sendSms.get('message'), undefined);
+  assert.equal(sendSms.get('isDirty'), false);
+  assert.equal(sendSms.get('isDirtyOrRelatedDirty'), false);
+  sendSms.set('message', 'wat');
+  assert.equal(sendSms.get('isDirty'), true);
+  assert.equal(sendSms.get('isDirtyOrRelatedDirty'), true);
+  sendSms.rollback();
+  assert.equal(sendSms.get('message'), undefined);
+  assert.equal(sendSms.get('isDirty'), false);
+  assert.equal(sendSms.get('isDirtyOrRelatedDirty'), false);
+});
+
 test('saveRelated - saveRelated should persist the changed recipient and model should be clean', (assert) => {
   assert.equal(sendSms.get('recipient').get('length'), 0);
+  assert.ok(sendSms.get('isNotDirtyOrRelatedNotDirty'));
   sendSms.add_recipient({id: PD.idOne});
   assert.equal(sendSms.get('recipient').get('length'), 1);
   assert.ok(sendSms.get('recipientIsDirty'));
