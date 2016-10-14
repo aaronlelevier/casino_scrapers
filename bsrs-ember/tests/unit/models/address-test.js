@@ -7,7 +7,7 @@ import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import CD from 'bsrs-ember/vendor/defaults/country';
 import SD from 'bsrs-ember/vendor/defaults/country';
 
-var store, address;
+var store, address, country, state, address_type;
 
 moduleFor('model:address', 'Unit | Model | address', {
   needs: ['validator:presence', 'validator:length', 'validator:address-street', 'validator:address-postal', 'validator:belongs-to'],
@@ -329,4 +329,3 @@ test('address validations', assert => {
   assert.equal(address.get('validations.attrs.country.isValid'), true);
 
 });
->>>>>>> 45ea9ce... [WIP] Contact validations.
