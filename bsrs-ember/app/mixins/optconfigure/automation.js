@@ -59,6 +59,10 @@ export default Ember.Mixin.create({
     sendemail: {
       collection: 'actions',
       property: 'sendemail',
+    },
+    sendsms: {
+      collection: 'actions',
+      property: 'sendsms',
     }
   }
 });

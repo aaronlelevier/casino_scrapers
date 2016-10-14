@@ -393,7 +393,7 @@ test('automation validations', assert => {
 test('confirm action is related and has join model attr values', (assert) => {
   let automationJoinAction, automationAction;
   run(() => {
-    automationJoinAction =  store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
+    automationJoinAction = store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
     automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AAD.idOne]});
     automationAction =  store.push('automation-action', {id: AAD.idOne});
   });

@@ -14,6 +14,7 @@ export default Ember.Object.extend(OptConf, {
     belongs_to.bind(this)('priority');
     belongs_to.bind(this)('status');
     belongs_to.bind(this)('sendemail');
+    belongs_to.bind(this)('sendsms');
     many_to_many.bind(this)('pf', 'automation');
     many_to_many.bind(this)('criteria', 'pfilter');
   },
@@ -48,6 +49,7 @@ export default Ember.Object.extend(OptConf, {
     let priorities = {};
     let statuses = {};
     let sendemails = {};
+    let sendsmss = {};
     actions.forEach((a) => {
       // type
       const type = a.type;
@@ -82,6 +84,13 @@ export default Ember.Object.extend(OptConf, {
         sendemails[a.id] = sendemail;
         a.sendemail_fk = sendemail.id;
       }
+      // sendsms
+      if(a.sendsms){
+        const sendsms = a.sendsms;
+        delete a.sendsms;
+        sendsmss[a.id] = sendsms;
+        a.sendsms_fk = sendsms.id;
+      }
       // must set as "detail" b/c this is a detail payload
       a.detail = true;
     });
@@ -104,6 +113,9 @@ export default Ember.Object.extend(OptConf, {
       //sendemail
       let sendemail = sendemails[ad.id];
       this.setup_sendemail(sendemail, action);
+      // sendsms
+      let sendsms = sendsmss[ad.id];
+      this.setup_sendsms(sendsms, action);
     });
 
     const [,pfs,] = this.setup_pf(filters, automation);
