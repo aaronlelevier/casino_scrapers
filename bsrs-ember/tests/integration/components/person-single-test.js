@@ -70,16 +70,14 @@ test('validation on person username works if clear out username', function(asser
     this.set('model', store.push('person', {id: PD.id, username: 'foo'}));
   });
   this.render(hbs`{{people/person-single model=model}}`);
-  let $component = this.$('.invalid');
-  assert.equal($component.text().trim(), '');
+  assert.equal(this.$component.text().trim(), '');
   page.usernameFillIn('wat');
   assert.equal(page.username, 'wat');
-  assert.notOk($component.is(':visible'));
+  assert.notOk(this.$component.is(':visible'));
   page.usernameFillIn('');
   Ember.run.later(() => {
-    const $component = this.$('.invalid');
-    assert.ok($component.is(':visible'));
-    assert.equal($component.text().trim(), trans.t('errors.person.username'));
+    assert.ok(this.$component.is(':visible'));
+    assert.equal(this.$component.text().trim(), trans.t('errors.person.username'));
     done();
   }, 300);
 });
@@ -100,16 +98,16 @@ test('clicking save will reveal all validation msgs', function(assert) {
     this.model = store.push('person', {id: PD.idOne});
   });
   this.render(hbs`{{people/person-single model=model}}`);
-  assert.equal($('.validated-input-error-dialog').length, 0);
-  assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
-  assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), '');
+  assert.equal(this.$('.validated-input-error-dialog').length, 0);
+  assert.equal(this.$('.validated-input-error-dialog:eq(0)').text().trim(), '');
+  assert.equal(this.$('.validated-input-error-dialog:eq(1)').text().trim(), '');
   assert.notOk(page.firstNameValidationErrorVisible);
   assert.notOk(page.lastNameValidationErrorVisible);
   const save_btn = this.$('.t-save-btn');
   save_btn.trigger('click').trigger('change');
-  assert.equal($('.validated-input-error-dialog').length, 2);
-  assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.person.first_name'));
-  assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.person.last_name'));
+  assert.equal(this.$('.validated-input-error-dialog').length, 2);
+  assert.equal(this.$('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.person.first_name'));
+  assert.equal(this.$('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.person.last_name'));
   assert.ok(page.firstNameValidationErrorVisible);
   assert.ok(page.lastNameValidationErrorVisible);
 });
@@ -118,7 +116,7 @@ test('header populates with username and role name', function(assert) {
   let model;
   run(() => {
     model = store.push('person', {id: PD.id, username: PD.username, role_fk: RD.idOne});
-    role = store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.id]});
+    store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.id]});
   });
   this.set('model', model);
   this.render(hbs`{{people/person-single model=model}}`);
