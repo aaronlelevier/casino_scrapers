@@ -1,13 +1,11 @@
 {{#ember-wormhole to="mobile-single-wormhole"}}
-    {{#mobile/full-screen
-      model=model
-      statuses=statuses
-      priorities=priorities
-      title=(concat (t "ticket.label.numberSymbol")model.number)
-      close="closeMobileDetail"
-      redirectRoute="tickets.index"
-      hashComponents=hashComponents
-      repository=repository
-    }}
-    {{/mobile/full-screen}}
+  {{#mobile/full-screen
+    model=model
+    title=(concat (t "ticket.label.numberSymbol")model.number)
+    close="closeMobileDetail"
+    redirectRoute="tickets.index"
+    hashComponents=hashComponents
+    repository=repository
+  }}
+  {{/mobile/full-screen}}
 {{/ember-wormhole}}
