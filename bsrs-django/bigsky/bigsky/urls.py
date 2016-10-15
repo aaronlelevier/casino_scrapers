@@ -126,6 +126,7 @@ urlpatterns = [
 urlpatterns += [
     url(r'^404/$', bigsky_views.handler404, name='404'),
     url(r'^500/$', bigsky_views.handler500, name='500'),
+    url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 ]
 
 # Media - serve via Django locally

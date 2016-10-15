@@ -1,12 +1,17 @@
 import copy
 import json
 from mock import patch
+import requests
 
+from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 from oauthlib.oauth2 import LegacyApplicationClient, TokenExpiredError
+from oauth2_provider.models import Application
+from pretend import stub
 from requests_oauthlib import OAuth2Session
 
+from person.tests.factory import create_single_person, PASSWORD
 from tenant import oauth
 from tenant.tests.factory import SC_SUBSCRIBER_POST_DATA
 from utils.create import _generate_chars
@@ -162,3 +167,45 @@ class BsOAuthSessionSandbox2Tests(TestCase):
         self.assertIn('refresh_token', self.token)
         self.assertIn('scope', self.token)
         self.assertEqual(self.token, self.session.token)
+
+
+class BsOauthApplicationTests(TestCase):
+
+    def setUp(self):
+        self.person = create_single_person()
+
+    def test_create_application(self):
+        app = oauth.BsOauthApplication(user=self.person)
+
+        ret = app.application
+
+        self.assertIsInstance(ret, Application)
+        self.assertTrue(ret.client_id)
+        self.assertEqual(ret.user, self.person)
+        self.assertEqual(ret.redirect_uris, oauth.DEFAULT_PROVIDER_URIS)
+        self.assertEqual(ret.client_type, oauth.DEFAULT_CLIENT_TYPE)
+        self.assertEqual(ret.authorization_grant_type, oauth.DEFAULT_AUTHORIZATION_GRANT_TYPE)
+        self.assertTrue(ret.client_secret)
+        self.assertTrue(ret.name)
+        self.assertFalse(ret.skip_authorization)
+
+    def test_client_post_returns_token(self):
+        app = oauth.BsOauthApplication(user=self.person)
+        data = {
+            'grant_type': 'password',
+            'username': self.person.username,
+            'password': PASSWORD,
+            'client_id': app.application.client_id,
+            'client_secret': app.application.client_secret,
+            'redirect_uri': app.application.redirect_uris
+        }
+
+        response = self.client.post(reverse('oauth2_provider:token'), data=data)
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(data['access_token'])
+        self.assertTrue(data['refresh_token'])
+        self.assertEqual(data['token_type'], 'Bearer')
+        self.assertIn('read', data['scope'])
+        self.assertIn('write', data['scope'])
+        self.assertTrue(data['expires_in'])

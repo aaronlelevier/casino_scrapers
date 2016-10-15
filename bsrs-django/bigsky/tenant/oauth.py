@@ -1,7 +1,10 @@
 import os
 
 from oauthlib.oauth2 import LegacyApplicationClient, TokenExpiredError
+from oauth2_provider.models import Application
 from requests_oauthlib import OAuth2Session
+
+from utils.create import _generate_chars
 
 
 SC_GRANT_TYPE = 'password'
@@ -103,3 +106,26 @@ class BsOAuthSession(object):
 
     def put(self, url, data):
         return self.oauth.put(url, data=data)
+
+
+DEFAULT_PROVIDER_URIS = "http://localhost:8000/"
+DEFAULT_CLIENT_TYPE = "public"
+DEFAULT_AUTHORIZATION_GRANT_TYPE = "password"
+
+class BsOauthApplication(object):
+
+    def __init__(self, user, redirect_uris=DEFAULT_PROVIDER_URIS, client_type=DEFAULT_CLIENT_TYPE,
+        authorization_grant_type=DEFAULT_AUTHORIZATION_GRANT_TYPE, name=None,
+        skip_authorization=False):
+
+        name = name or _generate_chars()
+
+        self._application = Application.objects.create(
+            user=user, redirect_uris=redirect_uris, client_type=client_type,
+            authorization_grant_type=authorization_grant_type, name=name,
+            skip_authorization=skip_authorization
+        )
+
+    @property
+    def application(self):
+        return self._application

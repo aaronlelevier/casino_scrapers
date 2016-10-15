@@ -34,6 +34,7 @@ THIRD_PARTY_APPS = [
     'corsheaders',
     'rest_framework',
     'debug_toolbar',
+    'oauth2_provider',
     ]
 
 LOCAL_APPS = [
@@ -173,11 +174,12 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'utils.pagination.StandardPagination',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
+        'oauth2_provider.ext.rest_framework.OAuth2Authentication',
     )
 }
 
 CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True # just for local testing
 CORS_ORIGIN_REGEX_WHITELIST = (r'^https?://(\w+\.)?bs-webdev03.bigskytech\.com:8000$', ) #staging
 
 # get w/ Aaron to understand what settings people run for local dev
