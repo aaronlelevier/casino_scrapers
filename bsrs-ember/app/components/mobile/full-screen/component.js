@@ -12,10 +12,13 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
     this.componentStringFunc();
   },
   componentString: '',
+  /* @componentStringFunc
+   * sets string to be passed to component helper
+   */
   componentStringFunc(componentString) {
     const hashComponents = get(this, 'hashComponents');
     componentString = componentString || hashComponents[0].component;
-    this.set('componentString', componentString);
+    set(this, 'componentString', componentString);
   },
   actions: {
     save(update) {
@@ -31,7 +34,7 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
     delete() {
       this.sendAction('delete', get(this, 'model'), get(this, 'repository'));
     },
-    /*
+    /* @method renderSection
     * Called from clicking on footer item
     */
     renderSection(activeComponent) {
@@ -49,9 +52,10 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
       });
       this.componentStringFunc(activeComponent.component);
     },
-    // rollback_model() {
-
-    // },
+    rollback_model() {
+      const model = get(this, 'model');
+      model.rollback();
+    },
     cancel_modal() {
       set(this, 'mobileDialog', false);
     }

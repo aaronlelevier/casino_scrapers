@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { run } = Ember;
+const { get, run } = Ember;
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import { test } from 'qunit';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
@@ -19,7 +19,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import pageDrawer from 'bsrs-ember/tests/pages/nav-drawer';
 import BASEURLS, { PEOPLE_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
-var store;
+var store, list_xhr;
 
 const BASE_URL = BASEURLS.base_people_url;
 const PEOPLE_INDEX_URL = `${BASE_URL}/index`;
@@ -32,7 +32,7 @@ moduleForAcceptance('Acceptance | mobile people detail test', {
   beforeEach() {
     setWidth('mobile');
     store = this.application.__container__.lookup('service:simpleStore');
-    xhr(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, PF.list());
+    list_xhr = xhr(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, PF.list());
     xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
   },
 });
@@ -48,6 +48,62 @@ test('can click from admin to people grid to detail', async assert => {
   assert.equal(currentURL(), PEOPLE_INDEX_URL);
   await generalPage.gridItemZeroClick();
   assert.equal(currentURL(), DETAIL_URL);
+});
+
+test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async assert => {
+  clearxhr(list_xhr);
+  await page.visitDetail();
+  await click('.t-mobile-footer-item:eq(0)');
+  await peoplePage.firstNameFill('wat');
+  assert.equal(find('.t-person-first-name').val(), 'wat');
+  await generalMobilePage.backButtonClick();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
+    });
+  });
+  generalPage.clickModalCancel();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.equal(find('.t-person-first-name').val(), 'wat');
+      assert.throws(Ember.$('.ember-modal-dialog'));
+    });
+  });
+});
+
+test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit rollback', async assert => {
+  clearxhr(list_xhr);
+  await page.visitDetail();
+  await click('.t-mobile-footer-item:eq(0)');
+  await peoplePage.firstNameFill('wat');
+  assert.equal(find('.t-person-first-name').val(), 'wat');
+  await generalMobilePage.backButtonClick();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
+    });
+  });
+  generalPage.clickModalRollback();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      const person = store.find('person', PD.idOne);
+      assert.equal(find('.t-person-first-name').val(), get(person, 'first_name'));
+      assert.notEqual(find('.t-person-first-name').val(), 'wat');
+      assert.throws(Ember.$('.ember-modal-dialog'));
+    });
+  });
 });
 
 // test('can click through component sections and save to redirect to index', async assert => {

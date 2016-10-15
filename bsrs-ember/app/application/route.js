@@ -179,10 +179,6 @@ var ApplicationRoute = Route.extend({
     deleteAttachment(tab, callback){
       this.send('closeTabMaster', tab, {action:'deleteAttachment', deleteCB:callback});
     },
-    /* MOBILE */
-    closeMobileDetail(model, redirectRoute) {
-      this.transitionTo(redirectRoute);
-    },
     save(model, repository, tab, activityRepository, update, updateActivities=false) {//update arg determines if transition or not and close out tab
       if(update && model.get('isNotDirtyOrRelatedNotDirty')){
         return;
@@ -210,6 +206,10 @@ var ApplicationRoute = Route.extend({
           this.set('ajaxError', errors);
         }
       });
+    },
+    /* MOBILE */
+    closeMobileDetail(model, redirectRoute) {
+      this.transitionTo(redirectRoute);
     },
   }
 });

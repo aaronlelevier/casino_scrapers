@@ -4,6 +4,7 @@ import TabRoute from 'bsrs-ember/route/tab/route';
 import FindById from 'bsrs-ember/mixins/route/findById';
 
 export default TabRoute.extend(FindById, {
+  /* TODO: remove when tenant merged in */
   repository: inject('tenant'),
   redirectRoute: 'admin',
   module: 'tenant',

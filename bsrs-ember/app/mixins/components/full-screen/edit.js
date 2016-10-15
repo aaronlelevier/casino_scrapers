@@ -1,5 +1,8 @@
 import Ember from 'ember';
 
+/* @mixin FullScreen
+ * Not using save and cancel b/c no tabs that exist in desktop
+ */
 export default Ember.Mixin.create({
   actions: {
     save(update=false) {

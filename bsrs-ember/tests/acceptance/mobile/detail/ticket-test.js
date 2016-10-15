@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { run } = Ember;
+const { get, run } = Ember;
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import { test } from 'qunit';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
@@ -98,6 +98,35 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.equal(page.request, 'wat');
+      assert.throws(Ember.$('.ember-modal-dialog'));
+    });
+  });
+});
+
+test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit rollback', async assert => {
+  clearxhr(list_xhr);
+  await page.visitDetail();
+  await click('.t-mobile-footer-item:eq(1)');
+  await page.requestFillIn('wat');
+  assert.equal(find('.t-mobile-ticket-request').val(), 'wat');
+  await generalMobilePage.backButtonClick();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
+    });
+  });
+  generalPage.clickModalRollback();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      const ticket = store.find('ticket', TD.idOne);
+      assert.equal(find('.t-mobile-ticket-request').val(), get(ticket, 'request'));
+      assert.notEqual(find('.t-mobile-ticket-request').val(), 'wat');
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
