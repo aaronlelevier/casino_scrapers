@@ -36,7 +36,7 @@ const DETAIL_URL = BASE_URL + '/' + AD.idOne;
 
 let application, store, list_xhr, endpoint, detail_xhr, detail_data_two, list_data, original_uuid, counter;
 
-moduleForAcceptance('Acceptance | tab automation test', {
+moduleForAcceptance('scott Acceptance | tab automation test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     // Edit based on module

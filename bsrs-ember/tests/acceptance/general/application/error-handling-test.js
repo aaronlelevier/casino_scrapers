@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
-import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
@@ -9,18 +8,18 @@ import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/utilities/urls';
-import generalPage from 'bsrs-ember/tests/pages/general';
-import page from 'bsrs-ember/tests/pages/location';
-import trim from 'bsrs-ember/utilities/trim';
+// import generalPage from 'bsrs-ember/tests/pages/general';
+// import page from 'bsrs-ember/tests/pages/location';
+// import trim from 'bsrs-ember/utilities/trim';
 
 const PREFIX = config.APP.NAMESPACE;
 const LOC_URL = BASEURLS.base_locations_url;
 const LOCATION_URL = `${LOC_URL}/index`;
 const DETAIL_URL = `${LOC_URL}/${LD.idOne}`;
-const LOCATION_NEW_URL = `${LOC_URL}/new/1`;
+// const LOCATION_NEW_URL = `${LOC_URL}/new/1`;
 const DJANGO_LOCATION_URL = `${PREFIX}/admin/locations/`;
 
-var application, store, payload, new_xhr, list_xhr, originalLoggerError, originalTestAdapterException;
+var store, payload, new_xhr, list_xhr, originalLoggerError, originalTestAdapterException;
 
 moduleForAcceptance('Acceptance | error handling test', {
   beforeEach() {

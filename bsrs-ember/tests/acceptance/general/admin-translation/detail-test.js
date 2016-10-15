@@ -1,7 +1,5 @@
-import Ember from 'ember';
 import { test } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
-import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
@@ -9,23 +7,23 @@ import LOCALED from 'bsrs-ember/vendor/defaults/locale';
 import TF from 'bsrs-ember/vendor/admin_translation_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/translation';
 import BASEURLS from 'bsrs-ember/utilities/urls';
-import generalPage from 'bsrs-ember/tests/pages/general';
+// import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_admin_translations_url;
-const TRANSLATION_URL = BASE_URL + '/index';
+// const TRANSLATION_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + TD.keyOneGrid;
 
-var application, store, endpoint, translation_list_data, translation_detail_data, list_xhr, detail_xhr;
+var endpoint, translation_list_data, translation_detail_data, list_xhr;
 
 moduleForAcceptance('Acceptance | translation detail test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
+    this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/';
     translation_list_data = TF.list();
     translation_detail_data = TF.get();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, translation_list_data);
-    detail_xhr = xhr(endpoint + TD.keyOneGrid + '/', 'GET', null, {}, 200, translation_detail_data);
+    xhr(endpoint + TD.keyOneGrid + '/', 'GET', null, {}, 200, translation_detail_data);
   },
 });
 

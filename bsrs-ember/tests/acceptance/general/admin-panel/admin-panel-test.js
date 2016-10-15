@@ -1,7 +1,5 @@
-import Ember from 'ember';
 import { test } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
-import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/utilities/urls';
@@ -13,11 +11,11 @@ const PREFIX = config.APP.NAMESPACE;
 const SETTING_URL = BASEURLS.base_setting_url + '/' + TD.id;
 const ADMINPANEL = '.t-side-menu';
 
-var application, store, endpoint, setting_data, detail_xhr;
+var endpoint, setting_data, detail_xhr;
 
 moduleForAcceptance('Acceptance | admin settings layout test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
+    this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + SETTING_URL + '/';
     setting_data = TF.detail();
     detail_xhr = xhr(endpoint, 'GET', null, {}, 200, setting_data);

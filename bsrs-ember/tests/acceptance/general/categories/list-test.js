@@ -1,10 +1,7 @@
-import Ember from 'ember';
 import { test } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
-import startApp from 'bsrs-ember/tests/helpers/start-app';
-import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
+import {xhr} from 'bsrs-ember/tests/helpers/xhr';
 import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
-import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import page from 'bsrs-ember/tests/pages/category';
 import BASEURLS, { CATEGORIES_URL } from 'bsrs-ember/utilities/urls';
 

@@ -2,10 +2,8 @@ import Ember from 'ember';
 import { test } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
-import startApp from 'bsrs-ember/tests/helpers/start-app';
 import STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/status';
 import STORE_STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/location-status';
-import CD from 'bsrs-ember/vendor/defaults/category';
 import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import PND from 'bsrs-ember/vendor/defaults/phone-number-type';
 import ED from 'bsrs-ember/vendor/defaults/email-type';
@@ -14,7 +12,6 @@ import LD from 'bsrs-ember/vendor/defaults/ticket';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LOCALE_DEFAULTS from 'bsrs-ember/vendor/defaults/locale';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
-import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
 import config from 'bsrs-ember/config/environment';
@@ -22,10 +19,9 @@ import BASEURLS from 'bsrs-ember/utilities/urls';
 
 const HOME_URL = '/';
 const PREFIX = config.APP.NAMESPACE;
-const BASE_URL = BASEURLS.base_tickets_url;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 
-var application, store, run = Ember.run;
+var store, run = Ember.run;
 
 moduleForAcceptance('Acceptance | bootup test', {
   beforeEach() {
@@ -156,7 +152,7 @@ test('on boot we should fetch and load the role configuration', assert => {
   visit(HOME_URL);
   andThen(() => {
     var role_models = store.find('role');
-    var category_models = store.find('category');
+    store.find('category');
     assert.equal(role_models.get('length'), 6);
     assert.equal(role_models.objectAt(0).get('id'), RD.idOne);
     assert.equal(role_models.objectAt(0).get('name'), RD.nameOne);
