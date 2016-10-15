@@ -9,7 +9,6 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
 import RD from 'bsrs-ember/vendor/defaults/role';
-import GLOBAL from 'bsrs-ember/vendor/defaults/global-message';
 import CD from 'bsrs-ember/vendor/defaults/currencies';
 import page from 'bsrs-ember/tests/pages/person';
 import general from 'bsrs-ember/tests/pages/general';
