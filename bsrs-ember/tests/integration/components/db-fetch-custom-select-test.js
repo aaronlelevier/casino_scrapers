@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
-import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import { typeInSearch, clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
@@ -13,7 +12,6 @@ import waitFor from 'ember-test-helpers/wait';
 let store, dtd, link_one, dtd_two, run = Ember.run, dtd_repo;
 const PowerSelect = '.ember-power-select-trigger';
 const DROPDOWN = '.ember-power-select-dropdown';
-const COMPONENT = '.t-link-destination-select';
 
 moduleForComponent('db-fetch-custom-select', 'integration: db-fetch-custom-select test', {
   integration: true,
@@ -72,12 +70,12 @@ test('should be able to select new destination when one doesnt exist', function(
   run(() => { typeInSearch('a'); });
   return waitFor().
     then(() => {
-      assert.equal($(DROPDOWN).length, 1);
-      assert.equal($('.ember-power-select-options > li').length, 3);
+      assert.equal(Ember.$(DROPDOWN).length, 1);
+      assert.equal(Ember.$('.ember-power-select-options > li').length, 3);
       assert.equal(link_one.get('destination.id'), undefined);
       nativeMouseUp(`.ember-power-select-option:contains(${DTD.keyOne})`);
       assert.equal(link_one.get('destination.id'), DTD.idOne);
-      assert.equal($(PowerSelect).text().trim(), `${DTD.keyOne} ${DTD.descriptionOne}`);
+      assert.equal(Ember.$(PowerSelect).text().trim(), `${DTD.keyOne} ${DTD.descriptionOne}`);
     });
 });
 
@@ -89,14 +87,14 @@ test('should be able to select same dtd when dtd already has a dtd', function(as
   run(() => { typeInSearch('a'); });
   return waitFor().
     then(() => {
-      assert.equal($(DROPDOWN).length, 1);
-      assert.equal($('.ember-basic-dropdown-content').length, 1);
-      assert.equal($('.ember-power-select-options > li').length, 3);
+      assert.equal(Ember.$(DROPDOWN).length, 1);
+      assert.equal(Ember.$('.ember-basic-dropdown-content').length, 1);
+      assert.equal(Ember.$('.ember-power-select-options > li').length, 3);
       nativeMouseUp(`.ember-power-select-option:contains(${DTD.keyOne})`);
-      assert.equal($(DROPDOWN).length, 0);
-      assert.equal($('.ember-basic-dropdown-content').length, 0);
-      assert.equal($('.ember-power-select-options > li').length, 0);
-      assert.equal($(PowerSelect).text().trim(), `${DTD.keyOne} ${DTD.descriptionOne}`);
+      assert.equal(Ember.$(DROPDOWN).length, 0);
+      assert.equal(Ember.$('.ember-basic-dropdown-content').length, 0);
+      assert.equal(Ember.$('.ember-power-select-options > li').length, 0);
+      assert.equal(Ember.$(PowerSelect).text().trim(), `${DTD.keyOne} ${DTD.descriptionOne}`);
       assert.equal(link_one.get('destination').get('id'), DTD.idOne);
       assert.deepEqual(dtd.get('destination_links'), [LINK.idOne]);
     });
@@ -110,14 +108,14 @@ test('should be able to select diff dtd when dtd already has a dtd', function(as
   run(() => { typeInSearch('a'); });
   return waitFor().
     then(() => {
-      assert.equal($(DROPDOWN).length, 1);
-      assert.equal($('.ember-basic-dropdown-content').length, 1);
-      assert.equal($('.ember-power-select-options > li').length, 3);
+      assert.equal(Ember.$(DROPDOWN).length, 1);
+      assert.equal(Ember.$('.ember-basic-dropdown-content').length, 1);
+      assert.equal(Ember.$('.ember-power-select-options > li').length, 3);
       nativeMouseUp(`.ember-power-select-option:contains(${DTD.keyTwo})`);
-      assert.equal($(DROPDOWN).length, 0);
-      assert.equal($('.ember-basic-dropdown-content').length, 0);
-      assert.equal($('.ember-power-select-options > li').length, 0);
-      assert.equal($(PowerSelect).text().trim(), `${DTD.keyTwo} ${DTD.descriptionTwo}`);
+      assert.equal(Ember.$(DROPDOWN).length, 0);
+      assert.equal(Ember.$('.ember-basic-dropdown-content').length, 0);
+      assert.equal(Ember.$('.ember-power-select-options > li').length, 0);
+      assert.equal(Ember.$(PowerSelect).text().trim(), `${DTD.keyTwo} ${DTD.descriptionTwo}`);
       assert.equal(link_one.get('destination').get('id'), DTD.idTwo);
       assert.deepEqual(dtd_two.get('destination_links'), [LINK.idOne]);
       assert.deepEqual(dtd.get('destination_links'), []);
@@ -133,7 +131,7 @@ test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
   clickTrigger();
   run(() => { typeInSearch('a'); });
   Ember.run.later(() => {
-    assert.equal($('.ember-power-select-options > li').length, 1);
+    assert.equal(Ember.$('.ember-power-select-options > li').length, 1);
     done();
   }, 150);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
 });

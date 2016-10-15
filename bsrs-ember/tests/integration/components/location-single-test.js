@@ -6,19 +6,16 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import translations from "bsrs-ember/vendor/translation_fixtures";
-import LF from "bsrs-ember/vendor/location_fixtures";
 import LLF from "bsrs-ember/vendor/location-level_fixtures";
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
-import waitFor from 'ember-test-helpers/wait';
 import { clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 import page from 'bsrs-ember/tests/pages/location';
 import general from 'bsrs-ember/tests/pages/general';
 
 var store, trans;
-const ERR_TEXT = '.validated-input-error-dialog';
 
 moduleForComponent('locations/location-single', 'integration: locations/location-single test', {
   integration: true,
@@ -66,22 +63,22 @@ test('clicking save will reveal all validation msgs', function(assert) {
   });
   this.render(hbs`{{locations/location-single model=model}}`);
   this.$('.t-location-name').val('').trigger('change');
-  assert.equal($('.validated-input-error-dialog').length, 0);
-  assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
-  assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), '');
-  assert.equal($('.validated-input-error-dialog:eq(2)').text().trim(), '');
-  assert.equal($('.validated-input-error-dialog:eq(3)').text().trim(), '');
+  assert.equal(this.$('.validated-input-error-dialog').length, 0);
+  assert.equal(this.$('.validated-input-error-dialog:eq(0)').text().trim(), '');
+  assert.equal(this.$('.validated-input-error-dialog:eq(1)').text().trim(), '');
+  assert.equal(this.$('.validated-input-error-dialog:eq(2)').text().trim(), '');
+  assert.equal(this.$('.validated-input-error-dialog:eq(3)').text().trim(), '');
   assert.notOk(page.nameValidationErrorVisible);
   assert.notOk(page.numberValidationErrorVisible);
   assert.notOk(page.llevelValidationErrorVisible);
   assert.notOk(page.statusValidationErrorVisible);
   const save_btn = this.$('.t-save-btn');
   save_btn.trigger('click').trigger('change');
-  assert.equal($('.validated-input-error-dialog').length, 4);
-  assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.location.name'));
-  assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.location.number'));
-  assert.equal($('.validated-input-error-dialog:eq(2)').text().trim(), trans.t('errors.location.location_level'));
-  assert.equal($('.validated-input-error-dialog:eq(3)').text().trim(), trans.t('errors.location.status'));
+  assert.equal(Ember.$('.validated-input-error-dialog').length, 4);
+  assert.equal(Ember.$('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.location.name'));
+  assert.equal(Ember.$('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.location.number'));
+  assert.equal(Ember.$('.validated-input-error-dialog:eq(2)').text().trim(), trans.t('errors.location.location_level'));
+  assert.equal(Ember.$('.validated-input-error-dialog:eq(3)').text().trim(), trans.t('errors.location.status'));
   assert.ok(page.nameValidationErrorVisible);
   assert.ok(page.numberValidationErrorVisible);
   assert.ok(page.llevelValidationErrorVisible);

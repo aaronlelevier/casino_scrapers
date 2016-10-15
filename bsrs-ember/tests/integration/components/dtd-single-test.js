@@ -19,7 +19,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import ticketPage from 'bsrs-ember/tests/pages/tickets';
 import waitFor from 'ember-test-helpers/wait';
 
-let store, dtd, uuid, trans, link, field, option, dtd_repo;
+let store, dtd, uuid, trans, link, field, dtd_repo;
 const DROPDOWN = '.ember-power-select-dropdown';
 const FIELD_TYPE = '.t-dtd-field-type';
 const ERR_TEXT = '.validated-input-error-dialog';
@@ -65,7 +65,7 @@ test('validation on dtd key works', function(assert) {
   Ember.run.later(() => {
     const $component = this.$('.invalid');
     assert.ok($component.is(':visible'));
-    assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.dtd.key'));
+    assert.equal(Ember.$(ERR_TEXT).text().trim(), trans.t('errors.dtd.key'));
     this.$('.t-dtd-single-key:eq(0)').val('a'.repeat(12)).keyup();
     Ember.run.later(() => {
       const $component = this.$('.invalid');
@@ -74,7 +74,7 @@ test('validation on dtd key works', function(assert) {
       Ember.run.later(() => {
         const $component = this.$('.invalid');
         assert.ok($component.is(':visible'));
-        assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.dtd.key.length'));
+        assert.equal(Ember.$(ERR_TEXT).text().trim(), trans.t('errors.dtd.key.length'));
         done();
       }, 1900);
     }, 300);
@@ -91,15 +91,14 @@ test('validation on fields when click save', function(assert) {
   assert.equal($component.text().trim(), '');
   const add_btn = this.$('.t-add-link-btn');
   add_btn.trigger('click').trigger('change');
-  assert.equal($('.t-link-destination-select .ember-power-select-placeholder').text(), trans.t('dt.placeholder_submit'));
+  assert.equal(this.$('.t-link-destination-select .ember-power-select-placeholder').text(), trans.t('dt.placeholder_submit'));
   generalPage.save();
   Ember.run.later(() => {
     const $key_component = this.$('.t-dtd-key');
-    const $link_text_component = this.$('.t-link-text');
     assert.ok($key_component.is(':visible'));
     assert.ok($key_component.hasClass('invalid'));
-    assert.equal($(`${ERR_TEXT}:eq(0)`).text().trim(), trans.t('errors.dtd.key'));
-    assert.equal($(`${ERR_TEXT}:eq(1)`).text().trim(), trans.t('errors.link.text'));
+    assert.equal(Ember.$(`${ERR_TEXT}:eq(0)`).text().trim(), trans.t('errors.dtd.key'));
+    assert.equal(Ember.$(`${ERR_TEXT}:eq(1)`).text().trim(), trans.t('errors.link.text'));
     done();
   }, 300);
 });
@@ -136,7 +135,7 @@ test('validation - clear out text, and validation msg still works', function(ass
   Ember.run.later(() => {
     const $component = this.$('.invalid');
     assert.ok($component.is(':visible'));
-    assert.equal($(`${ERR_TEXT}:eq(0)`).text().trim(), trans.t('errors.link.text'));
+    assert.equal(Ember.$(`${ERR_TEXT}:eq(0)`).text().trim(), trans.t('errors.link.text'));
     done();
   }, 1900);
 });
@@ -184,7 +183,6 @@ test('add and remove dtd links', function(assert) {
 });
 
 test('must have one link, cant remove last link, remove btn clears link', function(assert) {
-  let links = store.find('link');
   run(() => {
     dtd = store.push('dtd', {
       id: DTD.idOne,
@@ -218,7 +216,6 @@ test('must have one link, cant remove last link, remove btn clears link', functi
   this.render(hbs `{{dtds/dtd-single model=model}}`);
   let $component = this.$('.t-input-multi-dtd-link');
   assert.ok($component.is(':visible'));
-  var add_btn = this.$('.t-add-link-btn');
   assert.equal($component.find('.t-dtd-link-request').length, 1);
   assert.equal($component.find('.t-dtd-link-text').length, 1);
   assert.equal($component.find('.t-dtd-link-action_button').length, 1);
@@ -525,17 +522,17 @@ test('selecting link destination will populate dropdown with key', function(asse
   this.set('model', dtd);
   this.render(hbs `{{dtds/dtd-single model=model}}`);
   const COMPONENT = '.t-link-destination-select';
-  assert.equal($('.ember-power-select-option').length, 0);
+  assert.equal(this.$('.ember-power-select-option').length, 0);
   clickTrigger(COMPONENT);
   run(() => {
     typeInSearch('a');
   });
   return waitFor().
   then(() => {
-    assert.equal($(DROPDOWN).length, 1);
-    assert.equal($('.ember-power-select-option').length, 2);
-    assert.equal($('li.ember-power-select-option:eq(0)').text().trim(), DTD.keyOne);
-    assert.equal($('li.ember-power-select-option:eq(1)').text().trim(), DTD.keyTwo);
+    assert.equal(Ember.$(DROPDOWN).length, 1);
+    assert.equal(this.$('.ember-power-select-option').length, 2);
+    assert.equal(this.$('li.ember-power-select-option:eq(0)').text().trim(), DTD.keyOne);
+    assert.equal(this.$('li.ember-power-select-option:eq(1)').text().trim(), DTD.keyTwo);
   });
 });
 
@@ -802,7 +799,7 @@ test('update a fields existing option', function(assert) {
       field_pk: FD.idOne,
       option_pk: OD.idOne
     });
-    option = store.push('option', {
+    store.push('option', {
       id: OD.idOne,
       text: OD.textOne,
       order: OD.orderOne

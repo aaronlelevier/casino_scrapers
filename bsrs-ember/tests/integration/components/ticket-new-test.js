@@ -1,17 +1,12 @@
 import Ember from 'ember';
-import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/model-category';
-import repository from 'bsrs-ember/tests/helpers/repository';
 
-let store, m2m, m2m_two, m2m_three, ticket, category_one, category_two, category_three, run = Ember.run, category_repo;
-const CATEGORY_ONE = '.t-model-category-select:eq(0) > .ember-basic-dropdown-trigger';
-const CATEGORY_TWO = '.t-model-category-select:eq(1) > .ember-basic-dropdown-trigger';
-const CATEGORY_THREE = '.t-model-category-select:eq(2) > .ember-basic-dropdown-trigger';
+let store, run = Ember.run;
 
 moduleForComponent('tickets/ticket-new', 'integration: ticket-new test', {
   integration: true,
@@ -19,12 +14,12 @@ moduleForComponent('tickets/ticket-new', 'integration: ticket-new test', {
     store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status']);
     translation.initialize(this);
     run(() => {
-      m2m = store.push('model-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, model_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne});
-      m2m_two = store.push('model-category', {id: TICKET_CATEGORY_DEFAULTS.idTwo, model_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idTwo});
-      m2m_three = store.push('model-category', {id: TICKET_CATEGORY_DEFAULTS.idThree, model_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.unusedId});
-      category_one = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent_id: CATEGORY_DEFAULTS.idTwo});
-      category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent_id: CATEGORY_DEFAULTS.unusedId});
-      category_three = store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameThree, parent_id: null});
+      store.push('model-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, model_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne});
+      store.push('model-category', {id: TICKET_CATEGORY_DEFAULTS.idTwo, model_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idTwo});
+      store.push('model-category', {id: TICKET_CATEGORY_DEFAULTS.idThree, model_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.unusedId});
+      store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent_id: CATEGORY_DEFAULTS.idTwo});
+      store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent_id: CATEGORY_DEFAULTS.unusedId});
+      store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameThree, parent_id: null});
     });
   }
 });

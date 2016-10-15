@@ -2,7 +2,6 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
-import translations from 'bsrs-ember/vendor/translation_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import CD from 'bsrs-ember/vendor/defaults/currencies';
@@ -12,7 +11,7 @@ import page from 'bsrs-ember/tests/pages/input-currency';
 
 const LONG_AUTH_AMOUNT = '50000.0000';
 
-var container, registry, store, model, service, trans, run = Ember.run;
+var store, model, trans, run = Ember.run;
 
 moduleForComponent('input-currency', 'integration: input-currency test', {
   integration: true,

@@ -48,8 +48,8 @@ test('company name is required validation, cannot save w/o name', function(asser
   this.render(hbs `{{settings/general-settings model=model }}`);
   let $err = this.$('.t-settings-company-name-validator.invalid');
   assert.notOk($err.is(':visible'));
-  assert.equal($('.validated-input-error-dialog').length, 0);
-  assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+  assert.equal(this.$('.validated-input-error-dialog').length, 0);
+  assert.equal(this.$('.validated-input-error-dialog:eq(0)').text().trim(), '');
   generalPage.save();
   $err = this.$('.t-settings-company-name-validator.invalid');
   assert.ok($err.is(':visible'));
@@ -60,8 +60,8 @@ test('company code is required validation, cannot save w/o code', function(asser
   this.render(hbs `{{settings/general-settings model=model }}`);
   let $err = this.$('.t-settings-company-code-validator.invalid');
   assert.notOk($err.is(':visible'));
-  assert.equal($('.validated-input-error-dialog').length, 0);
-  assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+  assert.equal(this.$('.validated-input-error-dialog').length, 0);
+  assert.equal(this.$('.validated-input-error-dialog:eq(0)').text().trim(), '');
   generalPage.save();
   $err = this.$('.t-settings-company-code-validator.invalid');
   assert.ok($err.is(':visible'));
@@ -72,8 +72,8 @@ test('dashboard text is required validation, cannot save w/o code', function(ass
   this.render(hbs `{{settings/general-settings model=model }}`);
   let $err = this.$('.t-settings-dashboard-text-validator.invalid');
   assert.notOk($err.is(':visible'));
-  assert.equal($('.validated-input-error-dialog').length, 0);
-  assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
+  assert.equal(this.$('.validated-input-error-dialog').length, 0);
+  assert.equal(this.$('.validated-input-error-dialog:eq(0)').text().trim(), '');
   generalPage.save();
   $err = this.$('.t-settings-dashboard-text-validator.invalid');
   assert.ok($err.is(':visible'));

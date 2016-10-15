@@ -1,9 +1,6 @@
-import Ember from 'ember';
-const { run } = Ember;
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
-let store;
 
 moduleForComponent('mobile/full-screen', 'amk Integration | Component | full-screen-footer', {
   integration: true

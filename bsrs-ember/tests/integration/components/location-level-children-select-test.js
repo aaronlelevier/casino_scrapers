@@ -1,17 +1,11 @@
-import Ember from 'ember';
-import hbs from 'htmlbars-inline-precompile';
-import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
-import { moduleForComponent, test } from 'ember-qunit';
-import translation from 'bsrs-ember/instance-initializers/ember-i18n';
+import Ember from 'ember'; import hbs from 'htmlbars-inline-precompile'; import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message'; import { moduleForComponent, test } from 'ember-qunit'; import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import { clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
+import { clickTrigger } from '../../helpers/ember-power-select';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 
 let store, location_level, location_levels, trans, run = Ember.run;
-const PowerSelect = '.ember-power-select-trigger > .ember-power-select-multiple-options';
-const COMPONENT = '.t-location-level-children-select';
 const DROPDOWN = '.ember-power-select-dropdown';
 
 moduleForComponent('location-level-children-select', 'integration: location-level-children-select test', {
@@ -37,27 +31,25 @@ test('should render a selectbox when location type options are empty (initial st
   this.set('model', location_level);
   this.set('options', location_levels);
   this.render(hbs`{{location-level-children-power-select model=model options=options}}`);
-  let $component = this.$(COMPONENT);
   //assert.equal($component.find(`${PowerSelect} > input`).attr('placeholder').trim(), 'Select One');
   clickTrigger();
-  assert.equal($(DROPDOWN).length, 1);
-  assert.equal($('.ember-basic-dropdown-content').length, 1);
-  assert.equal($('.ember-power-select-options > li').length, 1);
-  assert.equal($('li.ember-power-select-option').text().trim(), GLOBALMSG.no_results);
+  assert.equal(this.$(DROPDOWN).length, 1);
+  assert.equal(this.$('.ember-basic-dropdown-content').length, 1);
+  assert.equal(this.$('.ember-power-select-options > li').length, 1);
+  assert.equal(this.$('li.ember-power-select-option').text().trim(), GLOBALMSG.no_results);
   assert.deepEqual(location_level.get('children_fks'), undefined);
-  assert.notOk($('.ember-power-select-search').text());
+  assert.notOk(this.$('.ember-power-select-search').text());
 });
 
 test('should render a selectbox with bound options', function(assert) {
   this.set('model', location_level);
   this.set('options', location_levels);
   this.render(hbs`{{location-level-children-power-select model=model options=options}}`);
-  let $component = this.$(COMPONENT);
   //assert.equal($component.find(`${PowerSelect} > input`).attr('placeholder').trim(), 'Select One');
   clickTrigger();
-  assert.equal($(DROPDOWN).length, 1);
-  assert.equal($('.ember-basic-dropdown-content').length, 1);
-  assert.equal($('.ember-power-select-options > li').length, 5);
+  assert.equal(this.$(DROPDOWN).length, 1);
+  assert.equal(this.$('.ember-basic-dropdown-content').length, 1);
+  assert.equal(this.$('.ember-power-select-options > li').length, 5);
 });
 
 // setChild action is in controller.  Need to migrate these tests over to acceptane

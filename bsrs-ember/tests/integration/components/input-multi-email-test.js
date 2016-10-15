@@ -1,5 +1,3 @@
-import Ember from 'ember';
-const { run } = Ember;
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';

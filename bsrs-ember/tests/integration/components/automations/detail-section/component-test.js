@@ -40,12 +40,12 @@ test('validation on automation description works', function(assert) {
   Ember.run.later(() => {
     const $component = this.$('.invalid');
     assert.ok($component.is(':visible'), 'no entry. Too low');
-    assert.equal($('.validated-input-error-dialog').text().trim(), trans.t('errors.automation.description'));
+    assert.equal(Ember.$('.validated-input-error-dialog').text().trim(), trans.t('errors.automation.description'));
     this.$(DESCRIPTION).val('a'.repeat(4)).keyup();
     Ember.run.later(() => {
       const $component = this.$('.invalid');
       assert.ok($component.is(':visible'), 'only 4 characters. Too low');
-      assert.equal($('.validated-input-error-dialog').text().trim(), trans.t('errors.automation.description.min_max'));
+      assert.equal(Ember.$('.validated-input-error-dialog').text().trim(), trans.t('errors.automation.description.min_max'));
       this.$(DESCRIPTION).val('a'.repeat(5)).keyup();
       Ember.run.later(() => {
         const $component = this.$('.invalid');

@@ -8,20 +8,18 @@ import { clickTrigger, nativeMouseUp, nativeMouseDown, typeInSearch } from '../.
 import repository from 'bsrs-ember/tests/helpers/repository';
 import waitFor from 'ember-test-helpers/wait';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
-import CD from 'bsrs-ember/vendor/defaults/criteria';
-import PJFD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
 import SD from 'bsrs-ember/vendor/defaults/state';
 
 const DROPDOWN = '.ember-power-select-dropdown';
 
-var store, trans, pfilter, results, state_repo, component;
+var store, pfilter, results, state_repo, component;
 
 moduleForComponent('db-fetch-multi-select-criteria', 'Integration | Component | db-fetch-multi-select-criteria automation profile criteria', {
   integration: true,
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:pfilter', 'model:criteria', 'model:state']);
     translation.initialize(this);
-    trans = this.container.lookup('service:i18n');
+    this.container.lookup('service:i18n');
     run(() => {
       pfilter = store.push('pfilter', {id: PFD.idOne, source_id: PFD.sourceIdOne, key: PFD.keyOne, field: PFD.fieldOne, criteria: [{id: SD.id, name: SD.name}], lookups: {}});
       // ticket-priorities
@@ -32,7 +30,7 @@ moduleForComponent('db-fetch-multi-select-criteria', 'Integration | Component | 
       {id: SD.id, name: SD.name},
       {id: SD.idTwo, name: SD.nameTwo},
     ];
-    state_repo.findState = (search) => new Ember.RSVP.Promise((resolve) => {
+    state_repo.findState = () => new Ember.RSVP.Promise((resolve) => {
       resolve(results);
     });
     component = hbs `{{
@@ -61,8 +59,8 @@ test('add and remove a criteria; also shows display name, which is the _name_ fi
   clickTrigger();
   run(() => { typeInSearch('c'); });
   return waitFor().then(() => {
-    assert.equal($(DROPDOWN).length, 1);
-    assert.equal($('.ember-power-select-options > li').length, 2);
+    assert.equal(this.$(DROPDOWN).length, 1);
+    assert.equal(this.$('.ember-power-select-options > li').length, 2);
     assert.equal(this.$('.ember-power-select-multiple-option').length, 0);
     nativeMouseUp(`.ember-power-select-option:contains(${SD.name})`);
     assert.equal(this.$('.ember-power-select-multiple-option').length, 1);

@@ -18,12 +18,12 @@ var FakeComponent = Ember.Object.extend({
     }
 });
 
-var store, stub;
+var stub;
 
 moduleForComponent('input-filter-dynamic', 'integration: input-filter-dynamic test', {
     integration: true,
     setup() {
-        store = module_registry(this.container, this.registry, ['model:person', 'service:eventbus']);
+        module_registry(this.container, this.registry, ['model:person', 'service:eventbus']);
         stub = fake.initialize(this.container, this.registry, 'components:fake', FakeComponent);
     }
 });

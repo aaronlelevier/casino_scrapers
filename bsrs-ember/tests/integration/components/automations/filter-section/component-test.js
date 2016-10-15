@@ -6,10 +6,8 @@ import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import { clickTrigger, nativeMouseUp, nativeMouseDown } from '../../../../helpers/ember-power-select';
+import { clickTrigger, nativeMouseUp } from '../../../../helpers/ember-power-select';
 import repository from 'bsrs-ember/tests/helpers/repository';
-import random from 'bsrs-ember/models/random';
-import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import page from 'bsrs-ember/tests/pages/automation';
 import AD from 'bsrs-ember/vendor/defaults/automation';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
@@ -236,8 +234,8 @@ test('if automation has dynamic pfilter, power-select component will filter out 
 
 test('delete the middle filter, and it correctly leaves the remaining start n end filter in the page', function(assert) {
   run(() => {
-    let pf2 = store.push('pfilter', {id: PFD.idTwo, key: PFD.keyTwo, field: PFD.locationField, criteria: PFD.criteriaTwo, lookups: {}});
-    let pf3 = store.push('pfilter', {id: PFD.idThree, key: PFD.keyThree, field: PFD.locationField, criteria: PFD.criteriaThree, lookups: {}});
+    store.push('pfilter', {id: PFD.idTwo, key: PFD.keyTwo, field: PFD.locationField, criteria: PFD.criteriaTwo, lookups: {}});
+    store.push('pfilter', {id: PFD.idThree, key: PFD.keyThree, field: PFD.locationField, criteria: PFD.criteriaThree, lookups: {}});
     automation.add_pf({id: PFD.idTwo});
     automation.add_pf({id: PFD.idThree});
   });

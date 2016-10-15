@@ -15,7 +15,6 @@ import page from 'bsrs-ember/tests/pages/person';
 import general from 'bsrs-ember/tests/pages/general';
 
 var store, role, trans;
-const ERR_TEXT = '.validated-input-error-dialog';
 
 moduleForComponent('person-single', 'integration: person-single test', {
   integration: true,

@@ -1,26 +1,22 @@
 import Ember from 'ember';
 const { run } = Ember;
 import hbs from 'htmlbars-inline-precompile';
-import config from 'bsrs-ember/config/environment';
 import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
-import translations from 'bsrs-ember/vendor/translation_fixtures';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import repository from 'bsrs-ember/tests/helpers/repository';
 import { clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 
-let store, ticket, trans, width;
+let store, ticket;
 
 moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
   integration: true,
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status', 'model:model-category', 'service:device/layout']);
     translation.initialize(this);
-    trans = this.container.lookup('service:i18n');
     run(() => {
       store.push('model-category', {id: TICKET_CD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
       store.push('model-category', {id: TICKET_CD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});

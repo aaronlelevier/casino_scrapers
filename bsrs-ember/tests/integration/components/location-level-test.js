@@ -8,7 +8,6 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location-level_fixtures';
-import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import generalPage from 'bsrs-ember/tests/pages/general';
 
 let store, location_level, location_levels, location_level_repo, run = Ember.run;

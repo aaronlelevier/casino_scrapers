@@ -14,11 +14,10 @@ import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import PLD from 'bsrs-ember/vendor/defaults/person-location';
 
-let store, m2m, m2m_two, person, location_one, location_two, location_three, run = Ember.run, location_repo;
+let store, person, run = Ember.run, location_repo;
 
 const PowerSelect = '.ember-power-select-trigger > .ember-power-select-multiple-options';
 const DROPDOWN = '.ember-power-select-dropdown';
-const COMPONENT = '.t-person-locations-select';
 const OPTION = 'li.ember-power-select-option';
 
 moduleForComponent('person-locations-select', 'integration: person-locations-select test', {
@@ -29,12 +28,12 @@ moduleForComponent('person-locations-select', 'integration: person-locations-sel
         let service = this.container.lookup('service:i18n');
         loadTranslations(service, translations.generate('en'));
         run(function() {
-            m2m = store.push('person-location', {id: PLD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
-            m2m_two = store.push('person-location', {id: PLD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
+            store.push('person-location', {id: PLD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
+            store.push('person-location', {id: PLD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
             person = store.push('person', {id: PD.idOne});
-            location_one = store.push('location', {id: LD.idOne, name: LD.storeName});
-            location_two = store.push('location', {id: LD.idTwo, name: LD.storeNameTwo});
-            location_three = store.push('location', {id: LD.unusedId, name: LD.storeNameThree});
+            store.push('location', {id: LD.idOne, name: LD.storeName});
+            store.push('location', {id: LD.idTwo, name: LD.storeNameTwo});
+            store.push('location', {id: LD.unusedId, name: LD.storeNameThree});
         });
         location_repo = repository.initialize(this.container, this.registry, 'location');
         location_repo.findLocationSelect = function() {
@@ -48,12 +47,11 @@ test('should render a selectbox when with no options (initial state)', function(
     this.selected = person.get('locations');
     this.extra_params = {};
     this.render(hbs`{{db-fetch-multi-select model=model multiAttr="location" selectedAttr=selected className="t-person-locations-select" displayName="name" add_func="add_location" remove_func="remove_location" repository=location_repo searchMethod="findLocationSelect" extra_params=extra_params}}`);
-    let $component = this.$(`${COMPONENT}`);
     clickTrigger();
-    assert.equal($(`${DROPDOWN}`).length, 1);
-    assert.equal($('.ember-power-select-options > li').length, 1);
-    assert.equal($(`${OPTION}`).text().trim(), GLOBALMSG.power_search);
-    assert.equal($(`.ember-power-select-multiple-option`).length, 2);
+    assert.equal(this.$(`${DROPDOWN}`).length, 1);
+    assert.equal(this.$('.ember-power-select-options > li').length, 1);
+    assert.equal(this.$(`${OPTION}`).text().trim(), GLOBALMSG.power_search);
+    assert.equal(this.$(`.ember-power-select-multiple-option`).length, 2);
 });
 
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
@@ -62,17 +60,16 @@ test('should render a selectbox with bound options after type ahead for search',
     this.location_repo = location_repo;
     this.extra_params = {};
     this.render(hbs`{{db-fetch-multi-select model=model multiAttr="location" selectedAttr=selected className="t-person-locations-select" displayName="name" add_func="add_location" remove_func="remove_location" repository=location_repo searchMethod="findLocationSelect" extra_params=extra_params}}`);
-    let $component = this.$(`${COMPONENT}`);
     run(() => { typeInSearch('a'); });
     return waitFor().
         then(() => {
-            assert.equal($(`${DROPDOWN}`).length, 1);
-            assert.equal($('.ember-power-select-options > li').length, 3);
-            assert.equal($(`${OPTION}:eq(0)`).text().trim(), LD.storeName);
-            assert.equal($(`${OPTION}:eq(1)`).text().trim(), LD.storeNameTwo);
-            assert.equal($(`${OPTION}:eq(2)`).text().trim(), LD.storeNameThree);
-            assert.equal($(`${PowerSelect} > .ember-power-select-multiple-option`).length, 2);
-            assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains(${LD.storeName})`));
+            assert.equal(this.$(`${DROPDOWN}`).length, 1);
+            assert.equal(this.$('.ember-power-select-options > li').length, 3);
+            assert.equal(this.$(`${OPTION}:eq(0)`).text().trim(), LD.storeName);
+            assert.equal(this.$(`${OPTION}:eq(1)`).text().trim(), LD.storeNameTwo);
+            assert.equal(this.$(`${OPTION}:eq(2)`).text().trim(), LD.storeNameThree);
+            assert.equal(this.$(`${PowerSelect} > .ember-power-select-multiple-option`).length, 2);
+            assert.ok(this.$(`${PowerSelect} > span.ember-power-select-multiple-option:contains(this.${LD.storeName})`));
         });
 });
 
@@ -83,10 +80,9 @@ test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
     this.location_repo = location_repo;
     this.extra_params = {};
     this.render(hbs`{{db-fetch-multi-select model=model multiAttr="location" selectedAttr=selected className="t-person-locations-select" displayName="name" add_func="add_location" remove_func="remove_location" repository=location_repo searchMethod="findLocationSelect" extra_params=extra_params}}`);
-    let $component = this.$(`${COMPONENT}`);
     run(() => { typeInSearch('a'); });
     Ember.run.later(() => {
-        assert.equal($('.ember-power-select-options > li').length, 1);
+        assert.equal(this.$('.ember-power-select-options > li').length, 1);
         done();
     }, 150);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
 });

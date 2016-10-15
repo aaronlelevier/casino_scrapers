@@ -5,11 +5,9 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import translations from "bsrs-ember/vendor/translation_fixtures";
-import GLOBAL from 'bsrs-ember/vendor/defaults/global-message';
-import { typeInSearch, clickTrigger, nativeMouseUp } from 'bsrs-ember/tests/helpers/ember-power-select';
+import { clickTrigger, nativeMouseUp } from 'bsrs-ember/tests/helpers/ember-power-select';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import PD from 'bsrs-ember/vendor/defaults/person';
-import RD from 'bsrs-ember/vendor/defaults/role';
 import LD from 'bsrs-ember/vendor/defaults/locale';
 import page from 'bsrs-ember/tests/pages/person';
 

@@ -1,7 +1,5 @@
-import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
-import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
 moduleForComponent('grid/grid-head', 'Integration | Component | grid-head-desktop', {
   integration: true,

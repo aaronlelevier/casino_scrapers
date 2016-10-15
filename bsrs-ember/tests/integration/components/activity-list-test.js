@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import trim from 'bsrs-ember/utilities/trim';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 // import timemachine from 'vendor/timemachine';
@@ -8,18 +7,15 @@ import translations from 'bsrs-ember/vendor/translation_fixtures';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
-import PD from 'bsrs-ember/vendor/defaults/person';
 import GD from 'bsrs-ember/vendor/defaults/general';
 import TAD from 'bsrs-ember/vendor/defaults/ticket_activity';
 import TAF from 'bsrs-ember/vendor/ticket_activity_fixtures';
-import moment from 'moment';
 
 const ALL_TAB = '.t-activity-tab-all_updates';
 const COMMENT_TAB = '.t-activity-tab-comments';
 const STATUS_TAB = '.t-activity-tab-status_updates';
 
 const ACTIVITY_ITEMS = '.t-activity-list-item';
-const ATTACHMENT_FILE = '.t-ticket-attachment-add-remove';
 
 let store, trans, run = Ember.run;
 
@@ -138,7 +134,7 @@ test('activity list can be filtered to show comments or status updates', functio
   this.render(hbs`{{activity-list activities=model}}`);
   let $component = this.$(`${ACTIVITY_ITEMS}`);
   assert.equal($component.length, 8);
-  assert.equal($('.t-activity-timestamp:eq(0)').text(), '15 days ago');
+  assert.equal(this.$('.t-activity-timestamp:eq(0)').text(), '15 days ago');
   this.$(`${STATUS_TAB}`).click();
   $component = this.$(`${ACTIVITY_ITEMS}`).filter(':visible');
   assert.equal($component.length, 2);

@@ -7,7 +7,6 @@ import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from "bsrs-ember/vendor/translation_fixtures";
 import hbs from 'htmlbars-inline-precompile';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
-import LINK from 'bsrs-ember/vendor/defaults/link';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
 import FD from 'bsrs-ember/vendor/defaults/field';
 import page from 'bsrs-ember/tests/pages/dtd';
