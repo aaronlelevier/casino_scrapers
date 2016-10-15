@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import { test, module } from 'qunit';
 import address_validation from 'bsrs-ember/validation/address_name';
 import postal_code_validation from 'bsrs-ember/validation/postal_code';

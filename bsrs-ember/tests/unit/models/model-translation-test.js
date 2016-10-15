@@ -1,11 +1,10 @@
-import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/i18n/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LDS from 'bsrs-ember/vendor/defaults/location-status';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import CD from 'bsrs-ember/vendor/defaults/category';
 
-var store, run = Ember.run;
+var store;
 
 module('unit: model translation test', {
     beforeEach() {

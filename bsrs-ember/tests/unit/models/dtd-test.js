@@ -2,7 +2,7 @@ import Ember from 'ember';
 const { run } = Ember;
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import { dtd_payload, dtd_payload_link } from 'bsrs-ember/tests/helpers/payloads/dtd';
+import { dtd_payload } from 'bsrs-ember/tests/helpers/payloads/dtd';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import DTDL from 'bsrs-ember/vendor/defaults/dtd-link';
 import LINK from 'bsrs-ember/vendor/defaults/link';
@@ -14,7 +14,7 @@ import OD from 'bsrs-ember/vendor/defaults/option';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import TCD from 'bsrs-ember/vendor/defaults/model-category';
 
-var store, dtd, dtd_2, link, priority, status, field, option, uuid;
+var store, dtd, dtd_2, link, priority, status, field;
 
 module('unit: dtd test', {
   beforeEach() {
@@ -276,7 +276,7 @@ test('save - Fields and Options', (assert) => {
   field = dtd.get('fields').objectAt(0);
   assert.equal(field.get('options').get('length'), 0);
   run(() => {
-    option = store.push('option', {id: OD.idOne});
+    store.push('option', {id: OD.idOne});
   });
   field.add_option({id: OD.idOne});
   assert.equal(field.get('options').get('length'), 1);
@@ -302,7 +302,7 @@ test('serialize dtd model and links with a priority', (assert) => {
     status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, links: [LINK.idOne]});
     field = store.push('field', {id: FD.idOne, label: FD.labelOne, type: FD.typeOne, required: FD.requiredOne, order: FD.orderOne});
     dtd.add_field({id: FD.idOne});
-    option = store.push('option', {id: OD.idOne, text: OD.textOne, order: OD.orderOne});
+    store.push('option', {id: OD.idOne, text: OD.textOne, order: OD.orderOne});
     field.add_option({id: OD.idOne});
     store.push('dtd', {id: DTD.idTwo, destination_links: [LINK.idOne]});
     link = store.push('link', {
@@ -506,7 +506,7 @@ test('attachments property returns associated array or empty array', (assert) =>
 
 test('add_attachment will add the attachment id to the dtds fks array', function(assert) {
   dtd = store.push('dtd', {id: DTD.idOne});
-  let attachment = store.push('attachment', {id: 8});
+  store.push('attachment', {id: 8});
   assert.equal(dtd.get('attachments').get('length'), 0);
   dtd.add_attachment(8);
   assert.deepEqual(dtd.get('current_attachment_fks'), [8]);
@@ -518,7 +518,7 @@ test('add_attachment will add the attachment id to the dtds fks array', function
 
 test('remove_attachment will remove dtd_fk from the attachment', function(assert) {
   dtd = store.push('dtd', {id: DTD.idOne, current_attachment_fks: [8]});
-  let attachment = store.push('attachment', {id: 8});
+  store.push('attachment', {id: 8});
   assert.equal(dtd.get('attachments').get('length'), 1);
   assert.deepEqual(dtd.get('current_attachment_fks'), [8]);
   dtd.remove_attachment(8);
@@ -531,7 +531,7 @@ test('remove_attachment will remove dtd_fk from the attachment', function(assert
 
 test('add and remove attachment work as expected', function(assert) {
   dtd = store.push('dtd', {id: DTD.idOne, current_attachment_fks: []});
-  let attachment = store.push('attachment', {id: 8});
+  store.push('attachment', {id: 8});
   assert.equal(dtd.get('attachments').get('length'), 0);
   dtd.remove_attachment(8);
   assert.equal(dtd.get('attachments').get('length'), 0);
@@ -543,7 +543,7 @@ test('add and remove attachment work as expected', function(assert) {
 
 test('dtd is dirty or related is dirty when attachment is added or removed (starting with none)', (assert) => {
   dtd = store.push('dtd', {id: DTD.idOne, current_attachment_fks: [], previous_attachments_fks: []});
-  let attachment = store.push('attachment', {id: 8});
+  store.push('attachment', {id: 8});
   assert.equal(dtd.get('attachments').get('length'), 0);
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
   dtd.remove_attachment(8);
@@ -561,7 +561,7 @@ test('dtd is dirty or related is dirty when attachment is added or removed (star
 
 test('dtd is dirty or related is dirty when attachment is added or removed (starting with one attachment)', (assert) => {
   dtd = store.push('dtd', {id: DTD.idOne, current_attachment_fks: [8], previous_attachments_fks: [8]});
-  let attachment = store.push('attachment', {id: 8, dtd_fk: DTD.idOne});
+  store.push('attachment', {id: 8, dtd_fk: DTD.idOne});
   assert.equal(dtd.get('attachments').get('length'), 1);
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
   dtd.remove_attachment(8);
@@ -622,7 +622,7 @@ test('attachments should be dirty even when the number of previous matches curre
 
 test('dtd is not dirty after save and save related (starting with none)', (assert) => {
   dtd = store.push('dtd', {id: DTD.idOne, current_attachment_fks: [], previous_attachments_fks: []});
-  let attachment = store.push('attachment', {id: 8});
+  store.push('attachment', {id: 8});
   assert.equal(dtd.get('attachments').get('length'), 0);
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
   dtd.add_attachment(8);

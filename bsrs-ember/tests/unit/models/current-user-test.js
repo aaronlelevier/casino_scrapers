@@ -1,7 +1,5 @@
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import PersonCurrent from "bsrs-ember/models/person-current";
-import Ember from 'ember';
 
 var store;
 

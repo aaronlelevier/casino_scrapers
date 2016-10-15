@@ -4,7 +4,7 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CCD from 'bsrs-ember/vendor/defaults/category-children';
 
-var store, uuid, category, run = Ember.run;
+var store, category, run = Ember.run;
 
 module('unit: category test', {
     beforeEach() {
@@ -101,7 +101,7 @@ test('category is dirty when child is added or removed (starting with one child)
     category.add_children(cat_one);
     assert.equal(category.get('children').get('length'), 1);
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
-    const cat_two = store.push('category', {id:9});
+    store.push('category', {id:9});
     category.add_children({id: 9});
     assert.equal(category.get('children').get('length'), 2);
     assert.ok(category.get('category_children_fks'), [8,9]);
@@ -111,7 +111,7 @@ test('category is dirty when child is added or removed (starting with one child)
 test('rollback children will revert and reboot the dirty children to clean', (assert) => {
     store.push('category', {id: CD.idOne, category_children_fks: [CCD.idOne]});
     store.push('category-children', {id: CCD.idOne, category_pk: CD.idOne, children_pk: 8});
-    const cat = store.push('category', {id: 8});
+    store.push('category', {id: 8});
     const cat_two = {id: 9};
     assert.equal(category.get('children').get('length'), 1);
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));

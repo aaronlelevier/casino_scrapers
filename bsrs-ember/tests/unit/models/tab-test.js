@@ -5,7 +5,7 @@ import TBD from 'bsrs-ember/vendor/defaults/tab';
 import TBF from 'bsrs-ember/vendor/tab_fixtures';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-let store, tab1, tab2;
+let store, tab1;
 
 module('unit: tab', {
   beforeEach() {

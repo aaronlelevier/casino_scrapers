@@ -14,11 +14,10 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import PF from 'bsrs-ember/vendor/people_fixtures';
-import CF from 'bsrs-ember/vendor/category_fixtures';
 import TicketDeserializer from 'bsrs-ember/deserializers/ticket';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-let store, subject, uuid, ticket_priority, ticket_status, ticket, location_level, status;
+let store, subject, uuid, ticket_priority, ticket_status, ticket;
 
 module('unit: ticket deserializer test', {
   beforeEach() {
@@ -31,7 +30,7 @@ module('unit: ticket deserializer test', {
       ticket_status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: [TD.idOne]});
       store.push('ticket-status', {id: TD.statusSevenId, name: TD.statusSeven, tickets: []});
       ticket = store.push('ticket', {id: TD.idOne, priority_fk: TD.priorityOneId, status_fk: TD.statusOneId});
-      location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, locations: [LD.idOne]});
+      store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, locations: [LD.idOne]});
       store.push('status', {id: SD.activeId, name: SD.activeName});
       store.push('role', {id: RD.idOne, name: RD.nameOne, location_level_fk: LLD.idOne});
     });
@@ -491,11 +490,10 @@ test('ticket-join-person m2m is set up correctly using deserialize single (start
 });
 
 test('ticket-status m2m is added after deserialize single (starting with existing m2m relationship)', (assert) => {
-  let m2m, person;
   ticket.set('ticket_cc_fks', [TICKET_PERSON_DEFAULTS.idOne]);
   ticket.save();
-  m2m = store.push('ticket-join-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
-  person = store.push('person', {id: PD.id, fullname: PD.fullname});
+  store.push('ticket-join-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
+  store.push('person', {id: PD.id, fullname: PD.fullname});
   assert.equal(ticket.get('cc.length'), 1);
   let response = TF.generate(TD.idOne);
   let second_person = PF.get_no_related(PD.unusedId);
@@ -515,11 +513,10 @@ test('ticket-status m2m is added after deserialize single (starting with existin
 });
 
 test('ticket-join-person m2m is removed when server payload no longer reflects what server has for m2m relationship', (assert) => {
-  let m2m, person;
   ticket.set('ticket_cc_fks', [TICKET_PERSON_DEFAULTS.idOne]);
   ticket.save();
-  m2m = store.push('ticket-join-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
-  person = store.push('person', {id: PD.id, name: PD.fullname});
+  store.push('ticket-join-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
+  store.push('person', {id: PD.id, name: PD.fullname});
   assert.equal(ticket.get('cc').get('length'), 1);
   let response = TF.generate(TD.id);
   let second_person = PF.get(PD.unusedId);
@@ -635,11 +632,10 @@ test('model-category m2m is set up correctly using deserialize single (starting 
 // });
 
 test('ticket-category m2m is added after deserialize single (starting with existing m2m relationship)', (assert) => {
-  let m2m, category;
   ticket.set('model_categories_fks', [TICKET_CD.idOne]);
   ticket.save();
-  m2m = store.push('model-category', {id: TICKET_CD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
-  category = store.push('category', {id: CD.idOne, name: CD.nameOne});
+  store.push('model-category', {id: TICKET_CD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
+  store.push('category', {id: CD.idOne, name: CD.nameOne});
   assert.equal(ticket.get('categories.length'), 1);
   let response = TF.generate(TD.idOne);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -682,11 +678,10 @@ test('ticket-category m2m is added after deserialize single (starting with exist
 // });
 
 test('model-category m2m is removed when server payload no longer reflects what server has for m2m relationship', (assert) => {
-  let m2m, category;
   ticket.set('model_categories_fks', [TICKET_CD.idThree]);
   ticket.save();
   const m2m_unused = store.push('model-category', {id: TICKET_CD.idThree, model_pk: TD.idOne, category_pk: CD.unusedId});
-  category = store.push('category', {id: CD.idOne, name: CD.nameOne});
+  store.push('category', {id: CD.idOne, name: CD.nameOne});
   store.push('category', {id: CD.unusedId, name: CD.nameUnused});
   assert.equal(ticket.get('categories').get('length'), 1);
   let response = TF.generate(TD.id);

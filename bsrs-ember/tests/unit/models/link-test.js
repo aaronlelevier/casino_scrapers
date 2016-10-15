@@ -9,7 +9,7 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import TCD from 'bsrs-ember/vendor/defaults/model-category';
 
-var store, priority, status, dtd, link, uuid;
+var store, priority, status, dtd, link;
 
 module('unit: link test', {
   beforeEach() {
@@ -194,10 +194,9 @@ test('change_destination changes destination', (assert) => {
 
 // rollback
 test('rollback status - value value value', (assert) => {
-  let status_two;
   run(() => {
     status = store.push('ticket-status', {id: TD.statusOneId, links: [LINK.idOne]});
-    status_two = store.push('ticket-status', {id: TD.statusTwoId});
+    store.push('ticket-status', {id: TD.statusTwoId});
     link = store.push('link', {id: LINK.idOne, status_fk: TD.statusOneId});
   });
   assert.equal(link.get('status.id'), TD.statusOneId);
@@ -212,10 +211,9 @@ test('rollback status - value value value', (assert) => {
 });
 
 test('rollback priority - value value value', (assert) => {
-  let priority_two;
   run(() => {
     priority = store.push('ticket-priority', {id: TP.priorityOneId, links: [LINK.idOne]});
-    priority_two = store.push('ticket-priority', {id: TP.priorityTwoId});
+    store.push('ticket-priority', {id: TP.priorityTwoId});
     link = store.push('link', {id: LINK.idOne, priority_fk: TP.priorityOneId});
   });
   assert.equal(link.get('priority.id'), TP.priorityOneId);
@@ -229,10 +227,9 @@ test('rollback priority - value value value', (assert) => {
 });
 
 test('rollback priority - value null value', (assert) => {
-  let priority_two;
   run(() => {
     priority = store.push('ticket-priority', {id: TP.priorityOneId, links: [LINK.idOne]});
-    priority_two = store.push('ticket-priority', {id: TP.priorityTwoId});
+    store.push('ticket-priority', {id: TP.priorityTwoId});
     link = store.push('link', {id: LINK.idOne, priority_fk: TP.priorityOneId});
   });
   assert.equal(link.get('priority.id'), TP.priorityOneId);
@@ -246,11 +243,10 @@ test('rollback priority - value null value', (assert) => {
 });
 
 test('rollback - destination', (assert) => {
-  let dtd_two;
   run(() => {
     dtd = store.push('dtd', {id: DTD.idOne, destination_links: [LINK.idOne]});
     link = store.push('link', {id: LINK.idOne, destination_fk: DTD.idOne});
-    dtd_two = store.push('dtd', {id: DTD.idTwo});
+    store.push('dtd', {id: DTD.idTwo});
   });
   const two = {id: DTD.idTwo};
   assert.equal(link.get('destination.id'), DTD.idOne);
@@ -273,10 +269,9 @@ test('savePriority', (assert) => {
 });
 
 test('savePriority null priority', (assert) => {
-  let priority_two;
   run(() => {
     priority = store.push('ticket-priority', {id: TP.priorityOneId, links: [LINK.idOne]});
-    priority_two = store.push('ticket-priority', {id: TP.priorityTwoId});
+    store.push('ticket-priority', {id: TP.priorityTwoId});
     link = store.push('link', {id: LINK.idOne, priority_fk: TP.priorityOneId});
   });
   link.change_priority(null);
@@ -296,10 +291,9 @@ test('saveStatus', (assert) => {
 });
 
 test('saveStatus null status', (assert) => {
-  let status_two;
   run(() => {
     status = store.push('ticket-status', {id: TD.statusOneId, links: [LINK.idOne]});
-    status_two = store.push('ticket-status', {id: TD.statusTwoId});
+    store.push('ticket-status', {id: TD.statusTwoId});
     link = store.push('link', {id: LINK.idOne, status_fk: TD.statusOneId});
   });
   link.change_status(null);
@@ -632,7 +626,7 @@ test('categories property returns multiple matching items when multiple people (
 
 test('categories property will update when the m2m array suddenly has the category pk (starting w/ empty array)', (assert) => {
   link = store.push('link', {id: LINK.idOne, model_categories_fks: []});
-  let category = store.push('category', {id: CD.idOne});
+  store.push('category', {id: CD.idOne});
   assert.equal(link.get('categories').get('length'), 0);
   assert.ok(link.get('categoriesIsNotDirty'));
   assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
@@ -646,8 +640,8 @@ test('categories property will update when the m2m array suddenly has the catego
 test('categories property will update when the m2m array suddenly has the category pk', (assert) => {
   store.push('model-category', {id: TCD.idOne, category_pk: CD.idOne, model_pk: LINK.idOne});
   link = store.push('link', {id: LINK.idOne, model_categories_fks: [TCD.idOne]});
-  let category = store.push('category', {id: CD.idOne});
-  let category_two = store.push('category', {id: CD.idTwo});
+  store.push('category', {id: CD.idOne});
+  store.push('category', {id: CD.idTwo});
   assert.equal(link.get('categories').get('length'), 1);
   assert.ok(link.get('categoriesIsNotDirty'));
   assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
@@ -660,9 +654,9 @@ test('categories property will update when the m2m array suddenly has the catego
 });
 
 test('categories property will update when the m2m array suddenly removes the category', (assert) => {
-  let m2m = store.push('model-category', {id: TCD.idOne, category_pk: CD.idOne, model_pk: LINK.idOne});
+  store.push('model-category', {id: TCD.idOne, category_pk: CD.idOne, model_pk: LINK.idOne});
   link = store.push('link', {id: LINK.idOne, model_categories_fks: [TCD.idOne]});
-  let category = store.push('category', {id: CD.idOne});
+  store.push('category', {id: CD.idOne});
   assert.equal(link.get('categories').get('length'), 1);
   link.remove_category(CD.idOne);
   assert.equal(link.get('categories').get('length'), 0);
@@ -670,7 +664,7 @@ test('categories property will update when the m2m array suddenly removes the ca
 
 test('when categories is changed dirty tracking works as expected (removing)', (assert) => {
   store.push('model-category', {id: TCD.idOne, model_pk: LINK.idOne, category_pk: CD.idOne});
-  let category = store.push('category', {id: CD.idOne});
+  store.push('category', {id: CD.idOne});
   link = store.push('link', {id: LINK.idOne, model_categories_fks: [TCD.idOne]});
   assert.equal(link.get('categories').get('length'), 1);
   assert.ok(link.get('categoriesIsNotDirty'));

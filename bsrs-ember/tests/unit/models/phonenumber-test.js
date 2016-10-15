@@ -4,9 +4,8 @@ import { moduleFor, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PD from 'bsrs-ember/vendor/defaults/phone-number';
 import PTD from 'bsrs-ember/vendor/defaults/phone-number-type';
-import PhoneNumber from 'bsrs-ember/models/phonenumber';
 
-let store, phonenumber, type;
+let store, phonenumber;
 
 moduleFor('model:phonenumber', 'Unit | Model | phonenumber', {
   beforeEach() {
@@ -38,7 +37,7 @@ test('phonenumber-type - get via related attr', assert => {
 test('type - isDirty and related dirty tests', assert => {
   run(() => {
     phonenumber = store.push('phonenumber', {id: PD.idOne, phone_number_type_fk: PTD.idOne});
-    type = store.push('phone-number-type', {id: PTD.idOne, phonenumbers: [PD.idOne]});
+    store.push('phone-number-type', {id: PTD.idOne, phonenumbers: [PD.idOne]});
   });
   assert.equal(phonenumber.get('phone_number_type').get('id'), PTD.idOne);
   assert.ok(phonenumber.get('isNotDirty'));
@@ -53,7 +52,7 @@ test('type - isDirty and related dirty tests', assert => {
 test('type - saveRelated', assert => {
   run(() => {
     phonenumber = store.push('phonenumber', {id: PD.idOne, phone_number_type_fk: PTD.idOne});
-    type = store.push('phone-number-type', {id: PTD.idOne, phonenumbers: [PD.idOne]});
+    store.push('phone-number-type', {id: PTD.idOne, phonenumbers: [PD.idOne]});
   });
   assert.equal(phonenumber.get('phone_number_type').get('id'), PTD.idOne);
   assert.ok(phonenumber.get('isNotDirtyOrRelatedNotDirty'));
@@ -68,7 +67,7 @@ test('type - saveRelated', assert => {
 test('type - rollback', assert => {
   run(() => {
     phonenumber = store.push('phonenumber', {id: PD.idOne, phone_number_type_fk: PTD.idOne});
-    type = store.push('phone-number-type', {id: PTD.idOne, phonenumbers: [PD.idOne]});
+    store.push('phone-number-type', {id: PTD.idOne, phonenumbers: [PD.idOne]});
   });
   assert.equal(phonenumber.get('phone_number_type').get('id'), PTD.idOne);
   assert.ok(phonenumber.get('isNotDirtyOrRelatedNotDirty'));

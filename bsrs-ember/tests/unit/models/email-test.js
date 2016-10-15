@@ -5,7 +5,7 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import ED from 'bsrs-ember/vendor/defaults/email';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
 
-var store, email, email_type;
+var store, email;
 
 moduleFor('model:email', 'Unit | Model | email', {
   beforeEach() {
@@ -37,7 +37,7 @@ test('email-type - get via related attr', assert => {
 test('email.change_email_type', assert => {
   run(() => {
     email = store.push('email', {id: ED.idOne, email_type_fk: ETD.idOne});
-    email_type = store.push('email-type', {id: ETD.idOne, emails: [ED.idOne]});
+    store.push('email-type', {id: ETD.idOne, emails: [ED.idOne]});
   });
   assert.equal(email.get('email_type').get('id'), ETD.idOne);
   assert.ok(email.get('isNotDirtyOrRelatedNotDirty'));
@@ -49,7 +49,7 @@ test('email.change_email_type', assert => {
 test('email_type - isDirty and related dirty tests', assert => {
   run(() => {
     email = store.push('email', {id: ED.idOne, email_type_fk: ETD.idOne});
-    email_type = store.push('email-type', {id: ETD.idOne, emails: [ED.idOne]});
+    store.push('email-type', {id: ETD.idOne, emails: [ED.idOne]});
   });
   assert.equal(email.get('email_type').get('id'), ETD.idOne);
   assert.ok(email.get('isNotDirty'));
@@ -65,7 +65,7 @@ test('email_type - isDirty and related dirty tests', assert => {
 test('email_type - saveRelated', assert => {
   run(() => {
     email = store.push('email', {id: ED.idOne, email_type_fk: ETD.idOne});
-    email_type = store.push('email-type', {id: ETD.idOne, emails: [ED.idOne]});
+    store.push('email-type', {id: ETD.idOne, emails: [ED.idOne]});
   });
   assert.equal(email.get('email_type').get('id'), ETD.idOne);
   assert.ok(email.get('isNotDirtyOrRelatedNotDirty'));
@@ -80,7 +80,7 @@ test('email_type - saveRelated', assert => {
 test('email_type - rollback', assert => {
   run(() => {
     email = store.push('email', {id: ED.idOne, email_type_fk: ETD.idOne});
-    email_type = store.push('email-type', {id: ETD.idOne, emails: [ED.idOne]});
+    store.push('email-type', {id: ETD.idOne, emails: [ED.idOne]});
   });
   assert.equal(email.get('email_type').get('id'), ETD.idOne);
   assert.ok(email.get('isNotDirtyOrRelatedNotDirty'));

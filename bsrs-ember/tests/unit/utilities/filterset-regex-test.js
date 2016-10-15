@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import { test, module } from 'qunit';
 import filterset_regex from 'bsrs-ember/utilities/filterset-regex';
 

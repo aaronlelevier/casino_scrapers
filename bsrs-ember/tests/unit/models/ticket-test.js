@@ -289,7 +289,7 @@ test('cc property will update when the m2m array suddenly has the person pk', (a
 });
 
 test('cc property will update when the m2m array suddenly removes the person', (assert) => {
-  let m2m = store.push('ticket-join-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
+  store.push('ticket-join-person', {id: TPD.idOne, person_pk: PD.id, ticket_pk: TD.idOne});
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne]});
   store.push('person', {id: PD.id});
   assert.equal(ticket.get('cc').get('length'), 1);
@@ -784,7 +784,7 @@ test('categories property returns multiple matching items when multiple people (
 
 test('categories property will update when the m2m array suddenly has the category pk (starting w/ empty array)', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: []});
-  let category = store.push('category', {id: CD.idOne});
+  store.push('category', {id: CD.idOne});
   assert.equal(ticket.get('categories').get('length'), 0);
   assert.ok(ticket.get('categoriesIsNotDirty'));
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -798,8 +798,8 @@ test('categories property will update when the m2m array suddenly has the catego
 test('categories property will update when the m2m array suddenly has the category pk', (assert) => {
   store.push('model-category', {id: TCD.idOne, category_pk: CD.idOne, model_pk: TD.idOne});
   ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne]});
-  let category = store.push('category', {id: CD.idOne});
-  let category_two = store.push('category', {id: CD.idTwo});
+  store.push('category', {id: CD.idOne});
+  store.push('category', {id: CD.idTwo});
   assert.equal(ticket.get('categories').get('length'), 1);
   assert.ok(ticket.get('categoriesIsNotDirty'));
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -812,9 +812,9 @@ test('categories property will update when the m2m array suddenly has the catego
 });
 
 test('categories property will update when the m2m array suddenly removes the category', (assert) => {
-  let m2m = store.push('model-category', {id: TCD.idOne, category_pk: CD.idOne, model_pk: TD.idOne});
+  store.push('model-category', {id: TCD.idOne, category_pk: CD.idOne, model_pk: TD.idOne});
   ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne]});
-  let category = store.push('category', {id: CD.idOne});
+  store.push('category', {id: CD.idOne});
   assert.equal(ticket.get('categories').get('length'), 1);
   ticket.remove_category(CD.idOne);
   assert.equal(ticket.get('categories').get('length'), 0);
@@ -822,7 +822,7 @@ test('categories property will update when the m2m array suddenly removes the ca
 
 test('when categories is changed dirty tracking works as expected (removing)', (assert) => {
   store.push('model-category', {id: TCD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
-  let category = store.push('category', {id: CD.idOne});
+  store.push('category', {id: CD.idOne});
   ticket = store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne]});
   assert.equal(ticket.get('categories').get('length'), 1);
   assert.ok(ticket.get('categoriesIsNotDirty'));
@@ -1010,7 +1010,7 @@ test('priority will save correctly as undefined', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne, priority_fk: undefined});
   store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: []});
   ticket.saveRelated();
-  let priority = ticket.get('priority');
+   ticket.get('priority');
   assert.equal(ticket.get('priority_fk'), undefined);
 });
 
@@ -1106,7 +1106,7 @@ test('assignee will save correctly as undefined', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne, assignee_fk: undefined});
   store.push('person', {id: TD.assigneeOneId, name: TD.assigneeOne, assigned_tickets: []});
   ticket.saveRelated();
-  let assignee = ticket.get('assignee');
+  ticket.get('assignee');
   assert.equal(ticket.get('assignee_fk'), undefined);
 });
 
@@ -1196,7 +1196,7 @@ test('location will save correctly as undefined', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne, location_fk: undefined});
   store.push('location', {id: LD.idOne, name: LD.storeName, tickets: []});
   ticket.saveRelated();
-  let location = ticket.get('_location');
+  ticket.get('_location');
   assert.equal(ticket.get('location_fk'), undefined);
 });
 
@@ -1274,7 +1274,7 @@ test('attachments property returns associated array or empty array', (assert) =>
 
 test('add_attachment will add the attachment id to the tickets fks array', function(assert) {
   ticket = store.push('ticket', {id: TD.idOne});
-  let attachment = store.push('attachment', {id: 8});
+  store.push('attachment', {id: 8});
   assert.equal(ticket.get('attachments').get('length'), 0);
   ticket.add_attachment(8);
   assert.deepEqual(ticket.get('current_attachment_fks'), [8]);
@@ -1286,7 +1286,7 @@ test('add_attachment will add the attachment id to the tickets fks array', funct
 
 test('remove_attachment will remove ticket_fk from the attachment', function(assert) {
   ticket = store.push('ticket', {id: TD.idOne, current_attachment_fks: [8]});
-  let attachment = store.push('attachment', {id: 8});
+  store.push('attachment', {id: 8});
   assert.equal(ticket.get('attachments').get('length'), 1);
   assert.deepEqual(ticket.get('current_attachment_fks'), [8]);
   ticket.remove_attachment(8);
@@ -1299,7 +1299,7 @@ test('remove_attachment will remove ticket_fk from the attachment', function(ass
 
 test('add and remove attachment work as expected', function(assert) {
   ticket = store.push('ticket', {id: TD.idOne, current_attachment_fks: []});
-  let attachment = store.push('attachment', {id: 8});
+  store.push('attachment', {id: 8});
   assert.equal(ticket.get('attachments').get('length'), 0);
   ticket.remove_attachment(8);
   assert.equal(ticket.get('attachments').get('length'), 0);
@@ -1311,7 +1311,7 @@ test('add and remove attachment work as expected', function(assert) {
 
 test('ticket is dirty or related is dirty when attachment is added or removed (starting with none)', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne, current_attachment_fks: [], previous_attachments_fks: []});
-  let attachment = store.push('attachment', {id: 8});
+  store.push('attachment', {id: 8});
   assert.equal(ticket.get('attachments').get('length'), 0);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   ticket.remove_attachment(8);
@@ -1329,7 +1329,7 @@ test('ticket is dirty or related is dirty when attachment is added or removed (s
 
 test('ticket is dirty or related is dirty when attachment is added or removed (starting with one attachment)', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne, current_attachment_fks: [8], previous_attachments_fks: [8]});
-  let attachment = store.push('attachment', {id: 8, ticket_fk: TD.idOne});
+  store.push('attachment', {id: 8, ticket_fk: TD.idOne});
   assert.equal(ticket.get('attachments').get('length'), 1);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   ticket.remove_attachment(8);
@@ -1390,7 +1390,7 @@ test('attachments should be dirty even when the number of previous matches curre
 
 test('ticket is not dirty after save and save related (starting with none)', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne, current_attachment_fks: [], previous_attachments_fks: []});
-  let attachment = store.push('attachment', {id: 8});
+  store.push('attachment', {id: 8});
   assert.equal(ticket.get('attachments').get('length'), 0);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   ticket.add_attachment(8);

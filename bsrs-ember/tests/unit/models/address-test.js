@@ -7,7 +7,7 @@ import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import CD from 'bsrs-ember/vendor/defaults/country';
 import SD from 'bsrs-ember/vendor/defaults/country';
 
-var store, address, country, state, address_type;
+var store, address;
 
 moduleFor('model:address', 'Unit | Model | address', {
   beforeEach() {
@@ -55,7 +55,7 @@ test('country - get via related attr', assert => {
 test('address.change_country', assert => {
   run(() => {
     address = store.push('address', {id: AD.idOne, country_fk: CD.idOne});
-    country = store.push('country', {id: CD.idOne, addresses: [AD.idOne]});
+    store.push('country', {id: CD.idOne, addresses: [AD.idOne]});
   });
   assert.equal(address.get('country').get('id'), CD.idOne);
   address.change_country({id: CD.idTwo});
@@ -65,7 +65,7 @@ test('address.change_country', assert => {
 test('country - isDirty and related dirty tests', assert => {
   run(() => {
     address = store.push('address', {id: AD.idOne, country_fk: CD.idOne});
-    country = store.push('country', {id: CD.idOne, addresses: [AD.idOne]});
+    store.push('country', {id: CD.idOne, addresses: [AD.idOne]});
   });
   assert.equal(address.get('country').get('id'), CD.idOne);
   assert.ok(address.get('isNotDirty'));
@@ -81,7 +81,7 @@ test('country - isDirty and related dirty tests', assert => {
 test('country - saveRelated', assert => {
   run(() => {
     address = store.push('address', {id: AD.idOne, country_fk: CD.idOne});
-    country = store.push('country', {id: CD.idOne, addresses: [AD.idOne]});
+    store.push('country', {id: CD.idOne, addresses: [AD.idOne]});
   });
   assert.equal(address.get('country').get('id'), CD.idOne);
   assert.ok(address.get('isNotDirtyOrRelatedNotDirty'));
@@ -96,7 +96,7 @@ test('country - saveRelated', assert => {
 test('country - rollback', assert => {
   run(() => {
     address = store.push('address', {id: AD.idOne, country_fk: CD.idOne});
-    country = store.push('country', {id: CD.idOne, addresses: [AD.idOne]});
+    store.push('country', {id: CD.idOne, addresses: [AD.idOne]});
   });
   assert.equal(address.get('country').get('id'), CD.idOne);
   assert.ok(address.get('isNotDirtyOrRelatedNotDirty'));
@@ -123,7 +123,7 @@ test('state - get via related attr', assert => {
 test('address.change_state', assert => {
   run(() => {
     address = store.push('address', {id: AD.idOne, state_fk: SD.idOne});
-    state = store.push('state', {id: SD.idOne, addresses: [AD.idOne]});
+    store.push('state', {id: SD.idOne, addresses: [AD.idOne]});
   });
   assert.equal(address.get('state').get('id'), SD.idOne);
   address.change_state({id: SD.idTwo});
@@ -133,7 +133,7 @@ test('address.change_state', assert => {
 test('state - isDirty and related dirty tests', assert => {
   run(() => {
     address = store.push('address', {id: AD.idOne, state_fk: SD.idOne});
-    state = store.push('state', {id: SD.idOne, addresses: [AD.idOne]});
+    store.push('state', {id: SD.idOne, addresses: [AD.idOne]});
   });
   assert.equal(address.get('state').get('id'), SD.idOne);
   assert.ok(address.get('isNotDirty'));
@@ -149,7 +149,7 @@ test('state - isDirty and related dirty tests', assert => {
 test('state - saveRelated', assert => {
   run(() => {
     address = store.push('address', {id: AD.idOne, state_fk: SD.idOne});
-    state = store.push('state', {id: SD.idOne, addresses: [AD.idOne]});
+    store.push('state', {id: SD.idOne, addresses: [AD.idOne]});
   });
   assert.equal(address.get('state').get('id'), SD.idOne);
   assert.ok(address.get('isNotDirtyOrRelatedNotDirty'));
@@ -164,7 +164,7 @@ test('state - saveRelated', assert => {
 test('state - rollback', assert => {
   run(() => {
     address = store.push('address', {id: AD.idOne, state_fk: SD.idOne});
-    state = store.push('state', {id: SD.idOne, addresses: [AD.idOne]});
+    store.push('state', {id: SD.idOne, addresses: [AD.idOne]});
   });
   assert.equal(address.get('state').get('id'), SD.idOne);
   assert.ok(address.get('isNotDirtyOrRelatedNotDirty'));
@@ -191,7 +191,7 @@ test('address-type - get via related attr', assert => {
 test('address.change_address_type', assert => {
   run(() => {
     address = store.push('address', {id: AD.idOne, address_type_fk: ATD.idOne});
-    address_type = store.push('address-type', {id: ATD.idOne, addresses: [AD.idOne]});
+    store.push('address-type', {id: ATD.idOne, addresses: [AD.idOne]});
   });
   assert.equal(address.get('address_type').get('id'), ATD.idOne);
   assert.ok(address.get('isNotDirtyOrRelatedNotDirty'));
@@ -203,7 +203,7 @@ test('address.change_address_type', assert => {
 test('address_type - isDirty and related dirty tests', assert => {
   run(() => {
     address = store.push('address', {id: AD.idOne, address_type_fk: ATD.idOne});
-    address_type = store.push('address-type', {id: ATD.idOne, addresses: [AD.idOne]});
+    store.push('address-type', {id: ATD.idOne, addresses: [AD.idOne]});
   });
   assert.equal(address.get('address_type').get('id'), ATD.idOne);
   assert.ok(address.get('isNotDirty'));
@@ -219,7 +219,7 @@ test('address_type - isDirty and related dirty tests', assert => {
 test('address_type - saveRelated', assert => {
   run(() => {
     address = store.push('address', {id: AD.idOne, address_type_fk: ATD.idOne});
-    address_type = store.push('address-type', {id: ATD.idOne, addresses: [AD.idOne]});
+    store.push('address-type', {id: ATD.idOne, addresses: [AD.idOne]});
   });
   assert.equal(address.get('address_type').get('id'), ATD.idOne);
   assert.ok(address.get('isNotDirtyOrRelatedNotDirty'));
@@ -234,7 +234,7 @@ test('address_type - saveRelated', assert => {
 test('address_type - rollback', assert => {
   run(() => {
     address = store.push('address', {id: AD.idOne, address_type_fk: ATD.idOne});
-    address_type = store.push('address-type', {id: ATD.idOne, addresses: [AD.idOne]});
+    store.push('address-type', {id: ATD.idOne, addresses: [AD.idOne]});
   });
   assert.equal(address.get('address_type').get('id'), ATD.idOne);
   assert.ok(address.get('isNotDirtyOrRelatedNotDirty'));
@@ -260,15 +260,15 @@ test('serialize', assert => {
       state_fk: SD.idOne,
       address_type_fk: ATD.idOne
     });
-    country = store.push('country', {
+    store.push('country', {
       id: CD.idOne,
       addresses: [AD.idOne]
     });
-    state = store.push('state', {
+    store.push('state', {
       id: SD.idOne,
       addresses: [AD.idOne]
     });
-    address_type = store.push('address-type', {
+    store.push('address-type', {
       id: ATD.idOne,
       addresses: [AD.idOne]
     });

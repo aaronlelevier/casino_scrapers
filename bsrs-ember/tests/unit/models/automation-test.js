@@ -3,14 +3,10 @@ const { run } = Ember;
 import { moduleFor, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import AD from 'bsrs-ember/vendor/defaults/automation';
-import AF from 'bsrs-ember/vendor/automation_fixtures';
 import PersonD from 'bsrs-ember/vendor/defaults/person';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import AJFD from 'bsrs-ember/vendor/defaults/automation-join-pfilter';
-import PJCD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
-import CD from 'bsrs-ember/vendor/defaults/criteria';
-import TD from 'bsrs-ember/vendor/defaults/ticket';
 
 var store, automation, pfilter, inactive_assignee, pf;
 
@@ -237,7 +233,6 @@ test('save - pfilter and their criteria not dirty when just add new filters but 
 });
 
 test('savePf - and add back old pf with same id will keep criteria and wont be dirty', (assert) => {
-  let pfilter_unused = {id: PFD.unusedId};
   run(() => {
     store.push('pfilter', {id: PFD.idOne});
     store.push('pfilter', {id: PFD.idTwo});

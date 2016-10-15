@@ -29,17 +29,16 @@ module('unit: role deserializer test', {
 });
 
 test('category and location level will not be deserialized into its own store when deserialize list is invoked', (assert) => {
-  let location_level, category;
   role = store.push('role-list', {
     id: RD.idOne,
     location_level_fk: LLD.idOne
   });
-  location_level = store.push('location-level', {
+  store.push('location-level', {
     id: LLD.idOne,
     name: LLD.nameCompany,
     roles: [RD.idOne]
   });
-  category = store.push('category', {
+   store.push('category', {
     id: CD.idOne,
     name: CD.nameOne
   });
@@ -58,13 +57,12 @@ test('category and location level will not be deserialized into its own store wh
 });
 
 test('location level and category will correctly be deserialized into its own store with a foreign key on role (single)', (assert) => {
-  let location_level;
   role = store.push('role', {
     id: RD.idOne,
     location_level_fk: LLD.idOne
   });
   assert.ok(role.get('categoriesIsNotDirty'));
-  location_level = store.push('location-level', {
+  store.push('location-level', {
     id: LLD.idOne,
     name: LLD.nameCompany,
     roles: [RD.idOne]
@@ -89,12 +87,11 @@ test('location level and category will correctly be deserialized into its own st
 });
 
 test('role location level will not be duplicated and correctly be deserialized into its own store with a foreign key on role (single)', (assert) => {
-  let location_level;
   role = store.push('role', {
     id: RD.idOne,
     location_level_fk: LLD.idOne
   });
-  location_level = store.push('location-level', {
+  store.push('location-level', {
     id: LLD.idOne,
     name: LLD.nameCompany,
     roles: [RD.idOne]
@@ -109,12 +106,11 @@ test('role location level will not be duplicated and correctly be deserialized i
 });
 
 test('role location level will correctly be deserialized when server returns role without a location_level (single)', (assert) => {
-  let location_level;
   role = store.push('role', {
     id: RD.idOne,
     location_level_fk: LLD.idOne
   });
-  location_level = store.push('location-level', {
+  store.push('location-level', {
     id: LLD.idOne,
     name: LLD.nameCompany,
     roles: [RD.idOne]
@@ -132,12 +128,11 @@ test('role location level will correctly be deserialized when server returns rol
 });
 
 test('role location level will correctly be deserialized (with many roles) when server returns role without a location_level (single)', (assert) => {
-  let location_level;
   role = store.push('role', {
     id: RD.idOne,
     location_level_fk: LLD.idOne
   });
-  location_level = store.push('location-level', {
+  store.push('location-level', {
     id: LLD.idOne,
     name: LLD.nameCompany,
     roles: [RD.idOne, RD.unusedId]
@@ -155,12 +150,11 @@ test('role location level will correctly be deserialized (with many roles) when 
 });
 
 test('role location level will correctly be deserialized when server returns role without a location_level (list)', (assert) => {
-  let location_level;
   role = store.push('role-list', {
     id: RD.idOne,
     location_level_fk: LLD.idOne
   });
-  location_level = store.push('location-level', {
+  store.push('location-level', {
     id: LLD.idOne,
     name: LLD.nameCompany,
     roles: [RD.idOne]
@@ -183,7 +177,7 @@ test('role location level will correctly be deserialized when server returns rol
 
 /*LL and CATEGORIES*/
 test('role category will correctly be deserialized when server returns role without a location_level and without a category (single)', (assert) => {
-  let role_category, category;
+  let role_category;
   role = store.push('role', {
     id: RD.idOne,
     name: RD.nameOne,
@@ -194,7 +188,7 @@ test('role category will correctly be deserialized when server returns role with
     role_pk: RD.idOne,
     category_pk: CD.idOne
   });
-  category = store.push('category', {
+  store.push('category', {
     id: CD.idOne,
     name: CD.nameOne
   });
@@ -208,14 +202,14 @@ test('role category will correctly be deserialized when server returns role with
   });
   assert.deepEqual(role.get('role_categories_fks'), []);
   assert.equal(role.get('categories').get('length'), 0);
-  let original = store.find('category', CD.idOne);
+  store.find('category', CD.idOne);
   assert.ok(role.get('isNotDirty'));
   assert.equal(role_category.get('removed'), true);
   assert.equal(role.get('categories').get('length'), 0);
 });
 
 test('role category will correctly be deserialized when server returns role without a location_level and without one of two categories (single)', (assert) => {
-  let role_category, role_category_two, category, category_unused;
+  let role_category, role_category_two;
   role = store.push('role', {
     id: RD.idOne,
     name: RD.nameOne,
@@ -231,11 +225,11 @@ test('role category will correctly be deserialized when server returns role with
     role_pk: RD.idOne,
     category_pk: CD.unusedId
   });
-  category = store.push('category', {
+  store.push('category', {
     id: CD.idOne,
     name: CD.nameOne
   });
-  category_unused = store.push('category', {
+  store.push('category', {
     id: CD.unusedId,
     name: CD.nameTwo
   });
@@ -245,7 +239,7 @@ test('role category will correctly be deserialized when server returns role with
   run(() => {
     subject.deserialize(response, RD.idOne);
   });
-  let original = store.find('category', CD.idOne);
+  store.find('category', CD.idOne);
   assert.ok(role.get('isNotDirty'));
   assert.deepEqual(role.get('role_categories_fks'), [ROLE_CD.idOne]);
   assert.equal(role_category_two.get('removed'), true);
@@ -254,18 +248,18 @@ test('role category will correctly be deserialized when server returns role with
 });
 
 test('role category will correctly be deserialized when server returns role without a location_level and with an extra category (single)', (assert) => {
-  let role_category, category, response = RF.generate(RD.idOne);
+  let response = RF.generate(RD.idOne);
   role = store.push('role', {
     id: RD.idOne,
     name: RD.nameOne,
     role_categories_fks: [ROLE_CD.idOne]
   });
-  role_category = store.push('role-category', {
+  store.push('role-category', {
     id: ROLE_CD.idOne,
     role_pk: RD.idOne,
     category_pk: CD.idOne
   });
-  category = store.push('category', {
+  store.push('category', {
     id: CD.idOne,
     name: CD.nameOne
   });
@@ -275,7 +269,7 @@ test('role category will correctly be deserialized when server returns role with
   run(() => {
     subject.deserialize(response, RD.idOne);
   });
-  let original = store.find('category', CD.idOne);
+  store.find('category', CD.idOne);
   assert.ok(role.get('isNotDirty'));
   assert.deepEqual(role.get('role_categories_fks').length, 2);
   assert.equal(role.get('categories').get('length'), 2);
@@ -313,7 +307,6 @@ test('role-category m2m is set up correctly using deserialize single (starting w
 });
 
 test('role-category m2m is set up correctly using deserialize single (starting with a m2m relationship)', (assert) => {
-  let m2m, category;
   run(() => {
     store.push('location-level', {
       id: LLD.idOne,
@@ -331,7 +324,7 @@ test('role-category m2m is set up correctly using deserialize single (starting w
   });
   role.set('role_categories_fks', [ROLE_CD.idOne]);
   role.save();
-  m2m = store.push('role-category', {
+  store.push('role-category', {
     id: ROLE_CD.idOne,
     role_pk: RD.idOne,
     category_pk: CD.idTwo
@@ -378,7 +371,7 @@ test('role-category m2m is removed when server payload no longer reflects what s
 });
 
 test('role-category m2m does not delete other role-category m2m models', (assert) => {
-  let m2m, m2m_2, category, role_two;
+  let  role_two;
   run(() => {
     store.push('location-level', {
       id: LLD.idOne,
@@ -397,12 +390,12 @@ test('role-category m2m does not delete other role-category m2m models', (assert
       id: CD.idTwo,
       name: CD.nameTwo
     });
-    m2m = store.push('role-category', {
+    store.push('role-category', {
       id: ROLE_CD.idOne,
       role_pk: RD.idOne,
       category_pk: CD.idTwo
     });
-    m2m_2 = store.push('role-category', {
+    store.push('role-category', {
       id: ROLE_CD.idTwo,
       role_pk: RD.idTwo,
       category_pk: CD.idTwo

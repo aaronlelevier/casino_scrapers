@@ -4,17 +4,16 @@ import { test, module } from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import CD from 'bsrs-ember/vendor/defaults/criteria';
-import PersonD from 'bsrs-ember/vendor/defaults/person';
 import PJFD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
 
-var store, pfilter, criteria;
+var store, pfilter;
 
 module('unit: pfilter model test', {
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:pfilter', 'model:pfilter-join-criteria', 'model:criteria', 'model:person', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     run(() => {
       pfilter = store.push('pfilter', {id: PFD.idOne});
-      criteria = store.push('criteria', {id: CD.idOne});
+      store.push('criteria', {id: CD.idOne});
     });
   }
 });

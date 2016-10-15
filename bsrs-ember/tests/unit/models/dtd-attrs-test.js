@@ -4,7 +4,7 @@ import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 
-var store, dtd, uuid;
+var store, dtd;
 
 module('unit: dtd test', {
     beforeEach() {

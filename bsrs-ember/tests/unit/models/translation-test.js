@@ -1,11 +1,10 @@
 import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
-import Translation from 'bsrs-ember/models/translation';
 import TRANSLATION_DEFAULTS from 'bsrs-ember/vendor/defaults/translation';
 import LOCALE_TRANSLATION_DEFAULTS from 'bsrs-ember/vendor/defaults/locale-translation';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-let store, translation, locale, run = Ember.run;
+let store, translation,  run = Ember.run;
 
 module('unit: translation', {
     beforeEach() {
@@ -32,7 +31,7 @@ test('locales - push in actual object structure w/ 3 key:value', (assert) => {
         translation: LOCALE_TRANSLATION_DEFAULTS.translationOne
     };
     run(function() {
-        locale = store.push('locale-translation', locale_trans);
+         store.push('locale-translation', locale_trans);
     });
     assert.equal(translation.get('locales').get('length'), 1);
     assert.equal(translation.get('locales').objectAt(0).get('id'), LOCALE_TRANSLATION_DEFAULTS.idOne);

@@ -8,7 +8,7 @@ import CD from 'bsrs-ember/vendor/defaults/category';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import PD from 'bsrs-ember/vendor/defaults/person';
 
-var store, uuid, role, run = Ember.run;
+var store, role, run = Ember.run;
 
 module('unit: role test', {
   beforeEach() {
@@ -197,7 +197,7 @@ test('categories property will update when add category is invoked and add new m
 test('categories property will update when add category is invoked and add new m2m join model', (assert) => {
   store.push('role-category', {id: ROLE_CD.idOne, category_pk: CD.idOne, role_pk: RD.idOne});
   role = store.push('role', {id: RD.idOne, role_categories_fks: [ROLE_CD.idOne]});
-  let category = store.push('category', {id: CD.idOne});
+  store.push('category', {id: CD.idOne});
   const category_two = {id: CD.idTwo};
   assert.equal(role.get('categories').get('length'), 1);
   assert.ok(role.get('categoriesIsNotDirty'));
@@ -211,9 +211,9 @@ test('categories property will update when add category is invoked and add new m
 });
 
 test('categories property will update when the m2m array suddenly removes the category', (assert) => {
-  let m2m = store.push('role-category', {id: ROLE_CD.idOne, category_pk: CD.idOne, role_pk: RD.idOne});
+  store.push('role-category', {id: ROLE_CD.idOne, category_pk: CD.idOne, role_pk: RD.idOne});
   role = store.push('role', {id: RD.idOne, role_categories_fks: [ROLE_CD.idOne]});
-  let category = store.push('category', {id: CD.idOne});
+  store.push('category', {id: CD.idOne});
   assert.equal(role.get('categories').get('length'), 1);
   role.remove_category(CD.idOne);
   assert.equal(role.get('categories').get('length'), 0);
@@ -238,7 +238,7 @@ test('when category is suddently removed it shows as a dirty relationship (when 
 
 test('add_category will add back old join model after it was removed and dirty the model (multiple)', (assert) => {
   const role = store.push('role', {id: RD.idOne, role_categories_fks: [ROLE_CD.idOne, ROLE_CD.idTwo]});
-  const category_two = store.push('category', {id: CD.idTwo});
+  store.push('category', {id: CD.idTwo});
   const category_three = store.push('category', {id: CD.idThree});
   store.push('role-category', {id: ROLE_CD.idOne, role_pk: RD.idOne, category_pk: CD.idTwo});
   store.push('role-category', {id: ROLE_CD.idTwo, role_pk: RD.idOne, category_pk: CD.idThree});
@@ -252,7 +252,7 @@ test('add_category will add back old join model after it was removed and dirty t
 
 test('when categories is changed dirty tracking works as expected (removing)', (assert) => {
   store.push('role-category', {id: ROLE_CD.idOne, role_pk: RD.idOne, category_pk: CD.idOne});
-  let category = store.push('category', {id: CD.idOne});
+  store.push('category', {id: CD.idOne});
   role = store.push('role', {id: RD.idOne, role_categories_fks: [ROLE_CD.idOne]});
   assert.equal(role.get('categories').get('length'), 1);
   assert.ok(role.get('categoriesIsNotDirty'));

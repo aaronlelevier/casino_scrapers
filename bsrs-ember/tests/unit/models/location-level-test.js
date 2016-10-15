@@ -2,7 +2,6 @@ import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
-import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 
 var store, location_level, run = Ember.run;
 
@@ -38,7 +37,7 @@ test('location level can have child location levels', (assert) => {
 test('location level can have parent location levels', (assert) => {
     let model = {id: LLD.idTwo, name: LLD.nameDepartment, parent_fks: [LLD.idOne]};
     location_level = store.push('location-level', model);
-    let location_level_parent = store.push('location-level', {id: LLD.idOne, name: LLD.nameRegion});
+    store.push('location-level', {id: LLD.idOne, name: LLD.nameRegion});
     assert.equal(location_level.get('parents').get('length'), 1);
     run(function() {
         store.push('location-level', {id: LLD.idThree, name: LLD.nameStore});

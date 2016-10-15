@@ -1,7 +1,5 @@
 import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
-import Translation from 'bsrs-ember/models/translation';
-import TRANSLATION_DEFAULTS from 'bsrs-ember/vendor/defaults/translation';
 import LOCALE_TRANSLATION_DEFAULTS from 'bsrs-ember/vendor/defaults/locale-translation';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
