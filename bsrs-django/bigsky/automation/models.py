@@ -8,6 +8,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 from automation import choices as auto_choices
+from contact.models import Email
 from person.models import Person
 from tenant.models import Tenant
 from ticket.models import TicketPriority, TicketStatus
@@ -91,6 +92,8 @@ class AutomationManager(BaseManager):
             elif action.type.key == auto_choices.ACTIONS_TICKET_STATUS:
                 ticket.status = TicketStatus.objects.get(id=action.content['status'])
                 ticket.save()
+            elif action.type.key == auto_choices.ACTIONS_SEND_EMAIL:
+                Email.objects.process_send_email(action)
 
 
 class Automation(BaseModel):

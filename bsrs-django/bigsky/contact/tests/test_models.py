@@ -1,10 +1,13 @@
+from mock import patch
+
 from django.test import TestCase
 
 from model_mommy import mommy
 
+from automation.tests.factory import create_automation_action_send_email
 from contact.models import (State, StateManager, StateQuerySet, Country, PhoneNumber,
-    PhoneNumberType, Address, AddressType, Email)
-from contact.tests.factory import create_contact, create_address_type
+    PhoneNumberType, Address, AddressType, Email, EmailType, EmailManager)
+from contact.tests.factory import create_contact, create_address_type, create_email_type
 from location.models import Location
 from location.tests.factory import create_location
 from person.models import Person
@@ -99,8 +102,8 @@ class AddressTests(TestCase):
     def setUp(self):
         self.person = create_person()
         self.location = create_location()
-        self.store = create_address_type('admin.address_type.store')
-        self.office = create_address_type('admin.address_type.office')
+        self.store = create_address_type(AddressType.STORE)
+        self.office = create_address_type(AddressType.OFFICE)
 
     def test_ordering(self):
         create_contact(Address, self.person)
@@ -141,10 +144,44 @@ class AddressTests(TestCase):
         self.assertTrue(address.is_office_or_store)
 
 
+class EmailManagerTests(TestCase):
+
+    def setUp(self):
+        self.action = create_automation_action_send_email()
+        self.person = Person.objects.get(id=self.action.content['recipients'][0])
+
+    @patch("contact.models.EmailManager.send_mail")
+    def test_process_send_email__no_email(self, mock_func):
+        Email.objects.process_send_email(self.action)
+
+        self.assertFalse(mock_func.called)
+
+    @patch("contact.models.EmailManager.send_mail")
+    def test_process_send_email__email_is_not_type_work(self, mock_func):
+        personal_email_type = create_email_type(EmailType.PERSONAL)
+        create_contact(Email, self.person, personal_email_type)
+
+        Email.objects.process_send_email(self.action)
+
+        self.assertFalse(mock_func.called)
+
+    @patch("contact.models.EmailManager.send_mail")
+    def test_process_send_email__email_is_type_work(self, mock_func):
+        work_email_type = create_email_type(EmailType.WORK)
+        create_contact(Email, self.person, work_email_type)
+
+        Email.objects.process_send_email(self.action)
+
+        self.assertTrue(mock_func.called)
+
+
 class EmailTests(TestCase):
 
     def setUp(self):
         self.person = create_person()
+
+    def test_manager(self):
+        self.assertIsInstance(Email.objects, EmailManager)
 
     def test_ordering(self):
         create_contact(Email, self.person)

@@ -21,7 +21,8 @@ from automation.tests.factory import (
     create_automation, create_ticket_priority_filter, create_ticket_categories_filter,
     create_automation_filter_types, create_ticket_location_state_filter,
     create_automation_filter_type_state, create_ticket_location_country_filter,
-    create_automation_filter_type_country, create_automation_action_type)
+    create_automation_filter_type_country, create_automation_action_type,
+    create_automation_action_send_email)
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority, TicketStatus
 from ticket.tests.factory import create_ticket
@@ -205,6 +206,19 @@ class AutomationManagerTests(SetupMixin, TestCase):
         Automation.objects.process_actions(self.automation, self.ticket)
 
         self.assertEqual(self.ticket.status, ticket_status)
+
+    @patch("contact.models.EmailManager.process_send_email")
+    def test_process_actions__send_email(self, mock_func):
+        clear_related(self.automation, 'actions')
+        action = create_automation_action_send_email(self.automation)
+        # pre-test
+        self.assertEqual(self.automation.actions.count(), 1)
+        self.assertEqual(self.automation.actions.first(), action)
+        self.assertTrue(self.automation.is_match(self.ticket))
+
+        Automation.objects.process_actions(self.automation, self.ticket)
+
+        self.assertEqual(mock_func.call_args[0][0], action)
 
 
 class AutomationTests(SetupMixin, TestCase):

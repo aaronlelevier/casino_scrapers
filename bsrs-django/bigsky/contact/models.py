@@ -1,5 +1,6 @@
-from django.db import models
 from django.contrib.contenttypes.models import ContentType
+from django.core.mail import send_mail
+from django.db import models
 
 from utils.fields import MyGenericForeignKey
 from utils.models import BaseModel, BaseManager, BaseQuerySet, BaseNameOrderModel
@@ -174,9 +175,34 @@ class EmailType(BaseNameOrderModel):
     ]
 
 
+class EmailQuerySet(BaseQuerySet):
+    pass
+
+
+class EmailManager(BaseManager):
+
+    queryset_cls = EmailQuerySet
+
+    def process_send_email(self, action):
+        # use ContentType to avoid circular import
+        content_type = ContentType.objects.get(app_label="person", model="person")
+        Person = content_type.model_class()
+
+        for person in Person.objects.filter(id__in=action.content.get('recipients', [])):
+            for email in person.emails.filter(type__name=EmailType.WORK):
+                subject = action.content.get('subject', '')
+                body = action.content.get('body', '')
+                self.send_mail(email, subject, body)
+
+    def send_mail(self, email, subject, body):
+        pass
+
+
 class Email(BaseContactModel):
     type = models.ForeignKey(EmailType, blank=True, null=True)
     email = models.TextField(blank=True, null=True)
+
+    objects = EmailManager()
 
     class Meta:
         ordering = ('email',)
