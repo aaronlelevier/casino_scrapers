@@ -185,13 +185,13 @@ class EmailManagerTests(TestCase):
         self.action = create_automation_action_send_email()
         self.person = Person.objects.get(id=self.action.content['recipients'][0])
 
-    @patch("contact.models.EmailManager.send_mail")
+    @patch("contact.models.EmailManager.send_email")
     def test_process_send_email__no_email(self, mock_func):
         Email.objects.process_send_email(self.action)
 
         self.assertFalse(mock_func.called)
 
-    @patch("contact.models.EmailManager.send_mail")
+    @patch("contact.models.EmailManager.send_email")
     def test_process_send_email__email_is_not_type_work(self, mock_func):
         personal_email_type = create_email_type(EmailType.PERSONAL)
         create_contact(Email, self.person, personal_email_type)
@@ -200,7 +200,7 @@ class EmailManagerTests(TestCase):
 
         self.assertFalse(mock_func.called)
 
-    @patch("contact.models.EmailManager.send_mail")
+    @patch("contact.models.EmailManager.send_email")
     def test_process_send_email__email_is_type_work(self, mock_func):
         work_email_type = create_email_type(EmailType.WORK)
         create_contact(Email, self.person, work_email_type)

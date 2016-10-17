@@ -1,5 +1,6 @@
+from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 from django.db import models
 
 from utils.fields import MyGenericForeignKey
@@ -215,13 +216,21 @@ class EmailManager(BaseManager):
             for email in person.emails.filter(type__name=EmailType.WORK):
                 subject = action.content.get('subject', '')
                 body = action.content.get('body', '')
-                self.send_mail(email, subject, body)
+                self.send_email(email, subject, body)
 
-    def send_mail(self, email, subject, body):
+    def send_email(self, email, subject, body):
         """
         Generic method to send an email.
         """
-        pass
+        from_email, to = settings.EMAIL_HOST_USER, settings.EMAIL_HOST_USER
+        text_content = body
+        html_content = """
+        <p>Email: <strong>{email.email}</strong></p>
+        <p>{body}</p>
+        """.format(body=body, email=email)
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
 
 
 class Email(BaseContactModel):

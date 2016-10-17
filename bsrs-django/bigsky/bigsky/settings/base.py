@@ -242,5 +242,8 @@ DEFAULTS_WORKORDER_STATUS = "work_order.status.new"
 
 ### EMAIL ###
 # django native settings for ``django.core.mail.mail_admins()``
-# EMAIL_HOST_USER
-# EMAIL_HOST_PASSWORD
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'bigsky.sc.test@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ['DEV_SC_USER_PASSWORD']
+EMAIL_PORT = 587
