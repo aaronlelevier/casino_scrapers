@@ -22,7 +22,7 @@ import SMSD from 'bsrs-ember/vendor/defaults/sendsms';
 
 var store, automation, deserializer, pfilter, pfilter_unused;
 
-module('unit: automation deserializer test', {
+module('terrance unit: automation deserializer test', {
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:automation-event', 'model:automation-join-event', 'model:automation-list', 'model:person', 'model:automation-join-pfilter', 'model:pfilter', 'model:sendemail', 'model:sendsms', 'model:criteria', 'model:pfilter-join-criteria', 'model:ticket-priority', 'model:ticket-status', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:length', 'validator:has-many']);
     deserializer = automationDeserializer.create({ simpleStore: store });
@@ -62,27 +62,9 @@ test('deserialize single - no locale cache to start', assert => {
   assert.equal(automation.get('action').objectAt(0).get('assignee.fullname'), PersonD.fullname);
 });
 
-test('deserialize single - priority', assert => {
+test('deserialize single - status - no existing', assert => {
   const json = AF.detail();
-  json.actions[0].priority = { id: TPD.idOne, name: TPD.keyOne };
-  run(() => {
-    deserializer.deserialize(json, AD.idOne);
-  });
-  assert.equal(automation.get('id'), AD.idOne);
-  // actions
-  assert.equal(automation.get('action').get('length'), 1);
-  assert.equal(automation.get('action').objectAt(0).get('id'), AAD.idOne);
-  // action-type
-  assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idOne);
-  assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keyOne);
-  // priority
-  assert.equal(automation.get('action').objectAt(0).get('priority.id'), TPD.idOne);
-  assert.equal(automation.get('action').objectAt(0).get('priority.name'), TPD.keyOne);
-});
-
-test('deserialize single - status', assert => {
-  const json = AF.detail();
-  json.actions[0].status = { id: TSD.idOne, name: TSD.keyOne };
+  json.actions[0].status = { id: TSD.idOne, name: TSD.nameOne };
   run(() => {
     deserializer.deserialize(json, AD.idOne);
   });
@@ -94,10 +76,73 @@ test('deserialize single - status', assert => {
   assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idOne);
   assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keyOne);
   // status
-  assert.equal(automation.get('action').objectAt(0).get('status.id'), TSD.idOne);
-  assert.equal(automation.get('action').objectAt(0).get('status.name'), TSD.keyOne);
-  const status = store.find('ticket-status', TSD.idOne);
-  assert.deepEqual(status.get('actions'), [AAD.idOne]);
+  assert.equal(automation.get('action').objectAt(0).get('status_fk'), TSD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('status').get('id'), TSD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('status').get('name'), TSD.nameOne);
+});
+
+test('deserialize single - status - existing with same id', assert => {
+  // pre-deserialize
+  run(() => {
+    store.push('automation-action', {id: AAD.idOne, status_fk: TSD.idOne});
+    store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
+    store.push('ticket-status', {id: TSD.idOne, name: TSD.nameOne, actions: [AAD.idOne]});
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(automation.get('action').objectAt(0).get('status_fk'), TSD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('status').get('id'), TSD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('status').get('name'), TSD.nameOne);
+  // deserialize
+  const json = AF.detail();
+  json.actions[0].status = { id: TSD.idOne, name: TSD.nameOne };
+  run(() => {
+    deserializer.deserialize(json, AD.idOne);
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  // actions
+  assert.equal(automation.get('action').get('length'), 1);
+  assert.equal(automation.get('action').objectAt(0).get('id'), AAD.idOne);
+  // action-type
+  assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keyOne);
+  // status
+  assert.equal(automation.get('action').objectAt(0).get('status_fk'), TSD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('status').get('id'), TSD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('status').get('name'), TSD.nameOne);
+});
+
+test('deserialize single - status - different id', assert => {
+  // pre-deserialize
+  run(() => {
+    store.push('automation-action', {id: AAD.idOne, status_fk: TSD.idOne});
+    store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
+    store.push('ticket-status', {id: TSD.idOne, name: TSD.nameOne, actions: [AAD.idOne]});
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(automation.get('action').objectAt(0).get('status_fk'), TSD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('status').get('id'), TSD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('status').get('name'), TSD.keyOne);
+  // deserialize
+  const json = AF.detail();
+  json.actions[0].status = { id: TSD.idTwo, name: TSD.nameTwo };
+  run(() => {
+    deserializer.deserialize(json, AD.idOne);
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  // actions
+  assert.equal(automation.get('action').get('length'), 1);
+  assert.equal(automation.get('action').objectAt(0).get('id'), AAD.idOne);
+  // action-type
+  assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keyOne);
+  // status
+  assert.equal(automation.get('action').objectAt(0).get('status_fk'), TSD.idTwo);
+  assert.equal(automation.get('action').objectAt(0).get('status').get('id'), TSD.idTwo);
+  assert.equal(automation.get('action').objectAt(0).get('status').get('name'), TSD.nameTwo);
 });
 
 test('deserialize single - sendemail - no existing', assert => {
@@ -271,7 +316,6 @@ test('deserialize single - sendsms- different id', assert => {
   assert.equal(automation.get('action').objectAt(0).get('sendsms').get('message'), SMSD.messageTwo);
 });
 
-
 // assignee
 test('deserialize single - action has no assignee', assert => {
   let json = AF.detail();
@@ -284,9 +328,9 @@ test('deserialize single - action has no assignee', assert => {
   assert.equal(automation.get('action').objectAt(0).get('assignee'), undefined);
 });   
 
-test('terrance deserialize single - assignee - no existing', assert => {
+test(' deserialize single - assignee - no existing', assert => {
   const json = AF.detail();
-  json.actions[0].assignee = { id: AD.idOne, message: personD.fullname };
+  json.actions[0].assignee = { id: PersonD.id, fullname: PersonD.fullname };
   run(() => {
     deserializer.deserialize(json, AD.idOne);
   });
@@ -298,9 +342,73 @@ test('terrance deserialize single - assignee - no existing', assert => {
   assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idOne);
   assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keyOne);
   // sendsms
-  assert.equal(automation.get('action').objectAt(0).get('assignee_fk'), personD.idOne);
-  assert.equal(automation.get('action').objectAt(0).get('assignee').get('id'), personD.idOne);
-  assert.equal(automation.get('action').objectAt(0).get('assignee').get('fullname'), personD.fullname);
+  assert.equal(automation.get('action').objectAt(0).get('assignee_fk'), PersonD.id);
+  assert.equal(automation.get('action').objectAt(0).get('assignee').get('id'), PersonD.id);
+  assert.equal(automation.get('action').objectAt(0).get('assignee').get('fullname'), PersonD.fullname);
+});
+
+test('deserialize single - assignee- existing with same id', assert => {
+  // pre-deserialize
+  run(() => {
+    store.push('automation-action', {id: AAD.idOne, assignee_fk: PersonD.id });
+    store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
+    store.push('person', {id: PersonD.id, fullname: PersonD.fullname, actions: [AAD.idOne]});
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(automation.get('action').objectAt(0).get('assignee_fk'), PersonD.id);
+  assert.equal(automation.get('action').objectAt(0).get('assignee').get('id'), PersonD.id);
+  assert.equal(automation.get('action').objectAt(0).get('assignee').get('fullname'), PersonD.fullname);
+  // deserialize
+  const json = AF.detail();
+  json.actions[0].assignee = { id: PersonD.id, fullname: PersonD.fullname };
+  run(() => {
+    deserializer.deserialize(json, AD.idOne);
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  // actions
+  assert.equal(automation.get('action').get('length'), 1);
+  assert.equal(automation.get('action').objectAt(0).get('id'), AAD.idOne);
+  // action-type
+  assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keyOne);
+  // assignee
+  assert.equal(automation.get('action').objectAt(0).get('assignee_fk'), PersonD.id);
+  assert.equal(automation.get('action').objectAt(0).get('assignee').get('id'), PersonD.id);
+  assert.equal(automation.get('action').objectAt(0).get('assignee').get('fullname'), PersonD.fullname);
+});
+
+test('deserialize single - assignee- different id', assert => {
+  // pre-deserialize
+  run(() => {
+    store.push('automation-action', {id: AAD.idOne, assignee_fk: PersonD.id});
+    store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
+    store.push('person', {id: PersonD.id, fullname: PersonD.fullname, actions: [AAD.idOne]});
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(automation.get('action').objectAt(0).get('assignee_fk'), PersonD.id);
+  assert.equal(automation.get('action').objectAt(0).get('assignee').get('id'), PersonD.id);
+  assert.equal(automation.get('action').objectAt(0).get('assignee').get('fullname'), PersonD.fullname);
+  // deserialize
+  const json = AF.detail();
+  json.actions[0].assignee = { id: PersonD.idTwo, fullname: PersonD.fullname };
+  run(() => {
+    deserializer.deserialize(json, AD.idOne);
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  // actions
+  assert.equal(automation.get('action').get('length'), 1);
+  assert.equal(automation.get('action').objectAt(0).get('id'), AAD.idOne);
+  // action-type
+  assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keyOne);
+  // sensms
+  assert.equal(automation.get('action').objectAt(0).get('assignee_fk'), PersonD.idTwo);
+  assert.equal(automation.get('action').objectAt(0).get('assignee').get('id'), PersonD.idTwo);
+  assert.equal(automation.get('action').objectAt(0).get('assignee').get('fullname'), PersonD.fullname);
 });
 
 // test('existing automation w/ pf, and server returns no pf - want no pf b/c that is the most recent', assert => {
@@ -348,6 +456,89 @@ test('existing automation w/ pf and get same pf', assert => {
   assert.equal(automation.get('pf').get('length'), 1);
   assert.ok(automation.get('isNotDirty'));
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('deserialize single - priority - no existing', assert => {
+  const json = AF.detail();
+  json.actions[0].priority = { id: TPD.idOne, name: TPD.nameOne };
+  run(() => {
+    deserializer.deserialize(json, AD.idOne);
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  // // actions
+  assert.equal(automation.get('action').get('length'), 1);
+  assert.equal(automation.get('action').objectAt(0).get('id'), AAD.idOne);
+  // // action-type
+  assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keyOne);
+  // // priority
+  assert.equal(automation.get('action').objectAt(0).get('priority_fk'), TPD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('priority').get('id'), TPD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('priority').get('name'), TPD.nameOne);
+});
+
+test('deserialize single - priority - existing with same id', assert => {
+  // pre-deserialize
+  run(() => {
+    store.push('automation-action', {id: AAD.idOne, priority_fk: TPD.idOne});
+    store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
+    store.push('ticket-priority', {id: TPD.idOne, name: TPD.nameOne, actions: [AAD.idOne]});
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(automation.get('action').objectAt(0).get('priority_fk'), TPD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('priority').get('id'), TPD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('priority').get('name'), TPD.nameOne);
+  // deserialize
+  const json = AF.detail();
+  json.actions[0].priority = { id: TPD.idOne, name: TPD.nameOne };
+  run(() => {
+    deserializer.deserialize(json, AD.idOne);
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  // actions
+  assert.equal(automation.get('action').get('length'), 1);
+  assert.equal(automation.get('action').objectAt(0).get('id'), AAD.idOne);
+  // action-type
+  assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keyOne);
+  // priority
+  assert.equal(automation.get('action').objectAt(0).get('priority_fk'), TPD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('priority').get('id'), TPD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('priority').get('name'), TPD.nameOne);
+});
+
+test('deserialize single - priority - different id', assert => {
+  // pre-deserialize
+  run(() => {
+    store.push('automation-action', {id: AAD.idOne, priority_fk: TPD.idOne});
+    store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
+    store.push('ticket-priority', {id: TPD.idOne, name: TPD.nameOne, actions: [AAD.idOne]});
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(automation.get('action').objectAt(0).get('priority_fk'), TPD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('priority').get('id'), TPD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('priority').get('name'), TPD.keyOne);
+  // deserialize
+  const json = AF.detail();
+  json.actions[0].priority = { id: TPD.idTwo, name: TPD.nameTwo };
+  run(() => {
+    deserializer.deserialize(json, AD.idOne);
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  // actions
+  assert.equal(automation.get('action').get('length'), 1);
+  assert.equal(automation.get('action').objectAt(0).get('id'), AAD.idOne);
+  // action-type
+  assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keyOne);
+  // priority
+  assert.equal(automation.get('action').objectAt(0).get('priority_fk'), TPD.idTwo);
+  assert.equal(automation.get('action').objectAt(0).get('priority').get('id'), TPD.idTwo);
+  assert.equal(automation.get('action').objectAt(0).get('priority').get('name'), TPD.nameTwo);
 });
 
 //criteria
