@@ -7,7 +7,6 @@ from django.db.models import F, Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from automation import choices as auto_choices
 from contact.models import Email, PhoneNumber
 from person.models import Person
 from tenant.models import Tenant
@@ -18,18 +17,66 @@ from utils.models import BaseQuerySet, BaseManager, BaseModel
 
 
 class AutomationEvent(BaseModel):
+    ASSIGNEE_CHANGE = 'automation.event.ticket_assignee_change'
+    ATTACHMENT_ADD = 'automation.event.ticket_attachment_add'
+    CATEGORY_CHANGE = 'automation.event.ticket_category_change'
+    CC_ADD = 'automation.event.ticket_cc_add'
+    COMMENT = 'automation.event.ticket_comment'
+    LOCATION_CHANGE = 'automation.event.ticket_location_change'
+    PRIORITY_CHANGE = 'automation.event.ticket_priority_change'
+    STATUS_CANCELLED = 'automation.event.ticket_status_cancelled'
+    STATUS_COMPLETE = 'automation.event.ticket_status_complete'
+    STATUS_DEFERRED = 'automation.event.ticket_status_deferred'
+    STATUS_DENIED = 'automation.event.ticket_status_denied'
+    STATUS_IN_PROGRESS = 'automation.event.ticket_status_in_progress'
+    STATUS_NEW = 'automation.event.ticket_status_new'
+    STATUS_PENDING = 'automation.event.ticket_status_pending'
+    STATUS_UNSATISFACTORY = 'automation.event.ticket_status_unsatisfactory'
 
-    key = models.CharField(max_length=100, unique=True,
-                           choices=[(x,x) for x in auto_choices.AUTOMATION_EVENTS])
+    ALL = [
+        ASSIGNEE_CHANGE,
+        ATTACHMENT_ADD,
+        CATEGORY_CHANGE,
+        CC_ADD,
+        COMMENT,
+        LOCATION_CHANGE,
+        PRIORITY_CHANGE,
+        STATUS_CANCELLED,
+        STATUS_COMPLETE,
+        STATUS_DEFERRED,
+        STATUS_DENIED,
+        STATUS_IN_PROGRESS,
+        STATUS_NEW,
+        STATUS_PENDING,
+        STATUS_UNSATISFACTORY
+    ]
+
+    key = models.CharField(max_length=100, unique=True, choices=[(x,x) for x in ALL])
 
     class Meta:
         ordering = ['key']
 
 
 class AutomationActionType(BaseModel):
+    TICKET_ASSIGNEE = 'automation.actions.ticket_assignee'
+    SEND_EMAIL = 'automation.actions.send_email'
+    SEND_SMS = 'automation.actions.send_sms'
+    TICKET_CC = 'automation.actions.ticket_cc'
+    TICKET_PRIORITY = 'automation.actions.ticket_priority'
+    TICKET_REQUEST = 'automation.actions.ticket_request'
+    TICKET_STATUS = 'automation.actions.ticket_status'
 
-    key = models.CharField(max_length=100, unique=True,
-                           choices=[(x,x) for x in auto_choices.AUTOMATION_ACTION_TYPES])
+    ALL = [
+        TICKET_ASSIGNEE,
+        SEND_EMAIL,
+        SEND_SMS,
+        TICKET_CC,
+        TICKET_PRIORITY,
+        TICKET_REQUEST,
+        TICKET_STATUS
+    ]
+
+    key = models.CharField(max_length=100, unique=True, choices=[(x,x) for x in ALL])
 
     class Meta:
         ordering = ['key']
@@ -83,18 +130,18 @@ class AutomationManager(BaseManager):
 
     def process_actions(self, automation, ticket):
         for action in automation.actions.all():
-            if action.type.key == auto_choices.ACTIONS_TICKET_ASSIGNEE:
+            if action.type.key == AutomationActionType.TICKET_ASSIGNEE:
                 ticket.assignee = Person.objects.get(id=action.content['assignee'])
                 ticket.save()
-            elif action.type.key == auto_choices.ACTIONS_TICKET_PRIORITY:
+            elif action.type.key == AutomationActionType.TICKET_PRIORITY:
                 ticket.priority = TicketPriority.objects.get(id=action.content['priority'])
                 ticket.save()
-            elif action.type.key == auto_choices.ACTIONS_TICKET_STATUS:
+            elif action.type.key == AutomationActionType.TICKET_STATUS:
                 ticket.status = TicketStatus.objects.get(id=action.content['status'])
                 ticket.save()
-            elif action.type.key == auto_choices.ACTIONS_SEND_EMAIL:
+            elif action.type.key == AutomationActionType.SEND_EMAIL:
                 Email.objects.process_send_email(action)
-            elif action.type.key == auto_choices.ACTIONS_SEND_SMS:
+            elif action.type.key == AutomationActionType.SEND_SMS:
                 PhoneNumber.objects.process_send_sms(action)
 
 

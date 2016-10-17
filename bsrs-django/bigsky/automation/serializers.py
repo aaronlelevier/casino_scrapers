@@ -7,7 +7,6 @@ from contact.models import State, Country
 from location.models import Location, LocationLevel
 from person.models import Person
 from person.serializers_leaf import PersonSimpleSerializer
-from automation import choices
 from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationAction, AutomationActionType)
 from automation.validators import (AutomationFilterFieldValidator, UniqueByTenantValidator,
@@ -45,17 +44,17 @@ class AutomationActionSerializer(BaseCreateSerializer):
         data = copy.copy(init_data)
 
         key = data['type']['key']
-        if key == choices.ACTIONS_TICKET_ASSIGNEE:
+        if key == AutomationActionType.TICKET_ASSIGNEE:
             data['assignee'] = Person.objects.get(id=data['content']['assignee']).to_simple_fullname_dict()
-        elif key == choices.ACTIONS_TICKET_PRIORITY:
+        elif key == AutomationActionType.TICKET_PRIORITY:
             data['priority'] = TicketPriority.objects.get(id=data['content']['priority']).to_dict_id_name()
-        elif key == choices.ACTIONS_TICKET_STATUS:
+        elif key == AutomationActionType.TICKET_STATUS:
             data['status'] = TicketStatus.objects.get(id=data['content']['status']).to_dict_id_name()
-        elif key == choices.ACTIONS_SEND_EMAIL:
+        elif key == AutomationActionType.SEND_EMAIL:
             data.update(data['content'])
             data['recipients'] = (Person.objects.filter(id__in=data['content']['recipients'])
                                                 .values('id', 'fullname'))
-        elif key == choices.ACTIONS_SEND_SMS:
+        elif key == AutomationActionType.SEND_SMS:
             data.update(data['content'])
             data['recipients'] = (Person.objects.filter(id__in=data['content']['recipients'])
                                                 .values('id', 'fullname'))

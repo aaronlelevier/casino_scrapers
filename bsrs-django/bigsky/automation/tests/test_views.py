@@ -11,7 +11,6 @@ from location.tests.factory import (create_location_levels, create_top_level_loc
     create_location_level, create_location)
 from person.models import Person
 from person.tests.factory import create_single_person, PASSWORD
-from automation.choices import ACTIONS_TICKET_PRIORITY
 from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationActionType)
 from automation.tests.factory import (
@@ -634,7 +633,7 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
 
     def test_update__actions__existing(self):
         self.assertEqual(len(self.data['actions']), 1)
-        new_action_type = create_automation_action_type(ACTIONS_TICKET_PRIORITY)
+        new_action_type = create_automation_action_type(AutomationActionType.TICKET_PRIORITY)
         self.data['actions'][0]['type'] = str(new_action_type.id)
         self.data['actions'][0]['content'] = {'priority': str(self.ticket_priority.id)}
 
@@ -648,7 +647,7 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['actions'][0]['content'], self.data['actions'][0]['content'])
 
     def test_update__actions__add_new(self):
-        new_action_type = create_automation_action_type(ACTIONS_TICKET_PRIORITY)
+        new_action_type = create_automation_action_type(AutomationActionType.TICKET_PRIORITY)
         self.data['actions'].append({
             'id': str(uuid.uuid4()),
             'type': str(new_action_type.id),

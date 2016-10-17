@@ -4,7 +4,8 @@ from rest_framework import permissions, viewsets, mixins
 from rest_framework.exceptions import MethodNotAllowed
 
 from location.models import LocationLevel
-from automation.models import AutomationEvent, Automation, AutomationFilterType, AutomationActionType
+from automation.models import (AutomationEvent, Automation, AutomationFilterType,
+    AutomationActionType)
 from automation import serializers as rs
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.views import BaseModelViewSet

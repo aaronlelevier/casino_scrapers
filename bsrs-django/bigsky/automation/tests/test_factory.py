@@ -8,8 +8,8 @@ from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
-from automation import choices as auto_choices
-from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
+from automation.models import (
+    AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationActionType, AutomationAction)
 from automation.tests import factory
 from tenant.models import Tenant
@@ -25,7 +25,7 @@ class AutomationEventTests(TestCase):
         ret = factory.create_automation_event()
 
         self.assertIsInstance(ret, AutomationEvent)
-        self.assertEqual(ret.key, auto_choices.EVENT_TICKET_STATUS_NEW)
+        self.assertEqual(ret.key, AutomationEvent.STATUS_NEW)
 
     def test_create_automation_event__key(self):
         key = 'automation.event.ticket_status_unsatisfactory'
@@ -39,14 +39,14 @@ class AutomationEventTests(TestCase):
         ret = factory.create_automation_event_two()
 
         self.assertIsInstance(ret, AutomationEvent)
-        self.assertEqual(ret.key, auto_choices.EVENT_TICKET_STATUS_COMPLETE)
+        self.assertEqual(ret.key, AutomationEvent.STATUS_COMPLETE)
 
     def test_create_automation_events(self):
         self.assertEqual(AutomationEvent.objects.count(), 0)
 
         ret = factory.create_automation_events()
 
-        self.assertEqual(AutomationEvent.objects.count(), len(auto_choices.AUTOMATION_EVENTS))
+        self.assertEqual(AutomationEvent.objects.count(), len(AutomationEvent.ALL))
         self.assertIsInstance(ret, list)
         self.assertIsInstance(ret[0], AutomationEvent)
 
@@ -57,14 +57,14 @@ class AutomationActionTypeTests(TestCase):
         ret = factory.create_automation_action_type()
 
         self.assertIsInstance(ret, AutomationActionType)
-        self.assertEqual(ret.key, auto_choices.ACTIONS_TICKET_ASSIGNEE)
+        self.assertEqual(ret.key, AutomationActionType.TICKET_ASSIGNEE)
 
     def test_create_automation_action_types(self):
         self.assertEqual(AutomationActionType.objects.count(), 0)
 
         ret = factory.create_automation_action_types()
 
-        self.assertEqual(AutomationActionType.objects.count(), len(auto_choices.AUTOMATION_ACTION_TYPES))
+        self.assertEqual(AutomationActionType.objects.count(), len(AutomationActionType.ALL))
         self.assertIsInstance(ret, list)
         self.assertIsInstance(ret[0], AutomationActionType)
 
@@ -75,7 +75,7 @@ class AutomationActionTests(TestCase):
         ret = factory.create_automation_action_assignee()
 
         self.assertIsInstance(ret, AutomationAction)
-        self.assertEqual(ret.type.key, auto_choices.ACTIONS_TICKET_ASSIGNEE)
+        self.assertEqual(ret.type.key, AutomationActionType.TICKET_ASSIGNEE)
         self.assertIsInstance(
             Person.objects.get(id=ret.content['assignee']), Person)
 
@@ -83,7 +83,7 @@ class AutomationActionTests(TestCase):
         ret = factory.create_automation_action_send_email()
 
         self.assertIsInstance(ret, AutomationAction)
-        self.assertEqual(ret.type.key, auto_choices.ACTIONS_SEND_EMAIL)
+        self.assertEqual(ret.type.key, AutomationActionType.SEND_EMAIL)
         # content
         self.assertEqual(len(ret.content), 3)
         self.assertEqual(len(ret.content['recipients']), 1)
@@ -96,7 +96,7 @@ class AutomationActionTests(TestCase):
         ret = factory.create_automation_action_send_sms()
 
         self.assertIsInstance(ret, AutomationAction)
-        self.assertEqual(ret.type.key, auto_choices.ACTIONS_SEND_SMS)
+        self.assertEqual(ret.type.key, AutomationActionType.SEND_SMS)
         # content
         self.assertEqual(len(ret.content), 2)
         self.assertEqual(len(ret.content['recipients']), 1)
@@ -106,24 +106,24 @@ class AutomationActionTests(TestCase):
 
     def test_create_automation_action_priority(self):
         ret = factory.create_automation_action_priority()
-        self.assertEqual(ret.type.key, auto_choices.ACTIONS_TICKET_PRIORITY)
+        self.assertEqual(ret.type.key, AutomationActionType.TICKET_PRIORITY)
         self.assertIsInstance(
             TicketPriority.objects.get(id=ret.content['priority']), TicketPriority)
 
     def test_create_automation_action_status(self):
         ret = factory.create_automation_action_status()
-        self.assertEqual(ret.type.key, auto_choices.ACTIONS_TICKET_STATUS)
+        self.assertEqual(ret.type.key, AutomationActionType.TICKET_STATUS)
         self.assertIsInstance(
             TicketStatus.objects.get(id=ret.content['status']), TicketStatus)
 
     def test_create_automation_action_request(self):
         ret = factory.create_automation_action_request()
-        self.assertEqual(ret.type.key, auto_choices.ACTIONS_TICKET_REQUEST)
+        self.assertEqual(ret.type.key, AutomationActionType.TICKET_REQUEST)
         self.assertIsInstance(ret.content['request'], str)
 
     def test_create_automation_action_cc(self):
         ret = factory.create_automation_action_cc()
-        self.assertEqual(ret.type.key, auto_choices.ACTIONS_TICKET_CC)
+        self.assertEqual(ret.type.key, AutomationActionType.TICKET_CC)
         self.assertEqual(len(ret.content['ccs']), 1)
         self.assertIsInstance(
             Person.objects.get(id=ret.content['ccs'][0]), Person)
@@ -132,10 +132,10 @@ class AutomationActionTests(TestCase):
         factory.create_automation_actions()
 
         actions = AutomationAction.objects.all()
-        self.assertEqual(actions.count(), len(auto_choices.AUTOMATION_ACTION_TYPES))
+        self.assertEqual(actions.count(), len(AutomationActionType.ALL))
         for a in actions:
-            self.assertIn(a.type.key, auto_choices.AUTOMATION_ACTION_TYPES,
-                "{} not in {}".format(a.type.key, auto_choices.AUTOMATION_ACTION_TYPES))
+            self.assertIn(a.type.key, AutomationActionType.ALL,
+                "{} not in {}".format(a.type.key, AutomationActionType.ALL))
 
 
 class AutomationFilterTypeTests(TestCase):

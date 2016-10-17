@@ -3,7 +3,6 @@ from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
-from automation import choices as auto_choices
 from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationActionType, AutomationAction)
 from tenant.tests.factory import get_or_create_tenant
@@ -14,29 +13,29 @@ from utils.helpers import create_default
 
 # AutomationEvents
 
-def create_automation_event(key=auto_choices.EVENT_TICKET_STATUS_NEW):
+def create_automation_event(key=AutomationEvent.STATUS_NEW):
     obj, _  = AutomationEvent.objects.get_or_create(key=key)
     return obj
 
 
-def create_automation_event_two(key=auto_choices.EVENT_TICKET_STATUS_COMPLETE):
+def create_automation_event_two(key=AutomationEvent.STATUS_COMPLETE):
     obj, _  = AutomationEvent.objects.get_or_create(key=key)
     return obj
 
 
 def create_automation_events():
-    return [create_automation_event(key) for key in auto_choices.AUTOMATION_EVENTS]
+    return [create_automation_event(key) for key in AutomationEvent.ALL]
 
 
 # AutomationActionTypes
 
-def create_automation_action_type(key=auto_choices.ACTIONS_TICKET_ASSIGNEE):
+def create_automation_action_type(key=AutomationActionType.TICKET_ASSIGNEE):
     obj, _ = AutomationActionType.objects.get_or_create(key=key)
     return obj
 
 
 def create_automation_action_types():
-    return [create_automation_action_type(key) for key in auto_choices.AUTOMATION_ACTION_TYPES]
+    return [create_automation_action_type(key) for key in AutomationActionType.ALL]
 
 
 # AutomationActions
@@ -54,48 +53,48 @@ def _get_automation_and_action_type(automation, action_type_key):
 
 
 def create_automation_action_assignee(automation=None):
-    automation, type = _get_automation_and_action_type(automation, auto_choices.ACTIONS_TICKET_ASSIGNEE)
+    automation, type = _get_automation_and_action_type(automation, AutomationActionType.TICKET_ASSIGNEE)
     person = create_single_person()
     return AutomationAction.objects.create(type=type, automation=automation,
                                            content={'assignee': str(person.id)})
 
 
 def create_automation_action_send_email(automation=None):
-    automation, type = _get_automation_and_action_type(automation, auto_choices.ACTIONS_SEND_EMAIL)
+    automation, type = _get_automation_and_action_type(automation, AutomationActionType.SEND_EMAIL)
     person = create_single_person()
     return AutomationAction.objects.create(type=type, automation=automation,
                                            content={'recipients': [str(person.id)], 'subject': 'foo', 'body': 'bar'})
 
 
 def create_automation_action_send_sms(automation=None):
-    automation, type = _get_automation_and_action_type(automation, auto_choices.ACTIONS_SEND_SMS)
+    automation, type = _get_automation_and_action_type(automation, AutomationActionType.SEND_SMS)
     person = create_single_person()
     return AutomationAction.objects.create(type=type, automation=automation,
                                            content={'recipients': [str(person.id)], 'body': 'bar'})
 
 
 def create_automation_action_priority(automation=None):
-    automation, type = _get_automation_and_action_type(automation, auto_choices.ACTIONS_TICKET_PRIORITY)
+    automation, type = _get_automation_and_action_type(automation, AutomationActionType.TICKET_PRIORITY)
     priority = create_default(TicketPriority)
     return AutomationAction.objects.create(type=type, automation=automation,
                                            content={'priority': str(priority.id)})
 
 
 def create_automation_action_status(automation=None):
-    automation, type = _get_automation_and_action_type(automation, auto_choices.ACTIONS_TICKET_STATUS)
+    automation, type = _get_automation_and_action_type(automation, AutomationActionType.TICKET_STATUS)
     status = create_default(TicketStatus)
     return AutomationAction.objects.create(type=type, automation=automation,
                                            content={'status': str(status.id)})
 
 
 def create_automation_action_request(automation=None):
-    automation, type = _get_automation_and_action_type(automation, auto_choices.ACTIONS_TICKET_REQUEST)
+    automation, type = _get_automation_and_action_type(automation, AutomationActionType.TICKET_REQUEST)
     return AutomationAction.objects.create(type=type, automation=automation,
                                            content={'request': 'foo'})
 
 
 def create_automation_action_cc(automation=None):
-    automation, type = _get_automation_and_action_type(automation, auto_choices.ACTIONS_TICKET_CC)
+    automation, type = _get_automation_and_action_type(automation, AutomationActionType.TICKET_CC)
     person = create_single_person()
     return AutomationAction.objects.create(type=type, automation=automation,
                                            content={'ccs': [str(person.id)]})

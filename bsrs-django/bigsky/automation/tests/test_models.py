@@ -13,10 +13,9 @@ from contact.tests.factory import (
 from location.tests.factory import create_top_level_location
 from person.models import Person
 from person.tests.factory import create_single_person
-from automation import choices as auto_choices
 from automation.models import (
     AutomationEvent, Automation, AutomationManager, AutomationQuerySet,
-    AutomationFilterType, AutomationFilter, AutomationAction)
+    AutomationActionType, AutomationFilterType, AutomationFilter, AutomationAction)
 from automation.tests.factory import (
     create_automation, create_ticket_priority_filter, create_ticket_categories_filter,
     create_automation_filter_types, create_ticket_location_state_filter,
@@ -44,7 +43,7 @@ class AutomationEventTests(TestCase):
 
     def test_key_choices(self):
         field = AutomationEvent._meta.get_field('key')
-        self.assertEqual([(a) for a,b in field.choices], auto_choices.AUTOMATION_EVENTS)
+        self.assertEqual([(a) for a,b in field.choices], AutomationEvent.ALL)
 
     def test_meta(self):
         self.assertEqual(AutomationEvent._meta.ordering, ['key'])
@@ -167,7 +166,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.assertIsNone(self.ticket.assignee)
         self.assertEqual(self.automation.actions.count(), 1)
         action = self.automation.actions.first()
-        self.assertEqual(action.type.key, auto_choices.ACTIONS_TICKET_ASSIGNEE)
+        self.assertEqual(action.type.key, AutomationActionType.TICKET_ASSIGNEE)
         action_assignee_id = action.content['assignee']
         action_assignee = Person.objects.get(id=action_assignee_id)
 
@@ -178,7 +177,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
     def test_process_actions__ticket_priority(self):
         clear_related(self.automation, 'actions')
         ticket_priority = mommy.make(TicketPriority)
-        priority_action_type = create_automation_action_type(auto_choices.ACTIONS_TICKET_PRIORITY)
+        priority_action_type = create_automation_action_type(AutomationActionType.TICKET_PRIORITY)
         action = mommy.make(AutomationAction, automation=self.automation,
                             type=priority_action_type, content={'priority': ticket_priority.id})
         # pre-test
@@ -194,7 +193,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
     def test_process_actions__ticket_status(self):
         clear_related(self.automation, 'actions')
         ticket_status = mommy.make(TicketStatus)
-        status_action_type = create_automation_action_type(auto_choices.ACTIONS_TICKET_STATUS)
+        status_action_type = create_automation_action_type(AutomationActionType.TICKET_STATUS)
         action = mommy.make(AutomationAction, automation=self.automation,
                             type=status_action_type, content={'status': ticket_status.id})
         # pre-test
