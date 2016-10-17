@@ -75,16 +75,20 @@ class BaseContactModel(BaseModel):
         return super(BaseContactModel, self).save(*args, **kwargs)
 
 
-PHONE_NUMBER_TYPES = [
-    'admin.phonenumbertype.telephone',
-    'admin.phonenumbertype.fax',
-    'admin.phonenumbertype.cell',
-    'admin.phonenumbertype.office',
-    'admin.phonenumbertype.mobile',
-]
-
 class PhoneNumberType(BaseNameOrderModel):
-    pass
+    TELEPHONE = 'admin.phonenumbertype.telephone'
+    FAX = 'admin.phonenumbertype.fax'
+    CELL = 'admin.phonenumbertype.cell'
+    OFFICE = 'admin.phonenumbertype.office'
+    MOBILE = 'admin.phonenumbertype.mobile'
+
+    ALL = [
+        TELEPHONE,
+        FAX,
+        CELL,
+        OFFICE,
+        MOBILE
+    ]
 
 
 class PhoneNumber(BaseContactModel):
@@ -100,27 +104,25 @@ class PhoneNumber(BaseContactModel):
         ordering = ('number',)
 
 
-LOCATION_ADDRESS_TYPE = 'admin.address_type.location'
-OFFICE_ADDRESS_TYPE = 'admin.address_type.office'
-STORE_ADDRESS_TYPE = 'admin.address_type.store'
-SHIPPING_ADDRESS_TYPE = 'admin.address_type.shipping'
-
-ADDRESS_TYPES = [
-    'admin.address_type.location',
-    'admin.address_type.office',
-    'admin.address_type.store',
-    'admin.address_type.shipping',
-]
-
 class AddressType(BaseNameOrderModel):
-    pass
+    LOCATION = 'admin.address_type.location'
+    OFFICE = 'admin.address_type.office'
+    STORE = 'admin.address_type.store'
+    SHIPPING = 'admin.address_type.shipping'
+
+    ALL = [
+        LOCATION,
+        OFFICE,
+        STORE,
+        SHIPPING
+    ]
 
 
 class AddressQuerySet(BaseQuerySet):
 
     def office_and_stores(self):
-        return (self.filter(type__name__in=[OFFICE_ADDRESS_TYPE,
-                                            STORE_ADDRESS_TYPE])
+        return (self.filter(type__name__in=[AddressType.OFFICE,
+                                            AddressType.STORE])
                     .distinct())
 
 
@@ -154,19 +156,22 @@ class Address(BaseContactModel):
 
     @property
     def is_office_or_store(self):
-        return self.type and self.type.name in ['admin.address_type.office',
-                                                'admin.address_type.store']
+        return self.type and self.type.name in [AddressType.OFFICE,
+                                                AddressType.STORE]
 
-
-EMAIL_TYPES = [
-    'admin.emailtype.location',
-    'admin.emailtype.work',
-    'admin.emailtype.personal',
-    'admin.emailtype.sms'
-]
 
 class EmailType(BaseNameOrderModel):
-    pass
+    LOCATION = 'admin.emailtype.location'
+    WORK = 'admin.emailtype.work'
+    PERSONAL = 'admin.emailtype.personal'
+    SMS = 'admin.emailtype.sms'
+
+    ALL = [
+        LOCATION,
+        WORK,
+        PERSONAL,
+        SMS,
+    ]
 
 
 class Email(BaseContactModel):

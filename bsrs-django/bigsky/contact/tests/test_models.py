@@ -3,8 +3,7 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from contact.models import (State, StateManager, StateQuerySet, Country, PhoneNumber,
-    PhoneNumberType, Address, AddressType, Email,  LOCATION_ADDRESS_TYPE, OFFICE_ADDRESS_TYPE,
-    STORE_ADDRESS_TYPE, SHIPPING_ADDRESS_TYPE,)
+    PhoneNumberType, Address, AddressType, Email)
 from contact.tests.factory import create_contact, create_address_type
 from location.models import Location
 from location.tests.factory import create_location
@@ -76,10 +75,10 @@ class PhoneNumberTests(TestCase):
 class AddressManagerTests(TestCase):
 
     def test_office_and_stores(self):
-        location_type = create_address_type(LOCATION_ADDRESS_TYPE)
-        office_type = create_address_type(OFFICE_ADDRESS_TYPE)
-        store_type = create_address_type(STORE_ADDRESS_TYPE)
-        shipping_type = create_address_type(SHIPPING_ADDRESS_TYPE)
+        location_type = create_address_type(AddressType.LOCATION)
+        office_type = create_address_type(AddressType.OFFICE)
+        store_type = create_address_type(AddressType.STORE)
+        shipping_type = create_address_type(AddressType.SHIPPING)
 
         location = create_location()
 
