@@ -102,16 +102,18 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
     # process_ticket - "on Ticket POST" tests
 
-    def test_process_ticket__match(self):
+    @patch("automation.models.AutomationManager.process_actions")
+    def test_process_ticket__calls_process_actions(self, mock_func):
         self.assertTrue(self.automation.is_match(self.ticket))
         self.assertFalse(self.automation_two.is_match(self.ticket))
 
         ret = Automation.objects.process_ticket(self.tenant.id, self.ticket)
 
-        self.assertEqual(ret, self.automation)
-        self.assertNotEqual(ret, self.automation_two)
+        self.assertEqual(mock_func.call_args[0][0], self.automation)
+        self.assertEqual(mock_func.call_args[0][1], self.ticket)
 
-    def test_process_ticket__no_match(self):
+    @patch("automation.models.AutomationManager.process_actions")
+    def test_process_ticket__no_match(self, mock_func):
         # filter_one make false
         filter_one = self.automation.filters.filter(source__field='categories')[0]
         filter_one.criteria = [str(create_single_category().id)]
@@ -124,23 +126,21 @@ class AutomationManagerTests(SetupMixin, TestCase):
         for automation in Automation.objects.filter(tenant__id=self.tenant.id):
             self.assertFalse(automation.is_match(self.ticket))
 
-        ret = Automation.objects.process_ticket(self.tenant.id, self.ticket)
+        Automation.objects.process_ticket(self.tenant.id, self.ticket)
 
-        self.assertIsNone(ret)
+        self.assertFalse(mock_func.called)
 
-    def test_process_ticket__both_match_so_determined_by_order(self):
-        # 1st matching
+    @patch("automation.models.AutomationManager.process_actions")
+    def test_process_ticket__two_match_so_process_actions_called_twice(self, mock_func):
         automation_three = create_automation('AAAA')
-        # processed Ticket should get the first matching AP assignee
-        self.assertTrue(automation_three.description < self.automation.description)
         # both match
         self.assertTrue(automation_three.is_match(self.ticket))
         self.assertTrue(self.automation.is_match(self.ticket))
 
-        ret = Automation.objects.process_ticket(self.ticket.location.location_level.tenant.id,
-                                                self.ticket)
+        Automation.objects.process_ticket(self.ticket.location.location_level.tenant.id,
+                                          self.ticket)
 
-        self.assertEqual(ret, automation_three)
+        self.assertEqual(mock_func.call_count, 2)
 
     def test_process_ticket__process_assign_attr_on_role_is_false(self):
         # the creator's role.process_assign == False, so assign the ticket
@@ -161,16 +161,6 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.assertEqual(self.ticket.assignee, creator)
 
     # process_actions
-
-    @patch("automation.models.AutomationManager.process_actions")
-    def test_process_ticket__calls_process_actions(self, mock_func):
-        self.assertTrue(self.automation.is_match(self.ticket))
-        self.assertFalse(self.automation_two.is_match(self.ticket))
-
-        ret = Automation.objects.process_ticket(self.tenant.id, self.ticket)
-
-        self.assertEqual(mock_func.call_args[0][0], self.automation)
-        self.assertEqual(mock_func.call_args[0][1], self.ticket)
 
     def test_process_actions__assign_assignee_to_ticket(self):
         self.assertIsNone(self.ticket.assignee)
@@ -199,6 +189,22 @@ class AutomationManagerTests(SetupMixin, TestCase):
         Automation.objects.process_actions(self.automation, self.ticket)
 
         self.assertEqual(self.ticket.priority, ticket_priority)
+
+    def test_process_actions__ticket_status(self):
+        clear_related(self.automation, 'actions')
+        ticket_status = mommy.make(TicketStatus)
+        status_action_type = create_automation_action_type(auto_choices.ACTIONS_TICKET_STATUS)
+        action = mommy.make(AutomationAction, automation=self.automation,
+                            type=status_action_type, content={'status': ticket_status.id})
+        # pre-test
+        self.assertEqual(self.automation.actions.count(), 1)
+        self.assertEqual(self.automation.actions.first(), action)
+        self.assertTrue(self.automation.is_match(self.ticket))
+        self.assertNotEqual(self.ticket.status, ticket_status)
+
+        Automation.objects.process_actions(self.automation, self.ticket)
+
+        self.assertEqual(self.ticket.status, ticket_status)
 
 
 class AutomationTests(SetupMixin, TestCase):

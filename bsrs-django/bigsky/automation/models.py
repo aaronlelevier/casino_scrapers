@@ -10,7 +10,7 @@ from django.dispatch import receiver
 from automation import choices as auto_choices
 from person.models import Person
 from tenant.models import Tenant
-from ticket.models import TicketPriority
+from ticket.models import TicketPriority, TicketStatus
 from utils import classproperty
 from utils.fields import MyGenericForeignKey
 from utils.models import BaseQuerySet, BaseManager, BaseModel
@@ -79,7 +79,6 @@ class AutomationManager(BaseManager):
             match = automation.is_match(ticket)
             if match:
                 self.process_actions(automation, ticket)
-                return automation
 
     def process_actions(self, automation, ticket):
         for action in automation.actions.all():
@@ -88,6 +87,9 @@ class AutomationManager(BaseManager):
                 ticket.save()
             elif action.type.key == auto_choices.ACTIONS_TICKET_PRIORITY:
                 ticket.priority = TicketPriority.objects.get(id=action.content['priority'])
+                ticket.save()
+            elif action.type.key == auto_choices.ACTIONS_TICKET_STATUS:
+                ticket.status = TicketStatus.objects.get(id=action.content['status'])
                 ticket.save()
 
 
