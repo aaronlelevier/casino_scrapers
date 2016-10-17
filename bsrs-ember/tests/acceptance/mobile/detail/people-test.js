@@ -106,22 +106,20 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   });
 });
 
-// test('can click through component sections and save to redirect to index', async assert => {
-//   await page.visitDetail();
-//   assert.equal(currentURL(), DETAIL_URL);
-//   await generalMobilePage.footerItemTwoClick();
-//   assert.ok(Ember.$('.t-mobile-footer-item:eq(1)').hasClass('active'));
-//   await generalMobilePage.footerItemThreeClick();
-//   assert.ok(Ember.$('.t-mobile-footer-item:eq(2)').hasClass('active'));
-//   // await generalMobilePage.footerItemFourClick();
-//   // assert.ok(Ember.$('.t-mobile-footer-item:eq(3)').hasClass('active'));
-//   await generalMobilePage.footerItemOneClick();
-//   assert.ok(Ember.$('.t-mobile-footer-item:eq(0)').hasClass('active'));
-//   let payload = PF.put({id: PD.idOne});
-//   xhr(PEOPLE_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
-//   await generalPage.save();
-//   assert.equal(currentURL(), PEOPLE_INDEX_URL);
-// });
+test('can click through component sections and save to redirect to index', async assert => {
+  await page.visitDetail();
+  assert.equal(currentURL(), DETAIL_URL);
+  await generalMobilePage.footerItemTwoClick();
+  assert.ok(Ember.$('.t-mobile-footer-item:eq(1)').hasClass('active'));
+  await generalMobilePage.footerItemThreeClick();
+  assert.ok(Ember.$('.t-mobile-footer-item:eq(2)').hasClass('active'));
+  await generalMobilePage.footerItemOneClick();
+  assert.ok(Ember.$('.t-mobile-footer-item:eq(0)').hasClass('active'));
+  let payload = PF.put({id: PD.idOne});
+  xhr(PEOPLE_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
+  await generalPage.save();
+  assert.equal(currentURL(), PEOPLE_INDEX_URL);
+});
 
 // test('can update fields and save', async assert => {
 //   await page.visitDetail();
