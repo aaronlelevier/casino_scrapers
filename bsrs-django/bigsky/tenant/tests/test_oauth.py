@@ -1,13 +1,15 @@
 import copy
+from datetime import timedelta
 import json
 from mock import patch
 import requests
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.utils import timezone
 
 from oauthlib.oauth2 import LegacyApplicationClient, TokenExpiredError
-from oauth2_provider.models import Application
+from oauth2_provider.models import Application, AccessToken
 from pretend import stub
 from requests_oauthlib import OAuth2Session
 
@@ -174,6 +176,9 @@ class BsOauthApplicationTests(TestCase):
     def setUp(self):
         self.person = create_single_person()
 
+    def _create_authorization_header(self, token):
+        return "Bearer {0}".format(token)
+
     def test_create_application(self):
         app = oauth.BsOauthApplication(user=self.person)
 
@@ -209,3 +214,18 @@ class BsOauthApplicationTests(TestCase):
         self.assertIn('read', data['scope'])
         self.assertIn('write', data['scope'])
         self.assertTrue(data['expires_in'])
+
+    def test_token_authenticated_request(self):
+        app = oauth.BsOauthApplication(user=self.person)
+        access_token = AccessToken.objects.create(
+            user=self.person,
+            scope='read write',
+            expires=timezone.now() + timedelta(seconds=300),
+            token='secret-access-token-key',
+            application=app.application
+        )
+        auth = self._create_authorization_header(access_token.token)
+
+        response = self.client.get("/api/admin/currencies/", HTTP_AUTHORIZATION=auth)
+
+        self.assertEqual(response.status_code, 200)
