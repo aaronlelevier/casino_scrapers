@@ -4,10 +4,11 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from automation.tests.factory import create_automation_action_send_email
+from automation.tests.factory import create_automation_action_send_email, create_automation_action_send_sms
 from contact.models import (State, StateManager, StateQuerySet, Country, PhoneNumber,
-    PhoneNumberType, Address, AddressType, Email, EmailType, EmailManager)
-from contact.tests.factory import create_contact, create_address_type, create_email_type
+    PhoneNumberManager, PhoneNumberType, Address, AddressType, Email, EmailType, EmailManager)
+from contact.tests.factory import (create_contact, create_address_type, create_email_type,
+    create_phone_number_type)
 from location.models import Location
 from location.tests.factory import create_location
 from person.models import Person
@@ -38,6 +39,37 @@ class StateTests(TestCase):
         self.assertIsInstance(State.objects, StateManager)
 
 
+class PhoneNumberManagerTests(TestCase):
+
+    def setUp(self):
+        self.action = create_automation_action_send_sms()
+        self.person = Person.objects.get(id=self.action.content.get('recipients')[0])
+
+    @patch("contact.models.PhoneNumberManager.send_sms")
+    def test_process_send_sms__no_sms(self, mock_func):
+        PhoneNumber.objects.process_send_sms(self.action)
+
+        self.assertFalse(mock_func.called)
+
+    @patch("contact.models.PhoneNumberManager.send_sms")
+    def test_process_send_sms__sms_is_not_type_cell(self, mock_func):
+        personal_sms_type = create_phone_number_type(PhoneNumberType.TELEPHONE)
+        create_contact(PhoneNumber, self.person, personal_sms_type)
+
+        PhoneNumber.objects.process_send_sms(self.action)
+
+        self.assertFalse(mock_func.called)
+
+    @patch("contact.models.PhoneNumberManager.send_sms")
+    def test_process_send_sms__sms_is_type_cell(self, mock_func):
+        work_sms_type = create_phone_number_type(PhoneNumberType.CELL)
+        create_contact(PhoneNumber, self.person, work_sms_type)
+
+        PhoneNumber.objects.process_send_sms(self.action)
+
+        self.assertTrue(mock_func.called)
+
+
 class PhoneNumberTests(TestCase):
 
     def setUp(self):
@@ -50,6 +82,9 @@ class PhoneNumberTests(TestCase):
         self.assertIsInstance(self.ph, PhoneNumber)
         self.assertIsInstance(self.ph.type, PhoneNumberType)
         self.assertIsInstance(self.ph.content_object, Person)
+
+    def test_manager(self):
+        self.assertIsInstance(PhoneNumber.objects, PhoneNumberManager)
 
     def test_ordering(self):
         create_contact(PhoneNumber, self.person)

@@ -92,6 +92,29 @@ class PhoneNumberType(BaseNameOrderModel):
     ]
 
 
+class PhoneNumberQuerySet(BaseQuerySet):
+    pass
+
+
+class PhoneNumberManager(BaseManager):
+
+    queryset_cls = PhoneNumberQuerySet
+
+    def process_send_sms(self, action):
+        Person = ContentType.objects.get(app_label="person", model="person").model_class()
+
+        for person in Person.objects.filter(id__in=action.content.get('recipients', [])):
+            for ph in person.phone_numbers.filter(type__name=PhoneNumberType.CELL):
+                body = action.content.get('body', '')
+                self.send_sms(ph, body)
+
+    def send_sms(self, ph, body):
+        """
+        A generic method that sends an sms.
+        """
+        pass
+
+
 class PhoneNumber(BaseContactModel):
     """
     TODO: Will use this "phone number lib" for validation:
@@ -100,6 +123,8 @@ class PhoneNumber(BaseContactModel):
     """
     type = models.ForeignKey(PhoneNumberType, blank=True, null=True)
     number = models.TextField(blank=True, null=True)
+
+    objects = PhoneNumberManager()
 
     class Meta:
         ordering = ('number',)
@@ -184,9 +209,7 @@ class EmailManager(BaseManager):
     queryset_cls = EmailQuerySet
 
     def process_send_email(self, action):
-        # use ContentType to avoid circular import
-        content_type = ContentType.objects.get(app_label="person", model="person")
-        Person = content_type.model_class()
+        Person = ContentType.objects.get(app_label="person", model="person").model_class()
 
         for person in Person.objects.filter(id__in=action.content.get('recipients', [])):
             for email in person.emails.filter(type__name=EmailType.WORK):
@@ -195,6 +218,9 @@ class EmailManager(BaseManager):
                 self.send_mail(email, subject, body)
 
     def send_mail(self, email, subject, body):
+        """
+        Generic method to send an email.
+        """
         pass
 
 
