@@ -76,14 +76,15 @@ test('should be able to select new location when one doesnt exist', function(ass
   this.model = ticket;
   this.locationRepo = location_repo;
   this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket"}}`);
+  let $component = this.$(`${COMPONENT}`);
   clickTrigger();
   run(() => { typeInSearch('a'); });
   return waitFor().
     then(() => {
-      assert.equal(this.$(`${DROPDOWN}`).length, 1);
-      assert.equal(this.$('.ember-power-select-options > li').length, 3);
-      nativeMouseUp(`.ember-power-select-option:contains(this.${LD.storeName})`);
-      assert.equal(this.$component.find(`${PowerSelect}`).text().trim(), LD.storeName);
+      assert.equal($(`${DROPDOWN}`).length, 1);
+      assert.equal($('.ember-power-select-options > li').length, 3);
+      nativeMouseUp(`.ember-power-select-option:contains(${LD.storeName})`);
+      assert.equal($component.find(`${PowerSelect}`).text().trim(), LD.storeName);
       assert.equal(ticket.get('location').get('id'), LD.idOne);
     });
 });
@@ -93,18 +94,19 @@ test('should be able to select new location when ticket already has a location',
   this.model = ticket;
   this.locationRepo = location_repo;
   this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket"}}`);
+  let $component = this.$(`${COMPONENT}`);
   clickTrigger();
   run(() => { typeInSearch('a'); });
   return waitFor().
     then(() => {
-      assert.equal(this.$(`${DROPDOWN}`).length, 1);
-      assert.equal(this.$('.ember-basic-dropdown-content').length, 1);
-      assert.equal(this.$('.ember-power-select-options > li').length, 3);
-      nativeMouseUp(`.ember-power-select-option:contains(this.${LD.storeNameTwo})`);
-      assert.equal(this.$(`${DROPDOWN}`).length, 0);
-      assert.equal(this.$('.ember-basic-dropdown-content').length, 0);
-      assert.equal(this.$('.ember-power-select-options > li').length, 0);
-      assert.equal(this.$component.find(`${PowerSelect}`).text().trim(), LD.storeNameTwo);
+      assert.equal($(`${DROPDOWN}`).length, 1);
+      assert.equal($('.ember-basic-dropdown-content').length, 1);
+      assert.equal($('.ember-power-select-options > li').length, 3);
+      nativeMouseUp(`.ember-power-select-option:contains(${LD.storeNameTwo})`);
+      assert.equal($(`${DROPDOWN}`).length, 0);
+      assert.equal($('.ember-basic-dropdown-content').length, 0);
+      assert.equal($('.ember-power-select-options > li').length, 0);
+      assert.equal($component.find(`${PowerSelect}`).text().trim(), LD.storeNameTwo);
       assert.equal(ticket.get('location').get('id'), LD.idTwo);
       assert.deepEqual(location_one.get('tickets'), []);
       assert.deepEqual(location_two.get('tickets'), [TD.idOne]);
