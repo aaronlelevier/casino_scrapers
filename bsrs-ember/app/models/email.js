@@ -7,6 +7,7 @@ import { validator, buildValidations } from 'ember-cp-validations';
 const Validations = buildValidations({
   email: validator('format', { 
     type: 'email',
+    regex: /^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9]{2,}(?:[a-z0-9-]*[a-z0-9])?$/i,
     message: 'errors.email.email' 
   }),
 });
