@@ -60,8 +60,10 @@ var GeneralPage = PageObject.create({
 
   phonenumberFillIn: fillable('.t-phonenumber-number0'),
   phonenumberThirdFillIn: fillable('.t-phonenumber-number2'),
+  phonenumberRemoveSecond: clickable('.t-del-phone-number-btn:eq(1)'),
   emailFillIn: fillable('.t-email-email0'),
   emailThirdFillIn: fillable('.t-email-email2'),
+  emailRemoveSecond: clickable('.t-del-email-btn:eq(1)'),
 
   phonenumberZeroValidationErrorVisible: hasClass('invalid', '.t-phonenumber-number-validator0'),
   phonenumberOneValidationErrorVisible: hasClass('invalid', '.t-phonenumber-number-validator1'),

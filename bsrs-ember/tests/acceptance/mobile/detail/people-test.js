@@ -11,6 +11,10 @@ import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import RD from 'bsrs-ember/vendor/defaults/role';
+import SD from 'bsrs-ember/vendor/defaults/status';
+import PNF from 'bsrs-ember/vendor/phone_number_fixtures';
+import PND from 'bsrs-ember/vendor/defaults/phone-number';
+import PNTD from 'bsrs-ember/vendor/defaults/phone-number-type';
 import config from 'bsrs-ember/config/environment';
 import page from 'bsrs-ember/tests/pages/person-mobile';
 import peoplePage from 'bsrs-ember/tests/pages/person';
@@ -18,22 +22,22 @@ import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import pageDrawer from 'bsrs-ember/tests/pages/nav-drawer';
 import BASEURLS, { PEOPLE_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
+import { ROLE_SELECT, LOCATION_SELECT, STATUS_SELECT } from 'bsrs-ember/tests/helpers/const-names';
 
-var store, list_xhr;
+var store, list_xhr, detail_payload;
 
 const BASE_URL = BASEURLS.base_people_url;
 const PEOPLE_INDEX_URL = `${BASE_URL}/index`;
 const DETAIL_URL = `${BASE_URL}/${PD.idOne}`;
 const PEOPLE_PUT_URL = `${PEOPLE_URL}${PD.idOne}/`;
-const LOCATION = '.t-person-locations-select';
-const ROLE = '.t-person-role-select';
 
 moduleForAcceptance('Acceptance | mobile people detail test', {
   beforeEach() {
     setWidth('mobile');
     store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, PF.list());
-    xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
+    detail_payload = PF.detail(PD.idOne);
+    xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, detail_payload);
   },
 });
 
@@ -48,6 +52,41 @@ test('can click from admin to people grid to detail', async assert => {
   assert.equal(currentURL(), PEOPLE_INDEX_URL);
   await generalPage.gridItemZeroClick();
   assert.equal(currentURL(), DETAIL_URL);
+});
+
+test('can update fields and save', async assert => {
+  await page.visitDetail();
+  assert.equal(currentURL(), DETAIL_URL);
+  const person = store.find('person', PD.idOne);
+  assert.equal(find('.t-detail-title').text(), person.get('fullname'));
+  xhr(`${LOCATIONS_URL}location__icontains=ABC1234/?location_level=${LLD.idOne}`, 'GET', null, {}, 200, LF.list_power_select());
+  await selectSearch(LOCATION_SELECT, 'ABC1234');
+  // role change will clear out locations
+  await selectChoose(LOCATION_SELECT, `${LD.baseStoreName}4`);
+  await selectChoose(ROLE_SELECT, RD.nameTwo);
+  await peoplePage.firstNameFill(PD.donald_first_name);
+  await peoplePage.lastNameFill(PD.donald_last_name);
+  await peoplePage.middleInitialFill(PD.donald_middle_initial);
+  await peoplePage.titleFillIn(PD.titleTwo);
+  await peoplePage.employeeIdFillIn(PD.donald_employee_id);
+  await generalMobilePage.footerItemTwoClick();
+  await selectChoose(STATUS_SELECT, SD.inactiveNameTranslated);
+  const username_response = {'count':0,'next':null,'previous':null,'results': []};
+  xhr(`${PEOPLE_URL}?username=${PD.usernameLastPage2Grid}`, 'GET', null, {}, 200, username_response);
+  await peoplePage.usernameFillIn(PD.usernameLastPage2Grid);
+  await generalMobilePage.footerItemThreeClick();
+  await generalPage.phonenumberRemoveSecond();
+  await generalPage.emailRemoveSecond();
+  const phone_payload = detail_payload.phone_numbers[0];
+  phone_payload.type = detail_payload.phone_numbers[0].type.id;
+  const email_payload = detail_payload.emails[0];
+  email_payload.type = detail_payload.emails[0].type.id;
+  const payload = PF.put({id: PD.idOne, first_name: PD.donald_first_name, last_name: PD.donald_last_name, middle_initial: PD.donald_middle_initial, 
+    username: PD.usernameLastPage2Grid, title: PD.titleTwo, employee_id: PD.donald_employee_id, role: RD.idTwo, locations: [], status: SD.inactiveId,
+    phone_numbers: [phone_payload], emails: [email_payload]});
+  xhr(PEOPLE_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
+  await generalPage.save()
+  assert.equal(currentURL(), PEOPLE_INDEX_URL);
 });
 
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async assert => {
@@ -120,22 +159,5 @@ test('can click through component sections and save to redirect to index', async
   await generalPage.save();
   assert.equal(currentURL(), PEOPLE_INDEX_URL);
 });
-
-// test('can update fields and save', async assert => {
-//   await page.visitDetail();
-//   assert.equal(currentURL(), DETAIL_URL);
-//   const person = store.find('person', PD.idOne);
-//   assert.equal(find('.t-detail-title').text(), person.get('fullname'));
-//   xhr(`${LOCATIONS_URL}location__icontains=ABC1234/?location_level=${LLD.idOne}`, 'GET', null, {}, 200, LF.list_power_select());
-//   await selectSearch(LOCATION, 'ABC1234');
-//   // role change will clear out locations
-//   await selectChoose(LOCATION, `${LD.baseStoreName}4`);
-//   await selectChoose(ROLE, RD.nameTwo);
-//   const payload = PF.put({id: PD.idOne, role: RD.idTwo, locations: []});
-//   xhr(PEOPLE_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
-//   await generalPage.save()
-//   assert.equal(currentURL(), PEOPLE_INDEX_URL);
-// });
-
 
 /* jshint ignore:end */
