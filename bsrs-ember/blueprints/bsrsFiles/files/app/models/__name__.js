@@ -5,6 +5,7 @@ import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import { many_to_many } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/<%= dasherizedModuleName %>';
+import NewMixin from 'bsrs-ember/mixins/model/new';
 
 const Validations = buildValidations({
   <%= firstPropertySnake %>: [
@@ -26,7 +27,7 @@ const Validations = buildValidations({
   ],
 });
 
-export default Model.extend(OptConf, Validations, {
+export default Model.extend(OptConf, Validations, NewMixin, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('<%= secondProperty %>', '<%= dasherizedModuleName %>');
