@@ -202,12 +202,7 @@ test('when user enters new form and doesnt enter data, the record is correctly r
 test('can change default role and locale', (assert) => {
   clearxhr(list_xhr);
   visit(NEW_URL);
-  page.roleClickDropdown();
-  andThen(() => {
-    const person = store.find('person', UUID.value);
-    assert.equal(person.get('role').get('id'), RD.idOne);
-  });
-  page.roleClickOptionTwo();
+  selectChoose('.t-person-role-select', RD.nameTwo);
   andThen(() => {
     const person = store.find('person', UUID.value);
     assert.equal(person.get('role').get('id'), RD.idTwo);
@@ -215,8 +210,7 @@ test('can change default role and locale', (assert) => {
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     assert.equal(page.roleInput, RD.nameTwo);
   });
-  page.localeClickDropdown();
-  page.localeClickOptionTwo();
+  selectChoose('.t-locale-select', PD.localeTwo);
   andThen(() => {
     assert.equal(page.localeInput, LD.nameTwo);
   });
@@ -263,10 +257,8 @@ test('adding a new person should allow for another new person to be created afte
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/abc123`);
     person_count = store.find('person').get('length');
   });
-  page.roleClickDropdown();
-  page.roleClickOptionOne();
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
+  selectChoose('.t-person-role-select', RD.nameOne);
+  selectChoose('.t-status-select', SD.activeNameTranslated);
   ajax(`${PEOPLE_URL}abc123/`, 'PUT', JSON.stringify(multi_new_put_payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
