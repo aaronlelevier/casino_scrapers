@@ -4,7 +4,6 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import equal from 'bsrs-ember/utilities/equal';
-import NewMixin from 'bsrs-ember/mixins/model/new';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import { many_to_many } from 'bsrs-components/attr/many-to-many';
 import OptConf from 'bsrs-ember/mixins/optconfigure/role';
@@ -21,7 +20,7 @@ const Validations = buildValidations({
   }),
 });
 
-var RoleModel = Model.extend(OptConf, NewMixin, Validations, {
+var RoleModel = Model.extend(OptConf, Validations, {
   init() {
     belongs_to.bind(this)('location_level', 'role', {bootstrapped:true, rollback:false});
     many_to_many.bind(this)('category', 'role', {plural:true});

@@ -211,6 +211,8 @@ test('validation works and when hit save, we do same post', (assert) => {
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
     const ticket = store.find('ticket').objectAt(0);
+    assert.equal(ticket.get('new'), undefined);
+    assert.equal(ticket.get('new_pk'), undefined);
     // assert.equal(ticket.get('created'), moment(new Date()).toISOString());
   });
 });

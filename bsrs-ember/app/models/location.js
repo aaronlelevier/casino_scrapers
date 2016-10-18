@@ -1,7 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
-import NewMixin from 'bsrs-ember/mixins/model/new';
 import inject from 'bsrs-ember/utilities/store';
 import equal from 'bsrs-ember/utilities/equal';
 // import EmailMixin from 'bsrs-ember/mixins/model/email';
@@ -38,7 +37,7 @@ const Validations = buildValidations({
   addresses: validator('has-many'),
 });
 
-var LocationModel = Model.extend(CopyMixin, NewMixin, ParentMixin, ChildrenMixin, LocationLevelMixin, Validations, OptConf, {
+var LocationModel = Model.extend(CopyMixin, ParentMixin, ChildrenMixin, LocationLevelMixin, Validations, OptConf, {
   init() {
     belongs_to.bind(this)('status', 'location', {bootstrapped:true});
     belongs_to.bind(this)('location_level', 'location', {bootstrapped:true, change_func:false});

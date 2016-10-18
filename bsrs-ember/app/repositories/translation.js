@@ -12,6 +12,8 @@ export default Ember.Object.extend(GridRepositoryMixin, {
   deserializer: Ember.computed.alias('TranslationDeserializer'),
   insert(model) {
     return PromiseMixin.xhr(TRANSLATION_URL, 'POST', {data: JSON.stringify(model.createSerialize())}).then(() => {
+      model.set('new', undefined);
+      model.set('new_pk', undefined);
       model.save();
       //TODO: insert should also call saveRelated (tdd please)
       //NOTE: (ayl) Since the List Endpoint only contains the Translation keys, we're
