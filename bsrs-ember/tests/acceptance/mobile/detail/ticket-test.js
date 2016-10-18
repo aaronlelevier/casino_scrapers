@@ -56,6 +56,9 @@ test('can click to detail, show activities, and go back to list', async assert =
   assert.equal(currentURL(), DETAIL_URL);
   const ticket = store.find('ticket', TD.idOne);
   assert.equal(find('.t-detail-title').text(), `#${ticket.get('number')}`);
+  assert.equal(find('[data-test-id="priority-tag"]').text().trim(), t(ticket.get('priority').get('name')));
+  assert.equal(find('[data-test-id="status-tag"]').text().trim(), t(ticket.get('status').get('name')));
+  assert.ok(find('[data-test-id="created-tag"]').text().trim().includes(ticket.get('assignee.fullname')));
   assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
   await generalMobilePage.backButtonClick();
   assert.equal(currentURL(), TICKET_URL);
