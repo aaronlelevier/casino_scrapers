@@ -15,7 +15,7 @@ from django.utils import timezone
 
 from accounting.models import Currency
 from category.models import Category
-from contact.models import PhoneNumber, Address, Email
+from contact.models import PhoneNumber, PhoneNumberType, Address, Email
 from location.models import LocationLevel, Location, LOCATION_COMPANY
 from person import config, helpers
 from tenant.models import Tenant
@@ -301,6 +301,13 @@ class PersonQuerySet(BaseQuerySet):
         return qs.annotate(status_name=F('status__name'),
                            role_name=F('role__name'))
 
+    def get_sms_recipients(self, tenant):
+        return (self.filter(role__tenant=tenant, phone_numbers__type__name=PhoneNumberType.CELL)
+                    .prefetch_related('phone_numbers'))
+
+    def get_email_recipients(self, tenant):
+        return (self.filter(role__tenant=tenant, emails__isnull=False)
+                    .prefetch_related('emails'))
 
 
 class PersonManager(BaseManagerMixin, UserManager):
@@ -318,6 +325,12 @@ class PersonManager(BaseManagerMixin, UserManager):
 
     def search_power_select(self, keyword):
         return self.get_queryset().search_power_select(keyword)
+
+    def get_sms_recipients(self, tenant):
+        return self.get_queryset().get_sms_recipients(tenant)
+
+    def get_email_recipients(self, tenant):
+        return self.get_queryset().get_email_recipients(tenant)
 
 
 class Person(BaseModel, AbstractUser):

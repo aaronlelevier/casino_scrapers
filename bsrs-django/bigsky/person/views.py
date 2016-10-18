@@ -68,7 +68,25 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
 
        URL: `/api/admin/people/current/`
 
-    **2. reset-password:**
+    **2. sms_recipients:**
+
+       Returns people with phone numbers of type "cell"
+
+       URL: `/api/admin/people/sms-recipients/`
+
+    **3. email_recipients:**
+
+       Returns people with emails
+
+       URL: `/api/admin/people/email-recipients/`
+
+    **4. search_power_select:**
+
+       Standard Person power-select endpoint.
+
+       URL: `/api/admin/people/person__icontains={search_key}/`
+
+    **5. reset_password:**
 
        Reset a Person's password using `{person_id}` the Person.
 
@@ -104,6 +122,26 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
         instance = get_object_or_404(Person, id=request.user.id)
         serializer = ps.PersonCurrentSerializer(instance)
         return Response(serializer.data)
+
+    @list_route(methods=['GET'], url_path=r"sms-recipients")
+    def sms_recipients(self, request):
+        """
+        Returns people with a related PhoneNumber of PhoneNumberType.CELL
+        """
+        queryset = Person.objects.get_sms_recipients(tenant=request.user.role.tenant)
+        queryset = self.paginate_queryset(queryset)
+        serializer = ps.PersonSearchSerializer(queryset, many=True)
+        return self.get_paginated_response(serializer.data)
+
+    @list_route(methods=['GET'], url_path=r"email-recipients")
+    def email_recipients(self, request):
+        """
+        Returns people with a Emails
+        """
+        queryset = Person.objects.get_email_recipients(tenant=request.user.role.tenant)
+        queryset = self.paginate_queryset(queryset)
+        serializer = ps.PersonSearchSerializer(queryset, many=True)
+        return self.get_paginated_response(serializer.data)
 
     # TODO: need email_re or something similar here
     @list_route(methods=['GET'], url_path=r"person__icontains=(?P<search_key>[\w\s\.\-@]+)")

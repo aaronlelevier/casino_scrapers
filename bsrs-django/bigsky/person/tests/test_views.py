@@ -13,7 +13,7 @@ from accounting.models import Currency
 from category.models import Category
 from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
-from contact.tests.factory import create_contact, create_contacts
+from contact.tests.factory import create_contact, create_contacts, create_phone_number_type
 from location.models import Location, LocationLevel
 from location.tests.factory import create_location
 from person import config as person_config
@@ -22,6 +22,7 @@ from person.serializers import PersonUpdateSerializer, RoleUpdateSerializer
 from person.tests.factory import (PASSWORD, create_single_person, create_role, create_roles,
     create_all_people, create_person_statuses)
 from person.tests.mixins import RoleSetupMixin
+from tenant.tests.factory import get_or_create_tenant
 from translation.models import Locale
 from translation.tests.factory import create_locale, create_locales
 from utils import create
@@ -270,7 +271,7 @@ class PersonCreateTests(APITestCase):
 class PersonListTests(TestCase):
 
     def setUp(self):
-        for i in range(3):
+        for i in range(5):
             self.person = create_single_person()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -378,6 +379,67 @@ class PersonListTests(TestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(data['count'] > 10)
         self.assertEqual(len(data['results']), settings.PAGE_SIZE)
+
+    def test_get_sms_recipients(self):
+        people = Person.objects.exclude(id=self.person.id)
+        person_one = people[0]
+        person_two = people[1]
+        person_three = people[2]
+        # person 1 - valid - same tenant, ph is type cell
+        phone_cell_type = create_phone_number_type(PhoneNumberType.CELL)
+        create_contact(PhoneNumber, person_one, phone_cell_type)
+        self.assertEqual(person_one.role.tenant, self.person.role.tenant)
+        self.assertTrue(person_one.phone_numbers.filter(type__name=PhoneNumberType.CELL).exists())
+        # person 2 - invalid - diff tenant
+        create_contact(PhoneNumber, person_two, phone_cell_type)
+        tenant_two = get_or_create_tenant('foo')
+        person_two.role.tenant = tenant_two
+        person_two.role.save()
+        self.assertNotEqual(person_two.role.tenant, self.person.role.tenant)
+        self.assertTrue(person_two.phone_numbers.filter(type__name=PhoneNumberType.CELL).exists())
+        # person 3 - invalid - no ph of type cell
+        self.assertEqual(person_three.role.tenant, self.person.role.tenant)
+        self.assertFalse(person_three.phone_numbers.filter(type__name=PhoneNumberType.CELL).exists())
+
+        response = self.client.get('/api/admin/people/sms-recipients/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(person_one.id))
+        self.assertEqual(data['results'][0]['fullname'], person_one.fullname)
+        self.assertEqual(data['results'][0]['username'], person_one.username)
+        self.assertEqual(data['results'][0]['email'], str(person_one.email))
+
+    def test_get_email_recipients(self):
+        people = Person.objects.exclude(id=self.person.id)
+        person_one = people[0]
+        person_two = people[1]
+        person_three = people[2]
+        # person 1 - valid - same tenant, has an email
+        create_contact(Email, person_one)
+        self.assertEqual(person_one.role.tenant, self.person.role.tenant)
+        self.assertTrue(person_one.emails.exists())
+        # person 2 - invalid - diff tenant
+        create_contact(Email, person_two)
+        tenant_two = get_or_create_tenant('foo')
+        person_two.role.tenant = tenant_two
+        person_two.role.save()
+        self.assertNotEqual(person_two.role.tenant, self.person.role.tenant)
+        self.assertTrue(person_two.emails.exists())
+        # person 3 - invalid - no email
+        self.assertEqual(person_three.role.tenant, self.person.role.tenant)
+        self.assertFalse(person_three.emails.exists())
+
+        response = self.client.get('/api/admin/people/email-recipients/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(person_one.id))
+        self.assertEqual(data['results'][0]['fullname'], person_one.fullname)
+        self.assertEqual(data['results'][0]['username'], person_one.username)
+        self.assertEqual(data['results'][0]['email'], str(person_one.email))
 
 
 class PersonDetailTests(TestCase):
