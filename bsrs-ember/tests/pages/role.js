@@ -23,6 +23,7 @@ const CATEGORY_DROPDOWN = options;
 
 
 export default PageObject.create({
+  visit: visitable(ROLE_LIST_URL),
   visitRoles: visitable(ROLE_LIST_URL),
   visitDetail: visitable(DETAIL_URL),
   categoryClickDropdown: clickable(CATEGORY),
@@ -47,6 +48,8 @@ export default PageObject.create({
   nameValue: value('.t-role-name'),
   nameValidationErrorHidden: () => Ember.$('.t-role-name-validator').is(':hidden'),
   nameValidationErrorVisible: hasClass('invalid', '.t-role-name-validator'),
+
+  authAmountFillIn: fillable('.t-amount'),
 
   roleTypeInput: text(ROLETYPE),
   roleTypeClickDropdown: clickable(ROLETYPE),
