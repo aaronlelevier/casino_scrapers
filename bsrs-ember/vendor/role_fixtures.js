@@ -7,8 +7,9 @@ var BSRS_ROLE_FACTORY = (function() {
     this.config = config;
   };
   factory.prototype.generate = function(i, name, inherited) {
+    var id = i || this.role_defaults.idOne;
     return {
-      id: i,
+      id: id,
       name: name || this.role_defaults.nameOne,
       role_type: this.role_defaults.t_roleTypeGeneral,
       location_level: this.location_level_fixtures.detail().id,
@@ -66,6 +67,10 @@ var BSRS_ROLE_FACTORY = (function() {
     var response = this.generate(role.id);
     response.location_level = this.location_level_fixtures.detail().id;
     response.categories = [response.categories[0].id];
+    response.dashboard_text = response.inherited.dashboard_text.value;
+    response.auth_currency = response.inherited.auth_currency.value;
+    // response.auth_amount = response.inherited.auth_amount.value;
+    delete response.inherited;
     for (var key in role) {
       response[key] = role[key];
     }

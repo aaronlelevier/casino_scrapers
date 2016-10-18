@@ -6,7 +6,6 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import PF from 'bsrs-ember/vendor/people_fixtures';
-import RF from 'bsrs-ember/vendor/role_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import RD from 'bsrs-ember/vendor/defaults/role';

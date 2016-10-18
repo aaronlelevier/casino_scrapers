@@ -25,7 +25,6 @@ import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
 import BASEURLS, { ROLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
-const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_roles_url;
 const ROLE_URL = ROLE_LIST_URL;
 const DETAIL_URL = BASE_URL + '/' + RD.idOne;
