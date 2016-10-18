@@ -1,5 +1,8 @@
 import os
 
+import logging
+logger = logging.getLogger(__name__)
+
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.mail import EmailMultiAlternatives
@@ -110,7 +113,13 @@ class PhoneNumberManager(BaseManager):
         Person = ContentType.objects.get(app_label="person", model="person").model_class()
 
         for person in Person.objects.filter(id__in=action.content.get('recipients', [])):
-            for ph in person.phone_numbers.filter(type__name=PhoneNumberType.CELL):
+            try:
+                ph = person.phone_numbers.get(type__name=PhoneNumberType.CELL)
+            except PhoneNumber.DoesNotExist:
+                logger.info("Person: {person.id}; Fullname: {person.fullname} not sent SMS " \
+                            "because has no CELL phone number on file, for SMS with body: {body}"
+                            .format(person=person, body=action.content['body']))
+            else:
                 body = action.content.get('body', '')
                 self.send_sms(ph, body)
 

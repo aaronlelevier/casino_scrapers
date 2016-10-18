@@ -1,5 +1,6 @@
 from mock import patch
 
+from django.conf import settings
 from django.test import TestCase
 
 from model_mommy import mommy
@@ -52,13 +53,21 @@ class PhoneNumberManagerTests(TestCase):
         self.assertFalse(mock_func.called)
 
     @patch("contact.models.PhoneNumberManager.send_sms")
-    def test_process_send_sms__sms_is_not_type_cell(self, mock_func):
+    def test_process_send_sms__sms_is_not_type_cell_(self, mock_func):
         personal_sms_type = create_phone_number_type(PhoneNumberType.TELEPHONE)
         create_contact(PhoneNumber, self.person, personal_sms_type)
+        # clear log
+        with open(settings.LOGGING_INFO_FILE, 'w'): pass
 
         PhoneNumber.objects.process_send_sms(self.action)
 
         self.assertFalse(mock_func.called)
+        # Log
+        with open(settings.LOGGING_INFO_FILE, 'r') as f:
+            content = f.read()
+        self.assertIn("Person: {person.id}; Fullname: {person.fullname} not sent SMS " \
+                      "because has no CELL phone number on file, for SMS with body: {body}"
+                      .format(person=self.person, body=self.action.content['body']), content)
 
     @patch("contact.models.PhoneNumberManager.send_sms")
     def test_process_send_sms__sms_is_type_cell(self, mock_func):
