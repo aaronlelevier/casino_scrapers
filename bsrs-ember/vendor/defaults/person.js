@@ -78,6 +78,7 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
       lastNameThree: 'C',
       lastNameBoy: 'Man1',
       lastNameBoy2: 'Man2',
+      usernameLastPage2Grid: 'scott17',
       titleOne: 'Pres',
       titleTwo: 'Vice Pres',
       titleThree: 'Manager',

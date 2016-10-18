@@ -21,7 +21,7 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
     * EVERYTHING BELOW
     */
     /* @method keyup
-    * asks repository for raw results
+    * asks repository for raw results w/ 'search' query param
     */
     keyup(searchValue) {
       const repo = this.get('repository');

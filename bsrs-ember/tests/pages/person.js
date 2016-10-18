@@ -25,6 +25,7 @@ const LOCALE = '.t-locale-select .ember-basic-dropdown-trigger';
 
 
 export default PageObject.create({
+  visit: visitable(PEOPLE_URL),
   visitPeople: visitable(PEOPLE_URL),
   visitDetail: visitable(DETAIL_URL),
   statusInput: text(STATUS),
