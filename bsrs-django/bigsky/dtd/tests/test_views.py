@@ -6,8 +6,7 @@ from model_mommy import mommy
 from rest_framework.test import APITestCase
 
 from category.tests.factory import create_single_category
-from dtd.model_choices import LINK_TYPES, NOTE_TYPES, FIELD_TYPES
-from dtd.models import TreeOption, TreeData
+from dtd.models import TreeOption, TreeData, TreeField
 from dtd.serializers import TreeDataCreateUpdateSerializer
 from dtd.tests.mixins import TreeDataTestSetUpMixin
 from generic.tests.factory import create_file_attachment
@@ -172,7 +171,7 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         raw_data['fields'] = [{
             'id': str(uuid.uuid4()),
             'label': random_lorem(),
-            'type': FIELD_TYPES[0],
+            'type': TreeField.TEXT,
             # 'options': [], # purposely left out b/c not a required field
             'required': True
         }]
@@ -199,7 +198,7 @@ class TreeDataCreateTests(TreeDataTestSetUpMixin, APITestCase):
         raw_data['fields'] = [{
             'id': str(uuid.uuid4()),
             'label': random_lorem(),
-            'type': FIELD_TYPES[0],
+            'type': TreeField.TEXT,
             'required': True,
             'order': 1,
             'options': [{
@@ -283,9 +282,9 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         key = random_lorem()
         description = random_lorem()
         note = random_lorem()
-        note_type = NOTE_TYPES[1]
+        note_type = TreeData.NOTE_TYPE_INFO
         prompt = random_lorem()
-        link_type = LINK_TYPES[1]
+        link_type = TreeData.LINK_TYPE_LINKS
         self.data['key'] = key
         self.data['description'] = description
         self.data['note'] = note
@@ -337,7 +336,7 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         self.data['fields'] = [{
             'id': str(uuid.uuid4()),
             'label': random_lorem(),
-            'type': FIELD_TYPES[0],
+            'type': TreeField.TEXT,
             'required': True,
             'order': 2,
             # 'options': [], # purposely left out b/c not a required field
@@ -360,7 +359,7 @@ class TreeDataUpdateTests(TreeDataTestSetUpMixin, APITestCase):
         self.data['fields'] = [{
             'id': str(uuid.uuid4()),
             'label': random_lorem(),
-            'type': FIELD_TYPES[0],
+            'type': TreeField.TEXT,
             'required': True,
             'order': 1,
             'options': [{

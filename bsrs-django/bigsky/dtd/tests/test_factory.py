@@ -5,7 +5,6 @@ from model_mommy import mommy
 from category.models import Category
 from category.tests.factory import create_single_category
 from dtd.models import TreeField, TreeOption, TreeData, TreeLink, DTD_START_KEY
-from dtd.model_choices import FIELD_TYPES
 from dtd.tests import factory
 from ticket.models import TicketStatus, TicketPriority
 
@@ -123,7 +122,7 @@ class FixtureGenerationTests(TestCase):
         self.assertEqual(dtd.fields.count(), 5)
         dtd_field_types = dtd.fields.values_list('type', flat=True)
         # only the currently supported field types by Ember
-        for type in FIELD_TYPES[:5]:
+        for type in TreeField.ALL[:5]:
             label = type.split('.')[-1]
             self.assertIsInstance(
                 TreeField.objects.get(label=label, type=type, required=True, tree_data=dtd),

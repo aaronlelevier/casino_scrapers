@@ -5,7 +5,6 @@ from model_mommy import mommy
 from category.models import Category
 from category.tests.factory import create_single_category
 from dtd.models import TreeField, TreeOption, TreeData, TreeLink, DTD_START_KEY
-from dtd.model_choices import FIELD_TYPES
 from ticket.models import TicketStatus, TicketPriority
 from ticket.tests.factory_related import create_ticket_status, create_ticket_priority
 from utils.create import _generate_chars, random_lorem
@@ -114,7 +113,7 @@ def create_dtd_fixtures_only(splice=None):
 
 
 def add_field_of_each_type(dtd):
-    for type in FIELD_TYPES[:5]:
+    for type in TreeField.ALL[:5]:
         label = type.split('.')[-1]
         field = TreeField.objects.create(label=label, type=type, required=True, tree_data=dtd)
 
