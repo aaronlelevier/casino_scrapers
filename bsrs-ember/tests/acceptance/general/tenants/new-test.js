@@ -142,6 +142,9 @@ test('visit new URL and create a new record', assert => {
 
   andThen(() => {
     assert.equal(currentURL(), TENANT_LIST_URL);
+    const tenant = store.find('tenant', 5);
+    assert.equal(tenant.get('new'), undefined);
+    assert.equal(tenant.get('new_pk'), undefined);
   });
 });
 
