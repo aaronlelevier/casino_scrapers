@@ -20,6 +20,8 @@ export default Ember.Mixin.create({
   },
   insert(model) {
     return PromiseMixin.xhr(this.get('url'), 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
+      model.set('new', undefined);
+      model.set('new_pk', undefined);
       model.save();
       model.saveRelated();
     }, (xhr) => {

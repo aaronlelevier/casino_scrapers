@@ -33,6 +33,8 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
   },
   insert(model) {
     return PromiseMixin.xhr(PEOPLE_URL, 'POST', {data: JSON.stringify(model.createSerialize())}).then(() => {
+      model.set('new', undefined);
+      model.set('new_pk', undefined);
       model.saveRelated();
       model.save();
     });

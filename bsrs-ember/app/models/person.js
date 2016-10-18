@@ -11,7 +11,6 @@ import RoleMixin from 'bsrs-ember/mixins/model/person/role';
 import LocationMixin from 'bsrs-ember/mixins/model/person/location';
 import LocaleMixin from 'bsrs-ember/mixins/model/person/locale';
 import config from 'bsrs-ember/config/environment';
-import NewMixin from 'bsrs-ember/mixins/model/new';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
@@ -78,7 +77,7 @@ const Validations = buildValidations({
   emails: validator('has-many'),
 });
 
-var Person = Model.extend(Validations, CopyMixin, LocationMixin, NewMixin, OptConf, RoleMixin, LocaleMixin, {
+var Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMixin, LocaleMixin, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('status', 'person', {bootstrapped:true});

@@ -123,6 +123,7 @@ test('visiting /people/new and creating a new person', (assert) => {
     var person = store.find('person').objectAt(1);
     assert.equal(person.get('id'), UUID.value);
     assert.equal(person.get('new'), undefined);
+    assert.equal(person.get('new_pk'), undefined);
     assert.equal(person.get('username'), PD.username);
     assert.equal(person.get('password'), '');
     assert.equal(person.get('role').get('id'), PD.role);
