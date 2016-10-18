@@ -1,7 +1,12 @@
+import os
+
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
 from django.core.mail import EmailMultiAlternatives
 from django.db import models
+
+from twilio import TwilioRestException
+from twilio.rest import TwilioRestClient
 
 from utils.fields import MyGenericForeignKey
 from utils.models import BaseModel, BaseManager, BaseQuerySet, BaseNameOrderModel
@@ -113,7 +118,33 @@ class PhoneNumberManager(BaseManager):
         """
         A generic method that sends an sms.
         """
-        pass
+        # if statement, so we're not sending SMS during a unittest run
+        if settings.DEBUG:
+            return true
+        else:
+            try:
+                twilio_account_sid = os.environ['TWILIO_ACCOUNT_SID']
+                twilio_auth_token = os.environ['TWILIO_AUTH_TOKEN']
+
+                client = TwilioRestClient(twilio_account_sid, twilio_auth_token)
+
+                body = "Ph:{}; Body:{}...".format(ph.number, body[:50])
+                to = os.environ['TWILIO_NUMBER_TO']
+                twilio_number = os.environ['TWILIO_NUMBER_FROM']
+
+                msg = client.messages.create(
+                    body=body,
+                    to=to,
+                    from_=twilio_number
+                )
+                print(msg.sid)
+            except KeyError:
+                # TODO: add logging - environment variables not configured
+                pass
+            except TwilioRestException:
+                # TODO: add logging - twilio error
+                pass
+
 
 
 class PhoneNumber(BaseContactModel):
