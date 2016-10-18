@@ -7,6 +7,7 @@ import { many_to_many } from 'bsrs-components/attr/many-to-many';
 export default Model.extend(OptConf, {
   init() {
     this._super(...arguments);
+    // TODO: change recipient to plural
     many_to_many.bind(this)('recipient', 'sendemail');
   },
   simpleStore: Ember.inject.service(),

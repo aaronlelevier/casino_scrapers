@@ -14,6 +14,7 @@ export default Ember.Object.extend(OptConf, {
     belongs_to.bind(this)('priority');
     belongs_to.bind(this)('status');
     belongs_to.bind(this)('sendemail');
+    many_to_many.bind(this)('recipient', 'sendemail');
     belongs_to.bind(this)('sendsms');
     many_to_many.bind(this)('pf', 'automation');
     many_to_many.bind(this)('criteria', 'pfilter');
@@ -50,6 +51,7 @@ export default Ember.Object.extend(OptConf, {
     let statuses = {};
     let sendemails = {};
     let sendsmss = {};
+    let recipient;
     actions.forEach((a) => {
       // type
       const type = a.type;
@@ -79,6 +81,8 @@ export default Ember.Object.extend(OptConf, {
       }
       //sendemail
       if(a.sendemail){
+        recipient = a.sendemail.recipient;
+        delete a.sendemail.recipient;
         const sendemail = a.sendemail;
         delete a.sendemail;
         sendemails[a.id] = sendemail;
@@ -95,7 +99,9 @@ export default Ember.Object.extend(OptConf, {
       a.detail = true;
     });
     // push in the actions in the store and those are returned
+    // actions == pojo's
     const [,actionData,] = this.setup_action(actions, automation);
+    // actionData - pojo
     actionData.forEach((ad) => {
       const action = store.find('automation-action', ad.id);
       // type
@@ -113,6 +119,11 @@ export default Ember.Object.extend(OptConf, {
       //sendemail
       let sendemail = sendemails[ad.id];
       this.setup_sendemail(sendemail, action);
+      // setup recipients - req'd by detail payload
+      if (sendemail) {
+        const sendemail_hydrated = store.find('sendemail', sendemail.id);
+        this.setup_recipient(recipient, sendemail_hydrated);
+      }
       // sendsms
       let sendsms = sendsmss[ad.id];
       this.setup_sendsms(sendsms, action);

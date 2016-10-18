@@ -19,12 +19,13 @@ import TPD from 'bsrs-ember/vendor/defaults/ticket-priority';
 import TSD from 'bsrs-ember/vendor/defaults/ticket-status';
 import SED from 'bsrs-ember/vendor/defaults/sendemail';
 import SMSD from 'bsrs-ember/vendor/defaults/sendsms';
+import SEJRD from 'bsrs-ember/vendor/defaults/sendemail-join-recipients';
 
 var store, automation, deserializer, pfilter, pfilter_unused;
 
-module('terrance unit: automation deserializer test', {
+module('unit: automation deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:automation-event', 'model:automation-join-event', 'model:automation-list', 'model:person', 'model:automation-join-pfilter', 'model:pfilter', 'model:sendemail', 'model:sendsms', 'model:criteria', 'model:pfilter-join-criteria', 'model:ticket-priority', 'model:ticket-status', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:length', 'validator:has-many']);
+    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:automation-event', 'model:automation-join-event', 'model:automation-list', 'model:person', 'model:automation-join-pfilter', 'model:pfilter', 'model:sendemail', 'model:sendemail-join-recipients', 'model:sendsms', 'model:criteria', 'model:pfilter-join-criteria', 'model:ticket-priority', 'model:ticket-status', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:length', 'validator:has-many']);
     deserializer = automationDeserializer.create({ simpleStore: store });
     run(() => {
       automation = store.push('automation', { id: AD.idOne });
@@ -147,7 +148,7 @@ test('deserialize single - status - different id', assert => {
 
 test('deserialize single - sendemail - no existing', assert => {
   const json = AF.detail();
-  json.actions[0].sendemail = { id: SED.idOne, subject: SED.subjectOne, body: SED.bodyOne };
+  json.actions[0].sendemail = { id: SED.idOne, subject: SED.subjectOne, body: SED.bodyOne, recipient: [{id: PersonD.idOne, fullname: PersonD.fullname}] };
   run(() => {
     deserializer.deserialize(json, AD.idOne);
   });
@@ -163,6 +164,9 @@ test('deserialize single - sendemail - no existing', assert => {
   assert.equal(automation.get('action').objectAt(0).get('sendemail').get('id'), SED.idOne);
   assert.equal(automation.get('action').objectAt(0).get('sendemail').get('subject'), SED.subjectOne);
   assert.equal(automation.get('action').objectAt(0).get('sendemail').get('body'), SED.bodyOne);
+  assert.equal(automation.get('action').objectAt(0).get('sendemail').get('recipient').get('length'), 1);
+  assert.equal(automation.get('action').objectAt(0).get('sendemail').get('recipient').objectAt(0).get('id'), PersonD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('sendemail').get('recipient').objectAt(0).get('fullname'), PersonD.fullname);
 });
 
 test('deserialize single - sendemail - existing with same id', assert => {
@@ -170,8 +174,10 @@ test('deserialize single - sendemail - existing with same id', assert => {
   run(() => {
     store.push('automation-action', {id: AAD.idOne, sendemail_fk: SED.idOne});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
-    store.push('sendemail', {id: SED.idOne, subject: SED.subjectOne, body: SED.bodyOne, actions: [AAD.idOne]});
-  });
+    store.push('sendemail', {id: SED.idOne, subject: SED.subjectOne, body: SED.bodyOne, sendemail_recipient_fks: [SEJRD.idOne], actions: [AAD.idOne]});
+    store.push('person', {id: PersonD.idOne});
+    store.push('sendemail-join-recipients', {id: SEJRD.idOne, sendemail_pk: SED.idOne, recipient_pk: PersonD.idOne});
+ });
   assert.equal(automation.get('id'), AD.idOne);
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(automation.get('action').objectAt(0).get('sendemail_fk'), SED.idOne);
@@ -179,7 +185,7 @@ test('deserialize single - sendemail - existing with same id', assert => {
   assert.equal(automation.get('action').objectAt(0).get('sendemail').get('name'), SED.keyOne);
   // deserialize
   const json = AF.detail();
-  json.actions[0].sendemail = { id: SED.idOne, subject: SED.subjectOne };
+  json.actions[0].sendemail = { id: SED.idOne, subject: SED.subjectOne, recipient: [{id: PersonD.idOne, fullname: PersonD.fullname}] };
   run(() => {
     deserializer.deserialize(json, AD.idOne);
   });
@@ -196,6 +202,8 @@ test('deserialize single - sendemail - existing with same id', assert => {
   assert.equal(automation.get('action').objectAt(0).get('sendemail').get('id'), SED.idOne);
   assert.equal(automation.get('action').objectAt(0).get('sendemail').get('subject'), SED.subjectOne);
   assert.equal(automation.get('action').objectAt(0).get('sendemail').get('body'), SED.bodyOne);
+  assert.equal(automation.get('action').objectAt(0).get('sendemail').get('recipient').objectAt(0).get('id'), PersonD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('sendemail').get('recipient').objectAt(0).get('fullname'), PersonD.fullname);
 });
 
 test('deserialize single - sendemail - different id', assert => {
@@ -203,7 +211,9 @@ test('deserialize single - sendemail - different id', assert => {
   run(() => {
     store.push('automation-action', {id: AAD.idOne, sendemail_fk: SED.idOne});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
-    store.push('sendemail', {id: SED.idOne, subject: SED.subjectOne, body: SED.bodyOne, actions: [AAD.idOne]});
+    store.push('sendemail', {id: SED.idOne, subject: SED.subjectOne, body: SED.bodyOne, sendemail_recipient_fks: [SEJRD.idOne], actions: [AAD.idOne]});
+    store.push('person', {id: PersonD.idOne});
+    store.push('sendemail-join-recipients', {id: SEJRD.idOne, sendemail_pk: SED.idOne, recipient_pk: PersonD.idOne});
   });
   assert.equal(automation.get('id'), AD.idOne);
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
@@ -212,7 +222,7 @@ test('deserialize single - sendemail - different id', assert => {
   assert.equal(automation.get('action').objectAt(0).get('sendemail').get('name'), SED.keyOne);
   // deserialize
   const json = AF.detail();
-  json.actions[0].sendemail = { id: SED.idTwo, subject: SED.subjectTwo, body: SED.bodyTwo };
+  json.actions[0].sendemail = { id: SED.idTwo, subject: SED.subjectTwo, body: SED.bodyTwo, recipient: [{id: PersonD.idOne, fullname: PersonD.fullname}] };
   run(() => {
     deserializer.deserialize(json, AD.idOne);
   });
@@ -229,6 +239,45 @@ test('deserialize single - sendemail - different id', assert => {
   assert.equal(automation.get('action').objectAt(0).get('sendemail').get('id'), SED.idTwo);
   assert.equal(automation.get('action').objectAt(0).get('sendemail').get('subject'), SED.subjectTwo);
   assert.equal(automation.get('action').objectAt(0).get('sendemail').get('body'), SED.bodyTwo);
+  assert.equal(automation.get('action').objectAt(0).get('sendemail').get('recipient').objectAt(0).get('id'), PersonD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('sendemail').get('recipient').objectAt(0).get('fullname'), PersonD.fullname);
+});
+
+test('deserialize single - sendemail - different recipient', assert => {
+  // pre-deserialize
+  run(() => {
+    store.push('automation-action', {id: AAD.idOne, sendemail_fk: SED.idOne});
+    store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
+    store.push('sendemail', {id: SED.idOne, subject: SED.subjectOne, body: SED.bodyOne, sendemail_recipient_fks: [SEJRD.idOne], actions: [AAD.idOne]});
+    store.push('person', {id: PersonD.idOne});
+    store.push('sendemail-join-recipients', {id: SEJRD.idOne, sendemail_pk: SED.idOne, recipient_pk: PersonD.idOne});
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(automation.get('action').objectAt(0).get('sendemail_fk'), SED.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('sendemail').get('id'), SED.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('sendemail').get('name'), SED.keyOne);
+  // deserialize
+  const json = AF.detail();
+  json.actions[0].sendemail = { id: SED.idTwo, subject: SED.subjectTwo, body: SED.bodyTwo, recipient: [{id: PersonD.idTwo, fullname: PersonD.fullname}] };
+  run(() => {
+    deserializer.deserialize(json, AD.idOne);
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  // actions
+  assert.equal(automation.get('action').get('length'), 1);
+  assert.equal(automation.get('action').objectAt(0).get('id'), AAD.idOne);
+  // action-type
+  assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idOne);
+  assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keyOne);
+  // sendemail
+  assert.equal(automation.get('action').objectAt(0).get('sendemail_fk'), SED.idTwo);
+  assert.equal(automation.get('action').objectAt(0).get('sendemail').get('id'), SED.idTwo);
+  assert.equal(automation.get('action').objectAt(0).get('sendemail').get('subject'), SED.subjectTwo);
+  assert.equal(automation.get('action').objectAt(0).get('sendemail').get('body'), SED.bodyTwo);
+  assert.equal(automation.get('action').objectAt(0).get('sendemail').get('recipient').objectAt(0).get('id'), PersonD.idTwo);
+  assert.equal(automation.get('action').objectAt(0).get('sendemail').get('recipient').objectAt(0).get('fullname'), PersonD.fullname);
 });
 
 // sendsms

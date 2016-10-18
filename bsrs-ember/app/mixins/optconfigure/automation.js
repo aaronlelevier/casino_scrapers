@@ -60,6 +60,12 @@ export default Ember.Mixin.create({
       collection: 'actions',
       property: 'sendemail',
     },
+    // deserializer
+    recipient: {
+      associated_model: 'person',
+      join_model: 'sendemail-join-recipients',
+      associated_pointer: 'recipient'
+    },
     sendsms: {
       collection: 'actions',
       property: 'sendsms',

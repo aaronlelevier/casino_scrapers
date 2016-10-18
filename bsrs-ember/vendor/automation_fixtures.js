@@ -1,5 +1,5 @@
 var BSRS_automation_FACTORY = (function() {
-  var factory = function(automation, event, pfilter, action, actionType, ticket, person, priority, status, config) {
+  var factory = function(automation, event, pfilter, action, actionType, ticket, person, priority, status, sendemail, sendsms, config) {
     this.automation = automation;
     this.event = event;
     this.pfilter = pfilter;
@@ -9,6 +9,8 @@ var BSRS_automation_FACTORY = (function() {
     this.person = person;
     this.priority = priority;
     this.status = status;
+    this.sendemail = sendemail;
+    this.sendsms = sendsms;
     this.config = config;
   };
   factory.prototype.generate = function(i) {
@@ -21,17 +23,19 @@ var BSRS_automation_FACTORY = (function() {
         id: this.event.idOne,
         key: this.event.keyOne
       }],
-      actions: [{
-        id: this.action.idOne,
-        type: {
-          id: this.actionType.idOne,
-          key: this.actionType.keyOne
+      actions: [
+        {
+          id: this.action.idOne,
+          type: {
+            id: this.actionType.idOne,
+            key: this.actionType.keyOne
+          },
+          assignee: {
+            id: this.person.idOne,
+            fullname: this.person.fullname
+          }
         },
-        assignee: {
-          id: this.person.idOne,
-          fullname: this.person.fullname
-        }
-      }],
+      ],
       filters: [{
         id: this.pfilter.idOne,
         source_id: this.pfilter.sourceIdOne,
@@ -163,6 +167,15 @@ var BSRS_automation_FACTORY = (function() {
       },{
         id: this.actionType.idTwo,
         key: this.actionType.keyTwo
+      },{
+        id: this.actionType.idThree,
+        key: this.actionType.keyThree
+      },{
+        id: this.actionType.idFour,
+        key: this.actionType.keyFour
+      },{
+        id: this.actionType.idFive,
+        key: this.actionType.keyFive
       }]
     };
   };
@@ -180,18 +193,20 @@ if (typeof window === 'undefined') {
   var ticket = require('./defaults/ticket');
   var person = require('./defaults/person');
   var priority = require('./defaults/ticket-priority');
-  var status = require('.defaults/ticket-status')
+  var status = require('./defaults/ticket-status')
+  var sendemail = require('./defaults/sendemail')
+  var sendsms = require('./defaults/sendsms')
   var config = require('../config/environment');
   objectAssign(BSRS_automation_FACTORY.prototype, mixin.prototype);
-  module.exports = new BSRS_automation_FACTORY(automation, event, pfilter, action, actionType, ticket, person, priority, status, config);
+  module.exports = new BSRS_automation_FACTORY(automation, event, pfilter, action, actionType, ticket, person, priority, status, sendemail, sendsms, config);
 }
 else {
   define('bsrs-ember/vendor/automation_fixtures',
-    ['exports', 'bsrs-ember/vendor/defaults/automation', 'bsrs-ember/vendor/defaults/automation-event', 'bsrs-ember/vendor/defaults/pfilter', 'bsrs-ember/vendor/defaults/automation-action', 'bsrs-ember/vendor/defaults/automation-action-type', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/defaults/ticket-priority', 'bsrs-ember/vendor/defaults/ticket-status', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
-    function(exports, automation, event, pfilter, action, actionType, ticket, person, priority, status, mixin, config) {
+    ['exports', 'bsrs-ember/vendor/defaults/automation', 'bsrs-ember/vendor/defaults/automation-event', 'bsrs-ember/vendor/defaults/pfilter', 'bsrs-ember/vendor/defaults/automation-action', 'bsrs-ember/vendor/defaults/automation-action-type', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/defaults/ticket-priority', 'bsrs-ember/vendor/defaults/ticket-status', 'bsrs-ember/vendor/defaults/sendemail', 'bsrs-ember/vendor/defaults/sendsms', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
+    function(exports, automation, event, pfilter, action, actionType, ticket, person, priority, status, sendemail, sendsms, mixin, config) {
       'use strict';
       Object.assign(BSRS_automation_FACTORY.prototype, mixin.prototype);
-      return new BSRS_automation_FACTORY(automation, event, pfilter, action, actionType, ticket, person, priority, status, config);
+      return new BSRS_automation_FACTORY(automation, event, pfilter, action, actionType, ticket, person, priority, status, sendemail, sendsms, config);
     }
   );
 }
