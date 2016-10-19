@@ -10,7 +10,7 @@ from rest_framework.exceptions import MethodNotAllowed
 from location.models import Location, LocationLevel, LocationStatus, LocationType
 from location import serializers as ls
 from utils.mixins import SearchMultiMixin
-from utils.views import BaseModelViewSet
+from utils.views import BaseModelViewSet, paginate_queryset_as_response
 
 
 class SelfReferencingRouteMixin(object):
@@ -171,29 +171,23 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
         return ls.LocationListSerializer
 
     @list_route(methods=['GET'], url_path=r'get-level-children/(?P<llevel_id>[\w\-]+)/(?P<pk>[\w\-]+)/location__icontains=(?P<search_key>[\w ]+)')
+    @paginate_queryset_as_response(ls.LocationSearchSerializer)
     def get_level_children(self, request, llevel_id=None, pk=None, search_key=None):
         queryset = Location.objects.get_level_children(llevel_id, pk)
-        queryset = Location.objects.filter(
+        return Location.objects.filter(
             Q(name__icontains=search_key)
         )
-        queryset = self.paginate_queryset(queryset)
-        serializer = ls.LocationSearchSerializer(queryset, many=True)
-        return self.get_paginated_response(serializer.data)
 
     @list_route(methods=['GET'], url_path=r'get-level-parents/(?P<llevel_id>[\w\-]+)/(?P<pk>[\w\-]+)/location__icontains=(?P<search_key>[\w ]+)')
+    @paginate_queryset_as_response(ls.LocationSearchSerializer)
     def get_level_parents(self, request, llevel_id=None, pk=None, search_key=None):
         queryset = Location.objects.get_level_parents(llevel_id, pk)
-        queryset = Location.objects.filter(
+        return Location.objects.filter(
             Q(name__icontains=search_key)
         )
-        queryset = self.paginate_queryset(queryset)
-        serializer = ls.LocationSearchSerializer(queryset, many=True)
-        return self.get_paginated_response(serializer.data)
 
     @list_route(methods=['GET'], url_path=r"location__icontains=(?P<search_key>[\w\s\,\.\-]+)")
+    @paginate_queryset_as_response(ls.LocationSearchSerializer)
     def search_power_select(self, request, search_key=None):
         llevel_id = request.query_params['location_level'] if 'location_level' in request.query_params else None
-        queryset = Location.objects.search_power_select(search_key, llevel_id)
-        queryset = self.paginate_queryset(queryset)
-        serializer = ls.LocationSearchSerializer(queryset, many=True)
-        return self.get_paginated_response(serializer.data)
+        return Location.objects.search_power_select(search_key, llevel_id)

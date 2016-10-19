@@ -10,7 +10,7 @@ from rest_framework.response import Response
 from person import serializers as ps
 from person.models import Person, Role
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
-from utils.views import BaseModelViewSet
+from utils.views import BaseModelViewSet, paginate_queryset_as_response
 
 
 class RoleViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
@@ -124,34 +124,27 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
         return Response(serializer.data)
 
     @list_route(methods=['GET'], url_path=r"sms-recipients")
+    @paginate_queryset_as_response(ps.PersonSearchSerializer)
     def sms_recipients(self, request):
         """
         Returns people with a related PhoneNumber of PhoneNumberType.CELL
         """
         keyword = request.query_params.get('search', None)
-        queryset = Person.objects.get_sms_recipients(tenant=request.user.role.tenant, keyword=keyword)
-        queryset = self.paginate_queryset(queryset)
-        serializer = ps.PersonSearchSerializer(queryset, many=True)
-        return self.get_paginated_response(serializer.data)
+        return Person.objects.get_sms_recipients(tenant=request.user.role.tenant, keyword=keyword)
 
     @list_route(methods=['GET'], url_path=r"email-recipients")
+    @paginate_queryset_as_response(ps.PersonSearchSerializer)
     def email_recipients(self, request):
         """
         Returns people with a Emails
         """
         keyword = request.query_params.get('search', None)
-        queryset = Person.objects.get_email_recipients(tenant=request.user.role.tenant, keyword=keyword)
-        queryset = self.paginate_queryset(queryset)
-        serializer = ps.PersonSearchSerializer(queryset, many=True)
-        return self.get_paginated_response(serializer.data)
+        return Person.objects.get_email_recipients(tenant=request.user.role.tenant, keyword=keyword)
 
-    # TODO: need email_re or something similar here
     @list_route(methods=['GET'], url_path=r"person__icontains=(?P<search_key>[\w\s\.\-@]+)")
+    @paginate_queryset_as_response(ps.PersonSearchSerializer)
     def search_power_select(self, request, search_key=None):
-        queryset = Person.objects.search_power_select(search_key)
-        queryset = self.paginate_queryset(queryset)
-        serializer = ps.PersonSearchSerializer(queryset, many=True)
-        return self.get_paginated_response(serializer.data)
+        return Person.objects.search_power_select(search_key)
 
     # TODO # add correct authorization to who can use this endpoint
     @list_route(methods=['post'], url_path=r"reset-password/(?P<person_id>[\w\-]+)")
