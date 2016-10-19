@@ -173,18 +173,14 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
     @list_route(methods=['GET'], url_path=r'get-level-children/(?P<llevel_id>[\w\-]+)/(?P<pk>[\w\-]+)/location__icontains=(?P<search_key>[\w ]+)')
     @paginate_queryset_as_response(ls.LocationSearchSerializer)
     def get_level_children(self, request, llevel_id=None, pk=None, search_key=None):
-        queryset = Location.objects.get_level_children(llevel_id, pk)
-        return Location.objects.filter(
-            Q(name__icontains=search_key)
-        )
+        return (Location.objects.get_level_children(llevel_id, pk)
+                                .filter(name__icontains=search_key))
 
     @list_route(methods=['GET'], url_path=r'get-level-parents/(?P<llevel_id>[\w\-]+)/(?P<pk>[\w\-]+)/location__icontains=(?P<search_key>[\w ]+)')
     @paginate_queryset_as_response(ls.LocationSearchSerializer)
     def get_level_parents(self, request, llevel_id=None, pk=None, search_key=None):
-        queryset = Location.objects.get_level_parents(llevel_id, pk)
-        return Location.objects.filter(
-            Q(name__icontains=search_key)
-        )
+        return (Location.objects.get_level_parents(llevel_id, pk)
+                                .filter(name__icontains=search_key))
 
     @list_route(methods=['GET'], url_path=r"location__icontains=(?P<search_key>[\w\s\,\.\-]+)")
     @paginate_queryset_as_response(ls.LocationSearchSerializer)
