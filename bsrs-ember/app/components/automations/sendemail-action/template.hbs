@@ -2,16 +2,19 @@
   <div class="input-group">
     <span class="input-group-addon action-label t-sendemail-recipient-label">{{t "admin.action.sendemail.recipients"}}</span>
     {{db-fetch-multi-select 
-      model=model 
+      model=model.sendemail
       multiAttr="recipient" 
+      valuePath="recipient" 
       multiAttrIds="recipient_ids" 
       selectedAttr=model.sendemail.recipient 
       className="t-action-recipient-select" 
+      class=(concat "t-action-recipient-validator" index)
       displayName="fullname" 
       add_func="add_recipient" 
       remove_func="remove_recipient" 
       repository=personRepo 
       searchMethod="findPeople"
+      didValidate=didValidate
     }}
   </div>
   <div class="input-group">

@@ -56,19 +56,20 @@ export default Ember.Mixin.create({
       property: 'ticket-status',
       related_model: 'status'
     },
+    
+    // deserializer - keys determine ..._fks property on the model
     sendemail: {
       collection: 'actions',
       property: 'sendemail',
     },
-    // deserializer
-    recipient: {
-      associated_model: 'person',
-      join_model: 'sendemail-join-recipients',
-      associated_pointer: 'recipient'
-    },
     sendsms: {
       collection: 'actions',
       property: 'sendsms',
-    }
+    },
+    recipient: {
+      associated_model: 'person',
+      join_model: 'generic-join-recipients',
+      associated_pointer: 'recipient'
+    },
   }
 });

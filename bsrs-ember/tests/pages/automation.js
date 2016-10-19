@@ -36,6 +36,10 @@ export default create({
   descriptionFill: fillable('.t-automation-description'),
   descriptionGridOne: text('.t-automation-description:eq(0)'),
   descriptionSortText: text('.t-sort-description'),
+  sendEmailBodyFillIn: fillable('.t-action-body0'),
+  sendEmailSubjectFillIn: fillable('.t-action-subject0'),
+  sendSmsMessageFillIn: fillable('.t-action-message0'),
+  // sendEmailRemoveRecipient: clickable('.ember-power-select-multiple-remove-btn'),
 
   addFilter: clickable('.t-add-pf-btn'),
   deleteFilter: clickable('.t-del-pf-btn:eq(0)'),

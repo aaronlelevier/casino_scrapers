@@ -1,6 +1,7 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { belongs_to } from 'bsrs-components/repository/belongs-to';
-import { many_to_many } from 'bsrs-components/repository/many-to-many';
+import { many_to_many_extract, many_to_many } from 'bsrs-components/repository/many-to-many';
 import OptConf from 'bsrs-ember/mixins/optconfigure/automation';
 
 export default Ember.Object.extend(OptConf, {
@@ -14,8 +15,9 @@ export default Ember.Object.extend(OptConf, {
     belongs_to.bind(this)('priority');
     belongs_to.bind(this)('status');
     belongs_to.bind(this)('sendemail');
-    many_to_many.bind(this)('recipient', 'sendemail');
+    // many_to_many.bind(this)('recipient', 'sendemail');
     belongs_to.bind(this)('sendsms');
+    // many_to_many.bind(this)('sendsms_recipient', 'sendsms');
     many_to_many.bind(this)('pf', 'automation');
     many_to_many.bind(this)('criteria', 'pfilter');
   },
@@ -52,6 +54,7 @@ export default Ember.Object.extend(OptConf, {
     let sendemails = {};
     let sendsmss = {};
     let recipient;
+    let sendsms_recipient;
     actions.forEach((a) => {
       // type
       const type = a.type;
@@ -90,6 +93,8 @@ export default Ember.Object.extend(OptConf, {
       }
       // sendsms
       if(a.sendsms){
+        sendsms_recipient = a.sendsms.recipient;
+        delete a.sendsms.recipient;
         const sendsms = a.sendsms;
         delete a.sendsms;
         sendsmss[a.id] = sendsms;
@@ -122,11 +127,36 @@ export default Ember.Object.extend(OptConf, {
       // setup recipients - req'd by detail payload
       if (sendemail) {
         const sendemail_hydrated = store.find('sendemail', sendemail.id);
-        this.setup_recipient(recipient, sendemail_hydrated);
+        let [m2m_recipients, recipients, server_sum] = many_to_many_extract(recipient, store, sendemail_hydrated, 'generic_recipient', 'generic_pk', 'person', 'recipient_pk');
+        run(() => {
+          recipients.forEach((cat) => {
+            store.push('person', cat);
+          });
+          m2m_recipients.forEach((m2m) => {
+            store.push('generic-join-recipients', m2m);
+          });
+          store.push('sendemail', {id: sendemail_hydrated.get('id'), generic_recipient_fks: server_sum});
+        });
+        // this.setup_recipient(recipient, sendemail_hydrated);
       }
       // sendsms
       let sendsms = sendsmss[ad.id];
       this.setup_sendsms(sendsms, action);
+      // setup recipients - req'd by detail payload
+      if(sendsms) {
+        const sendsms_hydrated = store.find('sendsms', sendsms.id);
+        let [m2m_recipients, recipients, server_sum] = many_to_many_extract(sendsms_recipient, store, sendsms_hydrated, 'generic_recipient', 'generic_pk', 'person', 'recipient_pk');
+        run(() => {
+          recipients.forEach((cat) => {
+            store.push('person', cat);
+          });
+          m2m_recipients.forEach((m2m) => {
+            store.push('generic-join-recipients', m2m);
+          });
+          store.push('sendsms', {id: sendsms_hydrated.get('id'), generic_recipient_fks: server_sum});
+        });
+        // this.setup_recipient(sendsms_recipient, sendsms_hydrated);
+      }
     });
 
     const [,pfs,] = this.setup_pf(filters, automation);

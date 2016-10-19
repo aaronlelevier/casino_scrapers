@@ -15,7 +15,7 @@ var store, action, actionType, type, assignee, priority, sendEmail, sendsms;
 
 moduleFor('model:automation-action', 'Unit | Model | automation-action', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:sendemail-join-recipients', 'model:sendsms-join-recipients', 'model:person', 'model:ticket-priority', 'model:ticket-status', 'model:sendemail', 'model:sendsms', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type']);
+    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:generic-join-recipients', 'model:generic-join-recipients', 'model:person', 'model:ticket-priority', 'model:ticket-status', 'model:sendemail', 'model:sendsms', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type']);
   }
 });
 
