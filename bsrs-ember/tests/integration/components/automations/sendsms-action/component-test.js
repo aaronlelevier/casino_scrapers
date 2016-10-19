@@ -49,6 +49,7 @@ test('it renders', function(assert) {
 });
 
 test('shows validation messages', function(assert) {
+  var done = assert.async();
   this.model = action;
   this.didValidate = false;
   this.index = 0;
@@ -69,13 +70,25 @@ test('shows validation messages', function(assert) {
   assert.equal($component2.hasClass('invalid'), true);
   assert.equal(Ember.$('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.sendsms.recipient'));
   assert.equal(Ember.$('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.sendsms.message'));
-  this.$('.t-action-message0').val('this is the message').trigger('keyup');
+  this.$('.t-action-message0').val('a'.repeat(160)).trigger('keyup');
   assert.equal($component.hasClass('invalid'), false);
-  // run(() => { typeInSearch('e'); });
-  // return waitFor().
-  //   then(() => {
-  //     nativeMouseUp(`.ember-power-select-option:contains(${PD.fullname})`);
-  //     assert.equal(this.$('.invalid').length, 0);
-  //   });
-  // assert.equal($component2.hasClass('invalid'), false);
+  this.$('.t-action-message0').val('a'.repeat(261)).trigger('keyup');
+  Ember.run.later(() => {
+    // valid input
+    $component = this.$('.t-action-message-validator0');
+    assert.equal($component.hasClass('invalid'), true);
+    this.$('.t-action-message0').val('this is the message').trigger('keyup');
+    Ember.run.later(() => {
+      assert.equal($component.hasClass('invalid'), false);
+      run(() => { typeInSearch('e'); });
+      Ember.run.later(() => {
+        assert.equal(action.get('sendsms').get('recipient').get('length'), 0);
+        nativeMouseUp(`.ember-power-select-option:contains(${PD.fullname})`);
+        assert.equal(action.get('sendsms').get('recipient').get('length'), 1);
+        assert.equal(this.$('.invalid').length, 0);
+        assert.equal($component2.hasClass('invalid'), false);
+        done();
+      }, 300);
+    }, 300);
+  }, 1900);
 });

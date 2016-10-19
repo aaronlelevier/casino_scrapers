@@ -5,8 +5,9 @@ import { many_to_many } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 const Validations = buildValidations({
-  message: validator('presence', { 
-    presence: true,
+  message: validator('length', { 
+    min: 1,
+    max: 160,
     message: 'errors.sendsms.message' 
   }),
   recipient: validator('presence', {

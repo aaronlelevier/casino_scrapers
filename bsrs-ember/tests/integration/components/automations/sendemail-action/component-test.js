@@ -78,13 +78,15 @@ test('shows validation messages', function(assert) {
   this.$('.t-action-body0').val('this is the body').trigger('keyup');
   assert.equal($component.hasClass('invalid'), false);
   assert.equal($component2.hasClass('invalid'), false);
-  // run(() => { typeInSearch('e'); });
-  // return waitFor().
-  //   then(() => {
-  //     nativeMouseUp(`.ember-power-select-option:contains(${PD.fullname})`);
-  //     assert.equal(this.$('.invalid').length, 0);
-  //   });
-  // assert.equal($component3.hasClass('invalid'), false);
+  run(() => { typeInSearch('e'); });
+  return waitFor().
+    then(() => {
+      assert.equal(action.get('sendemail').get('recipient').get('length'), 0);
+      nativeMouseUp(`.ember-power-select-option:contains(${PD.fullname})`);
+      assert.equal(action.get('sendemail').get('recipient').get('length'), 1);
+      assert.equal(this.$('.invalid').length, 0);
+      assert.equal($component3.hasClass('invalid'), false);
+    });
 });
 
 
