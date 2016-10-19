@@ -128,7 +128,8 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
         """
         Returns people with a related PhoneNumber of PhoneNumberType.CELL
         """
-        queryset = Person.objects.get_sms_recipients(tenant=request.user.role.tenant)
+        keyword = request.query_params.get('search', None)
+        queryset = Person.objects.get_sms_recipients(tenant=request.user.role.tenant, keyword=keyword)
         queryset = self.paginate_queryset(queryset)
         serializer = ps.PersonSearchSerializer(queryset, many=True)
         return self.get_paginated_response(serializer.data)
@@ -138,7 +139,8 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
         """
         Returns people with a Emails
         """
-        queryset = Person.objects.get_email_recipients(tenant=request.user.role.tenant)
+        keyword = request.query_params.get('search', None)
+        queryset = Person.objects.get_email_recipients(tenant=request.user.role.tenant, keyword=keyword)
         queryset = self.paginate_queryset(queryset)
         serializer = ps.PersonSearchSerializer(queryset, many=True)
         return self.get_paginated_response(serializer.data)

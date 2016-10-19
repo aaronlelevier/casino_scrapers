@@ -13,8 +13,8 @@ from model_mommy import mommy
 from accounting.models import Currency
 from category.models import Category
 from category.tests.factory import create_single_category
-from contact.models import Email
-from contact.tests.factory import create_contact
+from contact.models import Email, PhoneNumber, PhoneNumberType
+from contact.tests.factory import create_contact, create_phone_number_type
 from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonQuerySet, PersonStatus, Role, RoleManager, RoleQuerySet
@@ -297,6 +297,102 @@ class PersonManagerTests(TestCase):
         self.assertEqual(ret[0].username, self.person.username)
         self.assertEqual(ret[0].title, self.person.title)
         self.assertEqual(ret[0].role_name, self.person.role.name)
+
+    def test_get_sms_recipients(self):
+        person_one = create_single_person()
+        person_two = create_single_person()
+        person_three = create_single_person()
+        # person 1 - valid - same tenant, ph is type cell
+        phone_cell_type = create_phone_number_type(PhoneNumberType.CELL)
+        create_contact(PhoneNumber, person_one, phone_cell_type)
+        self.assertEqual(person_one.role.tenant, self.person.role.tenant)
+        self.assertTrue(person_one.phone_numbers.filter(type__name=PhoneNumberType.CELL).exists())
+        # person 2 - invalid - diff tenant
+        create_contact(PhoneNumber, person_two, phone_cell_type)
+        tenant_two = get_or_create_tenant('foo')
+        person_two.role.tenant = tenant_two
+        person_two.role.save()
+        self.assertNotEqual(person_two.role.tenant, self.person.role.tenant)
+        self.assertTrue(person_two.phone_numbers.filter(type__name=PhoneNumberType.CELL).exists())
+        # person 3 - invalid - no ph of type cell
+        self.assertEqual(person_three.role.tenant, self.person.role.tenant)
+        self.assertFalse(person_three.phone_numbers.filter(type__name=PhoneNumberType.CELL).exists())
+
+        qs = Person.objects.get_sms_recipients(self.person.role.tenant)
+
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), person_one)
+
+    def test_get_sms_recipients__filtered(self):
+        person_one = create_single_person()
+        person_two = create_single_person()
+        phone_cell_type = create_phone_number_type(PhoneNumberType.CELL)
+        create_contact(PhoneNumber, person_one, phone_cell_type)
+        create_contact(PhoneNumber, person_two, phone_cell_type)
+        # pre-test
+        self.assertTrue(person_one.phone_numbers.exists())
+        self.assertTrue(person_two.phone_numbers.exists())
+        self.assertEqual(person_one.role.tenant, self.person.role.tenant)
+        self.assertEqual(person_two.role.tenant, self.person.role.tenant)
+
+        # unfiltered
+        qs = Person.objects.get_sms_recipients(self.person.role.tenant)
+
+        self.assertEqual(qs.count(), 2)
+
+        # filtered
+        qs = Person.objects.get_sms_recipients(self.person.role.tenant,
+                                               keyword=person_one.username)
+
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), person_one)
+
+    def test_get_email_recipients(self):
+        person_one = create_single_person()
+        person_two = create_single_person()
+        person_three = create_single_person()
+        # person 1 - valid - same tenant, has an email
+        create_contact(Email, person_one)
+        self.assertEqual(person_one.role.tenant, self.person.role.tenant)
+        self.assertTrue(person_one.emails.exists())
+        # person 2 - invalid - diff tenant
+        create_contact(Email, person_two)
+        tenant_two = get_or_create_tenant('foo')
+        person_two.role.tenant = tenant_two
+        person_two.role.save()
+        self.assertNotEqual(person_two.role.tenant, self.person.role.tenant)
+        self.assertTrue(person_two.emails.exists())
+        # person 3 - invalid - no email
+        self.assertEqual(person_three.role.tenant, self.person.role.tenant)
+        self.assertFalse(person_three.emails.exists())
+
+        qs = Person.objects.get_email_recipients(self.person.role.tenant)
+
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), person_one)
+
+    def test_get_email_recipients__filtered(self):
+        person_one = create_single_person()
+        person_two = create_single_person()
+        create_contact(Email, person_one)
+        create_contact(Email, person_two)
+        # pre-test
+        self.assertTrue(person_one.emails.exists())
+        self.assertTrue(person_two.emails.exists())
+        self.assertEqual(person_one.role.tenant, self.person.role.tenant)
+        self.assertEqual(person_two.role.tenant, self.person.role.tenant)
+
+        # unfiltered
+        qs = Person.objects.get_email_recipients(self.person.role.tenant)
+
+        self.assertEqual(qs.count(), 2)
+
+        # filtered
+        qs = Person.objects.get_email_recipients(self.person.role.tenant,
+                                                 keyword=person_one.username)
+
+        self.assertEqual(qs.count(), 1)
+        self.assertEqual(qs.first(), person_one)
 
 
 class PersonTests(TestCase):

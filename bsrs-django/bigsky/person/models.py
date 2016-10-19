@@ -301,13 +301,23 @@ class PersonQuerySet(BaseQuerySet):
         return qs.annotate(status_name=F('status__name'),
                            role_name=F('role__name'))
 
-    def get_sms_recipients(self, tenant):
-        return (self.filter(role__tenant=tenant, phone_numbers__type__name=PhoneNumberType.CELL)
-                    .prefetch_related('phone_numbers'))
+    def get_sms_recipients(self, tenant, keyword):
+        qs = (self.filter(role__tenant=tenant, phone_numbers__type__name=PhoneNumberType.CELL)
+                  .prefetch_related('phone_numbers'))
 
-    def get_email_recipients(self, tenant):
-        return (self.filter(role__tenant=tenant, emails__isnull=False)
-                    .prefetch_related('emails'))
+        if keyword:
+            qs = qs.search_multi(keyword)
+
+        return qs
+
+    def get_email_recipients(self, tenant, keyword):
+        qs = (self.filter(role__tenant=tenant, emails__isnull=False)
+                  .prefetch_related('emails'))
+
+        if keyword:
+            qs = qs.search_multi(keyword)
+
+        return qs
 
 
 class PersonManager(BaseManagerMixin, UserManager):
@@ -326,11 +336,11 @@ class PersonManager(BaseManagerMixin, UserManager):
     def search_power_select(self, keyword):
         return self.get_queryset().search_power_select(keyword)
 
-    def get_sms_recipients(self, tenant):
-        return self.get_queryset().get_sms_recipients(tenant)
+    def get_sms_recipients(self, tenant, keyword=None):
+        return self.get_queryset().get_sms_recipients(tenant, keyword)
 
-    def get_email_recipients(self, tenant):
-        return self.get_queryset().get_email_recipients(tenant)
+    def get_email_recipients(self, tenant, keyword=None):
+        return self.get_queryset().get_email_recipients(tenant, keyword)
 
 
 class Person(BaseModel, AbstractUser):

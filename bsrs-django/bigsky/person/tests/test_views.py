@@ -1,5 +1,6 @@
 import copy
 import json
+from mock import patch
 import uuid
 
 from django.conf import settings
@@ -380,66 +381,79 @@ class PersonListTests(TestCase):
         self.assertTrue(data['count'] > 10)
         self.assertEqual(len(data['results']), settings.PAGE_SIZE)
 
-    def test_get_sms_recipients(self):
-        people = Person.objects.exclude(id=self.person.id)
-        person_one = people[0]
-        person_two = people[1]
-        person_three = people[2]
-        # person 1 - valid - same tenant, ph is type cell
+    @patch("person.views.Person.objects.get_sms_recipients")
+    def test_sms_recipients__confirm_queryset_called(self, mock_func):
+        # MagicMock will raise a TypeError here, but none the less, we
+        # can confirm that the correct queryset method was called
+        try:
+            response = self.client.get('/api/admin/people/sms-recipients/')
+        except TypeError:
+            pass
+        self.assertTrue(mock_func.called)
+
+    def test_get_sms_recipients__data(self):
         phone_cell_type = create_phone_number_type(PhoneNumberType.CELL)
-        create_contact(PhoneNumber, person_one, phone_cell_type)
-        self.assertEqual(person_one.role.tenant, self.person.role.tenant)
-        self.assertTrue(person_one.phone_numbers.filter(type__name=PhoneNumberType.CELL).exists())
-        # person 2 - invalid - diff tenant
-        create_contact(PhoneNumber, person_two, phone_cell_type)
-        tenant_two = get_or_create_tenant('foo')
-        person_two.role.tenant = tenant_two
-        person_two.role.save()
-        self.assertNotEqual(person_two.role.tenant, self.person.role.tenant)
-        self.assertTrue(person_two.phone_numbers.filter(type__name=PhoneNumberType.CELL).exists())
-        # person 3 - invalid - no ph of type cell
-        self.assertEqual(person_three.role.tenant, self.person.role.tenant)
-        self.assertFalse(person_three.phone_numbers.filter(type__name=PhoneNumberType.CELL).exists())
+        create_contact(PhoneNumber, self.person, phone_cell_type)
 
         response = self.client.get('/api/admin/people/sms-recipients/')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['count'], 1)
-        self.assertEqual(data['results'][0]['id'], str(person_one.id))
-        self.assertEqual(data['results'][0]['fullname'], person_one.fullname)
-        self.assertEqual(data['results'][0]['username'], person_one.username)
-        self.assertEqual(data['results'][0]['email'], str(person_one.email))
+        self.assertEqual(data['results'][0]['id'], str(self.person.id))
+        self.assertEqual(data['results'][0]['fullname'], self.person.fullname)
+        self.assertEqual(data['results'][0]['username'], self.person.username)
+        self.assertEqual(data['results'][0]['email'], str(self.person.email))
 
-    def test_get_email_recipients(self):
-        people = Person.objects.exclude(id=self.person.id)
-        person_one = people[0]
-        person_two = people[1]
-        person_three = people[2]
-        # person 1 - valid - same tenant, has an email
-        create_contact(Email, person_one)
-        self.assertEqual(person_one.role.tenant, self.person.role.tenant)
-        self.assertTrue(person_one.emails.exists())
-        # person 2 - invalid - diff tenant
-        create_contact(Email, person_two)
-        tenant_two = get_or_create_tenant('foo')
-        person_two.role.tenant = tenant_two
-        person_two.role.save()
-        self.assertNotEqual(person_two.role.tenant, self.person.role.tenant)
-        self.assertTrue(person_two.emails.exists())
-        # person 3 - invalid - no email
-        self.assertEqual(person_three.role.tenant, self.person.role.tenant)
-        self.assertFalse(person_three.emails.exists())
+    def test_get_sms_recipients__filtered(self):
+        phone_cell_type = create_phone_number_type(PhoneNumberType.CELL)
+        create_contact(PhoneNumber, self.person, phone_cell_type)
+        person_two = create_single_person('foo')
+        create_contact(PhoneNumber, person_two, phone_cell_type)
+
+        response = self.client.get('/api/admin/people/sms-recipients/?search={}'
+                                   .format(self.person.username))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(self.person.id))
+
+    @patch("person.views.Person.objects.get_email_recipients")
+    def test_email_recipients__confirm_queryset_called(self, mock_func):
+        # MagicMock will raise a TypeError here, but none the less, we
+        # can confirm that the correct queryset method was called
+        try:
+            response = self.client.get('/api/admin/people/email-recipients/')
+        except TypeError:
+            pass
+        self.assertTrue(mock_func.called)
+
+    def test_get_email_recipients__data(self):
+        create_contact(Email, self.person)
 
         response = self.client.get('/api/admin/people/email-recipients/')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['count'], 1)
-        self.assertEqual(data['results'][0]['id'], str(person_one.id))
-        self.assertEqual(data['results'][0]['fullname'], person_one.fullname)
-        self.assertEqual(data['results'][0]['username'], person_one.username)
-        self.assertEqual(data['results'][0]['email'], str(person_one.email))
+        self.assertEqual(data['results'][0]['id'], str(self.person.id))
+        self.assertEqual(data['results'][0]['fullname'], self.person.fullname)
+        self.assertEqual(data['results'][0]['username'], self.person.username)
+        self.assertEqual(data['results'][0]['email'], str(self.person.email))
+
+    def test_get_email_recipients__filtered(self):
+        create_contact(Email, self.person)
+        person_two = create_single_person('foo')
+        create_contact(Email, person_two)
+
+        response = self.client.get('/api/admin/people/email-recipients/?search={}'
+                                   .format(self.person.fullname))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(self.person.id))
 
 
 class PersonDetailTests(TestCase):
