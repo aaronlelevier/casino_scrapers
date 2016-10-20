@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ticket.models import TICKET_STATUS_MAP, TICKET_PRIORITY_MAP
+from ticket.models import TicketStatus, TICKET_PRIORITY_MAP
 from translation.models import Locale, Translation
 from translation.tests import factory
 
@@ -41,7 +41,7 @@ class FactoryTests(TestCase):
 
         self.assertIsInstance(ret, Translation)
         for k,v in ret.values.items():
-            keys = [x for x in TICKET_STATUS_MAP.values()]
+            keys = TicketStatus.ALL
             keys += [x for x in TICKET_PRIORITY_MAP.values()]
 
             self.assertIn(k, keys,

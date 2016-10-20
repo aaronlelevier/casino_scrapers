@@ -15,8 +15,7 @@ from person.models import Person
 from person.tests.factory import create_single_person, DistrictManager
 from ticket.models import (
     Ticket, TicketStatus, TicketPriority, TicketActivityType, TicketActivity,
-    TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES, TICKET_STATUS_NEW,
-    TICKET_PRIORITY_MEDIUM)
+    TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES, TICKET_PRIORITY_MEDIUM)
 from ticket.tests import factory, factory_related
 from utils.helpers import generate_uuid
 
@@ -147,7 +146,7 @@ class CreateStandardTicketTests(TestCase):
         ticket = factory.create_standard_ticket()
 
         self.assertIsInstance(ticket, Ticket)
-        self.assertEqual(ticket.status.name, TICKET_STATUS_NEW)
+        self.assertEqual(ticket.status.name, TicketStatus.NEW)
         self.assertEqual(ticket.priority.name, TICKET_PRIORITY_MEDIUM)
 
 
@@ -290,14 +289,14 @@ class CreateStatusTests(TestCase):
     def test_single(self):
         obj = factory_related.create_ticket_status()
         self.assertIsInstance(obj, TicketStatus)
-        self.assertIn(obj.name, TICKET_STATUSES)
+        self.assertIn(obj.name, TicketStatus.ALL)
 
     def test_multiple(self):
         statuses = factory_related.create_ticket_statuses()
 
-        self.assertEqual(statuses.count(), len(TICKET_STATUSES))
+        self.assertEqual(statuses.count(), len(TicketStatus.ALL))
         for s in statuses.all():
-            self.assertIn(s.name, TICKET_STATUSES)
+            self.assertIn(s.name, TicketStatus.ALL)
 
 
 class CreatePriorityTests(TestCase):

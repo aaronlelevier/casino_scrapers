@@ -12,8 +12,7 @@ from location.models import LocationStatus
 from location.tests.factory import create_location
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketManager, TicketQuerySet, TicketStatus, TicketPriority,
-    TicketActivityType, TicketActivity, TICKET_STATUS_DEFAULT, TICKET_STATUS_NEW,
-    TICKET_STATUS_DRAFT, TICKET_PRIORITY_DEFAULT)
+    TicketActivityType, TicketActivity, TICKET_PRIORITY_DEFAULT)
 from ticket.tests.factory_related import create_ticket_statuses, create_ticket_priorities
 from ticket.tests.factory import RegionManagerWithTickets, create_ticket, create_tickets
 from ticket.tests.mixins import TicketCategoryOrderingSetupMixin
@@ -26,7 +25,7 @@ class TicketStatusTests(TestCase):
         create_ticket_statuses()
 
     def test_to_dict__default(self):
-        status = TicketStatus.objects.get(name=TICKET_STATUS_DEFAULT)
+        status = TicketStatus.objects.get(name=TicketStatus.DEFAULT)
 
         ret = status.to_dict()
 
@@ -36,7 +35,7 @@ class TicketStatusTests(TestCase):
         self.assertTrue(ret['default'])
 
     def test_to_dict__non_default(self):
-        status = TicketStatus.objects.exclude(name=TICKET_STATUS_DEFAULT).first()
+        status = TicketStatus.objects.exclude(name=TicketStatus.DEFAULT).first()
 
         ret = status.to_dict()
 
@@ -237,8 +236,8 @@ class TicketTests(TestCase):
         create_ticket_statuses()
         create_tickets(_many=2)
         self.ticket = Ticket.objects.first()
-        self.status_new = TicketStatus.objects.get(name=TICKET_STATUS_NEW)
-        self.status_draft = TicketStatus.objects.get(name=TICKET_STATUS_DRAFT)
+        self.status_new = TicketStatus.objects.get(name=TicketStatus.NEW)
+        self.status_draft = TicketStatus.objects.get(name=TicketStatus.DRAFT)
 
     def test_export_fields(self):
         export_fields = ['priority_name', 'status_name', 'number', 'created',
