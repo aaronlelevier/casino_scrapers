@@ -54,7 +54,7 @@ test('can click from admin to people grid to detail', async assert => {
   assert.equal(currentURL(), DETAIL_URL);
 });
 
-test('can update fields and save', async assert => {
+test('scott can update fields and save', async assert => {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   const person = store.find('person', PD.idOne);
@@ -78,9 +78,9 @@ test('can update fields and save', async assert => {
   await generalPage.phonenumberRemoveSecond();
   await generalPage.emailRemoveSecond();
   const phone_payload = detail_payload.phone_numbers[0];
-  phone_payload.type = detail_payload.phone_numbers[0].type.id;
+  phone_payload.type = detail_payload.phone_numbers[0].type;
   const email_payload = detail_payload.emails[0];
-  email_payload.type = detail_payload.emails[0].type.id;
+  email_payload.type = detail_payload.emails[0].type;
   const payload = PF.put({id: PD.idOne, first_name: PD.donald_first_name, last_name: PD.donald_last_name, middle_initial: PD.donald_middle_initial, 
     username: PD.usernameLastPage2Grid, title: PD.titleTwo, employee_id: PD.donald_employee_id, role: RD.idTwo, locations: [], status: SD.inactiveId,
     phone_numbers: [phone_payload], emails: [email_payload]});
