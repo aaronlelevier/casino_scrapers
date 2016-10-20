@@ -63,7 +63,7 @@ test('scid - read only is populated if in detail, otherwise in create it is not 
   assert.equal($('[data-test-id="tenant-scid"]').val(), TD.scidOne);
 });
 
-test('validation works', function(assert) {
+test('scott validation works', function(assert) {
   // like new form
   run(function() {
     model = store.push('tenant', {id: TD.idOne, company_name: undefined, billing_phone_number_fk: PND.idOne, billing_email_fk: ED.idOne, implementation_email_fk: ED.idOne, billing_address_fk: AD.idOne});
@@ -90,6 +90,7 @@ test('validation works', function(assert) {
   assert.equal($('.t-validation-default_currency').text().trim(), 'errors.tenant.default_currency');
   assert.equal($('.t-validation-countries').text().trim(), 'errors.tenant.countries');
   assert.equal($('.t-validation-billing_contact').text().trim(), 'errors.tenant.billing_contact');
+  assert.equal($('.t-validation-implementation_contact_initial').text().trim(), 'errors.tenant.implementation_contact_initial');
 });
 
 test('header - shows company_name if present on the model', function(assert) {

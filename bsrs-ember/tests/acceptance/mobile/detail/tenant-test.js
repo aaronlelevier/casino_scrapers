@@ -22,9 +22,6 @@ const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
 const TENANT_PUT_URL = `${TENANT_URL}${TD.idOne}/`;
 const Currency = '.t-tenant-currency-select';
 
-// TODO: (ayl) there is no tenant-single/~layouts/mobile.hbs
-// once it's added, add back these tests
-
 moduleForAcceptance('Acceptance | mobile tenant detail test', {
   beforeEach() {
     setWidth('mobile');
