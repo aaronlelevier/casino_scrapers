@@ -180,9 +180,9 @@ class Ticket(BaseModel):
 
     def save(self, *args, **kwargs):
         super(Ticket, self).save(*args, **kwargs)
-        self._process_ticket_if_no_assignee()
+        self._process_ticket_if_new()
 
-    def _process_ticket_if_no_assignee(self):
+    def _process_ticket_if_new(self):
         if not self.deleted and self.status.name == TicketStatus.NEW:
             self._process_ticket(self.location.location_level.tenant.id,
                                  ticket=self)

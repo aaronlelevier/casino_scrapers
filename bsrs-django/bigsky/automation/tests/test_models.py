@@ -107,7 +107,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
     # process_ticket - "on Ticket POST" tests
 
-    @patch("automation.models.AutomationManager.process_actions")
+@patch("automation.models.AutomationManager.process_actions")
     def test_process_ticket__calls_process_actions(self, mock_func):
         self.assertTrue(self.automation.is_match(self.ticket))
         self.assertFalse(self.automation_two.is_match(self.ticket))
