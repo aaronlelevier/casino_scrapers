@@ -15,7 +15,8 @@ from person.models import Person
 from person.tests.factory import create_single_person, DistrictManager
 from ticket.models import (
     Ticket, TicketStatus, TicketPriority, TicketActivityType, TicketActivity,
-    TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
+    TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES, TICKET_STATUS_NEW,
+    TICKET_PRIORITY_MEDIUM)
 from ticket.tests import factory, factory_related
 from utils.helpers import generate_uuid
 
@@ -133,6 +134,21 @@ class CreateTicketTests(TestCase):
         self.assertEqual(type(self.ticket.dt_path[0]['dtd']['fields'][3]['value']), int)
         self.assertEqual(self.ticket.dt_path[1]['dtd']['id'], str(start_dtd.links.first().destination.id))
         self.assertEqual(self.ticket.dt_path[1]['dtd']['description'], 'You are almost done')
+
+
+class CreateStandardTicketTests(TestCase):
+
+    def setUp(self):
+        create_dtd_fixture_data()
+        create_categories()
+        self.person = create_single_person()
+
+    def test_main(self):
+        ticket = factory.create_standard_ticket()
+
+        self.assertIsInstance(ticket, Ticket)
+        self.assertEqual(ticket.status.name, TICKET_STATUS_NEW)
+        self.assertEqual(ticket.priority.name, TICKET_PRIORITY_MEDIUM)
 
 
 class CreateTicketKwargTests(TestCase):

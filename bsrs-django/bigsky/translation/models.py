@@ -243,9 +243,9 @@ class Translation(BaseModel):
     @classmethod
     def resolve_i18n_value(cls, values, obj, field):
         """
-        :values: Translation instance's i18n values
-        :obj: Model instance
-        :field: String name of Model instance property
+        :param values: Translation instance's i18n values
+        :param obj: Model instance
+        :param field: String name of Model instance's property
         """
         try:
             return values[getattr(obj, field)]
@@ -255,3 +255,14 @@ class Translation(BaseModel):
         except KeyError:
             # no i18n key exists, so just return raw value
             return getattr(obj, field)
+
+    def get_value(self, key):
+        """
+        Gracefully handle i18n strings that don't have a translation.
+
+        :param key: i18n key to look up
+        """
+        try:
+            return self.values[key]
+        except KeyError:
+            return ''

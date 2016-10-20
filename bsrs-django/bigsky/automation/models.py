@@ -56,6 +56,9 @@ class AutomationEvent(BaseModel):
     class Meta:
         ordering = ['key']
 
+    def __str__(self):
+        return self.key
+
 
 class AutomationActionType(BaseModel):
     TICKET_ASSIGNEE = 'automation.actions.ticket_assignee'

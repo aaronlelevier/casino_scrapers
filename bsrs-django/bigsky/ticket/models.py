@@ -56,6 +56,11 @@ TICKET_PRIORITIES = [v for k,v in TICKET_PRIORITY_MAP.items()]
 
 TICKET_PRIORITY_DEFAULT = TICKET_PRIORITY_MAP['3']
 
+TICKET_PRIORITY_EMERGENCY = 'ticket.priority.emergency'
+TICKET_PRIORITY_HIGH = 'ticket.priority.high'
+TICKET_PRIORITY_MEDIUM = 'ticket.priority.medium'
+TICKET_PRIORITY_LOW = 'ticket.priority.low'
+
 
 class TicketStatus(DefaultToDictMixin, BaseNameModel):
 

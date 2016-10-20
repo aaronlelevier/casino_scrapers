@@ -21,7 +21,8 @@ from automation.tests.factory import (
     create_automation_filter_types, create_ticket_location_state_filter,
     create_automation_filter_type_state, create_ticket_location_country_filter,
     create_automation_filter_type_country, create_automation_action_type,
-    create_automation_action_send_email, create_automation_action_send_sms)
+    create_automation_action_send_email, create_automation_action_send_sms,
+    create_automation_event)
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority, TicketStatus
 from ticket.tests.factory import create_ticket
@@ -47,6 +48,10 @@ class AutomationEventTests(TestCase):
 
     def test_meta(self):
         self.assertEqual(AutomationEvent._meta.ordering, ['key'])
+
+    def test_str(self):
+        event = create_automation_event()
+        self.assertEqual(str(event), event.key)
 
 
 class AutomationManagerTests(SetupMixin, TestCase):

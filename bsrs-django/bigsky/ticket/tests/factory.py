@@ -12,7 +12,7 @@ from generic.tests.factory import create_file_attachment
 from location.models import Location, LocationStatus, LocationType, LOCATION_COMPANY
 from location.tests.factory import create_locations
 from person.models import Person
-from ticket.models import (Ticket, TicketStatus, TicketActivityType,
+from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_ACTIVITY_TYPES)
 from ticket.tests.factory_related import (create_ticket_status, create_ticket_statuses,
     create_ticket_priorities)
@@ -175,6 +175,14 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
 
     ticket.save()
 
+    return ticket
+
+
+def create_standard_ticket():
+    ticket = _create_ticket()
+    ticket.status = create_default(TicketStatus)
+    ticket.priority = create_default(TicketPriority)
+    ticket.save()
     return ticket
 
 
