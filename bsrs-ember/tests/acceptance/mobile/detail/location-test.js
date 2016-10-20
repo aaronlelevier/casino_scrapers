@@ -58,7 +58,7 @@ test('can click through component sections and save to redirect to index', async
 });
 
 
-test('scott can update all fields and save', async assert => {
+test('can update all fields and save', async assert => {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   await page.nameFillIn(LD.storeNameTwo);

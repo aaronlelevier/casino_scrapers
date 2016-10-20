@@ -1,8 +1,10 @@
-import { create, clickable, fillable, hasClass } from 'ember-cli-page-object';
+import { create, clickable, fillable, hasClass, visitable } from 'ember-cli-page-object';
+import BASEURLS from 'bsrs-ember/utilities/urls';
 
 export const mobileSearch = '.t-mobile-search-slideUp .t-grid-search-input';
 
 export default create({
+  visitAdmin: visitable(BASEURLS.ADMIN_MOBILE_URL),
   cancelFilterSort: clickable('.t-mobile-filter-first-btn'),
   submitFilterSort: clickable('.t-mobile-filter-second-btn'),
   nextPage: clickable('.t-next > a'),
