@@ -10,9 +10,7 @@
           <li class="t-previous {{if previous '' 'disabled'}}" title="Last" disabled={{if previous disabled ''}} {{action "scrollTop"}}>{{#link-to list_url (query-params page=previous) disabled=notPrevious}}&lsaquo;{{/link-to}}</li>
           {{#each shown_pages as |page|}}
             <li class="t-page" {{action "scrollTop"}}>
-              {{#link-to list_url (query-params page=page)}}
-                {{page}}
-              {{/link-to}}
+              {{#link-to list_url (query-params page=page)}}{{page}}{{/link-to}}
             </li>
           {{/each}}
           <li class="t-next {{if next '' 'disabled'}}" title="Next" disabled={{if next disabled ''}} {{action "scrollTop"}}>{{#link-to list_url (query-params page=next) disabled=notNext}}&rsaquo;{{/link-to}}</li>

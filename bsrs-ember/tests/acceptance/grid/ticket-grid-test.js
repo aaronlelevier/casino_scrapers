@@ -34,7 +34,7 @@ const FILTER_PRIORITY = '.t-filter-priority-translated-name';
 
 var application, store, endpoint, list_xhr;
 
-moduleForAcceptance('Acceptance | ticket grid test', {
+moduleForAcceptance('scott Acceptance | ticket grid test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';
@@ -54,12 +54,7 @@ test('initial load should only show first ${PAGE_SIZE} records ordered by id wit
     assert.ok(find('.t-grid-data:eq(0) .t-ticket-status-new'));
     const time = moment(new Date()).calendar();
     assert.equal(find('.t-grid-data:eq(0) .t-ticket-created').text().trim(), `${time}`);
-    const pagination = find('.t-pages');
-    assert.equal(pagination.find('.t-page').length, 2);
-    assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
-    assert.equal(pagination.find('.t-page:eq(1) a').text().trim(), '2');
-    assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
-    assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
+    pagination(assert);
   });
 });
 
@@ -76,12 +71,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestLastGrid);
     const time = moment(new Date()).calendar();
     assert.equal(find('.t-grid-data:eq(0) .t-ticket-created').text().trim(), `${time}`);
-    var pagination = find('.t-pages');
-    assert.equal(pagination.find('.t-page').length, 2);
-    assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
-    assert.equal(pagination.find('.t-page:eq(1) a').text().trim(), '2');
-    assert.ok(!pagination.find('.t-page:eq(0) a').hasClass('active'));
-    assert.ok(pagination.find('.t-page:eq(1) a').hasClass('active'));
+    pagination2(assert);
   });
   click('.t-page:eq(0) a');
   andThen(() => {
@@ -92,12 +82,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     const time = moment(new Date()).calendar();
     assert.equal(find('.t-grid-data:eq(0) .t-ticket-created').text().trim(), `${time}`);
-    var pagination = find('.t-pages');
-    assert.equal(pagination.find('.t-page').length, 2);
-    assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
-    assert.equal(pagination.find('.t-page:eq(1) a').text().trim(), '2');
-    assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
-    assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
+    pagination(assert);
   });
 });
 
