@@ -56,6 +56,9 @@ var GridFooter = Ember.Component.extend({
     togglePageSize(page_size) {
       this.setProperties({page: 1, page_size: page_size});
     },
+    scrollTop() {
+      Ember.$('section.docSection').scrollTop(0, 0);
+    }
   }
 });
 
