@@ -30,7 +30,7 @@ class EtlUtilsTests(TestCase):
         # Ticket
         create_ticket_priorities()
         create_ticket_statuses()
-        self.priority = TicketPriority.objects.get(name=_etl_utils.TICKET_PRIORITY_MAP['1'])
+        self.priority = TicketPriority.objects.get(name=TicketPriority.EMERGENCY)
         self.status = TicketStatus.objects.get(name=TicketStatus.NEW)
         # successful DominoTicet ETL setup
         self.dt = create_domino_ticket()
@@ -170,5 +170,5 @@ class EtlUtilsTests(TestCase):
         self.assertIsInstance(ret, TicketPriority)
 
     def test_get_priority__raise_error_if_not_in_TICKET_PRIORITY_MAP(self):
-        with self.assertRaises(KeyError):
+        with self.assertRaises(ValueError):
             _etl_utils.get_priority('foo')

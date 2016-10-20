@@ -12,7 +12,7 @@ from location.models import LocationStatus
 from location.tests.factory import create_location
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketManager, TicketQuerySet, TicketStatus, TicketPriority,
-    TicketActivityType, TicketActivity, TICKET_PRIORITY_DEFAULT)
+    TicketActivityType, TicketActivity,)
 from ticket.tests.factory_related import create_ticket_statuses, create_ticket_priorities
 from ticket.tests.factory import RegionManagerWithTickets, create_ticket, create_tickets
 from ticket.tests.mixins import TicketCategoryOrderingSetupMixin
@@ -51,7 +51,7 @@ class TicketPriorityTests(TestCase):
         create_ticket_priorities()
 
     def test_to_dict__default(self):
-        priority = TicketPriority.objects.get(name=TICKET_PRIORITY_DEFAULT)
+        priority = TicketPriority.objects.get(name=TicketPriority.DEFAULT)
 
         ret = priority.to_dict()
 
@@ -61,7 +61,7 @@ class TicketPriorityTests(TestCase):
         self.assertTrue(ret['default'])
 
     def test_to_dict__non_default(self):
-        priority = TicketPriority.objects.exclude(name=TICKET_PRIORITY_DEFAULT).first()
+        priority = TicketPriority.objects.exclude(name=TicketPriority.DEFAULT).first()
 
         ret = priority.to_dict()
 

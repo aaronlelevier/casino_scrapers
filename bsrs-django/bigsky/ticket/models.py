@@ -16,23 +16,6 @@ from utils.models import (BaseModel, BaseQuerySet, BaseManager, BaseNameModel,
     DefaultToDictMixin)
 
 
-TICKET_PRIORITY_MAP = {
-    '1': 'ticket.priority.emergency',
-    '2': 'ticket.priority.high',
-    '3': 'ticket.priority.medium',
-    '4': 'ticket.priority.low',
-}
-
-TICKET_PRIORITIES = [v for k,v in TICKET_PRIORITY_MAP.items()]
-
-TICKET_PRIORITY_DEFAULT = TICKET_PRIORITY_MAP['3']
-
-TICKET_PRIORITY_EMERGENCY = 'ticket.priority.emergency'
-TICKET_PRIORITY_HIGH = 'ticket.priority.high'
-TICKET_PRIORITY_MEDIUM = 'ticket.priority.medium'
-TICKET_PRIORITY_LOW = 'ticket.priority.low'
-
-
 class TicketStatus(DefaultToDictMixin, BaseNameModel):
     NEW = 'ticket.status.new'
     DEFERRED = 'ticket.status.deferred'
@@ -66,8 +49,20 @@ class TicketStatus(DefaultToDictMixin, BaseNameModel):
 
 
 class TicketPriority(DefaultToDictMixin, BaseNameModel):
+    EMERGENCY = 'ticket.priority.emergency'
+    HIGH = 'ticket.priority.high'
+    MEDIUM = 'ticket.priority.medium'
+    LOW = 'ticket.priority.low'
 
-    default = TICKET_PRIORITY_DEFAULT
+    ALL = [
+        EMERGENCY,
+        HIGH,
+        MEDIUM,
+        LOW,
+    ]
+
+    default = MEDIUM
+    DEFAULT = MEDIUM
 
     class Meta:
         verbose_name_plural = "Ticket priorities"

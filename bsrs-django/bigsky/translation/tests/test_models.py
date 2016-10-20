@@ -6,7 +6,7 @@ from django.conf import settings
 
 from model_mommy import mommy
 
-from ticket.models import TicketStatus, TICKET_PRIORITY_MEDIUM
+from ticket.models import TicketStatus, TicketPriority
 from translation.models import Locale, Translation, TranslationManager, TranslationQuerySet
 from translation.tests import factory
 from utils import ListObject
@@ -232,9 +232,9 @@ class TranslationTests(TestCase):
         self.assertEqual(ret, obj.name)
 
     def test_get_value(self):
-        ret = self.translation.get_value(TICKET_PRIORITY_MEDIUM)
+        ret = self.translation.get_value(TicketPriority.MEDIUM)
 
-        self.assertEqual(ret, TICKET_PRIORITY_MEDIUM.split('.')[-1])
+        self.assertEqual(ret, TicketPriority.MEDIUM.split('.')[-1])
 
     def test_get_value__missing_key(self):
         ret = self.translation.get_value('foo')

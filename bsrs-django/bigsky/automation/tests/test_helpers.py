@@ -9,7 +9,6 @@ from automation import helpers
 from automation.tests.factory import create_automation_event
 from person.models import Role
 from person.tests.factory import create_single_person, create_role
-from ticket.models import TICKET_PRIORITY_MEDIUM
 from ticket.tests.factory import create_standard_ticket
 from translation.tests.factory import create_translation_keys_for_fixtures
 
@@ -37,7 +36,7 @@ class InterpolateTests(TestCase):
     def test_text__ticket_priority__i18n(self):
         # return i18n key to start
         s = "{{ticket.priority}}"
-        self.assertEqual(self.interpolate.text(s), TICKET_PRIORITY_MEDIUM.split('.')[-1])
+        self.assertEqual(self.interpolate.text(s), TicketPriority.MEDIUM.split('.')[-1])
 
     def test_text__ticket_request(self):
         s = "{{ticket.request}}"
