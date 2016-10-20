@@ -50,12 +50,8 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
     assert.equal(currentURL(), AUTOMATION_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(page.descriptionGridOne, AD.descriptionOne+'1');
-    var pagination = find('.t-pages');
-    assert.equal(pagination.find('.t-page').length, 2);
-    assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
-    assert.equal(pagination.find('.t-page:eq(1) a').text().trim(), '2');
-    assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
-    assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
+    assert.equal(page.assigneeGridOne, AD.fullname+'1');
+    pagination(assert);
   });
 });
 
@@ -84,12 +80,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     assert.equal(currentURL(),AUTOMATION_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-automation-description').text().trim(), AD.descriptionOne+'1');
-    var pagination = find('.t-pages');
-    assert.equal(pagination.find('.t-page').length, 2);
-    assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
-    assert.equal(pagination.find('.t-page:eq(1) a').text().trim(), '2');
-    assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
-    assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
+    pagination(assert);
   });
 });
 

@@ -44,12 +44,7 @@ test('initial load should only show first PAGE_SIZE records ordered by id with c
         assert.equal(find('.t-grid-data:eq(1) .t-category-label').text().trim(), CD.labelOne + '2');
         assert.equal(find('.t-grid-data:eq(1) .t-category-cost_amount').text().trim(), CD.costAmountOne);
         assert.equal(find('.t-grid-data:eq(1) .t-category-cost_code').text().trim(), CD.costCodeOne);
-        var pagination = find('.t-pages');
-        assert.equal(pagination.find('.t-page').length, 2);
-        assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
-        assert.equal(pagination.find('.t-page:eq(1) a').text().trim(), '2');
-        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
-        assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
+        pagination(assert);
     });
 });
 
@@ -64,12 +59,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
         assert.equal(currentURL(), CATEGORY_LIST_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-category-name').text().trim()), 'cococat');
-        var pagination = find('.t-pages');
-        assert.equal(pagination.find('.t-page').length, 2);
-        assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
-        assert.equal(pagination.find('.t-page:eq(1) a').text().trim(), '2');
-        assert.ok(!pagination.find('.t-page:eq(0) a').hasClass('active'));
-        assert.ok(pagination.find('.t-page:eq(1) a').hasClass('active'));
+        pagination2(assert);
     });
     click('.t-page:eq(0) a');
     andThen(() => {
@@ -78,12 +68,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
         assert.equal(currentURL(),CATEGORY_LIST_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(1) .t-category-name').text().trim(), CD.nameOne + '2');
-        var pagination = find('.t-pages');
-        assert.equal(pagination.find('.t-page').length, 2);
-        assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
-        assert.equal(pagination.find('.t-page:eq(1) a').text().trim(), '2');
-        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
-        assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
+        pagination(assert);
     });
 });
 
