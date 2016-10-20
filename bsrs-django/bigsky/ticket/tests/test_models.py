@@ -280,36 +280,24 @@ class TicketTests(TestCase):
         self.assertEqual(Ticket._meta.ordering, ('-created',))
 
     @patch("ticket.models.Ticket._process_ticket")
-    def test_save__process_ticket__new_status_and_no_assignee(self, mock_process_ticket):
+    def test_save__process_ticket__new_status(self, mock_func):
         # This is the only tiime that wee wan't the "process_ticket"
         # function to be called
         self.ticket.status = self.status_new
-        self.ticket.assignee = None
 
         self.ticket.save()
 
-        self.assertTrue(mock_process_ticket.called)
-        self.assertEqual(mock_process_ticket.call_args[0][0], self.ticket.location.location_level.tenant.id)
-        self.assertEqual(mock_process_ticket.call_args[1]['ticket'], self.ticket)
+        self.assertTrue(mock_func.called)
+        self.assertEqual(mock_func.call_args[0][0], self.ticket.location.location_level.tenant.id)
+        self.assertEqual(mock_func.call_args[1]['ticket'], self.ticket)
 
     @patch("ticket.models.Ticket._process_ticket")
-    def test_save__process_ticket__not_new_status_and_no_assignee(self, mock_process_ticket):
+    def test_save__process_ticket__not_new_status(self, mock_func):
         self.ticket.status = self.status_draft
-        self.ticket.assignee = None
 
         self.ticket.save()
 
-        self.assertFalse(mock_process_ticket.called)
-
-    @patch("ticket.models.Ticket._process_ticket")
-    def test_save__process_ticket__new_status_and_assignee(self, mock_process_ticket):
-        assignee = create_single_person()
-        self.ticket.status = self.status_new
-        self.ticket.assignee = assignee
-
-        self.ticket.save()
-
-        self.assertFalse(mock_process_ticket.called)
+        self.assertFalse(mock_func.called)
 
     def test_category(self):
         # categories - are joined directly onto the Ticket, but do

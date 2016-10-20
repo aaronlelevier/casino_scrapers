@@ -183,7 +183,7 @@ class Ticket(BaseModel):
         self._process_ticket_if_no_assignee()
 
     def _process_ticket_if_no_assignee(self):
-        if not self.deleted and self.status.name == TicketStatus.NEW and not self.assignee:
+        if not self.deleted and self.status.name == TicketStatus.NEW:
             self._process_ticket(self.location.location_level.tenant.id,
                                  ticket=self)
 
