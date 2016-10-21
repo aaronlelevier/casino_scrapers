@@ -43,34 +43,10 @@ const Validations = buildValidations({
     presence: true,
     message: 'errors.tenant.implementation_contact_initial'
   }),
-  implementation_email: [
-    validator('presence', {
-      presence: true,
-      message: 'errors.tenant.implementation_email'
-    }),
-    validator('belongs-to'),
-  ],
-  billing_phone_number: [
-    validator('presence', {
-      presence: true,
-      message: 'errors.tenant.billing_phone_number'
-    }),
-    validator('belongs-to'),
-  ],
-  billing_email: [
-    validator('presence', {
-      presence: true,
-      message: 'errors.tenant.billing_email'
-    }),
-    validator('belongs-to'),
-  ],
-  billing_address: [
-    validator('presence', {
-      presence: true,
-      message: 'errors.tenant.billing_address'
-    }),
-    validator('belongs-to'),
-  ],
+  implementation_email: validator('belongs-to'),
+  billing_phone_number: validator('belongs-to'),
+  billing_email: validator('belongs-to'),
+  billing_address: validator('belongs-to'),
 });
 
 export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {

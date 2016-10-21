@@ -902,15 +902,6 @@ test('tenant validations', assert => {
   assert.deepEqual(attrs.get('billing_contact').get('messages'), ['errors.tenant.billing_contact']);
   assert.ok(attrs.get('implementation_contact_initial'));
   assert.deepEqual(attrs.get('implementation_contact_initial').get('messages'), ['errors.tenant.implementation_contact_initial']);
-  assert.ok(attrs.get('billing_phone_number'));
-  assert.deepEqual(attrs.get('billing_phone_number.messages'), ['errors.tenant.billing_phone_number']);
-  // b/c has belongs to w/ no email, then uses email model validation msgs
-  assert.ok(attrs.get('billing_email'));
-  assert.deepEqual(attrs.get('billing_email.messages'), ['errors.email.email']);
-  assert.ok(attrs.get('implementation_email'));
-  assert.deepEqual(attrs.get('implementation_email.messages'), ['errors.email.email']);
-  assert.ok(attrs.get('billing_address'));
-  assert.deepEqual(attrs.get('billing_address.messages'), ['errors.tenant.billing_address']);
 });
 
 test('correctly has billing email msgs based on state', assert => {
@@ -918,8 +909,6 @@ test('correctly has billing email msgs based on state', assert => {
     tenant = store.push('tenant', {id: TD.idOne});
   });
   const attrs = tenant.get('validations').get('attrs');
-  assert.ok(attrs.get('billing_email'));
-  assert.deepEqual(attrs.get('billing_email.messages'), ['errors.tenant.billing_email']);
   tenant.change_billing_email({id: ED.idOne});
   assert.deepEqual(attrs.get('billing_email.messages'), ['errors.email.email']);
   tenant.change_billing_email({id: ED.idOne, email: ED.emailOne});
@@ -931,8 +920,6 @@ test('correctly has implementation email msgs based on state', assert => {
     tenant = store.push('tenant', {id: TD.idOne});
   });
   const attrs = tenant.get('validations').get('attrs');
-  assert.ok(attrs.get('implementation_email'));
-  assert.deepEqual(attrs.get('implementation_email.messages'), ['errors.tenant.implementation_email']);
   tenant.change_implementation_email({id: ED.idOne});
   assert.deepEqual(attrs.get('implementation_email.messages'), ['errors.email.email']);
   tenant.change_implementation_email({id: ED.idOne, email: ED.emailOne});
@@ -944,8 +931,6 @@ test('correctly has billing phone_number msgs based on state', assert => {
     tenant = store.push('tenant', {id: TD.idOne});
   });
   const attrs = tenant.get('validations').get('attrs');
-  assert.ok(attrs.get('billing_phone_number'));
-  assert.deepEqual(attrs.get('billing_phone_number.messages'), ['errors.tenant.billing_phone_number']);
   tenant.change_billing_phone_number({id: PND.idOne});
   assert.deepEqual(attrs.get('billing_phone_number.messages'), ['errors.phonenumber.number']);
   tenant.change_billing_phone_number({id: PND.idOne, number: PND.numberOne});
@@ -957,8 +942,6 @@ test('correctly has billing address msgs based on state', assert => {
     tenant = store.push('tenant', {id: TD.idOne});
   });
   const attrs = tenant.get('validations').get('attrs');
-  assert.ok(attrs.get('billing_address'));
-  assert.deepEqual(attrs.get('billing_address.messages'), ['errors.tenant.billing_address']);
   tenant.change_billing_address({id: AD.idOne});
   assert.deepEqual(attrs.get('billing_address.messages'), ['errors.address.type', 'errors.address.address', 'errors.address.city', 'errors.address.state', 'errors.address.postal_code', 'errors.address.country']);
   tenant.change_billing_address({id: AD.idOne, address: AD.streetOne});
