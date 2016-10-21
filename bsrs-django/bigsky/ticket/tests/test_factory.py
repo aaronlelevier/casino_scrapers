@@ -5,17 +5,20 @@ from django.db.models import Max
 from django.utils.timezone import now
 from django.test import TestCase
 
+from model_mommy import mommy
+
 from category.models import Category
-from category.tests.factory import create_categories
+from category.tests.factory import create_categories, create_repair_category, create_single_category
 from dtd.tests.factory import create_dtd_fixture_data
 from dtd.models import TreeData
 from generic.models import Attachment
+from generic.tests.factory import create_image_attachment
 from location.models import Location, LOCATION_COMPANY
 from person.models import Person
 from person.tests.factory import create_single_person, DistrictManager
 from ticket.models import Ticket, TicketStatus, TicketPriority, TicketActivityType, TicketActivity
 from ticket.tests import factory, factory_related
-from utils.helpers import generate_uuid
+from utils.helpers import generate_uuid, create_default
 
 
 class RegionManagerWithTicketsTests(TestCase):
@@ -146,6 +149,83 @@ class CreateStandardTicketTests(TestCase):
         self.assertIsInstance(ticket, Ticket)
         self.assertEqual(ticket.status.name, TicketStatus.NEW)
         self.assertEqual(ticket.priority.name, TicketPriority.MEDIUM)
+
+
+class CreateTicketWithActivitiesTests(TestCase):
+
+    def test_main(self):
+        person = create_single_person()
+        person_two = create_single_person()
+        status = create_default(TicketStatus)
+        status_two = mommy.make(TicketStatus, name=TicketStatus.IN_PROGRESS)
+        priority = create_default(TicketPriority)
+        priority_two = mommy.make(TicketPriority, name=TicketPriority.EMERGENCY)
+        category = create_repair_category()
+        category_two = create_single_category()
+        attachment = create_image_attachment()
+
+        ticket_with_activities = factory.TicketWithActivities(
+            person=person,
+            person_two=person_two,
+            status=status,
+            status_two=status_two,
+            priority=priority,
+            priority_two=priority_two,
+            category=category,
+            category_two=category_two,
+            attachment=attachment
+        )
+        ticket_with_activities.create()
+
+        ticket = ticket_with_activities.ticket
+
+        # overall tests
+        self.assertIsInstance(ticket, Ticket)
+        self.assertEqual(ticket.activities.count(), 9)
+        self.assertEqual(ticket.cc.count(), 1)
+        self.assertEqual(ticket.cc.first(), person)
+        self.assertEqual(ticket.assignee, person)
+        self.assertEqual(ticket.status, status)
+        self.assertEqual(ticket.priority, priority)
+        # create
+        create_activity = ticket.activities.get(type__name=TicketActivityType.CREATE)
+        self.assertEqual(create_activity.person, person)
+        # assignee
+        create_activity = ticket.activities.get(type__name=TicketActivityType.ASSIGNEE)
+        self.assertEqual(create_activity.person, person)
+        self.assertEqual(create_activity.content['from'], str(person.id))
+        self.assertEqual(create_activity.content['to'], str(person_two.id))
+        # cc_add
+        create_activity = ticket.activities.get(type__name=TicketActivityType.CC_ADD)
+        self.assertEqual(create_activity.person, person)
+        self.assertEqual(create_activity.content['0'], str(person_two.id))
+        # cc_remove
+        create_activity = ticket.activities.get(type__name=TicketActivityType.CC_REMOVE)
+        self.assertEqual(create_activity.person, person)
+        self.assertEqual(create_activity.content['0'], str(person.id))
+        # status
+        create_activity = ticket.activities.get(type__name=TicketActivityType.STATUS)
+        self.assertEqual(create_activity.person, person)
+        self.assertEqual(create_activity.content['from'], str(status.id))
+        self.assertEqual(create_activity.content['to'], str(status_two.id))
+        # priority
+        create_activity = ticket.activities.get(type__name=TicketActivityType.PRIORITY)
+        self.assertEqual(create_activity.person, person)
+        self.assertEqual(create_activity.content['from'], str(priority.id))
+        self.assertEqual(create_activity.content['to'], str(priority_two.id))
+        # categories
+        create_activity = ticket.activities.get(type__name=TicketActivityType.CATEGORIES)
+        self.assertEqual(create_activity.person, person)
+        self.assertEqual(create_activity.content['from_0'], str(category.id))
+        self.assertEqual(create_activity.content['to_0'], str(category_two.id))
+        # comment
+        create_activity = ticket.activities.get(type__name=TicketActivityType.COMMENT)
+        self.assertEqual(create_activity.person, person)
+        self.assertEqual(create_activity.content['comment'], 'foo')
+        # attachment_add
+        create_activity = ticket.activities.get(type__name=TicketActivityType.ATTACHMENT_ADD)
+        self.assertEqual(create_activity.person, person)
+        self.assertEqual(create_activity.content['0'], str(attachment.id))
 
 
 class CreateTicketKwargTests(TestCase):

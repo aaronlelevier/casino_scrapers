@@ -122,8 +122,8 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
         id = generate_uuid(Ticket)
 
     ticket = Ticket.objects.create(id=id, **kwargs)
-    cc = random.choice(people)
-    ticket.cc.add(cc)
+
+    ticket.cc.add(assignee)
 
     if add_attachment:
         a = create_file_attachment()
@@ -178,14 +178,6 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
     return ticket
 
 
-def create_standard_ticket():
-    ticket = _create_ticket()
-    ticket.status = create_default(TicketStatus)
-    ticket.priority = create_default(TicketPriority)
-    ticket.save()
-    return ticket
-
-
 def create_ticket(request=None, assignee=None, add_attachment=False):
     ticket = _create_ticket(request, assignee, add_attachment)
     top_level_category = Category.objects.filter(parent__isnull=True).first()
@@ -197,6 +189,77 @@ def create_ticket(request=None, assignee=None, add_attachment=False):
 
 def create_tickets(_many=1):
     return [create_ticket() for x in range(_many)]
+
+
+def create_standard_ticket(assignee=None):
+    ticket = _create_ticket(assignee=assignee)
+    ticket.status = create_default(TicketStatus)
+    ticket.priority = create_default(TicketPriority)
+    ticket.save()
+    return ticket
+
+
+class TicketWithActivities(object):
+    """
+    Creates a ticket with a TicketActivity of each type.
+
+    For use with TicketAcivity templating, and other areas of the
+    app where we need this fixture data.
+    """
+    def __init__(self, **kwargs):
+        for k,v in kwargs.items():
+            setattr(self, k, v)
+
+    def create(self):
+        self._ticket = create_standard_ticket(assignee=self.person)
+        self._ticket.attachments.add(self.attachment)
+
+        # TicketActivities
+        create_ticket_activity_types()
+        kwargs = {
+            'ticket': self._ticket,
+            'person': self.person
+        }
+
+        # create
+        kwargs['type'] = TicketActivityType.objects.get(name=TicketActivityType.CREATE)
+        TicketActivity.objects.create(**kwargs)
+        # assignee
+        kwargs['type'] = TicketActivityType.objects.get(name=TicketActivityType.ASSIGNEE)
+        kwargs['content'] = {'from': str(self.person.id), 'to': str(self.person_two.id)}
+        TicketActivity.objects.create(**kwargs)
+        # cc_add
+        kwargs['type'] = TicketActivityType.objects.get(name=TicketActivityType.CC_ADD)
+        kwargs['content'] = {'0': str(self.person_two.id)}
+        TicketActivity.objects.create(**kwargs)
+        # cc_remove
+        kwargs['type'] = TicketActivityType.objects.get(name=TicketActivityType.CC_REMOVE)
+        kwargs['content'] = {'0': str(self.person.id)}
+        TicketActivity.objects.create(**kwargs)
+        # status
+        kwargs['type'] = TicketActivityType.objects.get(name=TicketActivityType.STATUS)
+        kwargs['content'] = {'from': str(self.status.id), 'to': str(self.status_two.id)}
+        TicketActivity.objects.create(**kwargs)
+        # priority
+        kwargs['type'] = TicketActivityType.objects.get(name=TicketActivityType.PRIORITY)
+        kwargs['content'] = {'from': str(self.priority.id), 'to': str(self.priority_two.id)}
+        TicketActivity.objects.create(**kwargs)
+        # categories
+        kwargs['type'] = TicketActivityType.objects.get(name=TicketActivityType.CATEGORIES)
+        kwargs['content'] = {'from_0': str(self.category.id), 'to_0': str(self.category_two.id)}
+        TicketActivity.objects.create(**kwargs)
+        # comment
+        kwargs['type'] = TicketActivityType.objects.get(name=TicketActivityType.COMMENT)
+        kwargs['content'] = {'comment': 'foo'}
+        TicketActivity.objects.create(**kwargs)
+        # attachment_add
+        kwargs['type'] = TicketActivityType.objects.get(name=TicketActivityType.ATTACHMENT_ADD)
+        kwargs['content'] = {'0': str(self.attachment.id)}
+        TicketActivity.objects.create(**kwargs)
+
+    @property
+    def ticket(self):
+        return self._ticket
 
 
 def create_ticket_with_single_category(request=None, assignee=None):
