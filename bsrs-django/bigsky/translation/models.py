@@ -5,6 +5,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import os
 
 from django.db import models
+from django.contrib.auth.models import ContentType
 from django.contrib.postgres.fields import HStoreField
 from django.conf import settings
 from django.db.models.signals import post_save
@@ -72,6 +73,12 @@ class Locale(BaseModel):
             self.native_name = self.name
         if not self.presentation_name:
             self.presentation_name = self.name
+
+    @property
+    def translation_(self):
+        model = (ContentType.objects.get(model="translation")
+                                    .model_class())
+        return model.objects.get(locale=self)
 
 
 @receiver(post_save, sender=Locale)

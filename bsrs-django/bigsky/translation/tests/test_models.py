@@ -83,6 +83,14 @@ class LocaleTests(LocaleSetupMixin, TestCase):
         self.assertEqual(Locale.objects.filter(default=True).count(), 1)
         self.assertTrue(d.default)
 
+    def test_translation(self):
+        translation = mommy.make(Translation, locale=self.locale)
+
+        ret = self.locale.translation_
+
+        self.assertEqual(ret, translation)
+        self.assertEqual(ret.locale, self.locale)
+
 
 class TranslationManagerTests(TestCase):
 
