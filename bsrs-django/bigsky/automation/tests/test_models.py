@@ -241,7 +241,9 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
         Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
 
-        self.assertEqual(mock_func.call_args[0][0], action)
+        self.assertEqual(mock_func.call_args[0][0], self.ticket)
+        self.assertEqual(mock_func.call_args[0][1], action)
+        self.assertEqual(mock_func.call_args[0][2], self.event.key)
 
 
 class AutomationTests(SetupMixin, TestCase):

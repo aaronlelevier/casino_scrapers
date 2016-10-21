@@ -144,7 +144,7 @@ class AutomationManager(BaseManager):
             elif action.type.key == AutomationActionType.SEND_EMAIL:
                 Email.objects.process_send_email(ticket, action, event)
             elif action.type.key == AutomationActionType.SEND_SMS:
-                PhoneNumber.objects.process_send_sms(action)
+                PhoneNumber.objects.process_send_sms(ticket, action, event)
 
 
 class Automation(BaseModel):

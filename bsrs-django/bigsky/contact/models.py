@@ -106,7 +106,7 @@ class PhoneNumberManager(BaseManager):
 
     queryset_cls = PhoneNumberQuerySet
 
-    def process_send_sms(self, action):
+    def process_send_sms(self, ticket, action, event):
         Person = ContentType.objects.get(app_label="person", model="person").model_class()
 
         for person in Person.objects.filter(id__in=action.content.get('recipients', [])):
@@ -117,7 +117,8 @@ class PhoneNumberManager(BaseManager):
                             "because has no CELL phone number on file, for SMS with body: {body}"
                             .format(person=person, body=action.content['body']))
             else:
-                body = action.content.get('body', '')
+                interpolate = Interpolate(ticket, person.locale.translation_, event=event)
+                body = interpolate.text(action.content.get('body', ''))
                 self.send_sms(ph, body)
 
     def send_sms(self, ph, body):
@@ -275,10 +276,10 @@ class EmailManager(BaseManager):
         """
         from_email, to = settings.EMAIL_HOST_USER, settings.EMAIL_HOST_USER
         text_content = body
-        html_content = """
-        <p>Email: <strong>{email.email}</strong></p>
-        <p>{body}</p>
-        """.format(body=body, email=email)
+        # TODO: need to add a decorate HTML method here. at this point,
+        # the text is translated, and variables will be values, but no
+        # html. Only line breaks.
+        html_content = body
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()

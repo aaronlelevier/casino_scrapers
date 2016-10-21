@@ -47,11 +47,14 @@ class PhoneNumberManagerTests(TestCase):
 
     def setUp(self):
         self.action = create_automation_action_send_sms()
-        self.person = Person.objects.get(id=self.action.content.get('recipients')[0])
+        self.event = self.action.automation.events.first()
+        self.person = Person.objects.get(id=self.action.content['recipients'][0])
+        self.translation = create_translation_keys_for_fixtures(self.person.locale.locale)
+        self.ticket = create_standard_ticket()
 
     @patch("contact.models.PhoneNumberManager.send_sms")
     def test_process_send_sms__no_sms(self, mock_func):
-        PhoneNumber.objects.process_send_sms(self.action)
+        PhoneNumber.objects.process_send_sms(self.ticket, self.action, self.event.key)
 
         self.assertFalse(mock_func.called)
 
@@ -62,7 +65,7 @@ class PhoneNumberManagerTests(TestCase):
         # clear log
         with open(settings.LOGGING_INFO_FILE, 'w'): pass
 
-        PhoneNumber.objects.process_send_sms(self.action)
+        PhoneNumber.objects.process_send_sms(self.ticket, self.action, self.event.key)
 
         self.assertFalse(mock_func.called)
         # Log
@@ -75,11 +78,31 @@ class PhoneNumberManagerTests(TestCase):
     @patch("contact.models.PhoneNumberManager.send_sms")
     def test_process_send_sms__sms_is_type_cell(self, mock_func):
         work_sms_type = create_phone_number_type(PhoneNumberType.CELL)
+        phone = create_contact(PhoneNumber, self.person, work_sms_type)
+        self.action.content.update({
+            'body': "Priority {{ticket.priority}} to view the ticket go to {{ticket.url}}"
+        })
+        interpolate = Interpolate(self.ticket, self.translation, event=self.event.key)
+        body = interpolate.text(self.action.content['body'])
+
+        PhoneNumber.objects.process_send_sms(self.ticket, self.action, self.event.key)
+
+        self.assertEqual(mock_func.call_args[0][0], phone)
+        self.assertEqual(mock_func.call_args[0][1], body)
+
+    @patch("contact.models.PhoneNumberManager.send_sms")
+    @patch("contact.models.Interpolate")
+    def test_process_send_sms__calls_send_sms_with_interpolate(self, mock_interpolate, mock_send_sms):
+        work_sms_type = create_phone_number_type(PhoneNumberType.CELL)
         create_contact(PhoneNumber, self.person, work_sms_type)
 
-        PhoneNumber.objects.process_send_sms(self.action)
+        PhoneNumber.objects.process_send_sms(self.ticket, self.action, self.event.key)
 
-        self.assertTrue(mock_func.called)
+        self.assertEqual(mock_interpolate.call_args[0][0], self.ticket)
+        self.assertEqual(mock_interpolate.call_args[0][1], self.translation)
+        self.assertEqual(mock_interpolate.call_args[1]['event'], self.event.key)
+
+        self.assertTrue(mock_send_sms.called)
 
 
 class PhoneNumberTests(TestCase):
