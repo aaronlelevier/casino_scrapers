@@ -6,6 +6,7 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
+from automation.models import AutomationEvent
 from category.tests.factory import create_categories, create_single_category
 from generic.tests.factory import create_file_attachment
 from location.models import LocationStatus
@@ -290,6 +291,7 @@ class TicketTests(TestCase):
         self.assertTrue(mock_func.called)
         self.assertEqual(mock_func.call_args[0][0], self.ticket.location.location_level.tenant.id)
         self.assertEqual(mock_func.call_args[1]['ticket'], self.ticket)
+        self.assertEqual(mock_func.call_args[1]['event'], AutomationEvent.STATUS_NEW)
 
     @patch("ticket.models.Ticket._process_ticket")
     def test_save__process_ticket__not_new_status(self, mock_func):

@@ -105,7 +105,7 @@ class AutomationManager(BaseManager):
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
 
-    def process_ticket(self, tenant_id, ticket):
+    def process_ticket(self, tenant_id, ticket, event):
         """
         for each automation-filter in this Tenant's Automation Filters
           does it match?
@@ -120,6 +120,9 @@ class AutomationManager(BaseManager):
             TODO: should trigger running all Actions associated
                   with this Automation
 
+        :param tenant_id: related tenant.id to the automations
+        :param ticket: Ticket instance to process
+        :param event: string name of the AutomationEvent that triggered this
         """
         if ticket.creator and not ticket.creator.role.process_assign:
             ticket.assignee = ticket.creator

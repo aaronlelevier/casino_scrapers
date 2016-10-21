@@ -184,12 +184,13 @@ class Ticket(BaseModel):
 
     def _process_ticket_if_new(self):
         if not self.deleted and self.status.name == TicketStatus.NEW:
+            AutomationEvent = apps.get_model("automation", "automationevent")
             self._process_ticket(self.location.location_level.tenant.id,
-                                 ticket=self)
+                                 ticket=self, event=AutomationEvent.STATUS_NEW)
 
-    def _process_ticket(self, tenant_id, ticket):
-        model = apps.get_model("automation", "automation")
-        model.objects.process_ticket(tenant_id, ticket)
+    def _process_ticket(self, tenant_id, ticket, event):
+        Automation = apps.get_model("automation", "automation")
+        Automation.objects.process_ticket(tenant_id, ticket, event)
 
     @property
     def category(self):
