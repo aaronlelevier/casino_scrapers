@@ -27,7 +27,7 @@ import SED from 'bsrs-ember/vendor/defaults/sendemail';
 import SMSD from 'bsrs-ember/vendor/defaults/sendsms';
 import page from 'bsrs-ember/tests/pages/automation';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS, { AUTOMATION_URL, AUTOMATION_LIST_URL, AUTOMATION_EVENTS_URL, AUTOMATION_AVAILABLE_FILTERS_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { AUTOMATION_URL, AUTOMATION_LIST_URL, AUTOMATION_EVENTS_URL, AUTOMATION_AVAILABLE_FILTERS_URL, PEOPLE_URL, AUTOMATION_ACTION_TYPES_URL } from 'bsrs-ember/utilities/urls';
 
 const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
@@ -544,6 +544,46 @@ test('add and delete an action', assert => {
   });
 });
 
+
+test('select ticket assginee filter and update automation', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
+  });
+  xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
+  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyOne);
+  andThen(() => {
+    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyOne));
+  });
+  let personData = PF.search_power_select();
+  let personOneId = personData.results[0].id;
+  let personOneFullname = personData.results[0].fullname;
+  let keyword = 'a';
+  // xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
+  xhr(`${PEOPLE_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, personData);
+  selectSearch('.t-automation-action-assignee-select', keyword);
+  selectChoose('.t-automation-action-assignee-select', personOneFullname);
+  andThen(() => {
+    assert.equal(page.actionAssigneeSelectedOne, personOneFullname);
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idOne,
+      content: {
+        assignee: personOneId
+      }
+    }],
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+});
+
 test('visit detail and update an actions assignee', assert => {
   page.visitDetail();
   andThen(() => {
@@ -622,6 +662,39 @@ test('get an action priority and update it to a new priority', assert => {
   });
 });
 
+test('select priority filter and update automation', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
+  });
+  xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
+  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyTwo);
+  andThen(() => {
+    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyTwo));
+  });
+  selectChoose('.t-ticket-priority-select', TPD.priorityTwo);
+  andThen(() => {
+    assert.equal(page.actionPrioritySelectedOne, TPD.priorityTwo);
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idTwo,
+      content: {
+        priority: TPD.idTwo,
+      }
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+  // });
+});
+
 test('get an action status and update it to a new status', assert => {
   clearxhr(detailXhr);
   const json = AF.detail();
@@ -633,6 +706,38 @@ test('get an action status and update it to a new status', assert => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(page.actionTypeSelectedOne, AATD.keyThree);
     assert.equal(page.actionStatusSelectedOne, TSD.keyOneValue);
+  });
+  selectChoose('.t-ticket-status-select', TSD.keyTwoValue);
+  andThen(() => {
+    assert.equal(page.actionStatusSelectedOne, TSD.keyTwoValue);
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idThree,
+      content: {
+        status: TSD.idTwo,
+      }
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+});
+
+test('select status filter and update automation', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
+  });
+  xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
+  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyThree);
+  andThen(() => {
+    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyThree));
   });
   selectChoose('.t-ticket-status-select', TSD.keyTwoValue);
   andThen(() => {
@@ -699,6 +804,49 @@ test('get an action sendemail and update it to a new sendemail', assert => {
   });
 });
 
+test('select send email filter and update automation', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
+  });
+  xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
+  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyFour);
+  andThen(() => {
+    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyFour));
+  });
+  page.sendEmailBodyFillIn(SED.bodyTwo);
+  page.sendEmailSubjectFillIn(SED.subjectTwo);
+  xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
+  selectSearch('.t-action-recipient-select', 'e');
+  selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
+  andThen(() => {
+    assert.equal(page.sendEmailBodyValue, SED.bodyTwo);
+    assert.equal(page.sendEmailSubjectValue, SED.subjectTwo);
+    assert.equal(page.actionSendEmailRecipientOne.replace(/\W/, '').trim(), PD.fullnameBoy2);
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idFour,
+      content: {
+        sendemail: {
+          id: UUID.value,
+          body: SED.bodyTwo,
+          subject: SED.subjectTwo,
+          recipients: [PD.idSearch]
+        } 
+      }
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+});
+
 test('get an action sendsms and update it to a new sendsms', assert => {
   clearxhr(detailXhr);
   const json = AF.detail();
@@ -729,6 +877,46 @@ test('get an action sendsms and update it to a new sendsms', assert => {
           id: SMSD.idOne, 
           message: SMSD.messageTwo,
           recipients: [PD.id, PD.idSearch]
+        } 
+      }
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+});
+
+test('select sendsms filter and update automation', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
+  });
+  xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
+  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyFive);
+  andThen(() => {
+    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyFive));
+  });
+  page.sendSmsMessageFillIn(SMSD.messageTwo);
+  xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
+  selectSearch('.t-action-recipient-select', 'e');
+  selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
+  andThen(() => {
+    assert.equal(page.sendSmsMessageValue, SMSD.messageTwo);
+    assert.equal(page.actionSendSmsRecipientOne.replace(/\W/, '').trim(), PD.fullnameBoy2);
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idFive,
+      content: {
+        sendsms: { 
+          id: UUID.value, 
+          message: SMSD.messageTwo,
+          recipients: [PD.idSearch]
         } 
       }
     }]

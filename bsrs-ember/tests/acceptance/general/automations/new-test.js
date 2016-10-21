@@ -206,7 +206,7 @@ test('validation - at least one event is required, each action must have a type'
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
     assert.equal($('[data-test-id="validation-event0"]').text().trim(), t('errors.automation.event.length'));
-    assert.equal($('[data-test-id="validation-action0"]').text().trim(), t('errors.automation.type.assignee'));
+    assert.equal($('[data-test-id="validation-action0"]').length, 0);
   });
 });
 
@@ -226,6 +226,6 @@ test('validation - if type is priority, a ticket priority must be selected', ass
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
-    assert.equal($('[data-test-id="validation-action0"]').text().trim(), t('errors.automation.type.priority'));
+    assert.equal($('[data-test-id="validation-action0"]').length, 0);
   });
 });

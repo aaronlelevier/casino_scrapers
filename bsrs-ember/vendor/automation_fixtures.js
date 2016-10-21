@@ -109,6 +109,17 @@ var BSRS_automation_FACTORY = (function() {
     ];
     return {count: 3, next: null, previous: null, results: results};
   };
+  factory.prototype.list_action_types = function() {
+    var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
+    var results = [
+      {id: this.actionType.idOne, key: this.actionType.keyOne},
+      {id: this.actionType.idTwo, key: this.actionType.keyTwo},
+      {id: this.actionType.idThree, key: this.actionType.keyThree},
+      {id: this.actionType.idFour, key: this.actionType.keyFour},
+      {id: this.actionType.idFive, key: this.actionType.keyFive},
+    ];
+    return {count: 3, next: null, previous: null, results: results};
+  };
   factory.prototype.list_two = function() {
     var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
     return this._list(page_size+1, 20);
