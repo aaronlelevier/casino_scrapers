@@ -18,7 +18,7 @@ from person.tests.factory import create_role
 from utils.helpers import (BASE_UUID, model_to_json, model_to_json_select_related,
     model_to_json_prefetch_related, generate_uuid, get_content_type_number, media_path,
     create_default, local_strftime, queryset_to_json, add_related, remove_related,
-    clear_related)
+    clear_related, get_model_class, KwargsAsObject)
 
 
 class ModelToJsonTests(TestCase):
@@ -196,3 +196,22 @@ class RelatedModelCrudHelperTests(TestCase):
         clear_related(automation, 'filters')
 
         self.assertEqual(automation.filters.count(), 0)
+
+
+class GetModelClassTests(TestCase):
+
+    def test_main(self):
+        self.assertEqual(get_model_class("role"), Role)
+
+
+class KwargsAsObjectTests(TestCase):
+
+    def test_main(self):
+        class Car(object):
+            def __init__(self, **kwargs):
+                self.seat = KwargsAsObject(**kwargs)
+
+        car = Car(color='red', comfortable=True)
+
+        self.assertEqual(car.seat.color, 'red')
+        self.assertEqual(car.seat.comfortable, True)

@@ -11,6 +11,7 @@ from django.db import models
 from twilio import TwilioRestException
 from twilio.rest import TwilioRestClient
 
+from automation.helpers import Interpolate
 from utils.fields import MyGenericForeignKey
 from utils.models import BaseModel, BaseManager, BaseQuerySet, BaseNameOrderModel
 
@@ -249,13 +250,27 @@ class EmailManager(BaseManager):
 
     queryset_cls = EmailQuerySet
 
-    def process_send_email(self, action):
+    def process_send_email(self, ticket, action, event):
+        """
+        Process the recipients on this Email Action, and if they're
+        emailable, send them an email.
+
+        :param ticket: Ticket instance being processed
+        :param action:
+            AutomationAction instance of Type "email" which has info
+            about who to email and what to say
+        :param event:
+            AutomationEvent string name of the event that triggered
+            the automation
+        """
         Person = ContentType.objects.get(app_label="person", model="person").model_class()
 
         for person in Person.objects.filter(id__in=action.content.get('recipients', [])):
             for email in person.emails.filter(type__name=EmailType.WORK):
-                subject = action.content.get('subject', '')
-                body = action.content.get('body', '')
+                interpolate = Interpolate(ticket, person.locale.translation_, event=event)
+
+                subject = interpolate.text(action.content.get('subject', ''))
+                body = interpolate.text(action.content.get('body', ''))
                 self.send_email(email, subject, body)
 
     def send_email(self, email, subject, body):

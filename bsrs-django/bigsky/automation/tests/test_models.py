@@ -70,8 +70,10 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.ticket.categories.add(self.category)
 
         self.automation = create_automation('a')
+        self.event = self.automation.events.first()
         # non-maching
         self.automation_two = create_automation('b')
+        self.event_two = self.automation.events.first()
         self.filter_two = self.automation_two.filters.first()
         self.filter_two.criteria = [str(mommy.make(TicketPriority).id)]
         self.filter_two.save()
@@ -107,15 +109,16 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
     # process_ticket - "on Ticket POST" tests
 
-@patch("automation.models.AutomationManager.process_actions")
+    @patch("automation.models.AutomationManager.process_actions")
     def test_process_ticket__calls_process_actions(self, mock_func):
         self.assertTrue(self.automation.is_match(self.ticket))
         self.assertFalse(self.automation_two.is_match(self.ticket))
 
-        ret = Automation.objects.process_ticket(self.tenant.id, self.ticket)
+        ret = Automation.objects.process_ticket(self.tenant.id, self.ticket, self.event.key)
 
         self.assertEqual(mock_func.call_args[0][0], self.automation)
         self.assertEqual(mock_func.call_args[0][1], self.ticket)
+        self.assertEqual(mock_func.call_args[0][2], self.event.key)
 
     @patch("automation.models.AutomationManager.process_actions")
     def test_process_ticket__no_match(self, mock_func):
@@ -131,7 +134,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
         for automation in Automation.objects.filter(tenant__id=self.tenant.id):
             self.assertFalse(automation.is_match(self.ticket))
 
-        Automation.objects.process_ticket(self.tenant.id, self.ticket)
+        Automation.objects.process_ticket(self.tenant.id, self.ticket, self.event.key)
 
         self.assertFalse(mock_func.called)
 
@@ -143,7 +146,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.assertTrue(self.automation.is_match(self.ticket))
 
         Automation.objects.process_ticket(self.ticket.location.location_level.tenant.id,
-                                          self.ticket)
+                                          self.ticket, self.event.key)
 
         self.assertEqual(mock_func.call_count, 2)
 
@@ -161,9 +164,10 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.ticket.assignee = None
         self.assertIsNone(self.ticket.assignee)
 
-        ret = Automation.objects.process_ticket(self.automation.tenant.id, self.ticket)
+        ret = Automation.objects.process_ticket(self.automation.tenant.id, self.ticket, self.event.key)
 
         self.assertEqual(self.ticket.assignee, creator)
+        self.assertEqual(self.ticket.status.name, TicketStatus.IN_PROGRESS)
 
     # process_actions
 
@@ -175,9 +179,10 @@ class AutomationManagerTests(SetupMixin, TestCase):
         action_assignee_id = action.content['assignee']
         action_assignee = Person.objects.get(id=action_assignee_id)
 
-        Automation.objects.process_actions(self.automation, self.ticket)
+        Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
 
         self.assertEqual(self.ticket.assignee, action_assignee)
+        self.assertEqual(self.ticket.status.name, TicketStatus.IN_PROGRESS)
 
     def test_process_actions__ticket_priority(self):
         clear_related(self.automation, 'actions')
@@ -191,7 +196,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.assertTrue(self.automation.is_match(self.ticket))
         self.assertNotEqual(self.ticket.priority, ticket_priority)
 
-        Automation.objects.process_actions(self.automation, self.ticket)
+        Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
 
         self.assertEqual(self.ticket.priority, ticket_priority)
 
@@ -207,7 +212,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.assertTrue(self.automation.is_match(self.ticket))
         self.assertNotEqual(self.ticket.status, ticket_status)
 
-        Automation.objects.process_actions(self.automation, self.ticket)
+        Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
 
         self.assertEqual(self.ticket.status, ticket_status)
 
@@ -220,9 +225,11 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.assertEqual(self.automation.actions.first(), action)
         self.assertTrue(self.automation.is_match(self.ticket))
 
-        Automation.objects.process_actions(self.automation, self.ticket)
+        Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
 
-        self.assertEqual(mock_func.call_args[0][0], action)
+        self.assertEqual(mock_func.call_args[0][0], self.ticket)
+        self.assertEqual(mock_func.call_args[0][1], action)
+        self.assertEqual(mock_func.call_args[0][2], self.event.key)
 
     @patch("contact.models.PhoneNumberManager.process_send_sms")
     def test_process_actions__send_sms(self, mock_func):
@@ -233,7 +240,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.assertEqual(self.automation.actions.first(), action)
         self.assertTrue(self.automation.is_match(self.ticket))
 
-        Automation.objects.process_actions(self.automation, self.ticket)
+        Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
 
         self.assertEqual(mock_func.call_args[0][0], action)
 

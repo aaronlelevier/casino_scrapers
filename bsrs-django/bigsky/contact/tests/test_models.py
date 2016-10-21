@@ -5,6 +5,7 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
+from automation.helpers import Interpolate
 from automation.tests.factory import create_automation_action_send_email, create_automation_action_send_sms
 from contact.models import (State, StateManager, StateQuerySet, Country, PhoneNumber,
     PhoneNumberManager, PhoneNumberType, Address, AddressType, Email, EmailType, EmailManager)
@@ -15,6 +16,8 @@ from location.tests.factory import create_location
 from person.models import Person
 from person.tests.factory import create_person
 from tenant.tests.factory import get_or_create_tenant
+from ticket.tests.factory import create_standard_ticket
+from translation.tests.factory import create_translation_keys_for_fixtures
 
 
 class StateManagerTests(TestCase):
@@ -192,11 +195,14 @@ class EmailManagerTests(TestCase):
 
     def setUp(self):
         self.action = create_automation_action_send_email()
+        self.event = self.action.automation.events.first()
         self.person = Person.objects.get(id=self.action.content['recipients'][0])
+        self.translation = create_translation_keys_for_fixtures(self.person.locale.locale)
+        self.ticket = create_standard_ticket()
 
     @patch("contact.models.EmailManager.send_email")
     def test_process_send_email__no_email(self, mock_func):
-        Email.objects.process_send_email(self.action)
+        Email.objects.process_send_email(self.ticket, self.action, self.event.key)
 
         self.assertFalse(mock_func.called)
 
@@ -205,18 +211,38 @@ class EmailManagerTests(TestCase):
         personal_email_type = create_email_type(EmailType.PERSONAL)
         create_contact(Email, self.person, personal_email_type)
 
-        Email.objects.process_send_email(self.action)
+        Email.objects.process_send_email(self.ticket, self.action, self.event.key)
 
         self.assertFalse(mock_func.called)
 
     @patch("contact.models.EmailManager.send_email")
     def test_process_send_email__email_is_type_work(self, mock_func):
         work_email_type = create_email_type(EmailType.WORK)
+        email = create_contact(Email, self.person, work_email_type)
+        self.action.content.update({
+            'subject': "Emergency at {{location.name}}",
+            'body': "Priority {{ticket.priority}} to view the ticket go to {{ticket.url}}"
+        })
+        interpolate = Interpolate(self.ticket, self.translation, event=self.event.key)
+        subject = interpolate.text(self.action.content['subject'])
+        body = interpolate.text(self.action.content['body'])
+
+        Email.objects.process_send_email(self.ticket, self.action, self.event.key)
+
+        self.assertEqual(mock_func.call_args[0][0], email)
+        self.assertEqual(mock_func.call_args[0][1], subject)
+        self.assertEqual(mock_func.call_args[0][2], body)
+
+    @patch("contact.models.Interpolate")
+    def test_process_send_email__calls_send_email_with_interpolate(self, mock_func):
+        work_email_type = create_email_type(EmailType.WORK)
         create_contact(Email, self.person, work_email_type)
 
-        Email.objects.process_send_email(self.action)
+        Email.objects.process_send_email(self.ticket, self.action, self.event.key)
 
-        self.assertTrue(mock_func.called)
+        self.assertEqual(mock_func.call_args[0][0], self.ticket)
+        self.assertEqual(mock_func.call_args[0][1], self.translation)
+        self.assertEqual(mock_func.call_args[1]['event'], self.event.key)
 
 
 class EmailTests(TestCase):

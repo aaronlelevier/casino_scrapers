@@ -3,20 +3,28 @@ import re
 from django.conf import settings
 from django.template import loader
 
-from person.models import Role
-from translation.models import Translation
+from utils.helpers import KwargsAsObject, get_model_class
 
 
 class Interpolate(object):
     """
-    Does string interplolation for Automation actions
+    Does string interplolation for Automation actions where a message
+    needs to be sent. i.e email/sms
     """
     i18n_FIELDS = ['ticket.priority']
 
-    def __init__(self, ticket, automation, translation):
+    def __init__(self, ticket, translation, **kwargs):
+        """
+        :param ticket: Ticket instance associated with the message
+        :param automation:
+            AutomationWrapper instance that uses kwargs as properties
+            for info that's associated with the automation
+        :param translation:
+            Translation instance related to the message recipients' Locale
+        """
         self.ticket = ticket
-        self.automation = automation
         self.translation = translation
+        self.automation = KwargsAsObject(**kwargs)
 
         self.string_kwargs = {
             'ticket': self.ticket,
@@ -72,6 +80,7 @@ class Interpolate(object):
         :param s: a single role template tag. i.e. {{role 'store mgr'}}
         """
         tag_data = self._get_tags(s)[0]
+        Role = get_model_class("role")
         try:
             name = tag_data.split(' ')[1]
             # unwrap name from double string quotes, as a result from split()
