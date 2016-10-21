@@ -81,10 +81,6 @@ class BaseContactModel(BaseModel):
     class Meta:
         abstract = True
 
-    def save(self, *args, **kwargs):
-        self.object_id = self.content_object.id
-        return super(BaseContactModel, self).save(*args, **kwargs)
-
 
 class PhoneNumberType(BaseNameOrderModel):
     TELEPHONE = 'admin.phonenumbertype.telephone'
