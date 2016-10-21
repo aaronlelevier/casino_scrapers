@@ -12,7 +12,7 @@ import AAD from 'bsrs-ember/vendor/defaults/automation-action';
 import AATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import AF from 'bsrs-ember/vendor/automation_fixtures';
 import ED from 'bsrs-ember/vendor/defaults/automation-event';
-import PersonF from 'bsrs-ember/vendor/people_fixtures';
+import PF from 'bsrs-ember/vendor/people_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import CF from 'bsrs-ember/vendor/category_fixtures';
@@ -23,6 +23,8 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TPD from 'bsrs-ember/vendor/defaults/ticket-priority';
 import TSD from 'bsrs-ember/vendor/defaults/ticket-status';
+import SED from 'bsrs-ember/vendor/defaults/sendemail';
+import SMSD from 'bsrs-ember/vendor/defaults/sendsms';
 import page from 'bsrs-ember/tests/pages/automation';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { AUTOMATION_URL, AUTOMATION_LIST_URL, AUTOMATION_EVENTS_URL, AUTOMATION_AVAILABLE_FILTERS_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
@@ -53,6 +55,10 @@ test('by clicking record in list view, User is sent to detail view', assert => {
   generalPage.gridItemZeroClick();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
+  });
+  generalPage.cancel();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
 });
 
@@ -118,144 +124,6 @@ test('detail and update all fields', assert => {
   });
 });
 
-test('visit detail and update an actions assignee', assert => {
-  page.visitDetail();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    // action type
-    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
-    // action content - assignee
-    assert.equal(page.actionAssigneeSelectedOne, PD.fullname);
-  });
-  // change assignee
-  let personData = PersonF.search_power_select();
-  let personOneId = personData.results[0].id;
-  let personOneFullname = personData.results[0].fullname;
-  let keyword = 'a';
-  xhr(`${PEOPLE_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, personData);
-  selectSearch('.t-automation-action-assignee-select', keyword);
-  selectChoose('.t-automation-action-assignee-select', personOneFullname);
-  andThen(() => {
-    assert.equal(page.actionAssigneeSelectedOne, personOneFullname);
-  });
-  let payload = AF.put({
-    description: AD.descriptionOne,
-    events: [ED.idOne],
-    actions: [{
-      id: AAD.idOne,
-      type: AATD.idOne,
-      content: {
-        assignee: personOneId
-      }
-    }],
-    filters: [{
-      id: PFD.idOne,
-      source: PFD.sourceIdOne,
-      lookups: {},
-      criteria: [TD.priorityOneId]
-    }]
-  });
-  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), AUTOMATION_LIST_URL);
-  });
-});
-
-test('get an action priority and update it to a new priority', assert => {
-  clearxhr(detailXhr);
-  const json = AF.detail();
-  json.actions[0]['type'] = { id: AATD.idTwo, key: AATD.keyTwo };
-  json.actions[0]['priority'] = { id: TPD.idOne, name: TPD.keyOne };
-  xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
-  page.visitDetail();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    // // action type
-    assert.equal(page.actionTypeSelectedOne, AATD.keyTwo);
-    // action content - priority
-    assert.equal(page.actionPrioritySelectedOne, TPD.priorityOne);
-  });
-  selectChoose('.t-ticket-priority-select', TPD.priorityTwo);
-  andThen(() => {
-    assert.equal(page.actionPrioritySelectedOne, TPD.priorityTwo);
-  });
-  let payload = AF.put({
-    actions: [{
-      id: AAD.idOne,
-      type: AATD.idTwo,
-      content: {
-        priority: TPD.idTwo,
-      }
-    }]
-  });
-  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), AUTOMATION_LIST_URL);
-  });
-});
-
-test('get an action status and update it to a new status', assert => {
-  clearxhr(detailXhr);
-  const json = AF.detail();
-  json.actions[0]['type'] = { id: AATD.idThree, key: AATD.keyThree };
-  json.actions[0]['status'] = { id: TSD.idOne, name: TSD.keyOne };
-  xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
-  page.visitDetail();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.actionTypeSelectedOne, AATD.keyThree);
-    assert.equal(page.actionStatusSelectedOne, TSD.keyOneValue);
-  });
-  selectChoose('.t-ticket-status-select', TSD.keyTwoValue);
-  andThen(() => {
-    assert.equal(page.actionStatusSelectedOne, TSD.keyTwoValue);
-  });
-  let payload = AF.put({
-    actions: [{
-      id: AAD.idOne,
-      type: AATD.idThree,
-      content: {
-        status: TSD.idTwo,
-      }
-    }]
-  });
-  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), AUTOMATION_LIST_URL);
-  });
-});
-
-test('changing from one dynamic location available filter to another changes the location_level query param', assert => {
-  clearxhr(listXhr);
-  page.visitDetail();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-  });
-  // 1st filter
-  xhr(`${AUTOMATION_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
-  selectChoose('.t-automation-pf-select:eq(0)', PFD.keyTwo);
-  let keyword = 'a';
-  xhr(`/api/admin/locations/location__icontains=${keyword}/?location_level=${PFD.lookupsDynamic.id}`, 'GET', null, {}, 200, LF.search_power_select());
-  selectSearch('.t-ticket-location-select', keyword);
-  selectChoose('.t-ticket-location-select', LD.storeNameFour);
-  andThen(() => {
-    assert.equal(page.locationSelectedOne.split(/\s+/)[1], LD.storeNameFour);
-  });
-  // 2nd filter
-  selectChoose('.t-automation-pf-select:eq(0)', PFD.keyThree);
-  keyword = 'b';
-  // main thing we're testing is this 'xhr' mock, that the location_level query param changed
-  xhr(`/api/admin/locations/location__icontains=${keyword}/?location_level=${PFD.lookupsDynamicTwo.id}`, 'GET', null, {}, 200, LF.search_power_select());
-  selectSearch('.t-ticket-location-select', keyword);
-  selectChoose('.t-ticket-location-select', LD.storeNameFour);
-  andThen(() => {
-    assert.equal(page.locationSelectedOne.split(/\s+/)[1], LD.storeNameFour);
-  });
-});
-
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
   clearxhr(listXhr);
   page.visitDetail();
@@ -300,6 +168,22 @@ test('when user adds a filter and hits cancel they are prompted with a modal', (
   });
 });
 
+test('when user adds a filter and selects an available filter they are prompted with a modal', (assert) => {
+  clearxhr(listXhr);
+  page.visitDetail();
+  page.addFilter();
+  xhr(`${AUTOMATION_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
+  selectChoose('.t-automation-pf-select:eq(1)', PFD.keyTwo);
+  generalPage.cancel();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(generalPage.modalIsVisible);
+      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+    });
+  });
+});
+
 test('add an empty filter and do a PUT, and the empty filter isnt sent and is silently ignored', assert => {
   page.visitDetail();
   andThen(() => {
@@ -325,22 +209,6 @@ test('add an empty filter and do a PUT, and the empty filter isnt sent and is si
   });
 });
 
-test('when user adds a filter and selects an available filter they are prompted with a modal', (assert) => {
-  clearxhr(listXhr);
-  page.visitDetail();
-  page.addFilter();
-  xhr(`${AUTOMATION_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
-  selectChoose('.t-automation-pf-select:eq(1)', PFD.keyTwo);
-  generalPage.cancel();
-  andThen(() => {
-    waitFor(assert, () => {
-      assert.equal(currentURL(), DETAIL_URL);
-      assert.ok(generalPage.modalIsVisible);
-      assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
-    });
-  });
-});
-
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
   page.visitDetail();
   page.descriptionFill(AD.descriptionTwo);
@@ -358,17 +226,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
       var automation = store.find('automation', AD.idOne);
       assert.equal(automation.get('description'), AD.descriptionOne);
     });
-  });
-});
-
-test('clicking cancel button with no edits will take from detail view to list view', (assert) => {
-  page.visitDetail();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-  });
-  generalPage.cancel();
-  andThen(() => {
-    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
 });
 
@@ -432,6 +289,36 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-error-message').text(), 'WAT');
+  });
+});
+
+// PF m2m relationship
+
+test('changing from one dynamic location available filter to another changes the location_level query param', assert => {
+  clearxhr(listXhr);
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
+  // 1st filter
+  xhr(`${AUTOMATION_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
+  selectChoose('.t-automation-pf-select:eq(0)', PFD.keyTwo);
+  let keyword = 'a';
+  xhr(`/api/admin/locations/location__icontains=${keyword}/?location_level=${PFD.lookupsDynamic.id}`, 'GET', null, {}, 200, LF.search_power_select());
+  selectSearch('.t-ticket-location-select', keyword);
+  selectChoose('.t-ticket-location-select', LD.storeNameFour);
+  andThen(() => {
+    assert.equal(page.locationSelectedOne.split(/\s+/)[1], LD.storeNameFour);
+  });
+  // 2nd filter
+  selectChoose('.t-automation-pf-select:eq(0)', PFD.keyThree);
+  keyword = 'b';
+  // main thing we're testing is this 'xhr' mock, that the location_level query param changed
+  xhr(`/api/admin/locations/location__icontains=${keyword}/?location_level=${PFD.lookupsDynamicTwo.id}`, 'GET', null, {}, 200, LF.search_power_select());
+  selectSearch('.t-ticket-location-select', keyword);
+  selectChoose('.t-ticket-location-select', LD.storeNameFour);
+  andThen(() => {
+    assert.equal(page.locationSelectedOne.split(/\s+/)[1], LD.storeNameFour);
   });
 });
 
@@ -624,6 +511,8 @@ test('select country filter and update automation', assert => {
   });
 });
 
+// Action m2m relationship
+
 test('add and delete an action', assert => {
   // the 'assignee-select' is the first dynamic power-select on the page
   // and should only be cleared out of the final delete click, that will
@@ -651,6 +540,202 @@ test('add and delete an action', assert => {
   andThen(() => {
     assert.equal(Ember.$('.t-automation-action-type-select').length, 1);
     assert.equal(Ember.$('.t-automation-action-assignee-select').length, 0);
-    assert.equal(page.actionTypeSelectedOne, 'Click to select');
+    assert.equal(page.actionTypeSelectedOne, t('power.select.select'));
+  });
+});
+
+test('visit detail and update an actions assignee', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    // action type
+    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
+    // action content - assignee
+    assert.equal(page.actionAssigneeSelectedOne, PD.fullname);
+  });
+  // change assignee
+  let personData = PF.search_power_select();
+  let personOneId = personData.results[0].id;
+  let personOneFullname = personData.results[0].fullname;
+  let keyword = 'a';
+  xhr(`${PEOPLE_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, personData);
+  selectSearch('.t-automation-action-assignee-select', keyword);
+  selectChoose('.t-automation-action-assignee-select', personOneFullname);
+  andThen(() => {
+    assert.equal(page.actionAssigneeSelectedOne, personOneFullname);
+  });
+  let payload = AF.put({
+    description: AD.descriptionOne,
+    events: [ED.idOne],
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idOne,
+      content: {
+        assignee: personOneId
+      }
+    }],
+    filters: [{
+      id: PFD.idOne,
+      source: PFD.sourceIdOne,
+      lookups: {},
+      criteria: [TD.priorityOneId]
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+});
+
+test('get an action priority and update it to a new priority', assert => {
+  clearxhr(detailXhr);
+  const json = AF.detail();
+  json.actions[0]['type'] = { id: AATD.idTwo, key: AATD.keyTwo };
+  json.actions[0]['priority'] = { id: TPD.idOne, name: TPD.keyOne };
+  xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    // // action type
+    assert.equal(page.actionTypeSelectedOne, AATD.keyTwo);
+    // action content - priority
+    assert.equal(page.actionPrioritySelectedOne, TPD.priorityOne);
+  });
+  selectChoose('.t-ticket-priority-select', TPD.priorityTwo);
+  andThen(() => {
+    assert.equal(page.actionPrioritySelectedOne, TPD.priorityTwo);
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idTwo,
+      content: {
+        priority: TPD.idTwo,
+      }
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+});
+
+test('get an action status and update it to a new status', assert => {
+  clearxhr(detailXhr);
+  const json = AF.detail();
+  json.actions[0]['type'] = { id: AATD.idThree, key: AATD.keyThree };
+  json.actions[0]['status'] = { id: TSD.idOne, name: TSD.keyOne };
+  xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(page.actionTypeSelectedOne, AATD.keyThree);
+    assert.equal(page.actionStatusSelectedOne, TSD.keyOneValue);
+  });
+  selectChoose('.t-ticket-status-select', TSD.keyTwoValue);
+  andThen(() => {
+    assert.equal(page.actionStatusSelectedOne, TSD.keyTwoValue);
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idThree,
+      content: {
+        status: TSD.idTwo,
+      }
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+});
+
+test('get an action status and update it to a new status', assert => {
+  clearxhr(detailXhr);
+  const json = AF.detail();
+  json.actions[0]['type'] = { id: AATD.idFour, key: AATD.keyFour };
+  json.actions[0]['sendemail'] = { id: SED.idOne, subject: SED.subjectOne, body: SED.bodyOne, recipient: [{id: PD.idOne, fullname: PD.fullname}] };
+  xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(page.actionTypeSelectedOne, AATD.keyFour);
+    assert.equal(page.actionSendEmailRecipientOne.replace(/\W/, '').trim(), PD.fullname);
+    assert.equal(page.sendEmailBodyValue, SED.bodyOne);
+    assert.equal(page.sendEmailSubjectValue, SED.subjectOne);
+  });
+  page.sendEmailBodyFillIn(SED.bodyTwo);
+  page.sendEmailSubjectFillIn(SED.subjectTwo);
+  xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
+  selectSearch('.t-action-recipient-select', 'e');
+  selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
+  andThen(() => {
+    assert.equal(page.sendEmailBodyValue, SED.bodyTwo);
+    assert.equal(page.sendEmailSubjectValue, SED.subjectTwo);
+    assert.equal(page.actionSendEmailRecipientTwo.replace(/\W/, '').trim(), PD.fullnameBoy2);
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idFour,
+      content: {
+        sendemail: {
+          id: SED.idOne,
+          body: SED.bodyTwo,
+          subject: SED.subjectTwo,
+          recipients: [PD.idOne, PD.idSearch]
+        } 
+      }
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+});
+
+test('get an action status and update it to a new status', assert => {
+  clearxhr(detailXhr);
+  const json = AF.detail();
+  json.actions[0]['type'] = { id: AATD.idFive, key: AATD.keyFive };
+  json.actions[0]['sendsms'] = { id: SMSD.idOne, message: SMSD.messageOne, recipient: [{id: PD.idOne, fullname: PD.fullname}] };
+  xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(page.actionTypeSelectedOne, AATD.keyFive);
+    assert.equal(page.actionSendSmsRecipientOne.replace(/\W/, '').trim(), PD.fullname);
+    assert.equal(page.sendSmsMessageValue, SMSD.messageOne);
+  });
+  page.sendSmsMessageFillIn(SMSD.messageTwo);
+  xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
+  selectSearch('.t-action-recipient-select', 'e');
+  selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
+  andThen(() => {
+    assert.equal(page.sendSmsMessageValue, SMSD.messageTwo);
+    assert.equal(page.actionSendSmsRecipientTwo.replace(/\W/, '').trim(), PD.fullnameBoy2);
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idFive,
+      content: {
+        sendsms: { 
+          id: SMSD.idOne, 
+          message: SMSD.messageTwo,
+          recipients: [PD.id, PD.idSearch]
+        } 
+      }
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
 });

@@ -15,8 +15,12 @@ const ACTION_TYPE_SELECT_ONE = '.t-automation-action-type-select:eq(0)';
 const ACTION_ASSIGNEE_SELECT_ONE = '.t-automation-action-assignee-select:eq(0)';
 const ACTION_PRIORITY_SELECT_ONE = '.t-ticket-priority-select:eq(0)';
 const ACTION_STATUS_SELECT_ONE = '.t-ticket-status-select:eq(0)';
-const ACTION_SEND_EMAIL_RECIPIENTS = '.t-action-recipient-select li.ember-power-select-multiple-option';
+
+const ACTION_SEND_EMAIL_RECIPIENTS = '.t-action-recipient-select li.ember-power-select-multiple-option'; 
 const ACTION_SEND_EMAIL_RECIPIENT_ONE = `${ACTION_SEND_EMAIL_RECIPIENTS}:eq(0)`;
+
+const ACTION_SEND_SMS_RECIPIENTS = '.t-action-recipient-select li.ember-power-select-multiple-option'; 
+const ACTION_SEND_SMS_RECIPIENT_ONE = `${ACTION_SEND_SMS_RECIPIENTS}:eq(0)`;
 
 const EVENTS = '.t-automation-event-select .ember-power-select-multiple-option';
 
@@ -38,7 +42,10 @@ export default create({
   descriptionSortText: text('.t-sort-description'),
   sendEmailBodyFillIn: fillable('.t-action-body0'),
   sendEmailSubjectFillIn: fillable('.t-action-subject0'),
+  sendEmailBodyValue: value('.t-action-body0'),
+  sendEmailSubjectValue: value('.t-action-subject0'),
   sendSmsMessageFillIn: fillable('.t-action-message0'),
+  sendSmsMessageValue: value('.t-action-message0'),
   // sendEmailRemoveRecipient: clickable('.ember-power-select-multiple-remove-btn'),
 
   addFilter: clickable('.t-add-pf-btn'),
@@ -81,5 +88,8 @@ export default create({
   actionAssigneeSelectedOne: text(ACTION_ASSIGNEE_SELECT_ONE),
   actionPrioritySelectedOne: text(ACTION_PRIORITY_SELECT_ONE),
   actionStatusSelectedOne: text(ACTION_STATUS_SELECT_ONE),
-  actionSendEmailRecipientOne: text(ACTION_SEND_EMAIL_RECIPIENT_ONE),
+  actionSendEmailRecipientOne: text(`${ACTION_SEND_EMAIL_RECIPIENTS}:eq(0)`),
+  actionSendEmailRecipientTwo: text(`${ACTION_SEND_EMAIL_RECIPIENTS}:eq(1)`),
+  actionSendSmsRecipientOne: text(`${ACTION_SEND_SMS_RECIPIENTS}:eq(0)`),
+  actionSendSmsRecipientTwo: text(`${ACTION_SEND_SMS_RECIPIENTS}:eq(1)`),
 });

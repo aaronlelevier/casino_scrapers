@@ -13,7 +13,7 @@ export function automationAction(params/*, hash*/) {
       case 'automation.actions.sendemail':
         return 'automations/sendemail-action';
       case 'automation.actions.sendsms':
-        return 'automtions/sendsms-action';
+        return 'automations/sendsms-action';
     }
   }
 }

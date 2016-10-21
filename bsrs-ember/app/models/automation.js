@@ -38,6 +38,7 @@ export default Model.extend(OptConf, Validations, NewMixin, SaveAndRollbackRelat
   simpleStore: Ember.inject.service(),
   description: attr(''),
   // pf dirty tracking
+  automation_pf_fks: [],
   pfIsDirtyContainer: many_to_many_dirty('automation_pf'),
   pfIsDirty: Ember.computed('pf.@each.{isDirtyOrRelatedDirty}', 'pfIsDirtyContainer', function() {
     const pf = this.get('pf');

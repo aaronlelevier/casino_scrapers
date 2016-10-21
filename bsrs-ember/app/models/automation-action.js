@@ -69,6 +69,25 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
       case 'automation.actions.ticket_status':
         content = {status: this.get('status.id')};
         break;
+      case 'automation.actions.sendemail':
+        content = {
+          sendemail: {
+            id: this.get('sendemail.id'),
+            body: this.get('sendemail.body'),
+            subject: this.get('sendemail.subject'),
+            recipients: this.get('sendemail.recipient_ids'),
+          }
+        };
+        break;
+      case 'automation.actions.sendsms':
+        content = {
+          sendsms: {
+            id: this.get('sendsms.id'),
+            message: this.get('sendsms.message'),
+            recipients: this.get('sendsms.recipient_ids'),
+          }
+        };
+        break;
     }
     return {
       id: this.get('id'),

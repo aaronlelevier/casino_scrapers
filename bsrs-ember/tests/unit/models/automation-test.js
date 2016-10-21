@@ -9,12 +9,15 @@ import AJED from 'bsrs-ember/vendor/defaults/automation-join-event';
 import AJFD from 'bsrs-ember/vendor/defaults/automation-join-pfilter';
 import AJAD from 'bsrs-ember/vendor/defaults/automation-join-action';
 import AAD from 'bsrs-ember/vendor/defaults/automation-action';
+import ATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import AATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import PJCD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
-import PersonD from 'bsrs-ember/vendor/defaults/person';
+import PD from 'bsrs-ember/vendor/defaults/person';
+import SMSD from 'bsrs-ember/vendor/defaults/sendsms';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import CD from 'bsrs-ember/vendor/defaults/criteria';
+import SMSJRD from 'bsrs-ember/vendor/defaults/generic-join-recipients';
 import TPD from 'bsrs-ember/vendor/defaults/ticket-priority';
 import AutomationModel from 'bsrs-ember/models/automation';
 
@@ -23,7 +26,7 @@ var store, automation, event, action, actionType, pfilter, pf;
 moduleFor('model:automation', 'Unit | Model | automation', {
   needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username', 'validator:has-many', 'validator:automation-action-type'],
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-event', 'model:automation-join-event', 'model:automation-join-pfilter', 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'model:person', 'model:person-current', 'model:ticket-priority', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-event', 'model:automation-join-event', 'model:automation-join-pfilter', 'model:generic-join-recipients' , 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'model:person', 'model:person-current', 'model:ticket-priority', 'model:sendsms', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     run(() => {
       automation = store.push('automation', {id: AD.idOne});
     });
@@ -38,15 +41,32 @@ test('dirty test | description', assert => {
   assert.equal(automation.get('isDirty'), false);
 });
 
-test('serialize', assert => {
+test(' serialize', assert => {
+  let pfilter, event, action;
   run(() => {
-    automation = store.push('automation', {id: AD.idOne, description: AD.descriptionOne});
+    automation = store.push('automation', {id: AD.idOne, description: AD.descriptionOne, automation_pf_fks: [AJFD.idOne], automation_event_fks: [AJED.idOne], automation_action_fks: [AAD.idOne]});
     store.push('automation-join-pfilter', {id: AJFD.idOne, automation_pk: AD.idOne, pfilter_pk: PFD.idOne});
-    store.push('pfilter', {id: PFD.idOne});
+    pfilter = store.push('pfilter', {id: PFD.idOne, source_id: AD.idOne});
+    store.push('automation-join-event', {id: AJED.idOne, automation_pk: AD.idOne, event_pk: ED.idOne});
+    store.push('automation-event', {id: ED.idOne});
+    store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
+    action = store.push('automation-action', {id: AAD.idOne});
+    store.push('automation-action-type', {id: ATD.idOne, key: ATD.keyFive, actions: [AAD.idOne]});
+    store.push('generic-join-recipients', {id: SMSJRD.idOne, generic_pk: SMSD.idOne, recipient_pk: PD.idOne});
+    store.push('person', {id: PD.idOne});
+    store.push('sendsms', {id: SMSD.idOne, message: SMSD.messageTwo, generic_recipient_fks: [SMSJRD.idOne], actions: [AAD.idOne]});
   });
+  assert.equal(automation.get('pf').get('length'), 1);
   let ret = automation.serialize();
   assert.equal(ret.id, AD.idOne);
   assert.equal(ret.description, AD.descriptionOne);
+  assert.deepEqual(ret.filters, [pfilter.serialize()]);
+  assert.equal(ret.filters.length, 1);
+  assert.deepEqual(ret.events, automation.get('event_ids'));
+  assert.deepEqual(ret.actions, [action.serialize()]);
+  assert.equal(ret.actions.length, 1);
+  assert.equal(ret.actions[0].type, ATD.idOne);
+  assert.deepEqual(ret.actions[0].content, {sendsms: {id: SMSD.idOne, message: SMSD.messageTwo, recipients: [PD.id]}});
 });
 
 test('NewMixin is mixed into the Automation Model, so on save will set _new_ keys to undefined, and future CRUD will be PUTs', assert => {
@@ -58,7 +78,7 @@ test('NewMixin is mixed into the Automation Model, so on save will set _new_ key
   assert.equal(model.get('new_pk'), undefined);
 });
 
-/* automation & PROFILE_FILTER: Start */
+/* AUTOMATION & PROFILE_FILTER: Start */
 
 test('add pfilter and automation is dirty', assert => {
   run(() => {
@@ -143,7 +163,7 @@ test('add_pf - will create join model and mark model dirty', (assert) => {
 
 /* automation & PROFILE_FILTER: End */
 
-/* automation & event: Start */
+/* AUTOMATION & EVENT: Start */
 
 test('event property should return all associated events. also confirm related and join model attr values', (assert) => {
   let automationJoinEvent, automationEvent;
@@ -538,17 +558,17 @@ test('assignee - changing the assignee should make the automation model dirty', 
   run(() => {
     automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AJAD.idOne]});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
-    store.push('automation-action', {id: AAD.idOne, assignee_fk: PersonD.idOne});
-    store.push('person', {id: PersonD.idOne, actions: [AAD.idOne]});
+    store.push('automation-action', {id: AAD.idOne, assignee_fk: PD.idOne});
+    store.push('person', {id: PD.idOne, actions: [AAD.idOne]});
   });
   let action = automation.get('action').objectAt(0);
-  assert.equal(action.get('assignee.id'), PersonD.idOne);
+  assert.equal(action.get('assignee.id'), PD.idOne);
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
-  action.change_assignee({id: PersonD.idTwo});
-  assert.equal(action.get('assignee.id'), PersonD.idTwo);
+  action.change_assignee({id: PD.idTwo});
+  assert.equal(action.get('assignee.id'), PD.idTwo);
   assert.ok(automation.get('isDirtyOrRelatedDirty'));
-  action.change_assignee({id: PersonD.idOne});
-  assert.equal(action.get('assignee.id'), PersonD.idOne);
+  action.change_assignee({id: PD.idOne});
+  assert.equal(action.get('assignee.id'), PD.idOne);
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
 });
 
@@ -590,22 +610,22 @@ test('rollback - a change in nested actionType and assigee can be rolled back fr
   run(() => {
     automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AJAD.idOne]});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
-    store.push('automation-action', {id: AAD.idOne, assignee_fk: PersonD.idOne, type_fk: AATD.idOne});
-    store.push('person', {id: PersonD.idOne, actions: [AAD.idOne]});
+    store.push('automation-action', {id: AAD.idOne, assignee_fk: PD.idOne, type_fk: AATD.idOne});
+    store.push('person', {id: PD.idOne, actions: [AAD.idOne]});
     store.push('automation-action-type', {id: AATD.idOne, key: AATD.keyOne, actions: [AAD.idOne]});
   });
   let action = automation.get('action').objectAt(0);
   assert.equal(action.get('type.id'), AATD.idOne);
-  assert.equal(action.get('assignee.id'), PersonD.idOne);
+  assert.equal(action.get('assignee.id'), PD.idOne);
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
   action.change_type({id: AATD.idTwo});
-  action.change_assignee({id: PersonD.idTwo});
+  action.change_assignee({id: PD.idTwo});
   assert.equal(action.get('type.id'), AATD.idTwo);
-  assert.equal(action.get('assignee.id'), PersonD.idTwo);
+  assert.equal(action.get('assignee.id'), PD.idTwo);
   assert.ok(automation.get('isDirtyOrRelatedDirty'));
   automation.rollback();
   assert.equal(action.get('type.id'), AATD.idOne);
-  assert.equal(action.get('assignee.id'), PersonD.idOne);
+  assert.equal(action.get('assignee.id'), PD.idOne);
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
 });
 
@@ -625,7 +645,7 @@ test('saveRelated - a change in nested actionType or assignee is saved and entir
   assert.ok(automation.get('actionIsNotDirty'));
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
   // do same for 'assignee'
-  action.change_assignee({id: PersonD.idOne});
+  action.change_assignee({id: PD.idOne});
   assert.ok(automation.get('isDirtyOrRelatedDirty'));
   automation.saveRelated();
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));

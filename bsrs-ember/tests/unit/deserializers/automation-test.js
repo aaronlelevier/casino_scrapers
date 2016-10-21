@@ -207,7 +207,7 @@ test('deserialize single - sendemail - existing with same id', assert => {
   assert.equal(automation.get('action').objectAt(0).get('sendemail').get('recipient').objectAt(0).get('fullname'), PersonD.fullname);
 });
 
-test('scott deserialize single - sendemail - different id', assert => {
+test('deserialize single - sendemail - different id', assert => {
   // pre-deserialize
   run(() => {
     store.push('automation-action', {id: AAD.idOne, sendemail_fk: SED.idOne});
@@ -285,7 +285,7 @@ test('deserialize single - sendemail - different recipient', assert => {
 
 // sendsms
 
-test('scott deserialize single - sendsms - no existing', assert => {
+test('deserialize single - sendsms - no existing', assert => {
   const json = AF.detail();
   json.actions[0].sendsms = { id: SMSD.idOne, message: SMSD.messageOne, recipient: [{id: PersonD.idOne, fullname: PersonD.fullname}] };
   assert.equal(automation.get('isNotDirtyOrRelatedNotDirty'), true);

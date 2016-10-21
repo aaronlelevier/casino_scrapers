@@ -9,6 +9,8 @@ import TPD from 'bsrs-ember/vendor/defaults/ticket-priority';
 import TSD from 'bsrs-ember/vendor/defaults/ticket-status';
 import SED from 'bsrs-ember/vendor/defaults/sendemail';
 import SMSD from 'bsrs-ember/vendor/defaults/sendsms';
+import SMSJRD from 'bsrs-ember/vendor/defaults/generic-join-recipients';
+import SEDJRD from 'bsrs-ember/vendor/defaults/generic-join-recipients';
 import PD from 'bsrs-ember/vendor/defaults/person';
 
 var store, action, actionType, type, assignee, priority, sendEmail, sendsms;
@@ -421,14 +423,32 @@ test('saveRelated for priority to save model and make it clean', assert => {
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('serialize - should only send the content fields that are relevant based on the type', assert => {
+test(' serialize - should only send the content fields that are relevant based on the type', assert => {
   run(() => {
     action = store.push('automation-action', {id: AAD.idOne});
+    store.push('generic-join-recipients', {id: SEDJRD.idOne, generic_pk: SED.idOne, recipient_pk: PD.idOne});
+    store.push('generic-join-recipients', {id: SMSJRD.idTwo, generic_pk: SMSD.idOne, recipient_pk: PD.idTwo});
+    store.push('person', {id: PD.idOne});
+    store.push('person', {id: PD.idTwo});
+    store.push('sendemail', {id: SED.idOne, subject: SED.subjectTwo, body: SED.bodyTwo,  generic_recipient_fks: [SEDJRD.idOne], actions: [AAD.idOne]});
+    store.push('sendsms', {id: SMSD.idOne, message: SMSD.messageTwo, generic_recipient_fks: [SMSJRD.idTwo], actions: [AAD.idOne]});
   });
   action.change_assignee({id: PersonD.idOne});
   action.change_priority({id: TPD.idOne});
+  action.change_status({id: TSD.idOne});
+  action.change_sendemail({id: SED.idOne});
+  action.change_sendsms({id: SMSD.idOne});
+
   action.change_type({id: ATD.idOne, key: ATD.keyOne});
   assert.deepEqual(action.serialize().content, {assignee: PersonD.idOne});
   action.change_type({id: ATD.idTwo, key: ATD.keyTwo});
   assert.deepEqual(action.serialize().content, {priority: TPD.idOne});
+  action.change_type({id: ATD.idThree, key: ATD.keyThree});
+  assert.deepEqual(action.serialize().content, {status: TSD.idOne});
+  action.change_type({id: ATD.idFour, key: ATD.keyFour});
+  assert.deepEqual(action.serialize().content, {sendemail: {body: SED.bodyTwo, id: SED.idOne, recipients: [PD.id], subject: SED.subjectTwo}});
+  action.change_type({id: ATD.idFive, key: ATD.keyFive});
+  assert.equal(action.get('sendsms').get('id'), SMSD.idOne);
+  assert.deepEqual(action.get('sendsms').get('recipient').mapBy('id'), [PD.idTwo]);
+  assert.deepEqual(action.serialize().content, {sendsms: {id: SMSD.idOne, message: SMSD.messageTwo, recipients: [PD.idTwo]}});
 });

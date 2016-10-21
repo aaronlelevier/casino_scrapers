@@ -38,5 +38,6 @@ export default Model.extend(Validations, OptConf, {
   },
   saveRelated() {
     this.saveRecipient();
+    this.save();
   }
 });
