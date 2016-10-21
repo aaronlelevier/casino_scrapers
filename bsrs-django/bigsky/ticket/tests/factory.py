@@ -13,7 +13,7 @@ from location.models import Location, LocationStatus, LocationType, LOCATION_COM
 from location.tests.factory import create_locations
 from person.models import Person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
-    TicketActivity, TICKET_ACTIVITY_TYPES)
+    TicketActivity,)
 from ticket.tests.factory_related import (create_ticket_status, create_ticket_statuses,
     create_ticket_priorities)
 from utils.create import _generate_chars
@@ -246,7 +246,7 @@ def create_ticket_activity(ticket=None, type=None, content=None):
 
 def create_ticket_activity_type(name=None, weight=1):
     if not name:
-        name = random.choice(TICKET_ACTIVITY_TYPES)
+        name = random.choice(TicketActivityType.ALL)
 
     obj, _ = TicketActivityType.objects.get_or_create(name=name, weight=weight)
 
@@ -254,4 +254,4 @@ def create_ticket_activity_type(name=None, weight=1):
 
 
 def create_ticket_activity_types():
-    return [create_ticket_activity_type(name=name) for name in TICKET_ACTIVITY_TYPES]
+    return [create_ticket_activity_type(name=name) for name in TicketActivityType.ALL]

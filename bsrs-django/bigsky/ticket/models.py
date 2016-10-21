@@ -203,20 +203,28 @@ class Ticket(BaseModel):
         return " - ".join(x['name'] for x in sorted(categories, key=lambda k: k['level']))
 
 
-TICKET_ACTIVITY_TYPES = [
-    'create',
-    'assignee',
-    'cc_add',
-    'cc_remove',
-    'status',
-    'priority',
-    'categories',
-    'comment',
-    'attachment_add',
-]
-
-
 class TicketActivityType(BaseNameModel):
+    CREATE = 'create'
+    ASSIGNEE = 'assignee'
+    CC_ADD = 'cc_add'
+    CC_REMOVE = 'cc_remove'
+    STATUS = 'status'
+    PRIORITY = 'priority'
+    CATEGORIES = 'categories'
+    COMMENT = 'comment'
+    ATTACHMENT_ADD = 'attachment_add'
+
+    ALL = [
+        CREATE,
+        ASSIGNEE,
+        CC_ADD,
+        CC_REMOVE,
+        STATUS,
+        PRIORITY,
+        CATEGORIES,
+        COMMENT,
+        ATTACHMENT_ADD
+    ]
 
     weight = models.PositiveIntegerField(blank=True, default=1)
 

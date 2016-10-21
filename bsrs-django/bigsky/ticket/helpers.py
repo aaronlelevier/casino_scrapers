@@ -14,15 +14,15 @@ class TicketActivityToRepresentation(object):
 
     def get_data(self):
         if self.data['content']:
-            if self.type.name == 'assignee':
+            if self.type.name == TicketActivityType.ASSIGNEE:
                 self.set_assignee_data()
-            elif self.type.name == 'cc_add':
+            elif self.type.name == TicketActivityType.CC_ADD:
                 self.set_person_list_data_with_key(key='added')
-            elif self.type.name == 'cc_remove':
+            elif self.type.name == TicketActivityType.CC_REMOVE:
                 self.set_person_list_data_with_key(key='removed')
-            elif self.type.name == 'categories':
+            elif self.type.name == TicketActivityType.CATEGORIES:
                 self.set_category_data()
-            elif self.type.name == 'attachment_add':
+            elif self.type.name == TicketActivityType.ATTACHMENT_ADD:
                 self.set_attachment_list_data_with_key(key='added')
 
         self.data.update({'type': self.type.name})
