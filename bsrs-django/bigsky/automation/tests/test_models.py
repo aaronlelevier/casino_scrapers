@@ -1,6 +1,5 @@
 from mock import patch
 
-from django.db.models import Q
 from django.test import TestCase
 
 from model_mommy import mommy
@@ -24,7 +23,7 @@ from automation.tests.factory import (
     create_automation_action_send_email, create_automation_action_send_sms,
     create_automation_event)
 from tenant.tests.factory import get_or_create_tenant
-from ticket.models import Ticket, TicketPriority, TicketStatus
+from ticket.models import TicketPriority, TicketStatus
 from ticket.tests.factory import create_ticket
 from ticket.tests.factory_related import create_ticket_statuses
 from utils.helpers import create_default, clear_related

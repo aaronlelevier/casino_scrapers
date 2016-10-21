@@ -1,7 +1,6 @@
 from category.tests.factory import create_repair_category, create_single_category
 from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
-from person.models import Person
 from person.tests.factory import create_single_person
 from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationActionType, AutomationAction)

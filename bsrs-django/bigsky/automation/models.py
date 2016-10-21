@@ -1,18 +1,12 @@
 from django.conf import settings
-from django.contrib.auth.models import ContentType
-from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.db.models import F, Q
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 
 from contact.models import Email, PhoneNumber
 from person.models import Person
 from tenant.models import Tenant
 from ticket.models import TicketPriority, TicketStatus
 from utils import classproperty
-from utils.fields import MyGenericForeignKey
 from utils.models import BaseQuerySet, BaseManager, BaseModel
 
 

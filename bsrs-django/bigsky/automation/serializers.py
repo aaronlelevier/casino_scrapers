@@ -6,7 +6,6 @@ from category.models import Category
 from contact.models import State, Country
 from location.models import Location, LocationLevel
 from person.models import Person
-from person.serializers_leaf import PersonSimpleSerializer
 from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationAction, AutomationActionType)
 from automation.validators import (AutomationFilterFieldValidator, UniqueByTenantValidator,
