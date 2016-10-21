@@ -153,7 +153,8 @@ Ember.Test.registerAsyncHelper('patchRandomAsync', patchRandomAsync);
 export default function startApp(attrs) {
   let application;
 
-  let attributes = Ember.assign({}, config.APP, attrs);
+  let attributes = Ember.merge({}, config.APP);
+  attributes = Ember.merge(attributes, attrs);
 
   // Mock english translations
   var request = { url: '/api/translations/?locale=en&timezone=America/Los_Angeles' , method: 'GET' };
