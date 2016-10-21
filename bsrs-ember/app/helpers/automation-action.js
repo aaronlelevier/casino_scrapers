@@ -10,9 +10,9 @@ export function automationAction(params/*, hash*/) {
         return 'tickets/ticket-priority-select-action';
       case 'automation.actions.ticket_status':
         return 'tickets/ticket-status-select-action';
-      case 'automation.actions.sendemail':
+      case 'automation.actions.send_email':
         return 'automations/sendemail-action';
-      case 'automation.actions.sendsms':
+      case 'automation.actions.send_sms':
         return 'automations/sendsms-action';
     }
   }

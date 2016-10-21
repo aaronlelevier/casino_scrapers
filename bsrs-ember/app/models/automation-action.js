@@ -69,7 +69,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
       case 'automation.actions.ticket_status':
         content = {status: this.get('status.id')};
         break;
-      case 'automation.actions.sendemail':
+      case 'automation.actions.send_email':
         content = {
           sendemail: {
             id: this.get('sendemail.id'),
@@ -79,7 +79,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
           }
         };
         break;
-      case 'automation.actions.sendsms':
+      case 'automation.actions.send_sms':
         content = {
           sendsms: {
             id: this.get('sendsms.id'),

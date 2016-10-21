@@ -11,8 +11,8 @@ var BSRS_AUTOMATION_ACTION_TYPE_DEFAULTS = (function() {
       keyOne: 'automation.actions.ticket_assignee',
       keyTwo: 'automation.actions.ticket_priority',
       keyThree: 'automation.actions.ticket_status',
-      keyFour: 'automation.actions.sendemail',
-      keyFive: 'automation.actions.sendsms',
+      keyFour: 'automation.actions.send_email',
+      keyFive: 'automation.actions.send_sms',
     };
   };
   return factory;

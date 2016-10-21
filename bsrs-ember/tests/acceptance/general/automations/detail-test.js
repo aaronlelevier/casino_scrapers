@@ -654,7 +654,7 @@ test('get an action status and update it to a new status', assert => {
   });
 });
 
-test('get an action status and update it to a new status', assert => {
+test('get an action sendemail and update it to a new sendemail', assert => {
   clearxhr(detailXhr);
   const json = AF.detail();
   json.actions[0]['type'] = { id: AATD.idFour, key: AATD.keyFour };
@@ -699,7 +699,7 @@ test('get an action status and update it to a new status', assert => {
   });
 });
 
-test('get an action status and update it to a new status', assert => {
+test('get an action sendsms and update it to a new sendsms', assert => {
   clearxhr(detailXhr);
   const json = AF.detail();
   json.actions[0]['type'] = { id: AATD.idFive, key: AATD.keyFive };
