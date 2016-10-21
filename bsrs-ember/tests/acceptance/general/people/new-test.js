@@ -6,7 +6,6 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import PF from 'bsrs-ember/vendor/people_fixtures';
-import RF from 'bsrs-ember/vendor/role_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import RD from 'bsrs-ember/vendor/defaults/role';
@@ -123,6 +122,7 @@ test('visiting /people/new and creating a new person', (assert) => {
     var person = store.find('person').objectAt(1);
     assert.equal(person.get('id'), UUID.value);
     assert.equal(person.get('new'), undefined);
+    assert.equal(person.get('new_pk'), undefined);
     assert.equal(person.get('username'), PD.username);
     assert.equal(person.get('password'), '');
     assert.equal(person.get('role').get('id'), PD.role);
@@ -202,12 +202,7 @@ test('when user enters new form and doesnt enter data, the record is correctly r
 test('can change default role and locale', (assert) => {
   clearxhr(list_xhr);
   visit(NEW_URL);
-  page.roleClickDropdown();
-  andThen(() => {
-    const person = store.find('person', UUID.value);
-    assert.equal(person.get('role').get('id'), RD.idOne);
-  });
-  page.roleClickOptionTwo();
+  selectChoose('.t-person-role-select', RD.nameTwo);
   andThen(() => {
     const person = store.find('person', UUID.value);
     assert.equal(person.get('role').get('id'), RD.idTwo);
@@ -215,8 +210,7 @@ test('can change default role and locale', (assert) => {
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     assert.equal(page.roleInput, RD.nameTwo);
   });
-  page.localeClickDropdown();
-  page.localeClickOptionTwo();
+  selectChoose('.t-locale-select', PD.localeTwo);
   andThen(() => {
     assert.equal(page.localeInput, LD.nameTwo);
   });
@@ -263,10 +257,8 @@ test('adding a new person should allow for another new person to be created afte
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/abc123`);
     person_count = store.find('person').get('length');
   });
-  page.roleClickDropdown();
-  page.roleClickOptionOne();
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
+  selectChoose('.t-person-role-select', RD.nameOne);
+  selectChoose('.t-status-select', SD.activeNameTranslated);
   ajax(`${PEOPLE_URL}abc123/`, 'PUT', JSON.stringify(multi_new_put_payload), {}, 200, {});
   generalPage.save();
   andThen(() => {

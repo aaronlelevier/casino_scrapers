@@ -64,6 +64,8 @@ export default PageObject.create({
   firstNameFill: fillable('.t-person-first-name'),
   middleInitialFill: fillable('.t-person-middle-initial'),
   lastNameFill: fillable('.t-person-last-name'),
+  titleFillIn: fillable('.t-person-title'),
+  employeeIdFillIn: fillable('.t-person-employee_id'),
 
   usernameFillIn: fillable('.t-person-username'),
   username: value('.t-person-username'),

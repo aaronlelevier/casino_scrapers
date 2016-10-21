@@ -4,6 +4,7 @@ const PREFIX = config.APP.NAMESPACE;
 
 // API Urls
 export const ADMIN_URL = `${PREFIX}/admin/`;
+export const ADMIN_MOBILE_URL = `${PREFIX}/admin-mobile/`;
 export const ADMIN_TRANSLATIONS_URL = `${PREFIX}/admin/translations/`;
 export const AUTOMATION_URL = `${PREFIX}/admin/automations/`;
 export const AUTOMATION_ACTION_TYPES_URL = `${PREFIX}/admin/automation-action-types/`;

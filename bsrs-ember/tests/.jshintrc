@@ -7,6 +7,8 @@
     "uploadFile",
     "ajax",
     "patchRandom",
+    "pagination",
+    "pagination2",
     "patchRandomAsync",
     "clearAll",
     "saveFilterSet",

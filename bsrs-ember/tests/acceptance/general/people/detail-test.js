@@ -37,6 +37,7 @@ import page from 'bsrs-ember/tests/pages/person';
 import inputCurrencyPage from 'bsrs-ember/tests/pages/input-currency';
 import random from 'bsrs-ember/models/random';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import { LOCALE_SELECT } from 'bsrs-ember/tests/helpers/const-names';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
 import BASEURLS, { PEOPLE_URL, ROLES_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
@@ -1161,15 +1162,7 @@ test('can change locale to inactive for person and save (power select)', (assert
   andThen(() => {
     assert.equal(page.localeInput, PD.localeFull);
   });
-  page.localeClickDropdown();
-  andThen(() => {
-    assert.equal(page.localeOptionLength, 2);
-    assert.equal(page.localeOne, PD.localeFull);
-    assert.equal(page.localeTwo, PD.localeTwoFull);
-    const person = store.find('person', PD.idOne);
-    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  });
-  page.localeClickOptionTwo();
+  selectChoose(LOCALE_SELECT, PD.localeTwo);
   andThen(() => {
     const person = store.find('person', PD.idOne);
     assert.equal(person.get('locale_fk'), LOCALED.idOne);
@@ -1197,8 +1190,7 @@ test('when changing the locale for a user (not current user), the language is no
     assert.equal(page.localeInput, PD.localeFull);
     assert.equal(find('.t-person-first-name').prop('placeholder'), 'First Name');
   });
-  page.localeClickDropdown();
-  page.localeClickOptionTwo();
+  selectChoose(LOCALE_SELECT, PD.localeTwo);
   andThen(() => {
     assert.equal(find('.t-person-first-name').prop('placeholder'), 'First Name');
   });

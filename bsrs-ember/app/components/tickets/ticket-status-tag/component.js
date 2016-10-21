@@ -6,7 +6,9 @@ var TicketStatusTag = Ember.Component.extend({
     let tagClass = this.get('item.status_class');
     return `tag ${tagClass}`;
   }),
-  classNameBindings: ['className']
+  classNameBindings: ['className'],
+  testId: 'status-tag',
+  attributeBindings: ['testId:data-test-id'],
 });
 
 export default TicketStatusTag;

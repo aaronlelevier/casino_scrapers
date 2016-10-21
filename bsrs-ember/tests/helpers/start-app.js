@@ -9,6 +9,7 @@ import random from 'bsrs-ember/models/random';
 import './ember-i18n/test-helpers';
 import substring_up_to_num from './substring_up_to_num';
 import substringBreadcrumb from './substring-breadcrumb';
+import { pginator as pagination, pginator2 as pagination2 } from './pagination';
 import setWidth from './set-width';
 import uuidReset from './uuid-reset';
 import registerPowerSelectHelpers from '../../tests/helpers/ember-power-select';
@@ -152,7 +153,8 @@ Ember.Test.registerAsyncHelper('patchRandomAsync', patchRandomAsync);
 export default function startApp(attrs) {
   let application;
 
-  let attributes = Ember.assign({}, config.APP, attrs);
+  let attributes = Ember.merge({}, config.APP);
+  attributes = Ember.merge(attributes, attrs);
 
   // Mock english translations
   var request = { url: '/api/translations/?locale=en&timezone=America/Los_Angeles' , method: 'GET' };

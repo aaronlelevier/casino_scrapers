@@ -11,6 +11,7 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from utils.helpers import get_model_class
 from utils.models import BaseModel, BaseManager, BaseQuerySet
 
 
@@ -76,9 +77,8 @@ class Locale(BaseModel):
 
     @property
     def translation_(self):
-        model = (ContentType.objects.get(model="translation")
-                                    .model_class())
-        return model.objects.get(locale=self)
+        Translation = get_model_class("translation")
+        return Translation.objects.get(locale=self)
 
 
 @receiver(post_save, sender=Locale)

@@ -11,6 +11,7 @@ from django.db import models
 from twilio import TwilioRestException
 from twilio.rest import TwilioRestClient
 
+from automation.helpers import Interpolate
 from utils.fields import MyGenericForeignKey
 from utils.models import BaseModel, BaseManager, BaseQuerySet, BaseNameOrderModel
 
@@ -80,10 +81,6 @@ class BaseContactModel(BaseModel):
     class Meta:
         abstract = True
 
-    def save(self, *args, **kwargs):
-        self.object_id = self.content_object.id
-        return super(BaseContactModel, self).save(*args, **kwargs)
-
 
 class PhoneNumberType(BaseNameOrderModel):
     TELEPHONE = 'admin.phonenumbertype.telephone'
@@ -109,7 +106,7 @@ class PhoneNumberManager(BaseManager):
 
     queryset_cls = PhoneNumberQuerySet
 
-    def process_send_sms(self, action):
+    def process_send_sms(self, ticket, action, event):
         Person = ContentType.objects.get(app_label="person", model="person").model_class()
 
         for person in Person.objects.filter(id__in=action.content.get('recipients', [])):
@@ -120,7 +117,8 @@ class PhoneNumberManager(BaseManager):
                             "because has no CELL phone number on file, for SMS with body: {body}"
                             .format(person=person, body=action.content['body']))
             else:
-                body = action.content.get('body', '')
+                interpolate = Interpolate(ticket, person.locale.translation_, event=event)
+                body = interpolate.text(action.content.get('body', ''))
                 self.send_sms(ph, body)
 
     def send_sms(self, ph, body):
@@ -249,13 +247,27 @@ class EmailManager(BaseManager):
 
     queryset_cls = EmailQuerySet
 
-    def process_send_email(self, action):
+    def process_send_email(self, ticket, action, event):
+        """
+        Process the recipients on this Email Action, and if they're
+        emailable, send them an email.
+
+        :param ticket: Ticket instance being processed
+        :param action:
+            AutomationAction instance of Type "email" which has info
+            about who to email and what to say
+        :param event:
+            AutomationEvent string name of the event that triggered
+            the automation
+        """
         Person = ContentType.objects.get(app_label="person", model="person").model_class()
 
         for person in Person.objects.filter(id__in=action.content.get('recipients', [])):
             for email in person.emails.filter(type__name=EmailType.WORK):
-                subject = action.content.get('subject', '')
-                body = action.content.get('body', '')
+                interpolate = Interpolate(ticket, person.locale.translation_, event=event)
+
+                subject = interpolate.text(action.content.get('subject', ''))
+                body = interpolate.text(action.content.get('body', ''))
                 self.send_email(email, subject, body)
 
     def send_email(self, email, subject, body):
@@ -264,10 +276,10 @@ class EmailManager(BaseManager):
         """
         from_email, to = settings.EMAIL_HOST_USER, settings.EMAIL_HOST_USER
         text_content = body
-        html_content = """
-        <p>Email: <strong>{email.email}</strong></p>
-        <p>{body}</p>
-        """.format(body=body, email=email)
+        # TODO: need to add a decorate HTML method here. at this point,
+        # the text is translated, and variables will be values, but no
+        # html. Only line breaks.
+        html_content = body
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()

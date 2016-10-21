@@ -1,12 +1,11 @@
 import Ember from 'ember';
 const { computed } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
-import NewMixin from 'bsrs-ember/mixins/model/new';
 import inject from 'bsrs-ember/utilities/store';
 
 const { run } = Ember;
 
-var TranslationModel = Model.extend(NewMixin, {
+var TranslationModel = Model.extend({
   simpleStore: Ember.inject.service(),
   key: computed.alias('id'),
   locales: computed(function() {

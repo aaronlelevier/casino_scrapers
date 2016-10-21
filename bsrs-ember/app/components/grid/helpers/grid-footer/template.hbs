@@ -6,15 +6,15 @@
     <div class="col-md-8">
       <nav class="text-center">
         <ul class="pagination t-pages">
-          <li class="t-first {{if first '' 'disabled'}}" title="First" disabled={{if first disabled ''}}>{{#link-to list_url (query-params page=first) disabled=notFirst}}&laquo;{{/link-to}}</li>
-          <li class="t-previous {{if previous '' 'disabled'}}" title="Last" disabled={{if previous disabled ''}}>{{#link-to list_url (query-params page=previous) disabled=notPrevious}}&lsaquo;{{/link-to}}</li>
+          <li class="t-first {{if first '' 'disabled'}}" title="First" disabled={{if first disabled ''}} {{action "scrollTop"}}>{{#link-to list_url (query-params page=first) disabled=notFirst}}&laquo;{{/link-to}}</li>
+          <li class="t-previous {{if previous '' 'disabled'}}" title="Last" disabled={{if previous disabled ''}} {{action "scrollTop"}}>{{#link-to list_url (query-params page=previous) disabled=notPrevious}}&lsaquo;{{/link-to}}</li>
           {{#each shown_pages as |page|}}
-          <li class="t-page">
-            {{#link-to list_url (query-params page=page)}}{{page}}{{/link-to}}
-          </li>
+            <li class="t-page" {{action "scrollTop"}}>
+              {{#link-to list_url (query-params page=page)}}{{page}}{{/link-to}}
+            </li>
           {{/each}}
-          <li class="t-next {{if next '' 'disabled'}}" title="Next" disabled={{if next disabled ''}}>{{#link-to list_url (query-params page=next) disabled=notNext}}&rsaquo;{{/link-to}}</li>
-          <li class="t-last {{if last '' 'disabled'}}" title="Last" disabled={{if last disabled ''}}>{{#link-to list_url (query-params page=last) disabled=notLast}}&raquo;{{/link-to}}</li>
+          <li class="t-next {{if next '' 'disabled'}}" title="Next" disabled={{if next disabled ''}} {{action "scrollTop"}}>{{#link-to list_url (query-params page=next) disabled=notNext}}&rsaquo;{{/link-to}}</li>
+          <li class="t-last {{if last '' 'disabled'}}" title="Last" disabled={{if last disabled ''}} {{action "scrollTop"}}>{{#link-to list_url (query-params page=last) disabled=notLast}}&raquo;{{/link-to}}</li>
         </ul>
       </nav>
     </div>

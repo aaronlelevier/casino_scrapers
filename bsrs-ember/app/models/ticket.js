@@ -8,7 +8,6 @@ import computed from 'ember-computed-decorators';
 import equal from 'bsrs-ember/utilities/equal';
 import CategoriesMixin from 'bsrs-ember/mixins/model/category';
 import TicketLocationMixin from 'bsrs-ember/mixins/model/ticket/location';
-import NewMixin from 'bsrs-ember/mixins/model/new';
 import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
 import AttachmentMixin from 'bsrs-ember/mixins/model/attachment';
 import { belongs_to, change_belongs_to } from 'bsrs-components/attr/belongs-to';
@@ -50,7 +49,7 @@ const Validations = buildValidations({
 
 const { run } = Ember;
 
-var TicketModel = Model.extend(NewMixin, CategoriesMixin, TicketLocationMixin, OptConf, Validations, AttachmentMixin, {
+var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Validations, AttachmentMixin, {
   init() {
     this.requestValues = []; //store array of values to be sent in dt post or put request field
     belongs_to.bind(this)('status', 'ticket', {bootstrapped:true});

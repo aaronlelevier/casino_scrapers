@@ -44,12 +44,7 @@ test('initial load should only show first 10 records ordered by fullname with co
     assert.equal(find('.t-grid-data:eq(0) .t-person-fullname').text().trim(), PD.fullname);
     assert.equal(find('.t-grid-data:eq(0) .t-person-title').text().trim(), PD.title);
     assert.equal(find('.t-grid-data:eq(0) .t-person-role-name').text().trim(), RD.nameOne);
-    var pagination = find('.t-pages');
-    assert.equal(pagination.find('.t-page').length, PAGE_SIZE/5);
-    assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
-    assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
-    assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
-    assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
+    pagination(assert);
   });
 });
 
@@ -64,12 +59,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     assert.equal(currentURL(), PEOPLE_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-2);
     assert.equal(find('.t-grid-data:eq(0) .t-person-username').text().trim(), 'scott11');
-    var pagination = find('.t-pages');
-    assert.equal(pagination.find('.t-page').length, 2);
-    assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
-    assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
-    assert.ok(!pagination.find('.t-page:eq(0) a').hasClass('active'));
-    assert.ok(pagination.find('.t-page:eq(1) a').hasClass('active'));
+    pagination2(assert);
   });
   click('.t-page:eq(0) a');
   andThen(() => {
@@ -78,12 +68,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     assert.equal(currentURL(),PEOPLE_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-person-username').text().trim(), PD.username);
-    var pagination = find('.t-pages');
-    assert.equal(pagination.find('.t-page').length, 2);
-    assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
-    assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
-    assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
-    assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
+    pagination(assert);
   });
 });
 
@@ -508,8 +493,8 @@ test('picking a different number of pages will alter the query string and xhr', 
     assert.equal(find('.t-page-size option:selected').text(), `${PAGE_SIZE} per page`);
     var pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 2);
-    assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
-    assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
+    assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
+    assert.equal(pagination.find('.t-page:eq(1) a').text().trim(), '2');
     assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
     assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
   });
@@ -519,8 +504,8 @@ test('picking a different number of pages will alter the query string and xhr', 
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-2);
     var pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 2);
-    assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
-    assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
+    assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
+    assert.equal(pagination.find('.t-page:eq(1) a').text().trim(), '2');
     assert.ok(!pagination.find('.t-page:eq(0) a').hasClass('active'));
     assert.ok(pagination.find('.t-page:eq(1) a').hasClass('active'));
   });
@@ -531,7 +516,7 @@ test('picking a different number of pages will alter the query string and xhr', 
     assert.equal(find('.t-page-size option:selected').text(), `${updated_pg_size} per page`);
     var pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 1);
-    assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+    assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
     assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
   });
   alterPageSize('.t-page-size', PAGE_SIZE);
@@ -541,8 +526,8 @@ test('picking a different number of pages will alter the query string and xhr', 
     assert.equal(find('.t-page-size option:selected').text(), `${PAGE_SIZE} per page`);
     var pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 2);
-    assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
-    assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
+    assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
+    assert.equal(pagination.find('.t-page:eq(1) a').text().trim(), '2');
     assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
     assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
   });
@@ -560,7 +545,7 @@ test(`starting with a page size greater than ${PAGE_SIZE} will set the selected`
     assert.equal(find('.t-page-size option:selected').text(), `${updated_size} per page`);
     var pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 1);
-    assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+    assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
     assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
   });
 });

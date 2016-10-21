@@ -9,6 +9,7 @@ from automation import helpers
 from automation.tests.factory import create_automation_event
 from person.models import Role
 from person.tests.factory import create_single_person, create_role
+from ticket.models import TicketPriority
 from ticket.tests.factory import create_standard_ticket
 from translation.tests.factory import create_translation_keys_for_fixtures
 
@@ -18,10 +19,11 @@ class InterpolateTests(TestCase):
     def setUp(self):
         self.person = create_single_person()
         self.ticket = create_standard_ticket()
-        self.automation = stub(event=create_automation_event())
+        self.event = create_automation_event()
+        self.automation = stub(event=self.event)
         self.translation = create_translation_keys_for_fixtures()
         self.interpolate = helpers.Interpolate(
-            self.ticket, self.automation, self.translation)
+            self.ticket, self.translation, event=self.event)
 
     def test_text(self):
         s = "Emergency at {{location.name}} priority {{ticket.priority}} to view the ticket go to {{ticket.url}}"
@@ -57,6 +59,10 @@ class InterpolateTests(TestCase):
         self.interpolate.text(s)
         self.assertEqual(mock_func.call_args[0][0], 'email/ticket-activities.html')
         self.assertEqual(mock_func.call_args[0][1], {'ticket': self.ticket})
+
+    def test_text__empty_string(self):
+        s = ''
+        self.assertEqual(self.interpolate.text(s), '')
 
     def test_get_raw_tags(self):
         s = "Emergency at {{location.name}} with priority {{ticket.priority}}"

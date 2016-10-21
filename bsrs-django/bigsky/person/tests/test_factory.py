@@ -38,6 +38,7 @@ class DistrictManagerFactoryTests(TestCase):
 
         self.assertEqual(location_level, self.dm.role.location_level)
         self.assertEqual(location_level.name, LOCATION_DISTRICT)
+        self.assertIsInstance(location_level.tenant, Tenant)
         self.assertEqual(
             self.dm.location.location_level,
             self.dm.location_level

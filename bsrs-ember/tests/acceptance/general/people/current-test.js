@@ -44,8 +44,7 @@ test('when changing the locale for the current user, the language is updated on 
     assert.equal(find('.t-person-first-name').val(), PD.first_name);
     assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
   });
-  page.localeClickDropdown();
-  page.localeClickOptionTwo();
+  selectChoose('.t-locale-select', PD.localeTwo);
   andThen(() => {
     assert.equal(find('.t-person-first-name').prop("placeholder"), "Nombre de pila");
   });
@@ -60,8 +59,7 @@ test('when rolling back the locale the current locale is also changed back', (as
     assert.equal(find('.t-person-first-name').val(), PD.first_name);
     assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
   });
-  page.localeClickDropdown();
-  page.localeClickOptionTwo();
+  selectChoose('.t-locale-select', PD.localeTwo);
   andThen(() => {
     assert.equal(find('.t-person-first-name').prop("placeholder"), "Nombre de pila");
   });

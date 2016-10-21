@@ -41,6 +41,11 @@ export default PageObject.create({
   visitDetail: visitable(DETAIL_URL),
   visitNew: visitable(NEW_URL),
 
+  nameFillIn: fillable('.t-location-name'),
+  nameValue: value('.t-location-name'),
+  numberFillIn: fillable('.t-location-number'),
+  numberValue: value('.t-location-number'),
+
   locationLevelInput: text(LOCATIONLEVEL),
   locationLevelClickDropdown: clickable(LOCATIONLEVEL),
   locationLevelClickOptionOne: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${LLD.nameCompany})`),

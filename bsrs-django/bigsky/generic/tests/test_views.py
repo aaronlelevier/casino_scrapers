@@ -269,8 +269,6 @@ class ExportDataTests(APITestCase):
     @patch("generic.views.ExportData._write_file")
     def test_export(self, mock_func):
         model_name = "person"
-        content_type = ContentType.objects.get(model=model_name)
-        model = content_type.model_class()
         # file info
         export_data = ExportData()
         raw_content = "{}{}{}".format(settings.MEDIA_URL,
@@ -299,8 +297,6 @@ class ExportDataTests(APITestCase):
     @patch("generic.views.ExportData._write_file")
     def test_export__filtered(self, mock_func):
         model_name = "person"
-        content_type = ContentType.objects.get(model=model_name)
-        model = content_type.model_class()
         export_data = ExportData()
         raw_content = "{}{}{}".format(settings.MEDIA_URL,
                                       export_data.downloads_sub_path,

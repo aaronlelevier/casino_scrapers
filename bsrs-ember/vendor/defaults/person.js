@@ -63,7 +63,9 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
 
       scott_username: 'scott11',
       donald_first_name: 'Donald',
+      donald_middle_initial: 'D',
       donald_last_name: 'Trump',
+      donald_employee_id: '666',
       donald: 'Donald Trump',
       nameOne: 'wanker',
       nameTwo: 'bonker',

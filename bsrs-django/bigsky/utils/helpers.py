@@ -92,3 +92,23 @@ def remove_related(related_model):
 
 def clear_related(model, related_name):
     getattr(model, related_name).all().delete()
+
+# related model crud: end
+
+
+def get_model_class(model):
+    """
+    Can use this method to import a model class.
+
+    :param model:
+        string name of the model as all one word
+        i.e. TicketStatus would be: "ticketstatus"
+    """
+    return ContentType.objects.get(model=model).model_class()
+
+
+class KwargsAsObject(object):
+
+    def __init__(self, **kwargs):
+        for k, v in kwargs.items():
+            setattr(self, k, v)
