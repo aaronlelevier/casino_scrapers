@@ -12,12 +12,13 @@ import SMSD from 'bsrs-ember/vendor/defaults/sendsms';
 import SMSJRD from 'bsrs-ember/vendor/defaults/generic-join-recipients';
 import SEDJRD from 'bsrs-ember/vendor/defaults/generic-join-recipients';
 import PD from 'bsrs-ember/vendor/defaults/person';
+import page from 'bsrs-ember/tests/pages/automation';
 
 var store, action, actionType, type, assignee, priority, sendEmail, sendsms;
 
-moduleFor('model:automation-action', 'Unit | Model | automation-action', {
+moduleFor('model:automation-action', 'terrance Unit | Model | automation-action', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:generic-join-recipients', 'model:generic-join-recipients', 'model:person', 'model:ticket-priority', 'model:ticket-status', 'model:sendemail', 'model:sendsms', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type']);
+    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:generic-join-recipients', 'model:generic-join-recipients', 'model:person', 'model:ticket-priority', 'model:ticket-status', 'model:sendemail', 'model:sendsms', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type', 'validator:belongs-to']);
   }
 });
 
@@ -353,7 +354,6 @@ test('type validation - assignee - if the type is assignee, a related assignee i
   });
   assert.equal(action.get('validations.isValid'), false);
   action.change_type({id: ATD.idOne, key: ATD.keyOne});
-  assert.equal(action.get('validations.isValid'), false);
   action.change_assignee({id: PersonD.idOne});
   assert.equal(action.get('validations.isValid'), true);
 });
@@ -364,12 +364,44 @@ test('type validation - priority - if the type is priority, a related priority i
   });
   assert.equal(action.get('validations.isValid'), false);
   action.change_type({id: ATD.idTwo, key: ATD.keyTwo});
-  assert.equal(action.get('validations.isValid'), false);
   action.change_priority({id: TPD.idOne});
   assert.equal(action.get('validations.isValid'), true);
 });
 
-// Action - Priority
+test('type validation - sendemail - if the type is sendemail, a related sendemail is required', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne});
+  });
+  assert.equal(action.get('validations.isValid'), false);
+  action.change_type({id: ATD.idTwo, key: ATD.keyFour});
+  action.change_sendemail({id: SED.idOne});
+  assert.equal(action.get('validations.isValid'), false);   
+  const sendemail = store.find('sendemail', SED.idOne);
+  sendemail.set('body', 'watter');
+  assert.equal(action.get('validations.isValid'), false);   
+  sendemail.set('subject', 'watter');
+  assert.equal(action.get('validations.isValid'), false);   
+  sendemail.add_recipient({id: PD.idOne});
+  assert.equal(action.get('validations.isValid'), true);   
+});
+
+test('type validation -sendsms - if the tyoe is sendsms, a related sendsms is required', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne});
+  });
+  assert.equal(action.get('validations.isValid'), false);
+  action.change_type({id: ATD.idTwo, key: ATD.keyFive});
+  action.change_sendsms({id: SMSD.idOne});
+  assert.equal(action.get('validations.isValid'), false);   
+  const sendsms = store.find('sendsms', SMSD.idOne);
+  console.log(sendsms);
+  sendsms.set('message', 'message section');
+  assert.equal(action.get('validations.isValid'), false);   
+  sendsms.add_recipient({id: PD.idOne});
+  assert.equal(action.get('validations.isValid'), true);   
+});
+
+// Action - sendemail
 
 test('action has a related priority', assert => {
   run(() => {

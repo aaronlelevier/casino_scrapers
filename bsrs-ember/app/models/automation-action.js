@@ -7,13 +7,12 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/automation-action';
 import SaveAndRollbackRelatedMixin from 'bsrs-ember/mixins/model/save-and-rollback-related';
 
 const Validations = buildValidations({
-  type: [
-    validator('presence', {
+  type: validator('presence', {
       presence: true,
       message: 'errors.automation.type'
-    }),
-    validator('automation-action-type')
-  ]
+  }),
+  sendemail: validator('belongs-to'),
+  sendsms: validator('belongs-to'),
 });
 
 export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {

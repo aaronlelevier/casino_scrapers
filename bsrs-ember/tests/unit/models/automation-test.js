@@ -24,7 +24,7 @@ import AutomationModel from 'bsrs-ember/models/automation';
 var store, automation, event, action, actionType, pfilter, pf;
 
 moduleFor('model:automation', 'Unit | Model | automation', {
-  needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username', 'validator:has-many', 'validator:automation-action-type'],
+  needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username', 'validator:has-many', 'validator:belongs-to', 'validator:automation-action-type'],
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-event', 'model:automation-join-event', 'model:automation-join-pfilter', 'model:generic-join-recipients' , 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'model:person', 'model:person-current', 'model:ticket-priority', 'model:sendsms', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     run(() => {
