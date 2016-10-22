@@ -12,9 +12,6 @@ import PNTD from 'bsrs-ember/vendor/defaults/phone-number-type';
 import PND from 'bsrs-ember/vendor/defaults/phone-number';
 import PPHD from 'bsrs-ember/vendor/defaults/person-join-phonenumber';
 import PEMD from 'bsrs-ember/vendor/defaults/person-join-email';
-// import AF from 'bsrs-ember/vendor/address_fixtures';
-// import ATD from 'bsrs-ember/vendor/defaults/address-type';
-// import AD from 'bsrs-ember/vendor/defaults/address';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import PERSON_LD from 'bsrs-ember/vendor/defaults/person-location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
@@ -23,7 +20,7 @@ var store, person, role;
 
 module('unit: model | person test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency', 'model:phonenumber', 'model:phone-number-type', 'model:location', 'model:location-level', 'model:person-location', 'service:currency','service:person-current','service:translations-fetcher','service:i18n', 'model:uuid', 'model:status', 'model:person-join-phonenumber', 'model:person-join-email', 'model:email', 'model:email-type', 'model:locale', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many']);
+    store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency', 'model:phonenumber', 'model:phone-number-type', 'model:location', 'model:location-level', 'model:person-location', 'service:currency','service:person-current','service:translations-fetcher','service:i18n', 'model:uuid', 'model:status', 'model:person-join-phonenumber', 'model:person-join-email', 'model:email', 'model:email-type', 'model:locale', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'model:attachment']);
     run(() => {
       person = store.push('person', {id: PD.idOne, first_name: PD.first_name, last_name: PD.last_name, role_fk: RD.idOne, status_fk: SD.activeId, locale_fk: LOCALED.idOne, detail: true});
       role = store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.idOne]});
@@ -44,11 +41,6 @@ test('fullname property is a computed of first and last', (assert) => {
 // test('related phone numbers are not dirty when no phone numbers present', (assert) => {
 //   let phone_number = store.push('phonenumber', {id: PND.idOne, type: PNTD.officeId, model_fk: PD.unusedId});
 //   assert.ok(person.get('phonenumbersIsNotDirty'));
-// });
-
-// test('related addresses are not dirty when no addresses present', (assert) => {
-//   let address = store.push('address', {id: AD.idOne, type: ATD.officeId, model_fk: PD.unusedId});
-//   assert.ok(person.get('addressesIsNotDirty'));
 // });
 
 /* LOCALE */
@@ -254,6 +246,75 @@ test('related role is not dirty if after rollback and save', (assert) => {
   assert.equal(person.get('role_fk'), RD.idTwo);
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(person.get('roleIsNotDirty'));
+});
+
+/* PHOTO */
+
+test('related photo should return one photo for a person', (assert) => {
+  store.push('attachment', {id: 9});
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(person.get('photoIsNotDirty'), true);
+});
+
+test('change_photo will update the persons photo and dirty the model', (assert) => {
+  let inactive_photo = store.push('attachment', {id: 9, people: []});
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(person.get('photo_fk'), undefined);
+  assert.equal(person.get('photo.id'), undefined);
+  person.change_photo(inactive_photo.get('id'));
+  assert.equal(person.get('photo_fk'), undefined);
+  assert.equal(person.get('photo.id'), 9);
+  assert.ok(person.get('isDirtyOrRelatedDirty'));
+  assert.ok(person.get('photoIsDirty'));
+});
+
+test('save person will set photo_fk to current photo id', (assert) => {
+  let inactive_photo = store.push('attachment', {id: 9, people: []});
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  person.change_photo(inactive_photo.get('id'));
+  assert.equal(person.get('photo_fk'), undefined);
+  assert.equal(person.get('photo.id'), 9);
+  assert.ok(person.get('isDirtyOrRelatedDirty'));
+  assert.ok(person.get('photoIsDirty'));
+  person.saveRelated();
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(!person.get('photoIsDirty'));
+  assert.equal(person.get('photo_fk'), 9);
+  assert.equal(person.get('photo.id'), 9);
+});
+
+test('rollback person will set photo to current photo_fk', (assert) => {
+  let inactive_photo = store.push('attachment', {id: 9, people: []});
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  person.change_photo(inactive_photo.get('id'));
+  assert.equal(person.get('photo_fk'), undefined);
+  assert.equal(person.get('photo.id'), 9);
+  assert.ok(person.get('isDirtyOrRelatedDirty'));
+  assert.ok(person.get('photoIsDirty'));
+  person.rollback();
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(!person.get('photoIsDirty'));
+  assert.equal(person.get('photo.id'), undefined);
+  assert.equal(person.get('photo_fk'), undefined);
+});
+
+test('rollback person will set photo to old photo_fk', (assert) => {
+  store.push('person', {id: PD.idOne, photo_fk: 9});
+  let active_photo = store.push('attachment', {id: 9, people: [PD.idOne]});
+  let inactive_photo = store.push('attachment', {id: 8, people: []});
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(person.get('photo_fk'), 9);
+  assert.equal(person.get('photo.id'), 9);
+  person.change_photo(inactive_photo.get('id'));
+  assert.equal(person.get('photo_fk'), 9);
+  assert.equal(person.get('photo.id'), 8);
+  assert.ok(person.get('isDirtyOrRelatedDirty'));
+  assert.ok(person.get('photoIsDirty'));
+  person.rollback();
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(!person.get('photoIsDirty'));
+  assert.equal(person.get('photo.id'), 9);
+  assert.equal(person.get('photo_fk'), 9);
 });
 
 /* PHONE NUMBERS */
@@ -596,13 +657,6 @@ test('when email is removed after render, the person model is dirty (two emails)
 //   assert.ok(person.get('phonenumbersIsNotDirty'));
 // });
 
-// // test('related addresses are not dirty with original addresses model', (assert) => {
-// //   person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne]});
-// //   let address = store.push('address', {id: AD.idOne, type: ATD.officeId, model_fk: PD.idOne});
-// //   assert.ok(person.get('addressesIsNotDirty'));
-// // });
-
-
 // test('related phone number model is dirty when phone number is dirty (and phone number is not newly added)', (assert) => {
 //   person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne]});
 //   let phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, phone_number_type_fk: PNTD.officeId, model_fk: PD.idOne});
@@ -613,18 +667,6 @@ test('when email is removed after render, the person model is dirty (two emails)
 //   assert.ok(phone_number.get('isDirtyOrRelatedDirty'));
 //   assert.ok(person.get('phonenumbersIsDirty'));
 // });
-
-// // test('related address model is dirty when address is dirty (and address is not newly added)', (assert) => {
-// //   person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne]});
-// //   let address = store.push('address', {id: AD.idOne, type: ATD.officeId, model_fk: PD.idOne});
-// //   assert.ok(person.get('addressesIsNotDirty'));
-// //   assert.ok(address.get('isNotDirty'));
-// //   address.set('type', ATD.shippingId);
-// //   assert.ok(address.get('isDirty'));
-// //   assert.ok(person.get('addressesIsDirty'));
-// //   assert.ok(person.get('isDirtyOrRelatedDirty'));
-// // });
-
 
 // test('person dirty tracks their emails and email types', (assert) => {
 //   store.clear('person');
@@ -696,22 +738,6 @@ test('when email is removed after render, the person model is dirty (two emails)
 //   assert.ok(person.get('phonenumbersIsNotDirty'));
 // });
 
-// // test('save related will iterate over each address and save that model', (assert) => {
-// //   person = store.push('person', {id: PD.idOne});
-// //   let first_address = store.push('address', {id: AD.idOne, address: AD.streetOne,  type: ATD.officeId, model_fk: PD.idOne});
-// //   let second_address = store.push('address', {id: AD.idTwo, address: AD.streetTwo, type: ATD.shippingId, model_fk: PD.idOne});
-// //   assert.ok(person.get('addressesIsNotDirty'));
-// //   first_address.set('type', ATD.shippingId);
-// //   assert.ok(person.get('addressesIsDirty'));
-// //   person.saveAddresses();
-// //   assert.ok(person.get('addressesIsNotDirty'));
-// //   second_address.set('type', ATD.officeId);
-// //   assert.ok(person.get('addressesIsDirty'));
-// //   person.saveAddresses();
-// //   assert.ok(person.get('addressesIsNotDirty'));
-// // });
-
-
 // test('savePhoneNumbers will remove any phone number model with no (valid) value', (assert) => {
 //   person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne, PND.idTwo, PND.idThree]});
 //   let first_phone_number = store.push('phonenumber', {id: PND.idOne, type: PNTD.officeId, model_fk: PD.idOne});
@@ -736,31 +762,6 @@ test('when email is removed after render, the person model is dirty (two emails)
 //   assert.equal(store.find('phonenumber').get('length'), 0);
 // });
 
-// // test('saveAddresses will remove any address model with no (valid) value', (assert) => {
-// //   person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne, AD.idTwo, AD.idThree]});
-// //   let first_address = store.push('address', {id: AD.idOne, type: ATD.officeId, model_fk: PD.idOne});
-// //   let second_address = store.push('address', {id: AD.idTwo, type: ATD.officeId, model_fk: PD.idOne});
-// //   let third_address = store.push('address', {id: AD.idThree, type: ATD.officeId, model_fk: PD.idOne});
-// //   first_address.set('type', ATD.officeId);
-// //   second_address.set('type', ATD.officeId);
-// //   third_address.set('type', ATD.officeId);
-// //   first_address.set('address', AD.streetOne);
-// //   second_address.set('address', AD.streetTwo);
-// //   assert.equal(store.find('address').get('length'), 3);
-// //   person.saveAddresses();
-// //   assert.equal(store.find('address').get('length'), 2);
-// //   assert.equal(store.find('address').objectAt(0).get('id'), AD.idOne);
-// //   assert.equal(store.find('address').objectAt(1).get('id'), AD.idTwo);
-// //   first_address.set('address', '');
-// //   person.saveAddresses();
-// //   assert.equal(store.find('address').get('length'), 1);
-// //   assert.equal(store.find('address').objectAt(0).get('id'), AD.idTwo);
-// //   second_address.set('address', ' ');
-// //   person.saveAddresses();
-// //   assert.equal(store.find('address').get('length'), 0);
-// // });
-
-
 // test('phoneNumbersDirty behaves correctly for phone numbers (newly) added', (assert) => {
 //   person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne, PND.idTwo, PND.idThree]});
 //   let first_phone_number = store.push('phonenumber', {id: PND.idOne, type: PNTD.officeId, model_fk: PD.idOne});
@@ -774,20 +775,6 @@ test('when email is removed after render, the person model is dirty (two emails)
 //   assert.ok(person.get('phonenumbersIsNotDirty'));
 // });
 
-// // test('addressesIsDirty behaves correctly for addresses (newly) added', (assert) => {
-// //   person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne, AD.idTwo, AD.idThree]});
-// //   let first_address = store.push('address', {id: AD.idOne, type: ATD.officeId, model_fk: PD.idOne});
-// //   let second_address = store.push('address', {id: AD.idTwo, type: ATD.shippingId, model_fk: PD.idOne});
-// //   let third_address = store.push('address', {id: AD.idThree, type: ATD.shippingId, model_fk: PD.idOne});
-// //   assert.equal(person.get('addresses').get('length'), 3);
-// //   assert.ok(person.get('addressesIsNotDirty'));
-// //   first_address.set('address', AD.streetOne);
-// //   assert.ok(person.get('addressesIsDirty'));
-// //   first_address.set('address', '');
-// //   assert.ok(person.get('addressesIsNotDirty'));
-// // });
-
-
 // test('phoneNumbersDirty behaves correctly for existing phone numbers', (assert) => {
 //   person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne]});
 //   let first_phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PNTD.officeId, model_fk: PD.idOne});
@@ -799,18 +786,6 @@ test('when email is removed after render, the person model is dirty (two emails)
 //   assert.ok(person.get('phonenumbersIsDirty'));
 // });
 
-// // test('addressesDirty behaves correctly for existing addresses', (assert) => {
-// //   person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne]});
-// //   let first_address = store.push('address', {id: AD.idOne, address: AD.streetOne, type: ATD.officeId, model_fk: PD.idOne});
-// //   assert.equal(person.get('addresses').get('length'), 1);
-// //   assert.ok(person.get('addressesIsNotDirty'));
-// //   first_address.set('address', AD.streetTwo);
-// //   assert.ok(person.get('addressesIsDirty'));
-// //   first_address.set('address', '');
-// //   assert.ok(person.get('addressesIsDirty'));
-// // });
-
-
 // test('phonenumbersIsDirty is false when a phone number is added but does not have a (valid) number', (assert) => {
 //   person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne, PND.idTwo, PND.idThree]});
 //   let first_phone_number = store.push('phonenumber', {id: PND.idOne, type: PNTD.officeId, model_fk: PD.idOne});
@@ -821,17 +796,6 @@ test('when email is removed after render, the person model is dirty (two emails)
 //   assert.equal(store.find('phonenumber').get('length'), 3);
 // });
 
-// // test('addressesIsDirty is false when an address is added but does not have a (valid) address', (assert) => {
-// //   person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne, AD.idTwo, AD.idThree]});
-// //   let first_address = store.push('address', {id: AD.idOne, type: ATD.officeId, model_fk: PD.idOne});
-// //   let second_address = store.push('address', {id: AD.idTwo, type: ATD.shippingId, model_fk: PD.idOne});
-// //   let third_address = store.push('address', {id: AD.idThree, type: ATD.shippingId, model_fk: PD.idOne});
-// //   assert.equal(store.find('address').get('length'), 3);
-// //   assert.ok(person.get('addressesIsNotDirty'));
-// //   assert.equal(store.find('address').get('length'), 3);
-// // });
-
-
 // test('phonenumbersIsDirty is false when a phone number is added but does not have a (valid) number without phone_number_fks', (assert) => {
 //   person = store.push('person', {id: PD.idOne, phone_number_fks: []});
 //   let first_phone_number = store.push('phonenumber', {id: PND.idOne, type: PNTD.officeId, model_fk: PD.idOne});
@@ -841,17 +805,6 @@ test('when email is removed after render, the person model is dirty (two emails)
 //   assert.ok(person.get('phonenumbersIsNotDirty'));
 //   assert.equal(store.find('phonenumber').get('length'), 3);
 // });
-
-// // test('addressesIsDirty is false when an address is added but does not have a (valid) address without address_fks', (assert) => {
-// //   person = store.push('person', {id: PD.idOne, address_fks: []});
-// //   let first_address = store.push('address', {id: AD.idOne, type: ATD.officeId, model_fk: PD.idOne});
-// //   let second_address = store.push('address', {id: AD.idTwo, type: ATD.shippingId, model_fk: PD.idOne});
-// //   let third_address = store.push('address', {id: AD.idThree, type: ATD.shippingId, model_fk: PD.idOne});
-// //   assert.equal(store.find('address').get('length'), 3);
-// //   assert.ok(person.get('addressesIsNotDirty'));
-// //   assert.equal(store.find('address').get('length'), 3);
-// // });
-
 
 // test('rollback related will iterate over each phone number and rollback that model', (assert) => {
 //   person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne, PND.idTwo]});
@@ -870,23 +823,6 @@ test('when email is removed after render, the person model is dirty (two emails)
 //   assert.ok(person.get('phonenumbersIsNotDirty'));
 // });
 
-// // test('rollback related will iterate over each address and rollback that model', (assert) => {
-// //   person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne, AD.idTwo]});
-// //   let first_address = store.push('address', {id: AD.idOne, address: AD.streetOne, type: ATD.officeId, model_fk: PD.idOne});
-// //   let second_address = store.push('address', {id: AD.idTwo, address: AD.streetTwo, type: ATD.shippingId, model_fk: PD.idOne});
-// //   assert.ok(person.get('addressesIsNotDirty'));
-// //   first_address.set('type', ATD.shippingId);
-// //   assert.ok(person.get('addressesIsDirty'));
-// //   assert.ok(first_address.get('isDirty'));
-// //   person.rollback();
-// //   assert.ok(person.get('addressesIsNotDirty'));
-// //   second_address.set('type', ATD.officeId);
-// //   assert.ok(second_address.get('isDirty'));
-// //   person.rollback();
-// //   assert.ok(person.get('addressesIsNotDirty'));
-// // });
-
-
 // test('when new phone number is added, the person model is not dirty unless number is altered', (assert) => {
 //   let phone_number_two;
 //   person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne]});
@@ -904,25 +840,6 @@ test('when email is removed after render, the person model is dirty (two emails)
 //   phone_number.set('number', '999-999-9999');
 //   assert.ok(person.get('isDirtyOrRelatedDirty'));
 // });
-
-// // test('when new address is added, the person model is not dirty unless address is altered', (assert) => {
-// //   let address_two;
-// //   person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne]});
-// //   let address = store.push('address', {id: AD.idOne, type: ATD.officeId, model_fk: PD.idOne});
-// //   assert.ok(person.get('addressesIsNotDirty'));
-// //   assert.ok(person.get('isNotDirty'));
-// //   run(function() {
-// //     address_two = store.push('address', {id: AD.idTwo, type: ATD.officeId, model_fk: PD.idOne});
-// //   });
-// //   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-// //   address_two.set('address', '123 Mexico');
-// //   assert.ok(person.get('isDirtyOrRelatedDirty'));
-// //   address_two.rollback();
-// //   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-// //   address.set('address', 'Big Sky Parkway');
-// //   assert.ok(person.get('isDirtyOrRelatedDirty'));
-// // });
-
 
 // test('when new phone number is added, the person model is dirty when the type or number attrs are modified', (assert) => {
 //   let phone_number_two;
@@ -946,27 +863,6 @@ test('when email is removed after render, the person model is dirty (two emails)
 //   assert.equal(phone_number.get('number'), '5');
 // });
 
-// // test('when new address is added, the person model is not dirty when the type or address attrs are modified', (assert) => {
-// //   let address_two;
-// //   person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne]});
-// //   let address = store.push('address', {id: AD.idOne, type: ATD.officeId, model_fk: PD.idOne});
-// //   assert.ok(person.get('addressesIsNotDirty'));
-// //   assert.ok(person.get('isNotDirty'));
-// //   run(function() {
-// //     address_two = store.push('address', {id: AD.idTwo, type: ATD.officeId, model_fk: PD.idOne});
-// //   });
-// //   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-// //   address_two.set('type', ATD.shippingId);
-// //   assert.ok(person.get('isDirtyOrRelatedDirty'));
-// //   address_two.rollback();
-// //   assert.equal(address_two.get('type'), ATD.officeId);
-// //   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-// //   address.set('address', 'Big Sky Parkway');
-// //   assert.ok(person.get('isDirtyOrRelatedDirty'));
-// //   assert.ok(address.get('address'),'Big Sky Parkway');
-// // });
-
-
 // test('when new phone number is added after render, the person model is not dirty when a new phone number is appended to the array of phone numbers', (assert) => {
 //   let added_phone_num;
 //   person = store.push('person', {id: PD.idOne});
@@ -979,19 +875,6 @@ test('when email is removed after render, the person model is dirty (two emails)
 //   assert.ok(person.get('isNotDirty'));
 //   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
 // });
-
-// // test('when new address is added after render, the person model is not dirty when new address is appended to the array of addresses', (assert) => {
-// //   let added_address;
-// //   person = store.push('person', {id: PD.idOne});
-// //   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-// //   assert.ok(person.get('isNotDirty'));
-// //   let addresses = person.get('addresses');
-// //   run(function() {
-// //     added_address = addresses.push({id: AD.idOne, type: ATD.officeId, model_fk: PD.idOne});
-// //   });
-// //   assert.ok(person.get('isNotDirty'));
-// //   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-// // });
 
 // test('when phone number is removed after render, the person model is dirty (two phone numbers)', (assert) => {
 //   person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne, PND.idTwo]});
@@ -1006,22 +889,6 @@ test('when email is removed after render, the person model is dirty (two emails)
 //   assert.ok(person.get('isNotDirty'));
 //   assert.ok(person.get('isDirtyOrRelatedDirty'));
 // });
-
-// // test('when address is removed after render, the person model is dirty (two addresses)', (assert) => {
-// //   person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne, AD.idTwo]});
-// //   let address = store.push('address', {id: AD.idOne, address: AD.streetOne, city: AD.cityOne, state: AD.stateOne, postal_code: AD.zipOne,
-// //                            type: ATD.officeId, model_fk: PD.idOne});
-// //                            store.push('address', {id: AD.idTwo, address: AD.streetTwo, city: AD.cityTwo, state: AD.stateTwo, postal_code: AD.zipOne,
-// //                                       type: ATD.officeId, model_fk: PD.idOne});
-// //                                       assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-// //                                       assert.ok(person.get('isNotDirty'));
-// //                                       let addresses = person.get('addresses');
-// //                                       run(function() {
-// //                                         addresses.remove(AD.idOne);
-// //                                       });
-// //                                       assert.ok(person.get('isNotDirty'));
-// //                                       assert.ok(person.get('isDirtyOrRelatedDirty'));
-// // });
 
 // test('when no phone number and new phone number is added and updated, expect related isDirty to be true', (assert) => {
 //   let phone_number;
@@ -1043,24 +910,6 @@ test('when email is removed after render, the person model is dirty (two emails)
 //   assert.ok(person.get('isDirtyOrRelatedDirty'));
 // });
 
-// // test('when no address and new address is added and updated, expect related isDirty to be true', (assert) => {
-// //   let address;
-// //   person = store.push('person', {id: PD.idOne});
-// //   store.push('address', {id: AD.idOne, type: ATD.officeId, model_fk: PD.idOne});
-// //   assert.ok(person.get('isNotDirty'));
-// //   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-// //   run(function() {
-// //     address = store.push('address', {id: AD.idTwo, type: ATD.officeId, model_fk: PD.idOne});
-// //   });
-// //   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-// //   address.set('type', ATD.shippingId);
-// //   assert.ok(person.get('isDirtyOrRelatedDirty'));
-// //   address.rollback();
-// //   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-// //   address.set('address', '123 Baja');
-// //   assert.ok(person.get('isDirtyOrRelatedDirty'));
-// // });
-
 // test('when phone number is removed after render, the person model is dirty', (assert) => {
 //   person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne]});
 //   let phone_number = store.push('phonenumber', {id: PND.idOne, type: PNTD.officeId, model_fk: PD.idOne});
@@ -1072,19 +921,6 @@ test('when email is removed after render, the person model is dirty (two emails)
 //   assert.ok(person.get('isNotDirty'));
 //   assert.ok(person.get('isDirtyOrRelatedDirty'));
 // });
-
-// // test('when address is removed after render, the person model is dirty', (assert) => {
-// //   person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne]});
-// //   let address = store.push('address', {id: AD.idOne, address: AD.streetOne, city: AD.cityOne, state: AD.stateOne, postal_code: AD.zipOne,
-// //                            type: ATD.officeId, model_fk: PD.idOne});
-// //                            assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-// //                            assert.ok(person.get('isNotDirty'));
-// //                            run(function() {
-// //                              store.push('address', {id: address.get('id'), removed: true});
-// //                            });
-// //                            assert.ok(person.get('isNotDirty'));
-// //                            assert.ok(person.get('isDirtyOrRelatedDirty'));
-// // });
 
 // test('related emails are not dirty with original emailes model', (assert) => {
 //   person = store.push('person', {id: PD.idOne, email_fks: [ED.idOne]});
@@ -1796,3 +1632,4 @@ test('person-location join models are correctly filtered on for the current User
   assert.equal(person.get('locations').get('length'), 1);
   assert.equal(person.get('locationsIsDirty'), false);
 });
+

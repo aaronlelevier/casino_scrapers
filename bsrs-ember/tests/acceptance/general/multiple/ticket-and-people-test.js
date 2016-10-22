@@ -1,32 +1,24 @@
 import Ember from 'ember';
 import { test } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
-import startApp from 'bsrs-ember/tests/helpers/start-app';
 import config from 'bsrs-ember/config/environment';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import PF from 'bsrs-ember/vendor/people_fixtures';
-import CF from 'bsrs-ember/vendor/category_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
-import ETD from 'bsrs-ember/vendor/defaults/email-type';
-import LLD from 'bsrs-ember/vendor/defaults/location-level';
-import LF from 'bsrs-ember/vendor/location_fixtures';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import locationPage from 'bsrs-ember/tests/pages/location';
-import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, PEOPLE_URL, PEOPLE_LIST_URL, CATEGORIES_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, PEOPLE_URL, PEOPLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const TICKET_DETAIL_URL = `${BASEURLS.base_tickets_url}/${TD.idOne}`;
 const PEOPLE_DETAIL_URL = `${BASEURLS.base_people_url}/${PD.idOne}`;
 const PEOPLE_DONALD_DETAIL_URL = `${BASEURLS.base_people_url}/${PD.idDonald}`;
-const TOP_LEVEL_CATEGORIES_URL = `${CATEGORIES_URL}parents/`;
 const TICKET_ACTIVITIES_URL = `${TICKETS_URL}${TD.idOne}/activity/`;
 const LOCATION = '.t-person-locations-select .ember-basic-dropdown-trigger';
-const LOCATION_DROPDOWN = '.t-person-locations-select-dropdown > .ember-power-select-options';
-const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 var application, store, person, ticket;
 

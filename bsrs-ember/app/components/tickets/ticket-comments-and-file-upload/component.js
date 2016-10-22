@@ -30,6 +30,7 @@ export default Ember.Component.extend({
         let model = this.get('model');
         let repository = this.get('repository');
         repository.upload(id, files[i], model).then(() => {
+          model.add_attachment({ id: id });
           model.get('attachments').findBy('id', id).set('percent', 100);
         }).catch(() => {
           this.get('error').logErr('attachment.fail', 'ticket-comments-and-file-upload');

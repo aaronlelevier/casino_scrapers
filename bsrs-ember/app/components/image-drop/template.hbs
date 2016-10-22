@@ -1,0 +1,15 @@
+{{yield}}
+
+<div class="hover">
+  {{#if droppedImage}}
+    <p>{{changeHoverText}}</p>
+  {{else}}
+    <p>{{addHoverText}}</p>
+  {{/if}}
+</div>
+
+<div class="text">
+  <p class="help-text">{{dropText}}</p>
+</div>
+
+<input type="file">

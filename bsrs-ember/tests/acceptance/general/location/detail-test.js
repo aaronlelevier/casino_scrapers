@@ -120,7 +120,7 @@ test('visiting admin/location', (assert) => {
     assert.ok(location.get('isDirtyOrRelatedDirty'));
     assert.ok(location.get('statusIsNotDirty'));
   });
-  page.statusClickOptionTwo();
+  selectChoose('.t-location-status-select', LDS.closedNameTranslated);
   andThen(() => {
     assert.equal(page.statusOptionLength, 0);
     let location = store.find('location', LD.idOne);
@@ -164,8 +164,8 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   clearxhr(list_xhr);
   page.visitDetail();
   fillIn('.t-location-name', LD.storeNameTwo);
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionTwo();
+  selectChoose('.t-location-level-select', LLD.nameRegion);
+  selectChoose('.t-location-level-select', LLD.nameRegion);
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
@@ -190,8 +190,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
   page.visitDetail();
   fillIn('.t-location-name', LD.storeNameTwo);
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionTwo();
+  selectChoose('.t-location-level-select', LLD.nameRegion);
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
@@ -249,8 +248,7 @@ test('changing location level will update related location level locations array
     assert.equal(page.locationLevelInput.split(' +')[0].trim().split(' ')[0], LLD.nameCompany);
     assert.equal(find(`${PARENTS_MULTIPLE_OPTION} > li`).length, 2);
   });
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionLossRegion();
+  selectChoose('.t-location-level-select', LLD.nameLossPreventionRegion);
   andThen(() => {
     let location_level_two = store.find('location-level', LLD.idLossRegion);
     let location_level = store.find('location-level', LLD.idOne);

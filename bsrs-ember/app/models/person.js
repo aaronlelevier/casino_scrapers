@@ -83,6 +83,7 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMi
     belongs_to.bind(this)('status', 'person', {bootstrapped:true});
     belongs_to.bind(this)('role', 'person', {bootstrapped:true, change_func:false, rollback: false});
     belongs_to.bind(this)('locale', 'person', {bootstrapped:true, change_func:false});
+    belongs_to.bind(this)('photo', 'person');
     many_to_many.bind(this)('location', 'person', {plural:true, add_func: false, rollback:false, save:false});
     many_to_many.bind(this)('phonenumber', 'person', {plural:true, dirty:false});
     many_to_many.bind(this)('email', 'person', {plural:true, dirty:false});
@@ -108,6 +109,7 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMi
   locale_fk: undefined,
   role_fk: undefined,
   status_fk: undefined,
+  photo_fk: undefined,
   person_phonenumbers_fks: [],
   person_emails_fks: [],
   person_locations_fks: [],
@@ -210,8 +212,8 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMi
       });
     });
   },
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'emailsIsDirty', 'phonenumbersIsDirty', 'roleIsDirty', 'locationsIsDirty', 'statusIsDirty', 'localeIsDirty', function() {
-    return ( this.get('detail') || this.get('new') ) && ( this.get('isDirty') || this.get('phonenumbersIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty') || this.get('statusIsDirty') || this.get('emailsIsDirty') || this.get('localeIsDirty') );
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'emailsIsDirty', 'phonenumbersIsDirty', 'roleIsDirty', 'locationsIsDirty', 'statusIsDirty', 'localeIsDirty', 'photoIsDirty', function() {
+    return ( this.get('detail') || this.get('new') ) && ( this.get('isDirty') || this.get('phonenumbersIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty') || this.get('statusIsDirty') || this.get('emailsIsDirty') || this.get('localeIsDirty') || this.get('photoIsDirty'));
   }).readOnly(),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty').readOnly(),
   clearPassword() {
@@ -222,12 +224,12 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMi
     this.saveEmails();
     this.savePhonenumbersContainer();
     this.savePhonenumbers();
-    // this.saveAddresses();
     this.saveRole();
     this.saveLocations();
     this.clearPassword();
     this.saveStatus();
     this.saveLocale();
+    this.savePhoto();
   },
   rollback() {
     this.changeLocale();
@@ -235,11 +237,11 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMi
     this.rollbackEmails();
     this.rollbackPhonenumbersContainer();
     this.rollbackPhonenumbers();
-    // this.rollbackAddresses();
     this.rollbackRole();
     this.rollbackLocations();
     this.rollbackStatus();
     this.rollbackLocale();
+    this.rollbackPhoto();
     this._super(...arguments);
   },
   createSerialize() {
@@ -273,14 +275,6 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMi
     }).map(function(num) {
       return num.serialize();
     });
-    // const addresses = this.get('addresses').filter(function(address) {
-    //   if (address.get('invalid_address')) {
-    //     return;
-    //   }
-    //   return address;
-    // }).map(function(address) {
-    //   return address.serialize();
-    // });
 
     var payload = {
       id: this.get('id'),
@@ -297,9 +291,9 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMi
       locations: this.get('locations_ids'),
       emails: emails,
       phone_numbers: phonenumbers,
-      // addresses: addresses,
       locale: this.get('locale.id'),
-      password: this.get('password')
+      password: this.get('password'),
+      photo: this.get('photo.id'),
     };
     if (!this.get('password')) {
       delete payload.password;

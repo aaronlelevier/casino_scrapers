@@ -1,0 +1,85 @@
+& {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: transparent;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: $photoBorderRadius;
+
+  // responds to drag state on component
+  &.active {
+    background: $activeColor !important;
+    // turn on dropImage text
+    p {
+      color: $white;
+      display: block;
+    }
+    // turn off over text
+    .hover > p {
+      display: none;
+    }
+  }
+
+  .hover {
+    display: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    color: $white;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 2;
+    border-radius: $photoBorderRadius;
+
+    p {
+      color: $white;
+      display: block;
+      font-size: $imageOverlayText;
+      width: 100%;
+      height: $photoHeightWidth;
+      line-height: $photoHeightWidth;
+      margin: 0 auto;
+    }
+  }
+
+  &:hover {
+    .hover {
+      display: block;
+    }
+  }
+}
+
+& p {
+  // all p's including drop text and change img text
+  display: none;
+  width: 80%;
+  text-align: center;
+}
+
+& p.help-text {
+  font-size: $imageOverlayText;
+  line-height: $photoHeightWidth;
+  margin: 0 auto;
+}
+
+// & .text {
+//   width: 100%;
+
+//   // transform: translateY(-50%);
+// }
+
+& input[type=file] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 3;
+}

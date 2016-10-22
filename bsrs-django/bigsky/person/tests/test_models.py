@@ -687,6 +687,14 @@ class PersonTests(TestCase):
         person.locations.remove(top_location)
         self.assertFalse(person.has_top_level_location)
 
+    def test_has_photo(self):
+        person = create_single_person()
+        self.assertTrue(person.photo.id)
+        self.assertTrue(person.photo.image_thumbnail)
+        self.assertTrue(person.photo.image_medium)
+        self.assertTrue(person.photo.image_full)
+        self.assertTrue(person.photo.filename)
+
 
 ### PASSWORD
 

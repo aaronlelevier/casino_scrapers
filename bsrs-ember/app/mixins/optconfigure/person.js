@@ -6,6 +6,11 @@ export default Ember.Mixin.create({
       collection: 'people',
       property: 'status',
     },
+    photo: {
+      collection: 'people',
+      property: 'attachment',
+      related_model: 'photo',
+    },
     role: {
       collection: 'people',
       property: 'role',

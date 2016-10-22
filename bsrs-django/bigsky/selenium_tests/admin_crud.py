@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 
+import os
 import unittest
 import time
 
@@ -567,7 +568,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         person_page.find_new_link().click()
         username = "almno_"+rand_num()
         password = "bobber-foo"
-        first_name = "foo"
+        first_name = "a-foo"
         last_name = "bar"
         person = InputHelper(username=username, password=password, first_name=first_name, last_name=last_name)
         self._fill_in(person)
@@ -598,7 +599,14 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         person = InputHelper(first_name=first_name, middle_initial=middle_initial,
                 last_name=last_name, employee_id=employee_id,
                 title=title)
-        self._fill_in(person)
+
+        attach_file_btn = self.wait_for_xhr_request_xpath("//input[@type='file']")
+        attach_file_btn.send_keys(os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            "media/test_in/aaron.jpeg"
+        ))
+
+        self._fill_in(person, clear=True)
         # Fill in Contact Info
         add_phone_number_btn = self.gen_elem_page.find_add_btn()
         add_phone_number_btn.click()
@@ -616,58 +624,50 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         add_email_btn.click()
         person_page.find_second_email_new_entry_send_keys(new_email_two)
 
-    #     # NOTE: no address button on template (7/18 ayl)
-    #     # add_address_btn = self.gen_elem_page.find_add_address_btn()
-    #     # add_address_btn.click()
-    #     # person_page.find_address_new_entry_send_keys(1, new_street_one, new_city_one, new_zip_one)
-    #     # add_address_btn.click()
-    #     # person_page.find_address_new_entry_send_keys(2, new_street_two, new_city_two, new_zip_two)
 
-    #     # Fill in Location
-    #     # TODO: (scott) double slashes can be removed at some point when the templates are stable. Selects all nodes, regardless of where they are in document.  Allows for relative path selection
-    #     location_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-person-locations-select')])[last()]")
-    #     location_input.click()
-    #     location_input.send_keys("a")
-    #     loc_option = self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class ,' '), ' ember-power-select-options ')]/li")
-    #     loc_option_name = loc_option.text
-    #     loc_option.click()
-    #     # Select different locale
-    #     locale_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-locale-select ')]/div")
-    #     locale_input.click()
-    #     locale_option = self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
-    #     locale_option.click()
+        # Fill in Location
+        # TODO: (scott) double slashes can be removed at some point when the templates are stable. Selects all nodes, regardless of where they are in document.  Allows for relative path selection
+        location_input = self.driver.find_element_by_xpath("(//*[contains(@class, 't-person-locations-select')])/div/div/ul/input")
+        location_input.click()
+        location_input.send_keys("a")
+        self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class ,' '), ' ember-power-select-options ')]/li")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
+        # Select different locale
+        locale_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-locale-select ')]/div")
+        locale_input.click()
+        locale_option = self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
+        locale_option.click()
 
-    #     # b/c first save won't work if the 'password' is still attached to the person.
-    #     # self.gen_elem_page.click_save_btn()
-    #     # TODO: once locale is sent down correctly
-    #     # person_page.find_list_data()
-    #     # self.driver.refresh()
-    #     # person_page.find_list_data()
-    #     # new_person = person_page.click_name_in_list_pages(username, new_model=None)
-    #     # try:
-    #     #     new_person.click()
-    #     # except AttributeError as e:
-    #     #     raise e("new person not found")
-    #     # person_page.find_wait_and_assert_elem("t-person-username", username)
-    #     # person_page.find_and_assert_elems(username=username, first_name=first_name,
-    #     #     middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
-    #     # person_page.assert_phone_number_inputs(new_phone_one, new_phone_two)
-    #     # person_page.assert_email_inputs(new_email_one, new_email_two)
-    #     # person_page.assert_address_inputs(1, new_street_one, new_city_one, new_zip_one)
-    #     # person_page.assert_address_inputs(2, new_street_two, new_city_two, new_zip_two)
-    #     # # person_page.assert_locations(loc_option_name)
-    #     # self.driver.refresh()
-    #     # person_page.find_wait_and_assert_elem("t-person-username", username)
-    #     # assert self.driver.find_element_by_class_name("t-locale-select-trigger").text == "ja - ja"
-    #     # person_page.find_and_assert_elems(username=username, first_name=first_name,
-    #     #     middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
-    #     # ### DELETE
-    #     # person_page.find_wait_and_assert_elem("t-person-username", username)
-    #     # self.gen_elem_page.click_dropdown_delete()
-    #     # self.gen_elem_page.click_delete_btn()
-    #     # self.driver.refresh()
-    #     # person = self.driver_wait.find_elements_by_class_name(person_page.list_data) #person_page.find_list_data(just_refreshed=True)
-    #     # person_page.find_list_name()
+        # b/c first save won't work if the 'password' is still attached to the person.
+        self.gen_elem_page.click_save_btn()
+        person_page.find_list_data()
+        self.driver.refresh()
+        person_page.find_list_data()
+        new_person = person_page.click_name_in_list_pages(username, new_model=None)
+        try:
+            new_person.click()
+        except AttributeError as e:
+            raise e("new person not found")
+        time.sleep(1)
+        person_page.find_wait_and_assert_elem("t-person-username", username)
+        person_page.find_and_assert_elems(username=username, first_name=first_name,
+            middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
+        # person_page.assert_phone_number_inputs(new_phone_one, new_phone_two)
+        # person_page.assert_email_inputs(new_email_one, new_email_two)
+        # person_page.assert_locations(loc_option_name)
+        self.driver.refresh()
+        person_page.find_wait_and_assert_elem("t-person-username", username)
+        # assert self.driver.find_element_by_class_name("t-locale-select-trigger").text == "ja - ja"
+        person_page.find_and_assert_elems(username=username, first_name=first_name,
+            middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
+        # ### DELETE
+        # person_page.find_wait_and_assert_elem("t-person-username", username)
+        # self.gen_elem_page.click_dropdown_delete()
+        # self.gen_elem_page.click_delete_btn()
+        # self.driver.refresh()
+        # person = self.driver_wait.find_elements_by_class_name(person_page.list_data) #person_page.find_list_data(just_refreshed=True)
+        # person_page.find_list_name()
 
     #     # # TODO:
     #     # This is failing because a Grid View page # allows you to go to that page,

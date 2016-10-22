@@ -14,6 +14,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 
+from generic.models import Attachment
 from accounting.models import Currency
 from category.models import Category
 from contact.models import PhoneNumber, PhoneNumberType, Address, Email, EmailType
@@ -432,6 +433,7 @@ class Person(BaseModel, AbstractUser):
     proxy_auth_amount = InheritedValueField('auth_amount', [('role', 'auth_amount')])
     proxy_auth_currency = InheritedValueField('auth_currency',
                                               [('role', 'auth_currency'), ('tenant', 'default_currency')])
+    photo = models.ForeignKey(Attachment, null=True)
 
     # Managers
     objects = PersonManager()

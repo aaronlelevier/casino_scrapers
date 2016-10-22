@@ -11,7 +11,7 @@ const BASE_URL = BASEURLS.base_locations_url;
 const DETAIL_URL = `${BASE_URL}/${LD.idOne}`;
 const NEW_URL = `${BASE_URL}/new/1`;
 const LOCATIONLEVEL = '.t-location-level-select .ember-basic-dropdown-trigger';
-const STATUS = '.t-location-status-select .ember-basic-dropdown-trigger';
+const STATUS = '.t-location-status-select .ember-power-select-selected-item';
 const DROPDOWN = options;
 
 const CHILDREN = '.t-location-children-select .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
@@ -47,16 +47,9 @@ export default PageObject.create({
   numberValue: value('.t-location-number'),
 
   locationLevelInput: text(LOCATIONLEVEL),
-  locationLevelClickDropdown: clickable(LOCATIONLEVEL),
-  locationLevelClickOptionOne: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${LLD.nameCompany})`),
-  locationLevelClickOptionTwo: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${LLD.nameRegion})`, {multiple: true}),
-  locationLevelClickOptionLossRegion: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${LLD.nameLossPreventionRegion})`),
 
   statusInput: text(STATUS),
   statusClickDropdown: clickable(STATUS),
-  statusClickOptionOne: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${LDS.openNameTranslated})`),
-  //TODO: translate inline
-  statusClickOptionTwo: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${LDS.closedNameTranslated})`),
   statusOptionLength: count(`${DROPDOWN} > li`),
 
   childrenClickDropdown: clickable(CHILDREN),

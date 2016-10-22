@@ -5,11 +5,20 @@ import FindById from 'bsrs-ember/mixins/route/findById';
 
 var PersonRoute = TabRoute.extend(FindById, {
   repository: inject('person'),
+  attachmentRepository: inject('attachment'),
   i18n: Ember.inject.service(),
   queryParams: {
     role_change: {
       refreshModel: true
     }
+  },
+  /* @method transitionCB
+   * removes images from local store and find newly attached files and sends out batch delete 
+   */ 
+  transitionCB(model) {
+    // TODO: how to batch delete?
+    // const remove_attachment_ids = model.get('remove_attachment_ids');
+    // this.get('attachmentRepository').removeAllUnrelated(remove_attachment_ids);
   },
   redirectRoute: 'admin.people.index',
   module: 'person',

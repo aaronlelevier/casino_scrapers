@@ -45,6 +45,7 @@ test('initial load should only show first 10 records ordered by fullname with co
     assert.equal(find('.t-grid-data:eq(0) .t-person-title').text().trim(), PD.title);
     assert.equal(find('.t-grid-data:eq(0) .t-person-role-name').text().trim(), RD.nameOne);
     pagination(assert);
+    assert.equal(find('[data-test-id="username"]').attr('scope'), 'col', 'shows col accessibility html attribute');
   });
 });
 

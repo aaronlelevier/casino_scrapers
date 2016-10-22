@@ -40,7 +40,9 @@ export default Ember.Component.extend(TabMixin, {
         const store = this.get('simpleStore');
         const repository = this.get('attachmentRepository');
         repository.upload(id, files[i], model).then((attachment) => {
+          model.add_attachment({ id: id });
           model.get('attachments').findBy('id', id).set('percent', 100);
+          // need to figure out why need to push in again
           store.push('attachment', attachment);
         }).catch(() => {
           this.get('error').logErr('attachment.fail', 'dtd-single');

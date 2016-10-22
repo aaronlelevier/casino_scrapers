@@ -1,0 +1,8 @@
+{{#if item.photo}}
+  <img src={{item.photo.image_thumbnail}} class="user-avatar" data-test-id="user-avatar" />
+{{else}}
+  {{fa-icon "user"}}
+{{/if}}
+
+{{item.fullname}}
+

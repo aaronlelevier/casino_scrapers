@@ -212,6 +212,13 @@ var ApplicationRoute = Route.extend({
     closeMobileDetail(redirectRoute) {
       this.transitionTo(redirectRoute);
     },
+    /**
+     * @method actions.notify
+     * used for errors/notifications coming from child routes/components
+     */
+    notify(error) {
+      this.controllerFor('application').handleNotfication(error);
+    }
   }
 });
 

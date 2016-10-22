@@ -2,6 +2,7 @@ import copy
 import json
 from mock import patch
 import uuid
+from io import BytesIO
 
 from django.conf import settings
 from django.contrib.auth.models import ContentType
@@ -324,6 +325,11 @@ class PersonListTests(TestCase):
         self.assertEqual(data['title'], person.title)
         self.assertNotIn('employee_id', data)
         self.assertNotIn('auth_amount', data)
+        self.assertTrue(data['photo']['filename'])
+        self.assertTrue(data['photo']['id'])
+        self.assertTrue(data['photo']['image_thumbnail'])
+        self.assertTrue(data['photo']['image_full'])
+        self.assertTrue(data['photo']['image_medium'])
 
     ### CUSTOM LIST ROUTES
 
@@ -481,6 +487,13 @@ class PersonDetailTests(TestCase):
         self.assertEqual(self.data['title'], self.person.title)
         self.assertEqual(self.data['employee_id'], self.person.employee_id)
         self.assertEqual(self.data['password_one_time'], self.person.password_one_time)
+        photo = self.person.photo
+        self.assertEqual(self.data['photo']['filename'], photo.filename)
+        self.assertTrue(photo.file.name in self.data['photo']['file'])
+        self.assertEqual(self.data['photo']['id'], str(photo.id))
+        self.assertTrue(photo.image_thumbnail.url in self.data['photo']['image_thumbnail'])
+        self.assertTrue(photo.image_full.url in self.data['photo']['image_full'])
+        self.assertTrue(photo.image_medium.url in self.data['photo']['image_medium'])
         self.assertIn('last_login', self.data)
         self.assertIn('date_joined', self.data)
         self.assertNotIn('auth_amount', self.data)
@@ -871,6 +884,29 @@ class PersonUpdateTests(APITestCase):
             self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(self.data['middle_initial'], data['middle_initial'])
+
+    def test_update_photo(self):
+        id = str(uuid.uuid4())
+
+        # This is a 1x1 black png
+        simple_png = BytesIO(b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00\x1f\x15\xc4\x89\x00\x00\x00\rIDATx\x9cc````\x00\x00\x00\x05\x00\x01\xa5\xf6E@\x00\x00\x00\x00IEND\xaeB`\x82')
+        simple_png.name = 'test.png'
+
+        post_data = {
+            'id': id,
+            'filename': simple_png.name,
+            'file': simple_png
+        }
+
+        photo_response = self.client.post("/api/admin/attachments/", post_data)
+        photo_data = json.loads(photo_response.content.decode('utf8'))
+        self.data['photo'] = photo_data['id']
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['photo'], photo_data['id'])
+        person = Person.objects.get(id=data['id'])
+        self.assertEqual(person.photo.filename, photo_data['filename'])
 
 
 class PersonSearchTests(APITransactionTestCase):

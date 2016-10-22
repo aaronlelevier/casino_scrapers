@@ -11,14 +11,21 @@
     <div class="col-md-12">
       <section class="card-title">
         <div class="row">
-          <h1 class="col-md-12 t-person-single-header">
-            {{#if (or model.first_name model.middle_initial model.last_name)}}
-              {{model.first_name}} {{model.middle_initial}} {{model.last_name}}
-            {{else}}
-              {{model.username}}
-            {{/if}}
-          </h1>
-          <p class="col-md-12 t-person-single-sub-header">{{model.role.name}}</p>
+          <div class="col-md-12">
+            {{form-photo 
+              icon="user" 
+              model=model 
+              onError=onError
+            }}
+            <h1 class="t-person-single-header">
+              {{#if (or model.first_name model.middle_initial model.last_name)}}
+                {{model.first_name}} {{model.middle_initial}} {{model.last_name}}
+              {{else}}
+                {{model.username}}
+              {{/if}}
+            </h1>
+            <p class="t-person-single-sub-header">{{model.role.name}}</p>
+          </div>
         </div>
       </section>
     </div>

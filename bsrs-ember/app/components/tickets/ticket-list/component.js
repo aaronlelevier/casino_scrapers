@@ -1,7 +1,9 @@
 import GridViewComponent from 'bsrs-ember/components/grid-view/component';
 
 /*
-* .translated_name comes from translation mixin on model
+* translated_name comes from translation mixin on model
+* templateName - grid component
+* filterComponent - when click on column header to filter (instead of default search box)
 * multiple - select multiple values from a predefined list of models with ids
 */
 export let columns = [

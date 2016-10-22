@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer
+from generic.serializers import AttachmentSerializer
 from contact.serializers import (PhoneNumberSerializer, EmailSerializer, AddressSerializer,
     AddressUpdateSerializer)
 from location.serializers import LocationIdNameOnlySerializer, LocationStatusFKSerializer
@@ -71,10 +72,10 @@ class RoleIdNameSerializer(serializers.ModelSerializer):
 ### PERSON ###
 
 PERSON_FIELDS = ('id', 'username', 'first_name', 'middle_initial', 'last_name',
-                 'fullname', 'role', 'title')
+                 'fullname', 'role', 'title', 'photo')
 
 PERSON_DETAIL_FIELDS = PERSON_FIELDS + ('employee_id', 'locale', 'locations', 'emails', 'phone_numbers',
-                                        'addresses', 'password_one_time',)
+                                        'addresses', 'password_one_time')
 
 PERSON_DETAIL_FIELDS_WITH_STATUS = PERSON_DETAIL_FIELDS + ('status',)
 
@@ -106,6 +107,7 @@ class PersonStatusSerializer(serializers.ModelSerializer):
 class PersonListSerializer(serializers.ModelSerializer):
 
     status = PersonStatusSerializer(required=False)
+    photo = AttachmentSerializer(required=False)
 
     class Meta:
         model = Person
@@ -140,6 +142,7 @@ class PersonDetailSerializer(serializers.ModelSerializer):
     phone_numbers = PhoneNumberSerializer(required=False, many=True)
     addresses = AddressSerializer(required=False, many=True)
     status_fk = serializers.PrimaryKeyRelatedField(queryset=PersonStatus.objects.all(), source='status')
+    photo = AttachmentSerializer(required=False)
 
     class Meta:
         model = Person

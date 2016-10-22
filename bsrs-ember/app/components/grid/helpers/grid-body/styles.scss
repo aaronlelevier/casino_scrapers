@@ -63,6 +63,19 @@
     display: inline-block;
     @include font-awesome("\f007");
   }
+  .person-fullname {
+    font-size: 1.6rem;
+    padding: 4px 0 0;
+    font-weight: bold;
+  }
+  .person-title {
+    clear: both;
+    // TODO: mixin params for generalPadding
+    padding: 4% 0 0;
+  }
+  .person-role {
+    padding: 0 0 4%;
+  }
 }
 .mobile-grid-row::after{
   content: "";

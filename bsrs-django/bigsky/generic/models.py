@@ -155,7 +155,7 @@ class Attachment(BaseModel):
             self.image_full = self.file
 
             self.image_medium.name = "/".join([settings.IMAGE_MEDIUM_SUB_PATH, self.filename])
-            self.save_alt_image(location=self.image_medium.name, size=(100, 100))
+            self.save_alt_image(location=self.image_medium.name, size=(250, 250))
 
             self.image_thumbnail.name = "/".join([settings.IMAGE_THUMBNAIL_SUB_PATH, self.filename])
             self.save_alt_image(location=self.image_thumbnail.name, size=(50, 50))

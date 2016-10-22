@@ -134,7 +134,7 @@ function saveFilterSet(app, name, controller) {
   });
 }
 
-function uploadFile(app, name, action, file, model) {
+function uploadFile(app, name, action, file, model, type='action') {
   Ember.run(function() {
     var files;
     var component = app.__container__.lookup(`component:${name}`);
@@ -145,7 +145,13 @@ function uploadFile(app, name, action, file, model) {
       files = [file];
     }
     var event = {target: {files: files}};
-    component.send(action, event);
+    if (type === 'action') {
+      // component may handle upload process in an action
+      component.send(action, event);
+    } else {
+      // component may handle upload process in a method
+      component[action](event);
+    }
   });
   return app.testHelpers.wait();
 }

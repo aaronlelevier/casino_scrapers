@@ -135,9 +135,10 @@ var change_belongs_to = function(_ownerName) {
 
 /**
  * Creates belongs_to_dirty method
- *
+ * has_many is the model that contains the array of parent ids
+ * fk is the pointer to the has_many model
  * @method belongs_to_dirty
- * @return {Ember.Computed}
+ * @return {Ember.Computed} - returns only true or false.  Not undefined
  */
 var belongs_to_dirty = function(_ownerName) {
   const [has_many_fk, name] = [`${_ownerName}_fk`, _ownerName];
@@ -145,11 +146,16 @@ var belongs_to_dirty = function(_ownerName) {
     const has_many = this.get(name);
     const fk = this.get(has_many_fk);
     if (has_many) {
+      // ie. after deserializion or after save/rollback
       return has_many.get('id') === fk ? false : true;
     }
     if(!has_many && fk) {
+      // fk but removed, dirty
       return true;
     }
+    // else not dirty.  If model deserialized with no property, isDirtyOrRelatedDirty will be undefined
+    // and isNotDirtyOrRelatedNotDirty will be false.  So need to always return false b/c need only binary result of tru/false
+    return false;
   }).readOnly();
 };
 

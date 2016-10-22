@@ -10,7 +10,6 @@ import config from 'bsrs-ember/config/environment';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import TENANT_DEFAULTS from 'bsrs-ember/vendor/defaults/tenant';
-import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currency';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import RF from 'bsrs-ember/vendor/role_fixtures';
@@ -28,9 +27,6 @@ import PNTD from 'bsrs-ember/vendor/defaults/phone-number-type';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
-// import AF from 'bsrs-ember/vendor/address_fixtures';
-// import AD from 'bsrs-ember/vendor/defaults/address';
-// import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import locationPage from 'bsrs-ember/tests/pages/location';
 import page from 'bsrs-ember/tests/pages/person';
@@ -39,17 +35,13 @@ import random from 'bsrs-ember/models/random';
 import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 import { LOCALE_SELECT } from 'bsrs-ember/tests/helpers/const-names';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
-import BASEURLS, { PEOPLE_URL, ROLES_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { PEOPLE_URL, PEOPLE_LIST_URL, ROLES_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const POWER_SELECT_LENGTH = 10;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const BASE_LOCATION_URL = BASEURLS.base_locations_url;
-const PEOPLE_INDEX_URL = `${BASE_PEOPLE_URL}/index`;
 const DETAIL_URL = `${BASE_PEOPLE_URL}/${PD.idOne}`;
-const LETTER_A = {keyCode: 65};
-const LETTER_M = {keyCode: 77};
-const BACKSPACE = {keyCode: 8};
 const LOCATION = '.t-person-locations-select';
 const LOCATION_DROPDOWN = options;
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
@@ -72,7 +64,7 @@ moduleForAcceptance('Acceptance | person detail test', {
 test('clicking a persons name will redirect to the given detail view', (assert) => {
   page.visitPeople();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
     assert.equal(find('.t-nav-admin-people').hasClass('active'), true);
   });
   click('.t-grid-data:eq(0)');
@@ -190,7 +182,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
     var person = store.find('person', PD.idOne);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -210,7 +202,7 @@ test('when changing password to invalid, it checks for validation', (assert) => 
   andThen(() => {
     let person = store.find('person', PD.idOne);
     assert.equal(person.get('password'), '');
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
   });
 });
 
@@ -226,7 +218,7 @@ test('payload does not include password if blank or undefined', (assert) => {
   andThen(() => {
     let person = store.find('person', PD.idOne);
     assert.equal(person.get('password'), '');
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
   });
 });
 
@@ -270,7 +262,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), PEOPLE_INDEX_URL);
+      assert.equal(currentURL(), PEOPLE_LIST_URL);
       var person = store.find('person', PD.idOne);
       assert.equal(person.get('username'), PD.username);
     });
@@ -313,7 +305,7 @@ test('can change currency by clicking it and selecting another currency', assert
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
   });
 });
 
@@ -334,7 +326,7 @@ test('when click delete, modal displays and when click ok, person is deleted and
   generalPage.clickModalDelete();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), PEOPLE_INDEX_URL);
+      assert.equal(currentURL(), PEOPLE_LIST_URL);
       assert.equal(store.find('person', PD.idOne).get('length'), undefined);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
@@ -395,7 +387,7 @@ test('newly added phone numbers without a valid number are ignored and removed w
   triggerEvent('.t-phonenumber-number2', 'keyup', {keyCode: 65});
   generalPage.cancel();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
     assert.equal(store.find('phonenumber').get('length'), 3);
   });
 });
@@ -426,7 +418,7 @@ test('newly added emails without a valid email are ignored and removed when user
   triggerEvent('.t-email-email2', 'keyup', {keyCode: 65});
   generalPage.cancel();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
     assert.equal(store.find('email').get('length'), 3);
   });
 });
@@ -501,7 +493,7 @@ test('when you change a related email numbers type it will be persisted correctl
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
   });
 });
 
@@ -513,7 +505,7 @@ test('when you change a related phone numbers type it will be persisted correctl
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
   });
 });
 
@@ -530,7 +522,7 @@ test('when user changes an attribute on email and clicks cancel we prompt them w
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), PEOPLE_INDEX_URL);
+      assert.equal(currentURL(), PEOPLE_LIST_URL);
       const person = store.find('person', PD.idOne);
       assert.equal(person.get('emails').objectAt(0).get('email_type').get('id'), ETD.personalId);
     });
@@ -550,7 +542,7 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), PEOPLE_INDEX_URL);
+      assert.equal(currentURL(), PEOPLE_LIST_URL);
       const person = store.find('person', PD.idOne);
       assert.equal(person.get('phonenumbers').objectAt(0).get('phone_number_type').get('id'), PNTD.officeId);
     });
@@ -572,7 +564,7 @@ test('when user removes an email clicks cancel we prompt them with a modal and t
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), PEOPLE_INDEX_URL);
+      assert.equal(currentURL(), PEOPLE_LIST_URL);
       const person = store.find('person', PD.idOne);
       assert.equal(person.get('emails').get('length'), 2);
     });
@@ -594,7 +586,7 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), PEOPLE_INDEX_URL);
+      assert.equal(currentURL(), PEOPLE_LIST_URL);
       const person = store.find('person', PD.idOne);
       assert.equal(person.get('phonenumbers').get('length'), 2);
     });
@@ -625,7 +617,7 @@ test('when you deep link to the person detail view you can remove a new phone nu
   xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
     var person = store.find('person', PD.idOne);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -666,7 +658,7 @@ test('when you deep link to the person detail view you can add and remove a new 
 //   xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
 //   generalPage.save();
 //   andThen(() => {
-//     assert.equal(currentURL(), PEOPLE_INDEX_URL);
+//     assert.equal(currentURL(), PEOPLE_LIST_URL);
 //     var person = store.find('person', PD.idOne);
 //     assert.ok(person.get('isNotDirty'));
 //     assert.equal(person.get('phone_numbers').objectAt(0).get('type'), PNTD.mobileId);
@@ -678,7 +670,7 @@ test('when you deep link to the person detail view you can add and remove a new 
 test('clicking cancel button will take from detail view to list view', (assert) => {
   page.visitPeople();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
   });
   click('.t-grid-data:eq(0)');
   andThen(() => {
@@ -690,7 +682,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
   });
   generalPage.cancel();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
   });
 });
 
@@ -707,21 +699,19 @@ test('when you change a related role it will be persisted correctly', (assert) =
   let people_detail_data_two = PF.detail(PD.idOne);
   people_detail_data_two.role = RD.idTwo;
   ajax(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
-  page.roleClickDropdown();
-  page.roleClickOptionTwo();
+  selectChoose('.t-person-role-select', RD.nameTwo);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
   });
   page.firstNameFill(PD.first_name);
   page.middleInitialFill(PD.middle_initial);
   page.lastNameFill(PD.last_name);
-  var role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
-  var payload = PF.put({id: PD.id, first_name: PD.first_name, middle_initial: PD.middle_initial, last_name: PD.last_name, role: role.id});
+  let payload = PF.put({id: PD.id, first_name: PD.first_name, middle_initial: PD.middle_initial, last_name: PD.last_name, role: RD.idTwo});
   payload.locations = [];
   xhr(url,'PUT',JSON.stringify(payload),{},200);
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
   });
 });
 
@@ -738,8 +728,7 @@ test('when you deep link to the person detail view you can alter the role and ro
   let people_detail_data_two = PF.detail(PD.idOne);
   people_detail_data_two.role = RD.idTwo;
   ajax(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, people_detail_data_two);
-  page.roleClickDropdown();
-  page.roleClickOptionTwo();
+  selectChoose('.t-person-role-select', RD.nameTwo);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
     assert.equal(page.roleInput, RD.nameTwo);
@@ -757,7 +746,7 @@ test('when you deep link to the person detail view you can alter the role and ro
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), PEOPLE_INDEX_URL);
+      assert.equal(currentURL(), PEOPLE_LIST_URL);
       var person = store.find('person', PD.idOne);
       assert.equal(person.get('role.id'), RD.idOne);
       var actual_role = store.find('role', RD.idOne);
@@ -786,8 +775,7 @@ test('when you deep link to the person detail view you can alter the role and ch
       assert.equal(page.roleInput, RD.nameOne);
       assert.equal(person.get('role.id'), RD.idOne);
     });
-    page.roleClickDropdown();
-    page.roleClickOptionTwo();
+    selectChoose('.t-person-role-select', RD.nameTwo);
     andThen(() => {
       assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
       assert.equal(page.roleInput, RD.nameTwo);
@@ -803,8 +791,7 @@ test('when you deep link to the person detail view you can alter the role and ch
       page.middleInitialFill(PD.middle_initial);
       page.lastNameFill(PD.last_name);
       xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_three);
-      page.roleClickDropdown();
-      page.roleClickOptionOne();
+      selectChoose('.t-person-role-select', RD.nameOne);
       andThen(() => {
         assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idOne);
         assert.equal(page.roleInput, RD.nameOne);
@@ -815,7 +802,7 @@ test('when you deep link to the person detail view you can alter the role and ch
     });
     generalPage.cancel();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_INDEX_URL);
+      assert.equal(currentURL(), PEOPLE_LIST_URL);
     });
   });
 });
@@ -840,8 +827,7 @@ test('when you change a related role it will change the related locations as wel
   clearxhr(detail_xhr);
   let people_detail_data_two = PF.detail(PD.idOne);
   xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
-  page.roleClickDropdown();
-  page.roleClickOptionTwo();
+  selectChoose('.t-person-role-select', RD.nameTwo);
   andThen(() => {
     let person = store.find('person', PD.idOne);
     assert.equal(person.get('locationsIsDirty'), false);
@@ -851,7 +837,7 @@ test('when you change a related role it will change the related locations as wel
   });
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
     let person = store.find('person', PD.idOne);
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   });
@@ -886,15 +872,14 @@ test('when you change a related role it will change the related locations as wel
     let people_detail_data_two = PF.detail(PD.idOne);
     people_detail_data_two.role = RD.idTwo;
     xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
-    page.roleClickDropdown();
-    page.roleClickOptionTwo();
+    selectChoose('.t-person-role-select', RD.nameTwo);
     andThen(() => {
       let person = store.find('person', PD.idOne);
       assert.equal(person.get('role.id'), RD.idTwo);
     });
     generalPage.save();
     andThen(() => {
-      assert.equal(currentURL(), PEOPLE_INDEX_URL);
+      assert.equal(currentURL(), PEOPLE_LIST_URL);
       let person = store.find('person', PD.idOne);
       assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
       assert.equal(person.get('locations').get('length'), 0);
@@ -933,7 +918,7 @@ test('deep link to person and clicking in the person-locations-select component 
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
   });
 });
 
@@ -996,7 +981,7 @@ test('starting with multiple locations, can remove all locations (while not popu
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
   });
 });
 
@@ -1048,7 +1033,7 @@ test('when you deep link to the person detail view you can alter the locations a
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), PEOPLE_INDEX_URL);
+      assert.equal(currentURL(), PEOPLE_LIST_URL);
       let person = store.find('person', PD.idOne);
       assert.equal(person.get('locations').get('length'), 0);
       assert.ok(person.get('isNotDirty'));
@@ -1089,7 +1074,7 @@ test('can change status to inactive for person and save (power select)', (assert
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
   });
 });
 
@@ -1112,7 +1097,7 @@ test('can change locale to inactive for person and save (power select)', (assert
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
   });
 });
 
@@ -1209,6 +1194,6 @@ test('update password_one_time', assert => {
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
   });
 });

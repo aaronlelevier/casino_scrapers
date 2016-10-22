@@ -55,6 +55,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
       title : this.person_defaults.title,
       status : {id: this.status_defaults.activeId, name: this.status_defaults.activeName},
       role: this.role_defaults.idOne,
+      photo: {id: '80f530c4-ce6c-4724-9cfd-47y16e38900' + i, image_full: 'http://www.femalefirst.co.uk/image-library/square/250/m/xmel-gibson-awi.jpg.pagespeed.ic.6BxCJhF4Ru.jpg', image_medium: 'http://www.femalefirst.co.uk/image-library/square/250/m/xmel-gibson-awi.jpg.pagespeed.ic.6BxCJhF4Ru.jpg', image_thumbnail: 'http://www.femalefirst.co.uk/image-library/square/250/m/xmel-gibson-awi.jpg.pagespeed.ic.6BxCJhF4Ru.jpg'},
     }
   };
   factory.prototype.generate = function(i) {
@@ -71,8 +72,8 @@ var BSRS_PEOPLE_FACTORY = (function() {
       locations: [],
       emails: [],
       phone_numbers: [],
-      // addresses: [],
-      locale: this.locale_defaults.idOne
+      locale: this.locale_defaults.idOne,
+      photo: {id: '80f530c4-ce6c-4724-9cfd-47y16e389007', image_full: 'http://www.femalefirst.co.uk/image-library/square/250/m/xmel-gibson-awi.jpg.pagespeed.ic.6BxCJhF4Ru.jpg', image_medium: 'http://www.femalefirst.co.uk/image-library/square/250/m/xmel-gibson-awi.jpg.pagespeed.ic.6BxCJhF4Ru.jpg', image_thumbnail: 'http://www.femalefirst.co.uk/image-library/square/250/m/xmel-gibson-awi.jpg.pagespeed.ic.6BxCJhF4Ru.jpg'},
     }
   };
   factory.prototype.list = function() {
@@ -107,7 +108,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
       delete person.locale;
       delete person.emails;
       delete person.phone_numbers;
-      // delete person.addresses;
       person.username = 'scott' + i;
       person.first_name = 'Scott' + i;
       person.last_name = 'Newcomer' + i;
@@ -135,12 +135,12 @@ var BSRS_PEOPLE_FACTORY = (function() {
     delete response.status_fk;
     response.emails = this.emails.put();
     response.phone_numbers = this.phone_number_fixtures.put();
-    // response.addresses = this.address_fixtures.put();
     response.status = this.status_defaults.activeId;
     response.role = this.role_defaults.idOne;
     response.locale = this.person_defaults.locale_id;
     response.locations = [this.location_defaults.idOne];
     response.auth_currency = response.auth_currency;
+    response.photo = response.photo.id;
     for(var key in person) {
       response[key] = person[key];
     }

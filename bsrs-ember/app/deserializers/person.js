@@ -7,7 +7,6 @@ import copySettingsToFirstLevel from 'bsrs-ember/utilities/copy-settings-to-firs
 import ContactDeserializerMixin from 'bsrs-ember/mixins/deserializer/contact';
 import OptConf from 'bsrs-ember/mixins/optconfigure/person';
 
-
 var extract_role_location_level = function(model, store) {
   let role = store.find('role', model.role);
   if (role.get('id')) {
@@ -87,6 +86,7 @@ var PersonDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin, 
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('status', 'person');
+    belongs_to.bind(this)('photo', 'person');
     belongs_to.bind(this)('phone_number_type');
     belongs_to.bind(this)('email_type');
     many_to_many.bind(this)('phonenumbers', 'person');
@@ -107,9 +107,15 @@ var PersonDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin, 
       [model.role_fk] = extract_role(model, store);
       const status_json = model.status;
       delete model.status;
+      if (model.photo) {
+        const photo = model.photo;
+        store.push('attachment', photo);
+        model.photo_fk = model.photo.id;
+        delete model.photo;
+      }
       const person = store.push('person-list', model);
+      // photo
       this.setup_status(status_json, person);
-      // belongs_to_extract(status_json, store, person, 'status', 'person', 'people');
     });
   },
   // TODO: refactor w/o id and response
@@ -119,21 +125,32 @@ var PersonDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin, 
     let location_level_fk;
     let person = existing;
     if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
+      // photo
+      const photo = model.photo;
+      model.photo_fk = model.photo ? model.photo.id : undefined;
+      delete model.photo;
+      // contacts
       const phonenumber_json = model.phone_numbers;
       const email_json = model.emails;
       this.extract_emails(model);
       this.extract_phonenumbers(model);
-      // model.email_fks = this.extract_emails(model);
-      // model.phone_number_fks = this.extract_phonenumbers(model);
-      // model.address_fks = belongs_to_extract_contacts(model, store, 'address', 'addresses');
+      // role
       [model.role_fk, location_level_fk] = extract_role(model, store);
+      // location
       extract_person_location(model, store, location_level_fk, location_deserializer);
+      // locale
       extract_locale(model, store);
       model.detail = true;
       model = copySettingsToFirstLevel(model);
       run(() => {
         person = store.push('person', model);
+        // photo
+        if (photo) {
+          this.setup_photo(photo, person);
+        }
+        // status
         belongs_to_extract(model.status_fk, store, person, 'status', 'person', 'people');
+        // contacts
         if (phonenumber_json) {
           this.setup_phonenumbers(phonenumber_json, person);
         }

@@ -53,12 +53,11 @@ test('visiting mobile person grid show correct layout', async assert => {
   assert.equal(currentURL(), PEOPLE_LIST_URL);
   assert.equal(find('.t-mobile-grid-title').text().trim(), '18 People');
   assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-  assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').text().trim());
-  assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').hasClass('t-person-status-translated_name'));
-  assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), PD.fullname);
-  assert.equal(find('.t-grid-data:eq(0) > div:eq(2)').text().trim(), PD.username);
-  assert.equal(find('.t-grid-data:eq(0) > div:eq(3)').text().trim(), PD.title);
-  assert.equal(find('.t-grid-data:eq(0) > div:eq(4)').text().trim(), RD.nameOne);
+  assert.ok(find('.t-grid-data:eq(0) > div:eq(4)').hasClass('t-person-status-translated_name'));
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(0)').text().trim(), PD.fullname);
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), PD.username);
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(2)').text().trim(), PD.title);
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(3)').text().trim(), RD.nameOne);
 });
 
 test('person username filter will filter down results and reset page to 1', async assert => {
@@ -73,7 +72,7 @@ test('person username filter will filter down results and reset page to 1', asyn
   await generalMobilePage.filterInput('7');
   await triggerEvent('.t-filter-input', 'keyup', {keyCode: 68});
   await generalMobilePage.submitFilterSort();
-  assert.equal(find('.t-grid-data:eq(0) > div:eq(2)').text().trim(), PD.usernameLastPage2Grid);
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), PD.usernameLastPage2Grid);
 });
 
 test('person fullname filter will filter down results and reset page to 1', async assert => {
@@ -88,7 +87,7 @@ test('person fullname filter will filter down results and reset page to 1', asyn
   await generalMobilePage.filterInput('7');
   await triggerEvent('.t-filter-input', 'keyup', {keyCode: 68});
   await generalMobilePage.submitFilterSort();
-  assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), PD.fullnameLastPage2Grid);
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(0)').text().trim(), PD.fullnameLastPage2Grid);
 });
 
 test('person title filter will filter down results and reset page to 1', async assert => {
@@ -103,7 +102,7 @@ test('person title filter will filter down results and reset page to 1', async a
   await generalMobilePage.filterInput('7');
   await triggerEvent('.t-filter-input', 'keyup', {keyCode: 68});
   await generalMobilePage.submitFilterSort();
-  assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), PD.titleLastPage2Grid);
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(2)').text().trim(), PD.titleLastPage2Grid);
 });
 
 test('filtering on status will sort when filter is clicked', async assert => {

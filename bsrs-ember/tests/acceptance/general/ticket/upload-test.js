@@ -1,11 +1,11 @@
 import Ember from 'ember';
-import { test } from 'qunit';
+const { run } = Ember;
+import { test, skip } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
-import CF from 'bsrs-ember/vendor/category_fixtures';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
@@ -406,25 +406,29 @@ test('when multiple tabs are open only attachments associated with the rollback 
   });
 });
 
-// show the BELOW in another test (with one saved/ one not saved -nav away, the back to detail)
-// assert.equal(find(PROGRESS_BAR).length, 1);
-// assert.equal(find('.t-remove-attachment').length, 0);
-
-/* jshint ignore:start */
-test('uploading error shows error message', async assert => {
-  const model = store.find('ticket', TD.idOne);
+// TODO: see if drag and drop should be supported across all file uploads
+skip('bad gateway when saving an attachment (502)', function(assert) {
+  let model = store.find('ticket', TD.idOne);
+  let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
-  await page.visitDetail();
-  assert.equal(find(PROGRESS_BAR).length, 0);
-  assert.equal(store.find('attachment').get('length'), 0);
-  assert.equal(model.get('attachments').get('length'), 0);
-  assert.equal(model.get('isDirty'), false);
-  assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
-  const exception = `File failed to upload`;
-  const image = {name: 'foo.png', type: 'image/png', size: 234000};
-  ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 404, {'detail': exception});
-  await uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
-  assert.equal(store.find('attachment').get('length'), 0);
-  assert.equal(find('.t-ticket-attachment-error').text(), t('attachment.fail'));
+  ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 502, 'Server Error');
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL, 'ticket detail url');
+    assert.equal(find('app-notice').length, 0, 'no error notification displayed');
+    run(() => {
+      const event = Ember.$.Event('drop');
+      const image = { name: 'foo.png', type: 'image/png', size: 234000 };
+      event.dataTransfer = { files: [image] };
+      find('.btn-file').trigger(event);
+    });
+  });
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL, 'url did not change');
+    assert.equal(find('app-notice').length, 1, 'error notification displayed');
+  });
+  click('app-notice');
+  andThen(() => {
+    assert.equal(find('app-notice').length, 0, 'error notification dismissed');
+  });
 });
-/* jshint ignore:end */

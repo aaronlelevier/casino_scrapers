@@ -2,7 +2,6 @@ import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import PND from 'bsrs-ember/vendor/defaults/phone-number';
 import PNTD from 'bsrs-ember/vendor/defaults/phone-number-type';
-// import PNF from 'bsrs-ember/vendor/phone_number_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import RD from 'bsrs-ember/vendor/defaults/role';
@@ -14,8 +13,6 @@ import LOCALED from 'bsrs-ember/vendor/defaults/locale';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import ED from 'bsrs-ember/vendor/defaults/email';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
-// import EF from 'bsrs-ember/vendor/email_fixtures';
-// import Person from 'bsrs-ember/models/person';
 import PPHD from 'bsrs-ember/vendor/defaults/person-join-phonenumber';
 import PEMD from 'bsrs-ember/vendor/defaults/person-join-email';
 import CD from 'bsrs-ember/vendor/defaults/currency';
@@ -29,7 +26,7 @@ var store, subject, uuid, location_deserializer, location_level_deserializer, st
 
 module('unit: person deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:random','model:uuid','model:person', 'model:person-list', 'model:role', 'model:person-location','model:location','model:location-level','model:email', 'model:email-type', 'model:phonenumber', 'model:phone-number-type', 'model:person-join-phonenumber', 'model:person-join-email', 'service:person-current','service:translations-fetcher','service:i18n', 'model:status', 'model:person-status-list', 'model:location-status', 'model:locale', 'model:currency', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many']);
+    store = module_registry(this.container, this.registry, ['model:random','model:uuid','model:person', 'model:person-list', 'model:role', 'model:person-location','model:location','model:location-level','model:email', 'model:email-type', 'model:phonenumber', 'model:phone-number-type', 'model:person-join-phonenumber', 'model:person-join-email', 'service:person-current','service:translations-fetcher','service:i18n', 'model:status', 'model:person-status-list', 'model:location-status', 'model:locale', 'model:attachment', 'model:currency', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many']);
     uuid = this.container.lookup('model:uuid');
     location_level_deserializer = LocationLevelDeserializer.create({simpleStore: store});
     location_deserializer = LocationDeserializer.create({simpleStore: store, LocationLevelDeserializer: location_level_deserializer});
@@ -96,6 +93,7 @@ test('will check for previous person in store for locale_id as well', (assert) =
 });
 
 /* STATUS */
+
 test('person setup correct status fk with bootstrapped data (detail)', (assert) => {
   let response = PF.generate(PD.idOne);
   status = store.push('status', {id: SD.activeId, name: SD.activeName});
@@ -131,6 +129,75 @@ test('person setup correct status fk with bootstrapped data (list)', (assert) =>
   assert.equal(person.get('status.id'), status.get('id'));
   assert.equal(status.get('people').length, 1);
   assert.deepEqual(status.get('people'), [PD.idOne]);
+});
+
+test('person may not have a photo (list)', (assert) => {
+  let json = PF.generate_list(PD.idOne);
+  delete json.photo;
+  let response = {'count':1,'next':null,'previous':null,'results': [json]};
+  run(() => {
+    subject.deserialize(response);
+  });
+  person = store.find('person-list', PD.idOne);
+  assert.equal(person.get('photo.id'), undefined);
+});
+
+test('person setup correct photo fk (list)', (assert) => {
+  let json = PF.generate_list(PD.idOne);
+  let response = {'count':1,'next':null,'previous':null,'results': [json]};
+  run(() => {
+    subject.deserialize(response);
+  });
+  person = store.find('person-list', PD.idOne);
+  const photo = store.find('attachment').objectAt(0);
+  assert.equal(person.get('photo.id'), photo.get('id'));
+});
+
+/* PHOTO */
+
+test('person setup correct photo fk', (assert) => {
+  let response = PF.generate(PD.idOne);
+  response.photo = {id: 9, filename: 'wat.jpg'};
+  run(() => {
+    subject.deserialize(response, PD.idOne);
+  });
+  assert.equal(person.get('photo_fk'), 9);
+  assert.equal(person.get('photo').get('id'), 9);
+  assert.equal(person.get('photo').get('filename'), 'wat.jpg');
+  const photo = store.find('attachment', 9);
+  assert.deepEqual(photo.get('people'), [PD.idOne]);
+  assert.ok(person.get('isNotDirty'));
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(person.get('photoIsDirty'), false);
+});
+
+test('person may not have a photo detail', (assert) => {
+  let response = PF.generate(PD.idOne);
+  delete response.photo;
+  run(() => {
+    subject.deserialize(response, PD.idOne);
+  });
+  assert.equal(person.get('photo_fk'), undefined);
+  assert.equal(person.get('photo.id'), undefined);
+  assert.ok(person.get('isNotDirty'));
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(person.get('photoIsNotDirty'), true);
+});
+
+test('person setup correct photo fk with existing photo pointer to person', (assert) => {
+  let response = PF.generate(PD.idOne);
+  store.push('attachment', {id: 9, filename: 'wat.jpg', people: [PD.idOne]});
+  response.photo = {id: 10, filename: 'foo.jpg'};
+  run(() => {
+    subject.deserialize(response, PD.idOne);
+  });
+  const photo = store.find('attachment', 10);
+  assert.equal(person.get('photo_fk'), photo.get('id'));
+  assert.equal(person.get('photo').get('id'), photo.get('id'));
+  assert.equal(person.get('photo').get('filename'), photo.get('filename'));
+  assert.equal(photo.get('people').length, 1);
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(person.get('photoIsDirty'), false);
 });
 
 /* PH and EMAILS*/

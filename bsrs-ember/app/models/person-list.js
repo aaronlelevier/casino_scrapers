@@ -34,4 +34,9 @@ export default Ember.Object.extend(RoleMixin, OptConf, {
     const name = this.get('status.name');
     return name ? name.replace(/\./g, '-') : '';
   }),
+  photo: Ember.computed(function() {
+    const store = this.get('simpleStore');
+    const attachments = store.find('attachment');
+    return attachments.findBy('id', this.get('photo_fk'));
+  }),
 }); 

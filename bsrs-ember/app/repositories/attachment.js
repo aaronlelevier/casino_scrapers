@@ -31,23 +31,12 @@ var AttachmentRepo = Ember.Object.extend({
     const attachment = this.get('simpleStore').find('attachment', id);
     attachment.set('percent', Math.round(e.loaded / e.total * 100));
   },
-  /*
-   * didError removes attachment from store
-   */
-  didError(xhr, status, errorMsg, id) {
-    // xhr.then = null;
-    const store = this.get('simpleStore');
-    run(() => {
-      const attachment = store.remove('attachment', id);
-    });
-  },
   upload(id, file, model) {
     let self = this;
     let store = this.get('simpleStore');
     run(() => {
       store.push('attachment', {id: id, new: true, title: file.name, percent: 0});
     });
-    model.add_attachment({ id: id });
     let data = new FormData();
     data.append('id', id);
     data.append('filename', file.name);
@@ -73,7 +62,7 @@ var AttachmentRepo = Ember.Object.extend({
         return Ember.run(null, resolve, json);
       };
       options.error = (xhr, errorThrown) => {
-        return Ember.run(null, reject, this.didError(xhr, xhr.status, xhr.responseJSON, id));
+        return Ember.run(null, reject, xhr);
       };
       Ember.$.ajax(options);
     });

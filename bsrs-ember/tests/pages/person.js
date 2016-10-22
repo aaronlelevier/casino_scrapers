@@ -47,18 +47,12 @@ export default PageObject.create({
   locationTwoSelected: text(LOCATION_TWO),
 
   roleInput: text(ROLE),
-  roleClickDropdown: clickable(ROLE),
-  roleClickOptionOne: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${RD.nameOne})`),
-  roleClickOptionTwo: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${RD.nameTwo})`),
 
   localeInput: text(LOCALE),
   localeClickDropdown: clickable(LOCALE),
-  // localeClickOptionOne: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${PD.localeOne})`),
   localeClickOptionTwo: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${PD.localeTwo})`),
   localeOne: text(`${DROPDOWN} > li:eq(0)`),
   localeTwo: text(`${DROPDOWN} > li:eq(1)`),
-  // localeThree: text(`${DROPDOWN} > li:eq(2)`),
-  // localeFour: text(`${DROPDOWN} > li:eq(3)`),
   localeOptionLength: count(`${DROPDOWN} > li`),
 
   firstNameFill: fillable('.t-person-first-name'),

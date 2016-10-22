@@ -25,6 +25,7 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     let store = this.get('simpleStore');
     // belongs-to
     let location_json = response.location;
+    // TODO: ticket always have a location?
     response.location_fk = location_json.id;
     delete response.location;
     let assignee_json = response.assignee;

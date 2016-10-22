@@ -8,6 +8,7 @@ from model_mommy import mommy
 from accounting.models import Currency
 from category.models import Category, CategoryStatus
 from category.tests.factory import create_single_category, create_repair_category
+from generic.tests.factory import create_image_attachment
 from location.models import (LocationLevel, Location, LocationStatus, LocationType,
     LOCATION_COMPANY, LOCATION_DISTRICT, LOCATION_REGION,)
 from location.tests.factory import (
@@ -122,7 +123,8 @@ def create_single_person(name=None, role=None, location=None, status=None, local
             role=role,
             status=status,
             locale=locale,
-            employee_id=create._generate_ph()
+            employee_id=create._generate_ph(),
+            photo=create_image_attachment()
         )
         person.locations.add(location)
 

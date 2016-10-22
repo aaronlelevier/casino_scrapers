@@ -83,7 +83,7 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
       lastNameBoy2: 'Man2',
       usernameLastPage2Grid: 'scott17',
       fullnameLastPage2Grid: 'Scott17 Newcomer17',
-      titleLastPage2Grid: 'Scott17 Newcomer17',
+      titleLastPage2Grid: '17 WAT',
       titleOne: 'Pres',
       titleTwo: 'Vice Pres',
       titleThree: 'Manager',
@@ -94,6 +94,8 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
       emailTwo: 'tbillups@gmail.com',
       emailThree: 'alevier@aol.com',
       personListTwo: '139543cf-8fea-426a-8bc3-09778cd79902',
+      attachmentOneId: '40f530c4-ce6c-4724-9cfd-37a16e787001',
+      attachmentTwoId: '40f530c4-ce6c-4724-9cfd-37a16e787002',
       inherited: {
         /* no value field if not present */
         auth_amount: {

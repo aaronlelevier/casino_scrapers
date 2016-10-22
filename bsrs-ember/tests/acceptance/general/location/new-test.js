@@ -47,7 +47,7 @@ let store, payload, list_xhr;
 moduleForAcceptance('Acceptance | location-new', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
-    list_xhr = xhr(`${LOCATIONS_URL}?page=1`, "GET", null, {}, 201, LOCATION_FIXTURES.empty());
+    list_xhr = xhr(`${LOCATIONS_URL}?page=1`, "GET", null, {}, 201, LOCATION_FIXTURES.list());
     payload = {
       id: UUID.value,
       name: LD.storeName,
@@ -79,10 +79,8 @@ test('visiting /location/new', (assert) => {
   });
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
+  selectChoose('.t-location-level-select', LLD.nameCompany);
+  selectChoose('.t-location-status-select', LDS.openNameTranslated);
   andThen(() => {
     assert.equal(page.locationLevelInput.split(' +')[0].split(' ')[0], LLD.nameCompany);
   });
@@ -180,7 +178,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
       assert.throws(Ember.$('.ember-modal-dialog'));
       let locations = store.find('location');
       assert.equal(locations.get('length'), initLocationCount-1);
-      assert.equal(find('tr.t-grid-data').length, 0);
+      assert.equal(find('tr.t-grid-data').length, 10);
     });
   });
 });
@@ -202,10 +200,8 @@ test('adding a new location should allow for another new location to be created 
   click('.t-add-new');
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
+  selectChoose('.t-location-level-select', LLD.nameCompany);
+  selectChoose('.t-location-status-select', LDS.openNameTranslated);
   xhr(LOCATIONS_URL, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
   generalPage.save();
   andThen(() => {
@@ -224,10 +220,8 @@ test('when you change a related phone numbers type it will be persisted correctl
   page.visitNew();
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
+  selectChoose('.t-location-level-select', LLD.nameCompany);
+  selectChoose('.t-location-status-select', LDS.openNameTranslated);
   generalPage.clickAddPhoneNumber();
   andThen(() => {
     assert.equal(find('.t-add-phone-number-btn').length, 1);
@@ -246,10 +240,8 @@ test('when you change a related emails type it will be persisted correctly', (as
   page.visitNew();
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
+  selectChoose('.t-location-level-select', LLD.nameCompany);
+  selectChoose('.t-location-status-select', LDS.openNameTranslated);
   page.clickAddEmail();
   andThen(() => {
     assert.equal(find('.t-add-email-btn').length, 1);
@@ -267,10 +259,8 @@ test('when you change a related address type it will be persisted correctly', (a
   page.visitNew();
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
+  selectChoose('.t-location-level-select', LLD.nameCompany);
+  selectChoose('.t-location-status-select', LDS.openNameTranslated);
   page.clickAddAddress();
   page.addressFillIn(AD.streetOne);
   page.addressCityFill(AD.cityOne);
@@ -316,10 +306,8 @@ test('when you change a related address type it will be persisted correctly', (a
 /*LOCATION TO CHILDREN M2M*/
 test('clicking and typing into power select for location will fire off xhr request for all children locations', (assert) => {
   page.visitNew();
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
+  selectChoose('.t-location-level-select', LLD.nameCompany);
+  selectChoose('.t-location-status-select', LDS.openNameTranslated);
   let location_endpoint = `${LOCATIONS_URL}get-level-children/${LLD.idOne}/${UUID.value}/location__icontains=a/`;
   let response = {'results': [LF.get_no_related(LD.unusedId, LD.apple)]};
   ajax(location_endpoint, 'GET', null, {}, 201, response);
@@ -377,10 +365,8 @@ test('clicking and typing into power select for location will fire off xhr reque
 
 test('can add and remove all children (while not populating options) and add back', (assert) => {
   page.visitNew();
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
+  selectChoose('.t-location-level-select', LLD.nameCompany);
+  selectChoose('.t-location-status-select', LDS.openNameTranslated);
   andThen(() => {
     let location = store.find('location',UUID.value);
     assert.equal(location.get('children').get('length'), 0);
@@ -430,10 +416,8 @@ test('can add and remove all children (while not populating options) and add bac
 test('clicking and typing into power select for location will not filter if spacebar pressed', (assert) => {
   clearxhr(list_xhr);
   page.visitNew();
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
+  selectChoose('.t-location-level-select', LLD.nameCompany);
+  selectChoose('.t-location-status-select', LDS.openNameTranslated);
   selectSearch(CHILDREN, '');
   andThen(() => {
     assert.equal(page.childrenOptionLength, 1);
@@ -444,10 +428,8 @@ test('clicking and typing into power select for location will not filter if spac
 /*PARENTS*/
 test('clicking and typing into power select for location will fire off xhr request for all location', (assert) => {
   page.visitNew();
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
+  selectChoose('.t-location-level-select', LLD.nameCompany);
+  selectChoose('.t-location-status-select', LDS.openNameTranslated);
   andThen(() => {
     let location = store.find('location',UUID.value);
     assert.equal(location.get('parents').get('length'), 0);
@@ -509,10 +491,8 @@ test('clicking and typing into power select for location will fire off xhr reque
 
 test('starting with multiple parents, can remove all parents (while not populating options) and add back', (assert) => {
   page.visitNew();
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
+  selectChoose('.t-location-level-select', LLD.nameCompany);
+  selectChoose('.t-location-status-select', LDS.openNameTranslated);
   andThen(() => {
     let location = store.find('location',UUID.value);
     assert.equal(location.get('parents').get('length'), 0);
@@ -563,23 +543,11 @@ test('starting with multiple parents, can remove all parents (while not populati
 test('clicking and typing into power select for location will not filter if spacebar pressed', (assert) => {
   clearxhr(list_xhr);
   page.visitNew();
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
-  page.statusClickDropdown();
-  page.statusClickOptionOne();
+  selectChoose('.t-location-level-select', LLD.nameCompany);
+  selectChoose('.t-location-status-select', LDS.openNameTranslated);
   selectSearch(PARENTS, '');
   andThen(() => {
     assert.equal(page.parentsOptionLength, 1);
     assert.equal(find(`${PARENTS_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
-  });
-});
-
-/* STATUS */
-test('status options are populated and validation works correctly', (assert) => {
-  clearxhr(list_xhr);
-  page.visitNew();
-  page.statusClickDropdown();
-  andThen(() => {
-    assert.equal(page.statusOptionLength, 3);
   });
 });

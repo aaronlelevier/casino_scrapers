@@ -1,0 +1,14 @@
+& {
+  .user-avatar {
+    width: $photoSmallSize;
+    height: $photoSmallSize;
+    border-radius: $photoBorderRadius;
+    margin: -1px 5px 0 0;
+  }
+  // if no photo, fa icon shows
+  i {
+    font-size: 2.2rem;
+    color: $medGray;
+    margin: -3px 5px 0 0;
+  }
+}

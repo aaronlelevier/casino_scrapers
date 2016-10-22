@@ -1,5 +1,6 @@
 import Ember from 'ember';
-import { test } from 'qunit';
+const { run } = Ember;
+import { test, skip } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
@@ -7,7 +8,7 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
-import BASEURLS from 'bsrs-ember/utilities/urls';
+import BASEURLS, { ATTACHMENTS_URL } from 'bsrs-ember/utilities/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/dtd';
@@ -258,19 +259,28 @@ test('rolling back should only remove files not yet associated with a given dtd'
   assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('uploading error shows error message', async assert => {
-  await page.visitDetail();
-  assert.equal(find(PROGRESS_BAR).length, 0);
-  assert.equal(store.find('attachment').get('length'), 0);
-  assert.equal(model.get('attachments').get('length'), 0);
-  assert.equal(model.get('isDirty'), false);
-  assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
-  const exception = `File failed to upload`;
-  const image = {name: 'foo.png', type: 'image/png', size: 234000};
-  ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 404, {'detail': exception});
-  await uploadFile('dtds/dtd-single', 'upload', image, model);
-  assert.equal(store.find('attachment').get('length'), 0);
-  assert.equal(find('.t-dtd-attachment-error').text(), t('attachment.fail'));
+// TODO: see if drag and drop should be supported across all file uploads
+skip('bad gateway when saving an attachment (502)', function(assert) {
+  ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 502, 'Server Error');
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL, 'dtd detail url');
+    assert.equal(find('app-notice').length, 0, 'no error notification displayed');
+    run(() => {
+      const event = Ember.$.Event('drop');
+      const image = { name: 'foo.png', type: 'image/png', size: 234000 };
+      event.dataTransfer = { files: [image] };
+      find('.btn-file').trigger(event);
+    });
+  });
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL, 'url did not change');
+    assert.equal(find('app-notice').length, 1, 'error notification displayed');
+  });
+  click('app-notice');
+  andThen(() => {
+    assert.equal(find('app-notice').length, 0, 'error notification dismissed');
+  });
 });
 
 /* jshint ignore:end */
