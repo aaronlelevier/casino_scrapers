@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+  </head>
+  <body>
+    {% for a in ticket.activities.all %}
+      <ul>
+        <li>Type: {{a.type.name}}</li>
+        <li>Who: {{a.person.fullname}}</li>
+        <li>When: {{a.created}}</li>
+        <li>What: {{a.content}}</li>
+      </ul>
+    {% endfor %}
+  </body>
+</html>
