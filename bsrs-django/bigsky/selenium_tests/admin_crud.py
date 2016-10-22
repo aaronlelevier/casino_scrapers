@@ -747,7 +747,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         time.sleep(2)
         billing_email_type_option.click()
 
-        billing_email = self.driver.find_elements_by_class_name("t-email-email")[1]
+        billing_email = self.driver.find_element_by_class_name("t-email-email1")
         billing_email.send_keys("johnwayne@western.com")
 
         # select an Billing Phone Type

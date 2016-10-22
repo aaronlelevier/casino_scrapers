@@ -9,7 +9,6 @@ const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
 const CURRENCY = '.t-currency-select';
 const IMP_EMAIL = '.t-email-email:eq(0)';
 const IMP_EMAIL_TYPE = '.t-email-type-select:eq(0)';
-const BILL_EMAIL = '.t-email-email:eq(1)';
 const BILL_PHONE = '.t-phonenumber-number:eq(0)';
 const BILL_PHONE_TYPE = '.t-phone-number-type-select:eq(0)';
 const BILL_EMAIL_TYPE = '.t-email-type-select:eq(0)';
@@ -37,8 +36,8 @@ export default create({
   companyImplementationEmailTypeValue: text(IMP_EMAIL_TYPE),
   companyBillingContactValue: value('.t-tenant-billing_contact'),
   companyBillingContactFill: fillable('.t-tenant-billing_contact'),
-  companyBillingEmailValue: value(BILL_EMAIL),
-  companyBillingEmailFill: fillable(BILL_EMAIL),
+  companyBillingEmailValue: value('.t-email-email1'),
+  companyBillingEmailFill: fillable('.t-email-email1'),
   companyBillingPhoneValue: value(BILL_PHONE),
   companyBillingPhoneFill: fillable(BILL_PHONE),
   companyBillingEmailTypeValue: text(BILL_EMAIL_TYPE),
