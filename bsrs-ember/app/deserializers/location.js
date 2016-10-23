@@ -109,7 +109,7 @@ var extract_children = function(model, store) {
 var LocationDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin, {
   init() {
     this._super(...arguments);
-    belongs_to.bind(this)('status', 'location', 'location');
+    belongs_to.bind(this)('status', 'location');
     belongs_to.bind(this)('country');
     belongs_to.bind(this)('state');
     belongs_to.bind(this)('phone_number_type');

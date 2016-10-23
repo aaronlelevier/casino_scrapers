@@ -15,10 +15,10 @@ var extract_attachments = function(model, store) {
 var TicketDeserializer = Ember.Object.extend(OptConf, {
   init() {
     this._super(...arguments);
-    belongs_to.bind(this)('status', 'ticket', 'general');
-    belongs_to.bind(this)('priority', 'ticket', 'ticket');
-    belongs_to.bind(this)('assignee', 'ticket', 'person');
-    belongs_to.bind(this)('location', 'ticket', 'location');
+    belongs_to.bind(this)('status', 'general');
+    belongs_to.bind(this)('priority', 'ticket');
+    belongs_to.bind(this)('assignee', 'person');
+    belongs_to.bind(this)('location', 'location');
     many_to_many.bind(this)('cc', 'ticket');
   },
   deserialize(response, id) {
