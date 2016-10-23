@@ -31,6 +31,7 @@ class TenantTests(TestCase):
         self.assertIsInstance(ret.implementation_email.type, EmailType)
         self.assertTrue(ret.billing_contact)
         self.assertIsInstance(ret.billing_email, Email)
+        self.assertNotEqual(ret.billing_email.id, ret.implementation_email.id)
         self.assertIsInstance(ret.billing_email.type, EmailType)
         self.assertIsInstance(ret.billing_phone_number, PhoneNumber)
         self.assertIsInstance(ret.billing_phone_number.type, PhoneNumberType)

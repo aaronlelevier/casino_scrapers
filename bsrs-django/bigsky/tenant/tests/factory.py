@@ -29,7 +29,7 @@ def get_or_create_tenant(company_name=settings.DEFAULT_TENANT_COMPANY_NAME, **kw
             'implementation_contact_initial': _generate_chars(),
             'implementation_email': Email.objects.first(),
             'billing_contact': _generate_chars(),
-            'billing_email': Email.objects.first(),
+            'billing_email': Email.objects.last(),
             'billing_phone_number': PhoneNumber.objects.first(),
             'billing_address': Address.objects.first()
         }
