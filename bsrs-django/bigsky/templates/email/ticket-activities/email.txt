@@ -1,0 +1,19 @@
+{% for a in ticket.activities.all %}
+
+  {% if a.type.name == CREATE %}
+
+    Type: {{a.type.name}}
+    {{''|linebreaks}}
+
+    Who: {{a.person.fullname}}
+    {{''|linebreaks}}
+
+    When: {{a.created}}
+    {{''|linebreaks}}
+
+    What: {{a.content}}
+    {{''|linebreaks}}
+
+  {% endif %}
+
+{% endfor %}

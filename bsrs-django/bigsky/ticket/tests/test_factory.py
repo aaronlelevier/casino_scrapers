@@ -164,7 +164,7 @@ class CreateTicketWithActivitiesTests(TestCase):
         category_two = create_single_category()
         attachment = create_image_attachment()
 
-        ticket_with_activities = factory.TicketWithActivities(
+        twa = factory.TicketWithActivities(
             person=person,
             person_two=person_two,
             status=status,
@@ -175,9 +175,9 @@ class CreateTicketWithActivitiesTests(TestCase):
             category_two=category_two,
             attachment=attachment
         )
-        ticket_with_activities.create()
+        twa.create()
 
-        ticket = ticket_with_activities.ticket
+        ticket = twa.ticket
 
         # overall tests
         self.assertIsInstance(ticket, Ticket)

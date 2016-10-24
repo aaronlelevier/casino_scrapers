@@ -16,6 +16,7 @@ from bigsky import views_api as bigsky_views_api
 from bigsky.forms import BsAuthenticationForm
 from category import views as category_views
 from contact import views as contact_views
+from contact import _dj_views as dj_contact_views
 from dt import views as dt_views
 from dtd import views as dtd_views
 from generic import views as generic_views
@@ -25,7 +26,6 @@ from automation import views as automation_views
 from tenant import views as tenant_views
 from third_party import views as third_party_views
 from ticket import views as tickets_views
-from ticket import _dj_views as dj_ticket_views
 from translation import views as translation_views
 from utils.decorators import required, logout_required
 from work_order import views as work_orders_views
@@ -152,7 +152,7 @@ urlpatterns += required(
 
 if settings.DEBUG:
     email_patterns = [
-        url(r'^ticket-activities/(?P<pk>[\w-]+)/$', dj_ticket_views.ticket_activities)
+        url(r'^ticket-activities/(?P<pk>[\w-]+)/$', dj_contact_views.ticket_activities)
     ]
 
     import debug_toolbar

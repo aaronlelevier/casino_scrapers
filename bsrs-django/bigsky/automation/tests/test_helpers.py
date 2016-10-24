@@ -57,7 +57,7 @@ class InterpolateTests(TestCase):
     def test_text__ticket_activity(self, mock_func):
         s = "{{ticket.activity}}"
         self.interpolate.text(s)
-        self.assertEqual(mock_func.call_args[0][0], 'email/ticket-activities.html')
+        self.assertEqual(mock_func.call_args[0][0], 'email/ticket-activities/email.txt')
         self.assertEqual(mock_func.call_args[0][1], {'ticket': self.ticket})
 
     def test_text__empty_string(self):

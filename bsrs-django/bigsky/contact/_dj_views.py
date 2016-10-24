@@ -10,4 +10,6 @@ def ticket_activities(request, pk):
     for x in TicketActivityType.ALL:
         context[x.upper()] = x
 
-    return render(request, 'email/ticket-activities.html', context)
+    print(context)
+
+    return render(request, 'email/ticket-activities/email.txt', context)

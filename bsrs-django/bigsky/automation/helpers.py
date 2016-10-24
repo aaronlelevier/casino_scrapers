@@ -62,7 +62,7 @@ class Interpolate(object):
             return string.replace(substring, self._ticket_url())
         elif tag == 'ticket.activity':
             context = {'ticket': self.ticket}
-            return loader.render_to_string('email/ticket-activities.html', context)
+            return loader.render_to_string('email/ticket-activities/email.txt', context)
         elif tag in self.i18n_FIELDS:
             model, field = tag.split('.')
             return string.replace(
