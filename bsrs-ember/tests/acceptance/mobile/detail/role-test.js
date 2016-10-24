@@ -17,13 +17,12 @@ import page from 'bsrs-ember/tests/pages/role';
 import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
-import BASEURLS, { ROLES_URL, PEOPLE_URL, CATEGORIES_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { ROLES_URL, ROLE_LIST_URL, PEOPLE_URL, CATEGORIES_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 import { LLEVEL_SELECT } from 'bsrs-ember/tests/helpers/const-names';
 
 var store, list_xhr;
 
 const BASE_URL = BASEURLS.base_roles_url;
-const ROLE_URL = `${BASE_URL}/index`;
 const DETAIL_URL = `${BASE_URL}/${RD.idOne}`;
 const ROLE_PUT_URL = `${ROLES_URL}${RD.idOne}/`;
 
@@ -43,11 +42,11 @@ moduleForAcceptance('Acceptance | mobile role detail test', {
 
 test('can click to detail, show activities, and go back to list', async assert => {
   await page.visit();
-  assert.equal(currentURL(), ROLE_URL);
+  assert.equal(currentURL(), ROLE_LIST_URL);
   await click('.t-grid-data:eq(0)');
   assert.equal(currentURL(), DETAIL_URL);
   await generalMobilePage.backButtonClick();
-  assert.equal(currentURL(), ROLE_URL);
+  assert.equal(currentURL(), ROLE_LIST_URL);
 });
 
 test('can click through component sections and save to redirect to index', async assert => {
@@ -60,7 +59,7 @@ test('can click through component sections and save to redirect to index', async
   const payload = RF.put({id: RD.idOne});
   xhr(ROLE_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   await generalPage.save();
-  assert.equal(currentURL(), ROLE_URL);
+  assert.equal(currentURL(), ROLE_LIST_URL);
 });
 
 
@@ -81,7 +80,7 @@ test('can update all fields and save', async assert => {
   const payload = RF.put({id: RD.idOne, name: RD.nameTwo, role_type: RD.t_roleTypeContractor, location_level: LLD.idLossRegion, categories: [], auth_currency: CURRENCY_D.idCAD, auth_amount: '10.00', dashboard_text: 'wat'});
   xhr(ROLE_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   await generalPage.save()
-  assert.equal(currentURL(), ROLE_URL);
+  assert.equal(currentURL(), ROLE_LIST_URL);
 });
 
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async assert => {
@@ -111,7 +110,6 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
 });
 
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit rollback', async assert => {
-  clearxhr(list_xhr);
   await page.visitDetail();
   await page.nameFill('wat');
   assert.equal(find('.t-role-name').val(), 'wat');
@@ -129,9 +127,8 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), DETAIL_URL);
+      assert.equal(currentURL(), ROLE_LIST_URL);
       const role = store.find('role', RD.idOne);
-      assert.equal(find('.t-role-name').val(), get(role, 'name'));
       assert.notEqual(find('.t-role-name').val(), 'wat');
       assert.throws(Ember.$('.ember-modal-dialog'));
     });

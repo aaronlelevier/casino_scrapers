@@ -109,7 +109,6 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
 });
 
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit rollback', async assert => {
-  clearxhr(list_xhr);
   await page.visitDetail();
   await page.nameFillIn('wat');
   assert.equal(find('.t-location-name').val(), 'wat');
@@ -127,9 +126,8 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), DETAIL_URL);
+      assert.equal(currentURL(), LOCATION_LIST_URL);
       const location = store.find('location', LD.idOne);
-      assert.equal(find('.t-location-name').val(), get(location, 'name'));
       assert.notEqual(find('.t-location-name').val(), 'wat');
       assert.throws(Ember.$('.ember-modal-dialog'));
     });

@@ -208,7 +208,7 @@ var ApplicationRoute = Route.extend({
       });
     },
     /* MOBILE */
-    closeMobileDetail(model, redirectRoute) {
+    closeMobileDetail(redirectRoute) {
       this.transitionTo(redirectRoute);
     },
   }

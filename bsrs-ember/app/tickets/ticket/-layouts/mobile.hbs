@@ -3,7 +3,7 @@
       model=model
       activities=activities
       title=(concat (t "ticket.label.numberSymbol")model.number)
-      close="closeMobileDetail"
+      close=(route-action "closeMobileDetail")
       redirectRoute="tickets.index"
       hashComponents=hashComponents
       otherXhrs=otherXhrs

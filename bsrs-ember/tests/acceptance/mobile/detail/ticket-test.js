@@ -140,7 +140,6 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
 });
 
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit rollback', async assert => {
-  clearxhr(list_xhr);
   await page.visitDetail();
   await click('.t-mobile-footer-item:eq(1)');
   await page.requestFillIn('wat');
@@ -159,9 +158,8 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), DETAIL_URL);
+      assert.equal(currentURL(), TICKET_URL);
       const ticket = store.find('ticket', TD.idOne);
-      assert.equal(find('.t-mobile-ticket-request').val(), get(ticket, 'request'));
       assert.notEqual(find('.t-mobile-ticket-request').val(), 'wat');
       assert.throws(Ember.$('.ember-modal-dialog'));
     });

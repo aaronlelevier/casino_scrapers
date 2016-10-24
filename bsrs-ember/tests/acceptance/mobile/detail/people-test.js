@@ -21,13 +21,12 @@ import peoplePage from 'bsrs-ember/tests/pages/person';
 import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import pageDrawer from 'bsrs-ember/tests/pages/nav-drawer';
-import BASEURLS, { PEOPLE_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { PEOPLE_URL, PEOPLE_LIST_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 import { ROLE_SELECT, LOCATION_SELECT, STATUS_SELECT } from 'bsrs-ember/tests/helpers/const-names';
 
 var store, list_xhr, detail_payload;
 
 const BASE_URL = BASEURLS.base_people_url;
-const PEOPLE_INDEX_URL = `${BASE_URL}/index`;
 const DETAIL_URL = `${BASE_URL}/${PD.idOne}`;
 const PEOPLE_PUT_URL = `${PEOPLE_URL}${PD.idOne}/`;
 
@@ -49,12 +48,12 @@ test('can click from admin to people grid to detail', async assert => {
   await pageDrawer.clickDrawer();
   await pageDrawer.clickAdmin();
   await generalPage.clickPeople();
-  assert.equal(currentURL(), PEOPLE_INDEX_URL);
+  assert.equal(currentURL(), PEOPLE_LIST_URL);
   await generalPage.gridItemZeroClick();
   assert.equal(currentURL(), DETAIL_URL);
 });
 
-test('scott can update fields and save', async assert => {
+test('can update fields and save', async assert => {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   const person = store.find('person', PD.idOne);
@@ -86,7 +85,7 @@ test('scott can update fields and save', async assert => {
     phone_numbers: [phone_payload], emails: [email_payload]});
   xhr(PEOPLE_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   await generalPage.save()
-  assert.equal(currentURL(), PEOPLE_INDEX_URL);
+  assert.equal(currentURL(), PEOPLE_LIST_URL);
 });
 
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async assert => {
@@ -117,7 +116,6 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
 });
 
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit rollback', async assert => {
-  clearxhr(list_xhr);
   await page.visitDetail();
   await click('.t-mobile-footer-item:eq(0)');
   await peoplePage.firstNameFill('wat');
@@ -136,9 +134,8 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), DETAIL_URL);
+      assert.equal(currentURL(), PEOPLE_LIST_URL);
       const person = store.find('person', PD.idOne);
-      assert.equal(find('.t-person-first-name').val(), get(person, 'first_name'));
       assert.notEqual(find('.t-person-first-name').val(), 'wat');
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
@@ -157,7 +154,7 @@ test('can click through component sections and save to redirect to index', async
   let payload = PF.put({id: PD.idOne});
   xhr(PEOPLE_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   await generalPage.save();
-  assert.equal(currentURL(), PEOPLE_INDEX_URL);
+  assert.equal(currentURL(), PEOPLE_LIST_URL);
 });
 
 /* jshint ignore:end */

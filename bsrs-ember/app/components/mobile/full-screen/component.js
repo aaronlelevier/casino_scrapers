@@ -53,8 +53,8 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
       this.componentStringFunc(activeComponent.component);
     },
     rollback_model() {
-      const model = get(this, 'model');
-      model.rollback();
+      get(this, 'model').rollback();
+      get(this, 'close')(get(this, 'redirectRoute'));
     },
     cancel_modal() {
       set(this, 'mobileDialog', false);
