@@ -9,7 +9,7 @@ import <%= SecondModelSingleCharacter %>D from 'bsrs-ember/vendor/<%= secondMode
 import <%= SecondModelSingleCharacter %>F from 'bsrs-ember/vendor/<%= secondModel %>_fixtures';
 import config from 'bsrs-ember/config/environment';
 import page from 'bsrs-ember/tests/pages/<%= dasherizedModuleName %>-mobile';
-import <%= camelizedModuleName %>page from 'bsrs-ember/tests/pages/<%= dasherizedModuleName %>-mobile';
+import <%= camelizedModuleName %>Page from 'bsrs-ember/tests/pages/<%= dasherizedModuleName %>-mobile';
 import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import pageDrawer from 'bsrs-ember/tests/pages/nav-drawer';
@@ -62,21 +62,73 @@ test('can click through component sections and save to redirect to index', async
 test('visit mobile detail and update all fields', async assert => {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
-  assert.equal(<%= camelizedModuleName %>page.<%= firstPropertyCamel %>Value, <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One);
-  assert.equal(<%= camelizedModuleName %>page.<%= secondProperty %>Input, <%= FirstCharacterModuleName %>D.<%= secondModelDisplaySnake %>);
+  assert.equal(<%= camelizedModuleName %>Page.<%= firstPropertyCamel %>Value, <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>One);
+  assert.equal(<%= camelizedModuleName %>Page.<%= secondProperty %>Input, <%= FirstCharacterModuleName %>D.<%= secondModelDisplaySnake %>);
   // <%= firstProperty %>
-  await <%= camelizedModuleName %>page.<%= firstPropertyCamel %>Fill(<%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>Two);
-  assert.equal(<%= camelizedModuleName %>page.<%= firstPropertyCamel %>Value, <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>Two);
+  await <%= camelizedModuleName %>Page.<%= firstPropertyCamel %>FillIn(<%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>Two);
+  assert.equal(<%= camelizedModuleName %>Page.<%= firstPropertyCamel %>Value, <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>Two);
   // <%= secondProperty %>
   let keyword = 'Boy1';
   xhr(`${<%= secondModelPluralCaps %>_URL}<%= secondModelSnake %>__icontains=${keyword}/`, 'GET', null, {}, 200, <%= SecondModelSingleCharacter %>F.search_power_select());
   await selectSearch('.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select', keyword);
   await selectChoose('.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select', keyword);
-  assert.equal(<%= camelizedModuleName %>page.<%= secondProperty %>Input, <%= SecondModelSingleCharacter %>D.<%= secondModelDisplaySnake %>Boy);
+  assert.equal(<%= camelizedModuleName %>Page.<%= secondProperty %>Input, <%= SecondModelSingleCharacter %>D.<%= secondModelDisplaySnake %>Boy);
   xhr(<%= CapitalizeModule %>_PUT_URL, 'PUT', <%= FirstCharacterModuleName %>F.put({<%= firstPropertySnake %>: <%= FirstCharacterModuleName %>D.<%= firstPropertyCamel %>Two, <%= secondPropertySnake %>: <%= FirstCharacterModuleName %>D.<%= secondPropertyCamel %>SelectOne}), {}, 200, <%= FirstCharacterModuleName %>F.list());
   await generalMobilePage.mobileActionDropdownClick();
   await generalPage.save()
   assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
+});
+
+test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async assert => {
+  clearxhr(list_xhr);
+  await page.visitDetail();
+  await <%= camelizedModuleName %>Page.secondModelCamelFillIn(<%= FirstCharacterModuleName %>D.<%= secondModelDisplaySnake %>Two);
+  assert.equal(<%= camelizedModuleName %>Page.secondModelCamel, <%= FirstCharacterModuleName %>D.<%= secondModelDisplaySnake %>Two);
+  await generalMobilePage.backButtonClick();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
+    });
+  });
+  generalPage.clickModalCancel();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.equal(<%= camelizedModuleName %>Page.secondModelCamel, <%= FirstCharacterModuleName %>D.<%= secondModelDisplaySnake %>Two);
+      assert.throws(Ember.$('.ember-modal-dialog'));
+    });
+  });
+});
+
+test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit rollback', async assert => {
+  await page.visitDetail();
+  await <%= camelizedModuleName %>Page.secondModelCamelFillIn(<%= FirstCharacterModuleName %>D.<%= secondModelDisplaySnake %>Two);
+  assert.equal(<%= camelizedModuleName %>Page.secondModelCamel, <%= FirstCharacterModuleName %>D.<%= secondModelDisplaySnake %>Two);
+  await generalMobilePage.backButtonClick();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), DETAIL_URL);
+      assert.ok(Ember.$('.ember-modal-dialog'));
+      assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
+      assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
+      assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
+      assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
+    });
+  });
+  generalPage.clickModalRollback();
+  andThen(() => {
+    waitFor(assert, () => {
+      assert.equal(currentURL(), <%= CapitalizeModule %>_LIST_URL);
+      const <%= camelizedModuleName %> = store.find('<%= dasherizedModuleName %>', <%= FirstCharacterModuleName %>D.idOne);
+      assert.notEqual(<%= camelizedModuleName %>.get('<%= secondModelDisplaySnake'), 'wat');
+      assert.throws(Ember.$('.ember-modal-dialog'));
+    });
+  });
 });
 
 /* jshint ignore:end */
