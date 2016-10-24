@@ -6,12 +6,13 @@ import uuid
 from model_mommy import mommy
 
 from category.models import Category, CategoryStatus
-from category.tests.factory import create_single_category
+from category.tests.factory import create_repair_category, create_single_category
 from dtd.models import TreeData
-from generic.tests.factory import create_file_attachment
+from generic.tests.factory import create_file_attachment, create_image_attachment
 from location.models import Location, LocationStatus, LocationType, LOCATION_COMPANY
 from location.tests.factory import create_locations
 from person.models import Person
+from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity,)
 from ticket.tests.factory_related import (create_ticket_status, create_ticket_statuses,
@@ -207,8 +208,15 @@ class TicketWithActivities(object):
     app where we need this fixture data.
     """
     def __init__(self, **kwargs):
-        for k,v in kwargs.items():
-            setattr(self, k, v)
+        self.person = create_single_person()
+        self.person_two = create_single_person()
+        self.status = create_default(TicketStatus)
+        self.status_two = mommy.make(TicketStatus, name=TicketStatus.IN_PROGRESS)
+        self.priority = create_default(TicketPriority)
+        self.priority_two = mommy.make(TicketPriority, name=TicketPriority.EMERGENCY)
+        self.category = create_repair_category()
+        self.category_two = create_single_category()
+        self.attachment = create_image_attachment()
 
     def create(self):
         self._ticket = create_standard_ticket(assignee=self.person)

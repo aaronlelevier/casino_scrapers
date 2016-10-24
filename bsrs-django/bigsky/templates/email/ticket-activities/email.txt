@@ -1,19 +1,11 @@
+{% load contact_tags %}
+
 {% for a in ticket.activities.all %}
 
-  {% if a.type.name == CREATE %}
-
-    Type: {{a.type.name}}
+    When: {{a.created}};
+    Who: {{a.person.fullname}};
+    Type: {{a.type.name}};
+    What: {{a|ticket_activity_description}}
     {{''|linebreaks}}
-
-    Who: {{a.person.fullname}}
-    {{''|linebreaks}}
-
-    When: {{a.created}}
-    {{''|linebreaks}}
-
-    What: {{a.content}}
-    {{''|linebreaks}}
-
-  {% endif %}
 
 {% endfor %}

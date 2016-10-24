@@ -8,17 +8,16 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from category.models import Category
-from category.tests.factory import create_categories, create_repair_category, create_single_category
+from category.tests.factory import create_categories
 from dtd.tests.factory import create_dtd_fixture_data
 from dtd.models import TreeData
 from generic.models import Attachment
-from generic.tests.factory import create_image_attachment
 from location.models import Location, LOCATION_COMPANY
 from person.models import Person
 from person.tests.factory import create_single_person, DistrictManager
 from ticket.models import Ticket, TicketStatus, TicketPriority, TicketActivityType, TicketActivity
 from ticket.tests import factory, factory_related
-from utils.helpers import generate_uuid, create_default
+from utils.helpers import generate_uuid
 
 
 class RegionManagerWithTicketsTests(TestCase):
@@ -154,30 +153,20 @@ class CreateStandardTicketTests(TestCase):
 class CreateTicketWithActivitiesTests(TestCase):
 
     def test_main(self):
-        person = create_single_person()
-        person_two = create_single_person()
-        status = create_default(TicketStatus)
-        status_two = mommy.make(TicketStatus, name=TicketStatus.IN_PROGRESS)
-        priority = create_default(TicketPriority)
-        priority_two = mommy.make(TicketPriority, name=TicketPriority.EMERGENCY)
-        category = create_repair_category()
-        category_two = create_single_category()
-        attachment = create_image_attachment()
-
-        twa = factory.TicketWithActivities(
-            person=person,
-            person_two=person_two,
-            status=status,
-            status_two=status_two,
-            priority=priority,
-            priority_two=priority_two,
-            category=category,
-            category_two=category_two,
-            attachment=attachment
-        )
+        twa = factory.TicketWithActivities()
         twa.create()
-
         ticket = twa.ticket
+
+        # local VARs
+        person = twa.person
+        person_two = twa.person_two
+        status = twa.status
+        status_two = twa.status_two
+        priority = twa.priority
+        priority_two = twa.priority_two
+        category = twa.category
+        category_two = twa.category_two
+        attachment = twa.attachment
 
         # overall tests
         self.assertIsInstance(ticket, Ticket)
