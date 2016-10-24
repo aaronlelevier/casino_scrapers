@@ -24,9 +24,6 @@ class DjViewsTest(SetupMixin, TestCase):
             # context
             self.assertEqual(response.context['ticket'], self.ticket)
 
-            for x in TicketActivityType.ALL:
-                self.assertEqual(response.context[x.upper()], x)
-
 
 class TemplateTagsTests(SetupMixin, TestCase):
 
