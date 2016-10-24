@@ -5,7 +5,7 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import ROLE_CD from 'bsrs-ember/vendor/defaults/role-category';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import CD from 'bsrs-ember/vendor/defaults/category';
-import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
+import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currency';
 import PD from 'bsrs-ember/vendor/defaults/person';
 
 var store, role, run = Ember.run;

@@ -73,7 +73,7 @@ class TreeData(BaseModel):
     def next_number():
         return Ticket.objects.next_number()
 
-    key = models.CharField(unique=True, max_length=254)
+    key = models.CharField(max_length=254)
     description = models.TextField()
     attachments = GenericRelation(Attachment)
     note = models.CharField(max_length=1000, blank=True, null=True)

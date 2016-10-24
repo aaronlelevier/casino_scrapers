@@ -19,5 +19,18 @@ export default Ember.Mixin.create({
     this.get(relatedModel).forEach((model) => {
       model.rollback();
     });
+  },
+  saveRelatedSingle(relatedModel) {
+    const model = this.get(relatedModel);
+    if(model){
+      model.saveRelated();
+      model.save();
+    }
+  },
+  rollbackRelatedSingle(relatedModel) {
+    const model = this.get(relatedModel);
+    if(model){
+      model.rollback();
+    }
   }
 });

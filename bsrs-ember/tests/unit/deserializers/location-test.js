@@ -35,6 +35,12 @@ module('unit: location deserializer test', {
       location_status = store.push('location-status', {id: LDS.openId, name: LDS.openName, locations: [LD.idOne]});
       store.push('location-status', {id: LDS.closedId, name: LDS.closedName, locations: []});
       location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, locations: [LD.idOne]});
+      store.push('phone-number-type', {id: PNTD.idOne, name: PNTD.officeName});
+      store.push('phone-number-type', {id: PNTD.idTwo, name: PNTD.mobileName});
+      store.push('email-type', {id: ETD.idOne, name: ETD.workEmail});
+      store.push('email-type', {id: ETD.idTwo, name: ETD.personalEmail});
+      store.push('address-type', {id: ATD.officeId, name: ATD.officeName});
+      store.push('address-type', {id: ATD.shippingId, name: ATD.shippingName});
     });
   }
 });
@@ -238,9 +244,9 @@ test('deserialize - address, address_type - no existing relationship', assert =>
   assert.equal(address_one.get('id'), AND.idTwo);
   assert.equal(address_two.get('id'), AND.idOne);
   // address-type
-  assert.equal(address_one.get('address_type').get('id'), ATD.idTwo);
+  assert.equal(address_one.get('address_type').get('id'), ATD.shippingId);
   assert.equal(address_one.get('address_type').get('name'), ATD.shippingName);
-  assert.equal(address_two.get('address_type').get('id'), ATD.idOne);
+  assert.equal(address_two.get('address_type').get('id'), ATD.officeId);
   assert.equal(address_two.get('address_type').get('name'), ATD.officeName);
   // dirty checking
   assert.ok(address_one.get('addressTypeIsNotDirty'));
@@ -276,9 +282,9 @@ test('deserialize - address, address_type - existing relationship', assert => {
   assert.equal(address_two.get('isDirtyOrRelatedDirty'), false);
   assert.equal(address_two.get('isDirty'), false);
   // address-type
-  assert.equal(address_one.get('address_type').get('id'), ATD.idTwo);
+  assert.equal(address_one.get('address_type').get('id'), ATD.shippingId);
   assert.equal(address_one.get('address_type').get('name'), ATD.shippingName);
-  assert.equal(address_two.get('address_type').get('id'), ATD.idOne);
+  assert.equal(address_two.get('address_type').get('id'), ATD.officeId);
   assert.equal(address_two.get('address_type').get('name'), ATD.officeName);
   // dirty checking
   assert.ok(address_one.get('addressTypeIsNotDirty'));
@@ -418,7 +424,7 @@ test('deserialize location and address with its related models: type, state, and
   assert.equal(address.get('state').get('id'), SD.id);
   assert.equal(address.get('state').get('name'), SD.name);
   // address-type
-  assert.equal(address.get('address_type').get('id'), ATD.idOne);
+  assert.equal(address.get('address_type').get('id'), ATD.officeId);
   assert.equal(address.get('address_type').get('name'), ATD.officeName);
   // dirty checking
   assert.ok(address.get('addressTypeIsNotDirty'));

@@ -29,7 +29,10 @@ class TreeFieldSerializer(BaseCreateSerializer):
         fields = ('id', 'label', 'type', 'required', 'order', 'options',)
 
 
-class TreeDataLeafNodeSerializer(serializers.ModelSerializer):
+class TreeDataLeafNodeSerializer(BaseCreateSerializer):
+
+    id = serializers.UUIDField(required=False)
+    key = serializers.CharField(required=False)
 
     class Meta:
         model = TreeData

@@ -1,4 +1,5 @@
 import selenium
+import time
 
 from .model_page import ModelPage
 
@@ -21,7 +22,7 @@ class ModelContactPage(ModelPage):
         first_loc = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-children-select-trigger ')]/span")
         text = first_loc.text
         assert child_one in text
-    
+
     def assert_locations(self, child_one):
         first_loc = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-person-locations-select-trigger ')]/span")
         text = first_loc.text
@@ -55,6 +56,22 @@ class ModelContactPage(ModelPage):
         first_zip_input = self.driver.find_element_by_class_name("t-address-postal-code%s" % index)
         # first_zip_input = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-address-group ')])[%s]/div/following-sibling::*[1]/following-sibling::*[1]/following-sibling::*[1]/following-sibling::*[1]/input" % index)
         first_zip_input.send_keys(zip_code)
+        # select a State
+        first_state_dropdown = self.driver.find_elements_by_class_name("t-address-state")[index]
+        first_state_dropdown.click()
+        first_state_input = self.wait_for_xhr_request("ember-power-select-search-input")
+        first_state_input.send_keys('a')
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
+        # select a country
+        first_country_dropdown = self.driver.find_elements_by_class_name("t-address-country")[index]
+        first_country_dropdown.click()
+        first_country_input = self.wait_for_xhr_request("ember-power-select-search-input")
+        first_country_input.send_keys('a')
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(2)
+        self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
 
     def assert_address_inputs(self, index, new_street, new_city, new_zip):
         street_input = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-address-group ')])[%s]/div/following-sibling::*[1]/textarea" % index)

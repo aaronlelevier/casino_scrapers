@@ -5,28 +5,28 @@ from contact.models import (PhoneNumberType, PhoneNumber, AddressType,
 from utils.serializers import BaseCreateSerializer
 
 
-class StateIdNameSerializer(serializers.ModelSerializer):
+class StateIdNameSerializer(BaseCreateSerializer):
 
     class Meta:
         model = State
         fields = ('id', 'name',)
 
 
-class StateListSerializer(serializers.ModelSerializer):
+class StateListSerializer(BaseCreateSerializer):
 
     class Meta:
         model = State
         fields = ('id', 'name', 'state_code', 'classification',)
 
 
-class CountryListSerializer(serializers.ModelSerializer):
+class CountryListSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Country
         fields = ('id', 'common_name', 'three_letter_code')
 
 
-class CountryDetailSerializer(serializers.ModelSerializer):
+class CountryDetailSerializer(BaseCreateSerializer):
 
     states = StateIdNameSerializer(many=True)
 
@@ -35,8 +35,9 @@ class CountryDetailSerializer(serializers.ModelSerializer):
         fields = ('id', 'common_name', 'three_letter_code', 'states')
 
 
-class CountryIdNameSerializer(serializers.ModelSerializer):
+class CountryIdNameSerializer(BaseCreateSerializer):
 
+    id = serializers.UUIDField(required=False)
     name = serializers.CharField(source='common_name')
 
     class Meta:
@@ -46,7 +47,7 @@ class CountryIdNameSerializer(serializers.ModelSerializer):
 
 ### PHONE NUMBER ###
 
-class PhoneNumberTypeSerializer(serializers.ModelSerializer):
+class PhoneNumberTypeSerializer(BaseCreateSerializer):
 
     class Meta:
         model = PhoneNumberType
@@ -62,7 +63,7 @@ class PhoneNumberSerializer(BaseCreateSerializer):
 
 ### ADDRESS ###
 
-class AddressTypeSerializer(serializers.ModelSerializer):
+class AddressTypeSerializer(BaseCreateSerializer):
 
     class Meta:
         model = AddressType
@@ -71,7 +72,6 @@ class AddressTypeSerializer(serializers.ModelSerializer):
 
 class AddressSerializer(BaseCreateSerializer):
     
-    type = AddressTypeSerializer()
     state = StateIdNameSerializer()
     country = CountryIdNameSerializer()
 
@@ -91,7 +91,7 @@ class AddressUpdateSerializer(BaseCreateSerializer):
 
 ### EMAIL ###
 
-class EmailTypeSerializer(serializers.ModelSerializer):
+class EmailTypeSerializer(BaseCreateSerializer):
 
     class Meta:
         model = EmailType

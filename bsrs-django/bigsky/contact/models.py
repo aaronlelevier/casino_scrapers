@@ -74,8 +74,8 @@ class BaseContactModel(BaseModel):
     """
     GenericForeignKey fields that will be used for all Contact models.
     """
-    content_type = models.ForeignKey(ContentType)
-    object_id = models.UUIDField()
+    content_type = models.ForeignKey(ContentType, null=True)
+    object_id = models.UUIDField(null=True)
     content_object = MyGenericForeignKey('content_type', 'object_id')
 
     class Meta:
@@ -161,7 +161,7 @@ class PhoneNumber(BaseContactModel):
     https://github.com/daviddrysdale/python-phonenumbers
     """
     type = models.ForeignKey(PhoneNumberType, blank=True, null=True)
-    number = models.TextField(blank=True, null=True)
+    number = models.CharField(max_length=100)
 
     objects = PhoneNumberManager()
 
@@ -287,7 +287,7 @@ class EmailManager(BaseManager):
 
 class Email(BaseContactModel):
     type = models.ForeignKey(EmailType, blank=True, null=True)
-    email = models.TextField(blank=True, null=True)
+    email = models.EmailField()
 
     objects = EmailManager()
 

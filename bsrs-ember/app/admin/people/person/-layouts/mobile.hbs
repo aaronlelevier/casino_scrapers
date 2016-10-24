@@ -2,7 +2,7 @@
   {{#mobile/full-screen
     model=model
     title=model.fullname
-    close="closeMobileDetail"
+    close=(route-action "closeMobileDetail")
     redirectRoute="admin.people.index"
     hashComponents=hashComponents
     repository=repository

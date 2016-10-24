@@ -16,7 +16,7 @@ import caps from 'bsrs-components/utils/caps';
  * @return list of defined properties/methods/computed to handle belongs_to relationship with parent
  */
 var belongs_to = function(_ownerName, modelName, noSetup) {
-  let { bootstrapped=false, change_func=true, belongs_to=true, rollback=true, save=true, dirty=true } = noSetup || {};
+  let { bootstrapped=false, change_func=true, belongs_to=true, rollback=true, save=true, dirty=true, track_related_model=false } = noSetup || {};
   const _capsOwnerName = caps(_ownerName);
   const _camelOwnerName = camel(_ownerName);
 
@@ -34,6 +34,9 @@ var belongs_to = function(_ownerName, modelName, noSetup) {
   //dirty
   if(dirty){
     Ember.defineProperty(this, `${_camelOwnerName}IsDirty`, belongs_to_dirty(_ownerName));
+    Ember.defineProperty(this, `${_camelOwnerName}IsNotDirty`, Ember.computed.not(`${_ownerName}IsDirty`));
+  } else if(!dirty && track_related_model){
+    Ember.defineProperty(this, `${_camelOwnerName}IsDirty`, belongs_to_track_related_model(_ownerName));
     Ember.defineProperty(this, `${_camelOwnerName}IsNotDirty`, Ember.computed.not(`${_ownerName}IsDirty`));
   }
 
@@ -148,6 +151,12 @@ var belongs_to_dirty = function(_ownerName) {
       return true;
     }
   }).readOnly();
+};
+
+var belongs_to_track_related_model = function(_ownerName) {
+  return Ember.computed(`${_ownerName}.isDirtyOrRelatedDirty`, function(){
+    return this.get(`${_ownerName}.isDirtyOrRelatedDirty`);
+  });
 };
 
 

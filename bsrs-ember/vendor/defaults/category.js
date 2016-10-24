@@ -53,10 +53,10 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
 })();
 
 if (typeof window === 'undefined') {
-    var currency_defaults = require('./currencies');
+    var currency_defaults = require('./currency');
     module.exports = new BSRS_CATEGORY_DEFAULTS_OBJECT(currency_defaults).defaults();
 } else {
-    define('bsrs-ember/vendor/defaults/category', ['exports', 'bsrs-ember/vendor/defaults/currencies'], function (exports, currency_defaults) {
+    define('bsrs-ember/vendor/defaults/category', ['exports', 'bsrs-ember/vendor/defaults/currency'], function (exports, currency_defaults) {
         'use strict';
         return new BSRS_CATEGORY_DEFAULTS_OBJECT(currency_defaults).defaults();
     });

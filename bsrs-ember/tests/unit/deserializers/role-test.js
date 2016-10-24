@@ -6,7 +6,7 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
-import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
+import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currency';
 import RoleDeserializer from 'bsrs-ember/deserializers/role';
 import CategoryDeserializer from 'bsrs-ember/deserializers/category';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';

@@ -1,0 +1,73 @@
+{{base-component
+  model=model
+  save="save"
+  cancel="cancel"
+  delete=delete
+  btnDisabled=saveTask.isRunning
+}}
+
+<section class="docSection container-fluid">
+  <div class="row">
+    <div class="col-md-12">
+      <section style="padding-bottom: 0">
+        <div class="row card-title">
+          <h1 class="col-md-12 t-tenant-header">
+            {{#if model.company_name}}
+              {{model.company_name}}
+            {{else}}
+              <span class="new">{{t "tenant.new"}}</span>
+            {{/if}}
+          </h1>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <section>
+        {{tenants/tenant/detail-section
+          model=model
+          didValidate=didValidate
+        }}
+      </section>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <section>
+        <div class="row card-title">
+          <h2 class="col-md-12">{{t "admin.tenant.implementation"}}</h2>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <section>
+        {{tenants/tenant/implementation-section
+          model=model
+          didValidate=didValidate
+        }}
+      </section>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <section>
+        <div class="row card-title">
+          <h2 class="col-md-12">{{t "admin.tenant.billing"}}</h2>
+        </div>
+      </section>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <section>
+        {{tenants/tenant/billing-section
+          model=model
+          didValidate=didValidate
+        }}
+      </section>
+    </div>
+  </div>
+</section>

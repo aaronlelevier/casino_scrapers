@@ -17,7 +17,7 @@
     <div class="col-md-12">
       {{#form-group title="admin.setting.dashboard_text" for="dashboard_text"}}
         <p class="inherited-msg t-inherited-msg-dashboard_text">
-          {{#link-to "admin.settings" model.inherited.dashboard_text.inherits_from_id class="t-inherited-msg-dashboard_text-link"}}
+          {{#link-to "admin.tenants.tenant" model.inherited.dashboard_text.inherits_from_id class="t-inherited-msg-dashboard_text-link"}}
             {{t 'crud.inherited_from' from="general"}}
           {{/link-to}}
         </p>

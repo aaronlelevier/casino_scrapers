@@ -8,11 +8,10 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import { typeInSearch, clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 import waitFor from 'ember-test-helpers/wait';
-import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 
-let store, ticket, location_one, location_two, location_three, trans, run = Ember.run, location_repo;
+let store, ticket, location_one, location_two, trans, run = Ember.run, location_repo;
 const PowerSelect = '.ember-power-select-trigger';
 const DROPDOWN = '.ember-power-select-dropdown';
 const COMPONENT = '.t-ticket-location-select';
@@ -28,7 +27,7 @@ moduleForComponent('ticket-location-select', 'integration: ticket-location-selec
       ticket = store.push('ticket', {id: TD.idOne, location_fk: LD.idOne});
       location_one = store.push('location', {id: LD.idOne, name: LD.storeName});
       location_two = store.push('location', {id: LD.idTwo, name: LD.storeNameTwo});
-      location_three = store.push('location', {id: LD.unusedId, name: LD.storeNameThree});
+      store.push('location', {id: LD.unusedId, name: LD.storeNameThree});
     });
     location_repo = repository.initialize(this.container, this.registry, 'location');
     location_repo.findTicket = function() {
@@ -47,9 +46,9 @@ moduleForComponent('ticket-location-select', 'integration: ticket-location-selec
 //   this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket"}}`);
 //   let $component = this.$(`${COMPONENT}`);
 //   clickTrigger();
-//   assert.equal($(`${DROPDOWN}`).length, 1);
-//   assert.equal($('.ember-power-select-options > li').length, 1);
-//   assert.equal($('li.ember-power-select-option').text(), GLOBALMSG.power_search);
+//   assert.equal(this.$(`${DROPDOWN}`).length, 1);
+//   assert.equal(this.$('.ember-power-select-options > li').length, 1);
+//   assert.equal(this.$('li.ember-power-select-option').text(), GLOBALMSG.power_search);
 //   assert.equal(this.$('.ember-power-select-placeholder').text(), GLOBALMSG.location_power_select);
 //   assert.ok(!ticket.get('location'));
 // });
@@ -64,12 +63,12 @@ moduleForComponent('ticket-location-select', 'integration: ticket-location-selec
 //   run(() => { typeInSearch('a'); });
 //   return waitFor().
 //     then(() => {
-//       assert.equal($(`${DROPDOWN}`).length, 1);
-//       assert.equal($('.ember-power-select-options > li').length, 3);
-//       assert.equal($('li.ember-power-select-option:eq(0)').text().trim(), LD.storeName);
-//       assert.equal($('li.ember-power-select-option:eq(1)').text().trim(), LD.storeNameTwo);
-//       assert.equal($('li.ember-power-select-option:eq(2)').text().trim(), LD.storeNameThree);
-//       assert.equal($(`${PowerSelect}`).text().trim(), LD.storeName);
+//       assert.equal(this.$(`${DROPDOWN}`).length, 1);
+//       assert.equal(this.$('.ember-power-select-options > li').length, 3);
+//       assert.equal(this.$('li.ember-power-select-option:eq(0)').text().trim(), LD.storeName);
+//       assert.equal(this.$('li.ember-power-select-option:eq(1)').text().trim(), LD.storeNameTwo);
+//       assert.equal(this.$('li.ember-power-select-option:eq(2)').text().trim(), LD.storeNameThree);
+//       assert.equal(this.$(`${PowerSelect}`).text().trim(), LD.storeName);
 //     });
 // });
 
@@ -119,11 +118,10 @@ test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
   this.model = ticket;
   this.locationRepo = location_repo;
   this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket"}}`);
-  let $component = this.$(`${COMPONENT}`);
   clickTrigger();
   run(() => { typeInSearch('a'); });
   Ember.run.later(() => {
-    assert.equal($('.ember-power-select-options > li').length, 1);
+    assert.equal(this.$('.ember-power-select-options > li').length, 1);
     done();
   }, 150);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
 });

@@ -19,7 +19,7 @@ export default Ember.Mixin.create({
           return this.get('activityRepository').find('ticket', 'tickets', pk, model);
         } else {
           const redirectRoute = this.get('redirectRoute');
-          this.sendAction('close', model, redirectRoute);
+          this.sendAction('close', redirectRoute);
         }
       }, (xhr) => {
         if(xhr.status === 400) {
@@ -35,7 +35,7 @@ export default Ember.Mixin.create({
       const model = this.get('model');
       const redirectRoute = this.get('redirectRoute');
       if (model.get('isNotDirtyOrRelatedNotDirty')) {
-        this.sendAction('close', model, redirectRoute);
+        this.sendAction('close', redirectRoute);
       } else {
         this.set('mobileDialog', true);
       }

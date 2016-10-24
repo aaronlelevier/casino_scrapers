@@ -8,18 +8,19 @@ var BSRS_PHONE_NUMBER_FACTORY = (function() {
     return [{
       id: this.phone_number.idOne,
       number: this.phone_number.numberOne,
-      type: {
-        id: this.phonenumber_type.idOne,
-        name: this.phonenumber_type.officeName
-      }
+      type: this.phonenumber_type.idOne,
     }, {
       id: this.phone_number.idTwo,
       number: this.phone_number.numberTwo,
-      type: {
-        id: this.phonenumber_type.idTwo,
-        name: this.phonenumber_type.mobileName
-      }
+      type: this.phonenumber_type.idTwo,
     }];
+  };
+  factory.prototype.get_belongs_to = function() {
+    return {
+      id: this.phone_number.idOne,
+      number: this.phone_number.numberOne,
+      type: this.phonenumber_type.officeId,
+    }
   };
   factory.prototype.get_with_related_ids = function() {
     return [{

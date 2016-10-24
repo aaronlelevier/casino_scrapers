@@ -33,46 +33,37 @@ class FactoryTests(TestCase):
 
         factory.create_contacts(person)
 
-        # phone_number
-        self.assertEqual(PhoneNumber.objects.count(), 1)
-        phone_number = PhoneNumber.objects.first()
-        self.assertEqual(str(phone_number.content_object.id), str(person.id))
-        # address
-        self.assertEqual(Address.objects.count(), 1)
-        address = Address.objects.first()
-        self.assertEqual(str(address.content_object.id), str(person.id))
-        # email
-        self.assertEqual(Email.objects.count(), 1)
-        email = Email.objects.first()
-        self.assertEqual(str(email.content_object.id), str(person.id))
+        self.assertEqual(person.phone_numbers.count(), 1)
+        self.assertEqual(person.addresses.count(), 1)
+        self.assertEqual(person.emails.count(), 1)
 
     def test_create_phone_number(self):
-        self.assertEqual(PhoneNumber.objects.count(), 0)
         person = create_person()
+        init_count = PhoneNumber.objects.count()
 
         ret = factory.create_contact(PhoneNumber, person)
 
-        self.assertEqual(PhoneNumber.objects.count(), 1)
+        self.assertEqual(PhoneNumber.objects.count(), init_count+1)
         self.assertIsInstance(ret, PhoneNumber)
         self.assertEqual(ret.content_object, person)
 
     def test_create_address(self):
-        self.assertEqual(Address.objects.count(), 0)
         person = create_person()
+        init_count = Address.objects.count()
 
         ret = factory.create_contact(Address, person)
 
-        self.assertEqual(Address.objects.count(), 1)
+        self.assertEqual(Address.objects.count(), init_count+1)
         self.assertIsInstance(ret, Address)
         self.assertEqual(ret.content_object, person)
 
     def test_create_email(self):
-        self.assertEqual(Email.objects.count(), 0)
         person = create_person()
+        init_count = Email.objects.count()
 
         ret = factory.create_contact(Email, person)
 
-        self.assertEqual(Email.objects.count(), 1)
+        self.assertEqual(Email.objects.count(), init_count+1)
         self.assertIsInstance(ret, Email)
         self.assertEqual(ret.content_object, person)
 
@@ -123,6 +114,15 @@ class FactoryTests(TestCase):
         self.assertTrue(email_mock.was_called)
         self.assertTrue(ph_num_mock.was_called)
 
+    def test_create_address(self):
+        ret = factory.create_address()
+        self.assertIsInstance(ret, Address)
+        self.assertIsInstance(ret.type, AddressType)
+        self.assertIsInstance(ret.state, State)
+        self.assertTrue(ret.state.name)
+        self.assertIsInstance(ret.country, Country)
+        self.assertTrue(ret.country.common_name)
+
     def test_create_contact_state(self):
         ret = factory.create_contact_state()
         self.assertIsInstance(ret, State)
@@ -148,3 +148,38 @@ class FactoryTests(TestCase):
         factory.add_office_to_location(location)
 
         self.assertTrue(location.is_office_or_store)
+
+    def test_create_contact_fixtures(self):
+        factory.create_contact_fixtures()
+
+        # email
+        email = Email.objects.order_by('id')[0]
+        self.assertTrue(str(email.id).endswith('001'), str(email.id))
+        # email 2
+        email_two = Email.objects.order_by('id')[1]
+        self.assertTrue(str(email_two.id).endswith('002'), str(email_two.id))
+        # phone number
+        ph = PhoneNumber.objects.first()
+        self.assertTrue(str(ph.id).endswith('001'))
+        self.assertEqual(len(ph.number.split('-')[0]), 3)
+        self.assertEqual(len(ph.number.split('-')[1]), 3)
+        self.assertEqual(len(ph.number.split('-')[2]), 4)
+        # address
+        address = Address.objects.first()
+        self.assertTrue(str(address.id).endswith('001'))
+        self.assertTrue(address.city)
+        self.assertTrue(address.postal_code)
+
+        # all types should be created w/ incrementing uuids
+        # email
+        self.assertEqual(EmailType.objects.count(), len(EmailType.ALL))
+        for i, obj in enumerate(EmailType.objects.order_by('id')):
+            self.assertEqual(str(obj.id)[-1], str(i+1))
+        # ph
+        self.assertEqual(PhoneNumberType.objects.count(), len(PhoneNumberType.ALL))
+        for i, obj in enumerate(PhoneNumberType.objects.order_by('id')):
+            self.assertEqual(str(obj.id)[-1], str(i+1))
+        # address
+        self.assertEqual(AddressType.objects.count(), len(AddressType.ALL))
+        for i, obj in enumerate(AddressType.objects.order_by('id')):
+            self.assertEqual(str(obj.id)[-1], str(i+1))

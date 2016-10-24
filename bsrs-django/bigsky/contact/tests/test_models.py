@@ -32,9 +32,8 @@ class StateManagerTests(TestCase):
 
         ret = State.objects.tenant(tenant)
 
-        self.assertEqual(ret.count(), 2)
+        self.assertEqual(ret.count(), 1)
         self.assertEqual(ret[0].country, country)
-        self.assertEqual(ret[1].country, country)
 
 
 class StateTests(TestCase):

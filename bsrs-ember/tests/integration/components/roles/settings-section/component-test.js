@@ -3,7 +3,7 @@ const { run } = Ember;
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import hbs from 'htmlbars-inline-precompile';
-import CD from 'bsrs-ember/vendor/defaults/currencies';
+import CD from 'bsrs-ember/vendor/defaults/currency';
 import RD from 'bsrs-ember/vendor/defaults/role';
 
 var trans, store; 

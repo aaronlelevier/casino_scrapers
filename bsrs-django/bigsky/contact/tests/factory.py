@@ -13,7 +13,15 @@ STATE_CODE_TWO = "NV"
 COUNTRY_COMMON_NAME = "United States"
 
 
-def create_contact(model, content_object, type=None):
+def create_contacts(content_object):
+    """
+    :content_object: object to create foreign key for. i.e. ``person`` instance
+    """
+    for model in [PhoneNumber, Address, Email]:
+        create_contact(model, content_object)
+
+
+def create_contact(model, instance, type=None):
     """
     `object_id` is a UUID, which `model_mommy` doesn't know how to make,
     so it must be specified.
@@ -21,30 +29,14 @@ def create_contact(model, content_object, type=None):
     :model: ``contact`` app model class. i.e. ``Email``
     :content_object: object to create foreign key for. i.e. ``person`` instance
     """
-    create_method = load_create_contact(model)
-    instance = create_method(content_object)
+    incr = model.objects.count()
+    id = generate_uuid(model)
+    contact = mommy.make(model, id=id, content_object=instance,
+                      object_id=instance.id, _fill_optional=['type'])
     if type:
-        instance.type = type
-        instance.save()
-    return instance
-
-
-def create_contacts(content_object):
-    """
-    :content_object: object to create foreign key for. i.e. ``person`` instance
-    """
-    for model in [PhoneNumber, Address, Email]:
-        create_method = load_create_contact(model)
-        create_method(content_object)
-
-
-def load_create_contact(model):
-    def create_contact_instance(instance):
-        incr = model.objects.count()
-        id = generate_uuid(model)
-        return mommy.make(model, id=id, content_object=instance,
-                          object_id=instance.id, _fill_optional=['type'])
-    return create_contact_instance
+        contact.type = type
+        contact.save()
+    return contact
 
 
 def create_phone_number_type(name=None):
@@ -89,6 +81,12 @@ def create_contact_types():
     create_address_types()
 
 
+def create_address():
+    state = create_contact_state()
+    country = create_contact_country()
+    return mommy.make(Address, state=state, country=country, _fill_optional=['type', 'address'])
+
+
 def create_contact_state(state_code=STATE_CODE, **kwargs):
     try:
         return State.objects.get(state_code=state_code)
@@ -115,3 +113,31 @@ def add_office_to_location(location):
     address.type = office
     address.save()
     location.addresses.add(address)
+
+
+def create_contact_fixtures():
+    """These are base fixtures for models that require a related
+    Contact. i.e. Tenant."""
+    def create_types(static_types, model, model_type):
+        for name in static_types:
+            type_id = generate_uuid(model_type)
+            model_id = generate_uuid(model)
+            try:
+                type_instance = model_type.objects.get(name=name)
+            except model_type.DoesNotExist:
+                type_instance = mommy.make(model_type, id=type_id, name=name)
+        return (model_id, type_instance)
+
+    email_id, email_type = create_types(EmailType.ALL, Email, EmailType)
+    ph_id, ph_type = create_types(PhoneNumberType.ALL, PhoneNumber, PhoneNumberType)
+    address_id, address_type = create_types(AddressType.ALL, Address, AddressType)
+
+    mommy.make(Email, id=email_id, type=email_type)
+    mommy.make(Email, id=str(email_id)[:-1]+'2', type=email_type)
+
+    mommy.make(PhoneNumber, id=ph_id, type=ph_type, number='123-456-7890')
+
+    state = create_contact_state()
+    country = create_contact_country()
+    mommy.make(Address, id=address_id, type=address_type, state=state,
+               country=country, _fill_optional=['address', 'city', 'postal_code'])

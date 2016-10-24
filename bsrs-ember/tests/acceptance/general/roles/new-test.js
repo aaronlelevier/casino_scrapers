@@ -14,7 +14,7 @@ import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import TD from 'bsrs-ember/vendor/defaults/tenant';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
-import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
+import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currency';
 import BASEURLS from 'bsrs-ember/utilities/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import random from 'bsrs-ember/models/random';

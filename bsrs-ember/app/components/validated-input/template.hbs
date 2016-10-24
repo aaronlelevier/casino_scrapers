@@ -12,16 +12,16 @@
   {{#if showMessage}}
       {{#if (v-get model valuePath "message")}}
         {{#tether-dialog
+          constraints=(array (hash to="scrollParent" pin=true attachment="together"))
           container-class="tether-dialog-reset"
-          target=(concat "#" valuePath)
+          target=(concat "#" (if count (concat valuePath count) valuePath))
           hasOverlay=false
           attachment="bottom left"
           targetAttachment="top left"
-          offset="5px 0"
         }}
-        <div class="validated-input-error-dialog animated flipInX error">
-         {{t (v-get model valuePath "message")}}
-        </div>
+          <div class="validated-input-error-dialog animated flipInX error {{concat "t-validation-" valuePath}}">
+            {{t (v-get model valuePath "message")}}
+          </div>
         {{/tether-dialog}}
       {{/if}}
   {{/if}}
@@ -38,16 +38,16 @@
   {{#if showMessage}}
       {{#if (v-get model valuePath "message")}}
         {{#tether-dialog
+          constraints=(array (hash to="scrollParent" pin=true attachment="together"))
           container-class="tether-dialog-reset"
           target=(concat "#" valuePath)
           hasOverlay=false
           attachment="bottom left"
           targetAttachment="top left"
-          offset="5px 0"
         }}
-        <div class="validated-input-error-dialog animated flipInX">
-         {{t (v-get model valuePath "message")}}
-       </div>
+          <div class="validated-input-error-dialog animated flipInX">
+            {{t (v-get model valuePath "message")}}
+          </div>
         {{/tether-dialog}}
       {{/if}}
   {{/if}}

@@ -86,7 +86,7 @@ var extract_locale = (model, store) => {
 var PersonDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin, {
   init() {
     this._super(...arguments);
-    belongs_to.bind(this)('status', 'person', 'person');
+    belongs_to.bind(this)('status', 'person');
     belongs_to.bind(this)('phone_number_type');
     belongs_to.bind(this)('email_type');
     many_to_many.bind(this)('phonenumbers', 'person');

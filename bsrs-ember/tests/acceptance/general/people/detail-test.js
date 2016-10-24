@@ -11,7 +11,7 @@ import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import TENANT_DEFAULTS from 'bsrs-ember/vendor/defaults/tenant';
 import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
-import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
+import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currency';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import PF from 'bsrs-ember/vendor/people_fixtures';

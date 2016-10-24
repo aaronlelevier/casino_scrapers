@@ -27,3 +27,9 @@ def celery_set_eager():
     current_app.conf.CELERY_ALWAYS_EAGER = True
     settings.CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
     current_app.conf.CELERY_EAGER_PROPAGATES_EXCEPTIONS = True
+
+
+def empty_str_if_none(x):
+    if x is None:
+        return ''
+    return x

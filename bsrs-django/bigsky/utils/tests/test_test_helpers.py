@@ -4,7 +4,7 @@ import os
 from django.conf import settings
 from django.test import TestCase
 
-from utils.tests.helpers import remove_attachment_test_files, build_dict
+from utils.tests import helpers
 
 
 class HelperTests(TestCase):
@@ -20,7 +20,7 @@ class HelperTests(TestCase):
 
         self.assertTrue(os.path.isfile(test_file))
 
-        remove_attachment_test_files()
+        helpers.remove_attachment_test_files()
 
         self.assertFalse(os.path.isfile(test_file))
 
@@ -31,8 +31,12 @@ class HelperTests(TestCase):
             {'id':'3456','name':'Art'}
         ]
 
-        d = build_dict(lst, key="name")
+        d = helpers.build_dict(lst, key="name")
         
         ret = d["Tom"] 
         self.assertEqual(ret['id'], '2345')
         self.assertEqual(ret['name'], 'Tom')
+
+    def test_empty_str_if_none(self):
+        self.assertEqual(helpers.empty_str_if_none(None), '')
+        self.assertEqual(helpers.empty_str_if_none('foo'), 'foo')

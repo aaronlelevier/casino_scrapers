@@ -65,7 +65,7 @@ router.register(r'admin/automation-automation-filter-types', automation_views.Au
 router.register(r'admin/automation-events', automation_views.AutomationEventViewSet)
 router.register(r'admin/automation-action-types', automation_views.AutomationActionTypeViewSet)
 # TENANT
-router.register(r'admin/tenant', tenant_views.TenantViewSet)
+router.register(r'admin/tenants', tenant_views.TenantViewSet)
 # THIRD PARTY
 router.register(r'admin/third-parties', third_party_views.ThirdPartyViewSet)
 # Tickets
@@ -129,6 +129,7 @@ urlpatterns = [
 urlpatterns += [
     url(r'^404/$', bigsky_views.handler404, name='404'),
     url(r'^500/$', bigsky_views.handler500, name='500'),
+    url(r'^o/', include('oauth2_provider.urls', namespace='oauth2_provider')),
 ]
 
 # Media - serve via Django locally

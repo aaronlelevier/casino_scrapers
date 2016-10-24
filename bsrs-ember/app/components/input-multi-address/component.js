@@ -27,11 +27,6 @@ var MultiAddressComponent = Ember.Component.extend({
       const new_address = this.get('simpleStore').find('address', id);
       new_address.change_address_type({ id: default_type.get('id') });
     },
-    delete(entry) {
-      run(() => {
-        this.get('model').remove_address(entry.get('id'));
-      });
-    },
   }
 });
 

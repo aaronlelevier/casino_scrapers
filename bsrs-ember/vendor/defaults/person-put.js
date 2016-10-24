@@ -23,10 +23,10 @@ var BSRS_PERSON_PUT_DEFAULTS_OBJECT = (function() {
 
 
 if (typeof window === 'undefined') {
-    var currency_defaults = './currencies';
+    var currency_defaults = './currency';
     module.exports = new BSRS_PERSON_PUT_DEFAULTS_OBJECT(currency_defaults).defaults();
 } else {
-    define('bsrs-ember/vendor/defaults/person-put', ['exports', 'bsrs-ember/vendor/defaults/currencies'], function (exports, currency_defaults) {
+    define('bsrs-ember/vendor/defaults/person-put', ['exports', 'bsrs-ember/vendor/defaults/currency'], function (exports, currency_defaults) {
         'use strict';
         return new BSRS_PERSON_PUT_DEFAULTS_OBJECT(currency_defaults).defaults();
     });

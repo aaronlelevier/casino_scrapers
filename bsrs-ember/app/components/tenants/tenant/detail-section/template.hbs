@@ -1,0 +1,126 @@
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="tenant.company_name" for="company_name"}}
+      {{validated-input
+        model=model
+        valuePath="company_name"
+        didValidate=didValidate
+        className="form-control t-tenant-company_name"
+        placeholder=(t "tenant.company_name")
+      }}
+    {{/form-group}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="tenant.company_code" for="company_code"}}
+      <div class="input-group">
+        {{validated-input
+          model=model
+          valuePath="company_code"
+          didValidate=didValidate
+          className="form-control t-tenant-company_code"
+          placeholder=(t "tenant.company_code")
+        }}
+        <span class="input-group-addon hint" data-test-id="company_code_hint">
+          https://<strong>{{if model.company_code model.company_code "_____"}}</strong>.servicechannel.com
+        </span>
+      </div>
+    {{/form-group}}
+  </div>
+</div>
+{{#if model.scid}}
+  <div class="row">
+    <div class="col-md-12">
+      {{#form-group title="tenant.scid" for="scid"}}
+        <input type="text" class="form-control" readonly data-test-id="tenant-scid" value={{model.scid}}>
+      {{/form-group}}
+    </div>
+  </div>
+{{/if}}
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="tenant.dashboard_text" for="dashboard_text"}}
+      {{validated-input
+        model=model
+        valuePath="dashboard_text"
+        didValidate=didValidate
+        className="form-control t-tenant-dashboard_text"
+        placeholder=(t "tenant.dashboard_text")
+      }}
+    {{/form-group}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="admin.tenant.currency" for="currency"}}
+      {{power-select-foreign-key
+        mainModel=model
+        model=model
+        selected=model.default_currency
+        change_method="change_default_currency"
+        relatedModels=currencies
+        relatedModelName="currency"
+        valuePath="default_currency"
+        didValidate=didValidate
+      }}
+    {{/form-group}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="admin.tenant.countries" for="country"}}
+      {{power-select-validation
+        model=model
+        valuePath="countries"
+        didValidate=didValidate
+      }}
+      {{db-fetch-multi-select
+        model=model
+        multiAttr="countries"
+        multiAttrIds="countries_ids"
+        selectedAttr=model.countries
+        className="t-tenant-country-select"
+        displayName="name"
+        add_func="add_country"
+        remove_func="remove_country"
+        repository=countryRepo
+        searchMethod="findCountry"
+        didValidate=didValidate
+        valuePath="countries"
+      }}
+    {{/form-group}}
+  </div>
+</div>
+{{#unless model.new}}
+  <div class="row">
+    <div class="col-md-12">
+      {{#form-group title="admin.tenant.label.test_mode" for="test_mode"}}
+      <div class="checkbox">
+        <label>
+          {{input type="checkbox" checked=model.test_mode class="form-control t-tenant-test_mode"}}
+          <span></span>
+        </label>
+      </div>
+      {{/form-group}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      {{#form-group title="admin.tenant.label.dtd_start" for="dtd_start"}}
+        {{db-fetch-select
+          model=model
+          selectedAttr=model.dtd_start
+          className="t-tenant-dtd_start-select"
+          displayName="description"
+          change_func="change_dtd_start"
+          remove_func="remove_dtd_start"
+          repository=dtdRepo
+          searchMethod="findDTD"
+          valuePath="dtd_start"
+          didValidate=didValidate
+        }}
+      {{/form-group}}
+    </div>
+  </div>
+{{/unless}}

@@ -18,6 +18,8 @@ import PNTD from 'bsrs-ember/vendor/defaults/phone-number-type';
 import AD from 'bsrs-ember/vendor/defaults/address';
 import AF from 'bsrs-ember/vendor/address_fixtures';
 import ATD from 'bsrs-ember/vendor/defaults/address-type';
+import CF from 'bsrs-ember/vendor/country_fixtures';
+import SF from 'bsrs-ember/vendor/state_fixtures';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
@@ -310,9 +312,40 @@ test('when you change a related address type it will be persisted correctly', (a
   page.statusClickDropdown();
   page.statusClickOptionOne();
   page.clickAddAddress();
-  page.addressFillIn('34 2nd St');
-  page.addressPostalCodeFillIn('12345');
-  xhr(LOCATIONS_URL,'POST',JSON.stringify(address_put_payload),{},201);
+  page.addressFillIn(AD.streetOne);
+  page.addressCityFill(AD.cityOne);
+  page.addressPostalCodeFillIn(AD.zipOne);
+  andThen(() => {
+    assert.equal(page.addressAddressValue, AD.streetOne);
+    assert.equal(page.addressCityValue, AD.cityOne);
+    assert.equal(page.addressPostalCodeValue, AD.zipOne);
+  });
+  // Country
+  let keyword = 'a';
+  let countryListResults = CF.list_power_select();
+  let countryId = countryListResults.results[0].id;
+  let countryName = countryListResults.results[0].name;
+  xhr(`/api/countries/tenant/?search=${keyword}`, 'GET', null, {}, 200, countryListResults);
+  selectSearch('.t-address-country', keyword);
+  selectChoose('.t-address-country', countryName);
+  andThen(() => {
+    assert.equal(page.countrySelectedOne, countryName);
+  });
+  // State
+  keyword = 'a';
+  let stateListResults = SF.list_power_select();
+  let stateId = stateListResults.results[0].id;
+  let stateName = stateListResults.results[0].name;
+  xhr(`/api/states/tenant/?search=${keyword}`, 'GET', null, {}, 200, stateListResults);
+  selectSearch('.t-address-state', keyword);
+  selectChoose('.t-address-state', stateName);
+  andThen(() => {
+    assert.equal(page.stateSelectedOne, stateName);
+  });
+  address_put_payload.addresses[0].state = stateId;
+  address_put_payload.addresses[0].postal_code = AD.zipOne;
+  address_put_payload.addresses[0].country = countryId;
+  xhr(LOCATIONS_URL, 'POST', JSON.stringify(address_put_payload), {}, 201);
   selectChoose('.t-address-type-select:eq(0)', ATD.shippingNameText);
   generalPage.save();
   andThen(() => {

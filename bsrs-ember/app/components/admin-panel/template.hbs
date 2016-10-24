@@ -1,6 +1,6 @@
 <h3>{{fa-icon "cogs" classNames="menuIcon"}}{{t "admin.setting" count="2"}}</h3>
 <section>
-  {{#link-to "admin.settings" model.settings_id class="t-nav-general-settings"}}{{t "admin.general" count="2"}}{{/link-to}}
+  {{#link-to "admin.tenants.index" class="t-nav-tenants"}}{{t "admin.general.other" count="2"}}{{/link-to}}
   {{#link-to "admin.automations" class="t-nav-admin-automation-profiles"}}{{t "admin.automation" count="2"}}{{/link-to}}
   {{#link-to "admin.approvals"}}{{t "admin.approval" count="2"}}{{/link-to}}
   {{#link-to "admin.templates"}}{{t "admin.template" count="2"}}{{/link-to}}
@@ -24,5 +24,5 @@
 <h3>{{fa-icon "wrench" classNames="menuIcon"}}{{t "admin.contractor" count="2"}}</h3>
 <section>
   {{#link-to "admin.contractors"}}{{t "admin.company" count="2"}}{{/link-to}}
-  {{#link-to "admin.contractor-automations"}}{{t "admin.contractorautomation" count="2"}}{{/link-to}}
+  {{#link-to "admin.contractor-assignments"}}{{t "admin.contractor-assignment" count="2"}}{{/link-to}}
 </section>

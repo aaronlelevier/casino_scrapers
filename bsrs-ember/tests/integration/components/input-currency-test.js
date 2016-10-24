@@ -4,7 +4,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import RD from 'bsrs-ember/vendor/defaults/role';
-import CD from 'bsrs-ember/vendor/defaults/currencies';
+import CD from 'bsrs-ember/vendor/defaults/currency';
 import CatD from 'bsrs-ember/vendor/defaults/category';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import page from 'bsrs-ember/tests/pages/input-currency';

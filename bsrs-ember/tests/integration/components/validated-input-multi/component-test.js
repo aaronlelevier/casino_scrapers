@@ -18,7 +18,7 @@ moduleForComponent('validated-input-multi', 'integration: validated-input-multi 
 
 test('passing a type will change the form fields type', function(assert) {
   run(() => {
-    this.set('model', store.push('person', {}));
+    this.set('model', store.push('person', {id: "1234"}));
   });
   this.render(hbs`
     {{validated-input-multi
@@ -35,7 +35,7 @@ test('passing a type will change the form fields type', function(assert) {
   assert.equal($component.attr('type'), 'password');
   assert.equal($component.attr('placeholder'), trans.t('admin.person.label.password'));
   assert.equal($component.attr('class'), 'form-control t-person-password ember-view ember-text-field');
-  assert.equal($component.attr('id'), 'password0');
+  assert.equal($component.attr('id'), 'password1234');
   assert.equal($component.val(), '');
   $component.val('wat');
   assert.equal($component.val(), 'wat');

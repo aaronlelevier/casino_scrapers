@@ -33,7 +33,10 @@ var DBFetch = Ember.Component.extend({
       if (item) {
         model[change_func](item);
       } else {
-        model[remove_func]();
+        const previousId = model.get(this.get('valuePath')+'.id');
+        if (previousId) {
+          model[remove_func](previousId);
+        }
       }
     }
   }

@@ -9,7 +9,7 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
 import RD from 'bsrs-ember/vendor/defaults/role';
-import CD from 'bsrs-ember/vendor/defaults/currencies';
+import CD from 'bsrs-ember/vendor/defaults/currency';
 import page from 'bsrs-ember/tests/pages/person';
 import general from 'bsrs-ember/tests/pages/general';
 
@@ -118,7 +118,7 @@ test('header populates with username and role name', function(assert) {
   let model;
   run(() => {
     model = store.push('person', {id: PD.id, username: PD.username, role_fk: RD.idOne});
-    role = store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.id]});
+    store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.id]});
   });
   this.set('model', model);
   this.render(hbs`{{people/person-single model=model}}`);

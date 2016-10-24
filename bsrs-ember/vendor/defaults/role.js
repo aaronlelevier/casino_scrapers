@@ -54,14 +54,14 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
 
 if (typeof window === 'undefined') {
   var location_level = require('./location-level');
-  var currency = require('./currencies');
+  var currency = require('./currency');
   var tenant = require('./tenant');
   module.exports = new BSRS_ROLE_DEFAULTS_OBJECT(location_level, currency, tenant).defaults();
 } else {
   define('bsrs-ember/vendor/defaults/role',
     ['exports',
     'bsrs-ember/vendor/defaults/location-level',
-    'bsrs-ember/vendor/defaults/currencies',
+    'bsrs-ember/vendor/defaults/currency',
     'bsrs-ember/vendor/defaults/tenant'],
     function (exports, location_level, currency, tenant) {
     'use strict';

@@ -1,19 +1,19 @@
 <span id="category-validation" />
-{{model-category-select-top 
-  model=model 
-  selection=model.top_level_category 
-  ticket_category_options=category.children 
+{{model-category-select-top
+  model=model
+  selection=model.top_level_category
+  ticket_category_options=category.children
   allowClear=allowClear
   invalid=(if (and showMessage (eq model.sorted_categories.length 0)) "invalid")
 }}
 
 {{#each model.sorted_categories as |category index|}}
   {{#if category.children}}
-    {{model-category-select 
-      ticket=model 
-      index=(plus-one index) 
-      category=category 
-      ticket_category_options=category.children 
+    {{model-category-select
+      ticket=model
+      index=(plus-one index)
+      category=category
+      ticket_category_options=category.children
       allowClear=allowClear
       idTether=(concat valuePath (plus-one index))
       invalid=(if (and showMessage (eq model.sorted_categories.length (plus-one index))) "invalid")
@@ -24,16 +24,16 @@
 {{#if showMessage}}
   {{#if (v-get model valuePath "message")}}
     {{#tether-dialog
+      constraints=(array (hash to="scrollParent" pin=true attachment="together"))
       container-class="tether-dialog-reset"
       target=(concat "#" "category-validation")
       hasOverlay=false
       attachment="bottom left"
       targetAttachment="top left"
-      offset="5px 0"
     }}
-  <div class="validated-input-error-dialog animated flipInX error">
-    {{t (v-get model valuePath "message")}}
-  </div>
+    <div class="validated-input-error-dialog animated flipInX error">
+      {{t (v-get model valuePath "message")}}
+    </div>
   {{/tether-dialog}}
   {{/if}}
 {{/if}}

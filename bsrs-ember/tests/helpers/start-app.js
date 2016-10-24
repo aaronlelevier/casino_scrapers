@@ -49,6 +49,15 @@ function alterPageSize(app, selector, size) {
   return app.testHelpers.wait();
 }
 
+function patchIncrement(app, counter) {
+  Ember.run(function() {
+    random.uuid = function() {
+      counter++;
+      return counter;
+    };
+  });
+}
+
 function patchRandom(app, counter) {
   Ember.run(function() {
     random.uuid = function() {
@@ -147,6 +156,7 @@ Ember.Test.registerAsyncHelper('saveFilterSet', saveFilterSet);
 Ember.Test.registerAsyncHelper('alterPageSize', alterPageSize);
 Ember.Test.registerAsyncHelper('filterGrid', filterGrid);
 Ember.Test.registerHelper('visitSync', visitSync);
+Ember.Test.registerHelper('patchIncrement', patchIncrement);
 Ember.Test.registerHelper('patchRandom', patchRandom);
 Ember.Test.registerAsyncHelper('patchRandomAsync', patchRandomAsync);
 

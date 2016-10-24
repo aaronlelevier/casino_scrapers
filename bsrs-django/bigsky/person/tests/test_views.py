@@ -565,8 +565,7 @@ class PersonDetailTests(TestCase):
         address = Address.objects.get(id=data['addresses'][0]['id'])
         address_data = data['addresses'][0]
         self.assertEqual(address_data['id'], str(address.id))
-        self.assertEqual(address_data['type']['id'], str(address.type.id))
-        self.assertEqual(address_data['type']['name'], address.type.name)
+        self.assertEqual(address_data['type'], str(address.type.id))
         self.assertEqual(address_data['address'], address.address)
         self.assertEqual(address_data['city'], address.city)
         self.assertEqual(address_data['state']['id'], str(address.state.id))

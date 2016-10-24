@@ -48,7 +48,7 @@ module.exports = function(defaults) {
     app.import('vendor/defaults/category.js');
     app.import('vendor/defaults/country.js');
     app.import('vendor/defaults/criteria.js');
-    app.import('vendor/defaults/currencies.js');
+    app.import('vendor/defaults/currency.js');
     app.import('vendor/defaults/dtd-link.js');
     app.import('vendor/defaults/dtd.js');
     app.import('vendor/defaults/email-type.js');
@@ -87,6 +87,7 @@ module.exports = function(defaults) {
     app.import('vendor/defaults/status.js');
     app.import('vendor/defaults/tab.js');
     app.import('vendor/defaults/tenant.js');
+    app.import('vendor/defaults/tenant-join-country.js');
     app.import('vendor/defaults/ticket_activity.js');
     app.import('vendor/defaults/ticket-join-person.js');
     app.import('vendor/defaults/ticket-priority.js');

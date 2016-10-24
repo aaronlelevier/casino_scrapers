@@ -28,3 +28,11 @@ simplegeneric>=0.8.1
 terminado>=0.6
 tornado>=4.3
 traitlets>=4.1.0
+
+# pylint
+astroid>=1.4.8
+isort>=4.2.5
+lazy-object-proxy>=1.2.2
+mccabe>=0.5.2
+pylint>=1.6.4
+wrapt>=1.10.8

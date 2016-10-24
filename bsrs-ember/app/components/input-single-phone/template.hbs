@@ -1,0 +1,24 @@
+<div class="input-group">
+  {{#unless noDelete}}
+  <span class="input-group-btn">
+    <button class="t-del-phone-number-btn btn btn-default btn-sm delete" type="button" {{action "delete" phonenumber}}>{{fa-icon "minus"}}</button>
+  </span>
+  {{/unless}}
+  <div class="input-group-btn input-group-select">
+    {{power-select-foreign-key
+      model=phonenumber
+      selected=phonenumber.phone_number_type
+      change_method="change_phone_number_type"
+      relatedModelName="phone-number-type"
+    }}
+  </div>
+  {{validated-input-multi
+    model=phonenumber
+    valuePath="number"
+    count=index
+    className=(concat "t-phonenumber-number" index)
+    placeholder=placeholder
+    class=(concat "t-phonenumber-number-validator" index)
+    didValidate=didValidate
+  }}
+</div>

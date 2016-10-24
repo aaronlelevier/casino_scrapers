@@ -12,7 +12,7 @@ import LD from 'bsrs-ember/vendor/defaults/ticket';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LOCALE_DEFAULTS from 'bsrs-ember/vendor/defaults/locale';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
-import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
+import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currency';
 import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/utilities/urls';
