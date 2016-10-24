@@ -11,7 +11,7 @@ class Interpolate(object):
     Does string interplolation for Automation actions where a message
     needs to be sent. i.e email/sms
     """
-    i18n_FIELDS = ['ticket.priority']
+    i18n_FIELDS = ['ticket.priority', 'ticket.status']
 
     def __init__(self, ticket, translation, **kwargs):
         """
