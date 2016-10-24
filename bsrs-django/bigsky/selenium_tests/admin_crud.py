@@ -631,7 +631,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         implementation_contact_input = self.wait_for_xhr_request("ember-power-select-trigger-multiple-input")
         implementation_contact_input.send_keys('a')
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
-        time.sleep(2)
+        time.sleep(1)
         self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
 
         dtd_start_dropdown = self.driver.find_element_by_class_name('t-tenant-dtd_start-select')
@@ -639,12 +639,11 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         dtd_start_input = self.wait_for_xhr_request("ember-power-select-trigger-multiple-input")
         dtd_start_input.send_keys('a')
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
-        time.sleep(2)
+        time.sleep(1)
         self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
 
         # save
         self.gen_elem_page.click_save_btn()
-        time.sleep(5)
         # redirected to list
         tenant_page.find_list_data()
 
@@ -677,7 +676,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         currency = self.driver.find_element_by_class_name('t-currency-select')
         currency.click()
         currency_option = self.driver.find_element_by_class_name('ember-power-select-options')
-        time.sleep(2)
         currency_option.click()
 
         # select a Country
@@ -696,7 +694,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         implementation_contact_email_type = self.driver.find_element_by_class_name("t-email-type-select")
         implementation_contact_email_type.click()
         implementation_contact_email_type_option = self.driver.find_element_by_class_name('ember-power-select-options')
-        time.sleep(2)
+        time.sleep(1)
         implementation_contact_email_type_option.click()
 
         implementation_contact_email = self.driver.find_element_by_class_name("t-email-email")
@@ -709,7 +707,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         billing_address_type = self.driver.find_element_by_class_name("t-address-type-select")
         billing_address_type.click()
         billing_address_type_option = self.driver.find_element_by_class_name('ember-power-select-options')
-        time.sleep(2)
         billing_address_type_option.click()
 
         billing_address = self.driver.find_element_by_class_name('t-address-address')
@@ -723,8 +720,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         billing_state_dropdown.click()
         billing_state_input = self.wait_for_xhr_request("ember-power-select-search-input")
         billing_state_input.send_keys('a')
-        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
-        time.sleep(2)
+        self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]", debounce=True)
         self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
 
         billing_zip = self.driver.find_element_by_class_name('t-address-postal-code')
@@ -735,8 +731,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         billing_country_dropdown.click()
         billing_country_input = self.wait_for_xhr_request("ember-power-select-search-input")
         billing_country_input.send_keys('a')
-        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
-        time.sleep(2)
+        self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]", debounce=True)
         self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
 
         # select an Billing Email Type
@@ -762,7 +757,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
 
         # save
         self.gen_elem_page.click_save_btn()
-        time.sleep(5)
         # Find in list
         tenant = tenant_page.find_list_data()
         list_view = tenant_page.find_list_name()
