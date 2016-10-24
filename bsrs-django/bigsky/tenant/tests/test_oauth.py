@@ -93,55 +93,55 @@ class BsOAuthSessionDev1Tests(TestCase):
         self.session.get(self.subscriber_post_url)
         self.assertTrue(mock_func.called)
 
-    # def test_sc_crud(self):
-    #     """All live CRUD to SC is currently in this test. Maybe it makes
-    #     sense to break it out into separate tests, but need to do the initial
-    #     POST before can check GET/PUT"""
+    def test_sc_crud(self):
+        """All live CRUD to SC is currently in this test. Maybe it makes
+        sense to break it out into separate tests, but need to do the initial
+        POST before can check GET/PUT"""
 
-    #     # POST
-    #     SC_SUBSCRIBER_POST_DATA['Name'] = _generate_chars()
+        # POST
+        SC_SUBSCRIBER_POST_DATA['Name'] = _generate_chars()
 
-    #     response = self.session.post(self.subscriber_post_url, data=SC_SUBSCRIBER_POST_DATA)
+        response = self.session.post(self.subscriber_post_url, data=SC_SUBSCRIBER_POST_DATA)
 
-    #     data = json.loads(response.content.decode('utf8'))
-    #     self.assertEqual(response.status_code, 201,
-    #         "Error: {}; Random name: {}".format(data, SC_SUBSCRIBER_POST_DATA['Name']))
-    #     self.assertTrue(data['id'])
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 201,
+            "Error: {}; Random name: {}".format(data, SC_SUBSCRIBER_POST_DATA['Name']))
+        self.assertTrue(data['id'])
 
-    #     # store 'scid' for later use with PUT
-    #     scid = data['id']
+        # store 'scid' for later use with PUT
+        scid = data['id']
 
-    #     # GET
-    #     response = self.session.get("{}/{}/".format(self.subscriber_post_url, scid))
+        # GET
+        response = self.session.get("{}/{}/".format(self.subscriber_post_url, scid))
 
-    #     data = json.loads(response.content.decode('utf8'))
-    #     for k,v in SC_SUBSCRIBER_POST_DATA.items():
-    #         self.assertEqual(empty_str_if_none(data[k]), SC_SUBSCRIBER_POST_DATA[k])
+        data = json.loads(response.content.decode('utf8'))
+        for k,v in SC_SUBSCRIBER_POST_DATA.items():
+            self.assertEqual(empty_str_if_none(data[k]), SC_SUBSCRIBER_POST_DATA[k])
 
-    #     # PUT
-    #     PUT_DATA = copy.copy(SC_SUBSCRIBER_POST_DATA)
-    #     for k,v in PUT_DATA.items():
-    #         if k != 'Name':
-    #             PUT_DATA[k] = v+'123'
-    #     # state - thinking that there's somve validation on 'State', or just
-    #     # can't append '123' to it, b/c explicitly need to set it here for PUT
-    #     new_state = 'Nevada'
-    #     PUT_DATA['State'] = new_state
+        # PUT
+        PUT_DATA = copy.copy(SC_SUBSCRIBER_POST_DATA)
+        for k,v in PUT_DATA.items():
+            if k != 'Name':
+                PUT_DATA[k] = v+'123'
+        # state - thinking that there's somve validation on 'State', or just
+        # can't append '123' to it, b/c explicitly need to set it here for PUT
+        new_state = 'Nevada'
+        PUT_DATA['State'] = new_state
 
-    #     response = self.session.put("{}/{}/".format(self.subscriber_post_url, scid),
-    #                                 data=PUT_DATA)
+        response = self.session.put("{}/{}/".format(self.subscriber_post_url, scid),
+                                    data=PUT_DATA)
 
-    #     self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
-    #     # 2nd GET - confirms resource was updated
-    #     response = self.session.get("{}/{}/".format(self.subscriber_post_url, scid))
+        # 2nd GET - confirms resource was updated
+        response = self.session.get("{}/{}/".format(self.subscriber_post_url, scid))
 
-    #     data = json.loads(response.content.decode('utf8'))
-    #     for k,v in PUT_DATA.items():
-    #         if k != 'State':
-    #             self.assertEqual(empty_str_if_none(data[k]), PUT_DATA[k])
-    #     # state
-    #     self.assertEqual(data['State'], new_state)
+        data = json.loads(response.content.decode('utf8'))
+        for k,v in PUT_DATA.items():
+            if k != 'State':
+                self.assertEqual(empty_str_if_none(data[k]), PUT_DATA[k])
+        # state
+        self.assertEqual(data['State'], new_state)
 
 
 class BsOAuthSessionSandbox2Tests(TestCase):
