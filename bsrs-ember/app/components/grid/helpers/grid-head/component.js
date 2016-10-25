@@ -55,7 +55,7 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
       const gridFilterParams = this.get('gridFilterParams');
       let finalFilter = '';
       Object.keys(gridFilterParams).forEach((key) => {
-        finalFilter += this.update_find_query(key, gridFilterParams[key], find);
+        finalFilter += this.update_find_query(key, gridFilterParams[key], find, finalFilter);
       });
 
       /* 'id_in' query param - pipe separated model types, comma separated list of model's ids that were filtered */
