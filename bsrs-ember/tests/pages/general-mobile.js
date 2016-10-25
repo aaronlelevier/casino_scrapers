@@ -12,6 +12,7 @@ export default create({
   clickSearchGridOne: clickable('.t-grid-search-data:eq(0)'),
   mobileSearch: fillable(mobileSearch),
   filterInput: fillable('.t-filter-input'),
+  filterInput2: fillable('.t-filter-input:eq(1)'),
   clickSearchIcon: clickable('.t-mobile-search'),
   clickFilterOpen: clickable('.t-mobile-filter'),
   saveFilterset: clickable('.t-mobile-save-filterset'),

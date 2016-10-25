@@ -3,8 +3,8 @@ import { test, module } from 'qunit';
 import UpdateFind from 'bsrs-ember/mixins/update-find';
 
 var FakeComponentTwo = Ember.Object.extend(UpdateFind, {
-  run: function(column, value) {
-    return this.update_find_query(column, value, this.get('find'));
+  run: function(column, value, finalFilter='') {
+    return this.update_find_query(column, value, this.get('find'), finalFilter);
   }
 });
 
@@ -21,6 +21,21 @@ test('update will alter the find query param correctly (starting with single val
   subject.set('find', 'username:xyz');
   let result = subject.run('username', 'abc');
   assert.equal(result, 'username:abc');
+});
+
+test('adds second query param correctly (starting with single value)', function(assert) {
+  let subject = new FakeComponentTwo();
+  subject.set('find', 'username:xyz');
+  let result = subject.run('wat', 'abc');
+  assert.equal(result, 'username:xyz,wat:abc');
+});
+
+test('adds two query params if no find query param correctly (starting with single value)', function(assert) {
+  let subject = new FakeComponentTwo();
+  subject.set('find', '');
+  let result = subject.run('username', 'abc');
+  result = subject.run('wat', 'abc', 'username:abc');
+  assert.equal(result, ',wat:abc');
 });
 
 test('update will alter the find query param correctly after clearing out input field', function(assert) {
