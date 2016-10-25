@@ -1,11 +1,12 @@
 import copy
+from itertools import chain
 
 from rest_framework import serializers
 
 from category.models import Category
 from contact.models import State, Country
 from location.models import Location, LocationLevel
-from person.models import Person
+from person.models import Role, Person
 from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationAction, AutomationActionType)
 from automation.validators import (AutomationFilterFieldValidator, UniqueByTenantValidator,
@@ -51,18 +52,34 @@ class AutomationActionSerializer(BaseCreateSerializer):
             data['status'] = TicketStatus.objects.get(id=data['content']['status']).to_dict_id_name()
         elif key == AutomationActionType.SEND_EMAIL:
             data.update(data['content'])
-            data['recipients'] = (Person.objects.filter(id__in=data['content']['recipients'])
-                                                .values('id', 'fullname'))
+            data['recipients'] = self._get_recipients(data)
         elif key == AutomationActionType.SEND_SMS:
             data.update(data['content'])
-            data['recipients'] = (Person.objects.filter(id__in=data['content']['recipients'])
-                                                .values('id', 'fullname'))
+            data['recipients'] = self._get_recipients(data)
 
         # this is a storage dict for the data to be decorated onto
         # the automation action, so remove before returning the data
         data.pop('content')
 
         return data
+
+    @staticmethod
+    def _get_recipients(data):
+        person_ids = role_ids = []
+
+        for x in data['content']['recipients']:
+            if x['type'] == 'person':
+                person_ids.append(x['id'])
+            elif x['type'] == 'role':
+                role_ids.append(x['id'])
+
+        person_list = Person.objects.filter(id__in=person_ids)
+        role_list = Role.objects.filter(id__in=role_ids)
+
+        result_list = list(chain(person_list, role_list))
+
+        return [{'id': str(x.id), 'fullname': x.fullname, 'type': x.__class__.__name__.lower()}
+                for x in result_list]
 
 
 class AutomationActionUpdateSerializer(BaseCreateSerializer):

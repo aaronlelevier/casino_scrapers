@@ -9,7 +9,7 @@ from contact.models import State, Country
 from location.models import LocationLevel
 from location.tests.factory import (create_location_levels, create_top_level_location,
     create_location_level, create_location)
-from person.models import Person
+from person.models import Role, Person
 from person.tests.factory import create_single_person, PASSWORD
 from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationActionType)
@@ -284,10 +284,15 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['actions'][0]['id'], str(action.id))
         self.assertEqual(data['actions'][0]['type']['id'], str(action.type.id))
         self.assertEqual(data['actions'][0]['type']['key'], action.type.key)
-        self.assertEqual(len(data['actions'][0]['recipients']), 1)
-        person = Person.objects.get(id=action.content['recipients'][0])
+        self.assertEqual(len(data['actions'][0]['recipients']), 2)
+        person = Person.objects.get(id=action.content['recipients'][0]['id'])
         self.assertEqual(data['actions'][0]['recipients'][0]['id'], str(person.id))
         self.assertEqual(data['actions'][0]['recipients'][0]['fullname'], person.fullname)
+        self.assertEqual(data['actions'][0]['recipients'][0]['type'], person.__class__.__name__.lower())
+        role = Role.objects.get(id=action.content['recipients'][1]['id'])
+        self.assertEqual(data['actions'][0]['recipients'][1]['id'], str(role.id))
+        self.assertEqual(data['actions'][0]['recipients'][1]['fullname'], role.fullname)
+        self.assertEqual(data['actions'][0]['recipients'][1]['type'], role.__class__.__name__.lower())
         self.assertEqual(data['actions'][0]['subject'], action.content['subject'])
         self.assertEqual(data['actions'][0]['body'], action.content['body'])
         self.assertNotIn('content', data['actions'][0])
@@ -302,10 +307,15 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['actions'][0]['id'], str(action.id))
         self.assertEqual(data['actions'][0]['type']['id'], str(action.type.id))
         self.assertEqual(data['actions'][0]['type']['key'], action.type.key)
-        self.assertEqual(len(data['actions'][0]['recipients']), 1)
-        person = Person.objects.get(id=action.content['recipients'][0])
+        self.assertEqual(len(data['actions'][0]['recipients']), 2)
+        person = Person.objects.get(id=action.content['recipients'][0]['id'])
         self.assertEqual(data['actions'][0]['recipients'][0]['id'], str(person.id))
         self.assertEqual(data['actions'][0]['recipients'][0]['fullname'], person.fullname)
+        self.assertEqual(data['actions'][0]['recipients'][0]['type'], person.__class__.__name__.lower())
+        role = Role.objects.get(id=action.content['recipients'][1]['id'])
+        self.assertEqual(data['actions'][0]['recipients'][1]['id'], str(role.id))
+        self.assertEqual(data['actions'][0]['recipients'][1]['fullname'], role.fullname)
+        self.assertEqual(data['actions'][0]['recipients'][1]['type'], role.__class__.__name__.lower())
         self.assertEqual(data['actions'][0]['body'], action.content['body'])
         self.assertNotIn('content', data['actions'][0])
 

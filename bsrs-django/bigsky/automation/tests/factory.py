@@ -61,15 +61,19 @@ def create_automation_action_assignee(automation=None):
 def create_automation_action_send_email(automation=None):
     automation, type = _get_automation_and_action_type(automation, AutomationActionType.SEND_EMAIL)
     person = create_single_person()
-    return AutomationAction.objects.create(type=type, automation=automation,
-                                           content={'recipients': [str(person.id)], 'subject': 'foo', 'body': 'bar'})
+    role = person.role
+    return AutomationAction.objects.create(
+        type=type, automation=automation,
+        content={'recipients': [{'id': str(person.id), 'type': 'person'}, {'id': str(role.id), 'type': 'role'}], 'subject': 'foo', 'body': 'bar'})
 
 
 def create_automation_action_send_sms(automation=None):
     automation, type = _get_automation_and_action_type(automation, AutomationActionType.SEND_SMS)
     person = create_single_person()
-    return AutomationAction.objects.create(type=type, automation=automation,
-                                           content={'recipients': [str(person.id)], 'body': 'bar'})
+    role = person.role
+    return AutomationAction.objects.create(
+        type=type, automation=automation,
+        content={'recipients': [{'id': str(person.id), 'type': 'person'}, {'id': str(role.id), 'type': 'role'}], 'body': 'bar'})
 
 
 def create_automation_action_priority(automation=None):

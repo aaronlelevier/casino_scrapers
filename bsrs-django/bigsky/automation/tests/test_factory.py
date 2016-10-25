@@ -6,7 +6,7 @@ from category.models import Category
 from category.tests.factory import create_repair_category
 from contact.tests.factory import create_contact_state, create_contact_country
 from location.tests.factory import create_top_level_location
-from person.models import Person
+from person.models import Role, Person
 from automation.models import (
     AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationActionType, AutomationAction)
@@ -85,9 +85,14 @@ class AutomationActionTests(TestCase):
         self.assertEqual(ret.type.key, AutomationActionType.SEND_EMAIL)
         # content
         self.assertEqual(len(ret.content), 3)
-        self.assertEqual(len(ret.content['recipients']), 1)
-        self.assertIsInstance(
-            Person.objects.get(id=ret.content['recipients'][0]), Person)
+        self.assertEqual(len(ret.content['recipients']), 2)
+        # person recipient
+        self.assertEqual(ret.content['recipients'][0]['type'], 'person')
+        self.assertIsInstance(Person.objects.get(id=ret.content['recipients'][0]['id']), Person)
+        # role recipient
+        self.assertEqual(ret.content['recipients'][1]['type'], 'role')
+        self.assertIsInstance(Role.objects.get(id=ret.content['recipients'][1]['id']), Role)
+        # other fields
         self.assertIsInstance(ret.content['subject'], str)
         self.assertIsInstance(ret.content['body'], str)
 
@@ -98,9 +103,14 @@ class AutomationActionTests(TestCase):
         self.assertEqual(ret.type.key, AutomationActionType.SEND_SMS)
         # content
         self.assertEqual(len(ret.content), 2)
-        self.assertEqual(len(ret.content['recipients']), 1)
-        self.assertIsInstance(
-            Person.objects.get(id=ret.content['recipients'][0]), Person)
+        self.assertEqual(len(ret.content['recipients']), 2)
+        # person recipient
+        self.assertEqual(ret.content['recipients'][0]['type'], 'person')
+        self.assertIsInstance(Person.objects.get(id=ret.content['recipients'][0]['id']), Person)
+        # role recipient
+        self.assertEqual(ret.content['recipients'][1]['type'], 'role')
+        self.assertIsInstance(Role.objects.get(id=ret.content['recipients'][1]['id']), Role)
+        # other fields
         self.assertIsInstance(ret.content['body'], str)
 
     def test_create_automation_action_priority(self):
