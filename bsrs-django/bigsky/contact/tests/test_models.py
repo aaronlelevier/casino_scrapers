@@ -47,7 +47,7 @@ class PhoneNumberManagerTests(TestCase):
     def setUp(self):
         self.action = create_automation_action_send_sms()
         self.event = self.action.automation.events.first()
-        self.person = Person.objects.get(id=self.action.content['recipients'][0])
+        self.person = Person.objects.get(id=self.action.content['recipients'][0]['id'])
         self.translation = create_translation_keys_for_fixtures(self.person.locale.locale)
         self.ticket = create_standard_ticket()
 
@@ -218,7 +218,7 @@ class EmailManagerTests(TestCase):
     def setUp(self):
         self.action = create_automation_action_send_email()
         self.event = self.action.automation.events.first()
-        self.person = Person.objects.get(id=self.action.content['recipients'][0])
+        self.person = Person.objects.get(id=self.action.content['recipients'][0]['id'])
         self.translation = create_translation_keys_for_fixtures(self.person.locale.locale)
         self.ticket = create_standard_ticket()
 

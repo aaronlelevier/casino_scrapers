@@ -109,7 +109,8 @@ class PhoneNumberManager(BaseManager):
     def process_send_sms(self, ticket, action, event):
         Person = ContentType.objects.get(app_label="person", model="person").model_class()
 
-        for person in Person.objects.filter(id__in=action.content.get('recipients', [])):
+        for person in Person.objects.filter(id__in=[x['id'] for x in action.content['recipients']
+                                                            if x['type'] == 'person']):
             try:
                 ph = person.phone_numbers.get(type__name=PhoneNumberType.CELL)
             except PhoneNumber.DoesNotExist:
@@ -262,7 +263,8 @@ class EmailManager(BaseManager):
         """
         Person = ContentType.objects.get(app_label="person", model="person").model_class()
 
-        for person in Person.objects.filter(id__in=action.content.get('recipients', [])):
+        for person in Person.objects.filter(id__in=[x['id'] for x in action.content['recipients']
+                                                            if x['type'] == 'person']):
             for email in person.emails.filter(type__name=EmailType.WORK):
                 interpolate = Interpolate(ticket, person.locale.translation_, event=event)
 
