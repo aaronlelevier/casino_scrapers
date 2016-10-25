@@ -1,5 +1,4 @@
 from datetime import date
-from mock import patch
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, Group
@@ -13,11 +12,11 @@ from model_mommy import mommy
 from accounting.models import Currency
 from category.models import Category
 from category.tests.factory import create_single_category
-from contact.models import Email, PhoneNumber, PhoneNumberType
-from contact.tests.factory import create_contact, create_phone_number_type
+from contact.models import Email, EmailType, PhoneNumber, PhoneNumberType
+from contact.tests.factory import create_contact, create_phone_number_type, create_email_type
 from location.models import Location
 from location.tests.factory import create_locations
-from person.models import Person, PersonQuerySet, PersonStatus, Role, RoleManager, RoleQuerySet
+from person.models import Person, PersonStatus, Role, RoleManager, RoleQuerySet, PersonAndRole
 from person.tests.factory import (PASSWORD, create_person, create_role, create_single_person,
     get_or_create_tenant)
 from translation.models import Locale, Translation
@@ -90,6 +89,9 @@ class RoleTests(TestCase):
 
     def test_manager(self):
         self.assertIsInstance(Role.objects, RoleManager)
+
+    def test_fullname(self):
+        self.assertEqual(self.role.fullname, self.role.name)
 
     def test_str(self):
         self.assertEqual(str(self.role), self.role.name)
@@ -352,7 +354,8 @@ class PersonManagerTests(TestCase):
         person_two = create_single_person()
         person_three = create_single_person()
         # person 1 - valid - same tenant, has an email
-        create_contact(Email, person_one)
+        email_type_work = create_email_type(EmailType.WORK)
+        create_contact(Email, person_one, email_type_work)
         self.assertEqual(person_one.role.tenant, self.person.role.tenant)
         self.assertTrue(person_one.emails.exists())
         # person 2 - invalid - diff tenant
@@ -374,8 +377,9 @@ class PersonManagerTests(TestCase):
     def test_get_email_recipients__filtered(self):
         person_one = create_single_person()
         person_two = create_single_person()
-        create_contact(Email, person_one)
-        create_contact(Email, person_two)
+        email_type_work = create_email_type(EmailType.WORK)
+        create_contact(Email, person_one, email_type_work)
+        create_contact(Email, person_two, email_type_work)
         # pre-test
         self.assertTrue(person_one.emails.exists())
         self.assertTrue(person_two.emails.exists())
@@ -708,3 +712,39 @@ class PersonPasswordHistoryTests(TestCase):
             init_password_change,
             post_password_change
         )
+
+
+class PersonAndRoleTests(TestCase):
+
+    def setUp(self):
+        self.keyword = 'foo'
+        # match - person
+        self.person_one = create_single_person(self.keyword)
+        email_type_work = create_email_type(EmailType.WORK)
+        create_contact(Email, self.person_one, email_type_work)
+        phone_cell_type = create_phone_number_type(PhoneNumberType.CELL)
+        create_contact(PhoneNumber, self.person_one, phone_cell_type)
+        # match - role
+        self.role_one = create_role(self.keyword)
+        # don't match
+        self.person_two = create_single_person('bar')
+        self.role_two = create_role('bar')
+        self.role_three = create_role('fooo')
+        self.role_three.tenant = get_or_create_tenant('other')
+        self.role_three.save()
+
+    def test_email_recipients(self):
+        ret = PersonAndRole.email_recipients(self.person_one.role.tenant, self.keyword)
+
+        self.assertEqual(len(ret), 2)
+        ret_ids = [x['id'] for x in ret]
+        self.assertIn(str(self.person_one.id), ret_ids)
+        self.assertIn(str(self.role_one.id), ret_ids)
+
+    def test_sms_recipients(self):
+        ret = PersonAndRole.sms_recipients(self.person_one.role.tenant, self.keyword)
+
+        self.assertEqual(len(ret), 2)
+        ret_ids = [x['id'] for x in ret]
+        self.assertIn(str(self.person_one.id), ret_ids)
+        self.assertIn(str(self.role_one.id), ret_ids)

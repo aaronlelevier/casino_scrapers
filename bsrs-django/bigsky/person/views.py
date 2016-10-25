@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
@@ -8,7 +10,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from person import serializers as ps
-from person.models import Person, Role
+from person.models import Person, Role, PersonAndRole
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.views import BaseModelViewSet, paginate_queryset_as_response
 
@@ -124,22 +126,32 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
         return Response(serializer.data)
 
     @list_route(methods=['GET'], url_path=r"sms-recipients")
-    @paginate_queryset_as_response(ps.PersonSearchSerializer)
     def sms_recipients(self, request):
         """
         Returns people with a related PhoneNumber of PhoneNumberType.CELL
         """
-        keyword = request.query_params.get('search', None)
-        return Person.objects.get_sms_recipients(tenant=request.user.role.tenant, keyword=keyword)
+        keyword = request.query_params.get('search', '')
+        data = PersonAndRole.sms_recipients(request.user.role.tenant, keyword)
+        return Response(OrderedDict([
+            ('count', len(data)),
+            ('next', ''),
+            ('previous', ''),
+            ('results', data)
+        ]))
 
     @list_route(methods=['GET'], url_path=r"email-recipients")
-    @paginate_queryset_as_response(ps.PersonSearchSerializer)
     def email_recipients(self, request):
         """
         Returns people with a Emails
         """
-        keyword = request.query_params.get('search', None)
-        return Person.objects.get_email_recipients(tenant=request.user.role.tenant, keyword=keyword)
+        keyword = request.query_params.get('search', '')
+        data = PersonAndRole.email_recipients(request.user.role.tenant, keyword)
+        return Response(OrderedDict([
+            ('count', len(data)),
+            ('next', ''),
+            ('previous', ''),
+            ('results', data)
+        ]))
 
     @list_route(methods=['GET'], url_path=r"person__icontains=(?P<search_key>[\w\s\.\-@]+)")
     @paginate_queryset_as_response(ps.PersonSearchSerializer)

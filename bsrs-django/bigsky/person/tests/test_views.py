@@ -14,7 +14,8 @@ from accounting.models import Currency
 from category.models import Category
 from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
-from contact.tests.factory import create_contact, create_contacts, create_phone_number_type
+from contact.tests.factory import (create_contact, create_contacts, create_phone_number_type,
+    create_email_type)
 from location.models import Location, LocationLevel
 from location.tests.factory import create_location
 from person import config as person_config
@@ -381,79 +382,59 @@ class PersonListTests(TestCase):
         self.assertTrue(data['count'] > 10)
         self.assertEqual(len(data['results']), settings.PAGE_SIZE)
 
-    @patch("person.views.Person.objects.get_sms_recipients")
-    def test_sms_recipients__confirm_queryset_called(self, mock_func):
-        # MagicMock will raise a TypeError here, but none the less, we
-        # can confirm that the correct queryset method was called
-        try:
-            response = self.client.get('/api/admin/people/sms-recipients/')
-        except TypeError:
-            pass
-        self.assertTrue(mock_func.called)
-
-    def test_get_sms_recipients__data(self):
+    def test_get_sms_recipients(self):
+        keyword = 'foo'
+        person = create_single_person(keyword)
         phone_cell_type = create_phone_number_type(PhoneNumberType.CELL)
-        create_contact(PhoneNumber, self.person, phone_cell_type)
+        create_contact(PhoneNumber, person, phone_cell_type)
+        role = create_role('foo')
 
-        response = self.client.get('/api/admin/people/sms-recipients/')
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['count'], 1)
-        self.assertEqual(data['results'][0]['id'], str(self.person.id))
-        self.assertEqual(data['results'][0]['fullname'], self.person.fullname)
-        self.assertEqual(data['results'][0]['username'], self.person.username)
-        self.assertEqual(data['results'][0]['email'], str(self.person.email))
-
-    def test_get_sms_recipients__filtered(self):
-        phone_cell_type = create_phone_number_type(PhoneNumberType.CELL)
-        create_contact(PhoneNumber, self.person, phone_cell_type)
-        person_two = create_single_person('foo')
-        create_contact(PhoneNumber, person_two, phone_cell_type)
-
-        response = self.client.get('/api/admin/people/sms-recipients/?search={}'
-                                   .format(self.person.username))
+        response = self.client.get('/api/admin/people/sms-recipients/?search={}'.format(keyword))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['count'], 1)
-        self.assertEqual(data['results'][0]['id'], str(self.person.id))
+        self.assertEqual(data['count'], 2)
 
-    @patch("person.views.Person.objects.get_email_recipients")
-    def test_email_recipients__confirm_queryset_called(self, mock_func):
-        # MagicMock will raise a TypeError here, but none the less, we
-        # can confirm that the correct queryset method was called
-        try:
-            response = self.client.get('/api/admin/people/email-recipients/')
-        except TypeError:
-            pass
-        self.assertTrue(mock_func.called)
+        if str(person.id) == data['results'][0]['id']:
+            model_one, model_two = person, role
+        else:
+            model_one, model_two = role, person
 
-    def test_get_email_recipients__data(self):
-        create_contact(Email, self.person)
+        # model_one
+        self.assertEqual(data['results'][0]['id'], str(model_one.id))
+        self.assertEqual(data['results'][0]['fullname'], model_one.fullname)
+        self.assertEqual(data['results'][0]['type'], model_one.__class__.__name__.lower())
+        # model_two
+        self.assertEqual(data['results'][1]['id'], str(model_two.id))
+        self.assertEqual(data['results'][1]['fullname'], model_two.fullname)
+        self.assertEqual(data['results'][1]['type'], model_two.__class__.__name__.lower())
 
-        response = self.client.get('/api/admin/people/email-recipients/')
+    def test_get_email_recipients(self):
+        keyword = 'foo'
+        person = create_single_person(keyword)
+        email_type_work = create_email_type(EmailType.WORK)
+        create_contact(Email, person, email_type_work)
+        role = create_role('foo')
 
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['count'], 1)
-        self.assertEqual(data['results'][0]['id'], str(self.person.id))
-        self.assertEqual(data['results'][0]['fullname'], self.person.fullname)
-        self.assertEqual(data['results'][0]['username'], self.person.username)
-        self.assertEqual(data['results'][0]['email'], str(self.person.email))
-
-    def test_get_email_recipients__filtered(self):
-        create_contact(Email, self.person)
-        person_two = create_single_person('foo')
-        create_contact(Email, person_two)
-
-        response = self.client.get('/api/admin/people/email-recipients/?search={}'
-                                   .format(self.person.fullname))
+        response = self.client.get('/api/admin/people/email-recipients/?search={}'.format(keyword))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['count'], 1)
-        self.assertEqual(data['results'][0]['id'], str(self.person.id))
+        self.assertEqual(data['count'], 2)
+
+        if str(person.id) == data['results'][0]['id']:
+            model_one, model_two = person, role
+        else:
+            model_one, model_two = role, person
+
+        # model_one
+        self.assertEqual(data['results'][0]['id'], str(model_one.id))
+        self.assertEqual(data['results'][0]['fullname'], model_one.fullname)
+        self.assertEqual(data['results'][0]['type'], model_one.__class__.__name__.lower())
+        # model_two
+        self.assertEqual(data['results'][1]['id'], str(model_two.id))
+        self.assertEqual(data['results'][1]['fullname'], model_two.fullname)
+        self.assertEqual(data['results'][1]['type'], model_two.__class__.__name__.lower())
 
 
 class PersonDetailTests(TestCase):

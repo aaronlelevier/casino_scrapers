@@ -7,7 +7,7 @@ from model_mommy import mommy
 
 from accounting.models import Currency
 from category.models import Category, CategoryStatus
-from category.tests.factory import create_single_category, create_repair_category, REPAIR
+from category.tests.factory import create_single_category, create_repair_category
 from location.models import (LocationLevel, Location, LocationStatus, LocationType,
     LOCATION_COMPANY, LOCATION_DISTRICT, LOCATION_REGION,)
 from location.tests.factory import (
