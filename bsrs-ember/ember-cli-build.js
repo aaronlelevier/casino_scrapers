@@ -94,6 +94,7 @@ module.exports = function(defaults) {
     app.import('vendor/defaults/ticket-status.js');
     app.import('vendor/defaults/ticket.js');
     app.import('vendor/defaults/translation.js');
+    app.import('vendor/currency_fixtures.js');
     app.import('vendor/dtd_fixtures.js');
     app.import('vendor/email_fixtures.js');
     app.import('vendor/locale_fixtures.js');
