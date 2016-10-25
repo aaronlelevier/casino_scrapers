@@ -8,7 +8,7 @@
         targetAttachment="top left"
         offset="5px 0"
       }}
-      <div class="validated-input-error-dialog animated flipInX .error" data-test-id={{concat "validation-" valuePath index}}>
+      <div class="validated-input-error-dialog animated flipInX .error {{concat "t-validation-" valuePath}}" data-test-id={{concat "validation-" valuePath index}}>
        {{t (v-get model valuePath "message")}}
       </div>
       {{/tether-dialog}}

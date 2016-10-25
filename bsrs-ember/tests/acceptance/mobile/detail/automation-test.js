@@ -82,9 +82,8 @@ test('show the filter count on the detail section', async assert => {
   clearxhr(listXhr);
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
-  assert.equal(find('[data-test-id="applied-filters"]').text().trim(), 'There is 1 filter applied');
+  assert.equal(find('[data-test-id="applied-filters"]').text().trim(), t('admin.automation.filtersApplied', { count: 1 }));
 });
-
 
 // NOTE: Delete button not available
 // test('visit detail and delete record', async assert => {
