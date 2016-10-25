@@ -1,4 +1,4 @@
-var BSRS_STATUS_DEFAULTS_OBJECT = (function() {
+var BSRS_TICKET_STATUS_DEFAULTS_OBJECT = (function() {
   var factory = function() {
   };
   factory.prototype.defaults = function() {
@@ -17,10 +17,10 @@ var BSRS_STATUS_DEFAULTS_OBJECT = (function() {
 })();
 
 if (typeof window === 'undefined') {
-  module.exports = new BSRS_STATUS_DEFAULTS_OBJECT().defaults();
+  module.exports = new BSRS_TICKET_STATUS_DEFAULTS_OBJECT().defaults();
 } else {
   define('bsrs-ember/vendor/defaults/ticket-status', ['exports'], function (exports) {
     'use strict';
-    return new BSRS_STATUS_DEFAULTS_OBJECT().defaults();
+    return new BSRS_TICKET_STATUS_DEFAULTS_OBJECT().defaults();
   });
 }
