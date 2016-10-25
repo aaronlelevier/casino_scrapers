@@ -19,6 +19,7 @@ from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role, RoleManager, RoleQuerySet, PersonAndRole
 from person.tests.factory import (PASSWORD, create_person, create_role, create_single_person,
     get_or_create_tenant)
+from ticket.tests.factory import create_ticket
 from translation.models import Locale, Translation
 from utils import create
 from utils.models import DefaultNameManager
@@ -397,6 +398,23 @@ class PersonManagerTests(TestCase):
 
         self.assertEqual(qs.count(), 1)
         self.assertEqual(qs.first(), person_one)
+
+    def test_filter_by_ticket_location_and_role(self):
+        person_one = create_single_person()
+        person_two = create_single_person()
+        # params
+        ticket = create_ticket(assignee=person_one)
+        role = person_one.role
+        role_ids = [str(role.id)]
+        # pre-test
+        self.assertIn(ticket.location, person_one.locations.all())
+        self.assertNotEqual(person_one.role, person_two.role)
+        self.assertNotIn(ticket.location, person_two.locations.all())
+
+        ret = Person.objects.filter_by_ticket_location_and_role(ticket, role_ids)
+
+        self.assertEqual(ret.count(), 1)
+        self.assertEqual(ret.first(), person_one)
 
 
 class PersonTests(TestCase):

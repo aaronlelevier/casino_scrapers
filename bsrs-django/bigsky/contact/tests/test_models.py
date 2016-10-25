@@ -13,10 +13,10 @@ from contact.tests.factory import (create_contact, create_address_type, create_e
     create_phone_number_type)
 from location.models import Location
 from location.tests.factory import create_location
-from person.models import Person
-from person.tests.factory import create_person
+from person.models import Role, Person
+from person.tests.factory import create_person, create_single_person
 from tenant.tests.factory import get_or_create_tenant
-from ticket.tests.factory import create_standard_ticket
+from ticket.tests.factory import create_standard_ticket, create_ticket
 from translation.tests.factory import create_translation_keys_for_fixtures
 
 
@@ -40,6 +40,27 @@ class StateTests(TestCase):
 
     def test_manager(self):
         self.assertIsInstance(State.objects, StateManager)
+
+
+class EmailAndSmsMixinTests(TestCase):
+
+    def test_get_recipients(self):
+        action = create_automation_action_send_sms()
+        person = Person.objects.get(id=action.content['recipients'][0]['id'])
+        role = Role.objects.get(id=action.content['recipients'][1]['id'])
+        person_two = create_single_person()
+        person_two.role = role
+        person_two.save()
+        ticket = create_ticket(assignee=person_two)
+        # pre-test
+        self.assertIn(ticket.location, person_two.locations.all())
+        self.assertEqual(role, person_two.role)
+
+        ret = PhoneNumber.objects.get_recipients(action, ticket)
+
+        self.assertEqual(ret.count(), 2)
+        self.assertIn(person, ret)
+        self.assertIn(person_two, ret)
 
 
 class PhoneNumberManagerTests(TestCase):
@@ -102,6 +123,25 @@ class PhoneNumberManagerTests(TestCase):
         self.assertEqual(mock_interpolate.call_args[1]['event'], self.event.key)
 
         self.assertTrue(mock_send_sms.called)
+
+    @patch("contact.models.PhoneNumberManager.send_sms")
+    def test_process_send_sms__called_for_person_and_role(self, mock_func):
+        work_sms_type = create_phone_number_type(PhoneNumberType.CELL)
+        person_phone = create_contact(PhoneNumber, self.person, work_sms_type)
+        role = Role.objects.get(id=self.action.content['recipients'][1]['id'])
+        person_two = create_single_person()
+        person_two.role = role
+        person_two.save()
+        person_two.locations.add(self.ticket.location)
+        person_two_phone = create_contact(PhoneNumber, person_two, work_sms_type)
+
+        PhoneNumber.objects.process_send_sms(self.ticket, self.action, self.event.key)
+
+        self.assertEqual(mock_func.call_count, 2)
+        phone_call_args = [mock_func.call_args_list[0][0][0],
+                        mock_func.call_args_list[1][0][0]]
+        self.assertIn(person_phone, phone_call_args)
+        self.assertIn(person_two_phone, phone_call_args)
 
 
 class PhoneNumberTests(TestCase):
@@ -265,6 +305,25 @@ class EmailManagerTests(TestCase):
         self.assertEqual(mock_func.call_args[0][0], self.ticket)
         self.assertEqual(mock_func.call_args[0][1], self.translation)
         self.assertEqual(mock_func.call_args[1]['event'], self.event.key)
+
+    @patch("contact.models.EmailManager.send_email")
+    def test_process_send_email__called_for_person_and_role(self, mock_func):
+        work_email_type = create_email_type(EmailType.WORK)
+        person_email = create_contact(Email, self.person, work_email_type)
+        role = Role.objects.get(id=self.action.content['recipients'][1]['id'])
+        person_two = create_single_person()
+        person_two.role = role
+        person_two.save()
+        person_two.locations.add(self.ticket.location)
+        person_two_email = create_contact(Email, person_two, work_email_type)
+
+        Email.objects.process_send_email(self.ticket, self.action, self.event.key)
+
+        self.assertEqual(mock_func.call_count, 2)
+        email_call_args = [mock_func.call_args_list[0][0][0],
+                        mock_func.call_args_list[1][0][0]]
+        self.assertIn(person_email, email_call_args)
+        self.assertIn(person_two_email, email_call_args)
 
 
 class EmailTests(TestCase):

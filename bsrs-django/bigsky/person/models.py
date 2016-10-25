@@ -325,6 +325,9 @@ class PersonQuerySet(BaseQuerySet):
 
         return qs
 
+    def filter_by_ticket_location_and_role(self, ticket, role_ids):
+        return self.filter(locations=ticket.location, role__id__in=role_ids)
+
 
 class PersonManager(BaseManagerMixin, UserManager):
     '''
@@ -347,6 +350,9 @@ class PersonManager(BaseManagerMixin, UserManager):
 
     def get_email_recipients(self, tenant, keyword=None):
         return self.get_queryset().get_email_recipients(tenant, keyword)
+
+    def filter_by_ticket_location_and_role(self, ticket, role_ids):
+        return self.get_queryset().filter_by_ticket_location_and_role(ticket, role_ids)
 
 
 class Person(BaseModel, AbstractUser):

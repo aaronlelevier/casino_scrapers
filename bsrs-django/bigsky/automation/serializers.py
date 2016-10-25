@@ -14,6 +14,7 @@ from automation.validators import (AutomationFilterFieldValidator, UniqueByTenan
 from tenant.mixins import RemoveTenantMixin
 from ticket.models import TicketPriority, TicketStatus
 from utils.create import update_model
+from utils.helpers import get_person_and_role_ids
 from utils.serializers import BaseCreateSerializer
 
 
@@ -65,13 +66,7 @@ class AutomationActionSerializer(BaseCreateSerializer):
 
     @staticmethod
     def _get_recipients(data):
-        person_ids = role_ids = []
-
-        for x in data['content']['recipients']:
-            if x['type'] == 'person':
-                person_ids.append(x['id'])
-            elif x['type'] == 'role':
-                role_ids.append(x['id'])
+        person_ids, role_ids = get_person_and_role_ids(data)
 
         person_list = Person.objects.filter(id__in=person_ids)
         role_list = Role.objects.filter(id__in=role_ids)

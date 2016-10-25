@@ -10,7 +10,8 @@ from django.utils import timezone
 
 from automation.models import AutomationFilter
 from automation.tests.factory import (
-    create_automation, create_ticket_priority_filter, create_ticket_categories_filter)
+    create_automation, create_ticket_priority_filter, create_ticket_categories_filter,
+    create_automation_action_send_sms)
 from location.models import LocationLevel
 from person import config
 from person.models import Role, PersonStatus
@@ -18,7 +19,7 @@ from person.tests.factory import create_role
 from utils.helpers import (BASE_UUID, model_to_json, model_to_json_select_related,
     model_to_json_prefetch_related, generate_uuid, get_content_type_number, media_path,
     create_default, local_strftime, queryset_to_json, add_related, remove_related,
-    clear_related, get_model_class, KwargsAsObject)
+    clear_related, get_model_class, KwargsAsObject, get_person_and_role_ids)
 
 
 class ModelToJsonTests(TestCase):
@@ -215,3 +216,14 @@ class KwargsAsObjectTests(TestCase):
 
         self.assertEqual(car.seat.color, 'red')
         self.assertEqual(car.seat.comfortable, True)
+
+
+class GetPersonAndRoleIdsTests(TestCase):
+
+    def test_main(self):
+        action = create_automation_action_send_sms()
+
+        person_ids, role_ids = get_person_and_role_ids(action.content)
+
+        self.assertEqual(person_ids, [action.content['recipients'][0]['id']])
+        self.assertEqual(role_ids, [action.content['recipients'][1]['id']])

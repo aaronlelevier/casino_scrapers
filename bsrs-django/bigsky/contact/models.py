@@ -13,6 +13,7 @@ from twilio.rest import TwilioRestClient
 
 from automation.helpers import Interpolate
 from utils.fields import MyGenericForeignKey
+from utils.helpers import get_model_class, get_person_and_role_ids
 from utils.models import BaseModel, BaseManager, BaseQuerySet, BaseNameOrderModel
 
 
@@ -82,6 +83,19 @@ class BaseContactModel(BaseModel):
         abstract = True
 
 
+class EmailAndSmsMixin(object):
+
+    def get_recipients(self, action, ticket):
+        person_ids, role_ids = get_person_and_role_ids(action.content)
+
+        Person = get_model_class("person")
+        person_list = Person.objects.filter(id__in=person_ids)
+        person_list_from_role_ids = Person.objects.filter_by_ticket_location_and_role(
+            ticket, role_ids)
+
+        return person_list | person_list_from_role_ids
+
+
 class PhoneNumberType(BaseNameOrderModel):
     TELEPHONE = 'admin.phonenumbertype.telephone'
     FAX = 'admin.phonenumbertype.fax'
@@ -102,15 +116,14 @@ class PhoneNumberQuerySet(BaseQuerySet):
     pass
 
 
-class PhoneNumberManager(BaseManager):
+class PhoneNumberManager(EmailAndSmsMixin, BaseManager):
 
     queryset_cls = PhoneNumberQuerySet
 
     def process_send_sms(self, ticket, action, event):
-        Person = ContentType.objects.get(app_label="person", model="person").model_class()
+        Person = get_model_class("person")
 
-        for person in Person.objects.filter(id__in=[x['id'] for x in action.content['recipients']
-                                                            if x['type'] == 'person']):
+        for person in self.get_recipients(action, ticket):
             try:
                 ph = person.phone_numbers.get(type__name=PhoneNumberType.CELL)
             except PhoneNumber.DoesNotExist:
@@ -152,7 +165,6 @@ class PhoneNumberManager(BaseManager):
             except TwilioRestException:
                 # TODO: add logging - twilio error
                 pass
-
 
 
 class PhoneNumber(BaseContactModel):
@@ -244,7 +256,7 @@ class EmailQuerySet(BaseQuerySet):
     pass
 
 
-class EmailManager(BaseManager):
+class EmailManager(EmailAndSmsMixin, BaseManager):
 
     queryset_cls = EmailQuerySet
 
@@ -261,10 +273,10 @@ class EmailManager(BaseManager):
             AutomationEvent string name of the event that triggered
             the automation
         """
-        Person = ContentType.objects.get(app_label="person", model="person").model_class()
+        Person = get_model_class("person")
 
-        for person in Person.objects.filter(id__in=[x['id'] for x in action.content['recipients']
-                                                            if x['type'] == 'person']):
+        for person in self.get_recipients(action, ticket):
+
             for email in person.emails.filter(type__name=EmailType.WORK):
                 interpolate = Interpolate(ticket, person.locale.translation_, event=event)
 

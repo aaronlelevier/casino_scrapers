@@ -112,3 +112,23 @@ class KwargsAsObject(object):
     def __init__(self, **kwargs):
         for k, v in kwargs.items():
             setattr(self, k, v)
+
+
+def get_person_and_role_ids(data):
+    """
+    Separates Person and Role ids into two lists based on type.
+
+    :param data:
+        List of dict's with id,type keys for recipients. Either
+        being of type 'person' or 'role'
+    """
+    person_ids = []
+    role_ids = []
+
+    for x in data['recipients']:
+        if x['type'] == 'person':
+            person_ids.append(x['id'])
+        elif x['type'] == 'role':
+            role_ids.append(x['id'])
+
+    return person_ids, role_ids
