@@ -892,21 +892,20 @@ test('select sendsms filter and update automation', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
-    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey), 'priority initially selected');
   });
   xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
   selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyFive);
   andThen(() => {
-    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyFive));
+    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyFive), 'selected type');
   });
   page.sendSmsMessageFillIn(SMSD.messageTwo);
   xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
   selectSearch('.t-action-recipient-select', 'e');
   selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
   andThen(() => {
-    assert.equal(page.sendSmsMessageValue, SMSD.messageTwo);
-    assert.equal(page.actionSendSmsRecipientOne.replace(/\W/, '').trim(), PD.fullnameBoy2);
+    assert.equal(page.sendSmsMessageValue, SMSD.messageTwo, 'sms message');
+    assert.equal(page.actionSendSmsRecipientOne.replace(/\W/, '').trim(), PD.fullnameBoy2, 'recipient selected for sendsms');
   });
   let payload = AF.put({
     actions: [{
