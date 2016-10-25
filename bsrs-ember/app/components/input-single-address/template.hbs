@@ -29,7 +29,7 @@
   {{/unless}}
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.address"}}</span>
-      {{validated-input-multi
+      {{validated-input
         model=address
         valuePath="address"
         count=index
@@ -67,7 +67,7 @@
   </div>
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.postal_code"}}</span>
-      {{validated-input-multi
+      {{validated-input
         model=address
         valuePath="postal_code"
         count=index
