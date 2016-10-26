@@ -11,7 +11,6 @@ const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
 const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
 const DROPDOWN = options;
 const AF_SELECT_ONE = '.t-automation-pf-select:eq(0) .ember-basic-dropdown-trigger';
-const ACTION_TYPE_SELECT_ONE = '.t-automation-action-type-select:eq(0)';
 const ACTION_ASSIGNEE_SELECT_ONE = '.t-automation-action-assignee-select:eq(0)';
 const ACTION_PRIORITY_SELECT_ONE = '.t-ticket-priority-select:eq(0)';
 const ACTION_STATUS_SELECT_ONE = '.t-ticket-status-select:eq(0)';
@@ -46,6 +45,9 @@ export default create({
   sendEmailSubjectValue: value('.t-action-subject0'),
   sendSmsMessageFillIn: fillable('.t-action-message0'),
   sendSmsMessageValue: value('.t-action-message0'),
+
+  ticketRequestFillIn: fillable('.t-automation-ticket-request'),
+  ticketRequestValue: value('.t-automation-ticket-request'),
   // sendEmailRemoveRecipient: clickable('.ember-power-select-multiple-remove-btn'),
 
   addFilter: clickable('.t-add-pf-btn'),
@@ -83,10 +85,10 @@ export default create({
   clickDeleteActionBtn: clickable('.t-del-action-btn:eq(0)'),
   clickDeleteActionBtnTwo: clickable('.t-del-action-btn:eq(1)'),
 
-  actionTypeSelectedOne: text(ACTION_TYPE_SELECT_ONE),
+  actionTypeSelectedOne: text('.t-automation-action-type-select:eq(0)'),
 
   actionAssigneeSelectedOne: text(ACTION_ASSIGNEE_SELECT_ONE),
-  actionPrioritySelectedOne: text(ACTION_PRIORITY_SELECT_ONE),
+  actionPrioritySelectedOne: text(ACTION_PRIORITY_SELECT_ONE), 
   actionStatusSelectedOne: text(ACTION_STATUS_SELECT_ONE),
   actionSendEmailRecipientOne: text(`${ACTION_SEND_EMAIL_RECIPIENTS}:eq(0)`),
   actionSendEmailRecipientTwo: text(`${ACTION_SEND_EMAIL_RECIPIENTS}:eq(1)`),

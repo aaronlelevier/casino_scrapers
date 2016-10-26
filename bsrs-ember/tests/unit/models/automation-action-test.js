@@ -16,9 +16,9 @@ import page from 'bsrs-ember/tests/pages/automation';
 
 var store, action, actionType, type, assignee, priority, sendEmail, sendsms;
 
-moduleFor('model:automation-action', 'terrance Unit | Model | automation-action', {
+moduleFor('model:automation-action', 'Unit | Model | automation-action', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:generic-join-recipients', 'model:generic-join-recipients', 'model:person', 'model:ticket-priority', 'model:ticket-status', 'model:sendemail', 'model:sendsms', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type', 'validator:belongs-to']);
+    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:generic-join-recipients', 'model:generic-join-recipients', 'model:person', 'model:ticket-priority', 'model:ticket-status', 'model:sendemail', 'model:sendsms', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence','validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type', 'validator:belongs-to', 'validator:action-ticket-request']);
   }
 });
 
@@ -455,9 +455,9 @@ test('saveRelated for priority to save model and make it clean', assert => {
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test(' serialize - should only send the content fields that are relevant based on the type', assert => {
+test('serialize - should only send the content fields that are relevant based on the type', assert => {
   run(() => {
-    action = store.push('automation-action', {id: AAD.idOne});
+    action = store.push('automation-action', {id: AAD.idOne, request: AAD.requestOne});
     store.push('generic-join-recipients', {id: SEDJRD.idOne, generic_pk: SED.idOne, recipient_pk: PD.idOne});
     store.push('generic-join-recipients', {id: SMSJRD.idTwo, generic_pk: SMSD.idOne, recipient_pk: PD.idTwo});
     store.push('person', {id: PD.idOne});
@@ -483,4 +483,7 @@ test(' serialize - should only send the content fields that are relevant based o
   assert.equal(action.get('sendsms').get('id'), SMSD.idOne);
   assert.deepEqual(action.get('sendsms').get('recipient').mapBy('id'), [PD.idTwo]);
   assert.deepEqual(action.serialize().content, {sendsms: {id: SMSD.idOne, message: SMSD.messageTwo, recipients: [PD.idTwo]}});
+  action.change_type({id: ATD.idSix, key: ATD.keySix});
+  assert.equal(action.get('type').get('key'), ATD.keySix);
+  assert.deepEqual(action.serialize().content, {request: AAD.requestOne});
 });

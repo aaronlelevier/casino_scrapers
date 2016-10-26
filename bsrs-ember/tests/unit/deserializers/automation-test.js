@@ -525,6 +525,32 @@ test('deserialize single - assignee- different id', assert => {
   assert.equal(automation.get('action').objectAt(0).get('assignee').get('fullname'), PersonD.fullname);
 });
 
+test('deserialize single - request - no existing', assert => {
+  const json = AF.detail();
+  delete json.actions[0]['assignee'];
+  json.actions[0].request = AAD.requestOne;
+  json.actions[0]['type'] = { id: ATD.idSix, key: ATD.keySix };
+  run(() => {
+    deserializer.deserialize(json, AD.idOne);
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  // actions
+  assert.equal(automation.get('automation_action_fks').get('length'), 1);
+  assert.equal(automation.get('automation_action_ids').get('length'), 1);
+  // assert.equal(automation.get('action_ids').get('length'), 1);
+  assert.equal(automation.get('automation_action_ids')[0], automation.get('automation_action_fks')[0]);
+  assert.equal(automation.get('isDirtyOrRelatedDirty'), false);
+  const join = store.find('automation-join-action').objectAt(0);
+  assert.equal(join.get('action_pk'), AAD.idOne);
+  assert.equal(join.get('automation_pk'), AD.idOne);
+  assert.equal(automation.get('action').get('length'), 1);
+  assert.equal(automation.get('action').objectAt(0).get('id'), AAD.idOne);
+  // action-type
+  assert.equal(automation.get('action').objectAt(0).get('type.id'), ATD.idSix);
+  assert.equal(automation.get('action').objectAt(0).get('type.key'), ATD.keySix);
+  assert.equal(automation.get('action').objectAt(0).get('request'), AAD.requestOne);
+});
+
 // test('existing automation w/ pf, and server returns no pf - want no pf b/c that is the most recent', assert => {
 //   store.push('automation-join-pfilter', {id: AJFD.idOne, automation_pk: AD.idOne, pfilter_pk: PFD.idOne});
 //   automation = store.push('automation', {id: AD.idOne, automation_pf_fks: [AJFD.idOne]});

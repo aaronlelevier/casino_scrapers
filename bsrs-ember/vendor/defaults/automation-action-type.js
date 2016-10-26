@@ -8,11 +8,13 @@ var BSRS_AUTOMATION_ACTION_TYPE_DEFAULTS = (function() {
       idThree: '64a4401d-bfc1-492a-9b58-aa2310a81da634',
       idFour: '64a4401d-bfc1-492a-9b58-aa2310a81da635',
       idFive: '64a4401d-bfc1-492a-9b58-aa2310a81da639',
+      idSix: '64a4401d-bfc1-492a-9b58-aa2310a81da640',
       keyOne: 'automation.actions.ticket_assignee',
       keyTwo: 'automation.actions.ticket_priority',
       keyThree: 'automation.actions.ticket_status',
       keyFour: 'automation.actions.send_email',
       keyFive: 'automation.actions.send_sms',
+      keySix: 'automation.actions.ticket_request',
     };
   };
   return factory;

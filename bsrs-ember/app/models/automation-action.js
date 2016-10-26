@@ -7,9 +7,10 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/automation-action';
 import SaveAndRollbackRelatedMixin from 'bsrs-ember/mixins/model/save-and-rollback-related';
 
 const Validations = buildValidations({
+  request: validator('action-ticket-request'),
   type: validator('presence', {
-      presence: true,
-      message: 'errors.automation.type'
+    presence: true,
+    message: 'errors.automation.type'
   }),
   sendemail: validator('belongs-to'),
   sendsms: validator('belongs-to'),
@@ -27,6 +28,8 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     belongs_to.bind(this)('sendsms', 'automation-action');
   },
   simpleStore: Ember.inject.service(),
+  // request is only required for an action type of 'automation.actions.ticket_request', otherwise blank
+  request: attr(''),
   sendemailIsDirtyContainer: Ember.computed('sendemailIsDirty', 'sendemail.isDirtyOrRelatedDirty', function() {
     return this.get('sendemailIsDirty') || this.get('sendemail.isDirtyOrRelatedDirty');
   }),
@@ -86,6 +89,9 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
             recipients: this.get('sendsms.recipient_ids'),
           }
         };
+        break;
+      case 'automation.actions.ticket_request':
+        content = {request: this.get('request')};
         break;
     }
     return {

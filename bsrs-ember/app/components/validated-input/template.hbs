@@ -45,7 +45,7 @@
           attachment="bottom left"
           targetAttachment="top left"
         }}
-          <div class="validated-input-error-dialog animated flipInX">
+          <div class="validated-input-error-dialog animated flipInX {{concat "t-validation-" valuePath}}">
             {{t (v-get model valuePath "message")}}
           </div>
         {{/tether-dialog}}

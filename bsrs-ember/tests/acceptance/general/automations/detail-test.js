@@ -926,3 +926,69 @@ test('select sendsms filter and update automation', assert => {
     assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
 });
+
+// Ticket request
+test('get an action ticket request and update it to a new ticket request', assert => {
+  clearxhr(detailXhr);
+  const json = AF.detail();
+  json.actions[0]['type'] = { id: AATD.idSix, key: AATD.keySix };
+  delete json.actions[0]['assignee'];
+  json.actions[0]['request'] = AAD.requestOne;
+  xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(page.actionTypeSelectedOne, AATD.keySix);
+    assert.equal(page.ticketRequestValue, AAD.requestOne);
+  });
+  page.ticketRequestFillIn(AAD.requestOne);
+  andThen(() => {
+    assert.equal(page.ticketRequestValue, AAD.requestOne);
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idSix,
+      content: {
+        request: AAD.requestOne
+      }
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+});
+
+test('select ticket request filter and update automation', assert => {
+  const json = AF.detail();
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
+  });
+  xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
+  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keySix);
+  andThen(() => {
+    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keySix));
+  });
+  page.ticketRequestFillIn(AAD.requestTwo);
+  andThen(() => {
+    assert.equal(page.ticketRequestValue, AAD.requestTwo);
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idSix,
+      content: {
+        request: AAD.requestTwo
+      }
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+});

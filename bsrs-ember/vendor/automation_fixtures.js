@@ -117,6 +117,7 @@ var BSRS_automation_FACTORY = (function() {
       {id: this.actionType.idThree, key: this.actionType.keyThree},
       {id: this.actionType.idFour, key: this.actionType.keyFour},
       {id: this.actionType.idFive, key: this.actionType.keyFive},
+      {id: this.actionType.idSix, key: this.actionType.keySix},
     ];
     return {count: 3, next: null, previous: null, results: results};
   };

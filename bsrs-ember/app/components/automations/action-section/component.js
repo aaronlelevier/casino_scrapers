@@ -35,6 +35,7 @@ export default Ember.Component.extend({
           break;
         case 'automation.actions.send_sms':
           automationAction.change_sendsms({id: id});
+          break;
       }
     },
     fetchActions() {
