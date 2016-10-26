@@ -29,6 +29,7 @@ class AutomationActionValidatorTests(ViewTestSetupMixin, APITestCase):
         self.send_email_action_type = AutomationActionType.objects.get(key=AutomationActionType.SEND_EMAIL)
         self.send_sms_action_type = AutomationActionType.objects.get(key=AutomationActionType.SEND_SMS)
         self.request_action_type = AutomationActionType.objects.get(key=AutomationActionType.TICKET_REQUEST)
+        self.cc_action_type = AutomationActionType.objects.get(key=AutomationActionType.TICKET_CC)
 
         self.validator = AutomationActionValidator()
 
@@ -128,7 +129,7 @@ class AutomationActionValidatorTests(ViewTestSetupMixin, APITestCase):
         with self.assertRaises(ValidationError):
             self.validator.related_model_is_valid('assignee', Person)
 
-    # send_email
+    # related_model_is_valid: end
 
     def test_send_email(self):
         self.data['actions'] = [{
@@ -149,8 +150,6 @@ class AutomationActionValidatorTests(ViewTestSetupMixin, APITestCase):
             .format(AutomationActionType.SEND_EMAIL, ', '.join(['recipients', 'subject', 'body']))
         )
 
-    # send_sms
-
     def test_send_sms(self):
         self.data['actions'] = [{
             'id': str(uuid.uuid4()),
@@ -170,8 +169,6 @@ class AutomationActionValidatorTests(ViewTestSetupMixin, APITestCase):
             .format(AutomationActionType.SEND_SMS, ', '.join(['recipients', 'body']))
         )
 
-    # request
-
     def test_request(self):
         self.data['actions'] = [{
             'id': str(uuid.uuid4()),
@@ -189,6 +186,25 @@ class AutomationActionValidatorTests(ViewTestSetupMixin, APITestCase):
             msg['actions'][0]['non_field_errors'][0],
             "For type: {} must provide these keys: {}"
             .format(AutomationActionType.TICKET_REQUEST, ', '.join(['request']))
+        )
+
+    def test_cc(self):
+        self.data['actions'] = [{
+            'id': str(uuid.uuid4()),
+            'type': str(self.cc_action_type.id),
+            'content': {
+                'foo': 'bar'
+            }
+        }]
+
+        response = self.client.post('/api/admin/automations/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        msg = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            msg['actions'][0]['non_field_errors'][0],
+            "For type: {} must provide these keys: {}"
+            .format(AutomationActionType.TICKET_CC, ', '.join(['ccs']))
         )
 
 

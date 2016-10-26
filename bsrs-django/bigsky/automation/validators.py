@@ -17,18 +17,22 @@ class AutomationActionValidator(object):
         self.action_type = data.get('type')
         self.content = data.get('content')
 
-        if self.action_type.key == AutomationActionType.TICKET_ASSIGNEE:
+        key = self.action_type.key
+
+        if key == AutomationActionType.TICKET_ASSIGNEE:
             self.related_model_is_valid('assignee', Person)
-        elif self.action_type.key == AutomationActionType.TICKET_PRIORITY:
+        elif key == AutomationActionType.TICKET_PRIORITY:
             self.related_model_is_valid('priority', TicketPriority)
-        elif self.action_type.key == AutomationActionType.TICKET_STATUS:
+        elif key == AutomationActionType.TICKET_STATUS:
             self.related_model_is_valid('status', TicketStatus)
-        elif self.action_type.key == AutomationActionType.SEND_EMAIL:
+        elif key == AutomationActionType.SEND_EMAIL:
             self.type_with_fields_is_valid(['recipients', 'subject', 'body'])
-        elif self.action_type.key == AutomationActionType.SEND_SMS:
+        elif key == AutomationActionType.SEND_SMS:
             self.type_with_fields_is_valid(['recipients', 'body'])
-        elif self.action_type.key == AutomationActionType.TICKET_REQUEST:
+        elif key == AutomationActionType.TICKET_REQUEST:
             self.type_with_fields_is_valid(['request'])
+        elif key == AutomationActionType.TICKET_CC:
+            self.type_with_fields_is_valid(['ccs'])
 
     def related_model_is_valid(self, key, related_model_cls):
         error_msg = "For type: {} must provide a key of: {} which is a {}.id".format(
@@ -44,11 +48,10 @@ class AutomationActionValidator(object):
                 raise ValidationError(error_msg)
 
     def type_with_fields_is_valid(self, fields):
-        error_msg = "For type: {} must provide these keys: {}".format(
-            self.action_type.key, ', '.join(fields))
-
         if set(fields) != set(self.content.keys()):
-            raise ValidationError(error_msg)
+            raise ValidationError(
+                "For type: {} must provide these keys: {}".format(
+                    self.action_type.key, ', '.join(fields)))
 
 
 class AutomationFilterFieldValidator(object):

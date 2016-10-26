@@ -60,6 +60,8 @@ class AutomationActionSerializer(BaseCreateSerializer):
             data['recipients'] = self._get_recipients(data)
         elif key == AutomationActionType.TICKET_REQUEST:
             data.update(data['content'])
+        elif key == AutomationActionType.TICKET_CC:
+            data['ccs'] = Person.objects.filter(id__in=data['content']['ccs']).values('id', 'fullname')
 
         # this is a storage dict for the data to be decorated onto
         # the automation action, so remove before returning the data

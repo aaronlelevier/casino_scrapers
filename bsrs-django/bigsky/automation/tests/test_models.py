@@ -261,6 +261,25 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
         self.assertEqual(self.ticket.request, ticket_request)
 
+    def test_process_actions__ticket_cc(self):
+        person = create_single_person()
+        clear_related(self.automation, 'actions')
+        cc_action_type = create_automation_action_type(AutomationActionType.TICKET_CC)
+        action = mommy.make(AutomationAction, automation=self.automation,
+                            type=cc_action_type, content={'ccs': [str(person.id)]})
+        # pre-test
+        self.assertEqual(self.automation.actions.count(), 1)
+        self.assertEqual(self.automation.actions.first(), action)
+        self.assertTrue(self.automation.is_match(self.ticket))
+        self.assertNotIn(person, self.ticket.cc.all())
+        # person not present
+        self.assertNotIn(person, self.ticket.cc.all())
+
+        Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
+
+        self.assertEqual(self.ticket.cc.count(), 2)
+        self.assertIn(person, self.ticket.cc.all())
+
 
 class AutomationTests(SetupMixin, TestCase):
 

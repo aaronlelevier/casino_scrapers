@@ -131,24 +131,34 @@ class AutomationManager(BaseManager):
 
     def process_actions(self, automation, ticket, event):
         for action in automation.actions.all():
-            if action.type.key == AutomationActionType.TICKET_ASSIGNEE:
+            key = action.type.key
+
+            if key == AutomationActionType.TICKET_ASSIGNEE:
                 ticket.assignee = Person.objects.get(id=action.content['assignee'])
                 ticket.status = TicketStatus.objects.get(name=TicketStatus.IN_PROGRESS)
                 ticket.save()
-            elif action.type.key == AutomationActionType.TICKET_PRIORITY:
+            elif key == AutomationActionType.TICKET_PRIORITY:
                 ticket.priority = TicketPriority.objects.get(id=action.content['priority'])
                 ticket.save()
-            elif action.type.key == AutomationActionType.TICKET_STATUS:
+            elif key == AutomationActionType.TICKET_STATUS:
                 ticket.status = TicketStatus.objects.get(id=action.content['status'])
                 ticket.save()
-            elif action.type.key == AutomationActionType.SEND_EMAIL:
+            elif key == AutomationActionType.SEND_EMAIL:
                 Email.objects.process_send_email(ticket, action, event)
-            elif action.type.key == AutomationActionType.SEND_SMS:
+            elif key == AutomationActionType.SEND_SMS:
                 PhoneNumber.objects.process_send_sms(ticket, action, event)
-            elif action.type.key == AutomationActionType.TICKET_REQUEST:
+            elif key == AutomationActionType.TICKET_REQUEST:
                 if ticket.request != action.content['request']:
                     ticket.request = action.content['request']
                     ticket.save()
+            elif key == AutomationActionType.TICKET_CC:
+                existing_ccs = set([str(x['id']) for x in ticket.cc.values('id')])
+                action_ccs = set([str(x) for x in action.content['ccs']])
+                new_ccs = action_ccs - existing_ccs
+                if new_ccs:
+                    people = Person.objects.filter(id__in=new_ccs)
+                    for p in people:
+                        ticket.cc.add(p)
 
 
 class Automation(BaseModel):
