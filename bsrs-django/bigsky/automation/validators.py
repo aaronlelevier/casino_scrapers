@@ -3,7 +3,50 @@ from django.contrib.auth.models import ContentType
 
 from rest_framework.exceptions import ValidationError
 
-from automation.models import Automation
+from automation.models import Automation, AutomationActionType
+from person.models import Person
+from ticket.models import TicketPriority, TicketStatus
+
+
+class AutomationActionValidator(object):
+    """
+    Validates the key,values in the "content" JSON field
+    are consistent with the AutomationActionType.
+    """
+    def __call__(self, data):
+        self.action_type = data.get('type')
+        self.content = data.get('content')
+
+        if self.action_type.key == AutomationActionType.TICKET_ASSIGNEE:
+            self.related_model_is_valid('assignee', Person)
+        elif self.action_type.key == AutomationActionType.TICKET_PRIORITY:
+            self.related_model_is_valid('priority', TicketPriority)
+        elif self.action_type.key == AutomationActionType.TICKET_STATUS:
+            self.related_model_is_valid('status', TicketStatus)
+        elif self.action_type.key == AutomationActionType.SEND_EMAIL:
+            self.recipients_and_msg_is_valid(['recipients', 'subject', 'body'])
+        elif self.action_type.key == AutomationActionType.SEND_SMS:
+            self.recipients_and_msg_is_valid(['recipients', 'body'])
+
+    def related_model_is_valid(self, key, related_model_cls):
+        error_msg = "For type: {} must provide a key of: {} which is a {}.id".format(
+            self.action_type.key, key, related_model_cls.__class__.__name__)
+
+        if key not in self.content or len(self.content) != 1:
+            raise ValidationError(error_msg)
+        else:
+            id_ = self.content[key]
+            try:
+                assert related_model_cls.objects.filter(id=id_).exists()
+            except (TypeError, AssertionError):
+                raise ValidationError(error_msg)
+
+    def recipients_and_msg_is_valid(self, fields):
+        error_msg = "For type: {} must provide these keys: {}".format(
+            self.action_type.key, ', '.join(fields))
+
+        if set(fields) != set(self.content.keys()):
+            raise ValidationError(error_msg)
 
 
 class AutomationFilterFieldValidator(object):
@@ -11,7 +54,6 @@ class AutomationFilterFieldValidator(object):
     the 'field' and that the 'field' has valid 'criteria'."""
 
     def __call__(self, data):
-        # import pdb; pdb.set_trace()
         self.source = data.get('source', None)
         self.criteria = data.get('criteria', [])
 

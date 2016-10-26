@@ -1,16 +1,173 @@
 import json
 import uuid
 
+from rest_framework.exceptions import ValidationError
 from rest_framework.test import APITestCase
 
-from location.models import Location
-from location.tests.factory import create_top_level_location
-from person.tests.factory import create_single_person, PASSWORD
-from automation.models import Automation
+from automation.models import Automation, AutomationActionType
 from automation.serializers import AutomationCreateUpdateSerializer
 from automation.tests.mixins import ViewTestSetupMixin
-from automation.tests.factory import create_ticket_location_filter
+from automation.tests.factory import create_ticket_location_filter, create_automation_action_types
+from automation.validators import AutomationActionValidator
+from location.models import Location
+from location.tests.factory import create_top_level_location
+from person.models import Person
+from person.tests.factory import create_single_person, PASSWORD
 from tenant.tests.factory import get_or_create_tenant
+from ticket.models import TicketPriority, TicketStatus
+
+
+class AutomationActionValidatorTests(ViewTestSetupMixin, APITestCase):
+
+    def setUp(self):
+        super(AutomationActionValidatorTests, self).setUp()
+
+        create_automation_action_types()
+        self.assignee_action_type = AutomationActionType.objects.get(key=AutomationActionType.TICKET_ASSIGNEE)
+        self.priority_action_type = AutomationActionType.objects.get(key=AutomationActionType.TICKET_PRIORITY)
+        self.status_action_type = AutomationActionType.objects.get(key=AutomationActionType.TICKET_STATUS)
+        self.send_email_action_type = AutomationActionType.objects.get(key=AutomationActionType.SEND_EMAIL)
+        self.send_sms_action_type = AutomationActionType.objects.get(key=AutomationActionType.SEND_SMS)
+
+        self.validator = AutomationActionValidator()
+
+        self.data['id'] = str(uuid.uuid4())
+        self.data['description'] = 'foo'
+
+    # assignee
+
+    def test_assignee(self):
+        self.data['actions'] = [{
+            'id': str(uuid.uuid4()),
+            'type': str(self.assignee_action_type.id),
+            'content': {
+                'foo': 'bar'
+            }
+        }]
+
+        response = self.client.post('/api/admin/automations/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        msg = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            msg['actions'][0]['non_field_errors'][0],
+            "For type: {} must provide a key of: {} which is a {}.id"
+            .format(AutomationActionType.TICKET_ASSIGNEE, 'assignee', Person.__class__.__name__)
+        )
+
+    # priority
+
+    def test_priority(self):
+        self.data['actions'] = [{
+            'id': str(uuid.uuid4()),
+            'type': str(self.priority_action_type.id),
+            'content': {
+                'foo': 'bar'
+            }
+        }]
+
+        response = self.client.post('/api/admin/automations/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        msg = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            msg['actions'][0]['non_field_errors'][0],
+            "For type: {} must provide a key of: {} which is a {}.id"
+            .format(AutomationActionType.TICKET_PRIORITY, 'priority', TicketPriority.__class__.__name__)
+        )
+
+    # status
+
+    def test_status(self):
+        self.data['actions'] = [{
+            'id': str(uuid.uuid4()),
+            'type': str(self.status_action_type.id),
+            'content': {
+                'foo': 'bar'
+            }
+        }]
+
+        response = self.client.post('/api/admin/automations/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        msg = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            msg['actions'][0]['non_field_errors'][0],
+            "For type: {} must provide a key of: {} which is a {}.id"
+            .format(AutomationActionType.TICKET_STATUS, 'status', TicketStatus.__class__.__name__)
+        )
+
+    # related_model_is_valid - used for action types: assignee, priority, status
+
+    def test_related_model_is_valid__missing_assignee_key(self):
+        self.validator.action_type = self.assignee_action_type
+        self.validator.content = {'foo': 'bar'}
+
+        with self.assertRaises(ValidationError):
+            self.validator.related_model_is_valid('assignee', Person)
+
+    def test_related_model_is_valid__too_man_args(self):
+        self.validator.action_type = self.assignee_action_type
+        self.validator.content = {'assignee': 1, 'foo': 'bar'}
+
+        with self.assertRaises(ValidationError):
+            self.validator.related_model_is_valid('assignee', Person)
+
+    def test_related_model_is_valid__not_invalid_id(self):
+        self.validator.action_type = self.assignee_action_type
+        self.validator.content = {'assignee': 1}
+
+        with self.assertRaises(ValidationError):
+            self.validator.related_model_is_valid('assignee', Person)
+
+    def test_related_model_is_valid__id_does_not_exist(self):
+        self.validator.action_type = self.assignee_action_type
+        self.validator.content = {'assignee': uuid.uuid4()}
+
+        with self.assertRaises(ValidationError):
+            self.validator.related_model_is_valid('assignee', Person)
+
+    # send_email
+
+    def test_send_email(self):
+        self.data['actions'] = [{
+            'id': str(uuid.uuid4()),
+            'type': str(self.send_email_action_type.id),
+            'content': {
+                'foo': 'bar'
+            }
+        }]
+
+        response = self.client.post('/api/admin/automations/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        msg = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            msg['actions'][0]['non_field_errors'][0],
+            "For type: {} must provide these keys: {}"
+            .format(AutomationActionType.SEND_EMAIL, ', '.join(['recipients', 'subject', 'body']))
+        )
+
+    # send_sms
+
+    def test_send_sms(self):
+        self.data['actions'] = [{
+            'id': str(uuid.uuid4()),
+            'type': str(self.send_sms_action_type.id),
+            'content': {
+                'foo': 'bar'
+            }
+        }]
+
+        response = self.client.post('/api/admin/automations/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        msg = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            msg['actions'][0]['non_field_errors'][0],
+            "For type: {} must provide these keys: {}"
+            .format(AutomationActionType.SEND_SMS, ', '.join(['recipients', 'body']))
+        )
 
 
 class AutomationFilterFieldValidatorTests(ViewTestSetupMixin, APITestCase):

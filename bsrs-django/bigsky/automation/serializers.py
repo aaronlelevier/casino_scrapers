@@ -9,7 +9,8 @@ from location.models import Location, LocationLevel
 from person.models import Role, Person
 from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationAction, AutomationActionType)
-from automation.validators import (AutomationFilterFieldValidator, UniqueByTenantValidator,
+from automation.validators import (
+    AutomationActionValidator, AutomationFilterFieldValidator, UniqueByTenantValidator,
     AutomationFilterTypeValidator)
 from tenant.mixins import RemoveTenantMixin
 from ticket.models import TicketPriority, TicketStatus
@@ -81,6 +82,7 @@ class AutomationActionUpdateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = AutomationAction
+        validators = [AutomationActionValidator()]
         fields = ('id', 'type', 'content')
 
 

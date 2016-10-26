@@ -322,6 +322,11 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
 
 class AutomationCreateTests(ViewTestSetupMixin, APITestCase):
 
+    def setUp(self):
+        super(AutomationCreateTests, self).setUp()
+
+        create_automation_action_types()
+
     def test_create(self):
         self.data['id'] = str(uuid.uuid4())
         self.data['description'] = 'foo'
@@ -406,6 +411,8 @@ class AutomationCreateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(automation.filters.filter(source__field='location', lookups={'id': str(location_level_two.id)}).count(), 1)
 
     def test_create_multiple_actions(self):
+        assignee_action_type = AutomationActionType.objects.get(key=AutomationActionType.TICKET_ASSIGNEE)
+        priority_action_type = AutomationActionType.objects.get(key=AutomationActionType.TICKET_PRIORITY)
         self.data['id'] = str(uuid.uuid4())
         self.data['description'] = 'foo'
         self.data['filters'] = []
@@ -413,13 +420,13 @@ class AutomationCreateTests(ViewTestSetupMixin, APITestCase):
         action_types = create_automation_action_types()
         self.data['actions'] = [{
             'id': str(uuid.uuid4()),
-            'type': str(action_types[0].id),
+            'type': str(assignee_action_type.id),
             'content': {
-                'assingee': str(self.person.id)
+                'assignee': str(self.person.id)
             }
         },{
             'id': str(uuid.uuid4()),
-            'type': str(action_types[1].id),
+            'type': str(priority_action_type.id),
             'content': {
                 'priority': str(self.ticket_priority.id)
             }
@@ -427,8 +434,8 @@ class AutomationCreateTests(ViewTestSetupMixin, APITestCase):
 
         response = self.client.post('/api/admin/automations/', self.data, format='json')
 
-        self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 201)
         self.assertEqual(len(data['actions']), 2)
         self.assertEqual(data['actions'][0], self.data['actions'][0])
         self.assertEqual(data['actions'][1], self.data['actions'][1])
