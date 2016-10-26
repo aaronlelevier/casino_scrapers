@@ -52,12 +52,16 @@ class EmailAndSmsMixinTests(TestCase):
         person_two.role = role
         person_two.save()
         ticket = create_ticket(assignee=person_two)
+        person.role = role
+        person.save()
+        person.locations.add(ticket.location)
         # pre-test
         self.assertIn(ticket.location, person_two.locations.all())
         self.assertEqual(role, person_two.role)
 
         ret = PhoneNumber.objects.get_recipients(action, ticket)
 
+        self.assertEqual(ret.count(), ret.distinct().count())
         self.assertEqual(ret.count(), 2)
         self.assertIn(person, ret)
         self.assertIn(person_two, ret)

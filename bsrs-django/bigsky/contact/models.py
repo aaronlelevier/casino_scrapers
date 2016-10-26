@@ -93,7 +93,9 @@ class EmailAndSmsMixin(object):
         person_list_from_role_ids = Person.objects.filter_by_ticket_location_and_role(
             ticket, role_ids)
 
-        return person_list | person_list_from_role_ids
+        result_list = person_list | person_list_from_role_ids
+
+        return result_list.distinct()
 
 
 class PhoneNumberType(BaseNameOrderModel):
