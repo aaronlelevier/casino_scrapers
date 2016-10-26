@@ -100,20 +100,20 @@ test('visit new URL and create a new record', assert => {
   });
 });
 
-test('when user creates an automation they should see an empty action', assert => {
-  clearxhr(listXhr);
-  visit(NEW_URL);
-  andThen(() => {
-    assert.equal(currentURL(), NEW_URL);
-    assert.equal(Ember.$('.t-automation-action-type-select .ember-power-select-placeholder').length, 1);
-  });
-  xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.action_search_power_select());
-  selectChoose('.t-automation-action-type-select', AATD.keyOne);
-  andThen(() => {
-    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
-    assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
-  });
-});
+// test('when user creates an automation they should see an empty action', assert => {
+//   clearxhr(listXhr);
+//   visit(NEW_URL);
+//   andThen(() => {
+//     assert.equal(currentURL(), NEW_URL);
+//     assert.equal(Ember.$('.t-automation-action-type-select .ember-power-select-placeholder').length, 1);
+//   });
+//   xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.action_search_power_select());
+//   selectChoose('.t-automation-action-type-select', AATD.keyOne);
+//   andThen(() => {
+//     assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
+//     assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
+//   });
+// });
 
 test('when user can visit new automation with, which stats with an empty action widget, and can cancel hit with no modal', assert => {
   visit(NEW_URL);
