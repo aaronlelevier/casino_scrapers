@@ -19,7 +19,7 @@ from automation.tests.factory import (
     create_ticket_location_state_filter, create_ticket_location_country_filter, create_automation_events,
     create_automation_event_two, create_automation_action_types, create_automation_action_priority,
     create_automation_action_type, create_automation_action_status, create_automation_action_send_email,
-    create_automation_action_send_sms)
+    create_automation_action_send_sms, create_automation_action_request)
 from automation.tests.mixins import ViewTestSetupMixin
 from ticket.models import TicketPriority, TicketStatus
 from utils.create import _generate_chars
@@ -318,6 +318,18 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(data['actions'][0]['recipients'][1]['type'], role.__class__.__name__.lower())
         self.assertEqual(data['actions'][0]['body'], action.content['body'])
         self.assertNotIn('content', data['actions'][0])
+
+    def test_action_request(self):
+        action = create_automation_action_request()
+
+        response = self.client.get('/api/admin/automations/{}/'.format(action.automation.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['actions']), 1)
+        self.assertEqual(data['actions'][0]['id'], str(action.id))
+        self.assertEqual(data['actions'][0]['type']['id'], str(action.type.id))
+        self.assertEqual(data['actions'][0]['type']['key'], action.type.key)
+        self.assertEqual(data['actions'][0]['request'], action.content['request'])
 
 
 class AutomationCreateTests(ViewTestSetupMixin, APITestCase):

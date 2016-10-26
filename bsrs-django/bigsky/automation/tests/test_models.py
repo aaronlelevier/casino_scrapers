@@ -245,6 +245,22 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.assertEqual(mock_func.call_args[0][1], action)
         self.assertEqual(mock_func.call_args[0][2], self.event.key)
 
+    def test_process_actions__ticket_request(self):
+        ticket_request = 'bar'
+        clear_related(self.automation, 'actions')
+        request_action_type = create_automation_action_type(AutomationActionType.TICKET_REQUEST)
+        action = mommy.make(AutomationAction, automation=self.automation,
+                            type=request_action_type, content={'request': ticket_request})
+        # pre-test
+        self.assertEqual(self.automation.actions.count(), 1)
+        self.assertEqual(self.automation.actions.first(), action)
+        self.assertTrue(self.automation.is_match(self.ticket))
+        self.assertNotEqual(self.ticket.request, ticket_request)
+
+        Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
+
+        self.assertEqual(self.ticket.request, ticket_request)
+
 
 class AutomationTests(SetupMixin, TestCase):
 

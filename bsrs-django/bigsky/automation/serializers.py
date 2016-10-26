@@ -58,6 +58,8 @@ class AutomationActionSerializer(BaseCreateSerializer):
         elif key == AutomationActionType.SEND_SMS:
             data.update(data['content'])
             data['recipients'] = self._get_recipients(data)
+        elif key == AutomationActionType.TICKET_REQUEST:
+            data.update(data['content'])
 
         # this is a storage dict for the data to be decorated onto
         # the automation action, so remove before returning the data

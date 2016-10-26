@@ -24,9 +24,11 @@ class AutomationActionValidator(object):
         elif self.action_type.key == AutomationActionType.TICKET_STATUS:
             self.related_model_is_valid('status', TicketStatus)
         elif self.action_type.key == AutomationActionType.SEND_EMAIL:
-            self.recipients_and_msg_is_valid(['recipients', 'subject', 'body'])
+            self.type_with_fields_is_valid(['recipients', 'subject', 'body'])
         elif self.action_type.key == AutomationActionType.SEND_SMS:
-            self.recipients_and_msg_is_valid(['recipients', 'body'])
+            self.type_with_fields_is_valid(['recipients', 'body'])
+        elif self.action_type.key == AutomationActionType.TICKET_REQUEST:
+            self.type_with_fields_is_valid(['request'])
 
     def related_model_is_valid(self, key, related_model_cls):
         error_msg = "For type: {} must provide a key of: {} which is a {}.id".format(
@@ -41,7 +43,7 @@ class AutomationActionValidator(object):
             except (TypeError, AssertionError):
                 raise ValidationError(error_msg)
 
-    def recipients_and_msg_is_valid(self, fields):
+    def type_with_fields_is_valid(self, fields):
         error_msg = "For type: {} must provide these keys: {}".format(
             self.action_type.key, ', '.join(fields))
 
