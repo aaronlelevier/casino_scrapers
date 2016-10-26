@@ -10,7 +10,7 @@ import CD from 'bsrs-ember/vendor/defaults/currency';
 import CF from 'bsrs-ember/vendor/currency_fixtures';
 import config from 'bsrs-ember/config/environment';
 import page from 'bsrs-ember/tests/pages/tenant-mobile';
-import tenantPage from 'bsrs-ember/tests/pages/tenant-mobile';
+import tenantPage from 'bsrs-ember/tests/pages/tenant';
 import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import pageDrawer from 'bsrs-ember/tests/pages/nav-drawer';
@@ -62,12 +62,12 @@ test('can click through component sections and save to redirect to index', async
 test('visit mobile detail and update all fields', async assert => {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
-  assert.equal(tenantPage.companyName, TD.companyNameOne);
+  assert.equal(tenantPage.companyNameValue, TD.companyNameOne);
   assert.equal(tenantPage.currencyInput, TD.name);
-  // // company_name
+  // company_name
   await tenantPage.companyNameFill(TD.companyNameTwo);
-  assert.equal(tenantPage.companyName, TD.companyNameTwo);
-  // // currency
+  assert.equal(tenantPage.companyNameValue, TD.companyNameTwo);
+  // currency
   await selectChoose('.t-currency-select', CD.nameEuro);
   assert.equal(tenantPage.currencyInput, CD.nameEuro);
   xhr(TENANT_PUT_URL, 'PUT', TF.put({company_name: TD.companyNameTwo, default_currency: CD.idEuro}), {}, 200, TF.list());
@@ -79,7 +79,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   clearxhr(list_xhr);
   await page.visitDetail();
   await tenantPage.companyNameFill(TD.companyNameTwo);
-  assert.equal(tenantPage.companyName, TD.companyNameTwo);
+  assert.equal(tenantPage.companyNameValue, TD.companyNameTwo);
   await generalMobilePage.backButtonClick();
   andThen(() => {
     waitFor(assert, () => {
@@ -95,7 +95,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.equal(tenantPage.companyName, TD.companyNameTwo);
+      assert.equal(tenantPage.companyNameValue, TD.companyNameTwo);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
@@ -104,7 +104,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit rollback', async assert => {
   await page.visitDetail();
   await tenantPage.companyNameFill(TD.companyNameTwo);
-  assert.equal(tenantPage.companyName, TD.companyNameTwo);
+  assert.equal(tenantPage.companyNameValue, TD.companyNameTwo);
   await generalMobilePage.backButtonClick();
   andThen(() => {
     waitFor(assert, () => {

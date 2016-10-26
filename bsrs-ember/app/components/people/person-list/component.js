@@ -10,7 +10,10 @@ export default GridViewComponent.extend({
     isFilterable: true,
     isSearchable: true,
     templateName: 'tickets/ticket-status-tag',
-    classNames: ['person-status']
+    classNames: ['person-status'],
+    filterComponent: 'grid/filters/checkbox-list',
+    filterModelName: 'status',
+    multiple: true,
   }, {
     field: 'fullname',
     headerLabel: 'admin.person.label.fullname',
@@ -38,6 +41,10 @@ export default GridViewComponent.extend({
     headerIsTranslatable: true,
     isSortable: true,
     isFilterable: true,
-    isSearchable: true
+    isSearchable: true,
+    classNames: ['person-role'],
+    filterComponent: 'grid/filters/checkbox-list',
+    filterModelName: 'role',
+    multiple: true,
   }, ]
 });

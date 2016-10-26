@@ -23,6 +23,7 @@ var BSRS_TENANT_DEFAULTS_OBJECT = (function() {
       currencyOne: this.currency.idOne,
       currencyTwo: this.currency.idTwo,
       currencySelectOne: this.currency.idBoy,
+      // currency
       name: this.currency.name,
       nameOne: this.currency.nameOne,
       nameGridOne: this.currency.name+'0',

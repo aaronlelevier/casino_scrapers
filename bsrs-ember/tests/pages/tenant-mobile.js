@@ -11,7 +11,4 @@ export default create({
   visitDetail: visitable(DETAIL_URL),
   clickFilterCompanyName: clickable('.t-filter-company-name'),
   clickFilterCompanyCode: clickable('.t-filter-company-code'),
-
-  companyName: value('.t-tenant-company_name'),
-  companyNameFill: fillable('.t-tenant-company_name'),
 });

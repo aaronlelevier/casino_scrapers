@@ -45,7 +45,7 @@ export default create({
   companyBillingCityFill: fillable('.t-address-city'),
   companyBillingZipFill: fillable('.t-address-postal-code'),
 
-  currencyInput: text(CURRENCY),
+  currencyInput: text(`${CURRENCY} .ember-power-select-selected-item`),
   currencySortText: text('.t-sort-currency-name'),
 
   countrySelectedOne: text(`${COUNTRIES}:eq(0)`),
