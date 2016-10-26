@@ -56,7 +56,7 @@
     "ember-computed-decorators": "^0.2.2",
     "ember-concurrency": "0.7.15",
     "ember-cp-validations": "3.1.0",
-    "ember-css-transitions": "git+ssh//git@github.com:peec/ember-css-transitions.git",
+    "ember-css-transitions": "0.1.5",
     "ember-disable-proxy-controllers": "^1.0.1",
     "ember-exam": "0.5.0",
     "ember-export-application-global": "^1.0.5",
