@@ -14,10 +14,10 @@ moduleForAcceptance('Acceptance | application error test', {
   error: 500,
   beforeEach() {
     // store = this.application.__container__.lookup('service:simpleStore');
-    const { originalLoggerError, originalTestAdapterException } = errorSetup();
+    errorSetup();
   },
   afterEach() {
-    errorTearDown(originalLoggerError, originalTestAdapterException);
+    errorTearDown();
   }
 });
 

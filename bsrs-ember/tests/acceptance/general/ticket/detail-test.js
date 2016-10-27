@@ -1058,7 +1058,7 @@ test('clicking update will not transition away from ticket detail and bring in l
 });
 
 test('deep linking with an xhr with a 404 status code will show up in the error component (ticket)', async assert => {
-  const { originalLoggerError, originalTestAdapterException } = errorSetup();
+  errorSetup();
   clearxhr(detail_xhr);
   clearxhr(list_xhr);
   const exception = `This record does not exist.`;
@@ -1066,7 +1066,7 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(find('[data-test-id="ticket-single-error"]').length, 1);
-  errorTearDown(originalLoggerError, originalTestAdapterException);
+  errorTearDown();
 });
 
 test('dt continue button will show up if ticket has a status of draft and can click on it to restart dt', async assert => {
