@@ -1,13 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title></title>
+    <title>Big Sky</title>
+    <style type="text/css">
+      .red{
+      color: red;
+      }
+      .thick{
+      font-size:20px;
+      }
+      .green{
+      color:green;
+      }
+    </style>
   </head>
   <body>
     {% for a in ticket.activities.all %}
       <ul>
-        <li>Type: {{a.type.name}}</li>
-        <li>Who: {{a.person.fullname}}</li>
+        <li class="red">Type: {{a.type.name}}</li>
+        <li class="thick">Who: {{a.person.fullname}}</li>
         <li>When: {{a.created}}</li>
         <li>What: {{a.content}}</li>
       </ul>
