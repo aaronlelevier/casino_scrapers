@@ -94,6 +94,7 @@ var GridViewRoute = Ember.Route.extend({
       controller.set('gridIdInParams', this.gridIdInParams);
     } else {
       controller.set('error', hash);
+      // need to set model to empty array due to model state preserved in component.  Error shows in place of component
       controller.set('model', []);
     }
   },
