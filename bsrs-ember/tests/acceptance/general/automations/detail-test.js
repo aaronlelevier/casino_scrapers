@@ -804,191 +804,191 @@ test('get an action sendemail and update it to a new sendemail', assert => {
   });
 });
 
-// test('select send email filter and update automation', assert => {
-//   page.visitDetail();
-//   andThen(() => {
-//     assert.equal(currentURL(), DETAIL_URL);
-//     assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
-//     assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
-//   });
-//   xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
-//   selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyFour);
-//   andThen(() => {
-//     assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyFour));
-//   });
-//   page.sendEmailBodyFillIn(SED.bodyTwo);
-//   page.sendEmailSubjectFillIn(SED.subjectTwo);
-//   xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
-//   selectSearch('.t-action-recipient-select', 'e');
-//   selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
-//   andThen(() => {
-//     assert.equal(page.sendEmailBodyValue, SED.bodyTwo);
-//     assert.equal(page.sendEmailSubjectValue, SED.subjectTwo);
-//     assert.equal(page.actionSendEmailRecipientOne.replace(/\W/, '').trim(), PD.fullnameBoy2);
-//   });
-//   let payload = AF.put({
-//     actions: [{
-//       id: AAD.idOne,
-//       type: AATD.idFour,
-//       content: {
-//         sendemail: {
-//           id: UUID.value,
-//           body: SED.bodyTwo,
-//           subject: SED.subjectTwo,
-//           recipients: [PD.idSearch]
-//         } 
-//       }
-//     }]
-//   });
-//   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
-//   generalPage.save();
-//   andThen(() => {
-//     assert.equal(currentURL(), AUTOMATION_LIST_URL);
-//   });
-// });
+test('select send email filter and update automation', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
+  });
+  xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
+  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyFour);
+  andThen(() => {
+    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyFour));
+  });
+  page.sendEmailBodyFillIn(SED.bodyTwo);
+  page.sendEmailSubjectFillIn(SED.subjectTwo);
+  xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
+  selectSearch('.t-action-recipient-select', 'e');
+  selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
+  andThen(() => {
+    assert.equal(page.sendEmailBodyValue, SED.bodyTwo);
+    assert.equal(page.sendEmailSubjectValue, SED.subjectTwo);
+    assert.equal(page.actionSendEmailRecipientOne.replace(/\W/, '').trim(), PD.fullnameBoy2);
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idFour,
+      content: {
+        sendemail: {
+          id: UUID.value,
+          body: SED.bodyTwo,
+          subject: SED.subjectTwo,
+          recipients: [PD.idSearch]
+        } 
+      }
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+});
 
-// test('get an action sendsms and update it to a new sendsms', assert => {
-//   clearxhr(detailXhr);
-//   const json = AF.detail();
-//   json.actions[0]['type'] = { id: AATD.idFive, key: AATD.keyFive };
-//   json.actions[0]['sendsms'] = { id: SMSD.idOne, message: SMSD.messageOne, recipient: [{id: PD.idOne, fullname: PD.fullname}] };
-//   xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
-//   page.visitDetail();
-//   andThen(() => {
-//     assert.equal(currentURL(), DETAIL_URL);
-//     assert.equal(page.actionTypeSelectedOne, AATD.keyFive);
-//     assert.equal(page.actionSendSmsRecipientOne.replace(/\W/, '').trim(), PD.fullname);
-//     assert.equal(page.sendSmsMessageValue, SMSD.messageOne);
-//   });
-//   page.sendSmsMessageFillIn(SMSD.messageTwo);
-//   xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
-//   selectSearch('.t-action-recipient-select', 'e');
-//   selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
-//   andThen(() => {
-//     assert.equal(page.sendSmsMessageValue, SMSD.messageTwo);
-//     assert.equal(page.actionSendSmsRecipientTwo.replace(/\W/, '').trim(), PD.fullnameBoy2);
-//   });
-//   let payload = AF.put({
-//     actions: [{
-//       id: AAD.idOne,
-//       type: AATD.idFive,
-//       content: {
-//         sendsms: { 
-//           id: SMSD.idOne, 
-//           message: SMSD.messageTwo,
-//           recipients: [PD.id, PD.idSearch]
-//         } 
-//       }
-//     }]
-//   });
-//   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
-//   generalPage.save();
-//   andThen(() => {
-//     assert.equal(currentURL(), AUTOMATION_LIST_URL);
-//   });
-// });
+test('get an action sendsms and update it to a new sendsms', assert => {
+  clearxhr(detailXhr);
+  const json = AF.detail();
+  json.actions[0]['type'] = { id: AATD.idFive, key: AATD.keyFive };
+  json.actions[0]['sendsms'] = { id: SMSD.idOne, message: SMSD.messageOne, recipient: [{id: PD.idOne, fullname: PD.fullname}] };
+  xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(page.actionTypeSelectedOne, AATD.keyFive);
+    assert.equal(page.actionSendSmsRecipientOne.replace(/\W/, '').trim(), PD.fullname);
+    assert.equal(page.sendSmsMessageValue, SMSD.messageOne);
+  });
+  page.sendSmsMessageFillIn(SMSD.messageTwo);
+  xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
+  selectSearch('.t-action-recipient-select', 'e');
+  selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
+  andThen(() => {
+    assert.equal(page.sendSmsMessageValue, SMSD.messageTwo);
+    assert.equal(page.actionSendSmsRecipientTwo.replace(/\W/, '').trim(), PD.fullnameBoy2);
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idFive,
+      content: {
+        sendsms: { 
+          id: SMSD.idOne, 
+          message: SMSD.messageTwo,
+          recipients: [PD.id, PD.idSearch]
+        } 
+      }
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+});
 
-// test('select sendsms filter and update automation', assert => {
-//   page.visitDetail();
-//   andThen(() => {
-//     assert.equal(currentURL(), DETAIL_URL);
-//     assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey), 'priority initially selected');
-//   });
-//   xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
-//   selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyFive);
-//   andThen(() => {
-//     assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyFive), 'selected type');
-//   });
-//   page.sendSmsMessageFillIn(SMSD.messageTwo);
-//   xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
-//   selectSearch('.t-action-recipient-select', 'e');
-//   selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
-//   andThen(() => {
-//     assert.equal(page.sendSmsMessageValue, SMSD.messageTwo, 'sms message');
-//     assert.equal(page.actionSendSmsRecipientOne.replace(/\W/, '').trim(), PD.fullnameBoy2, 'recipient selected for sendsms');
-//   });
-//   let payload = AF.put({
-//     actions: [{
-//       id: AAD.idOne,
-//       type: AATD.idFive,
-//       content: {
-//         sendsms: { 
-//           id: UUID.value, 
-//           message: SMSD.messageTwo,
-//           recipients: [PD.idSearch]
-//         } 
-//       }
-//     }]
-//   });
-//   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
-//   generalPage.save();
-//   andThen(() => {
-//     assert.equal(currentURL(), AUTOMATION_LIST_URL);
-//   });
-// });
+test('select sendsms filter and update automation', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey), 'priority initially selected');
+  });
+  xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
+  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyFive);
+  andThen(() => {
+    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyFive), 'selected type');
+  });
+  page.sendSmsMessageFillIn(SMSD.messageTwo);
+  xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
+  selectSearch('.t-action-recipient-select', 'e');
+  selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
+  andThen(() => {
+    assert.equal(page.sendSmsMessageValue, SMSD.messageTwo, 'sms message');
+    assert.equal(page.actionSendSmsRecipientOne.replace(/\W/, '').trim(), PD.fullnameBoy2, 'recipient selected for sendsms');
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idFive,
+      content: {
+        sendsms: { 
+          id: UUID.value, 
+          message: SMSD.messageTwo,
+          recipients: [PD.idSearch]
+        } 
+      }
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+});
 
-// // Ticket request
-// test('get an action ticket request and update it to a new ticket request', assert => {
-//   clearxhr(detailXhr);
-//   const json = AF.detail();
-//   json.actions[0]['type'] = { id: AATD.idSix, key: AATD.keySix };
-//   delete json.actions[0]['assignee'];
-//   json.actions[0]['request'] = AAD.requestOne;
-//   xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
-//   page.visitDetail();
-//   andThen(() => {
-//     assert.equal(currentURL(), DETAIL_URL);
-//     assert.equal(page.actionTypeSelectedOne, AATD.keySix);
-//     assert.equal(page.ticketRequestValue, AAD.requestOne);
-//   });
-//   page.ticketRequestFillIn(AAD.requestOne);
-//   andThen(() => {
-//     assert.equal(page.ticketRequestValue, AAD.requestOne);
-//   });
-//   let payload = AF.put({
-//     actions: [{
-//       id: AAD.idOne,
-//       type: AATD.idSix,
-//       content: {
-//         request: AAD.requestOne
-//       }
-//     }]
-//   });
-//   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
-//   generalPage.save();
-//   andThen(() => {
-//     assert.equal(currentURL(), AUTOMATION_LIST_URL);
-//   });
-// });
+// Ticket request
+test('get an action ticket request and update it to a new ticket request', assert => {
+  clearxhr(detailXhr);
+  const json = AF.detail();
+  json.actions[0]['type'] = { id: AATD.idSix, key: AATD.keySix };
+  delete json.actions[0]['assignee'];
+  json.actions[0]['request'] = AAD.requestOne;
+  xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(page.actionTypeSelectedOne, AATD.keySix);
+    assert.equal(page.ticketRequestValue, AAD.requestOne);
+  });
+  page.ticketRequestFillIn(AAD.requestOne);
+  andThen(() => {
+    assert.equal(page.ticketRequestValue, AAD.requestOne);
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idSix,
+      content: {
+        request: AAD.requestOne
+      }
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+});
 
-// test('select ticket request filter and update automation', assert => {
-//   const json = AF.detail();
-//   page.visitDetail();
-//   andThen(() => {
-//     assert.equal(currentURL(), DETAIL_URL);
-//     assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
-//   });
-//   xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
-//   selectChoose('.t-automation-action-type-select:eq(0)', AATD.keySix);
-//   andThen(() => {
-//     assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keySix));
-//   });
-//   page.ticketRequestFillIn(AAD.requestTwo);
-//   andThen(() => {
-//     assert.equal(page.ticketRequestValue, AAD.requestTwo);
-//   });
-//   let payload = AF.put({
-//     actions: [{
-//       id: AAD.idOne,
-//       type: AATD.idSix,
-//       content: {
-//         request: AAD.requestTwo
-//       }
-//     }]
-//   });
-//   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
-//   generalPage.save();
-//   andThen(() => {
-//     assert.equal(currentURL(), AUTOMATION_LIST_URL);
-//   });
-// });
+test('select ticket request filter and update automation', assert => {
+  const json = AF.detail();
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
+  });
+  xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
+  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keySix);
+  andThen(() => {
+    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keySix));
+  });
+  page.ticketRequestFillIn(AAD.requestTwo);
+  andThen(() => {
+    assert.equal(page.ticketRequestValue, AAD.requestTwo);
+  });
+  let payload = AF.put({
+    actions: [{
+      id: AAD.idOne,
+      type: AATD.idSix,
+      content: {
+        request: AAD.requestTwo
+      }
+    }]
+  });
+  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  });
+});
