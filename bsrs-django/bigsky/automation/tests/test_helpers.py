@@ -85,22 +85,3 @@ class InterpolateTests(TestCase):
     def test_ticket_url(self):
         self.assertEqual(self.interpolate._ticket_url(),
                         '{}/tickets/{}'.format(settings.SITE_URL, self.ticket.id))
-
-    def test_get_role_id(self):
-        role = create_role('foo')
-        s = "{{role 'foo'}}"
-        self.assertEqual(self.interpolate.get_role_id(s), str(role.id))
-
-    def test_get_role_id__does_not_exist(self):
-        with self.assertRaises(Role.DoesNotExist):
-            Role.objects.get(name='bar')
-        s = "{{role 'bar'}}"
-        self.assertIsNone(self.interpolate.get_role_id(s))
-
-    def test_get_role_id__too_few_args(self):
-        s = "{{role-no-second-arg}}"
-        self.assertIsNone(self.interpolate.get_role_id(s))
-
-    def test_get_role_id__too_many_args(self):
-        s = "{{role 'foo' 'bar'}}"
-        self.assertIsNone(self.interpolate.get_role_id(s))

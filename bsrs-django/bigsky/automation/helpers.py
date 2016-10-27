@@ -72,24 +72,3 @@ class Interpolate(object):
 
     def _ticket_url(self):
         return '{}/tickets/{}'.format(settings.SITE_URL, self.ticket.id)
-
-    def get_role_id(self, s):
-        """
-        Takes Role template tags, and returns an the `role.id`
-
-        :param s: a single role template tag. i.e. {{role 'store mgr'}}
-        """
-        tag_data = self._get_tags(s)[0]
-        Role = get_model_class("role")
-        try:
-            name = tag_data.split(' ')[1]
-            # unwrap name from double string quotes, as a result from split()
-            name = name.replace("'", '')
-            return str(Role.objects.get(name=name).id)
-        except IndexError:
-            # not enough args
-            return
-        except Role.DoesNotExist:
-            # TODO: may want to propagate exception here back to User,
-            # who tried to tag a Role that doesn't exist
-            return
