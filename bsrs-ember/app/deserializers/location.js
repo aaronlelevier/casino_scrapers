@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { belongs_to, belongs_to_extract, belongs_to_extract_contacts } from 'bsrs-components/repository/belongs-to';
+import { belongs_to, belongs_to_extract } from 'bsrs-components/repository/belongs-to';
 import { many_to_many } from 'bsrs-components/repository/many-to-many';
 import ContactDeserializerMixin from 'bsrs-ember/mixins/deserializer/contact';
 import OptConf from 'bsrs-ember/mixins/optconfigure/location';

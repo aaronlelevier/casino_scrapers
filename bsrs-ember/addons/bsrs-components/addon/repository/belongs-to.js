@@ -23,21 +23,6 @@ var belongs_to_extract = function(type, store, parent_model, ownerName, relatedM
   return model;
 };
 
-var belongs_to_extract_contacts = function(model, store, contact_model_str, contact_type) {
-  //model, store, email, emails
-  let contact_fks = [];
-  let contacts = model[`${contact_type}`] || [];
-  contacts.forEach((contact) => {
-    contact_fks.push(contact.id);
-    contact.model_fk = model.id;
-    run(() => {
-      store.push(`${contact_model_str}`, contact);
-    });
-  });
-  delete model[`${contact_type}`];
-  return contact_fks;
-};
-
 var belongs_to = function(ownerName, relatedModelName) {
   Ember.defineProperty(this, `setup_${ownerName}`, undefined, belongs_to_json(ownerName, relatedModelName));
 };
@@ -56,4 +41,4 @@ var belongs_to_json = function(ownerName, relatedModelName) {
   };
 };
 
-export { belongs_to_extract, belongs_to_extract_contacts, belongs_to };
+export { belongs_to_extract, belongs_to };

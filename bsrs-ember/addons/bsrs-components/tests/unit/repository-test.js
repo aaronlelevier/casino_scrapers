@@ -25,19 +25,6 @@ test('repository sets up hat relationship in deserializer', (assert) => {
   assert.deepEqual(hat.get('users'), [1]);
 });
 
-test('extract contacts works as expected', (assert) => {
-  const json = {id: 1, emails: [{id: 2}]};
-  run(() => {
-    deserializer.deserialize_three(json);
-  });
-  const user = store.find('user', 1);
-  assert.equal(user.get('email_fks'), 2);
-  assert.ok(!user.get('emails'));
-  const email = store.find('email', 2);
-  assert.equal(email.get('id'), 2);
-  assert.deepEqual(email.get('model_fk'), 1);
-});
-
 test('shoes relationship setup in deserializer', (assert) => {
   const json = {id: 1, shoes: [{id: 2}]};
   run(() => {

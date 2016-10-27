@@ -1,7 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
 import { many_to_many_extract } from 'bsrs-components/repository/many-to-many';
-import { belongs_to_extract, belongs_to_extract_contacts } from 'bsrs-components/repository/belongs-to';
+import { belongs_to_extract } from 'bsrs-components/repository/belongs-to';
 import registerCB from 'bsrs-ember/utilities/registerCB';
 
 
