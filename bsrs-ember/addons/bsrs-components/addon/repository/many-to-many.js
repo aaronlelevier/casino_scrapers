@@ -8,15 +8,16 @@ var many_to_many_extract = function(json, store, model, join_models_str, main_pk
   const m2m_models = [];
   const relateds = [];
   const related_ids = json.mapBy('id'); //server side people
-  const join_models = model.get(`${join_models_str}`) || [];
-  const join_model_pks = join_models.mapBy(`${related_pk}`);//client side people
+  const join_models = model.get(`${join_models_str}`) || []; // client side existing join models 
+  const join_model_pks = join_models.mapBy(`${related_pk}`); // client side existing child models
   const model_pk = model.get('id');
   store = store || this.get('simpleStore');
   for (let i = json.length-1; i >= 0; i--){
     const pk = Ember.uuid();
     const many_models = json[i];
     const existing = store.find(`${related_str}`, many_models.id);
-    if(!existing.get('content')){
+    if (!existing.get('content')) {
+      // push in child models
       relateds.push(many_models);
     }
     if (!join_model_pks.includes(many_models.id)) {
@@ -24,15 +25,17 @@ var many_to_many_extract = function(json, store, model, join_models_str, main_pk
       let m2m_model = {id: pk};
       m2m_model[`${main_pk}`] = model_pk;
       m2m_model[`${related_pk}`] = many_models.id;
+      // push in m2m models
       m2m_models.push(m2m_model);
     }
   }
+  // loop through existing join models
   join_models.forEach((m2m) => {
     if (related_ids.includes(m2m.get(related_pk))) {
       server_sum.push(m2m.id);
       return;
       //TODO: just make else statement and see if all tests pass
-    }else if (!related_ids.includes(m2m.get(related_pk))) {
+    } else if (!related_ids.includes(m2m.get(related_pk))) {
       m2m_models.push({id: m2m.get('id'), removed: true});
     }
   });

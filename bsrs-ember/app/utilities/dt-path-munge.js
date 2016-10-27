@@ -26,7 +26,7 @@ var dtPathMunge = function(ticket, dtd, fieldsObj, link, simpleStore) {
     request: ticket.get('request'),
     categories: ticket.get('categories_ids'),
     cc: ticket.get('cc_ids'),
-    attachments: ticket.get('attachment_ids')
+    attachments: ticket.get('attachments_ids')
   };
   const new_dtd = {
     id: dtd ? dtd.get('id') : undefined,

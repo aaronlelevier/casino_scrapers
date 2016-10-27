@@ -9,7 +9,6 @@ import equal from 'bsrs-ember/utilities/equal';
 import CategoriesMixin from 'bsrs-ember/mixins/model/category';
 import TicketLocationMixin from 'bsrs-ember/mixins/model/ticket/location';
 import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
-import AttachmentMixin from 'bsrs-ember/mixins/model/attachment';
 import { belongs_to, change_belongs_to } from 'bsrs-components/attr/belongs-to';
 import { many_to_many } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
@@ -49,7 +48,7 @@ const Validations = buildValidations({
 
 const { run } = Ember;
 
-var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Validations, AttachmentMixin, {
+var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Validations, {
   init() {
     this.requestValues = []; //store array of values to be sent in dt post or put request field
     belongs_to.bind(this)('status', 'ticket', {bootstrapped:true});
@@ -57,6 +56,7 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     belongs_to.bind(this)('assignee', 'ticket', {change_func:false, rollback:false});//change_assignee_container (below): change_belongs_to
     belongs_to.bind(this)('location', 'ticket', {change_func:false});
     many_to_many.bind(this)('cc', 'ticket');
+    many_to_many.bind(this)('attachment', 'generic', {plural: true});
     many_to_many.bind(this)('category', 'model', {plural:true, add_func:false});
     this._super(...arguments);
   },
@@ -70,8 +70,7 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
   //TODO: these need to be in an init function
   ticket_cc_fks: [],
   model_categories_fks: [],
-  previous_attachments_fks: [],
-  current_attachment_fks: [],
+  generic_attachments_fks: [],
   status_fk: undefined,
   priority_fk: undefined,
   location_fk: undefined,
@@ -141,7 +140,7 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
       requester: get(this, 'requester'),
       assignee: get(this, 'assignee.id'),
       location: get(this, 'location.id'),
-      attachments: get(this, 'attachment_ids'),
+      attachments: get(this, 'attachments_ids'),
       dt_path: get(this, 'dt_path'),
     };
     if (this.get('comment')) {
@@ -183,27 +182,6 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
   removeRecord() {
     run(() => {
       get(this, 'simpleStore').remove('ticket', get(this, 'id'));
-    });
-  },
-  remove_attachment(attachment_id) {
-    const updated_fks = this._super(attachment_id);
-    run(() => {
-      this.get('simpleStore').push('ticket', {id: this.get('id'), current_attachment_fks: updated_fks});
-    });
-  },
-  add_attachment(attachment_id) {
-    const current_fks = this._super(attachment_id);
-    run(() => {
-      this.get('simpleStore').push('ticket', {id: this.get('id'), current_attachment_fks: current_fks.concat(attachment_id).uniq()});
-    });
-  },
-  saveAttachments() {
-    const fks = this.get('current_attachment_fks');
-    run(() => {
-      this.get('simpleStore').push('ticket', {id: this.get('id'), previous_attachments_fks: fks});
-    });
-    this.get('attachments').forEach((attachment) => {
-      attachment.save();
     });
   },
   rollback() {

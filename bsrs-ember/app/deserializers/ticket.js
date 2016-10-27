@@ -4,14 +4,6 @@ import { belongs_to_extract, belongs_to } from 'bsrs-components/repository/belon
 import { many_to_many_extract, many_to_many } from 'bsrs-components/repository/many-to-many';
 import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
 
-
-var extract_attachments = function(model, store) {
-  model.attachments.forEach((attachment_id) => {
-    store.push('attachment', {id: attachment_id});
-  });
-  return model.attachments;
-};
-
 var TicketDeserializer = Ember.Object.extend(OptConf, {
   init() {
     this._super(...arguments);
@@ -20,6 +12,7 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     belongs_to.bind(this)('assignee', 'person');
     belongs_to.bind(this)('location', 'location');
     many_to_many.bind(this)('cc', 'ticket');
+    many_to_many.bind(this)('attachments', 'ticket');
   },
   deserialize(response, id) {
     if (id) {
@@ -30,17 +23,17 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
   },
   _deserializeSingle(response) {
     let store = this.get('simpleStore');
-    /* FindById mixin prevents xhr if dirty */
+    // belongs-to
     let location_json = response.location;
     response.location_fk = location_json.id;
     delete response.location;
-    let cc_json = response.cc;
-    delete response.cc;
     let assignee_json = response.assignee;
     response.assignee_fk = response.assignee ? response.assignee.id : undefined;
     delete response.assignee;
-    response.current_attachment_fks = extract_attachments(response, store);
-    response.previous_attachments_fks = response.current_attachment_fks;
+    // m2m
+    let cc_json = response.cc;
+    delete response.cc;
+    let attachments_json = response.attachments;
     delete response.attachments;
     const categories_json = response.categories;
     delete response.categories;
@@ -55,6 +48,17 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
       this.setup_location(location_json, ticket);
     }
     this.setup_cc(cc_json, ticket);
+    // this.setup_attachments(attachments_json, ticket);
+    let [m2m_attachments, attachments, m2m_attachment_fks] = many_to_many_extract(attachments_json, store, ticket, 'generic_attachments', 'generic_pk', 'attachment', 'attachment_pk');
+    run(() => {
+      attachments.forEach((att) => {
+        store.push('attachment', att);
+      });
+      m2m_attachments.forEach((m2m) => {
+        store.push('generic-join-attachment', m2m);
+      });
+      store.push('ticket', {id: ticket.get('id'), generic_attachments_fks: m2m_attachment_fks});
+    });
     let [m2m_categories, categories, server_sum] = many_to_many_extract(categories_json, store, ticket, 'model_categories', 'model_pk', 'category', 'category_pk');
     run(() => {
       categories.forEach((cat) => {

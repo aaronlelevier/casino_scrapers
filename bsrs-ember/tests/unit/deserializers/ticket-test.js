@@ -21,7 +21,7 @@ let store, subject, uuid, ticket_priority, ticket_status, ticket;
 
 module('unit: ticket deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-list', 'model:person-list', 'model:ticket-join-person', 'model:model-category', 'model:ticket-status', 'model:ticket-priority', 'model:status', 'model:location', 'model:location-list','model:person-location', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:attachment', 'model:location-status', 'service:person-current','service:translations-fetcher','service:i18n', 'model:locale', 'model:role', 'model:general-status-list', 'model:ticket-priority-list', 'model:category-list', 'model:category-children', 'validator:presence', 'validator:length', 'validator:ticket-status', 'validator:ticket-categories']);
+    store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-list', 'model:person-list', 'model:ticket-join-person', 'model:model-category', 'model:ticket-status', 'model:ticket-priority', 'model:status', 'model:location', 'model:location-list','model:person-location', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:attachment', 'model:location-status', 'service:person-current','service:translations-fetcher','service:i18n', 'model:locale', 'model:role', 'model:general-status-list', 'model:ticket-priority-list', 'model:category-list', 'model:category-children', 'model:generic-join-attachment', 'validator:presence', 'validator:length', 'validator:ticket-status', 'validator:ticket-categories']);
     uuid = this.container.lookup('model:uuid');
     subject = TicketDeserializer.create({simpleStore: store, uuid: uuid});
     run(() => {
@@ -786,7 +786,7 @@ test('model-category m2m added even when ticket did not exist before the deseria
 
 test('attachment added for each attachment on ticket', (assert) => {
   let json = TF.generate(TD.idOne);
-  json.attachments = [TD.attachmentOneId];
+  json.attachments = [{id: TD.attachmentOneId}];
   run(function() {
     subject.deserialize(json, json.id);
   });
@@ -800,12 +800,13 @@ test('attachment added for each attachment on ticket', (assert) => {
 });
 
 test('attachment added for each attachment on ticket (when ticket has existing attachments)', (assert) => {
-  ticket = store.push('ticket', {id: TD.idOne, current_attachment_fks: [TD.attachmentTwoId], previous_attachments_fks: [TD.attachmentTwoId]});
+  ticket = store.push('ticket', {id: TD.idOne, generic_attachments_fks: [8]});
+  store.push('generic-join-attachment', {id: 4, attachment_pk: TD.attachmentTwoId, generic_pk: TD.idOne});
   ticket.save();
   store.push('attachment', {id: TD.attachmentTwoId});
   assert.equal(ticket.get('attachments').get('length'), 1);
   let json = TF.generate(TD.id);
-  json.attachments = [TD.attachmentTwoId, TD.attachmentOneId];
+  json.attachments = [{id: TD.attachmentTwoId}, {id: TD.attachmentOneId}];
   run(function() {
     subject.deserialize(json, json.id);
   });
