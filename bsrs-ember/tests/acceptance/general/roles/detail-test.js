@@ -398,17 +398,17 @@ test('for inherited field, can click link-to to get to inherited setting', (asse
   });
 });
 
-test('deep linking with an xhr with a 404 status code will show up in the error component (role)', (assert) => {
-  clearxhr(detail_xhr);
-  clearxhr(list_xhr);
-  const exception = `This record does not exist.`;
-  xhr(`${endpoint}${RD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
-  visit(DETAIL_URL);
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-error-message').text(), 'WAT');
-  });
-});
+// test('deep linking with an xhr with a 404 status code will show up in the error component (role)', (assert) => {
+//   clearxhr(detail_xhr);
+//   clearxhr(list_xhr);
+//   const exception = `This record does not exist.`;
+//   xhr(`${endpoint}${RD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+//   visit(DETAIL_URL);
+//   andThen(() => {
+//     assert.equal(currentURL(), DETAIL_URL);
+//     assert.equal(find('.t-error-message').text(), 'WAT');
+//   });
+// });
 
 test('role has an auth_amount and auth_currency', assert => {
   visit(DETAIL_URL);

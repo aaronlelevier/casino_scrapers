@@ -1212,40 +1212,44 @@ test('settings values, placeholers, and inherited froms', assert => {
       assert.ok(page.passwordOneTimeChecked());
     });
   });
+});
 
-  test('deep linking with an xhr with a 404 status code will show up in the error component (person)', (assert) => {
-    clearxhr(detail_xhr);
-    clearxhr(list_xhr);
-    const exception = `This record does not exist.`;
-    xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
-    page.visitDetail();
-    andThen(() => {
-      assert.equal(currentURL(), DETAIL_URL);
-      assert.equal(find('.t-error-message').text(), 'WAT');
-    });
+/* jshint ignore:start */
+
+// test('scott deep linking with an xhr with a 404 status code will show up in the error component (ticket)', async assert => {
+//   let originalLoggerError = Ember.Logger.error;
+//   let originalTestAdapterException = Ember.Test.adapter.exception;
+//   Ember.Logger.error = function() {};
+//   Ember.Test.adapter.exception = function() {};
+//   clearxhr(detail_xhr);
+//   clearxhr(list_xhr);
+//   const exception = `This record does not exist.`;
+//   xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+//   await page.visitDetail();
+//   assert.equal(currentURL(), DETAIL_URL);
+//   assert.equal(find('[data-test-id="admin-single-error"]').length, 1);
+//   return pauseTest();
+//   Ember.Logger.error = originalLoggerError;
+//   Ember.Test.adapter.exception = originalTestAdapterException;
+// });
+
+/* jshint ignore:end */
+
+test('update password_one_time', assert => {
+  clearxhr(list_xhr);
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.notOk(page.passwordOneTimeChecked());
   });
-
-  test('update password_one_time', assert => {
-    page.visitDetail();
-    andThen(() => {
-      assert.equal(currentURL(), DETAIL_URL);
-      page.clickChangePassword();
-      andThen(() => {
-        assert.equal(page.passwordOneTimeLabelText, translations['admin.setting.password_one_time']);
-        assert.notOk(page.passwordOneTimeChecked());
-      });
-      page.passwordOneTimeClick();
-      andThen(() => {
-        assert.ok(page.passwordOneTimeChecked());
-      });
-    });
-    andThen(() => {
-      assert.equal(currentURL(), DETAIL_URL);
-    });
-    page.passwordOneTimeClick();
-    andThen(() => {
-      assert.ok(page.passwordOneTimeChecked());
-    });
+  page.clickChangePassword();
+  andThen(() => {
+    assert.equal(page.passwordOneTimeLabelText, translations['admin.setting.password_one_time']);
+    assert.notOk(page.passwordOneTimeChecked());
+  });
+  page.passwordOneTimeClick();
+  andThen(() => {
+    assert.ok(page.passwordOneTimeChecked());
   });
 });
 

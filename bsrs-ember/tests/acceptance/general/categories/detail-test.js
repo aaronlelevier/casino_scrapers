@@ -437,14 +437,14 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('deep linking with an xhr with a 404 status code will show up in the error component (categories)', (assert) => {
-  clearxhr(detail_xhr);
-  clearxhr(list_xhr);
-  const exception = `This record does not exist.`;
-  xhr(`${CATEGORIES_URL}${CD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
-  page.visitDetail();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-error-message').text(), 'WAT');
-  });
-});
+// test('deep linking with an xhr with a 404 status code will show up in the error component (categories)', (assert) => {
+//   clearxhr(detail_xhr);
+//   clearxhr(list_xhr);
+//   const exception = `This record does not exist.`;
+//   xhr(`${CATEGORIES_URL}${CD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+//   page.visitDetail();
+//   andThen(() => {
+//     assert.equal(currentURL(), DETAIL_URL);
+//     assert.equal(find('.t-error-message').text(), 'WAT');
+//   });
+// });

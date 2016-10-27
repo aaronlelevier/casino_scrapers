@@ -304,18 +304,6 @@ test('when click delete, and click no modal disappears', assert => {
   });
 });
 
-test('deep linking with an xhr with a 404 status code will show up in the error component (person)', (assert) => {
-  clearxhr(detailXhr);
-  clearxhr(listXhr);
-  const exception = `This record does not exist.`;
-  xhr(`${AUTOMATION_URL}${AD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
-  page.visitDetail();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-error-message').text(), 'WAT');
-  });
-});
-
 test('remove filter and save - should stay on page because an automation must have at least one filter and criteria unless auto-assign', assert => {
   page.visitDetail();
   andThen(() => {
