@@ -2,6 +2,7 @@ import Ember from 'ember';
 const { get, set } = Ember;
 import set_filter_model_attrs from 'bsrs-ember/utilities/filter-model-attrs';
 import inject from 'bsrs-ember/utilities/inject';
+import { ServerError } from 'bsrs-ember/utilities/errors';
 
 var nameRoute = function(route) {
   return route.get('constructor.ClassMixin.ownerConstructor').toString();
@@ -75,15 +76,26 @@ var GridViewRoute = Ember.Route.extend({
       return new Ember.RSVP.Promise((resolve, reject) => {
         return repository.findWithQuery(query.page, query.search, query.find, query.id_in, query.page_size, query.sort, special_url).then((model) => {
           resolve({ count, model, requested, filtersets, routeName, search, repository });
+        }, (xhr) => {
+          if (xhr.status >= 400) {
+            const err = xhr.responseJSON;
+            const key = Object.keys(err);
+            resolve( new ServerError(err[key[0]]) );
+          }
         });
       });
     }
   },
   setupController: function(controller, hash) {
-    controller.setProperties(hash);
-    controller.set('filterModel', this.filterModel);
-    controller.set('gridFilterParams', this.gridFilterParams);
-    controller.set('gridIdInParams', this.gridIdInParams);
+    if ( !(hash instanceof ServerError) )  {
+      controller.setProperties(hash);
+      controller.set('filterModel', this.filterModel);
+      controller.set('gridFilterParams', this.gridFilterParams);
+      controller.set('gridIdInParams', this.gridIdInParams);
+    } else {
+      controller.set('error', hash);
+      controller.set('model', []);
+    }
   },
   actions: {
     exportGrid(find, search, sort) {

@@ -120,12 +120,6 @@ var ApplicationRoute = Route.extend({
     Ember.$('.loading-image').addClass('bounceOut');
   },
   actions: {
-    error(error) {
-      if(error){
-        /* intermediateTransitionTo does not modify the url or window history so when page is refreshed, they are redirected to route user intended */
-        return this.intermediateTransitionTo('error');
-      }
-    },
     /* DESKTOP */
     closeTabMaster(tab, {action='closeTab', deleteCB=null, confirmed=false}={}) {
       /* Find model based on stored id in tab */

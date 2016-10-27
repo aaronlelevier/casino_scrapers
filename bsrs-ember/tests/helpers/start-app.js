@@ -160,7 +160,7 @@ Ember.Test.registerHelper('patchIncrement', patchIncrement);
 Ember.Test.registerHelper('patchRandom', patchRandom);
 Ember.Test.registerAsyncHelper('patchRandomAsync', patchRandomAsync);
 
-export default function startApp(attrs) {
+export default function startApp(attrs={}) {
   let application;
 
   let attributes = Ember.merge({}, config.APP);
@@ -172,7 +172,7 @@ export default function startApp(attrs) {
   Ember.$.fauxjax.new({
     request: request,
     response: {
-      status: 200,
+      status: attrs.error || 200,
       content: response
     }
   });

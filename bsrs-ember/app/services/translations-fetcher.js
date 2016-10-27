@@ -1,4 +1,3 @@
-// app/services/translations-fetcher.js
 import Ember from 'ember';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import config from 'bsrs-ember/config/environment';

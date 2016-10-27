@@ -112,8 +112,6 @@ var GridRepositoryMixin = Ember.Mixin.create({
         });
       });
       return this.deserializeResponse(response);
-    }, (xhr) => {
-      this.get('error').transToError();
     });
   },
   deserializeResponse(response) {

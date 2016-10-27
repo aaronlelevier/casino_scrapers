@@ -9,7 +9,7 @@
             <span class="t-reset-grid reset-grid" {{action "resetGrid"}}>{{t 'grid.reset_all_options'}}</span>
             {{/if}}
             {{#unless model.isLoaded}}
-            {{grid-loading-graphic}}
+              {{grid-loading-graphic}}
             {{/unless}}
           </h1>
           <div class="col-md-4 text-center search-wrap pull-right">
@@ -34,16 +34,24 @@
       </thead>
       <tbody>
         {{#each paginated_content as |item|}}
-        {{#link-to detail_url item.id tagName="tr" class="t-grid-data"}}
-        <td class="selector t-selector">
-          {{#if item.isDirtyOrRelatedDirty}}
-          {{fa-icon 'circle' classNames='dirty'}}
-          {{/if}}
-        </td>
-        {{#each columns as |column|}}
-        {{grid/helpers/grid-body-column tagName="td" noun=noun column=column item=item}}
-        {{/each}}
-        {{/link-to}}
+          {{#link-to detail_url item.id tagName="tr" class="t-grid-data"}}
+          <td class="selector t-selector">
+            {{#if item.isDirtyOrRelatedDirty}}
+            {{fa-icon 'circle' classNames='dirty'}}
+            {{/if}}
+          </td>
+          {{#each columns as |column|}}
+            {{grid/helpers/grid-body-column tagName="td" noun=noun column=column item=item}}
+          {{/each}}
+          {{/link-to}}
+        {{else}}
+          <td colspan="100%">
+            {{#unless error}} 
+              {{fa-icon 'binoculars'}} {{t 'grid.no_results'}}
+            {{else}}
+              {{error.message}}
+            {{/unless}}
+          </td>
         {{/each}}
       </tbody>
     </table>

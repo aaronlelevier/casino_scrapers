@@ -1,32 +1,33 @@
 <article class="main full fixed">
   {{component (if FlexiLayout.isMobile 'tickets/ticket-list-mobile' 'tickets/ticket-list')
-  count=count
-  model=model
-  page=page
-  sort=sort
-  search=search
-  find=find
-  id_in=id_in
-  requested=requested
-  page_size=page_size
-  filterModel=filterModel
-  gridFilterParams=gridFilterParams
-  gridIdInParams=gridIdInParams
-  filtersets=filtersets
-  routeName=routeName
-  noun="ticket"
-  plural=(t "ticket.other")
-  grid_title=(t "ticket" count="2")
-  list_url="tickets.index"
-  detail_url="tickets.ticket"
-  add_model_url="tickets.new"
-  search_placeholder=(t "ticket.search")
-  add_model_text=(t "ticket.one")
-  save_filterset=(action "save_filterset")
-  hasActiveFilterSet=hasActiveFilterSet
-  repository=repository
-  exportGrid=(route-action "exportGrid" find search sort)
-  updateGridFilterParams=(route-action "updateGridFilterParams")
-  infinityIsLoading=(if FlexiLayout.isMobile infinityIsLoading)
+    count=count
+    model=model
+    error=error
+    page=page
+    sort=sort
+    search=search
+    find=find
+    id_in=id_in
+    requested=requested
+    page_size=page_size
+    filterModel=filterModel
+    gridFilterParams=gridFilterParams
+    gridIdInParams=gridIdInParams
+    filtersets=filtersets
+    routeName=routeName
+    noun="ticket"
+    plural=(t "ticket.other")
+    grid_title=(t "ticket" count="2")
+    list_url="tickets.index"
+    detail_url="tickets.ticket"
+    add_model_url="tickets.new"
+    search_placeholder=(t "ticket.search")
+    add_model_text=(t "ticket.one")
+    save_filterset=(action "save_filterset")
+    hasActiveFilterSet=hasActiveFilterSet
+    repository=repository
+    exportGrid=(route-action "exportGrid" find search sort)
+    updateGridFilterParams=(route-action "updateGridFilterParams")
+    infinityIsLoading=(if FlexiLayout.isMobile infinityIsLoading)
   }}
 </article>

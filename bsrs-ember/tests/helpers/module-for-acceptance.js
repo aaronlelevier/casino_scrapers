@@ -7,7 +7,7 @@ import TestDone from "../helpers/test-done";
 export default function(name, options = {}) {
   module(name, {
     beforeEach() {
-      this.application = startApp();
+      this.application = startApp({ error: options.error });
 
       if (options.beforeEach) {
         return options.beforeEach.apply(this, arguments);
