@@ -1,6 +1,8 @@
+import os
 from mock import patch
 
 from django.conf import settings
+from django.template import loader
 from django.test import TestCase
 
 from pretend import stub
@@ -10,7 +12,7 @@ from automation.tests.factory import create_automation_event
 from person.models import Role
 from person.tests.factory import create_single_person, create_role
 from ticket.models import TicketPriority, TicketStatus
-from ticket.tests.factory import create_standard_ticket
+from ticket.tests.factory import TicketWithActivities
 from translation.tests.factory import create_translation_keys_for_fixtures
 
 
@@ -18,12 +20,20 @@ class InterpolateTests(TestCase):
 
     def setUp(self):
         self.person = create_single_person()
-        self.ticket = create_standard_ticket()
+        twa = TicketWithActivities()
+        twa.create()
+        self.ticket = twa.ticket
         self.event = create_automation_event()
         self.automation = stub(event=self.event)
         self.translation = create_translation_keys_for_fixtures()
         self.interpolate = helpers.Interpolate(
             self.ticket, self.translation, event=self.event)
+        # email
+        self.html_base_template = os.path.join(settings.TEMPLATES_DIR,
+                                     'email/test/base.html')
+        with open(os.path.join(settings.TEMPLATES_DIR, 'email/test/body.html')) as f:
+            raw_body = f.read().replace('\n', '')
+        self.html_email_body = self.interpolate.text(raw_body)
 
     def test_text(self):
         s = "Emergency at {{location.name}} priority {{ticket.priority}} to view the ticket go to {{ticket.url}}"
@@ -55,16 +65,9 @@ class InterpolateTests(TestCase):
         self.assertEqual(self.interpolate.text(s),
                          "{}/tickets/{}".format(settings.SITE_URL, self.ticket.id))
 
-    @patch("automation.helpers.loader.render_to_string")
-    def test_text__ticket_activity(self, mock_func):
-        s = "{{ticket.activity}}"
-        self.interpolate.text(s)
-        self.assertEqual(mock_func.call_args[0][0], 'email/ticket-activities/email.txt')
-        self.assertEqual(mock_func.call_args[0][1], {'ticket': self.ticket})
-
-    def test_text__ticket_activity__not_called_if_sms(self):
+    def test_text__ticket_activity__remove_tag(self):
         interpolate = helpers.Interpolate(
-            self.ticket, self.translation, sms=True, event=self.event)
+            self.ticket, self.translation, event=self.event)
         s = "{{ticket.activity}}"
         ret = interpolate.text(s)
         self.assertEqual(ret, '')
@@ -92,3 +95,54 @@ class InterpolateTests(TestCase):
     def test_ticket_url(self):
         self.assertEqual(self.interpolate._ticket_url(),
                         '{}/tickets/{}'.format(settings.SITE_URL, self.ticket.id))
+
+    def test_contains_ticket_activity(self):
+        s = "Foo"
+        self.assertFalse(self.interpolate.contains_ticket_activity(s))
+        s = "Foo {{ticket.activity}}"
+        self.assertTrue(self.interpolate.contains_ticket_activity(s))
+
+    def test_get_html_email__combine_base_template_with_body(self):
+        title = '<title>Big Sky</title>'
+        with open(self.html_base_template) as f:
+            base = f.read().replace('\n', '')
+        self.assertIn(title, base)
+
+        ret = self.interpolate.get_html_email(
+            self.html_base_template, body=self.html_email_body)
+
+        self.assertIn(title, ret)
+        self.assertIn(self.ticket.location.name, ret)
+        self.assertIn(self.translation.values[self.ticket.priority.name], ret)
+        self.assertIn(self.interpolate._ticket_url(), ret)
+        self.assertNotIn('\n', ret)
+
+    def test_get_html_email__inline_css(self):
+        with open(self.html_base_template) as f:
+            base_template_content = f.read().replace('\n', '')
+        self.assertIn(
+            '<style type="text/css">h1 { border:1px solid black }</style>',
+            base_template_content)
+        self.assertIn('<h1>Test Email</h1>', base_template_content)
+
+        ret = self.interpolate.get_html_email(
+            self.html_base_template, body=self.html_email_body)
+
+        self.assertNotIn('h1 { border:1px solid black }', ret)
+        self.assertIn(
+            '<h1 style="border:1px solid black">Test Email</h1>',
+            ret
+        )
+
+    def test_get_html_email__populate_ticket_activity(self):
+        ticket_activity = self.ticket.activities.first()
+        self.assertTrue(ticket_activity)
+        body = self.interpolate.text('{{location.name}}')
+
+        ret = self.interpolate.get_html_email(
+            self.html_base_template, body=body, ticket_activity=True, ticket=self.ticket)
+
+        self.assertIn(
+            '<li>Type: {}</li>'.format(ticket_activity.type.name),
+            ret
+        )

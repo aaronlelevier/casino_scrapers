@@ -1,0 +1,23 @@
+{% load contact_tags %}
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Big Sky</title>
+    <style type="text/css">h1 { border:1px solid black }</style>
+  </head>
+  <body>
+    <h1>Test Email</h1>
+    {{body}}
+    {%if ticket_activity %}
+      {% for a in ticket.activities.all %}
+        <ul>
+          <li>Type: {{a.type.name}}</li>
+          <li>Who: {{a.person.fullname}}</li>
+          <li>When: {{a.created}}</li>
+          <li>What: {{aticket_activity_description}}</li>
+        </ul>
+      {% endfor %}
+    {% endif %}
+  </body>
+</html>

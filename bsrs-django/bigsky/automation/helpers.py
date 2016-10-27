@@ -3,6 +3,8 @@ import re
 from django.conf import settings
 from django.template import loader
 
+from premailer import transform
+
 from utils.helpers import KwargsAsObject, get_model_class
 
 
@@ -13,7 +15,7 @@ class Interpolate(object):
     """
     i18n_FIELDS = ['ticket.priority', 'ticket.status']
 
-    def __init__(self, ticket, translation, sms=False, **kwargs):
+    def __init__(self, ticket, translation, **kwargs):
         """
         :param ticket: Ticket instance associated with the message
         :param automation:
@@ -28,7 +30,6 @@ class Interpolate(object):
         """
         self.ticket = ticket
         self.translation = translation
-        self.sms = sms
         self.automation = KwargsAsObject(**kwargs)
 
         self.string_kwargs = {
@@ -66,13 +67,8 @@ class Interpolate(object):
         if tag == 'ticket.url':
             return string.replace(substring, self._ticket_url())
         elif tag == 'ticket.activity':
-            if self.sms:
-                # here, the `ticket.activity` tag has been used, but this is
-                # an SMS msg, so silently remove the tag and don't interpolate
-                return string.replace(substring, '')
-            else:
-                context = {'ticket': self.ticket}
-                return loader.render_to_string('email/ticket-activities/email.txt', context)
+            # if present because will be generated later
+            return string.replace(substring, '')
         elif tag in self.i18n_FIELDS:
             model, field = tag.split('.')
             return string.replace(
@@ -82,3 +78,19 @@ class Interpolate(object):
 
     def _ticket_url(self):
         return '{}/tickets/{}'.format(settings.SITE_URL, self.ticket.id)
+
+    def contains_ticket_activity(self, s):
+        return '{{ticket.activity}}' in s
+
+    def get_html_email(self, base_template, **context):
+        """
+        Constructs an HTML email based on a base template and
+        a body of content.
+
+        :param base_template:
+            file location string of the base html template to use
+        :param body:
+            body text string string of the email already interpolated
+        """
+        return transform(
+            loader.render_to_string(base_template, context)).replace('\n', '')

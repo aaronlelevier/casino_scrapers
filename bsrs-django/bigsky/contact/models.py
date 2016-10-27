@@ -133,7 +133,7 @@ class PhoneNumberManager(EmailAndSmsMixin, BaseManager):
                             "because has no CELL phone number on file, for SMS with body: {body}"
                             .format(person=person, body=action.content['body']))
             else:
-                interpolate = Interpolate(ticket, person.locale.translation_, sms=True, event=event)
+                interpolate = Interpolate(ticket, person.locale.translation_, event=event)
                 body = interpolate.text(action.content.get('body', ''))
                 self.send_sms(ph, body)
 
