@@ -179,8 +179,8 @@ class Ticket(BaseModel):
         ordering = ('-created',)
 
     def save(self, *args, **kwargs):
-        super(Ticket, self).save(*args, **kwargs)
         self._process_ticket_if_new()
+        super(Ticket, self).save(*args, **kwargs)
 
     def _process_ticket_if_new(self):
         if not self.deleted and self.status.name == TicketStatus.NEW:

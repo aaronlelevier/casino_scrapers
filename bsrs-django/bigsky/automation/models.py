@@ -120,8 +120,6 @@ class AutomationManager(BaseManager):
         """
         if ticket.creator and not ticket.creator.role.process_assign:
             ticket.assignee = ticket.creator
-            ticket.status = TicketStatus.objects.get(name=TicketStatus.IN_PROGRESS)
-            ticket.save()
             return True
 
         for automation in self.filter(tenant__id=tenant_id).order_by('description'):
@@ -135,14 +133,10 @@ class AutomationManager(BaseManager):
 
             if key == AutomationActionType.TICKET_ASSIGNEE:
                 ticket.assignee = Person.objects.get(id=action.content['assignee'])
-                ticket.status = TicketStatus.objects.get(name=TicketStatus.IN_PROGRESS)
-                ticket.save()
             elif key == AutomationActionType.TICKET_PRIORITY:
                 ticket.priority = TicketPriority.objects.get(id=action.content['priority'])
-                ticket.save()
             elif key == AutomationActionType.TICKET_STATUS:
                 ticket.status = TicketStatus.objects.get(id=action.content['status'])
-                ticket.save()
             elif key == AutomationActionType.SEND_EMAIL:
                 Email.objects.process_send_email(ticket, action, event)
             elif key == AutomationActionType.SEND_SMS:
@@ -150,7 +144,6 @@ class AutomationManager(BaseManager):
             elif key == AutomationActionType.TICKET_REQUEST:
                 if ticket.request != action.content['request']:
                     ticket.request = action.content['request']
-                    ticket.save()
             elif key == AutomationActionType.TICKET_CC:
                 existing_ccs = set([str(x['id']) for x in ticket.cc.values('id')])
                 action_ccs = set([str(x) for x in action.content['ccs']])

@@ -161,12 +161,12 @@ class AutomationManagerTests(SetupMixin, TestCase):
         # creator is not the assignee.If role.process_assign == False,
         # that takes precedence and the creator will be assigned
         self.ticket.assignee = None
-        self.assertIsNone(self.ticket.assignee)
+        self.assertNotEqual(self.ticket.assignee, creator)
 
         ret = Automation.objects.process_ticket(self.automation.tenant.id, self.ticket, self.event.key)
 
         self.assertEqual(self.ticket.assignee, creator)
-        self.assertEqual(self.ticket.status.name, TicketStatus.IN_PROGRESS)
+        self.assertEqual(self.ticket.status.name, TicketStatus.NEW)
 
     # process_actions
 
@@ -181,7 +181,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
         Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
 
         self.assertEqual(self.ticket.assignee, action_assignee)
-        self.assertEqual(self.ticket.status.name, TicketStatus.IN_PROGRESS)
+        self.assertEqual(self.ticket.status.name, TicketStatus.NEW)
 
     def test_process_actions__ticket_priority(self):
         clear_related(self.automation, 'actions')

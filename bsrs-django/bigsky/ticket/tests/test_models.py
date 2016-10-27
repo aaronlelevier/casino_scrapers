@@ -288,7 +288,7 @@ class TicketTests(TestCase):
 
         self.ticket.save()
 
-        self.assertTrue(mock_func.called)
+        self.assertEqual(mock_func.call_count, 1)
         self.assertEqual(mock_func.call_args[0][0], self.ticket.location.location_level.tenant.id)
         self.assertEqual(mock_func.call_args[1]['ticket'], self.ticket)
         self.assertEqual(mock_func.call_args[1]['event'], AutomationEvent.STATUS_NEW)
