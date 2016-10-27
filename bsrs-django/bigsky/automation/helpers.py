@@ -13,7 +13,7 @@ class Interpolate(object):
     """
     i18n_FIELDS = ['ticket.priority', 'ticket.status']
 
-    def __init__(self, ticket, translation, **kwargs):
+    def __init__(self, ticket, translation, sms=False, **kwargs):
         """
         :param ticket: Ticket instance associated with the message
         :param automation:
@@ -21,9 +21,14 @@ class Interpolate(object):
             for info that's associated with the automation
         :param translation:
             Translation instance related to the message recipients' Locale
+        :param sms: optional bool - pass as True if this is for an SMS msg
+        :param kwargs:
+            this will build an object on the instance for any additional
+            data needed to populate msg
         """
         self.ticket = ticket
         self.translation = translation
+        self.sms = sms
         self.automation = KwargsAsObject(**kwargs)
 
         self.string_kwargs = {
@@ -61,8 +66,13 @@ class Interpolate(object):
         if tag == 'ticket.url':
             return string.replace(substring, self._ticket_url())
         elif tag == 'ticket.activity':
-            context = {'ticket': self.ticket}
-            return loader.render_to_string('email/ticket-activities/email.txt', context)
+            if self.sms:
+                # here, the `ticket.activity` tag has been used, but this is
+                # an SMS msg, so silently remove the tag and don't interpolate
+                return string.replace(substring, '')
+            else:
+                context = {'ticket': self.ticket}
+                return loader.render_to_string('email/ticket-activities/email.txt', context)
         elif tag in self.i18n_FIELDS:
             model, field = tag.split('.')
             return string.replace(

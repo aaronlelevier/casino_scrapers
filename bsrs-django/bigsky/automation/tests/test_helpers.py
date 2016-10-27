@@ -62,6 +62,13 @@ class InterpolateTests(TestCase):
         self.assertEqual(mock_func.call_args[0][0], 'email/ticket-activities/email.txt')
         self.assertEqual(mock_func.call_args[0][1], {'ticket': self.ticket})
 
+    def test_text__ticket_activity__not_called_if_sms(self):
+        interpolate = helpers.Interpolate(
+            self.ticket, self.translation, sms=True, event=self.event)
+        s = "{{ticket.activity}}"
+        ret = interpolate.text(s)
+        self.assertEqual(ret, '')
+
     def test_text__empty_string(self):
         s = ''
         self.assertEqual(self.interpolate.text(s), '')

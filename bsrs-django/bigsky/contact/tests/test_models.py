@@ -124,6 +124,7 @@ class PhoneNumberManagerTests(TestCase):
 
         self.assertEqual(mock_interpolate.call_args[0][0], self.ticket)
         self.assertEqual(mock_interpolate.call_args[0][1], self.translation)
+        self.assertEqual(mock_interpolate.call_args[1]['sms'], True)
         self.assertEqual(mock_interpolate.call_args[1]['event'], self.event.key)
 
         self.assertTrue(mock_send_sms.called)
