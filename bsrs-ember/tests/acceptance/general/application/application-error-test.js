@@ -8,20 +8,16 @@ const LOC_URL = BASEURLS.base_locations_url;
 const LOCATION_URL = `${LOC_URL}/index`;
 const DETAIL_URL = `${LOC_URL}/${LD.idOne}`;
 
-var originalLoggerError, originalTestAdapterException;
+let originalLoggerError, originalTestAdapterException;
 
 moduleForAcceptance('Acceptance | application error test', {
   error: 500,
   beforeEach() {
     // store = this.application.__container__.lookup('service:simpleStore');
-    originalLoggerError = Ember.Logger.error;
-    originalTestAdapterException = Ember.Test.adapter.exception;
-    Ember.Logger.error = function() {};
-    Ember.Test.adapter.exception = function() {};
+    const { originalLoggerError, originalTestAdapterException } = errorSetup();
   },
   afterEach() {
-    Ember.Logger.error = originalLoggerError;
-    Ember.Test.adapter.exception = originalTestAdapterException;
+    errorTearDown(originalLoggerError, originalTestAdapterException);
   }
 });
 

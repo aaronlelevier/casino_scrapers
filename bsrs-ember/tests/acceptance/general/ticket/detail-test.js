@@ -1058,10 +1058,7 @@ test('clicking update will not transition away from ticket detail and bring in l
 });
 
 test('deep linking with an xhr with a 404 status code will show up in the error component (ticket)', async assert => {
-  let originalLoggerError = Ember.Logger.error;
-  let originalTestAdapterException = Ember.Test.adapter.exception;
-  Ember.Logger.error = function() {};
-  Ember.Test.adapter.exception = function() {};
+  const { originalLoggerError, originalTestAdapterException } = errorSetup();
   clearxhr(detail_xhr);
   clearxhr(list_xhr);
   const exception = `This record does not exist.`;
@@ -1069,8 +1066,7 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(find('[data-test-id="ticket-single-error"]').length, 1);
-  Ember.Logger.error = originalLoggerError;
-  Ember.Test.adapter.exception = originalTestAdapterException;
+  errorTearDown(originalLoggerError, originalTestAdapterException);
 });
 
 test('dt continue button will show up if ticket has a status of draft and can click on it to restart dt', async assert => {
