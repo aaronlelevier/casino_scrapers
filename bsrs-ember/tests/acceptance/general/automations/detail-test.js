@@ -856,17 +856,17 @@ test('get an action sendsms and update it to a new sendsms', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.actionTypeSelectedOne, AATD.keyFive);
-    assert.equal(page.actionSendSmsRecipientOne.replace(/\W/, '').trim(), PD.fullname);
-    assert.equal(page.sendSmsMessageValue, SMSD.messageOne);
+    assert.equal(page.actionTypeSelectedOne, AATD.keyFive, 'Type sendsms selected');
+    assert.equal(page.actionSendSmsRecipientOne.replace(/\W/, '').trim(), PD.fullname, 'full name recipient shows');
+    assert.equal(page.sendSmsMessageValue, SMSD.messageOne, 'sendsms message shows');
   });
   page.sendSmsMessageFillIn(SMSD.messageTwo);
   xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
   selectSearch('.t-action-recipient-select', 'e');
   selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
   andThen(() => {
-    assert.equal(page.sendSmsMessageValue, SMSD.messageTwo);
-    assert.equal(page.actionSendSmsRecipientTwo.replace(/\W/, '').trim(), PD.fullnameBoy2);
+    assert.equal(page.sendSmsMessageValue, SMSD.messageTwo, 'message is updated');
+    assert.equal(page.actionSendSmsRecipientTwo.replace(/\W/, '').trim(), PD.fullnameBoy2, 'new recipient shows');
   });
   let payload = AF.put({
     actions: [{
