@@ -102,5 +102,8 @@ class Interpolate(object):
         to make it a plain text.
         """
         html_email = self.get_html_email(base_template, **context)
-        body = re.search('<body.*?>(.+?)</body>', html_email, re.DOTALL).group(0)
+        try:
+            body = re.search('<body.*?>(.+?)</body>', html_email, re.DOTALL).group(0)
+        except AttributeError:
+            body = ''
         return strip_tags(body)

@@ -283,22 +283,19 @@ class EmailManagerTests(TestCase):
         self.assertFalse(mock_func.called)
 
     @patch("contact.models.EmailManager.send_email")
-    def test_process_send_email__email_is_type_work(self, mock_func):
+    def test_process_send_email__is_called_with_html_and_text_content(self, mock_func):
+        subject = 'Foo'
+        self.action.content['subject'] = subject
         work_email_type = create_email_type(EmailType.WORK)
-        email = create_contact(Email, self.person, work_email_type)
-        self.action.content.update({
-            'subject': "Emergency at {{location.name}}",
-            'body': "Priority {{ticket.priority}} to view the ticket go to {{ticket.url}}"
-        })
-        interpolate = Interpolate(self.ticket, self.translation, event=self.event.key)
-        subject = interpolate.text(self.action.content['subject'])
-        body = interpolate.text(self.action.content['body'])
+        person_email = create_contact(Email, self.person, work_email_type)
 
         Email.objects.process_send_email(self.ticket, self.action, self.event.key)
 
-        self.assertEqual(mock_func.call_args[0][0], email)
-        self.assertEqual(mock_func.call_args[0][1], subject)
-        self.assertEqual(mock_func.call_args[0][2], body)
+        self.assertEqual(mock_func.call_count, 1)
+        self.assertEqual(mock_func.call_args[0][0], person_email)
+        self.assertTrue(mock_func.call_args[0][1], subject)
+        self.assertTrue(mock_func.call_args[1]['html_content'])
+        self.assertTrue(mock_func.call_args[1]['text_content'])
 
     @patch("contact.models.Interpolate")
     def test_process_send_email__calls_send_email_with_interpolate(self, mock_func):
@@ -313,6 +310,7 @@ class EmailManagerTests(TestCase):
 
     @patch("contact.models.Interpolate.get_html_email")
     def test_process_send_email__get_html_email__has_ticket_activity(self, mock_func):
+        mock_func.return_value = '<body>foo</body'
         self.action.content['body'] = "Foo {{ticket.activity}} bar"
         html_base_template = os.path.join(settings.TEMPLATES_DIR,
                                      'email/test/base.html')
@@ -329,6 +327,7 @@ class EmailManagerTests(TestCase):
 
     @patch("contact.models.Interpolate.get_html_email")
     def test_process_send_email__get_html_email__no_ticket_activity(self, mock_func):
+        mock_func.return_value = '<body>foo</body'
         self.action.content['body'] = "Foo bar"
         html_base_template = os.path.join(settings.TEMPLATES_DIR,
                                      'email/test/base.html')
@@ -340,6 +339,22 @@ class EmailManagerTests(TestCase):
         self.assertEqual(mock_func.call_args[0][0], html_base_template)
         self.assertEqual(len(mock_func.call_args[1]), 1)
         self.assertTrue(mock_func.call_args[1]['body'])
+
+    @patch("contact.models.Interpolate.get_text_email")
+    def test_process_send_email__get_text_email__has_ticket_activity(self, mock_func):
+        self.action.content['body'] = "Foo {{ticket.activity}} bar"
+        html_base_template = os.path.join(settings.TEMPLATES_DIR,
+                                     'email/test/base.html')
+        work_email_type = create_email_type(EmailType.WORK)
+        create_contact(Email, self.person, work_email_type)
+
+        Email.objects.process_send_email(self.ticket, self.action, self.event.key)
+
+        self.assertEqual(mock_func.call_args[0][0], html_base_template)
+        self.assertEqual(len(mock_func.call_args[1]), 3)
+        self.assertTrue(mock_func.call_args[1]['body'])
+        self.assertTrue(mock_func.call_args[1]['ticket_activity'])
+        self.assertEqual(mock_func.call_args[1]['ticket'], self.ticket)
 
     @patch("contact.models.EmailManager.send_email")
     def test_process_send_email__called_for_person_and_role(self, mock_func):
