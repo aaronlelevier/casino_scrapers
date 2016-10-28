@@ -1,4 +1,5 @@
 from mock import patch
+import os
 
 from django.conf import settings
 from django.test import TestCase
@@ -309,6 +310,36 @@ class EmailManagerTests(TestCase):
         self.assertEqual(mock_func.call_args[0][0], self.ticket)
         self.assertEqual(mock_func.call_args[0][1], self.translation)
         self.assertEqual(mock_func.call_args[1]['event'], self.event.key)
+
+    @patch("contact.models.Interpolate.get_html_email")
+    def test_process_send_email__get_html_email__has_ticket_activity(self, mock_func):
+        self.action.content['body'] = "Foo {{ticket.activity}} bar"
+        html_base_template = os.path.join(settings.TEMPLATES_DIR,
+                                     'email/test/base.html')
+        work_email_type = create_email_type(EmailType.WORK)
+        create_contact(Email, self.person, work_email_type)
+
+        Email.objects.process_send_email(self.ticket, self.action, self.event.key)
+
+        self.assertEqual(mock_func.call_args[0][0], html_base_template)
+        self.assertEqual(len(mock_func.call_args[1]), 3)
+        self.assertTrue(mock_func.call_args[1]['body'])
+        self.assertTrue(mock_func.call_args[1]['ticket_activity'])
+        self.assertEqual(mock_func.call_args[1]['ticket'], self.ticket)
+
+    @patch("contact.models.Interpolate.get_html_email")
+    def test_process_send_email__get_html_email__no_ticket_activity(self, mock_func):
+        self.action.content['body'] = "Foo bar"
+        html_base_template = os.path.join(settings.TEMPLATES_DIR,
+                                     'email/test/base.html')
+        work_email_type = create_email_type(EmailType.WORK)
+        create_contact(Email, self.person, work_email_type)
+
+        Email.objects.process_send_email(self.ticket, self.action, self.event.key)
+
+        self.assertEqual(mock_func.call_args[0][0], html_base_template)
+        self.assertEqual(len(mock_func.call_args[1]), 1)
+        self.assertTrue(mock_func.call_args[1]['body'])
 
     @patch("contact.models.EmailManager.send_email")
     def test_process_send_email__called_for_person_and_role(self, mock_func):

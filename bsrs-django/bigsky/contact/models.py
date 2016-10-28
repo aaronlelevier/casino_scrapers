@@ -283,7 +283,28 @@ class EmailManager(EmailAndSmsMixin, BaseManager):
                 interpolate = Interpolate(ticket, person.locale.translation_, event=event)
 
                 subject = interpolate.text(action.content.get('subject', ''))
-                body = interpolate.text(action.content.get('body', ''))
+
+                context = {}
+                raw_body = action.content.get('body', '')
+                if interpolate.contains_ticket_activity(raw_body):
+                    context.update({
+                        'ticket_activity': True,
+                        'ticket': ticket
+                    })
+                body = interpolate.text(raw_body)
+                context['body'] = body
+
+                # TODO: this doesn't have 'ticket.activity' yet, and
+                # needs the HTML stripped, so User doesn't have to
+                # define the template twice
+                text_content = body
+                # TODO: this base email template is hard coded at this
+                # time. This should be configurable based on the Tenant
+                html_base_template = os.path.join(settings.TEMPLATES_DIR,
+                                     'email/test/base.html')
+                html_content = interpolate.get_html_email(
+                    html_base_template, **context)
+
                 self.send_email(email, subject, body)
 
     def send_email(self, email, subject, body):

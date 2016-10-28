@@ -146,3 +146,18 @@ class InterpolateTests(TestCase):
             '<li>Type: {}</li>'.format(ticket_activity.type.name),
             ret
         )
+
+    def test_get_html_email__dont_populate_ticket_activity(self):
+        # w/o ticket_activity=True, ticket=ticket kwargs, the ticket
+        # activity log content won't be generated
+        ticket_activity = self.ticket.activities.first()
+        self.assertTrue(ticket_activity)
+        body = self.interpolate.text('{{location.name}}')
+
+        ret = self.interpolate.get_html_email(
+            self.html_base_template, body=body)
+
+        self.assertNotIn(
+            '<li>Type: {}</li>'.format(ticket_activity.type.name),
+            ret
+        )
