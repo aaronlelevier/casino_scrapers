@@ -1,3 +1,4 @@
+import re
 import os
 from mock import patch
 
@@ -102,6 +103,8 @@ class InterpolateTests(TestCase):
         s = "Foo {{ticket.activity}}"
         self.assertTrue(self.interpolate.contains_ticket_activity(s))
 
+    # get_html_email
+
     def test_get_html_email__combine_base_template_with_body(self):
         title = '<title>Big Sky</title>'
         with open(self.html_base_template) as f:
@@ -115,7 +118,6 @@ class InterpolateTests(TestCase):
         self.assertIn(self.ticket.location.name, ret)
         self.assertIn(self.translation.values[self.ticket.priority.name], ret)
         self.assertIn(self.interpolate._ticket_url(), ret)
-        self.assertNotIn('\n', ret)
 
     def test_get_html_email__inline_css(self):
         with open(self.html_base_template) as f:
@@ -159,5 +161,36 @@ class InterpolateTests(TestCase):
 
         self.assertNotIn(
             '<li>Type: {}</li>'.format(ticket_activity.type.name),
+            ret
+        )
+
+    # get_text_email
+
+    def test_get_text_email(self):
+        title = '<h1>Test Email</h1>'
+        with open(self.html_base_template) as f:
+            base = f.read().replace('\n', '')
+        self.assertIn(title, base)
+
+        ret = self.interpolate.get_text_email(
+                self.html_base_template, body=self.html_email_body)
+
+        self.assertIn('Test Email', ret)
+        self.assertFalse(re.findall('<[^<]+?>', ret))
+        self.assertIn(self.ticket.location.name, ret)
+        self.assertIn(self.translation.values[self.ticket.priority.name], ret)
+        self.assertIn(self.interpolate._ticket_url(), ret)
+
+    def test_get_text_email__ticket_activity(self):
+        ticket_activity = self.ticket.activities.first()
+        self.assertTrue(ticket_activity)
+        body = self.interpolate.text('{{location.name}}')
+
+        ret = self.interpolate.get_text_email(
+                self.html_base_template, body=body, ticket_activity=True, ticket=self.ticket)
+
+        self.assertFalse(re.findall('<[^<]+?>', ret))
+        self.assertIn(
+            'Type: {}'.format(ticket_activity.type.name),
             ret
         )

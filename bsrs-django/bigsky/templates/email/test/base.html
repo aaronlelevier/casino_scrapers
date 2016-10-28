@@ -8,7 +8,7 @@
   </head>
   <body>
     <h1>Test Email</h1>
-    {{body}}
+    {{body|safe}}
     {%if ticket_activity %}
       {% for a in ticket.activities.all %}
         <ul>

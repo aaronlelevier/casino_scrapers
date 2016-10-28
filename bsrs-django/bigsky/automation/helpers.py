@@ -2,6 +2,7 @@ import re
 
 from django.conf import settings
 from django.template import loader
+from django.utils.html import strip_tags
 
 from premailer import transform
 
@@ -93,4 +94,13 @@ class Interpolate(object):
             body text string string of the email already interpolated
         """
         return transform(
-            loader.render_to_string(base_template, context)).replace('\n', '')
+            loader.render_to_string(base_template, context))
+
+    def get_text_email(self, base_template, **context):
+        """
+        Only the body of the HTML email and strips out the HTML tags
+        to make it a plain text.
+        """
+        html_email = self.get_html_email(base_template, **context)
+        body = re.search('<body.*?>(.+?)</body>', html_email, re.DOTALL).group(0)
+        return strip_tags(body)
