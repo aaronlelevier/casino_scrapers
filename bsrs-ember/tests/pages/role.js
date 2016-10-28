@@ -12,6 +12,7 @@ let { text, visitable, fillable, clickable, count, value, hasClass } = PageObjec
 const PREFIX = config.APP.NAMESPACE;
 const BASE_ROLES_URL = BASEURLS.base_roles_url;
 const DETAIL_URL = `${BASE_ROLES_URL}/${RD.idOne}`;
+const NEW_URL = `${BASE_ROLES_URL}/new/1`;
 const ROLETYPE = '.t-role-role-type .ember-basic-dropdown-trigger';
 const ROLETYPE_DROPDOWN = options;
 const LOCATIONLEVEL = '.t-location-level-select .ember-basic-dropdown-trigger';
@@ -26,6 +27,7 @@ export default PageObject.create({
   visit: visitable(ROLE_LIST_URL),
   visitRoles: visitable(ROLE_LIST_URL),
   visitDetail: visitable(DETAIL_URL),
+  visitNew: visitable(NEW_URL),
   categoryClickDropdown: clickable(CATEGORY),
   categorySelectText: text('.t-role-category-select .ember-basic-dropdown-trigger'),
   categorySelected: text(CATEGORY_ONE),
