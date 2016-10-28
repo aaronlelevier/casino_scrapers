@@ -17,7 +17,7 @@ var store, subject, dtd, run = Ember.run;
 
 module('unit: dtd deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-list', 'model:dtd-link', 'model:link', 'model:dtd-field', 'model:field', 'model:option', 'model:field-option', 'model:link-priority-list', 'model:ticket-priority', 'model:ticket-status', 'model:category', 'model:category-children', 'model:model-category', 'model:attachment', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-list', 'model:dtd-link', 'model:link', 'model:dtd-field', 'model:field', 'model:option', 'model:field-option', 'model:link-priority-list', 'model:ticket-priority', 'model:ticket-status', 'model:category', 'model:category-children', 'model:model-category', 'model:attachment', 'model:generic-join-attachment', 'service:i18n']);
     subject = DTDDeserializer.create({simpleStore: store});
     run(() => {
       store.push('ticket-priority', {id: TP.priorityOneId, name: TP.priorityOne});
@@ -262,7 +262,7 @@ test('dtd link gets updated destination from server', assert => {
   const json = DTDF.generate(DTD.idOne);
   json.links[0].destination_fk = DTD.idThree;
   run(() => {
-      subject.deserialize(json, DTD.idOne);
+    subject.deserialize(json, DTD.idOne);
   });
   dtd = store.find('dtd', DTD.idOne);
   assert.equal(dtd.get('id'), DTD.idOne);
@@ -284,7 +284,7 @@ test('dtd link that is dirty gets ignores destination from server', assert => {
   assert.ok(dtd.get('isDirtyOrRelatedDirty'));
   const json = DTDF.generate(DTD.idOne);
   run(() => {
-      subject.deserialize(json, DTD.idOne);
+    subject.deserialize(json, DTD.idOne);
   });
   dtd = store.find('dtd', DTD.idOne);
   assert.equal(dtd.get('id'), DTD.idOne);
@@ -295,106 +295,108 @@ test('dtd link that is dirty gets ignores destination from server', assert => {
 
 //ATTACHMENT
 test('attachment added for each attachment on dtd', (assert) => {
-    let json = DTDF.generate(DTD.idOne);
-    json.attachments = [{id: DTD.attachmentOneId}];
-    run(() => {
-        subject.deserialize(json, json.id);
-    });
-    dtd = store.find('dtd', DTD.idOne);
-    let attachments = dtd.get('attachments');
-    assert.equal(attachments.get('length'), 1);
-    assert.equal(attachments.objectAt(0).get('id'), DTD.attachmentOneId);
-    assert.ok(dtd.get('isNotDirty'));
-    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-    assert.equal(store.find('attachment').get('length'), 1);
+  let json = DTDF.generate(DTD.idOne);
+  json.attachments = [{id: DTD.attachmentOneId}];
+  run(() => {
+    subject.deserialize(json, json.id);
+  });
+  dtd = store.find('dtd', DTD.idOne);
+  let attachments = dtd.get('attachments');
+  assert.equal(attachments.get('length'), 1);
+  assert.equal(attachments.objectAt(0).get('id'), DTD.attachmentOneId);
+  assert.ok(dtd.get('isNotDirty'));
+  assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(store.find('attachment').get('length'), 1);
 });
 
 test('attachment added for each attachment on dtd (when dtd has existing attachments)', (assert) => {
-    dtd = store.push('dtd', {id: DTD.idOne, current_attachment_fks: [DTD.attachmentTwoId], previous_attachments_fks: [DTD.attachmentTwoId]});
-    store.push('attachment', {id: DTD.attachmentTwoId});
-    assert.equal(dtd.get('attachments').get('length'), 1);
-    const json = DTDF.generate(DTD.idOne);
-    json.attachments = [{id: DTD.attachmentTwoId}, {id: DTD.attachmentOneId}];
-    run(function() {
-        subject.deserialize(json, json.id);
-    });
-    dtd = store.find('dtd', DTD.idOne);
-    const attachments = dtd.get('attachments');
-    assert.equal(attachments.get('length'), 2);
-    assert.equal(attachments.objectAt(0).get('id'), DTD.attachmentTwoId);
-    assert.equal(attachments.objectAt(1).get('id'), DTD.attachmentOneId);
-    assert.ok(dtd.get('isNotDirty'));
-    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-    assert.equal(store.find('attachment').get('length'), 2);
+  dtd = store.push('dtd', {id: DTD.idOne, generic_attachments_fks: [8]});
+  store.push('generic-join-attachment', {id: 4, attachment_pk: DTD.attachmentTwoId, generic_pk: DTD.idOne});
+  dtd.save();
+  store.push('attachment', {id: DTD.attachmentTwoId});
+  assert.equal(dtd.get('attachments').get('length'), 1);
+  const json = DTDF.generate(DTD.idOne);
+  json.attachments = [{id: DTD.attachmentTwoId}, {id: DTD.attachmentOneId}];
+  run(function() {
+    subject.deserialize(json, json.id);
+  });
+  dtd = store.find('dtd', DTD.idOne);
+  const attachments = dtd.get('attachments');
+  assert.equal(attachments.get('length'), 2);
+  assert.equal(attachments.objectAt(0).get('id'), DTD.attachmentTwoId);
+  assert.equal(attachments.objectAt(1).get('id'), DTD.attachmentOneId);
+  assert.ok(dtd.get('isNotDirty'));
+  assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(store.find('attachment').get('length'), 2);
 });
 
 /*LINK CATEGORY M2M*/
 test('model-category m2m is set up correctly using deserialize single (starting with no m2m relationship)', assert => {
-    let response = DTDF.generate(DTD.idOne);
-    const link_id = response.links[0].id;
-    run(() => {
-        subject.deserialize(response, DTD.idOne);
-    });
-    let original = store.find('link', link_id);
-    let categories = original.get('sorted_categories');
-    let m2m_categories = original.get('model_categories');
-    let m2m_fks = original.get('model_categories_fks');
-    let m2m_ids = original.get('model_categories_ids');
-    assert.equal(categories.get('length'), 3);
-    assert.equal(m2m_categories.get('length'), 3);
-    assert.equal(m2m_fks.get('length'), 3);
-    assert.equal(m2m_ids.get('length'), 3);
-    assert.equal(categories.objectAt(0).get('id'), CD.idOne);
-    assert.equal(categories.objectAt(0).get('name'), CD.nameOne);
-    assert.ok(!categories.objectAt(0).get('parent_id'));
-    assert.equal(categories.objectAt(1).get('id'), CD.idPlumbing);
-    assert.equal(categories.objectAt(1).get('name'), CD.nameRepairChild);
-    assert.equal(categories.objectAt(1).get('parent_id'), CD.idOne);
-    assert.equal(categories.objectAt(2).get('id'), CD.idPlumbingChild);
-    const link_cat = store.find('model-category');
-    assert.equal(link_cat.get('length'), 3);
-    assert.ok(original.get('isNotDirty'));
-    assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
+  let response = DTDF.generate(DTD.idOne);
+  const link_id = response.links[0].id;
+  run(() => {
+    subject.deserialize(response, DTD.idOne);
+  });
+  let original = store.find('link', link_id);
+  let categories = original.get('sorted_categories');
+  let m2m_categories = original.get('model_categories');
+  let m2m_fks = original.get('model_categories_fks');
+  let m2m_ids = original.get('model_categories_ids');
+  assert.equal(categories.get('length'), 3);
+  assert.equal(m2m_categories.get('length'), 3);
+  assert.equal(m2m_fks.get('length'), 3);
+  assert.equal(m2m_ids.get('length'), 3);
+  assert.equal(categories.objectAt(0).get('id'), CD.idOne);
+  assert.equal(categories.objectAt(0).get('name'), CD.nameOne);
+  assert.ok(!categories.objectAt(0).get('parent_id'));
+  assert.equal(categories.objectAt(1).get('id'), CD.idPlumbing);
+  assert.equal(categories.objectAt(1).get('name'), CD.nameRepairChild);
+  assert.equal(categories.objectAt(1).get('parent_id'), CD.idOne);
+  assert.equal(categories.objectAt(2).get('id'), CD.idPlumbingChild);
+  const link_cat = store.find('model-category');
+  assert.equal(link_cat.get('length'), 3);
+  assert.ok(original.get('isNotDirty'));
+  assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('link-category m2m is added after deserialize single (starting with existing m2m relationship)', (assert) => {
-    let response = DTDF.generate(DTD.idOne);
-    const link_id = response.links[0].id;
-    let dtd = store.push('dtd', {id: DTD.idOne, dtd_links_fks: [DTDL.idOne]});
-    let link = store.push('link', {id: LINK.idOne, model_categories_fks: [TICKET_CD.idOne]});
-    store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
-    store.push('model-category', {id: TICKET_CD.idOne, model_pk: link_id, category_pk: CD.idGridOne});
-    store.push('category', {id: CD.idGridOne, name: CD.nameLossPreventionChild});
-    assert.equal(link.get('categories.length'), 1);
-    assert.equal(link.get('model_categories_fks').length, 1);
-    assert.ok(link.get('categoriesIsNotDirty'));
-    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
-    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-    run(() => {
-        subject.deserialize(response, DTD.idOne);
-    });
-    let categories = link.get('sorted_categories');
-    assert.equal(categories.get('length'), 3);
-    assert.equal(categories.objectAt(0).get('name'), CD.nameOne);
-    assert.equal(categories.objectAt(1).get('name'), CD.nameRepairChild);
-    assert.equal(categories.objectAt(2).get('name'), CD.namePlumbingChild);
-    assert.ok(link.get('isNotDirty'));
-    assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
-    assert.ok(link.get('categoriesIsNotDirty'));
-    assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-    assert.equal(link.get('model_categories_fks').length, 3);
-    assert.equal(link.get('model_categories_ids').length, 3);
-    assert.equal(store.find('model-category').get('length'), 4);
+  let response = DTDF.generate(DTD.idOne);
+  const link_id = response.links[0].id;
+  let dtd = store.push('dtd', {id: DTD.idOne, dtd_links_fks: [DTDL.idOne]});
+  let link = store.push('link', {id: LINK.idOne, model_categories_fks: [TICKET_CD.idOne]});
+  store.push('dtd-link', {id: DTDL.idOne, dtd_pk: DTD.idOne, link_pk: LINK.idOne});
+  store.push('model-category', {id: TICKET_CD.idOne, model_pk: link_id, category_pk: CD.idGridOne});
+  store.push('category', {id: CD.idGridOne, name: CD.nameLossPreventionChild});
+  assert.equal(link.get('categories.length'), 1);
+  assert.equal(link.get('model_categories_fks').length, 1);
+  assert.ok(link.get('categoriesIsNotDirty'));
+  assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+  run(() => {
+    subject.deserialize(response, DTD.idOne);
+  });
+  let categories = link.get('sorted_categories');
+  assert.equal(categories.get('length'), 3);
+  assert.equal(categories.objectAt(0).get('name'), CD.nameOne);
+  assert.equal(categories.objectAt(1).get('name'), CD.nameRepairChild);
+  assert.equal(categories.objectAt(2).get('name'), CD.namePlumbingChild);
+  assert.ok(link.get('isNotDirty'));
+  assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(link.get('categoriesIsNotDirty'));
+  assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(link.get('model_categories_fks').length, 3);
+  assert.equal(link.get('model_categories_ids').length, 3);
+  assert.equal(store.find('model-category').get('length'), 4);
 });
 
 test('categories may not exist on deserialization single', assert => {
-    let response = DTDF.generate(DTD.idOne);
-    const link_id = response.links[0].id;
-    delete response.links[0].categories;
-    assert.equal(response.links.categories, undefined);
-    run(() => {
-        subject.deserialize(response, DTD.idOne);
-    });
-    const link = store.find('link', link_id);
-    assert.equal(link.get('categories').get('length'), 0);
+  let response = DTDF.generate(DTD.idOne);
+  const link_id = response.links[0].id;
+  delete response.links[0].categories;
+  assert.equal(response.links.categories, undefined);
+  run(() => {
+    subject.deserialize(response, DTD.idOne);
+  });
+  const link = store.find('link', link_id);
+  assert.equal(link.get('categories').get('length'), 0);
 });

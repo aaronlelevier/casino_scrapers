@@ -33,7 +33,7 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     // m2m
     let cc_json = response.cc;
     delete response.cc;
-    let attachments_json = response.attachments;
+    let attachments_json = response.attachments.map((id) => { return { id: id }; });
     delete response.attachments;
     const categories_json = response.categories;
     delete response.categories;

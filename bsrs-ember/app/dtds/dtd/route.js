@@ -12,11 +12,13 @@ export default Ember.Route.extend(FindById, PriorityMixin, StatusMixin, {
   closeTabRedirect: 'admin',
   module: 'dtd',
   displayText: Ember.computed(function() { return this.get('i18n').t('admin.dtd.one'); }),
-  transitionCB() {
-    return {
-      //should be an array
-      otherFuncs: this.get('attachmentRepository').removeAllUnrelated()
-    };
+  /* @method transitionCB
+   * removes attachments from local store and find newly attached files and sends out batch delete 
+   */ 
+  transitionCB(model) {
+    const remove_attachment_ids = model.get('remove_attachment_ids');
+    this.get('attachmentRepository').removeAllUnrelated(remove_attachment_ids);
+    model.rollback();
   },
   tabList: Ember.inject.service(),
   model(params){

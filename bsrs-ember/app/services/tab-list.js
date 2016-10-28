@@ -95,11 +95,14 @@ export default Ember.Service.extend({
       }
     });
   },
-  callCB(tab) {
+  /* @method callCB
+   * e.g. batch delete attachments
+   */
+  callCB(tab, model) {
     const cb = tab.get('transitionCB');
-    if(cb) {
-      cb();    
-    } 
+    if (cb) {
+      cb(model);
+    }
   },
   findTab(id) {
     const store = this.get('simpleStore');

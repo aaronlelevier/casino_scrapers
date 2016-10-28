@@ -70,7 +70,7 @@ test('upload will post form data, show progress and on save append the attachmen
   });
 });
 
-test('uploading a file, then rolling back should throw out any previously associated attachments', (assert) => {
+test('scott uploading a file, then rolling back should throw out any previously associated attachments', (assert) => {
   let model = store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
@@ -90,11 +90,9 @@ test('uploading a file, then rolling back should throw out any previously associ
     assert.ok(model.get('isDirtyOrRelatedDirty'));
     assert.equal(find('.dirty').length, 1);
   });
-  ajax(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
-  visit(TICKET_URL);
   click('.t-tab-close:eq(0)');
   andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
+    assert.equal(currentURL(), DETAIL_URL);
     waitFor(assert, () => {
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -104,6 +102,7 @@ test('uploading a file, then rolling back should throw out any previously associ
     });
   });
   ajax(`${ATTACHMENTS_URL}batch-delete/`, 'DELETE', {ids: [UUID.value]}, {}, 204, {});
+  ajax(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
   click('.t-modal-rollback-btn');
   andThen(() => {
     assert.equal(model.get('attachments').get('length'), 0);

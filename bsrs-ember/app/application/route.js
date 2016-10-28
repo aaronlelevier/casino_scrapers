@@ -138,10 +138,8 @@ var ApplicationRoute = Route.extend({
         this.trx.tabService = tabService;
 
       } else {
-        /* rollback if contact info */
-        if(model.get('id')) { model.rollback(); }
-
-        tabService.callCB(tab);
+        // callback to do stuff like batch delete attachments
+        tabService.callCB(tab, model);
 
         /* Redirect if clicked x on tab but stay on route if on other route...If new route, close tab, transition if at same module, and remove the model if in unsaved state (and not dirty) */
         const currentPath = this.router.generate(this.controller.currentPath);

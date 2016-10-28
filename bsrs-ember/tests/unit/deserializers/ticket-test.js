@@ -786,7 +786,7 @@ test('model-category m2m added even when ticket did not exist before the deseria
 
 test('attachment added for each attachment on ticket', (assert) => {
   let json = TF.generate(TD.idOne);
-  json.attachments = [{id: TD.attachmentOneId}];
+  json.attachments = [TD.attachmentOneId];
   run(function() {
     subject.deserialize(json, json.id);
   });
@@ -806,7 +806,7 @@ test('attachment added for each attachment on ticket (when ticket has existing a
   store.push('attachment', {id: TD.attachmentTwoId});
   assert.equal(ticket.get('attachments').get('length'), 1);
   let json = TF.generate(TD.id);
-  json.attachments = [{id: TD.attachmentTwoId}, {id: TD.attachmentOneId}];
+  json.attachments = [TD.attachmentTwoId, TD.attachmentOneId];
   run(function() {
     subject.deserialize(json, json.id);
   });

@@ -12,18 +12,11 @@ var AttachmentRepo = Ember.Object.extend({
     });
     PromiseMixin.xhr(`${PREFIX}/admin/attachments/${id}/`, 'DELETE');
   },
-  removeAllUnrelated() {
-    let store = this.get('simpleStore');
-    let ids_array = store.find('attachment').toArray();
-    let ids = ids_array.filter(function(attachment) {
-      return attachment.get('rollback');
-    }).mapBy('id');
-    run(() => {
-      ids.forEach((id) => {
-        store.remove('attachment', id);
-      });
-    });
-    if(ids.length > 0) {
+  /* @method removeAllUnrelated
+   * when rolling back, any attachment that exists on the _ids array but not on the _fks array
+   */
+  removeAllUnrelated(ids) {
+    if(ids && ids.length > 0) {
       let endpoint = `${PREFIX}/admin/attachments/batch-delete/`;
       let options = {method: 'DELETE', cache: false, data: {ids: ids}, url: endpoint};
       return new Ember.RSVP.Promise(function(resolve, reject) {
@@ -54,7 +47,7 @@ var AttachmentRepo = Ember.Object.extend({
     run(() => {
       store.push('attachment', {id: id, new: true, title: file.name, percent: 0});
     });
-    model.add_attachment(id);
+    model.add_attachment({ id: id });
     let data = new FormData();
     data.append('id', id);
     data.append('filename', file.name);

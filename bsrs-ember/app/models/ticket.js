@@ -128,6 +128,14 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     this.person_status_role_setup(new_assignee);
     this.change_assignee_container(new_assignee.id);
   },
+  /* @method saveAttachmentsContainer
+   * sets new flag so template can render differently for the attachment
+   */
+  saveAttachmentsContainer() {
+    this.get('attachments').forEach((att) => {
+      att.save();
+    });
+  },
   serialize() {
     const { id, simpleStore } = this.getProperties('id', 'simpleStore');
     let payload = {
@@ -184,6 +192,20 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
       get(this, 'simpleStore').remove('ticket', get(this, 'id'));
     });
   },
+  /* @method rollbackAttachmentsContainer
+   * sets attachment fks to be removed in transitionCB from route
+   */ 
+  rollbackAttachmentsContainer() {
+    const store = this.get('simpleStore');
+    const attachment_ids = this.get('attachments_ids');
+    const previous_attachment_fks = this.get('generic_attachments_fks').map((m2m_fk) => {
+      const m2m = store.find('generic-join-attachment', m2m_fk);
+      return m2m.get('attachment_pk');
+    });
+    const remove_attachment_ids = attachment_ids.filter(id => !previous_attachment_fks.includes(id));
+    remove_attachment_ids.forEach((attachment_id) => store.remove('attachment', attachment_id));
+    store.push('ticket', {id: this.get('id'), remove_attachment_ids: remove_attachment_ids});
+  },
   rollback() {
     this.rollbackStatus();
     this.rollbackPriority();
@@ -191,6 +213,7 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     this.rollbackCc();
     this.rollbackCategories();
     this.rollbackAssignee();
+    this.rollbackAttachmentsContainer();
     this.rollbackAttachments();
     this._super(...arguments);
   },
@@ -199,6 +222,7 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     this.savePriority();
     this.saveCc();
     this.saveAssignee();
+    this.saveAttachmentsContainer();
     this.saveAttachments();
     this.saveCategories();
     this.saveLocation();

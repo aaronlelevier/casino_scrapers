@@ -3,7 +3,6 @@ const { run } = Ember;
 import inject from 'bsrs-ember/utilities/store';
 import equal from 'bsrs-ember/utilities/equal';
 import OptConf from 'bsrs-ember/mixins/optconfigure/dtd';
-import AttachmentMixin from 'bsrs-ember/mixins/model/attachment';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { validator, buildValidations } from 'ember-cp-validations';
 import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
@@ -26,15 +25,15 @@ const Validations = buildValidations({
   }),
 });
 
-var DTDModel = Model.extend(Validations, OptConf, AttachmentMixin, {
+var DTDModel = Model.extend(Validations, OptConf, {
   init() {
     many_to_many.bind(this)('link', 'dtd', {plural:true, dirty:false});
     many_to_many.bind(this)('field', 'dtd', {plural:true, dirty:false});
+    many_to_many.bind(this)('attachment', 'generic', {plural: true});
     this._super(...arguments);
   },
   simpleStore: Ember.inject.service(),
-  current_attachment_fks: [],
-  previous_attachments_fks: [],
+  generic_attachments_fks: [],
   key: attr(''),
   description: attr(''),
   note: attr(''),
@@ -82,14 +81,29 @@ var DTDModel = Model.extend(Validations, OptConf, AttachmentMixin, {
       link_type: this.get('link_type'),
       fields: fields,
       links: links,
-      attachments: this.get('attachment_ids')
+      attachments: this.get('attachments_ids')
     };
+  },
+  /* @method rollbackAttachmentsContainer
+   * sets attachment fks to be removed in transitionCB from route
+   */ 
+  rollbackAttachmentsContainer() {
+    const store = this.get('simpleStore');
+    const attachment_ids = this.get('attachments_ids');
+    const previous_attachment_fks = this.get('generic_attachments_fks').map((m2m_fk) => {
+      const m2m = store.find('generic-join-attachment', m2m_fk);
+      return m2m.get('attachment_pk');
+    });
+    const remove_attachment_ids = attachment_ids.filter(id => !previous_attachment_fks.includes(id));
+    remove_attachment_ids.forEach((attachment_id) => store.remove('attachment', attachment_id));
+    store.push('dtd', {id: this.get('id'), remove_attachment_ids: remove_attachment_ids});
   },
   rollback() {
     this.linkRollbackContainer();
     this.rollbackLinks();
     this.fieldRollbackContainer();
     this.rollbackFields();
+    this.rollbackAttachmentsContainer();
     this.rollbackAttachments();
     this._super(...arguments);
   },
@@ -105,11 +119,17 @@ var DTDModel = Model.extend(Validations, OptConf, AttachmentMixin, {
       model.rollback();
     });
   },
+  saveAttachmentsContainer() {
+    this.get('attachments').forEach((attachment) => {
+      attachment.save();
+    });
+  },
   save(){
     this.saveLinksContainer();
     this.saveLinks();
     this.saveFieldsContainer();
     this.saveFields();
+    this.saveAttachmentsContainer();
     this.saveAttachments();
     this._super(...arguments);
   },
@@ -130,27 +150,6 @@ var DTDModel = Model.extend(Validations, OptConf, AttachmentMixin, {
   removeRecord(){
     run(() => {
       this.get('simpleStore').remove('dtd', this.get('id'));
-    });
-  },
-  remove_attachment(attachment_id) {
-    const updated_fks = this._super(attachment_id);
-    run(() => {
-      this.get('simpleStore').push('dtd', {id: this.get('id'), current_attachment_fks: updated_fks});
-    });
-  },
-  add_attachment(attachment_id) {
-    const current_fks = this._super(attachment_id);
-    run(() => {
-      this.get('simpleStore').push('dtd', {id: this.get('id'), current_attachment_fks: current_fks.concat(attachment_id).uniq()});
-    });
-  },
-  saveAttachments() {
-    const fks = this.get('current_attachment_fks');
-    run(() => {
-      this.get('simpleStore').push('dtd', {id: this.get('id'), previous_attachments_fks: fks});
-    });
-    this.get('attachments').forEach((attachment) => {
-      attachment.save();
     });
   },
 });

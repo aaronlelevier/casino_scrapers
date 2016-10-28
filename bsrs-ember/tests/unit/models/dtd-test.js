@@ -18,7 +18,7 @@ var store, dtd, dtd_2, link, priority, status, field;
 
 module('unit: dtd test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-link', 'model:link', 'model:ticket-priority', 'model:ticket-status', 'model:field', 'model:dtd-field', 'model:option', 'model:field-option', 'model:attachment', 'model:category', 'model:model-category', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-link', 'model:link', 'model:ticket-priority', 'model:ticket-status', 'model:field', 'model:dtd-field', 'model:option', 'model:field-option', 'model:attachment', 'model:category', 'model:model-category', 'model:generic-join-attachment', 'service:i18n']);
     run(() => {
       dtd = store.push('dtd', {id: DTD.idOne, dtd_links_fks: [DTDL.idOne]});
       dtd_2 = store.push('dtd', {id: DTD.idTwo, destination_links: [LINK.idOne]});
@@ -171,7 +171,7 @@ test('remove_field', (assert) => {
   assert.ok(dtd.get('isDirtyOrRelatedDirty'));
 });
 
-test('if add_field but no type, then wont serialize and wont send in payload to server (saveRelated will remove it b/c invalid)', (assert) => {
+test('if add_field but no type, then wont serialize and wont send in payload to server (save will remove it b/c invalid)', (assert) => {
   dtd.add_field({id: FD.idOne});
   const obj = dtd.serialize();
   assert.deepEqual(obj.fields, []);
@@ -486,20 +486,22 @@ test('save and rollback combined test', (assert) => {
 //ATTACHMENT
 
 test('attachments property returns associated array or empty array', (assert) => {
-  dtd = store.push('dtd', {id: DTD.idOne, current_attachment_fks: []});
+  dtd = store.push('dtd', {id: DTD.idOne, generic_attachments_fks: []});
   assert.equal(dtd.get('attachments').get('length'), 0);
-  run(() => {
+  run(function() {
     store.push('attachment', {id: 8});
-    store.push('dtd', {id: DTD.idOne, current_attachment_fks: [8]});
+    store.push('generic-join-attachment', {id: 4, attachment_pk: 8, generic_pk: DTD.idOne});
+    store.push('dtd', {id: DTD.idOne, generic_attachments_fks: [4]});
   });
   assert.equal(dtd.get('attachments').get('length'), 1);
-  run(() => {
+  run(function() {
     store.push('attachment', {id: 9});
   });
   assert.equal(dtd.get('attachments').get('length'), 1);
-  run(() => {
+  run(function() {
     store.push('attachment', {id: 7});
-    dtd = store.push('dtd', {id: DTD.idOne, current_attachment_fks: [8, 7]});
+    store.push('generic-join-attachment', {id: 5, attachment_pk: 7, generic_pk: DTD.idOne});
+    dtd = store.push('dtd', {id: DTD.idOne, generic_attachments_fks: [4, 5]});
   });
   assert.equal(dtd.get('attachments').get('length'), 2);
 });
@@ -508,48 +510,46 @@ test('add_attachment will add the attachment id to the dtds fks array', function
   dtd = store.push('dtd', {id: DTD.idOne});
   store.push('attachment', {id: 8});
   assert.equal(dtd.get('attachments').get('length'), 0);
-  dtd.add_attachment(8);
-  assert.deepEqual(dtd.get('current_attachment_fks'), [8]);
+  dtd.add_attachment({id: 8});
+  assert.deepEqual(dtd.get('generic_attachments_fks'), []);
+  assert.deepEqual(dtd.get('generic_attachments_ids').length, 1);
+  const m2m = store.find('generic-join-attachment', dtd.get('generic_attachments_ids')[0]);
+  assert.equal(m2m.get('generic_pk'), DTD.idOne);
+  assert.equal(m2m.get('attachment_pk'), 8);
   assert.equal(dtd.get('attachments').get('length'), 1);
-  dtd.add_attachment(8);
-  assert.deepEqual(dtd.get('current_attachment_fks'), [8]);
+  dtd.add_attachment({id: 8});
+  assert.deepEqual(dtd.get('generic_attachments_fks'), []);
+  assert.deepEqual(dtd.get('generic_attachments_ids').length, 1);
   assert.equal(dtd.get('attachments').get('length'), 1);
 });
 
 test('remove_attachment will remove dtd_fk from the attachment', function(assert) {
-  dtd = store.push('dtd', {id: DTD.idOne, current_attachment_fks: [8]});
+  dtd = store.push('dtd', {id: DTD.idOne, generic_attachments_fks: [4]});
   store.push('attachment', {id: 8});
+  store.push('generic-join-attachment', {id: 4, attachment_pk: 8, generic_pk: DTD.idOne});
   assert.equal(dtd.get('attachments').get('length'), 1);
-  assert.deepEqual(dtd.get('current_attachment_fks'), [8]);
+  assert.deepEqual(dtd.get('generic_attachments_fks'), [4]);
   dtd.remove_attachment(8);
-  assert.deepEqual(dtd.get('current_attachment_fks'), []);
-  assert.equal(dtd.get('attachments').get('length'), 0);
-  dtd.remove_attachment(8);
-  assert.deepEqual(dtd.get('current_attachment_fks'), []);
+  assert.deepEqual(dtd.get('generic_attachments_fks'), [4]);
+  assert.deepEqual(dtd.get('generic_attachments_ids'), []);
   assert.equal(dtd.get('attachments').get('length'), 0);
 });
 
 test('add and remove attachment work as expected', function(assert) {
-  dtd = store.push('dtd', {id: DTD.idOne, current_attachment_fks: []});
+  dtd = store.push('dtd', {id: DTD.idOne, generic_attachments_fks: []});
   store.push('attachment', {id: 8});
-  assert.equal(dtd.get('attachments').get('length'), 0);
-  dtd.remove_attachment(8);
-  assert.equal(dtd.get('attachments').get('length'), 0);
-  dtd.add_attachment(8);
+  dtd.add_attachment({id: 8});
   assert.equal(dtd.get('attachments').get('length'), 1);
   dtd.remove_attachment(8);
   assert.equal(dtd.get('attachments').get('length'), 0);
 });
 
 test('dtd is dirty or related is dirty when attachment is added or removed (starting with none)', (assert) => {
-  dtd = store.push('dtd', {id: DTD.idOne, current_attachment_fks: [], previous_attachments_fks: []});
+  dtd = store.push('dtd', {id: DTD.idOne, generic_attachments_fks: []});
   store.push('attachment', {id: 8});
   assert.equal(dtd.get('attachments').get('length'), 0);
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-  dtd.remove_attachment(8);
-  assert.equal(dtd.get('attachments').get('length'), 0);
-  assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-  dtd.add_attachment(8);
+  dtd.add_attachment({id: 8});
   assert.equal(dtd.get('attachments').get('length'), 1);
   assert.ok(dtd.get('isDirtyOrRelatedDirty'));
   dtd.remove_attachment(8);
@@ -560,22 +560,23 @@ test('dtd is dirty or related is dirty when attachment is added or removed (star
 });
 
 test('dtd is dirty or related is dirty when attachment is added or removed (starting with one attachment)', (assert) => {
-  dtd = store.push('dtd', {id: DTD.idOne, current_attachment_fks: [8], previous_attachments_fks: [8]});
-  store.push('attachment', {id: 8, dtd_fk: DTD.idOne});
+  const m2m = store.push('generic-join-attachment', {id: 4, attachment_pk: 8, generic_pk: DTD.idOne});
+  dtd = store.push('dtd', {id: DTD.idOne, generic_attachments_fks: [m2m.get('id')]});
+  store.push('attachment', {id: 8});
   assert.equal(dtd.get('attachments').get('length'), 1);
-  assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(dtd.get('isNotDirtyOrRelatedNotDirty'), true);
+  assert.deepEqual(dtd.get('generic_attachments_fks'), [m2m.get('id')]);
+  assert.deepEqual(dtd.get('generic_attachments_ids'), [m2m.get('id')]);
   dtd.remove_attachment(8);
   assert.equal(dtd.get('attachments').get('length'), 0);
   assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-  dtd.remove_attachment(8);
-  assert.equal(dtd.get('attachments').get('length'), 0);
-  assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-  dtd.add_attachment(8);
+  dtd.add_attachment({id: 8});
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('rollback attachments will revert and reboot the dirty attachments to clean', (assert) => {
-  dtd = store.push('dtd', {id: DTD.idOne, current_attachment_fks: [8], previous_attachments_fks: [8]});
+  const m2m = store.push('generic-join-attachment', {id: 4, attachment_pk: 8, generic_pk: DTD.idOne});
+  dtd = store.push('dtd', {id: DTD.idOne, generic_attachments_fks: [m2m.get('id')]});
   store.push('attachment', {id: 8, dtd_fk: DTD.idOne});
   store.push('attachment', {id: 9});
   assert.equal(dtd.get('attachments').get('length'), 1);
@@ -586,13 +587,13 @@ test('rollback attachments will revert and reboot the dirty attachments to clean
   dtd.rollback();
   assert.equal(dtd.get('attachments').get('length'), 1);
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-  dtd.add_attachment(9);
+  dtd.add_attachment({id: 9});
   assert.equal(dtd.get('attachments').get('length'), 2);
   assert.ok(dtd.get('isDirtyOrRelatedDirty'));
   dtd.rollback();
   assert.equal(dtd.get('attachments').get('length'), 1);
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-  dtd.add_attachment(9);
+  dtd.add_attachment({id: 9});
   assert.equal(dtd.get('attachments').get('length'), 2);
   assert.ok(dtd.get('isDirtyOrRelatedDirty'));
   dtd.save();
@@ -601,34 +602,6 @@ test('rollback attachments will revert and reboot the dirty attachments to clean
   dtd.remove_attachment(8);
   assert.equal(dtd.get('attachments').get('length'), 1);
   assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-  dtd.save();
-  assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(dtd.get('attachments').get('length'), 1);
-});
-
-test('attachments should be dirty even when the number of previous matches current', (assert) => {
-  dtd = store.push('dtd', {id: DTD.idOne, current_attachment_fks: [8], previous_attachments_fks: [8]});
-  store.push('attachment', {id: 8, dtd_fk: DTD.idOne});
-  store.push('attachment', {id: 9});
-  assert.equal(dtd.get('attachments').get('length'), 1);
-  assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-  dtd.remove_attachment(8);
-  assert.equal(dtd.get('attachments').get('length'), 0);
-  assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-  dtd.add_attachment(9);
-  assert.equal(dtd.get('attachments').get('length'), 1);
-  assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-});
-
-test('dtd is not dirty after save and save related (starting with none)', (assert) => {
-  dtd = store.push('dtd', {id: DTD.idOne, current_attachment_fks: [], previous_attachments_fks: []});
-  store.push('attachment', {id: 8});
-  assert.equal(dtd.get('attachments').get('length'), 0);
-  assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
-  dtd.add_attachment(8);
-  assert.equal(dtd.get('attachments').get('length'), 1);
-  assert.ok(dtd.get('isDirtyOrRelatedDirty'));
-  dtd.save();
   dtd.save();
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(dtd.get('attachments').get('length'), 1);

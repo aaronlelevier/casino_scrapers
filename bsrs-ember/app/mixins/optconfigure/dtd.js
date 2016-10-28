@@ -24,7 +24,12 @@ export default Ember.Mixin.create({
     fields: {
       associated_model: 'field',
       join_model: 'dtd-field'
-    }
+    },
+    attachments: {
+      associated_model: 'attachment',
+      join_model: 'generic-join-attachment',
+      main_model: 'dtd'
+    },
   },
 });
 

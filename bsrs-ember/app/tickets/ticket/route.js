@@ -8,11 +8,12 @@ var TicketSingleRoute = TabRoute.extend(FindById, {
   repository: inject('ticket'),
   attachmentRepository: inject('attachment'),
   i18n: Ember.inject.service(),
-  transitionCB() {
-    return {
-      //should be an array
-      otherFuncs: this.get('attachmentRepository').removeAllUnrelated()
-    };
+  /* @method transitionCB
+   * removes attachments from local store and find newly attached files and sends out batch delete 
+   */ 
+  transitionCB(model) {
+    const remove_attachment_ids = model.get('remove_attachment_ids');
+    this.get('attachmentRepository').removeAllUnrelated(remove_attachment_ids);
   },
   redirectRoute: 'tickets.index',
   module: 'ticket',

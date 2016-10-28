@@ -32,8 +32,7 @@ var DTDDeserializer = Ember.Object.extend({
     let existing = store.find('dtd', id);
     if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
       // Prep and Attachments
-      response.current_attachment_fks = extract_attachments(response, store);
-      response.previous_attachments_fks = response.current_attachment_fks;
+      let attachments_json = response.attachments;
       delete response.attachments;
       let link_json = response.links;
       delete response.links;
@@ -114,6 +113,19 @@ var DTDDeserializer = Ember.Object.extend({
           let _option = store.push('option', model);
         });
       });
+
+      // Attachments
+      let [m2m_attachments, attachments, m2m_attachment_fks] = many_to_many_extract(attachments_json, store, dtd, 'generic_attachments', 'generic_pk', 'attachment', 'attachment_pk');
+      run(() => {
+        attachments.forEach((att) => {
+          store.push('attachment', att);
+        });
+        m2m_attachments.forEach((m2m) => {
+          store.push('generic-join-attachment', m2m);
+        });
+        store.push('dtd', {id: dtd.get('id'), generic_attachments_fks: m2m_attachment_fks});
+      });
+
       dtd = store.push('dtd', {id: dtd.get('id'), dtd_links_fks: links_server_sum});
       dtd.save();
       existing = dtd;
