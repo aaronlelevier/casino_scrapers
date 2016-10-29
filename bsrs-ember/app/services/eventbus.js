@@ -1,5 +1,9 @@
 import Ember from 'ember';
 
+/**
+ * Global Event Bus
+ * operating in own context and injected into object
+*/
 var EventBus = Ember.Service.extend(Ember.Evented, {
   publish: function() {
     return this.trigger.apply(this, arguments);

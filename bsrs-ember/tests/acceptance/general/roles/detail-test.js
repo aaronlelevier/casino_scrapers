@@ -65,7 +65,7 @@ moduleForAcceptance('Acceptance | role detail', {
 });
 
 test('clicking a roles name will redirect to the given detail view', (assert) => {
-  page.visitRoles();
+  page.visit();
   andThen(() => {
     assert.equal(currentURL(), ROLE_URL);
     assert.equal(find('.t-nav-admin-role').hasClass('active'), true);

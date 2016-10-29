@@ -13,5 +13,12 @@ export default Ember.Component.extend({
     toggleDrawer() {
       this.toggleProperty('drawerOpen');
     }
+  },
+
+  click(){
+    if (!!document.querySelector('app-notice')) {
+      this.get('on-dismiss')();
+    }
+    return true;
   }
 });

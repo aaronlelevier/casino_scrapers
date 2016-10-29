@@ -4,6 +4,8 @@ import startApp from '../helpers/start-app';
 import destroyApp from '../helpers/destroy-app';
 import TestDone from "../helpers/test-done";
 
+const { RSVP: { Promise } } = Ember;
+
 export default function(name, options = {}) {
   module(name, {
     beforeEach() {
@@ -13,6 +15,7 @@ export default function(name, options = {}) {
         return options.beforeEach.apply(this, arguments);
       }
     },
+
     afterEach(assert) {
       TestDone.create({
         name: assert.test.testName,
@@ -21,10 +24,8 @@ export default function(name, options = {}) {
       }).testDoneCallback();
       Ember.$.fauxjax.clear();
       uuidReset();
-      if (options.afterEach) {
-        options.afterEach.apply(this, arguments);
-      }
-      return destroyApp(this.application);
+      let afterEach = options.afterEach && options.afterEach.apply(this, arguments);
+      return Promise.resolve(afterEach).then(() => destroyApp(this.application));
     }
   });
 }

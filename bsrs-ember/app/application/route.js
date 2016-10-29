@@ -1,7 +1,8 @@
 import Ember from 'ember';
-const { run } = Ember;
+const { run, set } = Ember;
 import config from 'bsrs-ember/config/environment';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
+import parseError from 'bsrs-ember/utilities/error-response';
 import moment from 'moment';
 const { Route, inject } = Ember;
 
@@ -120,6 +121,13 @@ var ApplicationRoute = Route.extend({
     });
     Ember.$('.loading-image').addClass('bounceOut');
   },
+  handleApplicationNotice(xhr, model) {
+    if (xhr.status >= 500) {
+      const error = parseError(xhr.status, xhr.responseText);
+      this.controllerFor('application').handleNotfication(error);
+      set(model, 'ajaxError', error);
+    }
+  },
   actions: {
     /* DESKTOP */
     closeTabMaster(tab, {action='closeTab', deleteCB=null, confirmed=false}={}) {
@@ -195,14 +203,8 @@ var ApplicationRoute = Route.extend({
           //TICKET sends update in args
           return activityRepository.find('ticket', 'tickets', pk, model);
         }
-      }, (xhr) => {
-        if(xhr.status === 400) {
-          var response = JSON.parse(xhr.responseText), errors = [];
-          Object.keys(response).forEach(function(key) {
-            errors.push({name: key, value: response[key].toString()});
-          });
-          this.set('ajaxError', errors);
-        }
+      }).catch((xhr) => {
+        this.handleApplicationNotice(xhr, model);
       });
     },
     /* MOBILE */

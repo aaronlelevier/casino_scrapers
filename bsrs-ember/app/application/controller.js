@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { Controller, inject } = Ember;
+const { Controller } = Ember;
 
 export default Controller.extend({
   showModal: false,
@@ -8,6 +8,20 @@ export default Controller.extend({
   modalIsShowing: Ember.computed('showModal', function() {
     return this.get('showModal');
   }),
+
+  /*
+    Notification properties to display app wide error or notices.
+
+    @method handleNotfication
+    @param {Error|Object} notice `{message,level}`
+  */
+  handleNotfication(notice) {
+    if (this.get('isDestroying') || this.get('isDestroyed')) {
+      return;
+    }
+    this.setProperties({ message: notice.message, level: notice.level });
+  },
+
   actions: {
     /*
      * rollback_model
@@ -54,6 +68,28 @@ export default Controller.extend({
       deleteCB();
       this.send('closeTabMaster', tab, {action:action, confirmed:true});//call closeTabMaster action again w/ different action to closeTab
     },
+    dismiss_errors() {
+      this.setProperties({'message': null, 'level': null});
+    }
+  },
 
-  }
+  /*
+    Message for display at the application level for notices
+
+    @property message
+    @type String|null
+    @default null
+  */
+  message: null,
+
+  /*
+    Level of notice to display for application level for messages.
+
+    E.g. `critical`, `error`, `warning`, `info`, `success`
+
+    @property level
+    @type String|null
+    @default null
+  */
+  level: null
 });

@@ -1,9 +1,8 @@
+import Ember from 'ember';
 import windowProxy from 'bsrs-ember/utilities/window-proxy';
 
-var errorFunction = (xhr, textStatus, errorThrown, message) => {
-    if (xhr.status === 403) {
-        windowProxy.changeLocation('/login/');
-    }
-};
-
-export default errorFunction;
+export default function errorFunction(xhr/*, textStatus, errorThrown, message*/) {
+  if (xhr.status === 403) {
+    windowProxy.changeLocation('/login/');
+  } 
+}
