@@ -33,6 +33,9 @@ var RoleRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
   getRouteData() {
     return PromiseMixin.xhr(ROLES_URL + 'route-data/new/', 'GET').then((response) => {
       return response;
+    }).catch( e => {
+      // Squelch any error for the request for dashboard_text message
+      Ember.Logger.error(e);
     });
   }
 });
