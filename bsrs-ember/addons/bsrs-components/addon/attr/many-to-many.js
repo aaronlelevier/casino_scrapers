@@ -7,17 +7,17 @@ import pluralize from 'bsrs-components/utils/plural';
 
 
 /**
- * Creates properties defined on join  model
+ * Creates properties defined on join model
  *   - relationship param defines model association
  *   - models must be explicitly overridden here and can't override in main model given init setup
  *
  * @method many_to_many
- * @param {string} _associatedModel owning model ie. hat
- * @param {string} modelName belongs to model ie. user
+ * @param {string} _associatedModel child models ie. hat, person
+ * @param {string} _modelName parent model ie. user, ticket
  * @param {object} noSetup explicitly defines what methods to override in model
  * @return list of defined properties/methods/computed to handle many_to_many relationship with parent
  */
-var many_to_many = function(_associatedModel, modelName, noSetup) {
+var many_to_many = function(_associatedModel, _modelName, noSetup) {
   let { plural=false, add_func=true, remove_func=true, rollback=true, save=true, dirty=true, unlessAddedM2MDirty=false } = noSetup || {};
   const _singularName = _associatedModel;
   if (plural) {
@@ -25,17 +25,20 @@ var many_to_many = function(_associatedModel, modelName, noSetup) {
   }
   const _capsOwnerName = caps(_associatedModel);
   const _camelOwnerName = camel(_associatedModel);
-  const _joinModelName = `${modelName}_${_associatedModel}`;
+  // parent might have a dash in it
+  const _parentNameUnderscore = _modelName.replace(/-/g, '_');
+  const _joinModelName = `${_parentNameUnderscore}_${_associatedModel}`; 
 
-  //many_to_many
-  Ember.defineProperty(this, `${_joinModelName}`, many_to_many_generator(modelName, _associatedModel));
+  //many_to_many - returns join models
+  Ember.defineProperty(this, `${_joinModelName}`, many_to_many_generator(_parentNameUnderscore, _associatedModel));
   Ember.defineProperty(this, `${_joinModelName}_ids`, many_to_many_ids(_joinModelName));
+  // returns child models
   Ember.defineProperty(this, `${_associatedModel}`, many_models(_joinModelName, _associatedModel));
   Ember.defineProperty(this, `${_associatedModel}_ids`, many_models_ids(_associatedModel));
 
   //add
   if (add_func) {
-    Ember.defineProperty(this, `add_${_singularName}`, undefined, add_many_to_many(_associatedModel, _joinModelName, modelName));
+    Ember.defineProperty(this, `add_${_singularName}`, undefined, add_many_to_many(_associatedModel, _joinModelName, _parentNameUnderscore));
   }
   //remove
   if (remove_func) {
@@ -53,12 +56,12 @@ var many_to_many = function(_associatedModel, modelName, noSetup) {
 
   //rollback
   if (rollback) {
-    Ember.defineProperty(this, `rollback${_capsOwnerName}`, undefined, many_to_many_rollback(_associatedModel, _joinModelName, modelName));
+    Ember.defineProperty(this, `rollback${_capsOwnerName}`, undefined, many_to_many_rollback(_associatedModel, _joinModelName, _parentNameUnderscore));
   }
 
   //save
   if (save) {
-    Ember.defineProperty(this, `save${_capsOwnerName}`, undefined, many_to_many_save(_joinModelName, _associatedModel, modelName));
+    Ember.defineProperty(this, `save${_capsOwnerName}`, undefined, many_to_many_save(_joinModelName, _associatedModel, _modelName));
   }
 };
 
@@ -68,14 +71,16 @@ var many_to_many = function(_associatedModel, modelName, noSetup) {
  *   - OPT_CONF is defined as a mixin in the relationship model
  *   - Ember.get('shoes', 'users')
  *   - store.find('shoes', filter)
+ *   - Part 1 in finding all of the child models.  First looks through the join models and asks if they have a pointer
+ *   to the parent model.  Ie. ticket-join-cc has a pk ticket_pk pointing to a ticket model
  *
  * @method many_to_many_generator
  * @return {Store.ArrayProxy}
  */
-var many_to_many_generator = function(modelName, _associatedModel) {
+var many_to_many_generator = function(_parentNameUnderscore, _associatedModel) {
   return Ember.computed(function() {
     const filter = (m2m) => {
-      return m2m.get(`${modelName}_pk`) === this.get('id') && !m2m.get('removed');
+      return m2m.get(`${_parentNameUnderscore}_pk`) === this.get('id') && !m2m.get('removed');
     };
     return this.get('simpleStore').find(this.OPT_CONF[_associatedModel]['join_model'], filter);
   }).readOnly();
@@ -98,6 +103,9 @@ var many_to_many_ids = function(_joinModelName) {
 /**
  * Returns model instances associated with mainModel
  * - associated_model is the store model name to find pk that join model points at
+ * - Part 2 in getting all of the children models...uses the m2m generator above that returns out the 
+ *   join models that contain a pointer to the parent model and now asks those join models if they contain
+ *   a pointer to the child model (looping through them in the simpleStore filter method below)
  *
  * @method many_models
  * @return {Store.ArrayProxy}
@@ -178,11 +186,11 @@ var many_to_many_dirty_unlessAddedM2M = function(_joinModelName) {
  * @method many_to_many_rollback
  * @return {boolean}
  */
-var many_to_many_rollback = function(_associatedModel, _joinModelName, modelName) {
+var many_to_many_rollback = function(_associatedModel, _joinModelName, _parentNameUnderscore) {
   return function() {
     // const join_model = this.OPT_CONF[_associatedModel]['join_model'];
     const join_model_fks = `${_joinModelName}_fks`;
-    const main_many_fk = `${modelName}_pk`;
+    const main_many_fk = `${_parentNameUnderscore}_pk`;
     const store = this.get('simpleStore');
     const previous_m2m_fks = this.get(join_model_fks) || [];
     const m2m_array = store.find(this.OPT_CONF[_associatedModel]['join_model']).toArray();
@@ -215,10 +223,10 @@ var many_to_many_rollback = function(_associatedModel, _joinModelName, modelName
  * @method many_to_many_save
  * @return {function}
  */
-var many_to_many_save = function(_joinModelName, _associatedModel, modelName) {
+var many_to_many_save = function(_joinModelName, _associatedModel, _modelName) {
   return function() {
     //TODO: test main_model
-    // const model_name = this.OPT_CONF[_associatedModel]['main_model'] || modelName;
+    // const model_name = this.OPT_CONF[_associatedModel]['main_model'] || _modelName;
     const m2m_models = _joinModelName;
     const m2m_models_ids = `${_joinModelName}_ids`;
     const m2m_models_fks = `${_joinModelName}_fks`;
@@ -234,7 +242,7 @@ var many_to_many_save = function(_joinModelName, _associatedModel, modelName) {
           updated_m2m_fks = updated_m2m_fks.concat(join_model.get('id'));
           let new_model;
           run(() => {
-            new_model = this.get('simpleStore').push(this.OPT_CONF[_associatedModel]['main_model'] || modelName, {id: id, m2m_models_fks: updated_m2m_fks});
+            new_model = this.get('simpleStore').push(this.OPT_CONF[_associatedModel]['main_model'] || _modelName, {id: id, m2m_models_fks: updated_m2m_fks});
           });
           new_model.set(m2m_models_fks, updated_m2m_fks);
         });
@@ -258,12 +266,12 @@ var many_to_many_save = function(_joinModelName, _associatedModel, modelName) {
  * @method add_many_to_many
  * @return {function}
  */
-var add_many_to_many = function(_associatedModel, _joinModelName, modelName) {
+var add_many_to_many = function(_associatedModel, _joinModelName, _parentNameUnderscore) {
   return function(many_related) {
     // const relatedModelName = this.OPT_CONF[_associatedModel]['associated_model'];
     const lookup_pk = Ember.String.underscore(this.OPT_CONF[_associatedModel]['associated_pointer'] || this.OPT_CONF[_associatedModel]['associated_model']);
     const many_fk = `${lookup_pk}_pk`;
-    const main_many_fk = `${modelName}_pk`;
+    const main_many_fk = `${_parentNameUnderscore}_pk`;
     // const join_model = this.OPT_CONF[_associatedModel]['join_model'];
     const store = this.get('simpleStore');
     let new_many_related = store.find(this.OPT_CONF[_associatedModel]['associated_model'], many_related.id);

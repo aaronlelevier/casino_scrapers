@@ -7,7 +7,7 @@ var store, run = Ember.run, user;
 
 module('unit: many to many test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:user', 'model:shoe', 'model:issue', 'model:tag', 'model:user-shoe', 'model:feet', 'model:finger', 'model:user-feet', 'model:user-finger']);
+    store = module_registry(this.container, this.registry, ['model:user', 'model:shoe', 'model:issue', 'model:tag', 'model:user-shoe', 'model:feet', 'model:finger', 'model:user-feet', 'model:user-finger', 'model:finger-join-food', 'model:food-type', 'model:finger-food']);
   }
 });
 
@@ -509,6 +509,29 @@ test('user_shoe_ids computed returns a flat list of ids for each shoe', (assert)
   user.remove_shoe(2);
   assert.equal(user.get('shoes').get('length'), 1);
   assert.deepEqual(user.get('user_shoes_ids'), [4]);
+});
+
+test('finger-join-food is setup correctly with remove (extra dashes in name)', (assert) => {
+  store.push('finger-join-food', {id: 2, finger_food_pk: 3, food_type_pk: 4});
+  store.push('finger-food', {id: 3});
+  const parent = store.push('food-type', {id: 4, food_type_finger_food_fks: [2]});
+  assert.equal(parent.get('finger_food').get('length'), 1);
+  assert.equal(parent.get('isNotDirtyOrRelatedNotDirty'), true);
+  parent.remove_finger_food(3);
+  assert.equal(parent.get('isNotDirtyOrRelatedNotDirty'), false);
+  assert.equal(parent.get('finger_food').get('length'), 0);
+});
+
+test('finger-join-food is setup correctly with add', (assert) => {
+  store.push('finger-join-food', {id: 2, finger_food_pk: 3, food_type_pk: 4});
+  store.push('finger-food', {id: 3});
+  store.push('finger-food', {id: 5});
+  const parent = store.push('food-type', {id: 4, food_type_finger_food_fks: [2]});
+  assert.equal(parent.get('finger_food').get('length'), 1);
+  assert.equal(parent.get('isNotDirtyOrRelatedNotDirty'), true);
+  parent.add_finger_food({id: 5});
+  assert.equal(parent.get('finger_food').get('length'), 2);
+  assert.equal(parent.get('isNotDirtyOrRelatedNotDirty'), false);
 });
 
 test('plural utility', assert => {
