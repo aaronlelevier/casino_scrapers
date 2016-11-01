@@ -17,19 +17,59 @@ import Ember from 'ember';
  */
 export default Ember.Mixin.create({
   OPT_CONF: {
-    assignee: {
-      collection: 'automations',
-      property: 'person',
-      related_model: 'assignee',
+    event: {
+      associated_model: 'automation-event',
+      join_model: 'automation-join-event',
+      associated_pointer: 'event'
+    },
+    action: {
+      associated_model: 'automation-action',
+      join_model: 'automation-join-action',
+      associated_pointer: 'action'
+    },
+    type: {
+      collection: 'actions',
+      property: 'automation-action-type',
+      related_model: 'type',
     },
     pf: {
       associated_model: 'pfilter',
-      join_model: 'automation-join-pfilter',
+      join_model: 'automation-join-pfilter'
     },
     //deserializer
     criteria: {
       associated_model: 'criteria',
       join_model: 'pfilter-join-criteria',
-    }
+    },
+    assignee: {
+      collection: 'actions',
+      property: 'person',
+      related_model: 'assignee',
+    },
+    priority: {
+      collection: 'actions',
+      property: 'ticket-priority',
+      related_model: 'priority',
+    },
+    status: {
+      collection: 'actions',
+      property: 'ticket-status',
+      related_model: 'status'
+    },
+    
+    // deserializer - keys determine ..._fks property on the model
+    sendemail: {
+      collection: 'actions',
+      property: 'sendemail',
+    },
+    sendsms: {
+      collection: 'actions',
+      property: 'sendsms',
+    },
+    recipient: {
+      associated_model: 'person',
+      join_model: 'generic-join-recipients',
+      associated_pointer: 'recipient'
+    },
   }
 });

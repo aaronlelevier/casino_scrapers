@@ -62,3 +62,13 @@ celery==3.1.23
 kombu==3.0.35
 django-redis>=4.4.2
 redis>=2.10.5
+
+# twilio
+pysocks>=1.5.7
+twilio>=5.6.0
+
+# premailer
+cssselect>=1.0.0
+cssutils>=1.0.1
+lxml>=3.6.4
+premailer>=3.0.1

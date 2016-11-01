@@ -4,7 +4,7 @@ from model_mommy import mommy
 
 from contact.models import (
     State, Country, PhoneNumber, PhoneNumberType, Email, EmailType,
-    Address, AddressType, PHONE_NUMBER_TYPES, EMAIL_TYPES, ADDRESS_TYPES,)
+    Address, AddressType)
 from utils.helpers import generate_uuid
 
 
@@ -40,37 +40,37 @@ def create_contact(model, instance, type=None):
 
 
 def create_phone_number_type(name=None):
-    name = name or random.choice(PHONE_NUMBER_TYPES)
+    name = name or random.choice(PhoneNumberType.ALL)
     obj, _ = PhoneNumberType.objects.get_or_create(name=name)
     return obj
 
 
 def create_phone_number_types():
-    for name in PHONE_NUMBER_TYPES:
+    for name in PhoneNumberType.ALL:
         create_phone_number_type(name=name)
     return PhoneNumberType.objects.all()
 
 
 def create_email_type(name=None):
-    name = name or random.choice(EMAIL_TYPES)
+    name = name or random.choice(EmailType.ALL)
     obj, _ = EmailType.objects.get_or_create(name=name)
     return obj
 
 
 def create_email_types():
-    for name in EMAIL_TYPES:
+    for name in EmailType.ALL:
         create_email_type(name=name)
     return EmailType.objects.all()
 
 
 def create_address_type(name=None):
-    name = name or random.choice(ADDRESS_TYPES)
+    name = name or random.choice(AddressType.ALL)
     obj, _ = AddressType.objects.get_or_create(name=name)
     return obj
 
 
 def create_address_types():
-    for name in ADDRESS_TYPES:
+    for name in AddressType.ALL:
         create_address_type(name=name)
     return AddressType.objects.all()
 
@@ -128,9 +128,9 @@ def create_contact_fixtures():
                 type_instance = mommy.make(model_type, id=type_id, name=name)
         return (model_id, type_instance)
 
-    email_id, email_type = create_types(EMAIL_TYPES, Email, EmailType)
-    ph_id, ph_type = create_types(PHONE_NUMBER_TYPES, PhoneNumber, PhoneNumberType)
-    address_id, address_type = create_types(ADDRESS_TYPES, Address, AddressType)
+    email_id, email_type = create_types(EmailType.ALL, Email, EmailType)
+    ph_id, ph_type = create_types(PhoneNumberType.ALL, PhoneNumber, PhoneNumberType)
+    address_id, address_type = create_types(AddressType.ALL, Address, AddressType)
 
     mommy.make(Email, id=email_id, type=email_type)
     mommy.make(Email, id=str(email_id)[:-1]+'2', type=email_type)

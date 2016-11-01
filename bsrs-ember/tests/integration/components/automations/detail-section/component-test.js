@@ -23,8 +23,6 @@ moduleForComponent('automations/detail-section', 'Integration | Component | auto
 test('it renders with placeholder', function(assert) {
   this.render(hbs`{{automations/detail-section}}`);
   assert.equal(this.$('.t-automation-description').attr('placeholder'), trans.t('admin.automation.description'));
-  // TODO: working on this in master
-  // assert.equal(this.$('.t-automation-assignee-select').attr('placeholder'), trans.t('admin.automation.description'));
 });
 
 test('validation on automation description works', function(assert) {

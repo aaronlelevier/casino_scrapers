@@ -77,3 +77,58 @@ def local_strftime(d, tzname=settings.TIME_ZONE):
                            d.second, tzinfo=tzinfo)
     return datetime.datetime.strftime(tzinfo.normalize(dt + dt.utcoffset()),
                                       "%Y-%m-%d %H:%M:%S")
+
+
+# relate model crud methods (add, remove, clear)
+
+def add_related(model, related_model_str, related_model):
+    setattr(model, related_model_str, related_model)
+    model.save()
+
+
+def remove_related(related_model):
+    related_model.delete()
+
+
+def clear_related(model, related_name):
+    getattr(model, related_name).all().delete()
+
+# related model crud: end
+
+
+def get_model_class(model):
+    """
+    Can use this method to import a model class.
+
+    :param model:
+        string name of the model as all one word
+        i.e. TicketStatus would be: "ticketstatus"
+    """
+    return ContentType.objects.get(model=model).model_class()
+
+
+class KwargsAsObject(object):
+
+    def __init__(self, **kwargs):
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
+
+def get_person_and_role_ids(data):
+    """
+    Separates Person and Role ids into two lists based on type.
+
+    :param data:
+        List of dict's with id,type keys for recipients. Either
+        being of type 'person' or 'role'
+    """
+    person_ids = []
+    role_ids = []
+
+    for x in data['recipients']:
+        if x['type'] == 'person':
+            person_ids.append(x['id'])
+        elif x['type'] == 'role':
+            role_ids.append(x['id'])
+
+    return person_ids, role_ids

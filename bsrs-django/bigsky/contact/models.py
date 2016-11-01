@@ -1,7 +1,19 @@
-from django.db import models
-from django.contrib.contenttypes.models import ContentType
+import os
 
+import logging
+logger = logging.getLogger(__name__)
+
+from django.conf import settings
+from django.contrib.contenttypes.models import ContentType
+from django.core.mail import EmailMultiAlternatives
+from django.db import models
+
+from twilio import TwilioRestException
+from twilio.rest import TwilioRestClient
+
+from automation.helpers import Interpolate
 from utils.fields import MyGenericForeignKey
+from utils.helpers import get_model_class, get_person_and_role_ids
 from utils.models import BaseModel, BaseManager, BaseQuerySet, BaseNameOrderModel
 
 
@@ -70,22 +82,91 @@ class BaseContactModel(BaseModel):
     class Meta:
         abstract = True
 
-    def save(self, *args, **kwargs):
-        if self.content_object:
-            self.object_id = self.content_object.id
-        return super(BaseContactModel, self).save(*args, **kwargs)
 
+class EmailAndSmsMixin(object):
 
-PHONE_NUMBER_TYPES = [
-    'admin.phonenumbertype.telephone',
-    'admin.phonenumbertype.fax',
-    'admin.phonenumbertype.cell',
-    'admin.phonenumbertype.office',
-    'admin.phonenumbertype.mobile',
-]
+    def get_recipients(self, action, ticket):
+        person_ids, role_ids = get_person_and_role_ids(action.content)
+
+        Person = get_model_class("person")
+        person_list = Person.objects.filter(id__in=person_ids)
+        person_list_from_role_ids = Person.objects.filter_by_ticket_location_and_role(
+            ticket, role_ids)
+
+        result_list = person_list | person_list_from_role_ids
+
+        return result_list.distinct()
+
 
 class PhoneNumberType(BaseNameOrderModel):
+    TELEPHONE = 'admin.phonenumbertype.telephone'
+    FAX = 'admin.phonenumbertype.fax'
+    CELL = 'admin.phonenumbertype.cell'
+    OFFICE = 'admin.phonenumbertype.office'
+    MOBILE = 'admin.phonenumbertype.mobile'
+
+    ALL = [
+        TELEPHONE,
+        FAX,
+        CELL,
+        OFFICE,
+        MOBILE
+    ]
+
+
+class PhoneNumberQuerySet(BaseQuerySet):
     pass
+
+
+class PhoneNumberManager(EmailAndSmsMixin, BaseManager):
+
+    queryset_cls = PhoneNumberQuerySet
+
+    def process_send_sms(self, ticket, action, event):
+        Person = get_model_class("person")
+
+        for person in self.get_recipients(action, ticket):
+            try:
+                ph = person.phone_numbers.get(type__name=PhoneNumberType.CELL)
+            except PhoneNumber.DoesNotExist:
+                logger.info("Person: {person.id}; Fullname: {person.fullname} not sent SMS " \
+                            "because has no CELL phone number on file, for SMS with body: {body}"
+                            .format(person=person, body=action.content['body']))
+            else:
+                interpolate = Interpolate(ticket, person.locale.translation_, event=event)
+                body = interpolate.text(action.content.get('body', ''))
+                self.send_sms(ph, body)
+
+    def send_sms(self, ph, body):
+        """
+        A generic method that sends an sms.
+        """
+        # if statement, so we're not sending SMS during a unittest run
+        if settings.DEBUG:
+            return true
+        else:
+            try:
+                twilio_account_sid = os.environ['TWILIO_ACCOUNT_SID']
+                twilio_auth_token = os.environ['TWILIO_AUTH_TOKEN']
+
+                client = TwilioRestClient(twilio_account_sid, twilio_auth_token)
+
+                body = "Ph:{}; Body:{}...".format(ph.number, body[:50])
+                to = os.environ['TWILIO_NUMBER_TO']
+                twilio_number = os.environ['TWILIO_NUMBER_FROM']
+
+                msg = client.messages.create(
+                    body=body,
+                    to=to,
+                    from_=twilio_number
+                )
+                print(msg.sid)
+            except KeyError:
+                # TODO: add logging - environment variables not configured
+                pass
+            except TwilioRestException:
+                # TODO: add logging - twilio error
+                pass
 
 
 class PhoneNumber(BaseContactModel):
@@ -97,31 +178,31 @@ class PhoneNumber(BaseContactModel):
     type = models.ForeignKey(PhoneNumberType, blank=True, null=True)
     number = models.CharField(max_length=100)
 
+    objects = PhoneNumberManager()
+
     class Meta:
         ordering = ('number',)
 
 
-LOCATION_ADDRESS_TYPE = 'admin.address_type.location'
-OFFICE_ADDRESS_TYPE = 'admin.address_type.office'
-STORE_ADDRESS_TYPE = 'admin.address_type.store'
-SHIPPING_ADDRESS_TYPE = 'admin.address_type.shipping'
-
-ADDRESS_TYPES = [
-    'admin.address_type.location',
-    'admin.address_type.office',
-    'admin.address_type.store',
-    'admin.address_type.shipping',
-]
-
 class AddressType(BaseNameOrderModel):
-    pass
+    LOCATION = 'admin.address_type.location'
+    OFFICE = 'admin.address_type.office'
+    STORE = 'admin.address_type.store'
+    SHIPPING = 'admin.address_type.shipping'
+
+    ALL = [
+        LOCATION,
+        OFFICE,
+        STORE,
+        SHIPPING
+    ]
 
 
 class AddressQuerySet(BaseQuerySet):
 
     def office_and_stores(self):
-        return (self.filter(type__name__in=[OFFICE_ADDRESS_TYPE,
-                                            STORE_ADDRESS_TYPE])
+        return (self.filter(type__name__in=[AddressType.OFFICE,
+                                            AddressType.STORE])
                     .distinct())
 
 
@@ -155,24 +236,91 @@ class Address(BaseContactModel):
 
     @property
     def is_office_or_store(self):
-        return self.type and self.type.name in ['admin.address_type.office',
-                                                'admin.address_type.store']
+        return self.type and self.type.name in [AddressType.OFFICE,
+                                                AddressType.STORE]
 
-
-EMAIL_TYPES = [
-    'admin.emailtype.location',
-    'admin.emailtype.work',
-    'admin.emailtype.personal',
-    'admin.emailtype.sms'
-]
 
 class EmailType(BaseNameOrderModel):
+    LOCATION = 'admin.emailtype.location'
+    WORK = 'admin.emailtype.work'
+    PERSONAL = 'admin.emailtype.personal'
+    SMS = 'admin.emailtype.sms'
+
+    ALL = [
+        LOCATION,
+        WORK,
+        PERSONAL,
+        SMS,
+    ]
+
+
+class EmailQuerySet(BaseQuerySet):
     pass
+
+
+class EmailManager(EmailAndSmsMixin, BaseManager):
+
+    queryset_cls = EmailQuerySet
+
+    def process_send_email(self, ticket, action, event):
+        """
+        Process the recipients on this Email Action, and if they're
+        emailable, send them an email.
+
+        :param ticket: Ticket instance being processed
+        :param action:
+            AutomationAction instance of Type "email" which has info
+            about who to email and what to say
+        :param event:
+            AutomationEvent string name of the event that triggered
+            the automation
+        """
+        Person = get_model_class("person")
+
+        for person in self.get_recipients(action, ticket):
+
+            for email in person.emails.filter(type__name=EmailType.WORK):
+                interpolate = Interpolate(ticket, person.locale.translation_, event=event)
+
+                subject = interpolate.text(action.content.get('subject', ''))
+
+                context = {}
+                raw_body = action.content.get('body', '')
+                if interpolate.contains_ticket_activity(raw_body):
+                    context.update({
+                        'ticket_activity': True,
+                        'ticket': ticket
+                    })
+                body = interpolate.text(raw_body)
+                context['body'] = body
+
+                # TODO: this base email template is hard coded at this
+                # time. This should be configurable based on the Tenant
+                html_base_template = os.path.join(settings.TEMPLATES_DIR,
+                                     'email/test/base.html')
+                html_content = interpolate.get_html_email(
+                    html_base_template, **context)
+                text_content = interpolate.get_text_email(
+                    html_base_template, **context)
+
+                self.send_email(email, subject, html_content=html_content,
+                                text_content=text_content)
+
+    def send_email(self, email, subject, html_content, text_content):
+        """
+        Generic method to send an email.
+        """
+        from_email, to = settings.EMAIL_HOST_USER, settings.EMAIL_HOST_USER
+        msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
 
 
 class Email(BaseContactModel):
     type = models.ForeignKey(EmailType, blank=True, null=True)
     email = models.EmailField()
+
+    objects = EmailManager()
 
     class Meta:
         ordering = ('email',)

@@ -1,4 +1,5 @@
 from datetime import timedelta
+from itertools import chain
 import re
 
 from django.conf import settings
@@ -15,7 +16,7 @@ from django.utils import timezone
 
 from accounting.models import Currency
 from category.models import Category
-from contact.models import PhoneNumber, Address, Email
+from contact.models import PhoneNumber, PhoneNumberType, Address, Email, EmailType
 from location.models import LocationLevel, Location, LOCATION_COMPANY
 from person import config, helpers
 from tenant.models import Tenant
@@ -164,6 +165,10 @@ class Role(BaseModel):
         self._validate_related_categories()
         return super(Role, self).save(*args, **kwargs)
 
+    @property
+    def fullname(self):
+        return self.name
+
     def inherited(self):
         return {
             'dashboard_text': self.proxy_dashboard_text,
@@ -301,6 +306,27 @@ class PersonQuerySet(BaseQuerySet):
         return qs.annotate(status_name=F('status__name'),
                            role_name=F('role__name'))
 
+    def get_sms_recipients(self, tenant, keyword):
+        qs = (self.filter(role__tenant=tenant, phone_numbers__type__name=PhoneNumberType.CELL)
+                  .prefetch_related('phone_numbers'))
+
+        if keyword:
+            qs = qs.search_multi(keyword)
+
+        return qs
+
+    def get_email_recipients(self, tenant, keyword):
+        qs = (self.filter(role__tenant=tenant, emails__isnull=False,
+                          emails__type__name=EmailType.WORK)
+                  .prefetch_related('emails'))
+
+        if keyword:
+            qs = qs.search_multi(keyword)
+
+        return qs
+
+    def filter_by_ticket_location_and_role(self, ticket, role_ids):
+        return self.filter(locations=ticket.location, role__id__in=role_ids)
 
 
 class PersonManager(BaseManagerMixin, UserManager):
@@ -318,6 +344,15 @@ class PersonManager(BaseManagerMixin, UserManager):
 
     def search_power_select(self, keyword):
         return self.get_queryset().search_power_select(keyword)
+
+    def get_sms_recipients(self, tenant, keyword=None):
+        return self.get_queryset().get_sms_recipients(tenant, keyword)
+
+    def get_email_recipients(self, tenant, keyword=None):
+        return self.get_queryset().get_email_recipients(tenant, keyword)
+
+    def filter_by_ticket_location_and_role(self, ticket, role_ids):
+        return self.get_queryset().filter_by_ticket_location_and_role(ticket, role_ids)
 
 
 class Person(BaseModel, AbstractUser):
@@ -564,3 +599,40 @@ class Person(BaseModel, AbstractUser):
 def update_group(sender, instance=None, created=False, **kwargs):
     "Post-save hook for maintaing single Group enrollment."
     helpers.update_group(person=instance, group=instance.role.group)
+
+
+class PersonAndRole(object):
+    """
+    Class to provide methods for Person/Role. i.e. UNION'd lists.
+    """
+    @classmethod
+    def email_recipients(cls, tenant, keyword=''):
+        """
+        Return a UNION'd list of Person/Role records that are Email'able
+
+        :param tenant: related Tenant instance of the requesting Person
+        :param keyword: optional search string
+        """
+        person_list = Person.objects.get_email_recipients(tenant).search_multi(keyword)
+        role_list = Role.objects.filter(tenant=tenant).search_multi(keyword)
+
+        result_list = list(chain(person_list, role_list))[:settings.PAGE_SIZE]
+
+        return [{'id': str(x.id), 'fullname': x.fullname, 'type': x.__class__.__name__.lower()}
+                for x in result_list]
+
+    @classmethod
+    def sms_recipients(cls, tenant, keyword=''):
+        """
+        Return a UNION'd list of Person/Role records that are SMS'able
+
+        :param tenant: related Tenant instance of the requesting Person
+        :param keyword: optional search string
+        """
+        person_list = Person.objects.get_sms_recipients(tenant).search_multi(keyword)
+        role_list = Role.objects.filter(tenant=tenant).search_multi(keyword)
+
+        result_list = list(chain(person_list, role_list))[:settings.PAGE_SIZE]
+
+        return [{'id': str(x.id), 'fullname': x.fullname, 'type': x.__class__.__name__.lower()}
+                for x in result_list]

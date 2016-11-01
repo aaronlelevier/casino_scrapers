@@ -1,5 +1,6 @@
 import copy
 import json
+from mock import patch
 import uuid
 
 from django.conf import settings
@@ -13,7 +14,8 @@ from accounting.models import Currency
 from category.models import Category
 from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
-from contact.tests.factory import create_contact, create_contacts
+from contact.tests.factory import (create_contact, create_contacts, create_phone_number_type,
+    create_email_type)
 from location.models import Location, LocationLevel
 from location.tests.factory import create_location
 from person import config as person_config
@@ -22,6 +24,7 @@ from person.serializers import PersonUpdateSerializer, RoleUpdateSerializer
 from person.tests.factory import (PASSWORD, create_single_person, create_role, create_roles,
     create_all_people, create_person_statuses)
 from person.tests.mixins import RoleSetupMixin
+from tenant.tests.factory import get_or_create_tenant
 from translation.models import Locale
 from translation.tests.factory import create_locale, create_locales
 from utils import create
@@ -270,7 +273,7 @@ class PersonCreateTests(APITestCase):
 class PersonListTests(TestCase):
 
     def setUp(self):
-        for i in range(3):
+        for i in range(5):
             self.person = create_single_person()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -378,6 +381,60 @@ class PersonListTests(TestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(data['count'] > 10)
         self.assertEqual(len(data['results']), settings.PAGE_SIZE)
+
+    def test_get_sms_recipients(self):
+        keyword = 'foo'
+        person = create_single_person(keyword)
+        phone_cell_type = create_phone_number_type(PhoneNumberType.CELL)
+        create_contact(PhoneNumber, person, phone_cell_type)
+        role = create_role('foo')
+
+        response = self.client.get('/api/admin/people/sms-recipients/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['count'], 2)
+
+        if str(person.id) == data['results'][0]['id']:
+            model_one, model_two = person, role
+        else:
+            model_one, model_two = role, person
+
+        # model_one
+        self.assertEqual(data['results'][0]['id'], str(model_one.id))
+        self.assertEqual(data['results'][0]['fullname'], model_one.fullname)
+        self.assertEqual(data['results'][0]['type'], model_one.__class__.__name__.lower())
+        # model_two
+        self.assertEqual(data['results'][1]['id'], str(model_two.id))
+        self.assertEqual(data['results'][1]['fullname'], model_two.fullname)
+        self.assertEqual(data['results'][1]['type'], model_two.__class__.__name__.lower())
+
+    def test_get_email_recipients(self):
+        keyword = 'foo'
+        person = create_single_person(keyword)
+        email_type_work = create_email_type(EmailType.WORK)
+        create_contact(Email, person, email_type_work)
+        role = create_role('foo')
+
+        response = self.client.get('/api/admin/people/email-recipients/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['count'], 2)
+
+        if str(person.id) == data['results'][0]['id']:
+            model_one, model_two = person, role
+        else:
+            model_one, model_two = role, person
+
+        # model_one
+        self.assertEqual(data['results'][0]['id'], str(model_one.id))
+        self.assertEqual(data['results'][0]['fullname'], model_one.fullname)
+        self.assertEqual(data['results'][0]['type'], model_one.__class__.__name__.lower())
+        # model_two
+        self.assertEqual(data['results'][1]['id'], str(model_two.id))
+        self.assertEqual(data['results'][1]['fullname'], model_two.fullname)
+        self.assertEqual(data['results'][1]['type'], model_two.__class__.__name__.lower())
 
 
 class PersonDetailTests(TestCase):

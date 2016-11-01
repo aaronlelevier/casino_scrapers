@@ -6,7 +6,7 @@ from django.conf import settings
 
 from model_mommy import mommy
 
-from ticket.models import TicketStatus
+from ticket.models import TicketStatus, TicketPriority
 from translation.models import Locale, Translation, TranslationManager, TranslationQuerySet
 from translation.tests import factory
 from utils import ListObject
@@ -82,6 +82,14 @@ class LocaleTests(LocaleSetupMixin, TestCase):
         d = mommy.make(Locale, default=True)
         self.assertEqual(Locale.objects.filter(default=True).count(), 1)
         self.assertTrue(d.default)
+
+    def test_translation(self):
+        translation = mommy.make(Translation, locale=self.locale)
+
+        ret = self.locale.translation_
+
+        self.assertEqual(ret, translation)
+        self.assertEqual(ret.locale, self.locale)
 
 
 class TranslationManagerTests(TestCase):
@@ -230,3 +238,13 @@ class TranslationTests(TestCase):
         # here, the 'name' property on the obj is a translation key, and
         # since it couldn't be found, return the raw translation key
         self.assertEqual(ret, obj.name)
+
+    def test_get_value(self):
+        ret = self.translation.get_value(TicketPriority.MEDIUM)
+
+        self.assertEqual(ret, TicketPriority.MEDIUM.split('.')[-1])
+
+    def test_get_value__missing_key(self):
+        ret = self.translation.get_value('foo')
+
+        self.assertEqual(ret, '')

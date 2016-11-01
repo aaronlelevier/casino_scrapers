@@ -7,7 +7,7 @@ from model_mommy import mommy
 
 from accounting.models import Currency
 from category.models import Category, CategoryStatus
-from category.tests.factory import create_single_category, create_repair_category, REPAIR
+from category.tests.factory import create_single_category, create_repair_category
 from location.models import (LocationLevel, Location, LocationStatus, LocationType,
     LOCATION_COMPANY, LOCATION_DISTRICT, LOCATION_REGION,)
 from location.tests.factory import (
@@ -33,7 +33,7 @@ class DistrictManager(object):
     def __init__(self, *args, **kwargs):
         self.repair = create_repair_category()
 
-        self.location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_DISTRICT)
+        self.location_level = create_location_level(LOCATION_DISTRICT)
         self.role = create_role('district-manager', self.location_level, category=self.repair)
 
         LocationStatus.objects.get_or_create(name=LocationStatus.default)

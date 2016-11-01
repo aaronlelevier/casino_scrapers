@@ -427,7 +427,7 @@ class CategorySubRouteSearchTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertEqual(data['results'][0]['cost_code'], str('760521'))
 
 
-class CategorySubRouteProfileFilterTests(APITestCase):
+class CategorySubRouteAutomationFilterTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD

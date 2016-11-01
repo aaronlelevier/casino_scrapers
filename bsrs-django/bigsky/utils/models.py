@@ -166,8 +166,12 @@ class Tester(BaseModel):
     
 
 class ToDictNameMixin(object):
+
     def to_dict(self):
-        return {"id": str(self.pk), "name": self.name}
+        return {
+            "id": str(self.pk),
+            "name": self.name
+        }
 
 
 class BaseNameModel(ToDictNameMixin, BaseModel):
@@ -194,6 +198,12 @@ class DefaultToDictMixin(object):
             "id": str(self.id),
             "name": self.name,
             "default": True if self.name == self.default else False
+        }
+
+    def to_dict_id_name(self):
+        return {
+            "id": str(self.id),
+            "name": self.name
         }
 
 

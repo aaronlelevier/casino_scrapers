@@ -4,8 +4,7 @@ from django.test import TestCase
 
 from contact.models import (
     State, Country, PhoneNumber, PhoneNumberType, Email, EmailType,
-    Address, AddressType, PHONE_NUMBER_TYPES, EMAIL_TYPES, ADDRESS_TYPES,
-    OFFICE_ADDRESS_TYPE)
+    Address, AddressType)
 from contact.tests import factory
 from location.tests.factory import create_location
 from person.tests.factory import create_person
@@ -23,7 +22,7 @@ class FactoryTests(TestCase):
 
     def test_create_contact__with_type(self):
         person = create_person()
-        address_type = factory.create_address_type(OFFICE_ADDRESS_TYPE)
+        address_type = factory.create_address_type(AddressType.OFFICE)
 
         ret = factory.create_contact(Address, person, address_type)
 
@@ -77,9 +76,9 @@ class FactoryTests(TestCase):
         types = factory.create_phone_number_types()
 
         for t in types:
-            self.assertIn(t.name, PHONE_NUMBER_TYPES)
+            self.assertIn(t.name, PhoneNumberType.ALL)
 
-        self.assertEqual(types.count(), len(PHONE_NUMBER_TYPES))
+        self.assertEqual(types.count(), len(PhoneNumberType.ALL))
 
     def test_create_email_type(self):
         ret = factory.create_email_type()
@@ -90,9 +89,9 @@ class FactoryTests(TestCase):
         types = factory.create_email_types()
 
         for t in types:
-            self.assertIn(t.name, EMAIL_TYPES)
+            self.assertIn(t.name, EmailType.ALL)
 
-        self.assertEqual(types.count(), len(EMAIL_TYPES))
+        self.assertEqual(types.count(), len(EmailType.ALL))
 
     def test_create_address_type(self):
         ret = factory.create_address_type()
@@ -103,9 +102,9 @@ class FactoryTests(TestCase):
         types = factory.create_address_types()
 
         for t in types:
-            self.assertIn(t.name, ADDRESS_TYPES)
+            self.assertIn(t.name, AddressType.ALL)
 
-        self.assertEqual(types.count(), len(ADDRESS_TYPES))
+        self.assertEqual(types.count(), len(AddressType.ALL))
 
     @patch("contact.tests.factory.create_phone_number_types")
     @patch("contact.tests.factory.create_email_types")
@@ -173,14 +172,14 @@ class FactoryTests(TestCase):
 
         # all types should be created w/ incrementing uuids
         # email
-        self.assertEqual(EmailType.objects.count(), len(EMAIL_TYPES))
+        self.assertEqual(EmailType.objects.count(), len(EmailType.ALL))
         for i, obj in enumerate(EmailType.objects.order_by('id')):
             self.assertEqual(str(obj.id)[-1], str(i+1))
         # ph
-        self.assertEqual(PhoneNumberType.objects.count(), len(PHONE_NUMBER_TYPES))
+        self.assertEqual(PhoneNumberType.objects.count(), len(PhoneNumberType.ALL))
         for i, obj in enumerate(PhoneNumberType.objects.order_by('id')):
             self.assertEqual(str(obj.id)[-1], str(i+1))
         # address
-        self.assertEqual(AddressType.objects.count(), len(ADDRESS_TYPES))
+        self.assertEqual(AddressType.objects.count(), len(AddressType.ALL))
         for i, obj in enumerate(AddressType.objects.order_by('id')):
             self.assertEqual(str(obj.id)[-1], str(i+1))

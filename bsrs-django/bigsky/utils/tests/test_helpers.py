@@ -8,13 +8,18 @@ from django.contrib.auth.models import ContentType
 from django.test import TestCase
 from django.utils import timezone
 
+from automation.models import AutomationFilter
+from automation.tests.factory import (
+    create_automation, create_ticket_priority_filter, create_ticket_categories_filter,
+    create_automation_action_send_sms)
 from location.models import LocationLevel
 from person import config
 from person.models import Role, PersonStatus
 from person.tests.factory import create_role
 from utils.helpers import (BASE_UUID, model_to_json, model_to_json_select_related,
     model_to_json_prefetch_related, generate_uuid, get_content_type_number, media_path,
-    create_default, local_strftime, queryset_to_json)
+    create_default, local_strftime, queryset_to_json, add_related, remove_related,
+    clear_related, get_model_class, KwargsAsObject, get_person_and_role_ids)
 
 
 class ModelToJsonTests(TestCase):
@@ -158,3 +163,67 @@ class MiscTestHelperTests(TestCase):
         ret = local_strftime(obj.created, tzname)
 
         self.assertEqual(ret, raw_ret)
+
+
+class RelatedModelCrudHelperTests(TestCase):
+
+    def test_add_related(self):
+        automation = create_automation(with_filters=False)
+        automation_filter = create_ticket_priority_filter()
+        self.assertNotEqual(automation_filter.automation, automation)
+
+        add_related(automation_filter, 'automation', automation)
+
+        self.assertEqual(automation_filter.automation, automation)
+
+    def test_remove_related(self):
+        automation_filter = create_ticket_priority_filter()
+        automation = automation_filter.automation
+
+        remove_related(automation_filter)
+
+        with self.assertRaises(AutomationFilter.DoesNotExist):
+            AutomationFilter.objects.get(id=automation_filter.id)
+
+        self.assertEqual(automation.filters.count(), 0)
+
+    def test_clear_related(self):
+        automation_filter = create_ticket_priority_filter()
+        automation = automation_filter.automation
+        automation_filter_two = create_ticket_categories_filter(
+            automation)
+        self.assertEqual(automation.filters.count(), 2)
+
+        clear_related(automation, 'filters')
+
+        self.assertEqual(automation.filters.count(), 0)
+
+
+class GetModelClassTests(TestCase):
+
+    def test_main(self):
+        self.assertEqual(get_model_class("role"), Role)
+
+
+class KwargsAsObjectTests(TestCase):
+
+    def test_main(self):
+        class Car(object):
+            def __init__(self, **kwargs):
+                self.seat = KwargsAsObject(**kwargs)
+
+        car = Car(color='red', comfortable=True)
+
+        self.assertEqual(car.seat.color, 'red')
+        self.assertEqual(car.seat.comfortable, True)
+
+
+class GetPersonAndRoleIdsTests(TestCase):
+
+    def test_main(self):
+        action = create_automation_action_send_sms()
+
+        person_ids, role_ids = get_person_and_role_ids(action.content)
+
+        self.assertEqual(person_ids, [action.content['recipients'][0]['id']])
+        self.assertEqual(role_ids, [action.content['recipients'][1]['id']])

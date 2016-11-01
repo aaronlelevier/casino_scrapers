@@ -1,7 +1,10 @@
-{{db-fetch-multi-select-criteria
-  model=model
-  className="t-ticket-state-select"
-  placeholder=(t "admin.placeholder.state_filter_select")
-  repository=repository
-  searchMethod="findState"
-}}
+<div class="input-group">
+  <span class="input-group-addon address-label">{{t "admin.automation.states"}}</span>
+  {{db-fetch-multi-select-criteria
+    model=model
+    className="t-ticket-state-select"
+    placeholder=(t "admin.placeholder.state_filter_select")
+    repository=repository
+    searchMethod="findState"
+  }}
+</div>

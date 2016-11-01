@@ -1,0 +1,15 @@
+<div class="input-group">
+  <span class="input-group-addon address-label">{{t "admin.automation.assignee"}}</span>
+  {{db-fetch-select
+    model=model
+    selectedAttr=model.assignee
+    className="t-automation-action-assignee-select"
+    displayName="fullname"
+    change_func="change_assignee"
+    remove_func="remove_assignee"
+    repository=personRepo
+    searchMethod="findPeople"
+    valuePath="assignee"
+    didValidate=didValidate
+  }}
+</div>

@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from category import serializers as cs
 from category.models import Category
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
-from utils.views import BaseModelViewSet
+from utils.views import BaseModelViewSet, paginate_queryset_as_response
 
 
 class CategoryViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
@@ -29,9 +29,9 @@ class CategoryViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet
 
         `/api/admin/categories/category__icontains=<search_key>/`
 
-    3. ProfileFilter power-select endpoint
+    3. AutomationFilter power-select endpoint
 
-        `/api/admin/categories/profile-filter/<search_key>/`
+        `/api/admin/categories/automation-criteria/<search_key>/`
 
     '''
     model = Category
@@ -78,23 +78,19 @@ class CategoryViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet
         return Response(serializer.data)
 
     @list_route(methods=['GET'])
+    @paginate_queryset_as_response(cs.CategoryIDNameSerializer)
     def parents(self, request):
-        # for ticket top level category open power select
-        categories = Category.objects.filter(parent__isnull=True)
-        page = self.paginate_queryset(categories)
-        serializer = cs.CategoryIDNameSerializer(page, many=True)
-        return self.get_paginated_response(serializer.data)
+        """
+        For ticket top level category open power select
+        """
+        return Category.objects.filter(parent__isnull=True)
 
     @list_route(methods=['GET'], url_path=r"category__icontains=(?P<search_key>[\w\-]+)")
+    @paginate_queryset_as_response(cs.CategorySearchSerializer)
     def search(self, request, search_key=None):
-        queryset = Category.objects.search_power_select(search_key)
-        queryset = self.paginate_queryset(queryset)
-        serializer = cs.CategorySearchSerializer(queryset, many=True)
-        return self.get_paginated_response(serializer.data)
+        return Category.objects.search_power_select(search_key)
 
     @list_route(methods=['GET'], url_path=r"automation-criteria/(?P<search_key>[\w\-]+)")
-    def profile_filter(self, request, search_key=None):
-        queryset = Category.objects.ordered_parents_and_self_as_strings(search_key)
-        queryset = self.paginate_queryset(queryset)
-        serializer = cs.CategoryProfileFilterSerializer(queryset, many=True)
-        return self.get_paginated_response(serializer.data)
+    @paginate_queryset_as_response(cs.CategoryAutomationFilterSerializer)
+    def automation_filter(self, request, search_key=None):
+        return Category.objects.ordered_parents_and_self_as_strings(search_key)

@@ -1,12 +1,23 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { belongs_to } from 'bsrs-components/repository/belongs-to';
-import { many_to_many } from 'bsrs-components/repository/many-to-many';
+import { many_to_many_extract, many_to_many } from 'bsrs-components/repository/many-to-many';
 import OptConf from 'bsrs-ember/mixins/optconfigure/automation';
 
 export default Ember.Object.extend(OptConf, {
   init() {
     this._super(...arguments);
-    belongs_to.bind(this)('assignee', 'automation', 'person');
+    // relationship bindings give us a method called setup_.....
+    many_to_many.bind(this)('event', 'automation');
+    many_to_many.bind(this)('action', 'automation');
+    belongs_to.bind(this)('type');
+    belongs_to.bind(this)('assignee');
+    belongs_to.bind(this)('priority');
+    belongs_to.bind(this)('status');
+    belongs_to.bind(this)('sendemail');
+    // many_to_many.bind(this)('recipient', 'sendemail');
+    belongs_to.bind(this)('sendsms');
+    // many_to_many.bind(this)('sendsms_recipient', 'sendsms');
     many_to_many.bind(this)('pf', 'automation');
     many_to_many.bind(this)('criteria', 'pfilter');
   },
@@ -19,8 +30,6 @@ export default Ember.Object.extend(OptConf, {
   },
   _deserializeSingle(response) {
     const store = this.get('simpleStore');
-    response.assignee_fk = response.assignee.id;
-    const assignee = response.assignee;
     // extract criteria
     let criteriaMap = {};
     for (let i in response.filters) {
@@ -29,11 +38,127 @@ export default Ember.Object.extend(OptConf, {
       delete response.filters[i].criteria;
     }
     const filters = response.filters;
-    delete response.assignee;
+    const events = response.events;
+    const actions = response.actions;
     delete response.filters;
+    delete response.events;
+    delete response.actions;
     response.detail = true;
     let automation = store.push('automation', response);
-    this.setup_assignee(assignee, automation);
+    const [,eventData,] = this.setup_event(events, automation);
+
+    let actionTypes = {};
+    let assignees = {};
+    let priorities = {};
+    let statuses = {};
+    let sendemails = {};
+    let sendsmss = {};
+    let recipient;
+    let sendsms_recipient;
+    actions.forEach((a) => {
+      // type
+      const type = a.type;
+      delete a.type;
+      actionTypes[a.id] = type;
+      a.type_fk = type.id;
+      // assignee
+      if (a.assignee) {
+        const assignee = a.assignee;
+        delete a.assignee;
+        assignees[a.id] = assignee;
+        a.assignee_fk = assignee.id;
+      }
+      // priority
+      if (a.priority) {
+        const priority = a.priority;
+        delete a.priority;
+        priorities[a.id] = priority;
+        a.priority_fk = priority.id;
+      }
+      //status
+      if(a.status) {
+        const status = a.status;
+        delete a.status;
+        statuses[a.id] = status;
+        a.status_fk = status.id;
+      }
+      //sendemail
+      if(a.sendemail){
+        recipient = a.sendemail.recipient;
+        delete a.sendemail.recipient;
+        const sendemail = a.sendemail;
+        delete a.sendemail;
+        sendemails[a.id] = sendemail;
+        a.sendemail_fk = sendemail.id;
+      }
+      // sendsms
+      if(a.sendsms){
+        sendsms_recipient = a.sendsms.recipient;
+        delete a.sendsms.recipient;
+        const sendsms = a.sendsms;
+        delete a.sendsms;
+        sendsmss[a.id] = sendsms;
+        a.sendsms_fk = sendsms.id;
+      }
+      // must set as "detail" b/c this is a detail payload
+      a.detail = true;
+    });
+    // push in the actions in the store and those are returned
+    // actions == pojo's
+    const [,actionData,] = this.setup_action(actions, automation);
+    // actionData - pojo
+    actionData.forEach((ad) => {
+      const action = store.find('automation-action', ad.id);
+      // type
+      let type = actionTypes[ad.id];
+      this.setup_type(type, action);
+      // assignee
+      let assignee = assignees[ad.id];
+      this.setup_assignee(assignee, action);
+      // priority
+      let priority = priorities[ad.id];
+      this.setup_priority(priority, action);
+      // status - adds the action id to the array of 'actions' in the status model
+      let status = statuses[ad.id];
+      this.setup_status(status, action);
+      //sendemail
+      let sendemail = sendemails[ad.id];
+      this.setup_sendemail(sendemail, action);
+      // setup recipients - req'd by detail payload
+      if (sendemail) {
+        const sendemail_hydrated = store.find('sendemail', sendemail.id);
+        let [m2m_recipients, recipients, server_sum] = many_to_many_extract(recipient, store, sendemail_hydrated, 'generic_recipient', 'generic_pk', 'person', 'recipient_pk');
+        run(() => {
+          recipients.forEach((cat) => {
+            store.push('person', cat);
+          });
+          m2m_recipients.forEach((m2m) => {
+            store.push('generic-join-recipients', m2m);
+          });
+          store.push('sendemail', {id: sendemail_hydrated.get('id'), generic_recipient_fks: server_sum});
+        });
+        // this.setup_recipient(recipient, sendemail_hydrated);
+      }
+      // sendsms
+      let sendsms = sendsmss[ad.id];
+      this.setup_sendsms(sendsms, action);
+      // setup recipients - req'd by detail payload
+      if(sendsms) {
+        const sendsms_hydrated = store.find('sendsms', sendsms.id);
+        let [m2m_recipients, recipients, server_sum] = many_to_many_extract(sendsms_recipient, store, sendsms_hydrated, 'generic_recipient', 'generic_pk', 'person', 'recipient_pk');
+        run(() => {
+          recipients.forEach((cat) => {
+            store.push('person', cat);
+          });
+          m2m_recipients.forEach((m2m) => {
+            store.push('generic-join-recipients', m2m);
+          });
+          store.push('sendsms', {id: sendsms_hydrated.get('id'), generic_recipient_fks: server_sum});
+        });
+        // this.setup_recipient(sendsms_recipient, sendsms_hydrated);
+      }
+    });
+
     const [,pfs,] = this.setup_pf(filters, automation);
     pfs.forEach((pf) => {
       const criteria = criteriaMap[pf.id];

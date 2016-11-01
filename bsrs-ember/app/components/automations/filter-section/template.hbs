@@ -1,12 +1,38 @@
 {{power-select-validation
   model=model
-  valuePath="pf"
+  valuePath="event"
   didValidate=didValidate
+  index="0"
 }}
 <div class="row">
+  <div class="col-md-12" data-validation-target="event0">
+    {{#form-group title="admin.automation.events"}}
+      {{#power-select-multiple
+        selected=model.event
+        onchange=(action "selectEvents")
+        onopen=(action "fetchEvents")
+        tagName="div"
+        class="t-automation-event-select"
+        searchEnabled=false
+        options=options
+        as |event|
+      }}
+        {{t event.key}}
+      {{/power-select-multiple}}
+    {{/form-group}}
+  </div>
+</div>
+<div class="row">
   <div class="col-md-12">
+    {{#form-group title="admin.automation.filters"}}
     {{#each model.pf as |_ index|}}
-      <div class="input-group-vertical">
+      {{power-select-validation
+        model=model
+        valuePath="pf"
+        didValidate=didValidate
+        index=index
+      }}
+      <div class="input-group-vertical" data-validation-target={{concat "pf" index}}>
         <div class="input-group">
           <span class="input-group-btn">
             <button class="t-del-pf-btn btn btn-default btn-sm delete" type="button" {{action "delete" (model-at model.pf index)}}>{{fa-icon "minus"}}</button>
@@ -28,11 +54,10 @@
         {{component (automation-filter (model-at model.pf index))
           model=(model-at model.pf index)
           didValidate=didValidate
-          id=(concat "criteria" index)
-          index=index
         }}
       </div>
     {{/each}}
+    {{/form-group}}
     <button class="t-add-pf-btn btn-add btn btn-default btn-sm" type="button" disabled={{addFilterDisabled}} {{action "append"}}>
       <span class="btn-label">{{fa-icon "plus"}} {{t "admin.automation.pf.add"}}</span>
     </button>

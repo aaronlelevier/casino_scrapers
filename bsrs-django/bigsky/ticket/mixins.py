@@ -36,7 +36,7 @@ class CreateTicketModelMixin(object):
 
     @staticmethod
     def _create_activity_type(ticket, person):
-        type, _ = TicketActivityType.objects.get_or_create(name='create')
+        type, _ = TicketActivityType.objects.get_or_create(name=TicketActivityType.CREATE)
         TicketActivity.objects.create(type=type, ticket=ticket, person=person)
 
 
@@ -67,11 +67,11 @@ class TicketUpdateLogger(object):
 
         new_cc = post_cc - init_cc
         if new_cc:
-            self.log_list_change('cc_add', new_cc)
+            self.log_list_change(TicketActivityType.CC_ADD, new_cc)
 
         removed_cc = init_cc - post_cc
         if removed_cc:
-            self.log_list_change('cc_remove', removed_cc)
+            self.log_list_change(TicketActivityType.CC_REMOVE, removed_cc)
 
     def log_list_change(self, name, changed):
         type, _ = TicketActivityType.objects.get_or_create(name=name)
@@ -79,7 +79,11 @@ class TicketUpdateLogger(object):
         self.log_ticket_activity(type, content)
 
     def check_from_to_changes(self):
-        fields = ['assignee', 'status', 'priority']
+        fields = [
+            TicketActivityType.ASSIGNEE,
+            TicketActivityType.STATUS,
+            TicketActivityType.PRIORITY
+        ]
         for field in fields:
             self.check_from_to_change(field)
 
@@ -101,7 +105,7 @@ class TicketUpdateLogger(object):
 
         changed_categories = init_categories ^ post_categories
         if changed_categories:
-            type, _ = TicketActivityType.objects.get_or_create(name='categories')
+            type, _ = TicketActivityType.objects.get_or_create(name=TicketActivityType.CATEGORIES)
 
             content = {}
 
@@ -116,7 +120,7 @@ class TicketUpdateLogger(object):
     def check_comment_added(self):
         comment = self.init_ticket.pop("comment", None)
         if comment:
-            type, _ = TicketActivityType.objects.get_or_create(name='comment')
+            type, _ = TicketActivityType.objects.get_or_create(name=TicketActivityType.COMMENT)
             content = {'comment': comment}
             self.log_ticket_activity(type, content)
 
@@ -128,13 +132,13 @@ class TicketUpdateLogger(object):
 
         attachments = current - previous
         if attachments:
-            self.log_list_change('attachment_add', attachments)
+            self.log_list_change(TicketActivityType.ATTACHMENT_ADD, attachments)
 
     def previous_attachments(self, attachment_ids):
         """
         Returns a list() of previously logged attachments ids.
         """
-        activities = (self.instance.activities.filter(type__name='attachment_add')
+        activities = (self.instance.activities.filter(type__name=TicketActivityType.ATTACHMENT_ADD)
                                               .values_list('content', flat=True))
 
         return itertools.chain(*[x.values() for x in activities])
@@ -180,4 +184,4 @@ class UpdateTicketModelMixin(object):
 
     @property
     def other_info_fields(self):
-        return ['comment']
+        return [TicketActivityType.COMMENT]

@@ -16,12 +16,13 @@ from bigsky import views_api as bigsky_views_api
 from bigsky.forms import BsAuthenticationForm
 from category import views as category_views
 from contact import views as contact_views
+from contact import _dj_views as dj_contact_views
 from dt import views as dt_views
 from dtd import views as dtd_views
 from generic import views as generic_views
 from location import views as location_views
 from person import views as person_views
-from routing import views as routing_views
+from automation import views as automation_views
 from tenant import views as tenant_views
 from third_party import views as third_party_views
 from ticket import views as tickets_views
@@ -59,8 +60,10 @@ router.register(r'admin/location-types', location_views.LocationTypeViewSet)
 router.register(r'admin/people', person_views.PersonViewSet)
 router.register(r'admin/roles', person_views.RoleViewSet)
 # ROUTING
-router.register(r'admin/automations', routing_views.AutomationViewSet)
-router.register(r'admin/automations-available-filters', routing_views.AvailableFilterViewSet)
+router.register(r'admin/automations', automation_views.AutomationViewSet)
+router.register(r'admin/automation-automation-filter-types', automation_views.AutomationFilterTypeViewSet)
+router.register(r'admin/automation-events', automation_views.AutomationEventViewSet)
+router.register(r'admin/automation-action-types', automation_views.AutomationActionTypeViewSet)
 # TENANT
 router.register(r'admin/tenants', tenant_views.TenantViewSet)
 # THIRD PARTY
@@ -149,9 +152,14 @@ urlpatterns += required(
 )
 
 if settings.DEBUG:
+    email_patterns = [
+        url(r'^ticket-activities/(?P<pk>[\w-]+)/$', dj_contact_views.ticket_activities)
+    ]
+
     import debug_toolbar
     urlpatterns += [
         url(r'^__debug__/', include(debug_toolbar.urls)),
+        url(r'^email/', include(email_patterns))
     ]
 
 # Login Required

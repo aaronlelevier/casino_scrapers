@@ -1,8 +1,11 @@
-{{db-fetch-multi-select-criteria
-  model=model
-  className="t-ticket-location-select"
-  placeholder=(t "admin.placeholder.location_filter_select")
-  repository=repository
-  searchMethod="findPersonsLocations"
-  extra_params=(extra-params model.lookups.id)
-}}
+<div class="input-group">
+  <span class="input-group-addon address-label">{{t "admin.automation.locations"}}</span>
+  {{db-fetch-multi-select-criteria
+    model=model
+    className="t-ticket-location-select"
+    placeholder=(t "admin.placeholder.location_filter_select")
+    repository=repository
+    searchMethod="findPersonsLocations"
+    extra_params=(extra-params model.lookups.id)
+  }}
+</div>

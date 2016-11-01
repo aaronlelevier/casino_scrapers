@@ -128,7 +128,6 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), ROLE_LIST_URL);
-      const role = store.find('role', RD.idOne);
       assert.notEqual(find('.t-role-name').val(), 'wat');
       assert.throws(Ember.$('.ember-modal-dialog'));
     });

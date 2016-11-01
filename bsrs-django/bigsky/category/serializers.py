@@ -61,7 +61,7 @@ class CategorySearchSerializer(BaseCreateSerializer):
         fields = ('id', 'name', 'cost_code')
 
 
-class CategoryProfileFilterSerializer(serializers.ModelSerializer):
+class CategoryAutomationFilterSerializer(serializers.ModelSerializer):
 
     name = serializers.CharField(source='parents_and_self_as_string')
 

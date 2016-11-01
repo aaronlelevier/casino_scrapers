@@ -179,6 +179,9 @@ en,admin.location.label.phone_number.other,Phone Numbers,Phone Numbers,,"'admin.
 en,admin.location.label.status-name,Status,Status,,"'admin.location.label.status-name':'Status',",Status,Status
 en,admin.location.one,Location,Location,,"'admin.location.one':'Location',",Location,Location
 en,admin.location.other,Locations,Locations,,"'admin.location.other':'Locations',",Locations,Locations
+en,admin.location.section.details,Details,Details,,"'admin.location.section.details':'Details',",Details,Details
+en,admin.location.section.contact,Contact,Contact,,"'admin.location.section.contact':'Contact',",Contact,Contact
+en,admin.location.section.organization,Organizations,Organizations,,"'admin.location.section.organization':'Organizations',",Organizations,Organizations
 en,admin.location.search,Search Locations,Search Locations,,"'admin.location.search':'Search Locations',",Search Locations,Search Locations
 en,admin.location.status.closed,Closed,Closed,,"'admin.location.status.closed':'Closed',",Closed,Closed
 en,admin.location.status.future,Future,Future,,"'admin.location.status.future':'Future',",Future,Future
@@ -496,3 +499,12 @@ en,ticket.status.unsatisfactory_completion,Unsatisfactory,Unsatisfactory,,"'tick
 en,upload.progress,Progress,Progress,,"'upload.progress':'Progress',",Progress,Progress
 en,validation.invalid,Invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid,Invalid
 en,validation.valid,Valid,Valid,,"'validation.valid':'Valid',",Valid,Valid
+en,ticket.activity_type.create,Ticket Created,Ticket Created,,"'ticket.activity_type.create':'Ticket Created',",Ticket Created,Ticket Created
+en,ticket.activity_type.assignee,Assignee Changed,Assignee Changed,,"'ticket.activity_type.assignee':'Assignee Changed',",Assignee Changed,Assignee Changed
+en,ticket.activity_type.cc_add,Add CC,Add CC,,"'ticket.activity_type.cc_add':'Add CC',",Add CC,Add CC
+en,ticket.activity_type.cc_remove,Remove CC,Remove CC,,"'ticket.activity_type.cc_remove':'Remove CC',",Remove CC,Remove CC
+en,ticket.activity_type.status,Change Status,Change Status,,"'ticket.activity_type.status':'Change Status',",Change Status,Change Status
+en,ticket.activity_type.prority,Change Piority,Change Piority,,"'ticket.activity_type.prority':'Change Piority',",Change Piority,Change Piority
+en,ticket.activity_type.categories,Change Categories,Change Categories,,"'ticket.activity_type.categories':'Change Categories',",Change Categories,Change Categories
+en,ticket.activity_type.comment,Comment,Comment,,"'ticket.activity_type.comment':'Comment',",Comment,Comment
+en,ticket.activity_type.attachment_add,Attachment Added,Attachment Added,,"'ticket.activity_type.attachment_add':'Attachment Added',",Attachment Added,Attachment Added

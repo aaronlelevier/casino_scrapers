@@ -12,14 +12,6 @@ var BSRS_automation_DEFAULTS_OBJECT = (function() {
       descriptionTwo: 'barfoo',
       descriptionGridOne: 'foobar1',
       descriptionGridOneReverse: 'foobar10',
-      assigneeOne: this.person.idOne,
-      assigneeTwo: this.person.idTwo,
-      assigneeSelectOne: '249543cf-8fea-426a-8bc3-09778cd78001',
-      fullname: this.person.fullname,
-      // fullnameOne: this.person.fullnameOne,
-      // fullnameTwo: this.person.fullnameTwo,
-      fullnameGridOne: this.person.fullname+"1",
-      fullnameGridTen: this.person.fullname+"10",
       descriptionLastPage2Grid: 'foobar20',
     };
   };

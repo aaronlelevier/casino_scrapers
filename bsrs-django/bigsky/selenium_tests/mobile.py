@@ -41,22 +41,22 @@ class MobileTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
             list_name = "t-automation-assignee-fullname",
             list_data = "t-grid-data"
         )
-        list_items = page.find_list_name()
-        list_items[0].click()
-        # description
-        description = rand_chars()
-        automation = InputHelper(description=description)
-        self.wait_for_xhr_request("t-automation-description").clear()
-        self.wait_for_xhr_request("t-automation-description")
-        self._fill_in(automation)
-        # assignee
-        assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-assignee-select ')]/div")
-        assignee_dropdown.click()
-        assignee_input = self.wait_for_xhr_request("ember-power-select-search-input")
-        assignee_input.send_keys('a')
-        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
-        time.sleep(2)
-        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]//li[2]").click()
+        # list_items = page.find_list_name()
+        # list_items[0].click()
+        # # description
+        # description = rand_chars()
+        # automation = InputHelper(description=description)
+        # self.wait_for_xhr_request("t-automation-description").clear()
+        # self.wait_for_xhr_request("t-automation-description")
+        # self._fill_in(automation)
+        # # assignee
+        # assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-assignee-select ')]/div")
+        # assignee_dropdown.click()
+        # assignee_input = self.wait_for_xhr_request("ember-power-select-search-input")
+        # assignee_input.send_keys('a')
+        # self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        # time.sleep(2)
+        # self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]//li[2]").click()
         # TODO: AARON - to fix later
         # go to 2nd section
         # sections = self.wait_for_xhr_request('t-mobile-footer-item', plural=True)

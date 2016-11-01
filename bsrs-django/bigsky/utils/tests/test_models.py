@@ -12,7 +12,7 @@ from location.models import LocationType
 from person.models import Person, PersonQuerySet
 from person.tests.factory import create_single_person, create_role
 from translation.tests.factory import create_translation_keys_for_fixtures
-from ticket.models import TicketStatus, TICKET_STATUS_DEFAULT
+from ticket.models import TicketStatus
 from utils import create
 from utils.helpers import create_default
 from utils.models import Tester
@@ -143,7 +143,7 @@ class BaseModelTests(TestCase):
 
         ret = status.get_i18n_value('name')
 
-        self.assertEqual(ret, TICKET_STATUS_DEFAULT.split('.')[-1])
+        self.assertEqual(ret, TicketStatus.DEFAULT.split('.')[-1])
 
     def test_get_i18n_value__locale_arg(self):
         locale = 'es'
@@ -152,7 +152,7 @@ class BaseModelTests(TestCase):
 
         ret = status.get_i18n_value('name', locale)
 
-        self.assertEqual(ret, TICKET_STATUS_DEFAULT.split('.')[-1])
+        self.assertEqual(ret, TicketStatus.DEFAULT.split('.')[-1])
 
     def test_get_i18n_value__not_a_field(self):
         create_translation_keys_for_fixtures()
@@ -184,6 +184,27 @@ class BaseNameModelTests(TestCase):
             self.x.to_dict(),
             {'id': str(self.x.id), 'name': self.x.name}
         )
+
+
+class DefaultToDictMixinTests(TestCase):
+
+    def setUp(self):
+        self.status = create_default(TicketStatus)
+
+    def test_to_dict(self):
+        ret = self.status.to_dict()
+
+        self.assertEqual(len(ret), 3)
+        self.assertEqual(ret['id'], str(self.status.id))
+        self.assertEqual(ret['name'], self.status.name)
+        self.assertTrue(ret['default'])
+
+    def test_to_dict_id_name(self):
+        ret = self.status.to_dict_id_name()
+
+        self.assertEqual(len(ret), 2)
+        self.assertEqual(ret['id'], str(self.status.id))
+        self.assertEqual(ret['name'], self.status.name)
 
 
 class TesterPermissionTests(TestCase):

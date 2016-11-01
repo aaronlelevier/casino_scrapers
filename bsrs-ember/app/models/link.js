@@ -17,7 +17,7 @@ const Validations = buildValidations({
 var LinkModel = Model.extend(CategoriesMixin, Validations, OptConf, {
   init() {
     belongs_to.bind(this)('status', 'link', {bootstrapped:true});
-    belongs_to.bind(this)('priority', 'link', {bootstrapped:true});
+    belongs_to.bind(this)('priority', 'link');
     belongs_to.bind(this)('destination', 'link');
     many_to_many.bind(this)('category', 'model', {plural:true, add_func:false});
     this._super(...arguments);

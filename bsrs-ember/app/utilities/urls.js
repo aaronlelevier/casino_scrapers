@@ -7,7 +7,9 @@ export const ADMIN_URL = `${PREFIX}/admin/`;
 export const ADMIN_MOBILE_URL = `${PREFIX}/admin-mobile/`;
 export const ADMIN_TRANSLATIONS_URL = `${PREFIX}/admin/translations/`;
 export const AUTOMATION_URL = `${PREFIX}/admin/automations/`;
-export const AUTOMATION_AVAILABLE_FILTERS_URL = `${PREFIX}/admin/automations-available-filters/`;
+export const AUTOMATION_ACTION_TYPES_URL = `${PREFIX}/admin/automation-action-types/`;
+export const AUTOMATION_AVAILABLE_FILTERS_URL = `${PREFIX}/admin/automation-automation-filter-types/`;
+export const AUTOMATION_EVENTS_URL = `${PREFIX}/admin/automation-events/`;
 export const ATTACHMENTS_URL = `${PREFIX}/admin/attachments/`;
 export const CATEGORIES_URL = `${PREFIX}/admin/categories/`;
 export const COUNTRY_URL = `${PREFIX}/countries/`;
@@ -31,7 +33,7 @@ export const TICKETS_URL = `${PREFIX}/tickets/`;
 export const WOS_URL = `${PREFIX}/work-orders/`;
 
 // App Urls
-export const automation_LIST_URL = '/admin/automations/index';
+export const AUTOMATION_LIST_URL = '/admin/automations/index';
 export const CATEGORY_LIST_URL = '/admin/categories/index';
 export const I18N_LIST_URL = '/admin/translations/index';
 export const LOCATION_LIST_URL = '/admin/locations/index';

@@ -16,58 +16,53 @@ from utils.models import (BaseModel, BaseQuerySet, BaseManager, BaseNameModel,
     DefaultToDictMixin)
 
 
-TICKET_STATUS_MAP = {
-    '1': 'ticket.status.new',
-    '2': 'ticket.status.deferred',
-    '3': 'ticket.status.in_progress',
-    '4': 'ticket.status.complete',
-    '5': 'ticket.status.denied',
-    '6': 'ticket.status.problem_solved',
-    '7': 'ticket.status.draft',
-    '8': 'ticket.status.unsatisfactory_completion',
-    '9': 'ticket.status.cancelled',
-    '10': 'ticket.status.pending'
-}
-
-TICKET_STATUSES = [v for k,v in TICKET_STATUS_MAP.items()]
-
-TICKET_STATUS_DEFAULT = TICKET_STATUS_MAP['1']
-
-TICKET_STATUS_NEW = TICKET_STATUS_MAP['1']
-TICKET_STATUS_DEFERRED = TICKET_STATUS_MAP['2']
-TICKET_STATUS_IN_PROGRESS = TICKET_STATUS_MAP['3']
-TICKET_STATUS_COMPLETE = TICKET_STATUS_MAP['4']
-TICKET_STATUS_DENIED = TICKET_STATUS_MAP['5']
-TICKET_STATUS_PROBLEM_SOLVED = TICKET_STATUS_MAP['6']
-TICKET_STATUS_DRAFT = TICKET_STATUS_MAP['7']
-TICKET_STATUS_UNSATISFACTORY_COMPLETION = TICKET_STATUS_MAP['8']
-TICKET_STATUS_CANCELLED = TICKET_STATUS_MAP['9']
-TICKET_STATUS_PENDING = TICKET_STATUS_MAP['10']
-
-
-TICKET_PRIORITY_MAP = {
-    '1': 'ticket.priority.emergency',
-    '2': 'ticket.priority.high',
-    '3': 'ticket.priority.medium',
-    '4': 'ticket.priority.low',
-}
-
-TICKET_PRIORITIES = [v for k,v in TICKET_PRIORITY_MAP.items()]
-
-TICKET_PRIORITY_DEFAULT = TICKET_PRIORITY_MAP['3']
-
-
 class TicketStatus(DefaultToDictMixin, BaseNameModel):
+    NEW = 'ticket.status.new'
+    DEFERRED = 'ticket.status.deferred'
+    IN_PROGRESS = 'ticket.status.in_progress'
+    COMPLETE = 'ticket.status.complete'
+    DENIED = 'ticket.status.denied'
+    PROBLEM_SOLVED = 'ticket.status.problem_solved'
+    DRAFT = 'ticket.status.draft'
+    UNSATISFACTORY_COMPLETION = 'ticket.status.unsatisfactory_completion'
+    CANCELLED = 'ticket.status.cancelled'
+    PENDING = 'ticket.status.pending'
 
-    default = TICKET_STATUS_DEFAULT
+    ALL = [
+        NEW,
+        DEFERRED,
+        IN_PROGRESS,
+        COMPLETE,
+        DENIED,
+        PROBLEM_SOLVED,
+        DRAFT,
+        UNSATISFACTORY_COMPLETION,
+        CANCELLED,
+        PENDING,
+    ]
+
+    default = NEW
+    DEFAULT = NEW
 
     class Meta:
         verbose_name_plural = "Ticket statuses"
 
 
 class TicketPriority(DefaultToDictMixin, BaseNameModel):
+    EMERGENCY = 'ticket.priority.emergency'
+    HIGH = 'ticket.priority.high'
+    MEDIUM = 'ticket.priority.medium'
+    LOW = 'ticket.priority.low'
 
-    default = TICKET_PRIORITY_DEFAULT
+    ALL = [
+        EMERGENCY,
+        HIGH,
+        MEDIUM,
+        LOW,
+    ]
+
+    default = MEDIUM
+    DEFAULT = MEDIUM
 
     class Meta:
         verbose_name_plural = "Ticket priorities"
@@ -103,7 +98,7 @@ class TicketQuerySet(BaseQuerySet):
             q &= Q(
                 Q(categories__id__in=person.role.categories.filter(parent__isnull=True)
                                                            .values_list('id', flat=True)) | \
-                Q(categories__isnull=True, status__name=TICKET_STATUS_DRAFT)
+                Q(categories__isnull=True, status__name=TicketStatus.DRAFT)
             )
 
         return self.filter(q).distinct()
@@ -184,17 +179,18 @@ class Ticket(BaseModel):
         ordering = ('-created',)
 
     def save(self, *args, **kwargs):
+        self._process_ticket_if_new()
         super(Ticket, self).save(*args, **kwargs)
-        self._process_ticket_if_no_assignee()
 
-    def _process_ticket_if_no_assignee(self):
-        if not self.deleted and self.status.name == TICKET_STATUS_NEW and not self.assignee:
+    def _process_ticket_if_new(self):
+        if not self.deleted and self.status.name == TicketStatus.NEW:
+            AutomationEvent = apps.get_model("automation", "automationevent")
             self._process_ticket(self.location.location_level.tenant.id,
-                                 ticket=self)
+                                 ticket=self, event=AutomationEvent.STATUS_NEW)
 
-    def _process_ticket(self, tenant_id, ticket):
-        model = apps.get_model("routing", "automation")
-        model.objects.process_ticket(tenant_id, ticket)
+    def _process_ticket(self, tenant_id, ticket, event):
+        Automation = apps.get_model("automation", "automation")
+        Automation.objects.process_ticket(tenant_id, ticket, event)
 
     @property
     def category(self):
@@ -207,20 +203,28 @@ class Ticket(BaseModel):
         return " - ".join(x['name'] for x in sorted(categories, key=lambda k: k['level']))
 
 
-TICKET_ACTIVITY_TYPES = [
-    'create',
-    'assignee',
-    'cc_add',
-    'cc_remove',
-    'status',
-    'priority',
-    'categories',
-    'comment',
-    'attachment_add',
-]
-
-
 class TicketActivityType(BaseNameModel):
+    CREATE = 'create'
+    ASSIGNEE = 'assignee'
+    CC_ADD = 'cc_add'
+    CC_REMOVE = 'cc_remove'
+    STATUS = 'status'
+    PRIORITY = 'priority'
+    CATEGORIES = 'categories'
+    COMMENT = 'comment'
+    ATTACHMENT_ADD = 'attachment_add'
+
+    ALL = [
+        CREATE,
+        ASSIGNEE,
+        CC_ADD,
+        CC_REMOVE,
+        STATUS,
+        PRIORITY,
+        CATEGORIES,
+        COMMENT,
+        ATTACHMENT_ADD
+    ]
 
     weight = models.PositiveIntegerField(blank=True, default=1)
 

@@ -1,14 +1,13 @@
 import random
 
-from ticket.models import (TicketStatus, TicketPriority, TICKET_STATUSES,
-        TICKET_PRIORITIES,)
+from ticket.models import TicketStatus, TicketPriority
 from utils.helpers import generate_uuid
 
 
 def create_ticket_status(name=None):
     id = generate_uuid(TicketStatus)
     if not name:
-        name = random.choice(TICKET_STATUSES)
+        name = random.choice(TicketStatus.ALL)
     try:
         obj = TicketStatus.objects.get(name=name)
     except TicketStatus.DoesNotExist:
@@ -17,7 +16,7 @@ def create_ticket_status(name=None):
 
 
 def create_ticket_statuses():
-    [create_ticket_status(s) for s in TICKET_STATUSES]
+    [create_ticket_status(s) for s in TicketStatus.ALL]
     return TicketStatus.objects.all()
 
 
@@ -25,7 +24,7 @@ def create_ticket_priority(name=None):
     id = generate_uuid(TicketPriority)
 
     if not name:
-        name = random.choice(TICKET_PRIORITIES)
+        name = random.choice(TicketPriority.ALL)
 
     try:
         obj = TicketPriority.objects.get(name=name)
@@ -36,5 +35,5 @@ def create_ticket_priority(name=None):
 
 
 def create_ticket_priorities():
-    [create_ticket_priority(p) for p in TICKET_PRIORITIES]
+    [create_ticket_priority(p) for p in TicketPriority.ALL]
     return TicketPriority.objects.all()

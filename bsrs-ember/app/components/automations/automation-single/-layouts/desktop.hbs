@@ -37,13 +37,25 @@
     <div class="col-md-12">
       <section>
         <div class="row card-title">
-          <h2 class="col-md-12">{{t "admin.automation.filters"}}</h2>
+          <h2 class="col-md-12">{{t "admin.automation.criteria"}}</h2>
         </div>
       </section>
     </div>
     <div class="col-md-12">
       <section>
         {{automations/filter-section model=model didValidate=didValidate id="pf"}}
+      </section>
+    </div>
+    <div class="col-md-12">
+      <section>
+        <div class="row card-title">
+          <h2 class="col-md-12">{{t "admin.automation.actions"}}</h2>
+        </div>
+      </section>
+    </div>
+    <div class="col-md-12">
+      <section>
+        {{automations/action-section model=model didValidate=didValidate id="action"}}
       </section>
     </div>
   </div>

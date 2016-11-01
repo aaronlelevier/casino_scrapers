@@ -39,6 +39,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     'accounting',
+    'automation',
     'bigsky',
     'dt',
     'dtd',
@@ -47,7 +48,6 @@ LOCAL_APPS = [
     'generic',
     'location',
     'person',
-    'routing',
     'session',
     'tenant',
     'third_party',
@@ -77,10 +77,12 @@ MIDDLEWARE_CLASSES = [
 
 ROOT_URLCONF = 'bigsky.urls'
 
+TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -191,6 +193,8 @@ CORS_ORIGIN_REGEX_WHITELIST = (r'^https?://(\w+\.)?bs-webdev03.bigskytech\.com:8
 # APP SETTINGS #
 ################
 
+SITE_URL = 'denali.com'
+
 ### CATEGORY
 TOP_LEVEL_CATEGORY_LABEL = 'Type'
 
@@ -244,5 +248,56 @@ DEFAULTS_WORKORDER_STATUS = "work_order.status.new"
 
 ### EMAIL ###
 # django native settings for ``django.core.mail.mail_admins()``
-# EMAIL_HOST_USER
-# EMAIL_HOST_PASSWORD
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'bigsky.sc.test@gmail.com'
+EMAIL_HOST_PASSWORD = os.environ['DEV_SC_USER_PASSWORD']
+EMAIL_PORT = 587
+
+# TODO: Logging needs to be moved to a directory with the right permissions
+# that we can write to. If it's logging w/i the project, the directory
+# wont have the write permissions
+### LOGGING ###
+LOGGING_DIR = os.path.join(os.path.dirname(BASE_DIR), "log") # ../bsrs-django/log/
+LOGGING_INFO_FILE = os.path.join(LOGGING_DIR, 'info.log')
+LOGGING_REQUEST_FILE = os.path.join(LOGGING_DIR, 'request.log')
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {
+#         'standard': {
+#             'format': '%(asctime)s %(levelname)s %(name)s %(message)s'
+#         },
+#     },
+#     'handlers': {
+#         'default': {
+#             'level':'DEBUG',
+#             'class':'logging.handlers.RotatingFileHandler',
+#             'filename': LOGGING_INFO_FILE,
+#             'maxBytes': 1024*1024*5, # 5 MB
+#             'backupCount': 5,
+#             'formatter':'standard',
+#         },
+#         'request_handler': {
+#                 'level':'DEBUG',
+#                 'class':'logging.handlers.RotatingFileHandler',
+#                 'filename': LOGGING_REQUEST_FILE,
+#                 'maxBytes': 1024*1024*5, # 5 MB
+#                 'backupCount': 5,
+#                 'formatter':'standard',
+#         },
+#     },
+#     'loggers': {
+#         '': {
+#             'handlers': ['default'],
+#             'level': 'DEBUG',
+#             'propagate': True
+#         },
+#         'django.request': { # Stop SQL debug from logging to main logger
+#             'handlers': ['request_handler'],
+#             'level': 'DEBUG',
+#             'propagate': False
+#         },
+#     }
+# }

@@ -12,7 +12,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import AD from 'bsrs-ember/vendor/defaults/automation';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import AF from 'bsrs-ember/vendor/automation_fixtures';
-import BASEURLS, { AUTOMATION_URL, automation_LIST_URL, AUTOMATION_AVAILABLE_FILTERS_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { AUTOMATION_URL, AUTOMATION_LIST_URL, AUTOMATION_AVAILABLE_FILTERS_URL } from 'bsrs-ember/utilities/urls';
 
 
 // Edit based on module
@@ -82,7 +82,7 @@ test('visiting the automation detail url from the list url should push a tab int
   list_xhr = xhr(`${AUTOMATION_URL}?page=1`, 'GET', null, {}, 200, list_data);
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
@@ -104,7 +104,7 @@ test('clicking on a tab that is not dirty from the list url should take you to t
   list_xhr = xhr(`${AUTOMATION_URL}?page=1`, 'GET', null, {}, 200, list_data);
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
@@ -119,7 +119,7 @@ test('clicking on a tab that is not dirty from the list url should take you to t
   });
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
   click('.t-tab:eq(0)');
   andThen(() => {
@@ -133,7 +133,7 @@ test('clicking on a new model from the grid view will not dirty the original tab
   list_xhr = xhr(`${AUTOMATION_URL}?page=1`, 'GET', null, {}, 200, list_data);
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
@@ -145,7 +145,7 @@ test('clicking on a new model from the grid view will not dirty the original tab
   });
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
   detail_xhr = xhr(`${AUTOMATION_URL}${ID_GRID_TWO}/`, 'GET', null, {}, 200, detail_data_two);
   generalPage.gridItemOneClick();
@@ -170,7 +170,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
   list_xhr = xhr(`${AUTOMATION_URL}?page=1`, 'GET', null, {}, 200, list_data);
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });
   click('.t-tab:eq(0)');
   andThen(() => {
@@ -192,7 +192,7 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
   list_xhr = xhr(`${AUTOMATION_URL}?page=1`, 'GET', null, {}, 200, list_data);
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
     let model = store.find(MODEL, UUID.value);
     assert.equal(model.get('description'), EDIT_FIELD_VALUE);
     assert.equal(model.get('isDirtyOrRelatedDirty'), true);
@@ -210,7 +210,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
   list_xhr = xhr(`${AUTOMATION_URL}?page=1`, 'GET', null, {}, 200, list_data);
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
@@ -230,7 +230,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
   andThen(() => {
     page.visit();
     andThen(() => {
-      assert.equal(currentURL(), automation_LIST_URL);
+      assert.equal(currentURL(), AUTOMATION_LIST_URL);
     });
   });
   click('.t-tab:eq(0)');
@@ -285,7 +285,7 @@ test('opening a new tab, navigating away and closing the tab should remove the t
   });
   click('.t-tab-close:eq(0)');
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
@@ -303,7 +303,7 @@ test('opening a tab, navigating away and closing the tab should remove the tab',
   });
   click('.t-tab-close:eq(0)');
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
@@ -326,7 +326,7 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
   page.visit();
   click('.t-tab-close:eq(0)');
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
     waitFor(assert, () => {
       assert.equal(find('.t-modal-body').length, 1);
     });
@@ -346,7 +346,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
   list_xhr = xhr(`${AUTOMATION_URL}?page=1`, 'GET', null, {}, 200, list_data);
   page.visit();
   andThen(() => {
-    assert.equal(currentURL(), automation_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
   });

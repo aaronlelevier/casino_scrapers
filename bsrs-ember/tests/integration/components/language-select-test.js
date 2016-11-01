@@ -27,7 +27,7 @@ moduleForComponent('language-select', 'integration: language-select test', {
   }
 });
 
-test('terrance should render a selectbox with bound options', function(assert) {
+test('should render a selectbox with bound options', function(assert) {
   locale_one.set('people', [PD.idOne]);
   this.set('model', person);
   this.render(hbs`{{power-select-foreign-key model=model selected=model.locale change_method='change_locale' relatedModelName='locale'}}`);

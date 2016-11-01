@@ -5,11 +5,13 @@ from oauth2client.service_account import ServiceAccountCredentials
 import os
 
 from django.db import models
+from django.contrib.auth.models import ContentType
 from django.contrib.postgres.fields import HStoreField
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+from utils.helpers import get_model_class
 from utils.models import BaseModel, BaseManager, BaseQuerySet
 
 
@@ -72,6 +74,11 @@ class Locale(BaseModel):
             self.native_name = self.name
         if not self.presentation_name:
             self.presentation_name = self.name
+
+    @property
+    def translation_(self):
+        Translation = get_model_class("translation")
+        return Translation.objects.get(locale=self)
 
 
 @receiver(post_save, sender=Locale)
@@ -243,9 +250,9 @@ class Translation(BaseModel):
     @classmethod
     def resolve_i18n_value(cls, values, obj, field):
         """
-        :values: Translation instance's i18n values
-        :obj: Model instance
-        :field: String name of Model instance property
+        :param values: Translation instance's i18n values
+        :param obj: Model instance
+        :param field: String name of Model instance's property
         """
         try:
             return values[getattr(obj, field)]
@@ -255,3 +262,14 @@ class Translation(BaseModel):
         except KeyError:
             # no i18n key exists, so just return raw value
             return getattr(obj, field)
+
+    def get_value(self, key):
+        """
+        Gracefully handle i18n strings that don't have a translation.
+
+        :param key: i18n key to look up
+        """
+        try:
+            return self.values[key]
+        except KeyError:
+            return ''

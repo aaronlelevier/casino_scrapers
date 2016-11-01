@@ -1,71 +1,10 @@
 [
 {
   "model": "location.locationlevel",
-  "pk": "2506caf0-401d-4de5-900b-a6c02c8c9864",
+  "pk": "00335550-a8aa-4b8f-a0a2-e74c99283d71",
   "fields": {
-    "created": "2016-10-13T20:52:45.135Z",
-    "modified": "2016-10-13T20:52:45.135Z",
-    "deleted": null,
-    "name": "District",
-    "tenant": "037530c4-ce6c-4724-9cfd-37a16e787001",
-    "contact": true,
-    "can_create_tickets": true,
-    "landlord": true,
-    "warranty": true,
-    "catalog_categories": true,
-    "assets": true,
-    "children": [
-      "5c934975-9ede-4e68-83f4-3ea3ef2e9515"
-    ]
-  }
-},
-{
-  "model": "location.locationlevel",
-  "pk": "25b6a175-d41d-4d17-99a3-d626399ee626",
-  "fields": {
-    "created": "2016-10-13T20:52:45.152Z",
-    "modified": "2016-10-13T20:52:45.153Z",
-    "deleted": null,
-    "name": "Facility Management Unit",
-    "tenant": "037530c4-ce6c-4724-9cfd-37a16e787001",
-    "contact": true,
-    "can_create_tickets": true,
-    "landlord": true,
-    "warranty": true,
-    "catalog_categories": true,
-    "assets": true,
-    "children": [
-      "5c934975-9ede-4e68-83f4-3ea3ef2e9515"
-    ]
-  }
-},
-{
-  "model": "location.locationlevel",
-  "pk": "41d16701-6f8e-480e-8c45-b50d11aa98b5",
-  "fields": {
-    "created": "2016-10-13T20:52:45.118Z",
-    "modified": "2016-10-13T20:52:45.118Z",
-    "deleted": null,
-    "name": "Company",
-    "tenant": "037530c4-ce6c-4724-9cfd-37a16e787001",
-    "contact": true,
-    "can_create_tickets": true,
-    "landlord": true,
-    "warranty": true,
-    "catalog_categories": true,
-    "assets": true,
-    "children": [
-      "a5702016-1272-49d2-9f10-786fcefcea90",
-      "25b6a175-d41d-4d17-99a3-d626399ee626"
-    ]
-  }
-},
-{
-  "model": "location.locationlevel",
-  "pk": "5c934975-9ede-4e68-83f4-3ea3ef2e9515",
-  "fields": {
-    "created": "2016-10-13T20:52:45.144Z",
-    "modified": "2016-10-13T20:52:45.144Z",
+    "created": "2016-10-26T16:11:35.174Z",
+    "modified": "2016-10-26T16:11:35.174Z",
     "deleted": null,
     "name": "Store",
     "tenant": "037530c4-ce6c-4724-9cfd-37a16e787001",
@@ -80,10 +19,71 @@
 },
 {
   "model": "location.locationlevel",
-  "pk": "a5702016-1272-49d2-9f10-786fcefcea90",
+  "pk": "1aeb5509-5b60-4a59-b244-c4ec19e76f90",
   "fields": {
-    "created": "2016-10-13T20:52:45.127Z",
-    "modified": "2016-10-13T20:52:45.127Z",
+    "created": "2016-10-26T16:11:35.165Z",
+    "modified": "2016-10-26T16:11:35.165Z",
+    "deleted": null,
+    "name": "District",
+    "tenant": "037530c4-ce6c-4724-9cfd-37a16e787001",
+    "contact": true,
+    "can_create_tickets": true,
+    "landlord": true,
+    "warranty": true,
+    "catalog_categories": true,
+    "assets": true,
+    "children": [
+      "00335550-a8aa-4b8f-a0a2-e74c99283d71"
+    ]
+  }
+},
+{
+  "model": "location.locationlevel",
+  "pk": "8d5e7e28-09aa-4bbe-b69b-ea8de7214c7e",
+  "fields": {
+    "created": "2016-10-26T16:11:35.147Z",
+    "modified": "2016-10-26T16:11:35.147Z",
+    "deleted": null,
+    "name": "Company",
+    "tenant": "037530c4-ce6c-4724-9cfd-37a16e787001",
+    "contact": true,
+    "can_create_tickets": true,
+    "landlord": true,
+    "warranty": true,
+    "catalog_categories": true,
+    "assets": true,
+    "children": [
+      "f5611e82-22c6-44a4-8a79-69cbdef73c11",
+      "e34bc596-d909-4a7b-9acf-5d3f0975ba85"
+    ]
+  }
+},
+{
+  "model": "location.locationlevel",
+  "pk": "e34bc596-d909-4a7b-9acf-5d3f0975ba85",
+  "fields": {
+    "created": "2016-10-26T16:11:35.183Z",
+    "modified": "2016-10-26T16:11:35.183Z",
+    "deleted": null,
+    "name": "Facility Management Unit",
+    "tenant": "037530c4-ce6c-4724-9cfd-37a16e787001",
+    "contact": true,
+    "can_create_tickets": true,
+    "landlord": true,
+    "warranty": true,
+    "catalog_categories": true,
+    "assets": true,
+    "children": [
+      "00335550-a8aa-4b8f-a0a2-e74c99283d71"
+    ]
+  }
+},
+{
+  "model": "location.locationlevel",
+  "pk": "f5611e82-22c6-44a4-8a79-69cbdef73c11",
+  "fields": {
+    "created": "2016-10-26T16:11:35.157Z",
+    "modified": "2016-10-26T16:11:35.157Z",
     "deleted": null,
     "name": "Region",
     "tenant": "037530c4-ce6c-4724-9cfd-37a16e787001",
@@ -94,141 +94,141 @@
     "catalog_categories": true,
     "assets": true,
     "children": [
-      "2506caf0-401d-4de5-900b-a6c02c8c9864"
+      "1aeb5509-5b60-4a59-b244-c4ec19e76f90"
     ]
   }
 },
 {
   "model": "location.locationstatus",
-  "pk": "849477b0-6dac-4ea8-942b-9e1cfca227e8",
+  "pk": "e186a831-1c60-4500-ae70-73a2b039c29d",
   "fields": {
-    "created": "2016-10-13T20:52:45.094Z",
-    "modified": "2016-10-13T20:52:45.094Z",
+    "created": "2016-10-26T16:11:35.124Z",
+    "modified": "2016-10-26T16:11:35.124Z",
     "deleted": null,
     "name": "admin.location.status.open"
   }
 },
 {
   "model": "location.locationtype",
-  "pk": "d75bf04e-21cc-456d-afef-302b2d5597ce",
+  "pk": "e94b5051-a52b-4fa4-bedc-5fb2a79cc22a",
   "fields": {
-    "created": "2016-10-13T20:52:45.099Z",
-    "modified": "2016-10-13T20:52:45.099Z",
+    "created": "2016-10-26T16:11:35.129Z",
+    "modified": "2016-10-26T16:11:35.129Z",
     "deleted": null,
     "name": "big_store"
   }
 },
 {
   "model": "location.location",
-  "pk": "041fa8ef-cbdc-4a16-8118-f1eea8440a4e",
+  "pk": "09685129-671f-48f2-96b2-525d9c6a3dd7",
   "fields": {
-    "created": "2016-10-13T20:52:45.193Z",
-    "modified": "2016-10-13T20:52:45.193Z",
+    "created": "2016-10-26T16:11:35.210Z",
+    "modified": "2016-10-26T16:11:35.210Z",
     "deleted": null,
-    "location_level": "5c934975-9ede-4e68-83f4-3ea3ef2e9515",
-    "status": "849477b0-6dac-4ea8-942b-9e1cfca227e8",
-    "type": "d75bf04e-21cc-456d-afef-302b2d5597ce",
-    "name": "san_diego",
-    "number": "mGPqqShcCL",
-    "children": []
-  }
-},
-{
-  "model": "location.location",
-  "pk": "4416d0bc-28fe-4934-96b9-27ad4da48f24",
-  "fields": {
-    "created": "2016-10-13T20:52:45.180Z",
-    "modified": "2016-10-13T20:52:45.180Z",
-    "deleted": null,
-    "location_level": "25b6a175-d41d-4d17-99a3-d626399ee626",
-    "status": "849477b0-6dac-4ea8-942b-9e1cfca227e8",
-    "type": "d75bf04e-21cc-456d-afef-302b2d5597ce",
+    "location_level": "e34bc596-d909-4a7b-9acf-5d3f0975ba85",
+    "status": "e186a831-1c60-4500-ae70-73a2b039c29d",
+    "type": "e94b5051-a52b-4fa4-bedc-5fb2a79cc22a",
     "name": "Facility Management Unit",
-    "number": "LtMWganhab",
+    "number": "vbfuUVfuPM",
     "children": []
   }
 },
 {
   "model": "location.location",
-  "pk": "ace01dc6-28d9-418a-b9f8-1842962838dd",
+  "pk": "578b81e0-fca5-4954-bcff-e6c73d455878",
   "fields": {
-    "created": "2016-10-13T20:52:45.189Z",
-    "modified": "2016-10-13T20:52:45.189Z",
+    "created": "2016-10-26T16:11:35.218Z",
+    "modified": "2016-10-26T16:11:35.218Z",
     "deleted": null,
-    "location_level": "2506caf0-401d-4de5-900b-a6c02c8c9864",
-    "status": "849477b0-6dac-4ea8-942b-9e1cfca227e8",
-    "type": "d75bf04e-21cc-456d-afef-302b2d5597ce",
+    "location_level": "1aeb5509-5b60-4a59-b244-c4ec19e76f90",
+    "status": "e186a831-1c60-4500-ae70-73a2b039c29d",
+    "type": "e94b5051-a52b-4fa4-bedc-5fb2a79cc22a",
     "name": "nv",
-    "number": "rrnlroUtdA",
+    "number": "VFMfSSuVEV",
     "children": []
   }
 },
 {
   "model": "location.location",
-  "pk": "ae85159b-e23b-4cfa-856c-7fa483a097dd",
+  "pk": "64be245e-6f0e-419a-bdbe-3562c5fd6412",
   "fields": {
-    "created": "2016-10-13T20:52:45.197Z",
-    "modified": "2016-10-13T20:52:45.197Z",
+    "created": "2016-10-26T16:11:35.227Z",
+    "modified": "2016-10-26T16:11:35.227Z",
     "deleted": null,
-    "location_level": "5c934975-9ede-4e68-83f4-3ea3ef2e9515",
-    "status": "849477b0-6dac-4ea8-942b-9e1cfca227e8",
-    "type": "d75bf04e-21cc-456d-afef-302b2d5597ce",
+    "location_level": "00335550-a8aa-4b8f-a0a2-e74c99283d71",
+    "status": "e186a831-1c60-4500-ae70-73a2b039c29d",
+    "type": "e94b5051-a52b-4fa4-bedc-5fb2a79cc22a",
     "name": "los_angeles",
-    "number": "OgKfseBVxn",
+    "number": "LgCGpJwLBo",
     "children": []
   }
 },
 {
   "model": "location.location",
-  "pk": "b3653f52-bb80-45e4-8327-bb7751547640",
+  "pk": "85a37066-aa85-4f88-be09-8c5717633ef0",
   "fields": {
-    "created": "2016-10-13T20:52:45.170Z",
-    "modified": "2016-10-13T20:52:45.170Z",
+    "created": "2016-10-26T16:11:35.205Z",
+    "modified": "2016-10-26T16:11:35.205Z",
     "deleted": null,
-    "location_level": "41d16701-6f8e-480e-8c45-b50d11aa98b5",
-    "status": "849477b0-6dac-4ea8-942b-9e1cfca227e8",
-    "type": "d75bf04e-21cc-456d-afef-302b2d5597ce",
+    "location_level": "f5611e82-22c6-44a4-8a79-69cbdef73c11",
+    "status": "e186a831-1c60-4500-ae70-73a2b039c29d",
+    "type": "e94b5051-a52b-4fa4-bedc-5fb2a79cc22a",
+    "name": "east",
+    "number": "sRPSHCIFNu",
+    "children": [
+      "c83c60bc-9eba-46a4-892e-c37de706fcab",
+      "578b81e0-fca5-4954-bcff-e6c73d455878"
+    ]
+  }
+},
+{
+  "model": "location.location",
+  "pk": "a1a6310d-c8a0-4a8e-923a-81cb6e1ff2bc",
+  "fields": {
+    "created": "2016-10-26T16:11:35.200Z",
+    "modified": "2016-10-26T16:11:35.200Z",
+    "deleted": null,
+    "location_level": "8d5e7e28-09aa-4bbe-b69b-ea8de7214c7e",
+    "status": "e186a831-1c60-4500-ae70-73a2b039c29d",
+    "type": "e94b5051-a52b-4fa4-bedc-5fb2a79cc22a",
     "name": "Company",
     "number": "Company",
     "children": [
-      "4416d0bc-28fe-4934-96b9-27ad4da48f24",
-      "c19a4e70-2b86-48d8-8734-bc86e0302d69"
+      "09685129-671f-48f2-96b2-525d9c6a3dd7",
+      "85a37066-aa85-4f88-be09-8c5717633ef0"
     ]
   }
 },
 {
   "model": "location.location",
-  "pk": "c19a4e70-2b86-48d8-8734-bc86e0302d69",
+  "pk": "aa22130c-6e1d-4ca3-9a24-a59e1b15d309",
   "fields": {
-    "created": "2016-10-13T20:52:45.175Z",
-    "modified": "2016-10-13T20:52:45.175Z",
+    "created": "2016-10-26T16:11:35.223Z",
+    "modified": "2016-10-26T16:11:35.223Z",
     "deleted": null,
-    "location_level": "a5702016-1272-49d2-9f10-786fcefcea90",
-    "status": "849477b0-6dac-4ea8-942b-9e1cfca227e8",
-    "type": "d75bf04e-21cc-456d-afef-302b2d5597ce",
-    "name": "east",
-    "number": "MQyMEMOjiK",
-    "children": [
-      "dd924a80-afff-44dc-96be-cd53816dac4c",
-      "ace01dc6-28d9-418a-b9f8-1842962838dd"
-    ]
+    "location_level": "00335550-a8aa-4b8f-a0a2-e74c99283d71",
+    "status": "e186a831-1c60-4500-ae70-73a2b039c29d",
+    "type": "e94b5051-a52b-4fa4-bedc-5fb2a79cc22a",
+    "name": "san_diego",
+    "number": "uWjvlbsULe",
+    "children": []
   }
 },
 {
   "model": "location.location",
-  "pk": "dd924a80-afff-44dc-96be-cd53816dac4c",
+  "pk": "c83c60bc-9eba-46a4-892e-c37de706fcab",
   "fields": {
-    "created": "2016-10-13T20:52:45.185Z",
-    "modified": "2016-10-13T20:52:45.185Z",
+    "created": "2016-10-26T16:11:35.215Z",
+    "modified": "2016-10-26T16:11:35.215Z",
     "deleted": null,
-    "location_level": "2506caf0-401d-4de5-900b-a6c02c8c9864",
-    "status": "849477b0-6dac-4ea8-942b-9e1cfca227e8",
-    "type": "d75bf04e-21cc-456d-afef-302b2d5597ce",
+    "location_level": "1aeb5509-5b60-4a59-b244-c4ec19e76f90",
+    "status": "e186a831-1c60-4500-ae70-73a2b039c29d",
+    "type": "e94b5051-a52b-4fa4-bedc-5fb2a79cc22a",
     "name": "ca",
-    "number": "XXeIplXsTm",
+    "number": "PBjgnBdEdr",
     "children": [
-      "ae85159b-e23b-4cfa-856c-7fa483a097dd",
-      "041fa8ef-cbdc-4a16-8118-f1eea8440a4e"
+      "64be245e-6f0e-419a-bdbe-3562c5fd6412",
+      "aa22130c-6e1d-4ca3-9a24-a59e1b15d309"
     ]
   }
 }

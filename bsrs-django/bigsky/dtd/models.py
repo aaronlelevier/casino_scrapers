@@ -2,7 +2,6 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.db.models import Q
 
-from dtd.model_choices import LINK_TYPES, NOTE_TYPES, FIELD_TYPES
 from category.models import Category
 from generic.models import Attachment
 from ticket.models import TicketStatus, TicketPriority
@@ -38,6 +37,25 @@ class TreeDataManager(BaseManager):
 
 
 class TreeData(BaseModel):
+    LINK_TYPE_BUTTONS = 'admin.dtd.link_type.buttons'
+    LINK_TYPE_LINKS = 'admin.dtd.link_type.links'
+
+    LINK_TYPES = [
+        LINK_TYPE_BUTTONS,
+        LINK_TYPE_LINKS,
+    ]
+
+    NOTE_TYPE_SUCCESS = 'admin.dtd.note_type.success'
+    NOTE_TYPE_INFO = 'admin.dtd.note_type.info'
+    NOTE_TYPE_WARNING = 'admin.dtd.note_type.warning'
+    NOTE_TYPE_DANGER = 'admin.dtd.note_type.danger'
+
+    NOTE_TYPES = [
+        NOTE_TYPE_SUCCESS,
+        NOTE_TYPE_INFO,
+        NOTE_TYPE_WARNING,
+        NOTE_TYPE_DANGER,
+    ]
 
     _RAW_EXPORT_FIELDS_AND_HEADERS = [
         ('key', 'admin.dtd.label.key'),
@@ -60,10 +78,10 @@ class TreeData(BaseModel):
     attachments = GenericRelation(Attachment)
     note = models.CharField(max_length=1000, blank=True, null=True)
     note_type = models.CharField(max_length=1000, choices=[(x,x) for x in NOTE_TYPES],
-                                 blank=True, default=NOTE_TYPES[0])
+                                 blank=True, default=NOTE_TYPE_SUCCESS)
     prompt = models.CharField(max_length=1000, blank=True, null=True)
     link_type = models.CharField(max_length=1000, choices=[(x,x) for x in LINK_TYPES],
-                                 blank=True, default=LINK_TYPES[0])
+                                 blank=True, default=LINK_TYPE_BUTTONS)
 
     objects = TreeDataManager()
 
@@ -72,10 +90,31 @@ class TreeData(BaseModel):
 
 
 class TreeField(BaseModel):
+    TEXT = 'admin.dtd.label.field.text'
+    NUMBER = 'admin.dtd.label.field.number'
+    TEXTAREA = 'admin.dtd.label.field.textarea'
+    SELECT = 'admin.dtd.label.field.select'
+    CHECKBOX = 'admin.dtd.label.field.checkbox'
+    FILE = 'admin.dtd.label.field.file'
+    ASSET_SELECT = 'admin.dtd.label.field.asset_select'
+    CHECK_IN = 'admin.dtd.label.field.check_in'
+    CHECK_OUT = 'admin.dtd.label.field.check_out'
+
+    ALL = [
+        TEXT,
+        NUMBER,
+        TEXTAREA,
+        SELECT,
+        CHECKBOX,
+        FILE,
+        ASSET_SELECT,
+        CHECK_IN,
+        CHECK_OUT
+    ]
+
     order = models.IntegerField(blank=True, default=0)
     label = models.CharField(max_length=1000)
-    type = models.CharField(max_length=100, choices=[(x,x) for x in FIELD_TYPES],
-                            default=FIELD_TYPES[0])
+    type = models.CharField(max_length=100, choices=[(x,x) for x in ALL], default=TEXT)
     required = models.BooleanField(blank=True, default=False)
     tree_data = models.ForeignKey(TreeData, related_name='fields', null=True)
 

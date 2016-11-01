@@ -13,7 +13,7 @@ from location.tests.factory import create_location, create_locations
 from generic.models import Attachment
 from generic.tests.factory import create_file_attachment
 from person.tests.factory import PASSWORD, create_single_person, DistrictManager
-from routing.tests.factory import create_automation, create_auto_assign_filter
+from automation.tests.factory import create_automation
 from ticket.models import Ticket, TicketStatus, TicketActivity, TicketActivityType
 from ticket.serializers import TicketCreateSerializer
 from ticket.tests.factory_related import create_ticket_priority, create_ticket_status
@@ -340,30 +340,6 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(json.loads(response.content.decode('utf8'))['status'], ['This field may not be null.'])
         self.assertEqual(json.loads(response.content.decode('utf8'))['priority'], ['This field may not be null.'])
-
-    def test_process_ticket_if_no_assignee(self):
-        automation = create_automation()
-        auto_assign_filter = create_auto_assign_filter()
-        automation.filters.add(auto_assign_filter)
-
-        status = create_default(TicketStatus)
-        self.data.update({
-            'id': str(uuid.uuid4()),
-            'request': 'plumbing',
-            'status': str(status.id),
-            'assignee': None
-        })
-
-        response = self.client.post('/api/tickets/', self.data, format='json')
-
-        self.assertEqual(response.status_code, 201)
-        data = json.loads(response.content.decode('utf8'))
-        # Db check
-        ticket = Ticket.objects.get(id=data['id'])
-        self.assertTrue(automation.is_match(ticket))
-        self.assertEqual(ticket.assignee, automation.assignee)
-        # response check
-        self.assertEqual(data['assignee'], str(automation.assignee.id))
 
 
 class TicketSearchTests(TicketSetupMixin, APITestCase):

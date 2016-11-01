@@ -38,8 +38,7 @@ moduleForComponent('automations/filter-section', 'Integration | Component | auto
     automation_repo = repository.initialize(this.container, this.registry, 'automation');
     results = [{id: PFD.sourceIdOne, key: PFD.keyOne, field: PFD.fieldOne, lookups: {}},
                      {id: PFD.sourceIdTwo, key: PFD.keyTwo, field: PFD.locationField, lookups: PFD.lookupsDynamic},
-                     {id: PFD.sourceIdThree, key: PFD.keyThree, field: PFD.autoAssignField, lookups: PFD.lookupsDynamicTwo},
-                     {id: PFD.sourceIdFour, key: PFD.autoAssignKey, field: PFD.autoAssignField, lookups: {} }];
+                     {id: PFD.sourceIdThree, key: PFD.keyThree, field: PFD.locationField, lookups: PFD.lookupsDynamicTwo}];
     automation_repo.getFilters = () => new Ember.RSVP.Promise((resolve) => {
       resolve({'results': results});
     });
@@ -124,12 +123,12 @@ test('add new pfilter, and automation is not dirty until select pfilter which di
   // adds pfilter but not dirty
   assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), trans.t(PFD.keyOne));
   assert.equal(this.$('.t-automation-pf-select').length, 2);
-  assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(automation.get('isDirtyOrRelatedDirty'));
   assert.equal(automation.get('pf').get('length'), 2);
   // automation is now dirty
   clickTrigger('.t-automation-pf-select:eq(1)');
   assert.equal(this.$('.t-priority-criteria').length, 1);
-  assert.equal(this.$('li.ember-power-select-option').length, 3);
+  assert.equal(this.$('li.ember-power-select-option').length, 2);
   nativeMouseUp(`.ember-power-select-option:contains(${PFD.keyTwo})`);
   assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
   assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), trans.t(PFD.keyOne));
@@ -169,55 +168,6 @@ test('delete pfilter and automation is dirty and can add and remove filter seque
   assert.equal(automation.get('pf').get('length'), 0);
 });
 
-test('if first filter selected is auto assign, disable btn', function(assert) {
-  run(() => {
-    store.clear();
-    automation = store.push('automation', {id: AD.idOne, description: AD.descriptionOne, automation_pf_fks: [AJFD.idOne]});
-    store.push('automation-join-pfilter', {id: AJFD.idOne, automation_pk: AD.idOne, pfilter_pk: PFD.idThree});
-    store.push('pfilter', {id: PFD.idThree, key: PFD.autoAssignKey, field: PFD.autoAssignField});
-  });
-  this.model = automation;
-  this.render(hbs`{{automations/filter-section model=model}}`);
-  assert.equal(automation.get('pf').get('length'), 1);
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
-});
-
-test('if another automation has auto_assign, then display that automation in dropdown', function(assert) {
-  results[3].existingautomation = AD.descriptionOne;
-  results[3].disabled = "true";
-  automation_repo.getFilters = () => new Ember.RSVP.Promise((resolve) => {
-    resolve({'results': results});
-  });
-  run(() => {
-    store.clear();
-    automation = store.push('automation', {id: AD.idOne, description: AD.descriptionOne, automation_pf_fks: []});
-    store.push('automation', {id: AD.idTwo, description: AD.descTwo, automation_pf_fks: [AJFD.idTwo]});
-    store.push('automation-join-pfilter', {id: AJFD.idTwo, automation_pk: AD.idTwo, pfilter_pk: PFD.idThree});
-    store.push('pfilter', {id: PFD.idThree, key: PFD.autoAssignKey, field: PFD.autoAssignField});
-  });
-  this.model = automation;
-  this.render(hbs`{{automations/filter-section model=model}}`);
-  // on init adds a dummy pf if none present
-  assert.equal(automation.get('pf').get('length'), 1);
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
-  clickTrigger('.t-automation-pf-select:eq(0)');
-  assert.equal(this.$('.ember-power-select-option:eq(3)').attr('aria-disabled'), 'true');
-  assert.equal(this.$('.ember-power-select-option:eq(3)').text().trim(), trans.t('admin.placeholder.auto_assign') + " " + trans.t('admin.automation.selected_in') + " " + AD.descriptionOne);
-});
-
-test('if select auto_assign then disable add filter btn', function(assert) {
-  this.model = automation;
-  this.render(hbs`{{automations/filter-section model=model}}`);
-  assert.equal(automation.get('pf').get('length'), 1);
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
-  clickTrigger('.t-automation-pf-select:eq(0)');
-  nativeMouseUp(`.ember-power-select-option:contains(${PFD.keyThree})`);
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), true);
-  clickTrigger('.t-automation-pf-select:eq(0)');
-  nativeMouseUp(`.ember-power-select-option:contains(${PFD.keyTwo})`);
-  assert.equal(this.$('.t-add-pf-btn').prop('disabled'), false);
-});
-
 test('if automation has dynamic pfilter, power-select component will filter out response result', function(assert) {
   run(() => {
     store.clear();
@@ -255,6 +205,5 @@ test('ticket-priority-select is not searchable', function(assert) {
   this.model = automation;
   this.render(hbs`{{automations/filter-section model=model}}`);
   assert.equal(this.$('.t-priority-criteria').length, 1);
-  // would be '.ember-power-select-trigger-multiple-input' if it was searchEnabled
-  assert.equal(this.$('.ember-power-select-multiple-trigger').length, 1);
+  assert.equal(this.$('.ember-power-select-multiple-trigger').length, 2);
 });

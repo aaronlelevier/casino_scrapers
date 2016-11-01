@@ -2,9 +2,11 @@ import Ember from 'ember';
 const { run } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
-import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
+import { many_to_many, many_to_many_dirty, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/automation';
+import SaveAndRollbackRelatedMixin from 'bsrs-ember/mixins/model/save-and-rollback-related';
+import NewMixin from 'bsrs-ember/mixins/model/new';
 
 const Validations = buildValidations({
   description: [
@@ -18,62 +20,56 @@ const Validations = buildValidations({
       message: 'errors.automation.description.min_max'
     })
   ],
-  assignee: [
-    validator('presence', {
-      presence: true,
-      message: 'errors.automation.assignee'
-    }),
-  ],
-  pf: [
-    validator('length', {
-      min: 1,
-      message: 'errors.automation.pf.length'
-    }),
-    validator('has-many')
-  ]
+  event: validator('length', {
+    min: 1,
+    message: 'errors.automation.event.length'
+  }),
+  action: validator('has-many'),
+  pf: validator('has-many')
 });
 
-export default Model.extend(OptConf, Validations, {
+export default Model.extend(OptConf, Validations, NewMixin, SaveAndRollbackRelatedMixin, {
   init() {
     this._super(...arguments);
-    belongs_to.bind(this)('assignee', 'automation');
-    //TODO: pf is available filters...or just filter...
+    many_to_many.bind(this)('event', 'automation');
+    many_to_many.bind(this)('action', 'automation', {dirty: false});
     many_to_many.bind(this)('pf', 'automation', {dirty: false});
   },
   simpleStore: Ember.inject.service(),
   description: attr(''),
-  pfIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('automation_pf'),
+  // pf dirty tracking
+  automation_pf_fks: [],
+  pfIsDirtyContainer: many_to_many_dirty('automation_pf'),
   pfIsDirty: Ember.computed('pf.@each.{isDirtyOrRelatedDirty}', 'pfIsDirtyContainer', function() {
     const pf = this.get('pf');
     return pf.isAny('isDirtyOrRelatedDirty') || this.get('pfIsDirtyContainer');
   }),
   pfIsNotDirty: Ember.computed.not('pfIsDirty'),
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'pfIsDirty', function() {
-    return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('pfIsDirty');
+  // action dirty tracking
+  actionIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('automation_action'),
+  actionIsDirty: Ember.computed('action.@each.{isDirtyOrRelatedDirty}', 'actionIsDirtyContainer', function() {
+    const action = this.get('action');
+    return action.isAny('isDirtyOrRelatedDirty') || this.get('actionIsDirtyContainer');
+  }),
+  actionIsNotDirty: Ember.computed.not('actionIsDirty'),
+  // (cont.)
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'pfIsDirty', 'eventIsDirty', 'actionIsDirty', function() {
+    return this.get('isDirty') || this.get('pfIsDirty') || this.get('eventIsDirty') || this.get('actionIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-  rollbackPfContainer() {
-    const pf = this.get('pf');
-    pf.forEach((model) => {
-      model.rollback();
-    });
-  },
   rollback() {
-    this.rollbackAssignee();
-    this.rollbackPfContainer();
+    this.rollbackEvent();
+    this.rollbackRelatedContainer('action');
+    this.rollbackAction();
+    this.rollbackRelatedContainer('pf');
     this.rollbackPf();
     this._super(...arguments);
   },
-  savePfContainer() {
-    const pf = this.get('pf');
-    pf.forEach((model) => {
-      model.saveRelated();
-      model.save();
-    });
-  },
   saveRelated() {
-    this.saveAssignee();
-    this.savePfContainer();
+    this.saveEvent();
+    this.saveRelatedContainer('action');
+    this.saveAction();
+    this.saveRelatedContainer('pf');
     this.savePf();
   },
   removeRecord() {
@@ -87,11 +83,17 @@ export default Model.extend(OptConf, Validations, {
         this.remove_pf(f.get('id'));
       }
     });
+    this.get('action').forEach(a => {
+      if (!a.get('type.id')) {
+        this.remove_action(a.get('id'));
+      }
+    });
     return {
       id: this.get('id'),
       description: this.get('description'),
-      assignee: this.get('assignee').get('id'),
-      filters: this.get('pf').map((obj) => obj.serialize())
+      events: this.get('event_ids'),
+      filters: this.get('pf').map((obj) => obj.serialize()),
+      actions: this.get('action').map((obj) => obj.serialize())
     };
   },
 });

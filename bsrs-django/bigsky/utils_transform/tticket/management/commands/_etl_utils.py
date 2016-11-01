@@ -8,8 +8,7 @@ from utils_transform.tticket.models import DominoTicket
 from category.models import Category, LABEL_TYPE, LABEL_TRADE, LABEL_ISSUE
 from location.models import Location, LOCATION_STORE
 from person.models import Person
-from ticket.models import (Ticket, TicketStatus, TicketPriority,
-    TICKET_STATUS_MAP, TICKET_PRIORITY_MAP)
+from ticket.models import Ticket, TicketStatus, TicketPriority
 
 
 def run_ticket_migrations():
@@ -81,11 +80,11 @@ def get_assignee(fullname):
         raise
 
 
-def get_status(status):
-    name = TICKET_STATUS_MAP[status]
+def get_status(i):
+    name = TicketStatus.ALL[int(i)-1]
     return TicketStatus.objects.get(name=name)
 
 
-def get_priority(priority):
-    name = TICKET_PRIORITY_MAP[priority]
+def get_priority(i):
+    name = TicketPriority.ALL[int(i)-1]
     return TicketPriority.objects.get(name=name)

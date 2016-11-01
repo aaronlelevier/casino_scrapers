@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext_lazy as _
@@ -8,9 +10,9 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from person import serializers as ps
-from person.models import Person, Role
+from person.models import Person, Role, PersonAndRole
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
-from utils.views import BaseModelViewSet
+from utils.views import BaseModelViewSet, paginate_queryset_as_response
 
 
 class RoleViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
@@ -68,7 +70,25 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
 
        URL: `/api/admin/people/current/`
 
-    **2. reset-password:**
+    **2. sms_recipients:**
+
+       Returns people with phone numbers of type "cell"
+
+       URL: `/api/admin/people/sms-recipients/`
+
+    **3. email_recipients:**
+
+       Returns people with emails
+
+       URL: `/api/admin/people/email-recipients/`
+
+    **4. search_power_select:**
+
+       Standard Person power-select endpoint.
+
+       URL: `/api/admin/people/person__icontains={search_key}/`
+
+    **5. reset_password:**
 
        Reset a Person's password using `{person_id}` the Person.
 
@@ -105,13 +125,38 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
         serializer = ps.PersonCurrentSerializer(instance)
         return Response(serializer.data)
 
-    # TODO: need email_re or something similar here
+    @list_route(methods=['GET'], url_path=r"sms-recipients")
+    def sms_recipients(self, request):
+        """
+        Returns people with a related PhoneNumber of PhoneNumberType.CELL
+        """
+        keyword = request.query_params.get('search', '')
+        data = PersonAndRole.sms_recipients(request.user.role.tenant, keyword)
+        return Response(OrderedDict([
+            ('count', len(data)),
+            ('next', ''),
+            ('previous', ''),
+            ('results', data)
+        ]))
+
+    @list_route(methods=['GET'], url_path=r"email-recipients")
+    def email_recipients(self, request):
+        """
+        Returns people with a Emails
+        """
+        keyword = request.query_params.get('search', '')
+        data = PersonAndRole.email_recipients(request.user.role.tenant, keyword)
+        return Response(OrderedDict([
+            ('count', len(data)),
+            ('next', ''),
+            ('previous', ''),
+            ('results', data)
+        ]))
+
     @list_route(methods=['GET'], url_path=r"person__icontains=(?P<search_key>[\w\s\.\-@]+)")
+    @paginate_queryset_as_response(ps.PersonSearchSerializer)
     def search_power_select(self, request, search_key=None):
-        queryset = Person.objects.search_power_select(search_key)
-        queryset = self.paginate_queryset(queryset)
-        serializer = ps.PersonSearchSerializer(queryset, many=True)
-        return self.get_paginated_response(serializer.data)
+        return Person.objects.search_power_select(search_key)
 
     # TODO # add correct authorization to who can use this endpoint
     @list_route(methods=['post'], url_path=r"reset-password/(?P<person_id>[\w\-]+)")

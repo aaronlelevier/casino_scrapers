@@ -10,17 +10,6 @@ export default GridViewComponent.extend({
       isSortable: true,
       isFilterable: true,
       isSearchable: true
-    },
-    {
-      field: 'assignee.fullname',
-      headerLabel: 'admin.automation.assignee',
-      headerIsTranslatable: true,
-      isSortable: true,
-      isFilterable: true,
-      isSearchable: true,
-      classNames: ['automation-assignee'],
-      filterComponent: 'grid/filters/assignee-select-grid',
-      powerSelect: true
-    },
+    }
   ]
 });

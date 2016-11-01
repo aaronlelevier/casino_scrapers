@@ -1,0 +1,33 @@
+<div class="input-group-vertical t-action-group">
+  <div class="input-group">
+    <span class="input-group-addon action-label t-sendsms-recipient-label">{{t "admin.action.sendsms.recipients"}}</span>
+    {{db-fetch-multi-select 
+      model=model.sendsms
+      multiAttr="recipient" 
+      valuePath="recipient" 
+      multiAttrIds="recipient_ids" 
+      selectedAttr=model.sendsms.recipient 
+      className="t-action-recipient-select" 
+      class=(concat "t-action-recipient-validator" index)
+      displayName="fullname" 
+      add_func="add_recipient" 
+      remove_func="remove_recipient" 
+      repository=personRepo 
+      searchMethod="findPeople"
+      didValidate=didValidate
+    }}
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon action-label t-sendsms-message-label">{{t "admin.action.sendsms.message"}}</span>
+      {{validated-input
+        model=model.sendsms
+        valuePath="message"
+        count=index
+        className=(concat "t-action-message" index)
+        placeholder=placeholder
+        class=(concat "t-action-message-validator" index)
+        didValidate=didValidate
+        textarea=true
+      }}
+  </div>
+</div>

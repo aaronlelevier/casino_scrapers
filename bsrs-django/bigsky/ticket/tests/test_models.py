@@ -6,14 +6,14 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
+from automation.models import AutomationEvent
 from category.tests.factory import create_categories, create_single_category
 from generic.tests.factory import create_file_attachment
 from location.models import LocationStatus
 from location.tests.factory import create_location
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketManager, TicketQuerySet, TicketStatus, TicketPriority,
-    TicketActivityType, TicketActivity, TICKET_STATUS_DEFAULT, TICKET_STATUS_NEW,
-    TICKET_STATUS_DRAFT, TICKET_PRIORITY_DEFAULT)
+    TicketActivityType, TicketActivity,)
 from ticket.tests.factory_related import create_ticket_statuses, create_ticket_priorities
 from ticket.tests.factory import RegionManagerWithTickets, create_ticket, create_tickets
 from ticket.tests.mixins import TicketCategoryOrderingSetupMixin
@@ -26,7 +26,7 @@ class TicketStatusTests(TestCase):
         create_ticket_statuses()
 
     def test_to_dict__default(self):
-        status = TicketStatus.objects.get(name=TICKET_STATUS_DEFAULT)
+        status = TicketStatus.objects.get(name=TicketStatus.DEFAULT)
 
         ret = status.to_dict()
 
@@ -36,7 +36,7 @@ class TicketStatusTests(TestCase):
         self.assertTrue(ret['default'])
 
     def test_to_dict__non_default(self):
-        status = TicketStatus.objects.exclude(name=TICKET_STATUS_DEFAULT).first()
+        status = TicketStatus.objects.exclude(name=TicketStatus.DEFAULT).first()
 
         ret = status.to_dict()
 
@@ -52,7 +52,7 @@ class TicketPriorityTests(TestCase):
         create_ticket_priorities()
 
     def test_to_dict__default(self):
-        priority = TicketPriority.objects.get(name=TICKET_PRIORITY_DEFAULT)
+        priority = TicketPriority.objects.get(name=TicketPriority.DEFAULT)
 
         ret = priority.to_dict()
 
@@ -62,7 +62,7 @@ class TicketPriorityTests(TestCase):
         self.assertTrue(ret['default'])
 
     def test_to_dict__non_default(self):
-        priority = TicketPriority.objects.exclude(name=TICKET_PRIORITY_DEFAULT).first()
+        priority = TicketPriority.objects.exclude(name=TicketPriority.DEFAULT).first()
 
         ret = priority.to_dict()
 
@@ -237,8 +237,8 @@ class TicketTests(TestCase):
         create_ticket_statuses()
         create_tickets(_many=2)
         self.ticket = Ticket.objects.first()
-        self.status_new = TicketStatus.objects.get(name=TICKET_STATUS_NEW)
-        self.status_draft = TicketStatus.objects.get(name=TICKET_STATUS_DRAFT)
+        self.status_new = TicketStatus.objects.get(name=TicketStatus.NEW)
+        self.status_draft = TicketStatus.objects.get(name=TicketStatus.DRAFT)
 
     def test_export_fields(self):
         export_fields = ['priority_name', 'status_name', 'number', 'created',
@@ -281,36 +281,25 @@ class TicketTests(TestCase):
         self.assertEqual(Ticket._meta.ordering, ('-created',))
 
     @patch("ticket.models.Ticket._process_ticket")
-    def test_save__process_ticket__new_status_and_no_assignee(self, mock_process_ticket):
+    def test_save__process_ticket__new_status(self, mock_func):
         # This is the only tiime that wee wan't the "process_ticket"
         # function to be called
         self.ticket.status = self.status_new
-        self.ticket.assignee = None
 
         self.ticket.save()
 
-        self.assertTrue(mock_process_ticket.called)
-        self.assertEqual(mock_process_ticket.call_args[0][0], self.ticket.location.location_level.tenant.id)
-        self.assertEqual(mock_process_ticket.call_args[1]['ticket'], self.ticket)
+        self.assertEqual(mock_func.call_count, 1)
+        self.assertEqual(mock_func.call_args[0][0], self.ticket.location.location_level.tenant.id)
+        self.assertEqual(mock_func.call_args[1]['ticket'], self.ticket)
+        self.assertEqual(mock_func.call_args[1]['event'], AutomationEvent.STATUS_NEW)
 
     @patch("ticket.models.Ticket._process_ticket")
-    def test_save__process_ticket__not_new_status_and_no_assignee(self, mock_process_ticket):
+    def test_save__process_ticket__not_new_status(self, mock_func):
         self.ticket.status = self.status_draft
-        self.ticket.assignee = None
 
         self.ticket.save()
 
-        self.assertFalse(mock_process_ticket.called)
-
-    @patch("ticket.models.Ticket._process_ticket")
-    def test_save__process_ticket__new_status_and_assignee(self, mock_process_ticket):
-        assignee = create_single_person()
-        self.ticket.status = self.status_new
-        self.ticket.assignee = assignee
-
-        self.ticket.save()
-
-        self.assertFalse(mock_process_ticket.called)
+        self.assertFalse(mock_func.called)
 
     def test_category(self):
         # categories - are joined directly onto the Ticket, but do

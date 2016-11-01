@@ -5,6 +5,8 @@ from django.db.models import Max
 from django.utils.timezone import now
 from django.test import TestCase
 
+from model_mommy import mommy
+
 from category.models import Category
 from category.tests.factory import create_categories
 from dtd.tests.factory import create_dtd_fixture_data
@@ -13,9 +15,7 @@ from generic.models import Attachment
 from location.models import Location, LOCATION_COMPANY
 from person.models import Person
 from person.tests.factory import create_single_person, DistrictManager
-from ticket.models import (
-    Ticket, TicketStatus, TicketPriority, TicketActivityType, TicketActivity,
-    TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
+from ticket.models import Ticket, TicketStatus, TicketPriority, TicketActivityType, TicketActivity
 from ticket.tests import factory, factory_related
 from utils.helpers import generate_uuid
 
@@ -133,6 +133,88 @@ class CreateTicketTests(TestCase):
         self.assertEqual(type(self.ticket.dt_path[0]['dtd']['fields'][3]['value']), int)
         self.assertEqual(self.ticket.dt_path[1]['dtd']['id'], str(start_dtd.links.first().destination.id))
         self.assertEqual(self.ticket.dt_path[1]['dtd']['description'], 'You are almost done')
+
+
+class CreateStandardTicketTests(TestCase):
+
+    def setUp(self):
+        create_dtd_fixture_data()
+        create_categories()
+        self.person = create_single_person()
+
+    def test_main(self):
+        ticket = factory.create_standard_ticket()
+
+        self.assertIsInstance(ticket, Ticket)
+        self.assertEqual(ticket.status.name, TicketStatus.NEW)
+        self.assertEqual(ticket.priority.name, TicketPriority.MEDIUM)
+
+
+class CreateTicketWithActivitiesTests(TestCase):
+
+    def test_main(self):
+        twa = factory.TicketWithActivities()
+        twa.create()
+        ticket = twa.ticket
+
+        # local VARs
+        person = twa.person
+        person_two = twa.person_two
+        status = twa.status
+        status_two = twa.status_two
+        priority = twa.priority
+        priority_two = twa.priority_two
+        category = twa.category
+        category_two = twa.category_two
+        attachment = twa.attachment
+
+        # overall tests
+        self.assertIsInstance(ticket, Ticket)
+        self.assertEqual(ticket.activities.count(), 9)
+        self.assertEqual(ticket.cc.count(), 1)
+        self.assertEqual(ticket.cc.first(), person)
+        self.assertEqual(ticket.assignee, person)
+        self.assertEqual(ticket.status, status)
+        self.assertEqual(ticket.priority, priority)
+        # create
+        create_activity = ticket.activities.get(type__name=TicketActivityType.CREATE)
+        self.assertEqual(create_activity.person, person)
+        # assignee
+        create_activity = ticket.activities.get(type__name=TicketActivityType.ASSIGNEE)
+        self.assertEqual(create_activity.person, person)
+        self.assertEqual(create_activity.content['from'], str(person.id))
+        self.assertEqual(create_activity.content['to'], str(person_two.id))
+        # cc_add
+        create_activity = ticket.activities.get(type__name=TicketActivityType.CC_ADD)
+        self.assertEqual(create_activity.person, person)
+        self.assertEqual(create_activity.content['0'], str(person_two.id))
+        # cc_remove
+        create_activity = ticket.activities.get(type__name=TicketActivityType.CC_REMOVE)
+        self.assertEqual(create_activity.person, person)
+        self.assertEqual(create_activity.content['0'], str(person.id))
+        # status
+        create_activity = ticket.activities.get(type__name=TicketActivityType.STATUS)
+        self.assertEqual(create_activity.person, person)
+        self.assertEqual(create_activity.content['from'], str(status.id))
+        self.assertEqual(create_activity.content['to'], str(status_two.id))
+        # priority
+        create_activity = ticket.activities.get(type__name=TicketActivityType.PRIORITY)
+        self.assertEqual(create_activity.person, person)
+        self.assertEqual(create_activity.content['from'], str(priority.id))
+        self.assertEqual(create_activity.content['to'], str(priority_two.id))
+        # categories
+        create_activity = ticket.activities.get(type__name=TicketActivityType.CATEGORIES)
+        self.assertEqual(create_activity.person, person)
+        self.assertEqual(create_activity.content['from_0'], str(category.id))
+        self.assertEqual(create_activity.content['to_0'], str(category_two.id))
+        # comment
+        create_activity = ticket.activities.get(type__name=TicketActivityType.COMMENT)
+        self.assertEqual(create_activity.person, person)
+        self.assertEqual(create_activity.content['comment'], 'foo')
+        # attachment_add
+        create_activity = ticket.activities.get(type__name=TicketActivityType.ATTACHMENT_ADD)
+        self.assertEqual(create_activity.person, person)
+        self.assertEqual(create_activity.content['0'], str(attachment.id))
 
 
 class CreateTicketKwargTests(TestCase):
@@ -274,14 +356,14 @@ class CreateStatusTests(TestCase):
     def test_single(self):
         obj = factory_related.create_ticket_status()
         self.assertIsInstance(obj, TicketStatus)
-        self.assertIn(obj.name, TICKET_STATUSES)
+        self.assertIn(obj.name, TicketStatus.ALL)
 
     def test_multiple(self):
         statuses = factory_related.create_ticket_statuses()
 
-        self.assertEqual(statuses.count(), len(TICKET_STATUSES))
+        self.assertEqual(statuses.count(), len(TicketStatus.ALL))
         for s in statuses.all():
-            self.assertIn(s.name, TICKET_STATUSES)
+            self.assertIn(s.name, TicketStatus.ALL)
 
 
 class CreatePriorityTests(TestCase):
@@ -289,14 +371,14 @@ class CreatePriorityTests(TestCase):
     def test_single(self):
         obj = factory_related.create_ticket_priority()
         self.assertIsInstance(obj, TicketPriority)
-        self.assertIn(obj.name, TICKET_PRIORITIES)
+        self.assertIn(obj.name, TicketPriority.ALL)
 
     def test_multiple(self):
         priorities = factory_related.create_ticket_priorities()
 
-        self.assertEqual(priorities.count(), len(TICKET_PRIORITIES))
+        self.assertEqual(priorities.count(), len(TicketPriority.ALL))
         for p in priorities.all():
-            self.assertIn(p.name, TICKET_PRIORITIES)
+            self.assertIn(p.name, TicketPriority.ALL)
 
 
 class CreateTicketActivityTests(TestCase):
@@ -321,4 +403,4 @@ class CreateTicketsActivityTypesTests(TestCase):
     def test_create(self):
         obj = factory.create_ticket_activity_type()
         self.assertIsInstance(obj, TicketActivityType)
-        self.assertIn(obj.name, TICKET_ACTIVITY_TYPES)
+        self.assertIn(obj.name, TicketActivityType.ALL)

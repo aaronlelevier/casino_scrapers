@@ -1,0 +1,12 @@
+<div class="input-group">
+  <span class="input-group-addon address-label" data-test-id="automation-request">{{t "admin.automation.request"}}</span>
+  {{validated-input
+    model=model
+    placeholder=(t "ticket.label.request")
+    valuePath="request"
+    className="t-automation-ticket-request ticket-request"
+    didValidate=didValidate
+    textarea=true
+    class="t-automation-ticket-request-validator"
+  }}
+</div>

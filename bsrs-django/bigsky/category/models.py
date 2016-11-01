@@ -188,7 +188,7 @@ class Category(BaseModel):
 
     def parents_and_self_as_string(self, category=None, names=None):
         """
-        For use with the ProfileFilter for Categories to display to
+        For use with the AutomationFilter for Categories to display to
         the User which Categories they have selected, their parents,
         and if they have child categories.
 
