@@ -4,8 +4,6 @@ $Placeholders: ();
 @mixin vertical-align() {
   position: relative;
   top: 50%;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
 
@@ -17,8 +15,6 @@ $Placeholders: ();
 
 
 @mixin nav-box-shadow($blurRadius: 10px, $color: $dark) {
-  -webkit-box-shadow: 0 0 $blurRadius $color;
-  -moz-box-shadow: 0 0 $blurRadius $color;
   box-shadow: 0 0 $blurRadius $color;
 }
 
@@ -119,8 +115,6 @@ $Placeholders: ();
 //     }
 //     @extend %#{$inputGroupDropdownStatic};
 //   } @else {
-//     -webkit-appearance: none;
-//     -moz-appearance: none;
 //     appearance: none;
 //     margin-left: -1px;
 //     margin-right: -1px;
@@ -128,8 +122,6 @@ $Placeholders: ();
 // }
 
 %input-group-dropdown-static {
-  -webkit-appearance: none;
-  -moz-appearance: none;
   appearance: none;
   margin-left: -1px;
   margin-right: -1px;

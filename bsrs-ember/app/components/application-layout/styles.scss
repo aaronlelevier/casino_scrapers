@@ -63,16 +63,12 @@ span.mobile-tray-trigger {
 
 .mobile-tray-open {
   .mobile-wrap {
-    -webkit-transform: translateX($mobileDrawerWidth);
-    -ms-transform: translateX($mobileDrawerWidth);
     transform: translateX($mobileDrawerWidth);
     // this is expensive to keep around, so one possiblility is to remove it
     will-change: transform;
   }
   vbox.mobile-tray {
     @include nav-box-shadow();
-    -webkit-transform: none;
-    -ms-transform: none;
     transform: none;
     will-change: transform;
   }
@@ -83,9 +79,6 @@ span.mobile-tray-trigger {
 
 .mobile-wrap,
 vbox.mobile-tray {
-  -webkit-transition: all 150ms ease-in-out;
-  -moz-transition: all 150ms ease-in-out;
-  -o-transition: all 150ms ease-in-out;
   transition: all 150ms ease-in-out;
 }
 
@@ -94,8 +87,6 @@ vbox.mobile-tray { //slideout navigation tray
   width: $mobileDrawerWidth;
   position: relative;
   height: 100vh;
-  -webkit-transform: translateX(-100%);
-  -ms-transform: translateX(-100%);
   transform: translateX(-100%);
   z-index: 1; //
   div.mobile-tray__inner {

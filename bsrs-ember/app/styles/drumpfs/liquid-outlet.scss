@@ -1,11 +1,7 @@
 .liquid-container {
-  -webkit-transform: none;
-  -moz-transform: none;
   transform: none;
 }
 
 .liquid-animating .liquid-container {
-    -webkit-transform: translateY(0);
-    -moz-transform: translateY(0);
-    transform: translateY(0);
+  transform: translateY(0);
 }
