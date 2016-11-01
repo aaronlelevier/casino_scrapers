@@ -262,42 +262,42 @@ LOGGING_DIR = os.path.join(os.path.dirname(BASE_DIR), "log") # ../bsrs-django/lo
 LOGGING_INFO_FILE = os.path.join(LOGGING_DIR, 'info.log')
 LOGGING_REQUEST_FILE = os.path.join(LOGGING_DIR, 'request.log')
 
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'standard': {
-            'format': '%(asctime)s %(levelname)s %(name)s %(message)s'
-        },
-    },
-    'handlers': {
-        'default': {
-            'level':'DEBUG',
-            'class':'logging.handlers.RotatingFileHandler',
-            'filename': LOGGING_INFO_FILE,
-            'maxBytes': 1024*1024*5, # 5 MB
-            'backupCount': 5,
-            'formatter':'standard',
-        },
-        'request_handler': {
-                'level':'DEBUG',
-                'class':'logging.handlers.RotatingFileHandler',
-                'filename': LOGGING_REQUEST_FILE,
-                'maxBytes': 1024*1024*5, # 5 MB
-                'backupCount': 5,
-                'formatter':'standard',
-        },
-    },
-    'loggers': {
-        '': {
-            'handlers': ['default'],
-            'level': 'DEBUG',
-            'propagate': True
-        },
-        'django.request': { # Stop SQL debug from logging to main logger
-            'handlers': ['request_handler'],
-            'level': 'DEBUG',
-            'propagate': False
-        },
-    }
-}
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {
+#         'standard': {
+#             'format': '%(asctime)s %(levelname)s %(name)s %(message)s'
+#         },
+#     },
+#     'handlers': {
+#         'default': {
+#             'level':'DEBUG',
+#             'class':'logging.handlers.RotatingFileHandler',
+#             'filename': LOGGING_INFO_FILE,
+#             'maxBytes': 1024*1024*5, # 5 MB
+#             'backupCount': 5,
+#             'formatter':'standard',
+#         },
+#         'request_handler': {
+#                 'level':'DEBUG',
+#                 'class':'logging.handlers.RotatingFileHandler',
+#                 'filename': LOGGING_REQUEST_FILE,
+#                 'maxBytes': 1024*1024*5, # 5 MB
+#                 'backupCount': 5,
+#                 'formatter':'standard',
+#         },
+#     },
+#     'loggers': {
+#         '': {
+#             'handlers': ['default'],
+#             'level': 'DEBUG',
+#             'propagate': True
+#         },
+#         'django.request': { # Stop SQL debug from logging to main logger
+#             'handlers': ['request_handler'],
+#             'level': 'DEBUG',
+#             'propagate': False
+#         },
+#     }
+# }
