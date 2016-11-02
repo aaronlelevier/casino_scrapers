@@ -879,7 +879,7 @@ test('get an action sendsms and update it to a new sendsms', assert => {
 test('select sendsms filter and update automation', assert => {
   page.visitDetail();
   andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(currentURL(), DETAIL_URL, 'at detail url');
     assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey), 'priority initially selected');
   });
   xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
@@ -911,7 +911,7 @@ test('select sendsms filter and update automation', assert => {
   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL, 'at list url');
   });
 });
 
