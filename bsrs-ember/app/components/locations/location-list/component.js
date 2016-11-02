@@ -12,7 +12,8 @@ export default GridViewComponent.extend({
       isFilterable: true,
       isSearchable: true,
       templateName: 'tickets/ticket-status-tag',
-      classNames: ['location-status']
+      classNames: ['location-status'],
+      width: '150px',
     },
     {
       field: 'name',

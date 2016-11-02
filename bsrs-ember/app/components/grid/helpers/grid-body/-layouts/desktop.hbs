@@ -28,7 +28,16 @@
         <tr class="head">
           <th class="selector"></th>
           {{#each columns as |column|}}
-          {{grid/helpers/grid-header-column tagName="th" column=column sort=sort find=find toggleFilterModal=(action "toggleFilterModal") sortBy=(action "sortBy")}}
+            {{grid/helpers/grid-header-column 
+              tagName="th" 
+              style=(html-safe (if column.width (concat 'width: ' column.width))) 
+              column=column 
+              sort=sort 
+              find=find 
+              toggleFilterModal=(action "toggleFilterModal") 
+              sortBy=(action "sortBy")
+              dataTestId=column.field
+            }}
           {{/each}}
         </tr>
       </thead>

@@ -70,7 +70,7 @@ test('upload will post form data, show progress and on save append the attachmen
   });
 });
 
-test('scott uploading a file, then rolling back should throw out any previously associated attachments', (assert) => {
+test('uploading a file, then rolling back should throw out any previously associated attachments', (assert) => {
   let model = store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));

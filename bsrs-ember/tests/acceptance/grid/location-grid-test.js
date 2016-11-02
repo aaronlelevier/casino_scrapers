@@ -36,7 +36,7 @@ moduleForAcceptance('Acceptance | location-grid-list', {
   },
 });
 
-test(`initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr`, (assert) => {
+test(`initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr with correct th widths`, (assert) => {
   visit(LOCATION_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LIST_URL);
@@ -48,6 +48,7 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
     assert.equal(find('.t-grid-data:eq(0) .t-location-location_level-name').text().trim(), LLD.nameCompany);
     assert.ok(find('.t-grid-data:eq(0) .t-location-status-open'));
     pagination(assert);
+    assert.equal(find('[data-test-id="status.translated_name"]').attr('style'), 'width: 150px');
   });
 });
 
