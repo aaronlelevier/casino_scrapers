@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import config from 'bsrs-ember/config/environment';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 import moment from 'moment';
