@@ -10,6 +10,7 @@ import repository from 'bsrs-ember/tests/helpers/repository';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import LD from 'bsrs-ember/vendor/defaults/locale';
 import page from 'bsrs-ember/tests/pages/person';
+import general from 'bsrs-ember/tests/pages/general';
 
 var store, run = Ember.run, locale_repo, trans;
 
@@ -17,6 +18,7 @@ moduleForComponent('person-new', 'integration: person-new test', {
   integration: true,
   setup() {
     page.setContext(this);
+    general.setContext(this);
     store = module_registry(this.container, this.registry, ['model:person']);
     translation.initialize(this);
     trans = this.container.lookup('service:i18n');
@@ -32,25 +34,8 @@ moduleForComponent('person-new', 'integration: person-new test', {
   },
   afterEach() {
     page.removeContext(this);
+    general.removeContext(this);
   }
-});
-
-test('username validation error if not present', function(assert) {
-  let modalDialogService = this.container.lookup('service:modal-dialog');
-  modalDialogService.destinationElementId = 'username';
-  run(() => {
-    this.set('model', store.push('person', {}));
-  });
-  this.render(hbs`{{people/person-new model=model}}`);
-  let $component = this.$('.invalid');
-  // invalid - username required
-  assert.equal($component.text().trim(), '');
-  this.$('.t-person-password').val(PD.password).trigger('change');
-  var save_btn = this.$('.t-save-btn');
-  save_btn.trigger('click').trigger('change');
-  let $err = this.$('.invalid');
-  assert.ok($err.is(':visible'));
-  assert.ok($err.text().trim().indexOf(trans.t('errors.person.username')) > -1);
 });
 
 test('locale should default if not present in Person model', function(assert) {

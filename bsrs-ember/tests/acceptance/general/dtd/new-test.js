@@ -85,7 +85,6 @@ test('visiting /dtd/new', async assert => {
   const link = dtd.get('links').objectAt(0);
   assert.ok(link.get('isDirtyOrRelatedDirty'));
   assert.ok(link.get('priorityIsDirty'));
-  // const response = Ember.$.extend(true, {}, payload);
   xhr(DJANGO_DTD_URL, 'POST', JSON.stringify(dtd_new_payload), {}, 201, {});
   await generalPage.save();
   assert.equal(currentURL(), NEW_URL);

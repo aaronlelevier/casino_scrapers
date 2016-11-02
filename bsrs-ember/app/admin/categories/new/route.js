@@ -13,7 +13,7 @@ var CategoryNewRoute = TabNewRoute.extend({
     let repository = this.get('repository');
     let search = transition.queryParams.search;
     let categories_children = repository.findCategoryChildren(search);
-    let model = this.get('simpleStore').find('category', {new_pk: new_pk}).objectAt(0);
+    let model = this.get('simpleStore').find('category', { new_pk: new_pk }).objectAt(0);
     if(!model){
       model = repository.create(new_pk);
     }

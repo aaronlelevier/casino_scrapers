@@ -94,26 +94,6 @@ test('if save isRunning, btn is disabled', function(assert) {
   assert.equal(this.$('.t-save-btn').attr('disabled'), 'disabled', 'Button is disabled if xhr save is outstanding');
 });
 
-test('clicking save will reveal all validation msgs', function(assert) {
-  // no phone/email
-  run(() => {
-    this.model = store.push('person', {id: PD.idOne});
-  });
-  this.render(hbs`{{people/person-single model=model}}`);
-  assert.equal($('.validated-input-error-dialog').length, 0);
-  assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
-  assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), '');
-  assert.notOk(page.firstNameValidationErrorVisible);
-  assert.notOk(page.lastNameValidationErrorVisible);
-  const save_btn = this.$('.t-save-btn');
-  save_btn.trigger('click').trigger('change');
-  assert.equal($('.validated-input-error-dialog').length, 2);
-  assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.person.first_name'));
-  assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.person.last_name'));
-  assert.ok(page.firstNameValidationErrorVisible);
-  assert.ok(page.lastNameValidationErrorVisible);
-});
-
 test('header populates with username and role name', function(assert) {
   let model;
   run(() => {

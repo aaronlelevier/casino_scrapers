@@ -182,6 +182,7 @@ test('clicking cancel button with no edits will take from detail view to list vi
   });
 });
 
+// TODO: need to figure out a way to show validation messages.
 test('validation - at least one event is required, each action must have a type', assert => {
   clearxhr(listXhr);
   visit(NEW_URL);
@@ -189,24 +190,27 @@ test('validation - at least one event is required, each action must have a type'
     assert.equal(currentURL(), NEW_URL);
   });
   page.descriptionFill(AD.descriptionTwo);
-  generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
-    assert.equal($('[data-test-id="validation-event0"]').text().trim(), t('errors.automation.event.length'));
-    assert.equal($('[data-test-id="validation-action0"]').text().trim(), t('errors.automation.type'));
+    // btn disabled
+     assert.equal(find('.t-save-btn').attr('disabled'), 'disabled');
+    // TODO: user needs to be aware of validation errs
+    // assert.equal($('[data-test-id="validation-event0"]').text().trim(), t('errors.automation.event.length'));
+    // assert.equal($('[data-test-id="validation-action0"]').text().trim(), t('errors.automation.type'));
   });
   // set to type 'assignee', and should see an 'assignee required msg' b/c assignee not yet selected
   xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.action_search_power_select());
   selectChoose('.t-automation-action-type-select', AATD.keyOne);
   andThen(() => {
+    // not btn disabled
     assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
     assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
   });
-  generalPage.save();
+  xhr(AUTOMATION_EVENTS_URL, 'GET', null, {}, 200, AF.event_search_power_select());
+  selectChoose('.t-automation-event-select', ED.keyOneValue);
   andThen(() => {
-    assert.equal(currentURL(), NEW_URL);
-    assert.equal($('[data-test-id="validation-event0"]').text().trim(), t('errors.automation.event.length'));
-    assert.equal($('[data-test-id="validation-action0"]').length, 0);
+    assert.equal(find('.t-save-btn').attr('disabled'), undefined);
+    assert.equal(Ember.$('.t-automation-event-select').length, 1);
   });
 });
 

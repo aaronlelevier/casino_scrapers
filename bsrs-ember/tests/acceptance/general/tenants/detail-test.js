@@ -9,10 +9,13 @@ import TD from 'bsrs-ember/vendor/defaults/tenant';
 import TF from 'bsrs-ember/vendor/tenant_fixtures';
 import CF from 'bsrs-ember/vendor/currency_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/currency';
+import COD from 'bsrs-ember/vendor/defaults/country';
 import DD from 'bsrs-ember/vendor/defaults/dtd';
 import DF from 'bsrs-ember/vendor/dtd_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import PF from 'bsrs-ember/vendor/people_fixtures';
+import SF from 'bsrs-ember/vendor/state_fixtures';
+import CountryF from 'bsrs-ember/vendor/country_fixtures';
 import page from 'bsrs-ember/tests/pages/tenant';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { TENANT_URL, TENANT_LIST_URL, CURRENCIES_URL, PEOPLE_URL, DTD_URL } from 'bsrs-ember/utilities/urls';
@@ -21,6 +24,7 @@ const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_TENANT_URL;
 const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
 const API_DETAIL_URL = `${TENANT_URL}${TD.idOne}/`;
+const CURRENCY = '.t-currency-select';
 
 var store, detailXhr, listXhr;
 
@@ -232,3 +236,93 @@ test('when click delete, and click no modal disappears', assert => {
 //     assert.equal(find('.t-error-message').text(), 'WAT');
 //   });
 // });
+
+test('validations work', assert => {
+  clearxhr(listXhr);
+  page.visitDetail();
+  page.companyNameFill('');
+  triggerEvent('.t-tenant-company_name', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.t-validation-company_name').text().trim(), 'errors.tenant.company_name');
+    assert.equal($('.invalid').length, 1);
+  });
+  page.companyImplementationContactFill('');
+  triggerEvent('.t-tenant-implementation_contact_initial', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.t-validation-implementation_contact_initial').text().trim(), 'errors.tenant.implementation_contact_initial');
+    assert.equal($('.invalid').length, 2);
+  });
+  page.companyCodeFill('');
+  triggerEvent('.t-tenant-company_code', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.t-validation-company_code').text().trim(), 'errors.tenant.company_code');
+    assert.equal($('.invalid').length, 3);
+  });
+  page.companyBillingContactFill('');
+  triggerEvent('.t-tenant-billing_contact', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.t-validation-billing_contact').text().trim(), 'errors.tenant.billing_contact');
+    assert.equal($('.invalid').length, 4);
+  });
+  page.companyBillingAddressFill('');
+  triggerEvent('.t-address-address', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.t-validation-address').text().trim(), 'errors.address.address');
+    assert.equal($('.invalid').length, 5);
+  });
+  page.companyBillingCityFill('');
+  triggerEvent('.t-address-city', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.t-validation-city').text().trim(), 'errors.address.city');
+    assert.equal($('.invalid').length, 6);
+  });
+  page.companyBillingZipFill('');
+  triggerEvent('.t-address-postal-code', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.t-validation-postal_code').text().trim(), 'errors.address.postal_code');
+    assert.equal($('.invalid').length, 7);
+  });
+  page.companyBillingEmailFill('');
+  triggerEvent('.t-email-email1', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.t-validation-email').text().trim(), 'errors.email.email');
+    assert.equal($('.invalid').length, 8);
+  });
+  page.companyBillingPhoneFill('');
+  triggerEvent('.t-phonenumber-number', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.t-validation-number').text().trim(), 'errors.phonenumber.number');
+    assert.equal($('.invalid').length, 9);
+  });
+  page.companyDashboardTextFill('');
+  triggerEvent('.t-tenant-dashboard_text', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.t-validation-dashboard_text').text().trim(), 'errors.tenant.dashboard_text');
+    assert.equal($('.invalid').length, 10);
+  });
+  page.companyImplementationEmailFill('');
+  triggerEvent('.t-email-email', 'keyup', {keyCode: 65});
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal($('.t-validation-email:eq(0)').text().trim(), 'errors.email.email');
+    assert.equal($('.invalid').length, 11);
+  });
+
+  // TODO: When removing country from multi select it doesnt trigger validation.
+  // removeMultipleOption('.t-tenant-country-select', COD.name);
+  // andThen(() => {
+  //   assert.equal(currentURL(), DETAIL_URL);
+  //   assert.equal($('.t-validation-countries').text().trim(), 'errors.tenant.countries');
+  //   assert.equal($('.invalid').length, 4);
+  // });
+});

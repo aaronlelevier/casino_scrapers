@@ -114,6 +114,7 @@ test('a location level child can be selected and persisted', (assert) => {
 });
 
 test('when editing the location level name to invalid, it checks for validation', (assert) => {
+  clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
@@ -121,25 +122,12 @@ test('when editing the location level name to invalid, it checks for validation'
     assert.notOk(page.nameValidationErrorVisible);
   });
   page.nameFill('');
-  generalPage.save();
+  triggerEvent('.t-location-level-name', 'keyup', {keyCode: 32});
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal($('.validated-input-error-dialog').length, 1);
     assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), 'errors.location_level.name');
     assert.ok(page.nameValidationErrorVisible);
-  });
-  page.nameFill(LLD.nameAnother);
-  triggerEvent('.t-location-level-name', 'keyup', {keyCode: 65});
-  andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 0);
-    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
-    assert.notOk(page.nameValidationErrorVisible);
-  });
-  let payload = LLF.put({id: LLD.idOne, name: LLD.nameAnother, children: LLD.companyChildren});
-  xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, {});
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_LEVEL_URL);
   });
 });
 
@@ -278,9 +266,9 @@ test('can remove and add back children', (assert) => {
   page.childrenClickDropdown();
   page.childrenClickOptionFirst();
   let children = LLD.companyChildren;
-  let payload = LLF.put({id: LLD.idOne, name: LLD.nameCompany, children: children});
-  xhr(endpoint_detail, 'PUT', JSON.stringify(payload), {}, 200, {});
-  generalPage.save();
+  // let payload = LLF.put({id: LLD.idOne, name: LLD.nameCompany, children: children});
+  // xhr(endpoint_detail, 'PUT', JSON.stringify(payload), {}, 200, {});
+  generalPage.cancel();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
   });

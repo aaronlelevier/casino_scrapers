@@ -18,7 +18,6 @@ import { waitFor } from 'bsrs-ember/tests/helpers/utilities';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/person';
 import random from 'bsrs-ember/models/random';
-import { multi_new_put_payload } from 'bsrs-ember/tests/helpers/payloads/person';
 import BASEURLS, { PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -71,26 +70,56 @@ test('username backend validation', (assert) => {
 });
 
 test('clicking save reveals validation messages', (assert) => {
-  clearxhr(username_search);
   clearxhr(list_xhr);
   visit(NEW_URL);
+  page.usernameFillIn(PD.username);
+  page.passwordFillIn(PD.password);
+  page.firstNameFill(PD.first_name);
+  page.middleInitialFill(PD.middle_initial);
+  page.lastNameFill(PD.last_name);
   andThen(() => {
     assert.equal(find('[data-test-id="first-name"] .invalid').length, 0);
     assert.equal(find('[data-test-id="last-name"] .invalid').length, 0);
     assert.equal(find('[data-test-id="middle-initial"] .invalid').length, 0);
+    assert.equal(find('.t-person-username-validator .invalid').length, 0);
   });
-  generalPage.save();
+  page.firstNameFill('');
+  triggerEvent('.t-person-first-name', 'keyup', {keyCode: 32});
+  page.lastNameFill('');
+  triggerEvent('.t-person-last-name', 'keyup', {keyCode: 32});
+  page.middleInitialFill('');
+  triggerEvent('.t-person-middle-initial', 'keyup', {keyCode: 32});
+  page.usernameFillIn('');
+  triggerEvent('.t-person-username', 'keyup', {keyCode: 32});
   andThen(() => {
     assert.equal(find('[data-test-id="first-name"] .invalid').length, 1);
     assert.equal(find('[data-test-id="last-name"] .invalid').length, 1);
     assert.equal(find('[data-test-id="middle-initial"] .invalid').length, 0);
+    assert.equal(find('.t-person-username-validator').hasClass('invalid'), true);
   });
-  fillIn('.t-person-first-name', 'scott');
+  page.firstNameFill(PD.first_name);
   triggerEvent('.t-person-first-name', 'keyup', {keyCode: 68});
   andThen(() => {
     assert.equal(find('[data-test-id="first-name"] .invalid').length, 0);
     assert.equal(find('[data-test-id="last-name"] .invalid').length, 1);
     assert.equal(find('[data-test-id="middle-initial"] .invalid').length, 0);
+    assert.equal(find('.t-person-username-validator').hasClass('invalid'), true);
+  });
+  page.lastNameFill(PD.last_name);
+  triggerEvent('.t-person-last-name', 'keyup', {keyCode: 68});
+  andThen(() => {
+    assert.equal(find('[data-test-id="first-name"] .invalid').length, 0);
+    assert.equal(find('[data-test-id="last-name"] .invalid').length, 0);
+    assert.equal(find('[data-test-id="middle-initial"] .invalid').length, 0);
+    assert.equal(find('.t-person-username-validator').hasClass('invalid'), true);
+  });
+  page.usernameFillIn(PD.username);
+  triggerEvent('.t-person-username', 'keyup', {keyCode: 68});
+  andThen(() => {
+    assert.equal(find('[data-test-id="first-name"] .invalid').length, 0);
+    assert.equal(find('[data-test-id="last-name"] .invalid').length, 0);
+    assert.equal(find('[data-test-id="middle-initial"] .invalid').length, 0);
+    assert.equal(find('.t-person-username-validator').hasClass('invalid'), false);
   });
 });
 
@@ -257,8 +286,21 @@ test('adding a new person should allow for another new person to be created afte
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/abc123`);
     person_count = store.find('person').get('length');
   });
-  selectChoose('.t-person-role-select', RD.nameOne);
-  selectChoose('.t-status-select', SD.activeNameTranslated);
+  selectChoose('.t-status-select', SD.inactiveNameTranslated);
+  const multi_new_put_payload = {
+    id: 'abc123',
+    username: PD.username,
+    first_name: PD.first_name,
+    middle_initial: PD.middle_initial,
+    last_name: PD.last_name,
+    auth_amount: null,
+    status: PD.statusInactive,
+    role: PD.role,
+    locations: [],
+    emails: [],
+    phone_numbers: [],
+    locale: PD.locale_id,
+  };
   ajax(`${PEOPLE_URL}abc123/`, 'PUT', JSON.stringify(multi_new_put_payload), {}, 200, {});
   generalPage.save();
   andThen(() => {

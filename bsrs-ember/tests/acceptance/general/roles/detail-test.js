@@ -121,54 +121,17 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
+  clearxhr(list_xhr);
   visit(DETAIL_URL);
+  page.nameFill(RD.nameOne); 
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.notOk(page.nameValidationErrorVisible);
   });
-  fillIn('.t-role-name', '');
-  page.categoryOneRemove();
-  generalPage.save();
+  page.nameFill('');
+  triggerEvent('.t-role-name', 'keyup', {keyCode: 32});
   andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.ok(page.nameValidationErrorVisible);
-    assert.ok(find('.t-role-name-validator').hasClass('invalid'));
     assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.role.name'));
-  });
-  fillIn('.t-role-name', RD.nameOne);
-  triggerEvent('.t-role-name', 'keyup', {keyCode: 65});
-  andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 0);
-    assert.notOk(page.nameValidationErrorVisible);
-  });
-  xhr(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
-  page.categoryClickDropdown();
-  page.categoryClickOptionOneEq();
-  andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 0);
-    assert.notOk(page.nameValidationErrorVisible);
-  });
-  let payload = RF.put(Object.assign(basePayload, {categories: [CD.idOne]}));
-  let response = Ember.$.extend(true, {}, payload);
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
-  });
-});
-
-test('when you change a related location level it will be persisted correctly', (assert) => {
-  visit(DETAIL_URL);
-  let location_level = LLF.put({
-    id: LLD.idOne,
-    name: LLD.nameRegion
-  });
-  let payload = RF.put(Object.assign(basePayload, {
-    location_level: location_level.id,
-  }));
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
   });
 });
 
@@ -302,6 +265,7 @@ test('clicking select for categories will fire off xhr request for all parent ca
 });
 
 test('starting with multiple categories, can remove all categories (while not populating options) and add back', (assert) => {
+  clearxhr(list_xhr);
   detail_data.categories = [...detail_data.categories, CF.get(CD.idThree, CD.nameThree)];
   visit(DETAIL_URL);
   andThen(() => {
@@ -333,14 +297,6 @@ test('starting with multiple categories, can remove all categories (while not po
     assert.equal(role.get('categories').get('length'), 2);
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(page.categoriesSelected, 2);
-  });
-  let payload = RF.put(Object.assign(basePayload, {
-    categories: [CD.idOne, CD.idThree],
-  }));
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
   });
 });
 

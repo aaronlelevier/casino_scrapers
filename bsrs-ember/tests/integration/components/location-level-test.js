@@ -39,20 +39,6 @@ moduleForComponent('location-level', 'integration: location-level test', {
   }
 });
 
-test('name is required validation, cannot save w/o name', function(assert) {
-  // let modalDialogService = this.container.lookup('service:modal-dialog');
-  // modalDialogService.destinationElementId = 'description';
-  location_level.set('name', '');
-  this.set('model', location_level);
-  this.set('location_level_options', location_levels);
-  this.render(hbs`{{location-level-general model=model location_level_options=location_level_options}}`);
-  let $err = this.$('.t-location-level-name-validator.invalid');
-  assert.notOk($err.is(':visible'));
-  generalPage.save();
-  $err = this.$('.t-location-level-name-validator.invalid');
-  assert.ok($err.is(':visible'));
-});
-
 test('if save isRunning, btn is disabled', function(assert) {
   run(() => {
     this.model = store.push('location-level', {id: LLD.idOne});

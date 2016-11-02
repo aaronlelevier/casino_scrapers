@@ -9,11 +9,13 @@ import translations from "bsrs-ember/vendor/translation_fixtures";
 import LLF from "bsrs-ember/vendor/location-level_fixtures";
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import LDS from 'bsrs-ember/vendor/defaults/location-status';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
 import { clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 import page from 'bsrs-ember/tests/pages/location';
 import general from 'bsrs-ember/tests/pages/general';
+import wait from 'ember-test-helpers/wait';
 
 var store, trans;
 
@@ -58,31 +60,29 @@ moduleForComponent('locations/location-single', 'integration: locations/location
 
 test('clicking save will reveal all validation msgs', function(assert) {
   // no addresses/phone/email
+  var done = assert.async();
+  let model;
   run(() => {
-    this.model = store.push('location', {id: LD.idOne, name: LD.storeName});
+    model = store.push('location', {id: LD.idOne, name: LD.storeName, number: LD.storeNumber, location_level_fk: LLD.idOne, status_fk: LDS.openId});
+    store.push('location-level', {id: LLD.idOne, name: LLD.nameDistrict, locations: [LD.idOne]});
+  store.push('location-status', {id: LDS.openId, name: LDS.openName, locations: [LD.idOne]});
   });
+  this.model = model;
   this.render(hbs`{{locations/location-single model=model}}`);
   this.$('.t-location-name').val('').trigger('change');
   assert.equal(this.$('.validated-input-error-dialog').length, 0);
-  assert.equal(this.$('.validated-input-error-dialog:eq(0)').text().trim(), '');
-  assert.equal(this.$('.validated-input-error-dialog:eq(1)').text().trim(), '');
-  assert.equal(this.$('.validated-input-error-dialog:eq(2)').text().trim(), '');
-  assert.equal(this.$('.validated-input-error-dialog:eq(3)').text().trim(), '');
-  assert.notOk(page.nameValidationErrorVisible);
-  assert.notOk(page.numberValidationErrorVisible);
-  assert.notOk(page.llevelValidationErrorVisible);
-  assert.notOk(page.statusValidationErrorVisible);
-  const save_btn = this.$('.t-save-btn');
-  save_btn.trigger('click').trigger('change');
-  assert.equal(Ember.$('.validated-input-error-dialog').length, 4);
-  assert.equal(Ember.$('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.location.name'));
-  assert.equal(Ember.$('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.location.number'));
-  assert.equal(Ember.$('.validated-input-error-dialog:eq(2)').text().trim(), trans.t('errors.location.location_level'));
-  assert.equal(Ember.$('.validated-input-error-dialog:eq(3)').text().trim(), trans.t('errors.location.status'));
-  assert.ok(page.nameValidationErrorVisible);
-  assert.ok(page.numberValidationErrorVisible);
-  assert.ok(page.llevelValidationErrorVisible);
-  assert.ok(page.statusValidationErrorVisible);
+  assert.equal(model.get('status.id'), LDS.openId);
+  assert.equal(model.get('location_level.id'), LLD.idOne);
+  this.$('.t-location-name').val('').trigger('keyup');
+  this.$('.t-location-number').val('').trigger('keyup');
+  return wait().then(() => {
+    assert.equal(this.$('.invalid').length, 2);
+    assert.ok(page.nameValidationErrorVisible);
+    assert.ok(page.numberValidationErrorVisible);
+    assert.equal(Ember.$('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.location.name'));
+    assert.equal(Ember.$('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.location.number'));
+    done();
+  });
 });
 
 test('filling in location level on location new template will set diabled to false for children and parents', function(assert) {

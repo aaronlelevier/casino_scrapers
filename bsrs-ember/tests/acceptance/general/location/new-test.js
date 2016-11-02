@@ -111,63 +111,23 @@ test('validation works and when hit save, we do same post', (assert) => {
     assert.notOk(page.llevelValidationErrorVisible);
     assert.notOk(page.statusValidationErrorVisible);
   });
-  generalPage.save();
-  andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 4);
-    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.location.name'));
-    assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), t('errors.location.number'));
-    assert.equal($('.validated-input-error-dialog:eq(2)').text().trim(), t('errors.location.location_level'));
-    assert.equal($('.validated-input-error-dialog:eq(3)').text().trim(), t('errors.location.status'));
-    assert.ok(page.nameValidationErrorVisible);
-    assert.ok(page.numberValidationErrorVisible);
-    assert.ok(page.llevelValidationErrorVisible);
-    assert.ok(page.statusValidationErrorVisible);
-  });
-  fillIn('.t-location-name', LD.storeName);
-  triggerEvent('.t-location-name', 'keyup', {keyCode: 65});
-  andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 3);
-    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.location.number'));
-    assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), t('errors.location.location_level'));
-    assert.equal($('.validated-input-error-dialog:eq(2)').text().trim(), t('errors.location.status'));
-    assert.notOk(page.nameValidationErrorVisible);
-    assert.ok(page.numberValidationErrorVisible);
-    assert.ok(page.llevelValidationErrorVisible);
-    assert.ok(page.statusValidationErrorVisible);
-  });
-  fillIn('.t-location-number', LD.storeNumber);
-  triggerEvent('.t-location-number', 'keyup', {keyCode: 65});
-  andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 2);
-    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.location.location_level'));
-    assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), t('errors.location.status'));
-    assert.notOk(page.nameValidationErrorVisible);
-    assert.notOk(page.numberValidationErrorVisible);
-    assert.ok(page.llevelValidationErrorVisible);
-    assert.ok(page.statusValidationErrorVisible);
-  });
-  selectChoose('.t-location-level-select', 'Company');
-  andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.location.status'));
-    assert.notOk(page.nameValidationErrorVisible);
-    assert.notOk(page.numberValidationErrorVisible);
-    assert.notOk(page.llevelValidationErrorVisible);
-    assert.ok(page.statusValidationErrorVisible);
-  });
-  selectChoose('.t-location-status-select', 'Open');
+  page.nameFillIn(LD.storeName);
+  page.numberFillIn(LD.storeNumber);
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
     assert.notOk(page.nameValidationErrorVisible);
     assert.notOk(page.numberValidationErrorVisible);
-    assert.notOk(page.llevelValidationErrorVisible);
-    assert.notOk(page.statusValidationErrorVisible);
   });
-  let response = Ember.$.extend(true, {}, payload);
-  xhr(LOCATIONS_URL, 'POST', JSON.stringify(payload), {}, 201, response);
-  generalPage.save();
+  page.nameFillIn('');
+  page.numberFillIn('');
+  triggerEvent('.t-location-name', 'keyup', {keyCode: 32});
+  triggerEvent('.t-location-number', 'keyup', {keyCode: 32});
   andThen(() => {
-    assert.equal(currentURL(), LOCATION_URL);
+    assert.equal($('.validated-input-error-dialog').length, 2);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.location.name'));
+    assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), t('errors.location.number'));
+    assert.ok(page.nameValidationErrorVisible);
+    assert.ok(page.numberValidationErrorVisible);
   });
 });
 

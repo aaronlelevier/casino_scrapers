@@ -63,36 +63,6 @@ test('scid - read only is populated if in detail, otherwise in create it is not 
   assert.equal($('[data-test-id="tenant-scid"]').val(), TD.scidOne);
 });
 
-test('validation works', function(assert) {
-  // like new form
-  run(function() {
-    model = store.push('tenant', {id: TD.idOne, company_name: undefined, billing_phone_number_fk: PND.idOne, billing_email_fk: ED.idOne, implementation_email_fk: ED.idOne, billing_address_fk: AD.idOne});
-    store.push('currency', {id: CurrencyD.idOne, tenants: []});
-    store.push('phonenumber', {id: PND.idOne, number: undefined, tenants: [TD.idOne]});
-    store.push('phone-number-type', {id: PNTD.idOne, name: PNTD.officeName, phonenumbers: [PND.idOne]});
-    store.push('email', {id: ED.idOne, email: undefined, tenants: [TD.idOne], tenants_implementation: [TD.idOne]});
-    store.push('email-type', {id: ETD.idOne, name: ETD.workEmail, emails: [ED.idOne]});
-    store.push('address', {id: AD.idOne, address: undefined, city: undefined, postal_code: undefined, state_fk: SD.idOne, country_fk: CD.idOne, tenants: [TD.idOne]});
-    store.push('country', {id: CD.idOne, addresses: [AD.idOne]});
-    store.push('state', {id: SD.idOne, addresses: [AD.idOne]});
-    store.push('address-type', {id: ATD.idOne, name: ATD.officeName, addresses: [AD.idOne]});
-  });
-  this.set('model', model);
-  this.render(hbs `{{tenants/tenant-single model=model}}`);
-  let $input = this.$('.invalid');
-  assert.equal($input.length, 0);
-  generalPage.save();
-  $input = this.$('.invalid');
-  assert.equal($input.length, 14);
-  assert.equal($('.t-validation-implementation_contact_initial').text().trim(), 'errors.tenant.implementation_contact_initial');
-  assert.equal($('.t-validation-company_name').text().trim(), 'errors.tenant.company_name');
-  assert.equal($('.t-validation-company_code').text().trim(), 'errors.tenant.company_code');
-  assert.equal($('.t-validation-default_currency').text().trim(), 'errors.tenant.default_currency');
-  assert.equal($('.t-validation-countries').text().trim(), 'errors.tenant.countries');
-  assert.equal($('.t-validation-billing_contact').text().trim(), 'errors.tenant.billing_contact');
-  assert.equal($('.t-validation-implementation_contact_initial').text().trim(), 'errors.tenant.implementation_contact_initial');
-});
-
 test('header - shows company_name if present on the model', function(assert) {
   this.render(hbs `{{tenants/tenant-single model=model}}`);
   assert.equal(this.$('.t-tenant-header').text().trim(), TD.companyNameOne);

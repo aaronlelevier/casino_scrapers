@@ -128,15 +128,9 @@ test('when you click cancel, you are redirected to the category list view', (ass
 
 test('when editing the category name to invalid, it checks for validation', (assert) => {
   page.visitDetail();
-  andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 0);
-    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
-    assert.notOk(page.nameValidationErrorVisible);
-  });
   page.nameFill('');
-  generalPage.save();
+  triggerEvent('.t-category-name', 'keyup', {keyCode: 32});
   andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
     assert.equal($('.validated-input-error-dialog').length, 1);
     assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), 'errors.category.name');
     assert.ok(page.nameValidationErrorVisible);
@@ -234,9 +228,8 @@ test('cost_amount - is not required', (assert) => {
     assert.equal(currentURL(), CATEGORIES_INDEX_URL);
   });
 });
-
-/* CATEGORY TO CHILDREN */
 test('clicking and typing into power select for categories children will fire off xhr request for all categories', (assert) => {
+/* CATEGORY TO CHILDREN */
   page.visitDetail();
   andThen(() => {
     let category = store.find('category', CD.idOne);
@@ -350,11 +343,8 @@ test('when you deep link to the category detail can remove child from category a
 // });
 
 test('clicking and typing into power select for categories children will not filter if spacebar pressed', (assert) => {
+  clearxhr(list_xhr);
   page.visitDetail();
-  andThen(() => {
-    let category = store.find('category', CD.idOne);
-    assert.equal(category.get('children').get('length'), 1);
-  });
   page.categoryClickDropdown();
   fillIn(`${CATEGORY_SEARCH}`, ' ');
   andThen(() => {
@@ -363,14 +353,6 @@ test('clicking and typing into power select for categories children will not fil
     let category = store.find('category', CD.idOne);
     assert.equal(category.get('children').get('length'), 1);
     assert.equal(page.categoryOptionLength, 1);
-  });
-  let url = PREFIX + DETAIL_URL + '/';
-  let response = CF.detail(CD.idOne);
-  let payload = CF.put({id: CD.idOne, children: [CD.idChild]});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), CATEGORIES_INDEX_URL);
   });
 });
 /* END CATEGORY CHILDREN */

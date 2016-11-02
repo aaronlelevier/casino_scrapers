@@ -78,6 +78,7 @@ test('visiting /location-level/new', (assert) => {
 });
 
 test('when editing the location level name to invalid, it checks for validation', (assert) => {
+  clearxhr(list_xhr);
   page.visitNew();
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
@@ -85,27 +86,12 @@ test('when editing the location level name to invalid, it checks for validation'
     assert.notOk(page.nameValidationErrorVisible);
   });
   page.nameFill('');
-  generalPage.save();
+  triggerEvent('.t-location-level-name', 'keyup', {keyCode: 32});
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
     assert.equal($('.validated-input-error-dialog').length, 1);
     assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), 'errors.location_level.name');
     assert.ok(page.nameValidationErrorVisible);
-  });
-  page.nameFill(LLD.nameRegion);
-  triggerEvent('.t-location-level-name', 'keyup', {keyCode: 65});
-  andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 0);
-    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
-    assert.notOk(page.nameValidationErrorVisible);
-  });
-  payload.name = LLD.nameRegion;
-  payload.children = [];
-  let response = Ember.$.extend(true, {}, payload);
-  xhr(LOCATION_LEVELS_URL, 'POST', JSON.stringify(payload), {}, 201, response);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_LEVEL_URL);
   });
 });
 

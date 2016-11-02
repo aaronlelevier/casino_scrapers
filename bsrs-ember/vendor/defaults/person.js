@@ -43,6 +43,7 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
       fullname: BSRS_PERSON_FIRST_NAME + ' ' + BSRS_PERSON_LAST_NAME,
       role: this.role_defaults.idOne,
       status: this.status_defaults.activeId,
+      statusInactive: this.status_defaults.inactiveId,
       phone_numbers: BSRS_PERSON_PHONE_NUMBERS,
       // addresses: BSRS_PERSON_ADDRESSES,
       location: BSRS_PERSON_LOCATION,

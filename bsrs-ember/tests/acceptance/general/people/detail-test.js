@@ -432,6 +432,7 @@ test('newly added emails without a valid email are ignored and removed when user
 });
 
 test('invalid phone numbers prevent save and must click delete to navigate away', (assert) => {
+  clearxhr(list_xhr);
   page.visitDetail();
   generalPage.clickAddPhoneNumber();
   andThen(() => {
@@ -445,25 +446,9 @@ test('invalid phone numbers prevent save and must click delete to navigate away'
     assert.notOk(generalPage.phonenumberOneValidationErrorVisible);
     assert.ok(generalPage.phonenumberTwoValidationErrorVisible);
   });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.notOk(generalPage.phonenumberZeroValidationErrorVisible);
-    assert.notOk(generalPage.phonenumberOneValidationErrorVisible);
-    assert.ok(generalPage.phonenumberTwoValidationErrorVisible);
-  });
   generalPage.phonenumberThirdFillIn('');
   triggerEvent('.t-phonenumber-number2', 'keyup', {keyCode: 65});
   andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.notOk(generalPage.phonenumberZeroValidationErrorVisible);
-    assert.notOk(generalPage.phonenumberOneValidationErrorVisible);
-    assert.ok(generalPage.phonenumberTwoValidationErrorVisible);
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
     assert.equal($('.validated-input-error-dialog').length, 1);
     assert.notOk(generalPage.phonenumberZeroValidationErrorVisible);
     assert.notOk(generalPage.phonenumberOneValidationErrorVisible);
@@ -475,20 +460,10 @@ test('invalid phone numbers prevent save and must click delete to navigate away'
     assert.notOk(generalPage.phonenumberZeroValidationErrorVisible);
     assert.notOk(generalPage.phonenumberOneValidationErrorVisible);
   });
-  var payload = PF.put({id: PD.idOne});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
-    const person = store.find('person', PD.idOne);
-    const fks = person.get('person_phonenumbers_fks');
-    const ids = person.get('person_phonenumbers_ids');
-    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    assert.deepEqual(fks, ids);
-  });
 });
 
 test('invalid emails prevent save and must click delete to navigate away', (assert) => {
+  clearxhr(list_xhr);
   page.visitDetail();
   generalPage.clickAddEmail();
   andThen(() => {
@@ -502,25 +477,9 @@ test('invalid emails prevent save and must click delete to navigate away', (asse
     assert.notOk(generalPage.emailOneValidationErrorVisible);
     assert.ok(generalPage.emailTwoValidationErrorVisible);
   });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.notOk(generalPage.emailZeroValidationErrorVisible);
-    assert.notOk(generalPage.emailOneValidationErrorVisible);
-    assert.ok(generalPage.emailTwoValidationErrorVisible);
-  });
   generalPage.emailThirdFillIn('');
   triggerEvent('.t-email-email2', 'keyup', {keyCode: 65});
   andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.notOk(generalPage.emailZeroValidationErrorVisible);
-    assert.notOk(generalPage.emailOneValidationErrorVisible);
-    assert.ok(generalPage.emailTwoValidationErrorVisible);
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
     assert.equal($('.validated-input-error-dialog').length, 1);
     assert.notOk(generalPage.emailZeroValidationErrorVisible);
     assert.notOk(generalPage.emailOneValidationErrorVisible);
@@ -532,24 +491,12 @@ test('invalid emails prevent save and must click delete to navigate away', (asse
     assert.notOk(generalPage.emailZeroValidationErrorVisible);
     assert.notOk(generalPage.emailOneValidationErrorVisible);
   });
-  var response = PF.detail(PD.idOne);
-  var payload = PF.put({id: PD.idOne});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
-    const person = store.find('person', PD.idOne);
-    const fks = person.get('person_emails_fks');
-    const ids = person.get('person_emails_ids');
-    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    assert.deepEqual(fks, ids);
-  });
 });
 
 test('when you change a related email numbers type it will be persisted correctly', (assert) => {
   page.visitDetail();
-  selectChoose('.t-email-type-select', ETD.personalName);
-  var emails = EF.put({id: ED.idOne, type: ETD.personalId});
+  selectChoose('.t-email-type-select', ETD.workName);
+  var emails = EF.put({id: ED.idOne, type: ETD.workId});
   var payload = PF.put({id: PD.id, emails: emails});
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
@@ -991,11 +938,13 @@ test('deep link to person and clicking in the person-locations-select component 
 });
 
 test('can remove and add back same location', (assert) => {
+  clearxhr(list_xhr);
   page.visitDetail();
   page.locationOneRemove();
   andThen(() => {
     let person = store.find('person', PD.idOne);
     assert.equal(person.get('locations').get('length'), 0);
+    assert.equal(find('.t-save-btn').attr('disabled'), undefined);
   });
   let locations_endpoint = `${LOCATIONS_URL}location__icontains=a/?location_level=${LLD.idOne}`;
   const response = LF.list_power_select();
@@ -1008,13 +957,8 @@ test('can remove and add back same location', (assert) => {
     assert.equal(person.get('locations').get('length'), 1);
     assert.equal(page.locationOneSelected.indexOf(LD.storeName), 2);
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  });
-  let url = PREFIX + DETAIL_URL + '/';
-  let payload = PF.put({id: PD.idOne, locations: [LD.idOne]});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(find('.t-save-btn').attr('disabled'), 'disabled');
   });
 });
 
@@ -1057,19 +1001,12 @@ test('starting with multiple locations, can remove all locations (while not popu
 });
 
 test('clicking and typing into power select for people will not filter if spacebar pressed', (assert) => {
+  clearxhr(list_xhr);
   page.visitDetail();
   fillIn(LOCATION_SEARCH, '');
   andThen(() => {
     assert.equal(page.locationOptionLength, 1);
     assert.equal(find(LOCATION_DROPDOWN).text().trim(), GLOBALMSG.power_search);
-  });
-  let url = PREFIX + DETAIL_URL + '/';
-  let response = PF.detail(PD.idOne);
-  let payload = PF.put({id: PD.idOne, locations: [LD.idOne]});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), PEOPLE_INDEX_URL);
   });
 });
 

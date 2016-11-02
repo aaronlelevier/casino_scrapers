@@ -49,7 +49,7 @@ const BACKSPACE = {keyCode: 8};
 const LOCATION = '.t-ticket-location-select .ember-basic-dropdown-trigger';
 const DROPDOWN = options;
 const ASSIGNEE = '.t-ticket-assignee-select .ember-basic-dropdown-trigger';
-const CC = '.t-ticket-cc-select .ember-basic-dropdown-trigger';
+const CC = '.t-ticket-cc-select';
 const CC_SEARCH = '.ember-power-select-trigger-multiple-input';
 const SEARCH = '.ember-power-select-search input';
 const categories = '.categories-power-select-search input';
@@ -71,21 +71,6 @@ moduleForAcceptance('Acceptance | ticket detail', {
 
 /* jshint ignore:start */
 
-test('clicking a tickets will redirect to the given detail view and can save to ensure validation mixins are working (completed ticket)', async assert => {
-  await page.visit();
-  assert.equal(currentURL(), TICKET_URL);
-  assert.equal(find('.t-nav-tickets').hasClass('active'), true);
-  await click('.t-grid-data:eq(0)');
-  assert.equal(currentURL(), DETAIL_URL);
-  assert.equal(find('.t-nav-tickets').hasClass('active'), true);
-  assert.equal(find('.t-dt-continue').text(), '');
-  assert.equal(page.ccSelected.indexOf(PD.first_name), 2);
-  assert.equal(find('.t-ticket-header').text().trim().split('  ')[0].trim(), 'Toilet Leak');
-  let response = TF.detail(TD.idOne);
-  xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail), {}, 200, response);
-  await generalPage.save();
-  assert.equal(currentURL(), TICKET_URL);
-});
 
 test('you can add a comment and post it while not updating created property', async assert => {
   let iso;
@@ -149,36 +134,23 @@ test('when you click cancel, you are redirected to the ticket list view', async 
   assert.equal(currentURL(), TICKET_URL);
 });
 
-test('validation works for assignee if ticket status is not draft', async assert => {
+test('if ticket status is not draft/new, assignee is reqd', async assert => {
   clearxhr(list_xhr);
   detail_data.assignee = null;
   await page.visitDetail();
+  const ticket = store.find('ticket', TD.idOne);
+  assert.equal(ticket.get('status.name'), 'ticket.status.new');
   assert.equal(currentURL(), DETAIL_URL);
   assert.notOk(page.locationValidationErrorVisible);
   assert.notOk(page.assigneeValidationErrorVisible);
-  selectChoose('.t-ticket-status-select', t('ticket.status.complete'));
-  await generalPage.save();
-  assert.ok(page.assigneeValidationErrorVisible);
-  assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.ticket.assignee'));
-  await selectChoose('.t-ticket-status-select', t('ticket.status.new'));
-  assert.notOk(page.assigneeValidationErrorVisible);
-  assert.equal($('.validated-input-error-dialog').text().trim(), t(''));
-});
-
-test('validation does not show if ticket status is draft', async assert => {
-  clearxhr(list_xhr);
-  detail_data.assignee = null;
-  detail_data.status_fk = TD.statusSevenId;
-  await page.visitDetail();
-  assert.equal(currentURL(), DETAIL_URL);
-  assert.ok(page.assigneeErrorHidden);
-  const mod_ticket_payload = Ember.$.extend(true, {}, ticket_payload_detail)
-  mod_ticket_payload.status = TD.statusSevenId;
-  mod_ticket_payload.assignee = undefined;
-  xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(mod_ticket_payload), {}, 200, {});
-  xhr(TICKETS_URL + '?page=1', 'GET', null, {}, 200, TF.list());
-  await generalPage.save();
-  assert.equal(currentURL(), TICKET_URL);
+  // select Complete status
+  await selectChoose('.t-ticket-status-select', t('ticket.status.complete'));
+  assert.equal(ticket.get('isDirtyOrRelatedDirty'), true);
+  assert.equal(find('.t-save-btn').attr('disabled'), 'disabled'); // invalid b/c need to select assignee
+  ajax(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
+  await selectSearch('.t-ticket-assignee-select', 'b');
+  await selectChoose('.t-ticket-assignee-select', PD.fullnameBoy2);
+  assert.equal(find('.t-save-btn').attr('disabled'), undefined);
 });
 
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async assert => {
@@ -386,7 +358,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   });
-  page.ccOneRemove();
+  removeMultipleOption(CC, PD.fullname);
   andThen(() => {
     let ticket = store.find('ticket', TD.idOne);
     assert.equal(ticket.get('cc').get('length'), 0);
@@ -395,17 +367,8 @@ test('can remove and add back same cc and save empty cc', (assert) => {
   });
   let PEOPLE_TICKETS_URL = `${PEOPLE_URL}person__icontains=a/`;
   xhr(PEOPLE_TICKETS_URL, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
-  page.ccClickDropdown();//don't know why I have to do this
-  fillIn(`${CC_SEARCH}`, 'a');
-  andThen(() => {
-    assert.equal(page.ccOptionLength, 1);
-    let ticket = store.find('ticket', TD.idOne);
-    assert.equal(ticket.get('ticket_cc_fks').length, 1);
-    assert.equal(ticket.get('cc').get('length'), 0);
-    assert.ok(ticket.get('ccIsDirty'));
-    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-  });
-  page.ccClickDonald();
+  selectSearch(CC, 'a');
+  selectChoose(CC, PD.donald);
   andThen(() => {
     let ticket = store.find('ticket', TD.idOne);
     assert.equal(ticket.get('ticket_cc_fks').length, 1);
@@ -413,7 +376,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
-  page.ccOneRemove();
+  removeMultipleOption(CC, PD.donald);
   andThen(() => {
     let ticket = store.find('ticket', TD.idOne);
     assert.equal(ticket.get('cc').get('length'), 0);
@@ -421,16 +384,17 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
   xhr(`${PEOPLE_URL}person__icontains=Mel/`, 'GET', null, {}, 200, PF.get_for_power_select());
-  page.ccClickDropdown();
-  fillIn(`${CC_SEARCH}`, 'Mel');
-  page.ccClickMel();
+  selectSearch(CC, 'Mel');
+  selectChoose(CC, PD.nameMel);
+  selectSearch(CC, 'a');
+  selectChoose(CC, PD.donald);
   andThen(() => {
     let ticket = store.find('ticket', TD.idOne);
-    assert.equal(ticket.get('cc').get('length'), 1);
-    assert.ok(ticket.get('ccIsNotDirty'));
-    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('cc').get('length'), 2);
+    assert.ok(ticket.get('ccIsDirty'));
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
-  let payload = TF.put({id: TD.idOne, cc: [PD.idOne]});
+  let payload = TF.put({id: TD.idOne, cc: [PD.idDonald, PD.idOne]});
   const response = Ember.$.extend(true, {}, payload);
   xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
   generalPage.save();
@@ -489,20 +453,14 @@ test('starting with multiple cc, can remove all ccs (while not populating option
 });
 
 test('clicking and typing into db-multi power select for people will fire xhr if spacebar pressed', (assert) => {
+  clearxhr(list_xhr);
   page.visitDetail();
   page.ccClickDropdown();
-  fillIn(`${CC_SEARCH}`, ' ');
+  selectSearch(CC, ' ');
   andThen(() => {
     assert.equal(page.ccSelected.indexOf(PD.first_name), 2);
     assert.equal(page.ccOptionLength, 1);
     assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
-  });
-  let response = TF.detail(TD.idOne);
-  let payload = TF.put({id: TD.idOne, cc: [PD.idOne]});
-  xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
   });
 });
 

@@ -48,25 +48,16 @@ export default create({
 
   ticketRequestFillIn: fillable('.t-automation-ticket-request'),
   ticketRequestValue: value('.t-automation-ticket-request'),
-  // sendEmailRemoveRecipient: clickable('.ember-power-select-multiple-remove-btn'),
 
   addFilter: clickable('.t-add-pf-btn'),
   deleteFilter: clickable('.t-del-pf-btn:eq(0)'),
   deleteFilterTwo: clickable('.t-del-pf-btn:eq(1)'),
-  filterOneClickDropdown: clickable('.t-automation-pf-select:eq(0) .ember-basic-dropdown-trigger'),
-  filterOneClickOptionTwo: clickable(`.ember-power-select-option:contains(${PFD.keyTwo})`, { scope: DROPDOWN }),
   filterOnePriorityOneRemove: clickable('.ember-power-select-multiple-remove-btn', { scope: `${PRIORITIES}:eq(0)` }),
 
   automationFilterOneText: text('.t-automation-pf-select:eq(0)'),
   automationFilterTwoText: text('.t-automation-pf-select:eq(1)'),
   automationFilterThreeText: text('.t-automation-pf-select:eq(2)'),
   automationFilterFourText: text('.t-automation-pf-select:eq(3)'),
-
-  automationFilterOneInput: text(AF_SELECT_ONE),
-  automationFilterOneClickDropdown: clickable(AF_SELECT_ONE),
-  automationFilterOneOptionOneText: text('li:eq(0)', { scope: DROPDOWN }),
-  automationFilterOneOptionTwoText: text('li:eq(1)', { scope: DROPDOWN }),
-  automationFilterOneOptionThreeText: text('li:eq(2)', { scope: DROPDOWN }),
 
   eventSelectedOne: text(`${EVENTS}:eq(0)`),
   eventSelectedTwo: text(`${EVENTS}:eq(1)`),

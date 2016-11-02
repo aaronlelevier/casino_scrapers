@@ -96,13 +96,8 @@ test('visiting /category/new', (assert) => {
 test('when editing the category name to invalid, it checks for validation', (assert) => {
   clearxhr(children_xhr);
   page.visitNew();
-  andThen(() => {
-    assert.equal(currentURL(), CATEGORY_NEW_URL);
-    assert.equal($('.validated-input-error-dialog').length, 0);
-    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
-    assert.notOk(page.nameValidationErrorVisible);
-  });
-  generalPage.save();
+  page.nameFill('');
+  triggerEvent('.t-category-name', 'keyup', {keyCode: 32});
   andThen(() => {
     assert.equal(currentURL(), CATEGORY_NEW_URL);
     assert.equal($('.validated-input-error-dialog').length, 1);
@@ -161,7 +156,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
   clearxhr(children_xhr);
   page.visitNew();
-  fillIn('.t-category-name', CD.nameOne);
+  fillIn('.t-category-description', CD.nameOne);
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {

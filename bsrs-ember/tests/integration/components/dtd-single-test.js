@@ -81,29 +81,6 @@ test('validation on dtd key works', function(assert) {
   }, 300);
 });
 
-test('validation on fields when click save', function(assert) {
-  var done = assert.async();
-  let modalDialogService = this.container.lookup('service:modal-dialog');
-  modalDialogService.destinationElementId = 'key';
-  this.set('model', dtd);
-  this.render(hbs`{{dtds/dtd-single model=model}}`);
-  let $component = this.$('.invalid');
-  assert.equal($component.text().trim(), '');
-  const add_btn = this.$('.t-add-link-btn');
-  add_btn.trigger('click').trigger('change');
-  assert.equal(this.$('.t-link-destination-select .ember-power-select-placeholder').text(), trans.t('dt.placeholder_submit'));
-  generalPage.save();
-  Ember.run.later(() => {
-    const $key_component = this.$('.t-dtd-key');
-    assert.ok($key_component.is(':visible'));
-    assert.ok($key_component.hasClass('invalid'));
-    assert.equal(Ember.$(`${ERR_TEXT}:eq(0)`).text().trim(), trans.t('errors.dtd.key'));
-    assert.equal(Ember.$(`${ERR_TEXT}:eq(1)`).text().trim(), trans.t('errors.link.text'));
-    done();
-  }, 300);
-});
-
-// Links
 test('validation - clear out text, and validation msg still works', function(assert) {
   var done = assert.async();
   let modalDialogService = this.container.lookup('service:modal-dialog');
@@ -132,13 +109,17 @@ test('validation - clear out text, and validation msg still works', function(ass
   const $component = this.$('.invalid');
   assert.notOk($component.is(':visible'));
   this.$('.t-dtd-link-text:eq(0)').val('').keyup();
+  this.$('.t-dtd-single-key:eq(0)').val('').keyup();
   Ember.run.later(() => {
     const $component = this.$('.invalid');
     assert.ok($component.is(':visible'));
-    assert.equal(Ember.$(`${ERR_TEXT}:eq(0)`).text().trim(), trans.t('errors.link.text'));
+    assert.equal(Ember.$(`${ERR_TEXT}:eq(1)`).text().trim(), trans.t('errors.link.text'));
+    assert.equal(Ember.$(`${ERR_TEXT}:eq(0)`).text().trim(), trans.t('errors.dtd.key'));
     done();
   }, 300);
 });
+
+// Links
 
 test('add and remove dtd links', function(assert) {
   let modalDialogService = this.container.lookup('service:modal-dialog');

@@ -293,8 +293,7 @@ test('newly added phone numbers without a valid number are ignored and removed w
   triggerEvent('.t-phonenumber-number2', 'keyup', {keyCode: 65});
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 1);
-    // TODO: rely on emberi18ncpvalidations or roll our own
-    // assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.phone'));
+    assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.phonenumber.number'));
     assert.notOk(page.phonenumberZeroValidationErrorVisible);
     assert.notOk(page.phonenumberOneValidationErrorVisible);
     assert.ok(page.phonenumberTwoValidationErrorVisible);
@@ -398,36 +397,13 @@ test('invalid phone numbers prevent save and must click delete to navigate away'
     assert.equal($('.validated-input-error-dialog').length, 0);
   });
   page.phonenumberThirdFillIn('34');
-  triggerEvent('.t-phonenumber-number2', 'keyup', {keyCode: 65});
+  triggerEvent('.t-phonenumber-number2', 'keyup', {keyCode: 32});
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 1);
     assert.notOk(page.phonenumberZeroValidationErrorVisible);
     assert.notOk(page.phonenumberOneValidationErrorVisible);
     assert.ok(page.phonenumberTwoValidationErrorVisible);
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.notOk(page.phonenumberZeroValidationErrorVisible);
-    assert.notOk(page.phonenumberOneValidationErrorVisible);
-    assert.ok(page.phonenumberTwoValidationErrorVisible);
-  });
-  page.phonenumberThirdFillIn('');
-  triggerEvent('.t-phonenumber-number2', 'keyup', {keyCode: 65});
-  andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.notOk(page.phonenumberZeroValidationErrorVisible);
-    assert.notOk(page.phonenumberOneValidationErrorVisible);
-    assert.ok(page.phonenumberTwoValidationErrorVisible);
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.notOk(page.phonenumberZeroValidationErrorVisible);
-    assert.notOk(page.phonenumberOneValidationErrorVisible);
-    assert.ok(page.phonenumberTwoValidationErrorVisible);
+    assert.equal(find('.t-save-btn').attr('disabled'), 'disabled');
   });
   click('.t-del-phone-number-btn:eq(2)');
   andThen(() => {
@@ -435,10 +411,7 @@ test('invalid phone numbers prevent save and must click delete to navigate away'
     assert.notOk(page.phonenumberZeroValidationErrorVisible);
     assert.notOk(page.phonenumberOneValidationErrorVisible);
   });
-  var response = LF.detail(LD.idOne);
-  var payload = LF.put({id: LD.idOne});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-  generalPage.save();
+  generalPage.cancel();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
     const location = store.find('location', LD.idOne);
@@ -456,36 +429,13 @@ test('invalid emails prevent save and must click delete to navigate away', (asse
     assert.equal($('.validated-input-error-dialog').length, 0);
   });
   generalPage.emailThirdFillIn('34');
-  triggerEvent('.t-email-email2', 'keyup', {keyCode: 65});
+  triggerEvent('.t-email-email2', 'keyup', {keyCode: 32});
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 1);
     assert.notOk(generalPage.emailZeroValidationErrorVisible);
     assert.notOk(generalPage.emailOneValidationErrorVisible);
     assert.ok(generalPage.emailTwoValidationErrorVisible);
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.notOk(generalPage.emailZeroValidationErrorVisible);
-    assert.notOk(generalPage.emailOneValidationErrorVisible);
-    assert.ok(generalPage.emailTwoValidationErrorVisible);
-  });
-  generalPage.emailThirdFillIn('');
-  triggerEvent('.t-email-email2', 'keyup', {keyCode: 65});
-  andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.notOk(generalPage.emailZeroValidationErrorVisible);
-    assert.notOk(generalPage.emailOneValidationErrorVisible);
-    assert.ok(generalPage.emailTwoValidationErrorVisible);
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.notOk(generalPage.emailZeroValidationErrorVisible);
-    assert.notOk(generalPage.emailOneValidationErrorVisible);
-    assert.ok(generalPage.emailTwoValidationErrorVisible);
+    assert.equal(find('.t-save-btn').attr('disabled'), 'disabled');
   });
   click('.t-del-email-btn:eq(2)');
   andThen(() => {
@@ -493,10 +443,7 @@ test('invalid emails prevent save and must click delete to navigate away', (asse
     assert.notOk(generalPage.emailZeroValidationErrorVisible);
     assert.notOk(generalPage.emailOneValidationErrorVisible);
   });
-  var response = LF.detail(LD.idOne);
-  var payload = LF.put({id: LD.idOne});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-  generalPage.save();
+  generalPage.cancel();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
     const location = store.find('location', LD.idOne);
@@ -513,22 +460,15 @@ test('invalid addresss prevent save and must click delete to navigate away', (as
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
   });
-  generalPage.save();
+  page.addressPostalCodeThirdFillIn('53444');
   andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal($('.validated-input-error-dialog').length, 5);
-    assert.notOk(page.addressZeroValidationErrorVisible);
-    assert.notOk(page.addressOneValidationErrorVisible);
-    assert.ok(page.addressTwoValidationErrorVisible);
+    assert.equal(find('.t-save-btn').attr('disabled'), 'disabled');
   });
   click('.t-del-address-btn:eq(2)');
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
   });
-  var response = LF.detail(LD.idOne);
-  var payload = LF.put({id: LD.idOne});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-  generalPage.save();
+  generalPage.cancel();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
     const location = store.find('location', LD.idOne);
@@ -553,8 +493,8 @@ test('when you change a related phone numbers type it will be persisted correctl
 
 test('when you change a related emails type it will be persisted correctly', (assert) => {
   page.visitDetail();
-  selectChoose('.t-email-type-select', ETD.personalName);
-  const emails = EF.put({id: ED.idOne, type: ETD.personalId});
+  selectChoose('.t-email-type-select', ETD.workName);
+  const emails = EF.put({id: ED.idOne, type: ETD.workId});
   const payload = LF.put({id: LD.idOne, emails: emails});
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
@@ -1024,14 +964,15 @@ test('can remove and add back same children and save empty children', (assert) =
   xhr(location_endpoint, 'GET', null, {}, 200, LF.search_power_select());
   selectSearch(CHILDREN, 'd');
   page.childrenClickOptionStoreNameTwo();
+  page.nameFillIn(LD.storeNameTwo);
   andThen(() => {
     let location = store.find('location', LD.idOne);
     assert.equal(location.get('location_children_fks').length, 2);
     assert.equal(location.get('children').get('length'), 2);
     assert.ok(location.get('childrenIsNotDirty'));
-    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
-  let payload = LF.put({id: LD.idOne, children: [LD.idTwo, LD.idThree]});
+  let payload = LF.put({id: LD.idOne, name: LD.storeNameTwo, children: [LD.idTwo, LD.idThree]});
   xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
@@ -1077,13 +1018,14 @@ test('starting with multiple children, can remove all children (while not popula
   xhr(location_endpoint, 'GET', null, {}, 200, response);
   selectSearch(CHILDREN, 'g');
   page.childrenClickOptionStoreNameThree();
+  page.nameFillIn(LD.storeNameTwo);
   andThen(() => {
     let location = store.find('location', LD.idOne);
     assert.equal(location.get('children').get('length'), 2);
-    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(location.get('isDirtyOrRelatedDirty'));
     assert.equal(page.childrenSelected.indexOf(LD.storeNameTwo), 2);
   });
-  let payload = LF.put({id: LD.idOne, children: [LD.idTwo, LD.idThree]});
+  let payload = LF.put({id: LD.idOne, name: LD.storeNameTwo, children: [LD.idTwo, LD.idThree]});
   ajax(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
@@ -1092,20 +1034,14 @@ test('starting with multiple children, can remove all children (while not popula
 });
 
 test('clicking and typing into power select for location will not filter if spacebar pressed', (assert) => {
+  clearxhr(list_xhr);
   page.visitDetail();
   page.childrenClickDropdown();
-  selectSearch(CHILDREN, '');
+  selectSearch(CHILDREN, ' ');
   andThen(() => {
     assert.equal(page.childrenSelected.indexOf(LD.storeNameTwo), 2);
     assert.equal(page.childrenOptionLength, 1);
     assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
-  });
-  let response = LF.detail(LD.idOne);
-  let payload = LF.put({id: LD.idOne, children: [LD.idTwo, LD.idThree]});
-  xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_URL);
   });
 });
 
@@ -1244,18 +1180,19 @@ test('can remove and add back same parents and save empty parents', (assert) => 
   });
   location_endpoint = `${LOCATIONS_URL}get-level-parents/${LLD.idOne}/${LD.idOne}/location__icontains=p/`;
   response = LF.search_power_select();
-  response.results.push(...[LF.get_no_related(LD.unusedId, LD.baseStoreName), LF.get_no_related(LD.idParent, LD.storeNameParent), LF.get_no_related(LD.idParentTwo, LD.storeNameParentTwo)]);
+  response.results.push(...[LF.get_no_related(LD.unusedId, LD.baseStoreName), LF.get_no_related(LD.idParent, LD.storeNameParent), LF.get_no_related(LD.idParentTwo, LD.storeNameParentTwo), LF.get_no_related(LD.idParentThree, LD.storeNameParentThree)]);
   xhr(location_endpoint, 'GET', null, {}, 200, response);
   selectSearch(PARENTS, 'p');
   page.parentsClickOptionStoreNameTwo();
+  page.nameFillIn(LD.storeNameTwo);
   andThen(() => {
     let location = store.find('location', LD.idOne);
     assert.equal(location.get('location_parents_fks').length, 2);
     assert.equal(location.get('parents').get('length'), 2);
     assert.ok(location.get('parentsIsNotDirty'));
-    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
-  let payload = LF.put({id: LD.idOne, parents: [LD.idParent, LD.idParentTwo]});
+  let payload = LF.put({id: LD.idOne, name: LD.storeNameTwo, parents: [LD.idParent, LD.idParentTwo]});
   xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
@@ -1299,13 +1236,14 @@ test('starting with multiple parents, can remove all parents (while not populati
   });
   selectSearch(PARENTS, 'p');
   page.parentsClickOptionStoreNameFirst();
+  page.nameFillIn(LD.storeNameTwo);
   andThen(() => {
     let location = store.find('location', LD.idOne);
     assert.equal(location.get('parents').get('length'), 2);
-    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(location.get('isDirtyOrRelatedDirty'));
     assert.equal(page.parentsSelected.indexOf(LD.storeNameParent), 2);
   });
-  let payload = LF.put({id: LD.idOne, parents: [LD.idParent, LD.idParentTwo]});
+  let payload = LF.put({id: LD.idOne, name: LD.storeNameTwo, parents: [LD.idParent, LD.idParentTwo]});
   ajax(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
   generalPage.save();
   andThen(() => {
@@ -1314,6 +1252,7 @@ test('starting with multiple parents, can remove all parents (while not populati
 });
 
 test('clicking and typing into power select for location will not filter if spacebar pressed', (assert) => {
+  clearxhr(list_xhr);
   page.visitDetail();
   page.parentsClickDropdown();
   selectSearch(PARENTS, '');
@@ -1321,13 +1260,6 @@ test('clicking and typing into power select for location will not filter if spac
     assert.equal(page.parentsSelected.indexOf(LD.storeNameParent), 2);
     assert.equal(page.parentsOptionLength, 1);
     assert.equal(find(`${options} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
-  });
-  let response = LF.detail(LD.idOne);
-  let payload = LF.put({id: LD.idOne, parents: [LD.idParent, LD.idParentTwo]});
-  xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_URL);
   });
 });
 

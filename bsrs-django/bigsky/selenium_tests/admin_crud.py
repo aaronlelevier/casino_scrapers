@@ -690,15 +690,15 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
 
         implementation_contact_dropdown = self.driver.find_element_by_class_name('t-tenant-implementation_contact-select')
         implementation_contact_dropdown.click()
-        implementation_contact_input = self.wait_for_xhr_request("ember-power-select-trigger-multiple-input")
-        implementation_contact_input.send_keys('a')
+        implementation_contact_input = self.wait_for_xhr_request("ember-power-select-search-input")
+        implementation_contact_input.send_keys('c')
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
         time.sleep(1)
         self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
 
         dtd_start_dropdown = self.driver.find_element_by_class_name('t-tenant-dtd_start-select')
         dtd_start_dropdown.click()
-        dtd_start_input = self.wait_for_xhr_request("ember-power-select-trigger-multiple-input")
+        dtd_start_input = self.wait_for_xhr_request("ember-power-select-search-input")
         dtd_start_input.send_keys('a')
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
         time.sleep(1)
@@ -746,7 +746,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         country_input = self.wait_for_xhr_request("ember-power-select-trigger-multiple-input")
         country_input.send_keys('a')
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
-        time.sleep(2)
+        time.sleep(1)
         self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
 
         implementation_contact_initial = self.driver.find_element_by_class_name('t-tenant-implementation_contact_initial')

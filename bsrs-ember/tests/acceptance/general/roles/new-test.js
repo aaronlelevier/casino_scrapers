@@ -119,36 +119,19 @@ test('validation works and when hit save, we do same post', (assert) => {
     assert.equal($('.validated-input-error-dialog').length, 0);
     assert.notOk(page.nameValidationErrorVisible);
   });
-  generalPage.save();
-  andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 2);
-    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.role.name'));
-    assert.equal($('.validated-input-error-dialog:eq(1)').text().trim(), t('errors.role.location_level'));
-    assert.ok(page.nameValidationErrorVisible);
-  });
-  fillIn('.t-role-name', RD.nameOne);
-  triggerEvent('.t-role-name', 'keyup', {keyCode: 65});
-  generalPage.save();
-  andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.role.location_level'));
-    assert.notOk(page.nameValidationErrorVisible);
-  });
+  page.nameFill(RD.nameOne);
   page.locationLevelClickDropdown();
   page.locationLevelClickOptionOne();
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
+    assert.notOk(page.nameValidationErrorVisible);
   });
-  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
-  page.categoryClickDropdown();
-  page.categoryClickOptionOneEq();
+  page.nameFill('');
+  triggerEvent('.t-role-name', 'keyup', {keyCode: 32});
   andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 0);
-  });
-  xhr(url, 'POST', JSON.stringify(payload), {}, 201, {});
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal($('.validated-input-error-dialog').length, 1);
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.role.name'));
+    assert.ok(page.nameValidationErrorVisible);
   });
 });
 

@@ -30,15 +30,12 @@ const Validations = buildValidations({
   }),
   location: validator('presence', {
     presence: true,
-    message: 'errors.ticket.location'
   }),
   status: validator('presence', {
     presence: true,
-    message: 'errors.ticket.status'
   }),
   priority: validator('presence', {
     presence: true,
-    message: 'errors.ticket.priority'
   }),
   assignee: validator('ticket-status', {
     dependentKeys: ['model.status']

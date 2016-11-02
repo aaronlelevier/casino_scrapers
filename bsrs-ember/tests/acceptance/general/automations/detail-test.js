@@ -312,7 +312,9 @@ test('changing from one dynamic location available filter to another changes the
   });
 });
 
+// TODO; may need to come back and refacotr test
 test('remove filter and save - should stay on page because an automation must have at least one filter and criteria unless auto-assign', assert => {
+  clearxhr(listXhr);
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -321,42 +323,11 @@ test('remove filter and save - should stay on page because an automation must ha
   // criteria is required (unless auto-assign)
   page.filterOnePriorityOneRemove();
   andThen(() => {
-    let automation = store.find('automation', AD.idOne);
-    assert.equal(automation.get('pf').objectAt(0).get('criteria.length'), 0);
+    assert.equal(find('.t-save-btn').attr('disabled'), 'disabled');
   });
-  generalPage.save();
+  selectChoose('.t-priority-criteria', TD.priorityTwo);
   andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal($('[data-test-id="validation-pf0"]').text().trim(), t('errors.automation.pf.criteria.length'));
-  });
-  // have to have at lease 1 pfilter per automation
-  page.deleteFilter();
-  andThen(() => {
-    assert.equal(find('.t-del-pf-btn').length, 0);
-    let automation = store.find('automation', AD.idOne);
-    assert.equal(automation.get('pf').get('length'), 0);
-  });
-  // add back pfilter w/ 1 criteria to make valid, and save
-  xhr(AUTOMATION_AVAILABLE_FILTERS_URL, 'GET', null, {}, 200, AF.list_pfilters());
-  page.addFilter();
-  selectChoose('.t-automation-pf-select:eq(0)', PFD.keyOneTranslated);
-  selectChoose('.t-priority-criteria', TD.priorityOne);
-  andThen(() => {
-    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
-  });
-  let payload = AF.put({
-    description: AD.descriptionOne,
-    filters: [{
-      id: UUID.value,
-      source: PFD.sourceIdOne,
-      criteria: [TD.priorityOneId],
-      lookups: {}
-    }]
-  });
-  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+    assert.equal(find('.t-save-btn').attr('disabled'), undefined);
   });
 });
 

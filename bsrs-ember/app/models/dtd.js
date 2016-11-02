@@ -18,11 +18,7 @@ const Validations = buildValidations({
       message: 'errors.dtd.key.length',
     }),
   ],
-  links: validator(function(value, options, model, attribute) {
-    return model.get(attribute).reduce((prev, model) => {
-      return prev && model.get('validations').get('isValid');
-    }, true);
-  }),
+  links: validator('has-many')
 });
 
 var DTDModel = Model.extend(Validations, OptConf, {
