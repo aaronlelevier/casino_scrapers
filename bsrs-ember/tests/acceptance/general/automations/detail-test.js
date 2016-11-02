@@ -917,39 +917,39 @@ test('select sendsms filter and update automation', assert => {
   // });
 });
 
-// Ticket request
-test('get an action ticket request and update it to a new ticket request', assert => {
-  clearxhr(detailXhr);
-  const json = AF.detail();
-  json.actions[0]['type'] = { id: AATD.idSix, key: AATD.keySix };
-  delete json.actions[0]['assignee'];
-  json.actions[0]['request'] = AAD.requestOne;
-  xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
-  page.visitDetail();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.actionTypeSelectedOne, AATD.keySix, 'type selected');
-    assert.equal(page.ticketRequestValue, AAD.requestOne, 'exisiting request');
-  });
-  page.ticketRequestFillIn(AAD.requestOne);
-  andThen(() => {
-    assert.equal(page.ticketRequestValue, AAD.requestOne, 'filled in request');
-  });
-  let payload = AF.put({
-    actions: [{
-      id: AAD.idOne,
-      type: AATD.idSix,
-      content: {
-        request: AAD.requestOne
-      }
-    }]
-  });
-  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), AUTOMATION_LIST_URL, 'list url');
-  });
-});
+// // Ticket request
+// test('get an action ticket request and update it to a new ticket request', assert => {
+//   clearxhr(detailXhr);
+//   const json = AF.detail();
+//   json.actions[0]['type'] = { id: AATD.idSix, key: AATD.keySix };
+//   delete json.actions[0]['assignee'];
+//   json.actions[0]['request'] = AAD.requestOne;
+//   xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
+//   page.visitDetail();
+//   andThen(() => {
+//     assert.equal(currentURL(), DETAIL_URL);
+//     assert.equal(page.actionTypeSelectedOne, AATD.keySix, 'type selected');
+//     assert.equal(page.ticketRequestValue, AAD.requestOne, 'exisiting request');
+//   });
+//   page.ticketRequestFillIn(AAD.requestOne);
+//   andThen(() => {
+//     assert.equal(page.ticketRequestValue, AAD.requestOne, 'filled in request');
+//   });
+//   let payload = AF.put({
+//     actions: [{
+//       id: AAD.idOne,
+//       type: AATD.idSix,
+//       content: {
+//         request: AAD.requestOne
+//       }
+//     }]
+//   });
+//   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+//   generalPage.save();
+//   andThen(() => {
+//     assert.equal(currentURL(), AUTOMATION_LIST_URL, 'list url');
+//   });
+// });
 
 test('select ticket request filter and update automation', assert => {
   const json = AF.detail();
