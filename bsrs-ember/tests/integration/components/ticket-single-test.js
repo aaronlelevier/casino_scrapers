@@ -74,7 +74,7 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
 //         done();
 //       }, 300);
 //     }, 300);
-//   }, 1900);
+//   }, 300);
 // });
 
 test('each status shows up as a valid select option', function(assert) {

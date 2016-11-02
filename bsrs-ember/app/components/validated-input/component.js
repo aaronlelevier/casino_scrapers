@@ -1,7 +1,10 @@
 import Ember from 'ember';
+import config from 'bsrs-ember/config/environment';
 const { computed, defineProperty } = Ember;
 import { task, timeout } from 'ember-concurrency';
 import { ValidationComponentInit, ValidationComponentPieces } from 'bsrs-ember/mixins/validation-component';
+
+const TIMEOUT = config.APP.VALIDATION_TIMEOUT_INTERVAL;
 
 /* @class ValidatedInput
 * didValidate - trigger showMessage and can show mwwage if
@@ -37,7 +40,7 @@ export default Ember.Component.extend(ValidationComponentPieces, ValidationCompo
   // isValid: computed.oneWay('attributeValidation.isValid'),
   // isInvalid: computed.oneWay('attributeValidation.isInvalid'),
   setFocusedOut: task(function * () {
-    yield timeout(1500);
+    yield timeout(TIMEOUT);
     if (this.get('isInvalid')) {
       this.set('focusedOut', true);
     }

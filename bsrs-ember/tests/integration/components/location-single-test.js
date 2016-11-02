@@ -132,7 +132,7 @@ test('if save isRunning, btn is disabled', function(assert) {
 //       assert.equal($(ERR_TEXT).text().trim(), trans.t(''));
 //       done();
 //     }, 300);
-//   }, 1900);
+//   }, 300);
 // });
 
 // test('filling in invalid emails reveal validation messages', function(assert) {
@@ -157,7 +157,7 @@ test('if save isRunning, btn is disabled', function(assert) {
 //       assert.equal($(ERR_TEXT).text().trim(), trans.t(''));
 //       done();
 //     }, 300);
-//   }, 1900);
+//   }, 300);
 // });
 
 // test('can remove a new phone number', function(assert) {

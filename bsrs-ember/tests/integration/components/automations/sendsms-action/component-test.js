@@ -90,5 +90,5 @@ test('shows validation messages', function(assert) {
         done();
       }, 300);
     }, 300);
-  }, 1900);
+  }, 300);
 });

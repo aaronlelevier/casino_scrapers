@@ -51,5 +51,5 @@ test('validation on automation description works', function(assert) {
         done();
       }, 300);
     }, 300);
-  }, 1900);
+  }, 300);
 });

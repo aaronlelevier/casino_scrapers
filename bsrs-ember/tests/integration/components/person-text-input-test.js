@@ -26,7 +26,7 @@ moduleForComponent('person-text-input', 'integration: person-text-input test', {
   }
 });
 
-test('first_name validation error if not present or greater than 30 characters', function(assert) {
+test('scott first_name validation error if not present or greater than 30 characters', function(assert) {
   const FIRST_NAME = '.t-person-first-name';
   let modalDialogService = this.container.lookup('service:modal-dialog');
   modalDialogService.destinationElementId = 'first_name';
@@ -56,9 +56,9 @@ test('first_name validation error if not present or greater than 30 characters',
           assert.notOk($err.is(':visible'));
           done();
         }, 300);
-      }, 1900);
+      }, 300);
     }, 300);
-  }, 1900);
+  }, 300);
 });
 
 test('middle_initial validation error if number entered (max-length 1 fyi)', function(assert) {
@@ -85,9 +85,9 @@ test('middle_initial validation error if number entered (max-length 1 fyi)', fun
         assert.ok($err.is(':visible'));
         assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.person.middle_initial'));
          done();
-      }, 1900);
+      }, 300);
     }, 300);
-  }, 1900);
+  }, 300);
 });
 
 test('last_name validation error if not present or greater than 30 characters', function(assert) {
@@ -120,7 +120,7 @@ test('last_name validation error if not present or greater than 30 characters', 
           assert.notOk($err.is(':visible'));
           done();
         }, 300);
-      }, 1900);
+      }, 300);
     }, 300);
-  }, 1900);
+  }, 300);
 });

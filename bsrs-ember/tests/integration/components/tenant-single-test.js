@@ -63,7 +63,7 @@ test('scid - read only is populated if in detail, otherwise in create it is not 
   assert.equal($('[data-test-id="tenant-scid"]').val(), TD.scidOne);
 });
 
-test('scott validation works', function(assert) {
+test('validation works', function(assert) {
   // like new form
   run(function() {
     model = store.push('tenant', {id: TD.idOne, company_name: undefined, billing_phone_number_fk: PND.idOne, billing_email_fk: ED.idOne, implementation_email_fk: ED.idOne, billing_address_fk: AD.idOne});

@@ -33,7 +33,8 @@ module.exports = function(environment) {
     },
 
     APP: {
-      POWER_SELECT_DEBOUNCE: 300
+      POWER_SELECT_DEBOUNCE: 300,
+      VALIDATION_TIMEOUT_INTERVAL: 1500
       // Here you can pass flags/options to your application instance
       // when it is created
     },
@@ -55,6 +56,7 @@ module.exports = function(environment) {
   if (environment === 'test') {
     // Testem prefers this...
     ENV.DEBOUNCE_TIMEOUT_INTERVAL = 0;
+    ENV.APP.VALIDATION_TIMEOUT_INTERVAL = 0;
     ENV.locationType = 'none';
     ENV.APP.emberModalDialog = {
       modalRootElementId: 'ember-testing'
