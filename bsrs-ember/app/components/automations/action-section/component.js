@@ -40,7 +40,7 @@ export default Ember.Component.extend({
     },
     fetchActions() {
       this.get('repository').getActionTypes().then((response) => {
-        this.set('options', response.results);
+        this.set('optionz', response.results);
       });
     },
     delete(item) {

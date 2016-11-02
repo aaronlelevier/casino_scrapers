@@ -928,12 +928,12 @@ test('get an action ticket request and update it to a new ticket request', asser
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.actionTypeSelectedOne, AATD.keySix);
-    assert.equal(page.ticketRequestValue, AAD.requestOne);
+    assert.equal(page.actionTypeSelectedOne, AATD.keySix, 'type selected');
+    assert.equal(page.ticketRequestValue, AAD.requestOne, 'exisiting request');
   });
   page.ticketRequestFillIn(AAD.requestOne);
   andThen(() => {
-    assert.equal(page.ticketRequestValue, AAD.requestOne);
+    assert.equal(page.ticketRequestValue, AAD.requestOne, 'filled in request');
   });
   let payload = AF.put({
     actions: [{
@@ -947,7 +947,7 @@ test('get an action ticket request and update it to a new ticket request', asser
   xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), AUTOMATION_LIST_URL);
+    assert.equal(currentURL(), AUTOMATION_LIST_URL, 'list url');
   });
 });
 
