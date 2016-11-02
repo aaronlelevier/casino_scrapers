@@ -26,7 +26,7 @@ moduleForComponent('person-text-input', 'integration: person-text-input test', {
   }
 });
 
-test('scott first_name validation error if not present or greater than 30 characters', function(assert) {
+test('first_name validation error if not present or greater than 30 characters', function(assert) {
   const FIRST_NAME = '.t-person-first-name';
   let modalDialogService = this.container.lookup('service:modal-dialog');
   modalDialogService.destinationElementId = 'first_name';

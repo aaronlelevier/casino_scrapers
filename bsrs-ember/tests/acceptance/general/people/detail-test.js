@@ -1216,7 +1216,7 @@ test('settings values, placeholers, and inherited froms', assert => {
 
 /* jshint ignore:start */
 
-// test('scott deep linking with an xhr with a 404 status code will show up in the error component (ticket)', async assert => {
+// test('deep linking with an xhr with a 404 status code will show up in the error component (ticket)', async assert => {
 //   let originalLoggerError = Ember.Logger.error;
 //   let originalTestAdapterException = Ember.Test.adapter.exception;
 //   Ember.Logger.error = function() {};
