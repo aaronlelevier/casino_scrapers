@@ -3,6 +3,8 @@
 module.exports = function(environment) {
   var ENV = {
     contentSecurityPolicy: {
+      'img-src': "'self' data:",
+      'font-src': "'self' data:",
       'script-src': "'self' 'unsafe-inline'",
       'style-src': "'self' 'unsafe-inline'",
       'connect-src': "'self'"
@@ -63,7 +65,7 @@ module.exports = function(environment) {
     ENV.APP.VALIDATION_TIMEOUT_INTERVAL = 0;
     ENV.APP.emberModalDialog = {
       modalRootElementId: 'ember-testing'
-    }
+    };
 
     // keep test console output quieter
     ENV.APP.LOG_ACTIVE_GENERATION = false;
