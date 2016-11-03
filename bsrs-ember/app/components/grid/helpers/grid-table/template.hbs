@@ -2,7 +2,7 @@
   <table class="table table-striped table-hover">
     <thead>
       <tr class="head">
-        <th class="selector"></th>
+        <th class="selector" scope="col"></th>
         {{#each columns as |column|}}
         {{grid/helpers/grid-header-column column=column sort=sort find=find toggleFilterModal=(action "toggleFilterModal") sortBy=(action "sortBy")}}
         {{/each}}

@@ -394,7 +394,6 @@ test('type validation -sendsms - if the tyoe is sendsms, a related sendsms is re
   action.change_sendsms({id: SMSD.idOne});
   assert.equal(action.get('validations.isValid'), false);   
   const sendsms = store.find('sendsms', SMSD.idOne);
-  console.log(sendsms);
   sendsms.set('message', 'message section');
   assert.equal(action.get('validations.isValid'), false);   
   sendsms.add_recipient({id: PD.idOne});

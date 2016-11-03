@@ -49,6 +49,7 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
     assert.ok(find('.t-grid-data:eq(0) .t-location-status-open'));
     pagination(assert);
     assert.equal(find('[data-test-id="status.translated_name"]').attr('style'), 'width: 150px');
+    assert.equal(find('[data-test-id="status.translated_name"]').attr('scope'), 'col', 'shows col accessibility html attribute');
   });
 });
 
