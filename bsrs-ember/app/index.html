@@ -27,14 +27,5 @@
     <script src="{{rootURL}}assets/bsrs-ember.js" integrity=""></script>
 
     {{content-for "body-footer"}}
-
-    <script type="text/javascript">
-    document.addEventListener('keydown', function(evt) {
-        // Hitting "enter" in a text input field doesn't save the form.
-        if (evt.keyCode===13 && evt.target.localName==="input") {
-            evt.preventDefault();
-        }
-    });
-    </script>
   </body>
 </html>
