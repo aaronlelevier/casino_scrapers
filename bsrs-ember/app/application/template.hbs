@@ -1,4 +1,4 @@
-{{application-layout tabs=tabs closeTabMaster="closeTabMaster"}}
+{{application-layout tabs=tabs closeTabMaster="closeTabMaster" on-dismiss=(action 'dismiss_errors')}}
 
 {{#if modalIsShowing}}
 {{#modal-dialog translucentOverlay=true}}
@@ -21,4 +21,12 @@
     </div>
   </div>
 {{/modal-dialog}}
+{{/if}}
+
+{{#if message}}
+  {{app-notice
+    message=message
+    noticeLevel=level
+    on-dismiss=(action 'dismiss_errors')
+  }}
 {{/if}}

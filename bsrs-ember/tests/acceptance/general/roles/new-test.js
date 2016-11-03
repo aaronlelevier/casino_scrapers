@@ -63,7 +63,7 @@ moduleForAcceptance('Acceptance | role new', {
 });
 
 test('visiting role/new', (assert) => {
-  visit(ROLE_URL);
+  page.visit();
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
@@ -113,7 +113,7 @@ test('visiting role/new', (assert) => {
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
-  visit(ROLE_URL);
+  page.visit();
   click('.t-add-new');
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
@@ -154,7 +154,7 @@ test('validation works and when hit save, we do same post', (assert) => {
 
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
   clearxhr(list_xhr);
-  visit(NEW_URL);
+  page.visitNew();
   fillIn('.t-role-name', RD.nameOne);
   generalPage.cancel();
   andThen(() => {
@@ -178,7 +178,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
 });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
-  visit(NEW_URL);
+  page.visitNew();
   fillIn('.t-role-name', RD.nameOne);
   generalPage.cancel();
   andThen(() => {
@@ -205,7 +205,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
-  visit(NEW_URL);
+  page.visitNew();
   generalPage.cancel();
   andThen(() => {
     assert.equal(store.find('role').get('length'), 6);
@@ -214,7 +214,7 @@ test('when user enters new form and doesnt enter data, the record is correctly r
 
 /*ROLE TO CATEGORY M2M*/
 test('clicking power select for parent categories will fire off xhr request for all parent categories', (assert) => {
-  visit(NEW_URL);
+  page.visitNew();
   ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
   page.categoryClickDropdown();
   andThen(() => {
@@ -245,7 +245,7 @@ test('clicking power select for parent categories will fire off xhr request for 
 });
 
 test('adding and removing removing a category in power select for categories will save correctly and cleanup role_categories_fks', (assert) => {
-  visit(NEW_URL);
+  page.visitNew();
   andThen(() => {
     patchRandom(counter);
   });
@@ -287,7 +287,7 @@ test('adding and removing removing a category in power select for categories wil
 });
 
 test('can add multiple categories', (assert) => {
-  visit(NEW_URL);
+  page.visitNew();
   ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
   page.categoryClickDropdown();
   andThen(() => {
@@ -321,7 +321,7 @@ test('adding a new role should allow for another new role to be created after th
   uuidReset();
   payload.id = 'abc123';
   patchRandomAsync(0);
-  visit(ROLE_URL);
+  page.visit();
   click('.t-add-new');
   fillIn('.t-role-name', RD.nameOne);
   page.locationLevelClickDropdown();

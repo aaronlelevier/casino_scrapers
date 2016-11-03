@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { test } from 'qunit';
+import { test, skip } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
@@ -190,7 +190,7 @@ test('adding a new dtd should allow for another new dtd to be created after the 
   assert.equal(currentURL(), DTD_NEW_URL);
 });
 
-test('400 error redirects to dtd-error route', async assert => {
+skip('400 error redirects to dtd-error route', async assert => {
   await page.visit();
   await click('.t-add-new');
   page.keyFillIn(DTD.keyOne);

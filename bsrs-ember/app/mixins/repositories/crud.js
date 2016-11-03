@@ -24,8 +24,6 @@ export default Ember.Mixin.create({
       model.set('new_pk', undefined);
       model.save();
       model.saveRelated();
-    }, (xhr) => {
-      this.get('error').transToError(this.get('errorUrl'));
     });
   },
   update(model) {

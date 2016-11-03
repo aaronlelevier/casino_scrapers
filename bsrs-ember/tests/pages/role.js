@@ -25,7 +25,6 @@ const CATEGORY_DROPDOWN = options;
 
 export default PageObject.create({
   visit: visitable(ROLE_LIST_URL),
-  visitRoles: visitable(ROLE_LIST_URL),
   visitDetail: visitable(DETAIL_URL),
   visitNew: visitable(NEW_URL),
   categoryClickDropdown: clickable(CATEGORY),
