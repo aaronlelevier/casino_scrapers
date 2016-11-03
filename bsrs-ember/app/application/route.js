@@ -150,18 +150,18 @@ var ApplicationRoute = Route.extend({
           tabService.redirectRoute(tab, action, confirmed, this.transitionTo.bind(this));
         }
 
-        /* close tab                                                                                                                                                                      │
-         * if rollback, then saveModel is undefined and newModel is true                                                                                                                     │
-         * if save, don't removeRecord                                                                                                                                                       │
+        /* close tab
+         * if rollback, then saveModel is undefined and newModel is true
+         * if save, don't removeRecord
          * need run scheduleOne afterRender b/c save button needs to ask model if dirty and don't want to remove record while still on page
-        */                                                                                                                                                                                │
-        const newModel = tab.get('newModel')                                                                                                                                              │
-        const savedModel = tab.get('saveModel');                                                                                                                                          │
-        tabService.closeTab(tab, action);                                                                                                                                                 │
-        if (newModel && !savedModel) {                                                                                                                                                    │
-          run.scheduleOnce('afterRender', this, function() {                                                                                                                              │
-            model.removeRecord();                                                                                                                                                         │
-          });                                                                                                                                                                             │
+        */
+        const newModel = tab.get('newModel');
+        const savedModel = tab.get('saveModel');
+        tabService.closeTab(tab, action);
+        if (newModel && !savedModel) {
+          run.scheduleOnce('afterRender', this, function() {
+            model.removeRecord();
+          });
         }
       }
     },
