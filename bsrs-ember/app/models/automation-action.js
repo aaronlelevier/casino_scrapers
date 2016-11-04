@@ -74,7 +74,6 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
       case 'automation.actions.send_email':
         content = {
           sendemail: {
-            id: this.get('sendemail.id'),
             body: this.get('sendemail.body'),
             subject: this.get('sendemail.subject'),
             recipients: this.get('sendemail.recipient_ids'),
@@ -84,7 +83,6 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
       case 'automation.actions.send_sms':
         content = {
           sendsms: {
-            id: this.get('sendsms.id'),
             message: this.get('sendsms.message'),
             recipients: this.get('sendsms.recipient_ids'),
           }

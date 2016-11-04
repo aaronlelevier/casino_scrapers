@@ -210,8 +210,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
 
         # action - assignee
-        # action_button = self.driver.find_element_by_class_name('t-add-action-btn')
-        # action_button.click()
         assignee_dropdown = self.driver.find_element_by_class_name('t-automation-action-type-select')
         assignee_dropdown.click()
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]//li[3]").click()
@@ -223,19 +221,21 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         time.sleep(2)
         self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]//li[2]").click()
 
-        # # action - priority
-        # action_type_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-action-type-select ')]/div")
-        # action_type_dropdown.click()
-        # self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
-        # time.sleep(2)
-        # self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]//li[5]").click()
+        # action2 - priority
+        action_button = self.driver.find_element_by_class_name('t-add-action-btn')
+        action_button.click()
+        action_type_dropdown = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-automation-action-type-select ')])[2]/div")
+        action_type_dropdown.click()
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]//li[5]").click()
 
-        # # action - priority
-        # priority_dropdown = self.driver.find_element_by_class_name("t-ticket-priority-select")
-        # priority_dropdown.click()
-        # self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
-        # time.sleep(2)
-        # self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]//li[1]").click()
+        # action2 - priority
+        priority_dropdown = self.driver.find_element_by_class_name("t-ticket-priority-select")
+        priority_dropdown.click()
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]//li[1]").click()
 
         # save
         self.gen_elem_page.click_save_btn()

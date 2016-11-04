@@ -1,10 +1,12 @@
 import Ember from 'ember';
 const { run } = Ember;
+import injectUUID from 'bsrs-ember/utilities/uuid';
 import { belongs_to } from 'bsrs-components/repository/belongs-to';
 import { many_to_many_extract, many_to_many } from 'bsrs-components/repository/many-to-many';
 import OptConf from 'bsrs-ember/mixins/optconfigure/automation';
 
 export default Ember.Object.extend(OptConf, {
+  uuid: injectUUID('uuid'),
   init() {
     this._super(...arguments);
     // relationship bindings give us a method called setup_.....
@@ -82,21 +84,24 @@ export default Ember.Object.extend(OptConf, {
         statuses[a.id] = status;
         a.status_fk = status.id;
       }
-      //sendemail
-      if(a.sendemail){
-        recipient = a.sendemail.recipient;
-        delete a.sendemail.recipient;
-        const sendemail = a.sendemail;
-        delete a.sendemail;
+      //sendemail - delete recipients, type, body, subject (re-assign) and gen up uuid for send_email model
+      if (type.key === 'automation.actions.send_email') {
+        recipient = a.recipients;
+        delete a.recipients;
+        let { body, subject } = a;
+        delete a.body;
+        delete a.subject;
+        const sendemail = { id: this.get('uuid').v4(), body: body, subject: subject };
         sendemails[a.id] = sendemail;
         a.sendemail_fk = sendemail.id;
       }
       // sendsms
-      if(a.sendsms){
-        sendsms_recipient = a.sendsms.recipient;
-        delete a.sendsms.recipient;
-        const sendsms = a.sendsms;
-        delete a.sendsms;
+      if (type.key === 'automation.actions.send_sms') {
+        sendsms_recipient = a.recipients;
+        delete a.recipients;
+        let { message } = a;
+        delete a.message;
+        const sendsms = { id: this.get('uuid').v4(), message: message };
         sendsmss[a.id] = sendsms;
         a.sendsms_fk = sendsms.id;
       }

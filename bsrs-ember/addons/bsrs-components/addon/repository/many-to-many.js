@@ -13,7 +13,7 @@ var many_to_many_extract = function(json, store, model, join_models_str, main_pk
   //cc_json, store, ticket, ticket_cc, ticket_pk, person, person_pk
   const server_sum = [];
   const m2m_models = [];
-  const relateds = [];
+  const relateds = []; 
   const related_ids = json.mapBy('id'); //server side people
   const join_models = model.get(`${join_models_str}`) || []; // client side existing join models 
   const join_model_pks = join_models.mapBy(`${related_pk}`); // client side existing child models
@@ -46,7 +46,7 @@ var many_to_many_extract = function(json, store, model, join_models_str, main_pk
       m2m_models.push({id: m2m.get('id'), removed: true});
     }
   });
-  return [m2m_models, relateds, server_sum];
+  return [m2m_models, relateds, server_sum]; // relateds: will be empty if already exists
 };
 
 var many_to_many = function(_associatedModel, modelName, noSetup) {

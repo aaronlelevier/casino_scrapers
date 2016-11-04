@@ -66,7 +66,7 @@ test(' serialize', assert => {
   assert.deepEqual(ret.actions, [action.serialize()]);
   assert.equal(ret.actions.length, 1);
   assert.equal(ret.actions[0].type, ATD.idOne);
-  assert.deepEqual(ret.actions[0].content, {sendsms: {id: SMSD.idOne, message: SMSD.messageTwo, recipients: [PD.id]}});
+  assert.deepEqual(ret.actions[0].content, {sendsms: {message: SMSD.messageTwo, recipients: [PD.id]}});
 });
 
 test('NewMixin is mixed into the Automation Model, so on save will set _new_ keys to undefined, and future CRUD will be PUTs', assert => {
@@ -173,7 +173,6 @@ test('event property should return all associated events. also confirm related a
     automationEvent =  store.push('automation-event', {id: ED.idOne});
   });
   let event = automation.get('event');
-  // debugger
   assert.equal(event.get('length'), 1);
   assert.deepEqual(automation.get('event_ids'), [ED.idOne]);
   assert.deepEqual(automation.get('automation_event_ids'), [AJED.idOne]);
