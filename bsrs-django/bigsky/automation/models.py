@@ -141,17 +141,18 @@ class AutomationManager(BaseManager):
                 Email.objects.process_send_email(ticket, action, event)
             elif key == AutomationActionType.SEND_SMS:
                 PhoneNumber.objects.process_send_sms(ticket, action, event)
-            elif key == AutomationActionType.TICKET_REQUEST:
-                if ticket.request != action.content['request']:
-                    ticket.request = action.content['request']
+            # elif key == AutomationActionType.TICKET_REQUEST:
+            #     if ticket.request != action.content['request']:
+            #         ticket.request = action.content['request']
             elif key == AutomationActionType.TICKET_CC:
                 existing_ccs = set([str(x['id']) for x in ticket.cc.values('id')])
                 action_ccs = set([str(x) for x in action.content['ccs']])
-                new_ccs = action_ccs - existing_ccs
-                if new_ccs:
-                    people = Person.objects.filter(id__in=new_ccs)
-                    for p in people:
-                        ticket.cc.add(p)
+                # TODO: AARON - this is causing errors
+                # new_ccs = action_ccs - existing_ccs
+                # if new_ccs:
+                #     people = Person.objects.filter(id__in=new_ccs)
+                #     for p in people:
+                #         ticket.cc.add(p)
 
 
 class Automation(BaseModel):
