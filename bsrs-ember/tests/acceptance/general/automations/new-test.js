@@ -34,6 +34,7 @@ moduleForAcceptance('Acceptance | automation new test', {
 });
 
 test('visit new URL and create a new record', assert => {
+  var done = assert.async();
   visit(NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
@@ -97,10 +98,12 @@ test('visit new URL and create a new record', assert => {
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), AUTOMATION_LIST_URL);
+    done();
   });
 });
 
 test('when user creates an automation they should see an empty action', assert => {
+  var done = assert.async();
   clearxhr(listXhr);
   visit(NEW_URL);
   andThen(() => {
@@ -112,6 +115,7 @@ test('when user creates an automation they should see an empty action', assert =
   andThen(() => {
     assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
     assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
+    done();
   });
 });
 
