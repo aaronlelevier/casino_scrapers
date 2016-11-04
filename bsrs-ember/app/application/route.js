@@ -136,9 +136,10 @@ var ApplicationRoute = Route.extend({
       const model = this.get('simpleStore').find(tab.get('module'), tab_id);
       const tabService = this.get('tabList');
       if (tabService.showModal(tab, action, confirmed)) {
-        this.controller.set('action', action);
-        this.controller.set('module', tab.get('module'));
-        this.controller.toggleProperty('showModal');
+        // strings set on controller to control logic in the template
+        this.controllerFor('application').set('action', action);
+        this.controllerFor('application').set('module', tab.get('module'));
+        this.controllerFor('application').toggleProperty('showModal');
         this.trx.attemptedTabModel = tab;
         this.trx.attemptedTransitionModel = model;
         this.trx.attemptedAction = 'closeTabMaster';
@@ -151,10 +152,10 @@ var ApplicationRoute = Route.extend({
         tabService.callCB(tab, model);
 
         /* Redirect if clicked x on tab but stay on route if on other route...If new route, close tab, transition if at same module, and remove the model if in unsaved state (and not dirty) */
-        const currentPath = this.router.generate(this.controller.currentPath);
+        const currentPath = this.router.generate(this.controllerFor('application').currentPath);
         const temp = currentPath.split('/').pop();
         const currentLocation = tab.get('currentLocation');
-        if (temp === String(tab_id) || (tab.get('newModel') && currentLocation === this.controller.currentPath)) {
+        if (temp === String(tab_id) || (tab.get('newModel') && currentLocation === this.controllerFor('application').currentPath)) {
           tabService.redirectRoute(tab, action, confirmed, this.transitionTo.bind(this));
         }
 
