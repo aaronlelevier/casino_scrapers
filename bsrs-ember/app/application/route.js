@@ -122,7 +122,7 @@ var ApplicationRoute = Route.extend({
     Ember.$('.loading-image').addClass('bounceOut');
   },
   handleApplicationNotice(xhr, model) {
-    if (xhr.status >= 500) {
+    if (xhr.status >= 400) {
       const error = parseError(xhr.status, xhr.responseText);
       this.controllerFor('application').handleNotfication(error);
       set(model, 'ajaxError', error);

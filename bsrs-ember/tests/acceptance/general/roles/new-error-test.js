@@ -39,14 +39,17 @@ test('visiting admin/roles/new/1 and ignore server error for dashboard_text mess
   });
 });
 
-test('failure to save a new role renders an application error notice', function(assert) {
+test('server error when saving a new role renders an application error notice', function(assert) {
   xhr(SETTING_URL, 'GET', null, {}, 200, {detail: ''});
 
   run(function() {
     store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
   });
 
-  const payload = RF.put({id: UUID.value, dashboard_text: undefined, auth_currency: undefined, auth_amount: 0});
+  const payload = RF.put({
+    id: UUID.value, dashboard_text: undefined,
+    categories: [], auth_currency: undefined, auth_amount: 0
+  });
 
   page.visitNew();
 
@@ -57,9 +60,6 @@ test('failure to save a new role renders an application error notice', function(
 
   fillIn('.t-role-name', RD.nameOne);
   selectChoose('.t-location-level-select', LLD.nameCompany);
-  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
-  page.categoryClickDropdown();
-  page.categoryClickOptionOneEq();
 
   xhr(`${PREFIX}${BASE_URL}/`, 'POST', JSON.stringify(payload), {}, 502, "Server Error");
   generalPage.save();
@@ -75,3 +75,44 @@ test('failure to save a new role renders an application error notice', function(
     assert.equal(find('app-notice').length, 0, 'error notification dismissed');
   });
 });
+
+test('bad request when saving a new role renders an application error notice', function(assert) {
+  xhr(SETTING_URL, 'GET', null, {}, 200, {detail: ''});
+
+  run(function() {
+    store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
+  });
+
+  const payload = RF.put({
+    name: '<script src=\"https://bad_url.com\">Muhaha</script>',
+    id: UUID.value, dashboard_text: undefined,
+    categories: [], auth_currency: undefined, auth_amount: 0
+  });
+
+  page.visitNew();
+
+  andThen(function() {
+    assert.equal(currentURL(), NEW_URL, 'new role url');
+    assert.equal(find('app-notice').length, 0, 'no error notification displayed');
+  });
+
+  fillIn('.t-role-name', '<script src="https://bad_url.com">Muhaha</script>');
+  selectChoose('.t-location-level-select', LLD.nameCompany);
+
+  xhr(`${PREFIX}${BASE_URL}/`, 'POST', JSON.stringify(payload), {}, 400, {
+    "name": ["This field contains invalid characters."]
+  });
+  generalPage.save();
+
+  andThen(function() {
+    assert.equal(currentURL(), NEW_URL, 'url did not change');
+    assert.equal(find('app-notice').length, 1, 'error notification displayed');
+  });
+
+  click('app-notice');
+
+  andThen(function() {
+    assert.equal(find('app-notice').length, 0, 'error notification dismissed');
+  });
+});
+
