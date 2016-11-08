@@ -2,6 +2,18 @@ import Ember from 'ember';
 const { Controller } = Ember;
 
 export default Controller.extend({
+
+  init() {
+    this._super(...arguments);
+    window.addEventListener('offline', this.notifyOffline.bind(this));
+    window.addEventListener('online', this.notifyOnline.bind(this));
+  },
+
+  willDestroy() {
+    window.removeEventListener('offline', this.notifyOffline.bind(this));
+    window.removeEventListener('online', this.notifyOnline.bind(this));
+  },
+
   showModal: false,
   action: '',
   module: '',
@@ -20,6 +32,14 @@ export default Controller.extend({
       return;
     }
     this.setProperties({ message: notice.message, level: notice.level });
+  },
+
+  notifyOnline() {
+    this.handleNotfication({ message: 'notices.online', level: 'info' });
+  },
+
+  notifyOffline() {
+    this.handleNotfication({ message: 'notices.offline', level: 'warning' });
   },
 
   actions: {

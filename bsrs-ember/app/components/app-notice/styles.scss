@@ -14,19 +14,19 @@
 &.app-notice--error {
   background-color: $orange;
 }
+&.app-notice--warning {
+  background-color: $yellow;
+}
 &.app-notice--info {
   background-color: $blue;
 }
 
 /* TODO add use cases for various error types…
 &.app-notice--critical {
-  background-color: $orange;
-}
-&.app-notice--warning {
-  background-color: $orange;
+  background-color: $darkOrange;
 }
 &.app-notice--success {
-  background-color: $orange;
+  background-color: $lightGreen;
 }
 */
 

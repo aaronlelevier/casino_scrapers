@@ -7,10 +7,10 @@ export default Ember.Component.extend({
   classNames: ['animated-fast'],
   classNameBindings: [
     'isError:app-notice--error',
+    'isWarning:app-notice--warning',
     'isInfo:app-notice--info',
     /* TODO add use cases for various error types…
     'isCritical:app-notice--critical',
-    'isWarning:app-notice--warning',
     'isSuccess:app-notice--success',
     */
     'slideOutUp:slideOutUp',
@@ -18,10 +18,10 @@ export default Ember.Component.extend({
   ],
   /* TODO add use cases for various error types…
   isCritical: computed.equal('noticeLevel', 'critical'),
-  isWarning: computed.equal('noticeLevel', 'warning'),
   isSuccess: computed.equal('noticeLevel', 'success'),
   */
   isError: computed.equal('noticeLevel', 'error'),
+  isWarning: computed.equal('noticeLevel', 'warning'),
   isInfo: computed.equal('noticeLevel', 'info'),
   slideOutUp: false,
   slideInDown: true,
@@ -44,7 +44,7 @@ export default Ember.Component.extend({
     }
   }),
   __noticeLevel: 'error',
-  _levels: Ember.String.w('error info'/* critical warning success info'*/),
+  _levels: Ember.String.w('error warning info'/* critical success'*/),
 
   click() {
     this.toggleProperty('slideOutUp');
