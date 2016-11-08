@@ -14,7 +14,8 @@ var es5Shim = funnel('node_modules/es5-shim', {
 module.exports = function(defaults) {
   var app = new EmberApp(defaults, {
     'fingerprint': {
-      prepend: '/static/'
+      prepend: '/static/',
+      exclude: ['assets/icons']
     },
     babel: {
         optional: ['es7.decorators'],
