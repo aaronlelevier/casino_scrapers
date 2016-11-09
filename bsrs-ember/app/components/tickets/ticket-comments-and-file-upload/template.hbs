@@ -13,22 +13,6 @@
         <div class="ticket-action attach">
           <span class="btn btn-default btn-file">{{fa-icon "paperclip"}} {{t "button.upload"}}<input type="file" multiple="multiple" onchange={{action "upload"}}></span>
         </div>
-        <div class="ticket-action status">
-          {{power-select-foreign-key 
-            model=model 
-            selected=model.status 
-            change_method="change_status" 
-            relatedModelName="ticket-status"
-          }}
-        </div>
-        <div class="ticket-action priority">
-          {{power-select-foreign-key 
-            model=model 
-            selected=model.priority 
-            change_method="change_priority" 
-            relatedModelName="ticket-priority"
-          }}
-        </div>
       </div>
     </div>
   </div>

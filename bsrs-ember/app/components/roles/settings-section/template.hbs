@@ -1,5 +1,5 @@
-<section>
-  <div class="row card-title">
+<section class="card-title">
+  <div class="row">
     <h2 class="col-md-12">{{t "admin.role.label.settings"}}</h2>
   </div>
   <div class="row">
@@ -22,11 +22,11 @@
             {{t 'crud.inherited_from' from="general"}}
           {{/link-to}}
         </p>
-        {{textarea 
-          autoresize=true 
-          placeholder=(t 'crud.default_value' value=otherXhrs.[0].settings.dashboard_text) 
-          value=model.dashboard_text 
-          class="form-control t-settings-dashboard_text" 
+        {{textarea
+          autoresize=true
+          placeholder=(t 'crud.default_value' value=otherXhrs.[0].settings.dashboard_text)
+          value=model.dashboard_text
+          class="form-control t-settings-dashboard_text"
           id="dashboard_text"
         }}
       {{/form-group}}

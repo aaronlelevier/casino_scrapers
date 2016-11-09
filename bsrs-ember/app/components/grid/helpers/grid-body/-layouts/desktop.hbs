@@ -1,8 +1,8 @@
 <section class="docSection docSectionWithFooter container-fluid t-grid-wrap">
   <div class="row">
     <div class="col-md-12">
-      <section style="padding-bottom: 0">
-        <div class="row card-title">
+      <section class="card-title">
+        <div class="row">
           <h1 class="col-md-8">
             <span class="t-grid-title">{{grid_title}}</span>
             {{#if (filters-applied sort find search)}}
@@ -12,7 +12,7 @@
               {{grid-loading-graphic}}
             {{/unless}}
           </h1>
-          <div class="col-md-4 text-center search-wrap pull-right">
+          <div class="col-md-4 text-center pull-right">
             {{grid-search-input search=search placeholder=search_placeholder keyup=(action "keyup")}}
           </div>
           <div class="col-md-12 filtersets t-filterset-wrap">
@@ -28,13 +28,13 @@
         <tr class="head">
           <th class="selector" scope="col"></th>
           {{#each columns as |column|}}
-            {{grid/helpers/grid-header-column 
-              tagName="th" 
-              style=(html-safe (if column.width (concat 'width: ' column.width))) 
-              column=column 
-              sort=sort 
-              find=find 
-              toggleFilterModal=(action "toggleFilterModal") 
+            {{grid/helpers/grid-header-column
+              tagName="th"
+              style=(html-safe (if column.width (concat 'width: ' column.width)))
+              column=column
+              sort=sort
+              find=find
+              toggleFilterModal=(action "toggleFilterModal")
               sortBy=(action "sortBy")
               dataTestId=column.field
             }}
@@ -55,7 +55,7 @@
           {{/link-to}}
         {{else}}
           <td colspan="100%">
-            {{#unless error}} 
+            {{#unless error}}
               {{fa-icon 'binoculars'}} {{t 'grid.no_results'}}
             {{else}}
               {{error.message}}

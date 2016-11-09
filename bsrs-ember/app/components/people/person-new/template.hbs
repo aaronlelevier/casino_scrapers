@@ -7,8 +7,8 @@
 <section class="docSection container-fluid">
   <div class="row">
     <div class="col-md-12">
-      <section style="padding-bottom: 0">
-        <div class="row card-title">
+      <section class="card-title">
+        <div class="row">
           <h1 class="col-md-12">
             <span class="new">{{t "admin.person.new"}}</span>
           </h1>
@@ -74,10 +74,10 @@
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.person.label.language" for="locale"}}
-            {{power-select-foreign-key 
-              model=model 
-              selected=selectedLocale 
-              change_method="change_locale" 
+            {{power-select-foreign-key
+              model=model
+              selected=selectedLocale
+              change_method="change_locale"
               relatedModelName="locale"
             }}
             {{/form-group}}

@@ -103,17 +103,15 @@
           margin-top: -1px;
         }
       }
-
+      section.card-title{
+        margin: 20px -15px;
+        border-bottom: 1px solid #e5e5e5;
+        padding: 0 15px 0;
+      }
       .row {
         margin: 0;
         .row{
           margin: 4px 0;
-          &.card-title{
-            margin: 15px -15px 20px;
-            padding: 11px;
-            border: $borderStyle;
-            border-width: 0 0 1px 0;
-          }
         }
       }
     }//docSection
