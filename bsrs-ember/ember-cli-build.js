@@ -5,26 +5,25 @@ var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 var funnel = require('broccoli-funnel');
 var shim = require('flexi/lib/pod-templates-shim');
 shim(EmberApp);
-const env = process.env.EMBER_ENV;
-
 var es5Shim = funnel('node_modules/es5-shim', {
   files: ['es5-shim.js'],
   destDir: '/assets'
 });
 
 module.exports = function(defaults) {
+  var isProdBuild = (EmberApp.env() === 'production');
   var app = new EmberApp(defaults, {
     'fingerprint': {
       prepend: '/static/',
       exclude: ['assets/icons'],
-      enabled: (env === 'production' || env === 'development'),
+      enabled: isProdBuild,
     },
     babel: {
-        optional: ['es7.decorators'],
-        includePolyfill: true
+      optional: ['es7.decorators'],
+      includePolyfill: true
     },
     minifyJS: {
-        enabled: false
+      enabled: false
     },
   });
   app.import('vendor/defaults/uuid.js');
