@@ -35,7 +35,7 @@ export default Controller.extend({
   },
 
   notifyOnline() {
-    this.handleNotfication({ message: 'notices.online', level: 'info' });
+    this.handleNotfication({ message: 'notices.online', level: 'success' });
   },
 
   notifyOffline() {

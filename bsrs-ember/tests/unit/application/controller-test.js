@@ -34,7 +34,7 @@ test('online event triggers application notice', function(assert) {
     window.dispatchEvent(event);
   });
   assert.equal(controller.get('message'), 'notices.online', 'message set to notices.online');
-  assert.equal(controller.get('level'), 'info', 'level set to info');
+  assert.equal(controller.get('level'), 'success', 'level set to success');
   // manually dismiss
   controller.setProperties({'message': null, 'level': null});
 });

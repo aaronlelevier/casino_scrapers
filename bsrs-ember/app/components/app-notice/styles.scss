@@ -11,6 +11,9 @@
   display: flex;
 }
 
+&.app-notice--critical {
+  background-color: $darkOrange;
+}
 &.app-notice--error {
   background-color: $orange;
 }
@@ -20,15 +23,9 @@
 &.app-notice--info {
   background-color: $blue;
 }
-
-/* TODO add use cases for various error types…
-&.app-notice--critical {
-  background-color: $darkOrange;
-}
 &.app-notice--success {
   background-color: $lightGreen;
 }
-*/
 
 & .app-notice__icon {
   font-size: 2rem;

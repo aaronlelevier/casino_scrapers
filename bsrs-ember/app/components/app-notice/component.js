@@ -1,28 +1,24 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
-const { computed, run } = Ember;
+const { computed, get, run } = Ember;
 
 export default Ember.Component.extend({
   tagName: 'app-notice',
   classNames: ['animated-fast'],
   classNameBindings: [
+    'isCritical:app-notice--critical',
     'isError:app-notice--error',
     'isWarning:app-notice--warning',
     'isInfo:app-notice--info',
-    /* TODO add use cases for various error types…
-    'isCritical:app-notice--critical',
     'isSuccess:app-notice--success',
-    */
     'slideOutUp:slideOutUp',
     'slideInDown:slideInDown'
   ],
-  /* TODO add use cases for various error types…
   isCritical: computed.equal('noticeLevel', 'critical'),
-  isSuccess: computed.equal('noticeLevel', 'success'),
-  */
   isError: computed.equal('noticeLevel', 'error'),
   isWarning: computed.equal('noticeLevel', 'warning'),
   isInfo: computed.equal('noticeLevel', 'info'),
+  isSuccess: computed.equal('noticeLevel', 'success'),
   slideOutUp: false,
   slideInDown: true,
 
@@ -40,11 +36,18 @@ export default Ember.Component.extend({
       if (this._levels.includes(value)) {
         this[`__${key}`] = value;
       }
-      return this.get(`__${key}`);
+      return get(this, `__${key}`);
     }
   }),
   __noticeLevel: 'error',
-  _levels: Ember.String.w('error warning info'/* critical success'*/),
+  _levels: Ember.String.w('critical error warning info success'),
+
+  faIcon: computed('noticeLevel', {
+    get() {
+      const notice = get(this, 'noticeLevel');
+      return iconMap[notice];
+    }
+  }),
 
   click() {
     this.toggleProperty('slideOutUp');
@@ -54,7 +57,18 @@ export default Ember.Component.extend({
 
   actions: {
     dismiss() {
-      this.get('on-dismiss')();
+      get(this, 'on-dismiss')();
     }
   }
 });
+
+// Font Awesome icon names…
+let iconMap = Object.create(null);
+
+iconMap['critical'] = 'exclamation-triangle';
+iconMap['error'] = 'exclamation-circle';
+iconMap['warning'] = 'exclamation-circle';
+iconMap['info'] = 'info-circle';
+iconMap['success'] = 'fa-thumbs-up';
+
+Object.freeze(iconMap);
