@@ -5,11 +5,12 @@
   {{input 
     type="text" 
     placeholder=(if placeholder placeholder (t "admin.amount_and_default_value" value=placeholderAmount)) 
-    focus-out="format_currency" 
     value=bound_field 
-    class="form-control t-amount" 
-    id="amount" 
+    class=(concat "form-control t-amount" (if showMessage " invalid"))
+    id="auth_amount" 
     disabled=editPrivilege
+    focus-out="formatCurrency" 
+    key-up=(action "keyedUp")
   }}
   {{#power-select
     selected=currencyObject
@@ -23,3 +24,9 @@
     {{op.code}}
   {{/power-select}}
 </div>
+
+{{show-validation-message 
+  model=model 
+  valuePath=valuePath
+  showMessage=showMessage
+}}

@@ -23,7 +23,7 @@ var RoleRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
     const pk = this.get('uuid').v4();
     let role;
     run(() => {
-      role = store.push('role', {id: pk, role_type: role_type, new: true, new_pk: new_pk});
+      role = store.push('role', {id: pk, auth_amount: 0, role_type: role_type, new: true, new_pk: new_pk});
     });
     return role;
   },

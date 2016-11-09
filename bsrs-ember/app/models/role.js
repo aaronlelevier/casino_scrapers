@@ -18,6 +18,10 @@ const Validations = buildValidations({
     presence: true,
     message: 'errors.role.location_level'
   }),
+  auth_amount: validator('presence', {
+    presence: true,
+    message: 'errors.role.auth_amount'
+  }),
 });
 
 var RoleModel = Model.extend(OptConf, Validations, {

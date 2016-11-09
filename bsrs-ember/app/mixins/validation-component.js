@@ -9,6 +9,8 @@ var ValidationComponentInit = Ember.Mixin.create({
     defineProperty(this, 'attributeValidation', computed.oneWay(`model.validations.attrs.${valuePath}`));
     defineProperty(this, 'value', computed.alias(`model.${valuePath}`));
   },
+  isValid: computed.oneWay('attributeValidation.isValid'),
+  isInvalid: computed.oneWay('attributeValidation.isInvalid'),
 });
 
 var ValidationComponentPieces = Ember.Mixin.create({
@@ -22,8 +24,6 @@ var ValidationComponentPieces = Ember.Mixin.create({
     // set back when fill in input
     return this.get('didValidate') && this.get('isInvalid');
   }),
-  isValid: computed.oneWay('attributeValidation.isValid'),
-  isInvalid: computed.oneWay('attributeValidation.isInvalid'),
 });
 
 export { ValidationComponentInit, ValidationComponentPieces } ;

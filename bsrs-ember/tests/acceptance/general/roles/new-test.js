@@ -73,7 +73,7 @@ test('visiting role/new', (assert) => {
     assert.equal(store.find('location-level').get('length'), 8);
     assert.equal(page.categorySelectText, t('power.select.select'));
     assert.equal(find('.t-amount').get(0)['placeholder'], 'Amount: 0.00');
-    assert.equal(inputCurrencyPage.authAmountValue, '');
+    assert.equal(inputCurrencyPage.authAmountValue, '0.00');
     assert.equal(inputCurrencyPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
     assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.code);
     assert.equal(find('.t-inherited-msg-dashboard_text-link').text().trim(), 'Inherited from: general');

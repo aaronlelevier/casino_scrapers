@@ -1,11 +1,13 @@
 import Ember from 'ember';
+const { run } = Ember;
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import CD from 'bsrs-ember/vendor/defaults/currency';
 
-var store, run = Ember.run, trans;
+var store, trans;
+const ERR_TEXT = '.validated-input-error-dialog';
 
 moduleForComponent('role-single', 'integration: role-single test', {
   integration: true,
@@ -39,6 +41,23 @@ test('translation keys', function(assert) {
   assert.equal(getLabelText('category'), trans.t('admin.role.label.category'));
   assert.equal(getLabelText('auth_amount'), trans.t('admin.person.label.auth_amount'));
   assert.equal(getLabelText('dashboard_text'), trans.t('admin.setting.dashboard_text'));
+});
+
+test('auth amount required', function(assert) {
+  var done = assert.async();
+  run(() => {
+    this.set('model', store.push('role', {}));
+  });
+  this.render(hbs `{{roles/role-single model=model}}`);
+  assert.notOk(Ember.$('.invalid').is(':visible'));
+  this.$('.t-amount').val('8').trigger('keyup');
+  assert.notOk(Ember.$('.invalid').is(':visible'));
+  this.$('.t-amount').val('').trigger('keyup');
+  Ember.run.later(() => {
+    assert.ok(Ember.$('.invalid').is(':visible'));
+    assert.equal(Ember.$(ERR_TEXT).text().trim(), trans.t('errors.role.auth_amount'));
+    done();
+  }, 300);
 });
 
 test('if save isRunning, btn is disabled', function(assert) {
