@@ -83,7 +83,6 @@ Router.map(function() {
     this.route('tickets-in-progress');
   });
   this.route('redirect', {path: '/*wildcard'});
-  this.route('error');
 });
 
 export default Router;

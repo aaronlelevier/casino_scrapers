@@ -225,17 +225,19 @@ test('when click delete, and click no modal disappears', assert => {
 
 // modal tests: end
 
-// test('deep linking with an xhr with a 404 status code will show up in the error component (currency)', (assert) => {
-//   clearxhr(detailXhr);
-//   clearxhr(listXhr);
-//   const exception = `This record does not exist.`;
-//   xhr(`${TENANT_URL}${TD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
-//   page.visitDetail();
-//   andThen(() => {
-//     assert.equal(currentURL(), DETAIL_URL);
-//     assert.equal(find('.t-error-message').text(), 'WAT');
-//   });
-// });
+test('deep linking with an xhr with a 404 status code will show up in the error component (currency)', (assert) => {
+  errorSetup();
+  clearxhr(detailXhr);
+  clearxhr(listXhr);
+  const exception = `This record does not exist.`;
+  xhr(`${TENANT_URL}${TD.idOne}/`, 'GET', null, {}, 404, {'detail': exception});
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-error-message').text(), 'WAT');
+  });
+  errorTearDown();
+});
 
 test('validations work', assert => {
   clearxhr(listXhr);
