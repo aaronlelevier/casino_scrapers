@@ -104,38 +104,3 @@ test('each priority shows up as a valid select option', function(assert) {
   let $component = this.$('.t-ticket-priority-select');
   assert.equal($component.length, 1);
 });
-
-test('changing priority changes the class', function(assert) {
-  run(() => {
-    store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOneKey, tickets: [TD.idOne]});
-    store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityTwoKey});
-    ticket = store.push('ticket', {id: TD.idOne, priority_fk: TD.priorityOneId});
-  });
-  let priorities = store.find('ticket-priority');
-  this.set('model', ticket);
-  this.set('priorities', priorities);
-  this.render(hbs`{{tickets/ticket-single model=model priorities=priorities activities=priorities}}`);
-  assert.ok(this.$('.tag:eq(0)').hasClass('ticket-priority-emergency'));
-  let $component = this.$('.t-ticket-priority-select');
-  assert.equal($component.length, 1);
-  clickTrigger('.t-ticket-priority-select');
-  nativeMouseUp(`.ember-power-select-option:contains(${TD.priorityTwoKey})`);
-  assert.ok(this.$('.tag:eq(0)').hasClass('ticket-priority-high'));
-});
-
-test('changing status changes the class', function(assert) {
-  run(() => {
-    store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey, tickets: [TD.idOne]});
-    ticket = store.push('ticket', {id: TD.idOne, status_fk: TD.statusOneId});
-  });
-  let statuses = store.find('ticket-status');
-  this.set('model', ticket);
-  this.set('statuses', statuses);
-  this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
-  assert.ok(this.$('.tag:eq(1)').hasClass('ticket-status-new'));
-  let $component = this.$('.t-ticket-status-select');
-  assert.equal($component.length, 1);
-  clickTrigger('.t-ticket-status-select');
-  nativeMouseUp(`.ember-power-select-option:contains(${TD.statusTwoKey})`);
-  assert.ok(this.$('.tag:eq(1)').hasClass('ticket-status-deferred'));
-});
