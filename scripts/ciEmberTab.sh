@@ -21,9 +21,9 @@ function npmInstall {
 
 function emberTest {
     if [ "$(uname)" == "Darwin" ]; then
-      ./node_modules/ember-cli/bin/ember test -f general
+      ./node_modules/ember-cli/bin/ember test -f tab
     else
-      xvfb-run ./node_modules/ember-cli/bin/ember test -f general
+      xvfb-run ./node_modules/ember-cli/bin/ember test -f tab
     fi
     EMBER_TEST=$?
     if [ "$EMBER_TEST" == 1 ]; then
