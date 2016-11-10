@@ -5,14 +5,16 @@ export default Controller.extend({
 
   init() {
     this._super(...arguments);
-    window.addEventListener('offline', this.notifyOffline.bind(this));
-    window.addEventListener('online', this.notifyOnline.bind(this));
+    this._online = this.notifyOnline.bind(this);
+    this._offline = this.notifyOffline.bind(this);
+    window.addEventListener('offline', this._offline);
+    window.addEventListener('online', this._online);
     document.addEventListener('keydown', this.preventInputSubmit);
   },
 
   willDestroy() {
-    window.removeEventListener('offline', this.notifyOffline.bind(this));
-    window.removeEventListener('online', this.notifyOnline.bind(this));
+    window.removeEventListener('offline', this._offline);
+    window.removeEventListener('online', this._online);
     document.removeEventListener('keydown', this.preventInputSubmit);
   },
 
