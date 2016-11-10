@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { run } = Ember;
+const { run, set, get } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import { many_to_many, many_to_many_dirty, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components/attr/many-to-many';
@@ -34,11 +34,11 @@ export default Model.extend(OptConf, Validations, NewMixin, SaveAndRollbackRelat
     many_to_many.bind(this)('event', 'automation');
     many_to_many.bind(this)('action', 'automation', {dirty: false});
     many_to_many.bind(this)('pf', 'automation', {dirty: false});
+    set(this, 'automation_pf_fks', get(this, 'automation_pf_fks') || []);
   },
   simpleStore: Ember.inject.service(),
   description: attr(''),
   // pf dirty tracking
-  automation_pf_fks: [],
   pfIsDirtyContainer: many_to_many_dirty('automation_pf'),
   pfIsDirty: Ember.computed('pf.@each.{isDirtyOrRelatedDirty}', 'pfIsDirtyContainer', function() {
     const pf = this.get('pf');

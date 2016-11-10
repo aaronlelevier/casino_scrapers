@@ -1,12 +1,9 @@
 import Ember from 'ember';
-const { run } = Ember;
+const { run, set, get } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectRepo from 'bsrs-ember/utilities/inject';
 import CopyMixin from 'bsrs-ember/mixins/model/copy';
-// import EmailMixin from 'bsrs-ember/mixins/model/email';
-// import PhoneNumberMixin from 'bsrs-ember/mixins/model/phone_number';
-// import AddressMixin from 'bsrs-ember/mixins/model/address';
 import RoleMixin from 'bsrs-ember/mixins/model/person/role';
 import LocationMixin from 'bsrs-ember/mixins/model/person/location';
 import LocaleMixin from 'bsrs-ember/mixins/model/person/locale';
@@ -87,6 +84,9 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMi
     many_to_many.bind(this)('location', 'person', {plural:true, add_func: false, rollback:false, save:false});
     many_to_many.bind(this)('phonenumber', 'person', {plural:true, dirty:false});
     many_to_many.bind(this)('email', 'person', {plural:true, dirty:false});
+    set(this, 'person_phonenumber_fks', get(this, 'person_phonenumber_fks') || []);
+    set(this, 'person_email_fks', get(this, 'person_email_fks') || []);
+    set(this, 'person_location_fks', get(this, 'person_location_fks') || []);
   },
   type: 'person',
   simpleStore: Ember.inject.service(),
@@ -110,9 +110,6 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMi
   role_fk: undefined,
   status_fk: undefined,
   photo_fk: undefined,
-  person_phonenumbers_fks: [],
-  person_emails_fks: [],
-  person_locations_fks: [],
   changingPassword: false,
   //models are leaf nodes and should be given a set of data and encapsulate and work on that data
   //tightly coupled.  Ideally, route would get services or hand off to another service to collect them all

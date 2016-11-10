@@ -1,5 +1,4 @@
 import Ember from 'ember';
-const { get } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 //start-non-standard
@@ -43,11 +42,15 @@ const Validations = buildValidations({
   categories: validator('ticket-categories'),
 });
 
-const { run } = Ember;
+const { run, set, get } = Ember;
 
 var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Validations, {
   init() {
-    this.requestValues = []; //store array of values to be sent in dt post or put request field
+    this._super(...arguments);
+    set(this, 'requestValues', []); //store array of values to be sent in dt post or put request field
+    set(this, 'ticket_cc_fks', get(this, 'ticket_cc_fks') || []);
+    set(this, 'model_categories_fks', get(this, 'model_categories_fks') || []);
+    set(this, 'generic_attachments_fks', get(this, 'generic_attachments_fks') || []);
     belongs_to.bind(this)('status', 'ticket', {bootstrapped:true});
     belongs_to.bind(this)('priority', 'ticket', {bootstrapped:true});
     belongs_to.bind(this)('assignee', 'ticket', {change_func:false, rollback:false});//change_assignee_container (below): change_belongs_to
@@ -55,7 +58,6 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     many_to_many.bind(this)('cc', 'ticket');
     many_to_many.bind(this)('attachment', 'generic', {plural: true});
     many_to_many.bind(this)('category', 'model', {plural:true, add_func:false});
-    this._super(...arguments);
   },
   simpleStore: Ember.inject.service(),
   //TODO: test this.  Plan on using for delete modal
@@ -64,10 +66,6 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
   request: attr(''),
   requester: attr(''),
   comment: attr(''),
-  //TODO: these need to be in an init function
-  ticket_cc_fks: [],
-  model_categories_fks: [],
-  generic_attachments_fks: [],
   status_fk: undefined,
   priority_fk: undefined,
   location_fk: undefined,

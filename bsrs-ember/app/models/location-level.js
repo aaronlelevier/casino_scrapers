@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { run } = Ember;
+const { run, set, get } = Ember;
 import inject from 'bsrs-ember/utilities/store';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { validator, buildValidations } from 'ember-cp-validations';
@@ -12,12 +12,16 @@ const Validations = buildValidations({
 });
 
 var LocationLevel = Model.extend(Validations, {
+  init() {
+    this._super(...arguments);
+    set(this, 'parent_fks', get(this, 'parent_fks') || []);
+    set(this, 'locations', get(this, 'locations') || []);
+    set(this, 'roles', get(this, 'roles') || []);
+  },
   simpleStore: Ember.inject.service(),
   name: attr(''),
-  locations: [],
-  roles: [],
+  // TODO: wrap in attr?
   children_fks: attr([]),
-  parent_fks: [],
   isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
     return this.get('isDirty');
   }).readOnly(),

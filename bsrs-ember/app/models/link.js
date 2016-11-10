@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run, set, get } = Ember;
 import inject from 'bsrs-ember/utilities/store';
 import CategoriesMixin from 'bsrs-ember/mixins/model/category';
 import OptConf from 'bsrs-ember/mixins/optconfigure/link';
@@ -16,14 +17,14 @@ const Validations = buildValidations({
 
 var LinkModel = Model.extend(CategoriesMixin, Validations, OptConf, {
   init() {
+    this._super(...arguments);
     belongs_to.bind(this)('status', 'link', {bootstrapped:true});
     belongs_to.bind(this)('priority', 'link');
     belongs_to.bind(this)('destination', 'link');
     many_to_many.bind(this)('category', 'model', {plural:true, add_func:false});
-    this._super(...arguments);
+    set(this, 'model_categories_fks', get(this, 'model_categories_fks') || []);
   },
   simpleStore: Ember.inject.service(),
-  model_categories_fks: [],
   order: attr(''),
   action_button: attr(''),
   is_header: attr(false),

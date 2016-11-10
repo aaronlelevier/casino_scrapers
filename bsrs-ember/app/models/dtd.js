@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { run } = Ember;
+const { run, set, get } = Ember;
 import inject from 'bsrs-ember/utilities/store';
 import equal from 'bsrs-ember/utilities/equal';
 import OptConf from 'bsrs-ember/mixins/optconfigure/dtd';
@@ -23,25 +23,25 @@ const Validations = buildValidations({
 
 var DTDModel = Model.extend(Validations, OptConf, {
   init() {
+    this._super(...arguments);
     many_to_many.bind(this)('link', 'dtd', {plural:true, dirty:false});
     many_to_many.bind(this)('field', 'dtd', {plural:true, dirty:false});
     many_to_many.bind(this)('attachment', 'generic', {plural: true});
-    this._super(...arguments);
+    set(this, 'generic_attachments_fks', get(this, 'generic_attachments_fks') || []);
   },
   simpleStore: Ember.inject.service(),
-  generic_attachments_fks: [],
   key: attr(''),
   description: attr(''),
   note: attr(''),
   note_type: attr(''),
+  prompt: attr(''),
+  link_type: attr(''),
   note_types: [
     'admin.dtd.note_type.success',
     'admin.dtd.note_type.warning',
     'admin.dtd.note_type.info',
     'admin.dtd.note_type.danger'
   ],
-  prompt: attr(''),
-  link_type: attr(''),
   link_types: [
     'admin.dtd.link_type.buttons',
     'admin.dtd.link_type.links'

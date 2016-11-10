@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { run } = Ember;
+const { run, set, get } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import { many_to_many } from 'bsrs-components/attr/many-to-many';
@@ -60,6 +60,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     belongs_to.bind(this)('implementation_contact', 'tenant');
     belongs_to.bind(this)('dtd_start', 'tenant');
     many_to_many.bind(this)('country', 'tenant', {plural:true});
+    set(this, 'tenant_countries_fks', get(this, 'tenant_countries_fks') || []);
   },
   simpleStore: Ember.inject.service(),
   company_name: attr(''),
@@ -72,7 +73,6 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
   billing_email_fk: undefined,
   billing_address_fk: undefined,
   implementation_contact_fk: undefined,
-  tenant_countries_fks: [],
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'defaultCurrencyIsDirty', 'countriesIsDirty', 'billingEmailIsDirty', 'billingPhoneNumberIsDirty', 'implementationEmailIsDirty', 'implementationContactIsDirty', 'billingAddressIsDirty', 'dtdStartIsDirty', function() {
     return this.get('isDirty') || this.get('defaultCurrencyIsDirty') || this.get('countriesIsDirty') || this.get('billingEmailIsDirty') || this.get('billingPhoneNumberIsDirty') || this.get('implementationEmailIsDirty') || this.get('implementationContactIsDirty') || this.get('billingAddressIsDirty') || this.get('dtdStartIsDirty');
   }),

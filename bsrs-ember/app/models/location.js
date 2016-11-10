@@ -1,11 +1,8 @@
 import Ember from 'ember';
-const { run } = Ember;
+const { run, set, get } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import equal from 'bsrs-ember/utilities/equal';
-// import EmailMixin from 'bsrs-ember/mixins/model/email';
-// import PhoneNumberMixin from 'bsrs-ember/mixins/model/phone_number';
-// import AddressMixin from 'bsrs-ember/mixins/model/address';
 import CopyMixin from 'bsrs-ember/mixins/model/copy';
 import ChildrenMixin from 'bsrs-ember/mixins/model/location/children';
 import ParentMixin from 'bsrs-ember/mixins/model/location/parent';
@@ -39,6 +36,7 @@ const Validations = buildValidations({
 
 var LocationModel = Model.extend(CopyMixin, ParentMixin, ChildrenMixin, LocationLevelMixin, Validations, OptConf, {
   init() {
+    this._super(...arguments);
     belongs_to.bind(this)('status', 'location', {bootstrapped:true});
     belongs_to.bind(this)('location_level', 'location', {bootstrapped:true, change_func:false});
     many_to_many.bind(this)('children', 'location', {add_func:false});
@@ -46,17 +44,15 @@ var LocationModel = Model.extend(CopyMixin, ParentMixin, ChildrenMixin, Location
     many_to_many.bind(this)('phonenumber', 'location', {plural:true, dirty:false});
     many_to_many.bind(this)('address', 'location', {plural:true, dirty:false});
     many_to_many.bind(this)('email', 'location', {plural:true, dirty:false});
-    this._super(...arguments);
+    set(this, 'location_phonenumbers_fks', get(this, 'location_phonenumbers_fks') || []);
+    set(this, 'location_emails_fks', get(this, 'location_emails_fks') || []);
+    set(this, 'location_addresses_fks', get(this, 'location_addresses_fks') || []);
   },
   simpleStore: Ember.inject.service(),
   name: attr(''),
   number: attr(''),
   status_fk: undefined,
   location_level_fk: undefined,
-  tickets: [],
-  location_phonenumbers_fks: [],
-  location_emails_fks: [],
-  location_addresses_fks: [],
   // PH
   phonenumbersIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('location_phonenumbers'),
   phonenumbersIsDirty: Ember.computed('phonenumbers.@each.{isDirtyOrRelatedDirty}', 'phonenumbersIsDirtyContainer', function() {

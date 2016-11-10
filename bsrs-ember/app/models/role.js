@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { run } = Ember;
+const { run, set, get } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
@@ -26,20 +26,20 @@ const Validations = buildValidations({
 
 var RoleModel = Model.extend(OptConf, Validations, {
   init() {
+    this._super(...arguments);
     belongs_to.bind(this)('location_level', 'role', {bootstrapped:true, rollback:false});
     many_to_many.bind(this)('category', 'role', {plural:true});
-    this._super(...arguments);
+    set(this, 'role_categories_fks', get(this, 'role_categories_fks') || []);
+    set(this, 'people', get(this, 'people') || []);
   },
   simpleStore: Ember.inject.service(),
   uuid: injectUUID('uuid'),
   name: attr(''),
-  people: [],
   role_type: attr(),
   location_level_fk: undefined,
   dashboard_text: attr(''),
   auth_amount: attr(),
   auth_currency: attr(),
-  role_categories_fks: [],
   isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'categoriesIsDirty', function() {
     return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('categoriesIsDirty');
   }).readOnly(),

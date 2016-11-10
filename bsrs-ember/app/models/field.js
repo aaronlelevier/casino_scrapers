@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run, set, get } = Ember;
 import inject from 'bsrs-ember/utilities/store';
 import OptConf from 'bsrs-ember/mixins/optconfigure/field';
 import { attr, Model } from 'ember-cli-simple-store/model';
@@ -6,8 +7,9 @@ import { many_to_many, many_to_many_dirty_unlessAddedM2M } from 'bsrs-components
 
 export default Model.extend(OptConf, {
   init() {
-    many_to_many.bind(this)('option', 'field', {plural:true, dirty:false});
     this._super(...arguments);
+    many_to_many.bind(this)('option', 'field', {plural:true, dirty:false});
+    set(this, 'field_option_fks', get(this, 'field_option_fks') || []);
   },
   simpleStore: Ember.inject.service(),
   label: attr(''),
@@ -32,7 +34,6 @@ export default Model.extend(OptConf, {
   required: attr(),
   //TODO: test for empty string
   order: attr(),
-  field_option_fks: [],
   optionsIsDirtyContainer: many_to_many_dirty_unlessAddedM2M('field_options'),
   optionsIsDirty: Ember.computed('options.@each.{isDirty}', 'optionsIsDirtyContainer', function() {
     const options = this.get('options');
@@ -66,7 +67,7 @@ export default Model.extend(OptConf, {
     });
   },
   removeRecord(){
-    Ember.run(() => {
+    run(() => {
       this.get('simpleStore').remove('field', this.get('id'));
     });
   },

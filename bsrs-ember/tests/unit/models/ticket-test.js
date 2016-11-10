@@ -1163,7 +1163,7 @@ test('change_location will append the ticket id to the new location tickets arra
   let location = store.push('location', {id: LD.idOne});
   let location_two = {id: LD.idTwo};
   ticket.change_location(location_two);
-  assert.deepEqual(location.get('tickets'), []);
+  assert.equal(location.get('tickets'), undefined);
   let location_two_pushed = store.find('location', LD.idTwo);
   assert.deepEqual(location_two_pushed.get('tickets'), [TD.idOne]);
   assert.ok(location_two_pushed.get('isNotDirtyOrRelatedNotDirty'));
