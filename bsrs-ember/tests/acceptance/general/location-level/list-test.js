@@ -11,7 +11,7 @@ const BASE_URL = BASEURLS.base_location_levels_url;
 const LOCATION_LEVEL_URL = BASE_URL + '/index';
 
 
-moduleForAcceptance('Acceptance | location-level-list', {
+moduleForAcceptance('Acceptance | general location-level-list', {
   beforeEach() {
     xhr(`${LOCATION_LEVELS_URL}?page=1` ,'GET',null,{}, 200, LOCATION_LEVEL_FIXTURES.list() );
   },

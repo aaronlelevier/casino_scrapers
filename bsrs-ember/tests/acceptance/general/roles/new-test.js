@@ -33,7 +33,7 @@ const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-selec
 
 let store, payload, list_xhr, url, counter;
 
-moduleForAcceptance('Acceptance | role new', {
+moduleForAcceptance('Acceptance | general role new', {
   beforeEach() {
     payload = {
       id: UUID.value,

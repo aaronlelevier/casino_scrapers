@@ -27,7 +27,7 @@ const SORT_STATUS_DIR = '.t-sort-status-translated-name-dir';
 
 var store, endpoint, list_xhr;
 
-moduleForAcceptance('Acceptance | people-grid-list', {
+moduleForAcceptance('Acceptance | people grid list', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';

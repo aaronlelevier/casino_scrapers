@@ -27,7 +27,7 @@ const PROGRESS_BAR = '.progress-bar';
 
 let store;
 
-moduleForAcceptance('Acceptance | ticket file upload test', {
+moduleForAcceptance('Acceptance | general ticket file upload test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());

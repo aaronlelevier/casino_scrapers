@@ -15,7 +15,7 @@ const API_DETAIL_URL = `${<%= CapitalizeModule %>_URL}${<%= FirstCharacterModule
 
 let store;
 
-moduleForAcceptance('Acceptance | <%= dasherizedModuleName %> list test', {
+moduleForAcceptance('Acceptance | general <%= dasherizedModuleName %> list test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     const listData = <%= FirstCharacterModuleName %>F.list();

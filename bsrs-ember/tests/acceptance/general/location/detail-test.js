@@ -44,7 +44,7 @@ const CHILDREN_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-o
 const PARENTS = '.t-location-parent-select';
 const PARENTS_MULTIPLE_OPTION = `.t-location-parent-select .ember-power-select-trigger > .ember-power-select-multiple-options`;
 
-moduleForAcceptance('Acceptance | location detail-test', {
+moduleForAcceptance('Acceptance | general location detail-test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     let location_list_data = LF.list();

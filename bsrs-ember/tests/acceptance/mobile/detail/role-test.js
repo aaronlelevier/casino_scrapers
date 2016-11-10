@@ -26,7 +26,7 @@ const BASE_URL = BASEURLS.base_roles_url;
 const DETAIL_URL = `${BASE_URL}/${RD.idOne}`;
 const ROLE_PUT_URL = `${ROLES_URL}${RD.idOne}/`;
 
-moduleForAcceptance('Acceptance | mobile role detail test', {
+moduleForAcceptance('Acceptance | general mobile role detail test', {
   beforeEach() {
     /* SETUP */
     setWidth('mobile');

@@ -23,7 +23,7 @@ const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 
 var store, run = Ember.run;
 
-moduleForAcceptance('Acceptance | bootup test', {
+moduleForAcceptance('Acceptance | general bootup test', {
   beforeEach() {
 
     store = this.application.__container__.lookup('service:simpleStore');

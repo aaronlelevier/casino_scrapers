@@ -40,7 +40,7 @@ const SEARCH = '.ember-power-select-search input';
 
 let store, list_xhr, location_xhr, people_xhr, counter;
 
-moduleForAcceptance('Acceptance | ticket new test', {
+moduleForAcceptance('Acceptance | general ticket new test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(TICKETS_URL+'?page=1', 'GET', null, {}, 200, TF.empty());

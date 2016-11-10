@@ -48,7 +48,7 @@ const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 var store, list_xhr, people_detail_data, detail_xhr, url, translations, role_route_data_endpoint;
 
-moduleForAcceptance('Acceptance | person detail test', {
+moduleForAcceptance('Acceptance | general person detail test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     var people_list_data = PF.list();

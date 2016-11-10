@@ -50,7 +50,7 @@ const TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idTwo}/ticket/`;
 
 let store, endpoint;
 
-moduleForAcceptance('Acceptance | dt new', {
+moduleForAcceptance('Acceptance | general dt new', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${DTD_URL}/`;

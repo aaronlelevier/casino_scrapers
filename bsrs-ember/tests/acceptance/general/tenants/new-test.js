@@ -31,7 +31,7 @@ const NEW_URL = `${BASE_URL}/new/1`;
 
 var store, listXhr;
 
-moduleForAcceptance('Acceptance | tenant new test', {
+moduleForAcceptance('Acceptance | general tenant new test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     const listData = TF.list();

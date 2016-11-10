@@ -23,7 +23,7 @@ const ATTACHMENT_DELETE_URL = ATTACHMENTS_URL + UUID.value + '/';
 
 let store;
 
-moduleForAcceptance('Acceptance | person file upload test', {
+moduleForAcceptance('Acceptance | general person file upload test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     random.uuid = function() { return UUID.value; };

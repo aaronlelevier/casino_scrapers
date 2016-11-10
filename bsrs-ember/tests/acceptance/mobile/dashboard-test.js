@@ -13,7 +13,7 @@ var store, dashboard_xhr;
 
 const NAVBAR = '.t-navbar-items';
 
-moduleForAcceptance('Acceptance | mobile dashboard test', {
+moduleForAcceptance('Acceptance | general mobile dashboard test', {
   beforeEach() {
     setWidth('mobile');
     store = this.application.__container__.lookup('service:simpleStore');

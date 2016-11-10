@@ -21,7 +21,7 @@ const BASE_URL = BASEURLS.base_locations_url;
 const DETAIL_URL = `${BASE_URL}/${LD.idOne}`;
 const LOCATION_PUT_URL = `${LOCATIONS_URL}${LD.idOne}/`;
 
-moduleForAcceptance('Acceptance | mobile location detail test', {
+moduleForAcceptance('Acceptance | general mobile location detail test', {
   beforeEach() {
     /* SETUP */
     setWidth('mobile');

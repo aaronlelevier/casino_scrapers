@@ -13,7 +13,7 @@ const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_people_url;
 const PEOPLE_URL = BASE_URL + '/index';
 
-moduleForAcceptance('Acceptance | application redirect test', {
+moduleForAcceptance('Acceptance | general application redirect test', {
   beforeEach() {
 
     //required to allow tests to pass.

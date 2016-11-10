@@ -28,7 +28,7 @@ const CURRENCY = '.t-currency-select';
 
 var store, detailXhr, listXhr;
 
-moduleForAcceptance('Acceptance | tenant detail test', {
+moduleForAcceptance('Acceptance | general tenant detail test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     const listData = TF.list();

@@ -10,7 +10,7 @@ const DETAIL_URL = `${LOC_URL}/${LD.idOne}`;
 
 let originalLoggerError, originalTestAdapterException;
 
-moduleForAcceptance('Acceptance | application error test', {
+moduleForAcceptance('Acceptance | general application error test', {
   error: 500,
   beforeEach() {
     // store = this.application.__container__.lookup('service:simpleStore');

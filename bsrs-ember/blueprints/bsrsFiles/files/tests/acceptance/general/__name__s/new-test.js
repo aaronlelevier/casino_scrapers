@@ -20,7 +20,7 @@ const NEW_URL = `${BASE_URL}/new/1`;
 
 var store, listXhr;
 
-moduleForAcceptance('Acceptance | <%= dasherizedModuleName %> new test', {
+moduleForAcceptance('Acceptance | general <%= dasherizedModuleName %> new test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     const listData = <%= FirstCharacterModuleName %>F.list();

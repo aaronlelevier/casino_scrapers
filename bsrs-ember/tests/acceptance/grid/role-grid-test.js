@@ -24,7 +24,7 @@ const SAVE_FILTERSET_MODAL = '.t-show-save-filterset-modal';
 
 var application, store, endpoint, list_xhr;
 
-moduleForAcceptance('Acceptance | role-grid-list', {
+moduleForAcceptance('Acceptance | role grid list', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';

@@ -33,7 +33,7 @@ const LOCATION = '.t-ticket-location-select';
 // const SORT_ASSIGNEE_DIR = '.t-sort-assignee-fullname-dir';
 // const FILTER_PRIORITY = '.t-filter-priority-translated-name';
 
-moduleForAcceptance('Acceptance | grid ticket mobile test', {
+moduleForAcceptance('Acceptance | general grid ticket mobile test', {
   beforeEach() {
     setWidth('mobile');
     store = this.application.__container__.lookup('service:simpleStore');

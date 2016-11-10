@@ -15,7 +15,7 @@ const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 
 var application;
 
-moduleForAcceptance('Acceptance | logout test', {
+moduleForAcceptance('Acceptance | general logout test', {
   beforeEach() {
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
   },

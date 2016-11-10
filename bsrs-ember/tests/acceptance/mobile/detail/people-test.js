@@ -30,7 +30,7 @@ const BASE_URL = BASEURLS.base_people_url;
 const DETAIL_URL = `${BASE_URL}/${PD.idOne}`;
 const PEOPLE_PUT_URL = `${PEOPLE_URL}${PD.idOne}/`;
 
-moduleForAcceptance('Acceptance | mobile people detail test', {
+moduleForAcceptance('Acceptance | general mobile people detail test', {
   beforeEach() {
     setWidth('mobile');
     store = this.application.__container__.lookup('service:simpleStore');

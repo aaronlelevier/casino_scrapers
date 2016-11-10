@@ -8,7 +8,7 @@ import BASEURLS, { CATEGORIES_URL } from 'bsrs-ember/utilities/urls';
 const BASE_URL = BASEURLS.base_categories_url;
 const CATEGORIES_INDEX_URL = BASE_URL + '/index';
 
-moduleForAcceptance('Acceptance | category list test', {
+moduleForAcceptance('Acceptance | general category list test', {
   beforeEach() {
     xhr(`${CATEGORIES_URL}?page=1`, "GET", null, {}, 200, CATEGORY_FIXTURES.list());
   },

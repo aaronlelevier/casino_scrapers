@@ -27,7 +27,7 @@ const ERROR_URL = BASEURLS.error_url;
 
 let endpoint, detail_xhr, list_xhr;
 
-moduleForAcceptance('Acceptance | dtd list test', {
+moduleForAcceptance('Acceptance | general dtd list test', {
   beforeEach() {
     endpoint = `${PREFIX}${BASE_URL}/`;
     list_xhr = xhr(`${endpoint}?page=1`,'GET', null, {}, 200, DTDF.list());

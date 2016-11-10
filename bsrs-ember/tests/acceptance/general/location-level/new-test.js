@@ -21,7 +21,7 @@ const DETAIL_URL = BASE_URL + '/' + LLD.idOne;
 
 let application, store, payload, list_xhr;
 
-moduleForAcceptance('Acceptance | location-level-new', {
+moduleForAcceptance('Acceptance | general location-level-new', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${LOCATION_LEVELS_URL}?page=1`, 'GET', null, {}, 200, LOCATION_LEVEL_FIXTURES.empty());

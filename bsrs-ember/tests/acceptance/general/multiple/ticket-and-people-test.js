@@ -22,7 +22,7 @@ const LOCATION = '.t-person-locations-select .ember-basic-dropdown-trigger';
 
 var application, store, person, ticket;
 
-moduleForAcceptance('Acceptance | ticket and people test', {
+moduleForAcceptance('Acceptance | general ticket and people test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
   },

@@ -31,7 +31,7 @@ const LETTER_S = {keyCode: 83};
 const FILTERSET_COMPONENT = '.t-mobile-save-filterset-component';
 const FILTERSET_COMPONENT_INPUT = '.t-mobile-save-filterset-component__input';
 
-moduleForAcceptance('Acceptance | grid-head mobile', {
+moduleForAcceptance('Acceptance | general grid-head mobile', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());

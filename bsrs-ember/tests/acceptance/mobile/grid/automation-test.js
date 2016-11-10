@@ -23,7 +23,7 @@ const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 const DETAIL_URL = `${BASE_URL}/index/${AD.idOne}`;
 
-moduleForAcceptance('Acceptance | grid automation mobile test', {
+moduleForAcceptance('Acceptance | general grid automation mobile test', {
   beforeEach() {
     setWidth('mobile');
     store = this.application.__container__.lookup('service:simpleStore');

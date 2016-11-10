@@ -24,7 +24,7 @@ const BASE_URL = BASEURLS.base_people_url;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 const DETAIL_URL = `${BASE_URL}/index/${PD.idOne}`;
 
-moduleForAcceptance('Acceptance | grid people mobile test', {
+moduleForAcceptance('Acceptance | general grid people mobile test', {
   beforeEach() {
     setWidth('mobile');
     store = this.application.__container__.lookup('service:simpleStore');

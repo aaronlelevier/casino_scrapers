@@ -39,7 +39,7 @@ const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-selec
 
 let store, list_xhr, detail_xhr, setting_detail_xhr, endpoint, detail_data, url, translations, basePayload;
 
-moduleForAcceptance('Acceptance | role detail', {
+moduleForAcceptance('Acceptance | general role detail', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/';

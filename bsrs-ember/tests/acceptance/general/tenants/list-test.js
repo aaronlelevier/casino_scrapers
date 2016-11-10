@@ -15,7 +15,7 @@ const API_DETAIL_URL = `${TENANT_URL}${TD.idOne}/`;
 
 let store;
 
-moduleForAcceptance('Acceptance | tenant list test', {
+moduleForAcceptance('Acceptance | general tenant list test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     const listData = TF.list();

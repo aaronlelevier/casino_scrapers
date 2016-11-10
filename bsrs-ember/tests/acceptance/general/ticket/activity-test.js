@@ -34,7 +34,7 @@ const ACTIVITY_ITEMS = '.t-activity-list-item';
 
 let store, endpoint, list_xhr, detail_xhr;
 
-moduleForAcceptance('Acceptance | ticket activity test', {
+moduleForAcceptance('Acceptance | general ticket activity test', {
   beforeEach() {
     // timemachine.config({
     //   dateString: 'December 25, 2015 13:12:59'

@@ -22,7 +22,7 @@ const DETAIL_URL = `${BASE_URL}/${<%= FirstCharacterModuleName %>D.idOne}`;
 const <%= CapitalizeModule %>_PUT_URL = `${<%= CapitalizeModule %>_URL}${<%= FirstCharacterModuleName %>D.idOne}/`;
 const <%= secondPropertyTitle %> = '.t-<%= dasherizedModuleName %>-<%= secondProperty %>-select';
 
-moduleForAcceptance('Acceptance | mobile <%= dasherizedModuleName %> detail test', {
+moduleForAcceptance('Acceptance | general mobile <%= dasherizedModuleName %> detail test', {
   beforeEach() {
     setWidth('mobile');
     store = this.application.__container__.lookup('service:simpleStore');

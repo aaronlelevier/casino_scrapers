@@ -23,7 +23,7 @@ const SETTING_URL = `${PREFIX}${BASEURLS.base_roles_url}/route-data/new/`;
 
 let store;
 
-moduleForAcceptance('Acceptance | general/roles/new error', {
+moduleForAcceptance('Acceptance | general general/roles/new error', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     random.uuid = function() { return UUID.value; };

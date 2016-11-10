@@ -21,7 +21,7 @@ const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 
 var application;
 
-moduleForAcceptance('Acceptance | ajax async test helper tests', {
+moduleForAcceptance('Acceptance | general ajax async test helper tests', {
   beforeEach() {
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
   },

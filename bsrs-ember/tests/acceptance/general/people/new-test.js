@@ -28,7 +28,7 @@ const NEW_URL = BASE_PEOPLE_URL + '/new/1';
 
 var store, payload, detail_xhr, list_xhr, people_detail_data, detailEndpoint, username_search;
 
-moduleForAcceptance('Acceptance | person new test', {
+moduleForAcceptance('Acceptance | general person new test', {
   beforeEach() {
     payload = {
       id: UUID.value,

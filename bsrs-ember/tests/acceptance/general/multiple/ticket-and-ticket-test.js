@@ -22,7 +22,7 @@ const TICKET_ACTIVITIES_TWO_URL = `${PREFIX}/tickets/${idTwo}/activity/`;
 
 var application, store, ticket_one, ticket_two;
 
-moduleForAcceptance('Acceptance | ticket and ticket test', {
+moduleForAcceptance('Acceptance | general ticket and ticket test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
   },

@@ -31,7 +31,7 @@ const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 var application, store, category, ticket;
 
-moduleForAcceptance('Acceptance | ticket and category test', {
+moduleForAcceptance('Acceptance | general ticket and category test', {
     beforeEach() {
         
         store = this.application.__container__.lookup('service:simpleStore');

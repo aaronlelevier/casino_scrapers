@@ -24,7 +24,7 @@ const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 const DETAIL_URL = `${BASE_URL}/index/${TD.idOne}`;
 const Currency = '.t-tenant-currency-select';
 
-moduleForAcceptance('Acceptance | grid tenant mobile test', {
+moduleForAcceptance('Acceptance | general grid tenant mobile test', {
   beforeEach() {
     setWidth('mobile');
     store = this.application.__container__.lookup('service:simpleStore');

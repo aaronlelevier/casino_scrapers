@@ -37,7 +37,7 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 
 let store, endpoint, list_xhr, detail_xhr, detail_data;
 
-moduleForAcceptance('Acceptance | dtd detail', {
+moduleForAcceptance('Acceptance | general dtd detail', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/`;

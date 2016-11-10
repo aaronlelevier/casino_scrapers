@@ -24,7 +24,7 @@ const NUMBER_FOUR = {keyCode: 52};
 
 let application, store, listXhr;
 
-moduleForAcceptance('Acceptance | tenant-grid-test', {
+moduleForAcceptance('Acceptance | tenant grid test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     const listData = TF.list();

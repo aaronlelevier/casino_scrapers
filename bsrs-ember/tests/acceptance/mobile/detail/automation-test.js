@@ -22,7 +22,7 @@ const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
 const GRID_DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
 const automation_PUT_URL = `${AUTOMATION_URL}${AD.idOne}/`;
 
-moduleForAcceptance('Acceptance | mobile automation detail test', {
+moduleForAcceptance('Acceptance | general mobile automation detail test', {
   beforeEach() {
     setWidth('mobile');
     store = this.application.__container__.lookup('service:simpleStore');

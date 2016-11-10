@@ -21,7 +21,7 @@ const BACKSPACE = {keyCode: 8};
 
 var application, store, endpoint, list_xhr;
 
-moduleForAcceptance('Acceptance | category-grid-list', {
+moduleForAcceptance('Acceptance | category grid list', {
     beforeEach() {
         
         store = this.application.__container__.lookup('service:simpleStore');

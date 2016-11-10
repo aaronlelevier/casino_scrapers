@@ -56,7 +56,7 @@ const categories = '.categories-power-select-search input';
 
 let store, list_xhr, detail_xhr, top_level_xhr, detail_data, activity_one;
 
-moduleForAcceptance('Acceptance | ticket detail', {
+moduleForAcceptance('Acceptance | general ticket detail', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     detail_data = TF.detail(TD.idOne);

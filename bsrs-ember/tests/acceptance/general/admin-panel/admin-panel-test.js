@@ -13,7 +13,7 @@ const ADMINPANEL = '.t-side-menu';
 
 var endpoint, setting_data, detail_xhr;
 
-moduleForAcceptance('Acceptance | admin settings layout test', {
+moduleForAcceptance('Acceptance | general admin settings layout test', {
   beforeEach() {
     this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + SETTING_URL + '/';

@@ -34,7 +34,7 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 
 let store;
 
-moduleForAcceptance('Acceptance | dtd-new', {
+moduleForAcceptance('Acceptance | general dtd-new', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     xhr(`${DJANGO_DTD_URL}?page=1`, 'GET', null, {}, 201, DTDF.list());

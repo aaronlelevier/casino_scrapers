@@ -21,7 +21,7 @@ const PERSON_CURRENT_URL = BASE_URL + '/' + PCD.id;
 
 var store, list_xhr;
 
-moduleForAcceptance('Acceptance | person current test', {
+moduleForAcceptance('Acceptance | general person current test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     var people_list_data = PF.list();

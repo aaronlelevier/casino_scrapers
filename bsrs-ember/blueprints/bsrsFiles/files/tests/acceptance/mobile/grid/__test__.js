@@ -24,7 +24,7 @@ const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 const DETAIL_URL = `${BASE_URL}/index/${<%= FirstCharacterModuleName %>D.idOne}`;
 const <%= secondPropertyTitle %> = '.t-<%= dasherizedModuleName %>-<%= secondPropertySnake %>-select';
 
-moduleForAcceptance('Acceptance | grid <%= dasherizedModuleName %> mobile test', {
+moduleForAcceptance('Acceptance | general grid <%= dasherizedModuleName %> mobile test', {
   beforeEach() {
     setWidth('mobile');
     store = this.application.__container__.lookup('service:simpleStore');

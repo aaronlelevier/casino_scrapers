@@ -44,7 +44,7 @@ const PARENTS_MULTIPLE_OPTION = `.t-location-parent-select > .ember-power-select
 
 let store, payload, list_xhr;
 
-moduleForAcceptance('Acceptance | location-new', {
+moduleForAcceptance('Acceptance | general location-new', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${LOCATIONS_URL}?page=1`, "GET", null, {}, 201, LOCATION_FIXTURES.list());

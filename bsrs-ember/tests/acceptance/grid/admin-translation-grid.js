@@ -22,15 +22,11 @@ const BACKSPACE = {keyCode: 8};
 
 var application, store, endpoint, list_xhr, run = Ember.run;
 
-moduleForAcceptance('Acceptance | admin-translation-grid-list', {
+moduleForAcceptance('Acceptance | general admin translation grid list', {
     beforeEach() {
-        
         store = this.application.__container__.lookup('service:simpleStore');
         endpoint = PREFIX + BASE_URL + '/?page=1';
         list_xhr = xhr(endpoint ,"GET",null,{},200,ATF.list());
-    },
-    afterEach() {
-        
     }
 });
 

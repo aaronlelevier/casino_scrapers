@@ -41,7 +41,7 @@ const BAIL_TICKET_PATCH_URL = `${PREFIX}/dt/${DT.idOne}/ticket/`;
 
 let store, endpoint, link, dtd, dt_path, returned_ticket, dt_one;
 
-moduleForAcceptance('Acceptance | dt detail', {
+moduleForAcceptance('Acceptance | general dt detail', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/${DT.idOne}/ticket/?ticket=${TD.idOne}`;

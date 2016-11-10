@@ -27,7 +27,7 @@ const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 let store, payload, list_xhr, children_xhr, run = Ember.run;
 
-moduleForAcceptance('Acceptance | category new test', {
+moduleForAcceptance('Acceptance | general category new test', {
   beforeEach() {
     payload = {
       id: UUID.value,

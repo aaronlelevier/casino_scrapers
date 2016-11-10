@@ -30,7 +30,7 @@ const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 let store, detail_xhr, list_xhr, detail_data;
 
-moduleForAcceptance('Acceptance | category detail test', {
+moduleForAcceptance('Acceptance | general category detail test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     detail_data = CF.detail(CD.idOne);

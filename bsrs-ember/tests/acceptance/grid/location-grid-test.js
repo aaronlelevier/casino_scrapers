@@ -28,7 +28,7 @@ const SORT_LLEVEL_DIR = '.t-sort-location-level-name-dir';
 
 var application, store, endpoint, list_xhr;
 
-moduleForAcceptance('Acceptance | location-grid-list', {
+moduleForAcceptance('Acceptance | location grid list', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';

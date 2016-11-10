@@ -36,7 +36,7 @@ const API_DETAIL_URL = `${AUTOMATION_URL}${AD.idOne}/`;
 
 var store, detailXhr, listXhr;
 
-moduleForAcceptance('Acceptance | automation detail test', {
+moduleForAcceptance('Acceptance | general automation detail test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     const listData = AF.list();

@@ -24,7 +24,7 @@ const NUMBER_FOUR = {keyCode: 52};
 
 let application, store, listXhr;
 
-moduleForAcceptance('Acceptance | <%= dasherizedModuleName %>-grid-test', {
+moduleForAcceptance('Acceptance | <%= dasherizedModuleName %> grid test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     const listData = <%= FirstCharacterModuleName %>F.list();

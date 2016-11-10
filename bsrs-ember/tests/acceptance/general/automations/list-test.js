@@ -15,7 +15,7 @@ const API_DETAIL_URL = `${AUTOMATION_URL}${AD.idOne}/`;
 
 let store;
 
-moduleForAcceptance('Acceptance | automation list test', {
+moduleForAcceptance('Acceptance | general automation list test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     const listData = AF.list();

@@ -8,7 +8,7 @@ import TD from 'bsrs-ember/vendor/defaults/tenant';
 const PREFIX = config.APP.NAMESPACE;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 
-moduleForAcceptance('Acceptance | application layout test', {
+moduleForAcceptance('Acceptance | general application layout test', {
   beforeEach(assert) {
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
   },

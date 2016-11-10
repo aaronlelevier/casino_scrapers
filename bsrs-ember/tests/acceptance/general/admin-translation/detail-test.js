@@ -16,7 +16,7 @@ const DETAIL_URL = BASE_URL + '/' + TD.keyOneGrid;
 
 var endpoint, translation_list_data, translation_detail_data, list_xhr;
 
-moduleForAcceptance('Acceptance | translation detail test', {
+moduleForAcceptance('Acceptance | general translation detail test', {
   beforeEach() {
     this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/';

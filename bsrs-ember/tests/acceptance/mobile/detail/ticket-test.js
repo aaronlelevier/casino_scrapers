@@ -34,7 +34,7 @@ const LOCATION = '.t-ticket-location-select';
 const TICKET_PUT_URL = `${TICKETS_URL}${TD.idOne}/`;
 const ACTIVITY_ITEMS = '.t-activity-list-item';
 
-moduleForAcceptance('Acceptance | mobile ticket detail test', {
+moduleForAcceptance('Acceptance | general mobile ticket detail test', {
   beforeEach() {
     /* SETUP */
     setWidth('mobile');

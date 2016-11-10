@@ -28,7 +28,7 @@ const PROGRESS_BAR = '.progress-bar';
 
 let store, detail_xhr, endpoint, model, img_payload;
 
-moduleForAcceptance('Acceptance | dtd file upload test', {
+moduleForAcceptance('Acceptance | general dtd file upload test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/`;

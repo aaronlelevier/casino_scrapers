@@ -21,7 +21,7 @@ const BACKSPACE = {keyCode: 8};
 
 var application, store, endpoint, list_xhr;
 
-moduleForAcceptance('Acceptance | location-level-grid-list', {
+moduleForAcceptance('Acceptance | location-level grid list', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';
