@@ -4,9 +4,13 @@ import inject from 'bsrs-ember/utilities/inject';
 var FilterSetNavigation = Ember.Component.extend({
   tagName: 'hbox',
   repository: inject('filterset'),
+  /**
+   * @method saved
+   * returns saved filterests from the bootup data.  
+   */
   saved: Ember.computed('filtersets', 'filtersets.[]', function() {
-    let route = this.get('route');
-    let filtersets = this.get('filtersets');
+    const route = this.get('route');
+    const filtersets = this.get('filtersets') || [];
     return filtersets.filter((filterset) => {
       return filterset.get('endpoint_name') === route;
     });
