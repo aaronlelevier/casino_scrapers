@@ -3,7 +3,7 @@
     {{#tether-dialog
       constraints=(array (hash to="scrollParent" pin=true attachment="together"))
       container-class="tether-dialog-reset"
-      target=(concat "#" (if count (concat valuePath count) valuePath))
+      target=(or targetId (concat "#" (if count (concat valuePath count) valuePath)))
       hasOverlay=false
       attachment="bottom left"
       targetAttachment="top left"

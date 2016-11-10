@@ -9,22 +9,11 @@
     focus-out=(action "focusedOut")
     key-up=(action "keyedUp")
   }}
-  {{#if showMessage}}
-      {{#if (v-get model valuePath "message")}}
-        {{#tether-dialog
-          constraints=(array (hash to="scrollParent" pin=true attachment="together"))
-          container-class="tether-dialog-reset"
-          target=(concat "#" (if count (concat valuePath count) valuePath))
-          hasOverlay=false
-          attachment="bottom left"
-          targetAttachment="top left"
-        }}
-          <div class="validated-input-error-dialog animated flipInX error {{concat "t-validation-" valuePath}}">
-            {{t (v-get model valuePath "message")}}
-          </div>
-        {{/tether-dialog}}
-      {{/if}}
-  {{/if}}
+  {{show-validation-message 
+    model=model 
+    valuePath=valuePath
+    showMessage=showMessage
+  }}
 {{else}}
   {{textarea
     autoresize=true
@@ -35,20 +24,9 @@
     focus-out="focusedOut"
     key-up="keyedUp"
   }}
-  {{#if showMessage}}
-      {{#if (v-get model valuePath "message")}}
-        {{#tether-dialog
-          constraints=(array (hash to="scrollParent" pin=true attachment="together"))
-          container-class="tether-dialog-reset"
-          target=(concat "#" valuePath)
-          hasOverlay=false
-          attachment="bottom left"
-          targetAttachment="top left"
-        }}
-          <div class="validated-input-error-dialog animated flipInX {{concat "t-validation-" valuePath}}">
-            {{t (v-get model valuePath "message")}}
-          </div>
-        {{/tether-dialog}}
-      {{/if}}
-  {{/if}}
+  {{show-validation-message 
+    model=model 
+    valuePath=valuePath
+    showMessage=showMessage
+  }}
 {{/unless}}
