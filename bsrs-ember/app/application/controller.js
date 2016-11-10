@@ -7,11 +7,13 @@ export default Controller.extend({
     this._super(...arguments);
     window.addEventListener('offline', this.notifyOffline.bind(this));
     window.addEventListener('online', this.notifyOnline.bind(this));
+    document.addEventListener('keydown', this.preventInputSubmit);
   },
 
   willDestroy() {
     window.removeEventListener('offline', this.notifyOffline.bind(this));
     window.removeEventListener('online', this.notifyOnline.bind(this));
+    document.removeEventListener('keydown', this.preventInputSubmit);
   },
 
   showModal: false,
@@ -40,6 +42,13 @@ export default Controller.extend({
 
   notifyOffline() {
     this.handleNotfication({ message: 'notices.offline', level: 'warning' });
+  },
+
+  preventInputSubmit(evt) {
+    // Hitting "enter" in a text input field doesn't save the form.
+    if (evt.keyCode === 13 && evt.target.localName === 'input') {
+      evt.preventDefault();
+    }
   },
 
   actions: {
