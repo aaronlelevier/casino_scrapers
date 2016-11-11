@@ -24,7 +24,7 @@ const NEW_URL = `${BASE_URL}/new/1`;
 
 var store, listXhr;
 
-moduleForAcceptance('Acceptance | general automation new test', {
+moduleForAcceptance('scott Acceptance | general automation new test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     const listData = AF.list();
@@ -59,7 +59,7 @@ test('visit new URL and create a new record', assert => {
   selectChoose('.t-automation-pf-select:eq(0)', PFD.keyOneTranslated);
   selectChoose('.t-priority-criteria', TD.priorityOne);
   // action w/ a type
-  xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.action_search_power_select());
+  xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.list_action_types());
   selectChoose('.t-automation-action-type-select', AATD.keyOne);
   andThen(() => {
     assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
@@ -107,7 +107,7 @@ test('when user creates an automation they should see an empty action', assert =
     assert.equal(currentURL(), NEW_URL);
     assert.equal(Ember.$('.t-automation-action-type-select .ember-power-select-placeholder').length, 1);
   });
-  xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.action_search_power_select());
+  xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.list_action_types());
   selectChoose('.t-automation-action-type-select', AATD.keyOne);
   andThen(() => {
     assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
@@ -199,7 +199,7 @@ test('validation - at least one event is required, each action must have a type'
     // assert.equal($('[data-test-id="validation-action0"]').text().trim(), t('errors.automation.type'));
   });
   // set to type 'assignee', and should see an 'assignee required msg' b/c assignee not yet selected
-  xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.action_search_power_select());
+  xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.list_action_types());
   selectChoose('.t-automation-action-type-select', AATD.keyOne);
   andThen(() => {
     // not btn disabled
@@ -221,7 +221,7 @@ test('validation - if type is priority, a ticket priority must be selected', ass
     assert.equal(currentURL(), NEW_URL);
     assert.equal($('[data-test-id="validation-action0"]').length, 0);
   });
-  xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.action_search_power_select());
+  xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.list_action_types());
   selectChoose('.t-automation-action-type-select', AATD.keyTwo);
   andThen(() => {
     assert.equal(page.actionTypeSelectedOne, AATD.keyTwo);

@@ -1,7 +1,8 @@
 import Ember from 'ember';
-const { run } = Ember;
+const { run, get, set } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
+import { many_to_many } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/automation-action';
 import SaveAndRollbackRelatedMixin from 'bsrs-ember/mixins/model/save-and-rollback-related';
@@ -14,6 +15,7 @@ const Validations = buildValidations({
   }),
   sendemail: validator('belongs-to'),
   sendsms: validator('belongs-to'),
+  ticketcc: validator('action-ticketcc'),
 });
 
 export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
@@ -26,6 +28,8 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     belongs_to.bind(this)('status', 'automation-action');
     belongs_to.bind(this)('sendemail', 'automation-action');
     belongs_to.bind(this)('sendsms', 'automation-action');
+    many_to_many.bind(this)('ticketcc', 'automation-action');
+    set(this, 'ticketcc_fks', get(this, 'ticketcc_fks') || []);
   },
   simpleStore: Ember.inject.service(),
   // request is only required for an action type of 'automation.actions.ticket_request', otherwise blank
@@ -36,8 +40,8 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
   sendsmsIsDirtyContainer: Ember.computed('sendsmsIsDirty', 'sendsms.isDirtyOrRelatedDirty', function() {
     return this.get('sendsmsIsDirty') || this.get('sendsms.isDirtyOrRelatedDirty');
   }),
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'typeIsDirty', 'priorityIsDirty', 'statusIsDirty', 'sendemailIsDirtyContainer', 'sendsmsIsDirtyContainer', function() {
-    return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('typeIsDirty') || this.get('priorityIsDirty') || this.get('statusIsDirty') || this.get('sendemailIsDirtyContainer') || this.get('sendsmsIsDirtyContainer');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'ticketccIsDirty', 'typeIsDirty', 'priorityIsDirty', 'statusIsDirty', 'sendemailIsDirtyContainer', 'sendsmsIsDirtyContainer', function() {
+    return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('ticketccIsDirty')|| this.get('typeIsDirty') || this.get('priorityIsDirty') || this.get('statusIsDirty') || this.get('sendemailIsDirtyContainer') || this.get('sendsmsIsDirtyContainer');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   rollback() {
@@ -47,6 +51,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     this.rollbackStatus();
     this.rollbackSendemail();
     this.rollbackSendsms();
+    this.rollbackTicketcc();
     this._super(...arguments);
   },
   saveRelated() {
@@ -58,12 +63,16 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     this.saveSendemail();
     this.saveRelatedBelongsTo('sendsms');
     this.saveSendsms();
+    this.saveTicketcc();
   },
   serialize() {
     let content;
     switch (this.get('type.key')) {
       case 'automation.actions.ticket_assignee':
         content = {assignee: this.get('assignee.id')};
+        break;
+      case 'automation.actions.ticket_cc':
+        content = {ccs: this.get('ticketcc_ids')};
         break;
       case 'automation.actions.ticket_priority':
         content = {priority: this.get('priority.id')};

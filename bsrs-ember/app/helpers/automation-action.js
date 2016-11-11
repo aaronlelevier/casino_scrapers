@@ -16,6 +16,8 @@ export function automationAction(params/*, hash*/) {
         return 'automations/sendsms-action';
       case 'automation.actions.ticket_request':
         return 'tickets/ticket-request-select-action';
+      case 'automation.actions.ticket_cc':
+        return 'tickets/ticket-cc-select-action';
     }
   }
 }

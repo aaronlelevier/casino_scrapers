@@ -1,12 +1,12 @@
 import BaseValidator from 'ember-cp-validations/validators/base';
 
-const ActionTicketRequest = BaseValidator.extend({
+const ActionTicketcc = BaseValidator.extend({
   validate(_value, _options, model, _attribute) {
-    return model.get('type.key') !== 'automation.actions.ticket_request' ? true : model.get('request') ? true : 'errors.automation.request';
+    return model.get('type.key') !== 'automation.actions.ticket_cc' ? true : model.get('ticketcc').get('length') > 0 ? true : 'errors.automation.ticketcc';
   }
 });
 
-ActionTicketRequest.reopenClass({
+ActionTicketcc.reopenClass({
   /**
    * Define attribute specific dependent keys for your validator
    *
@@ -24,4 +24,4 @@ ActionTicketRequest.reopenClass({
   }
 });
 
-export default ActionTicketRequest;
+export default ActionTicketcc;

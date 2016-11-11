@@ -26,7 +26,7 @@ var store, automation, deserializer, pfilter, pfilter_unused;
 
 module('unit: automation deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:automation-event', 'model:automation-join-event', 'model:automation-list', 'model:person', 'model:automation-join-pfilter', 'model:pfilter', 'model:sendemail', 'model:generic-join-recipients', 'model:sendsms', 'model:generic-join-recipients', 'model:criteria', 'model:pfilter-join-criteria', 'model:ticket-priority', 'model:ticket-status', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:length', 'validator:has-many', 'model:uuid']);
+    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:automation-event', 'model:automation-join-event', 'model:automation-list', 'model:person', 'model:automation-join-pfilter', 'model:pfilter', 'model:sendemail', 'model:generic-join-recipients', 'model:sendsms', 'model:generic-join-recipients', 'model:criteria', 'model:pfilter-join-criteria', 'model:ticket-priority', 'model:ticket-status', 'model:action-join-person', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:length', 'validator:has-many', 'model:uuid']);
     const uuid = this.container.lookup('model:uuid');
     deserializer = automationDeserializer.create({ simpleStore: store, uuid: uuid });
     run(() => {
@@ -148,6 +148,7 @@ test('deserialize single - status - different id', assert => {
   assert.equal(automation.get('action').objectAt(0).get('status').get('name'), TSD.nameTwo);
 });
 
+//SENDEMAIL
 test('deserialize single - sendemail - no existing', assert => {
   const json = AF.detail();
   delete json.actions[0].assignee;
@@ -185,7 +186,7 @@ test('deserialize single - sendemail - existing with same id', assert => {
     store.push('sendemail', {id: SED.idOne, subject: SED.subjectOne, body: SED.bodyOne, generic_recipient_fks: [SEJRD.idOne], actions: [AAD.idOne]});
     store.push('person', {id: PersonD.idOne, fullname: PersonD.fullname});
     store.push('generic-join-recipients', {id: SEJRD.idOne, generic_pk: SED.idOne, recipient_pk: PersonD.idOne});
- });
+  });
   assert.equal(automation.get('id'), AD.idOne);
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(automation.get('action').objectAt(0).get('sendemail_fk'), SED.idOne);
@@ -302,8 +303,7 @@ test('deserialize single - sendemail - different recipient', assert => {
   assert.equal(automation.get('action').objectAt(0).get('sendemail').get('recipient').objectAt(0).get('fullname'), PersonD.fullname);
 });
 
-// sendsms
-
+// SENDSMS
 test('deserialize single - sendsms - no existing', assert => {
   const json = AF.detail();
   delete json.actions[0].assignee;
@@ -461,17 +461,121 @@ test('deserialize single - sendsms - different recipient', assert => {
   assert.equal(automation.get('action').objectAt(0).get('sendsms').get('recipient').objectAt(0).get('fullname'), PersonD.fullname);
 });
 
-// assignee
-test('deserialize single - action has no assignee', assert => {
+// ticket cc
+test('deserialize single - action has no ticket cc (has other action types)', assert => {
   let json = AF.detail();
-  json.actions[0].assignee = undefined;
+  json.actions[0].ccs = undefined;
   run(() => {
     deserializer.deserialize(json, AD.idOne);
   });
   assert.equal(automation.get('id'), AD.idOne);
   assert.equal(automation.get('action').get('length'), 1);
-  assert.equal(automation.get('action').objectAt(0).get('assignee'), undefined);
+  assert.equal(automation.get('action').objectAt(0).get('ticketcc').get('length'), 0);
 });   
+
+test('deserialize single - action has ticket cc', assert => {
+  let json = AF.detail();
+  delete json.actions[0].assignee;
+  json.actions[0].type.id = ATD.idSeven;
+  json.actions[0].type.key = ATD.keySeven;
+  json.actions[0]['ccs'] = [{id: PersonD.idOne, fullname: PersonD.fullname}];
+  run(() => {
+    deserializer.deserialize(json, AD.idOne);
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  assert.equal(automation.get('action').get('length'), 1);
+  const join_model = store.find('action-join-person').objectAt(0);
+  const action = automation.get('action').objectAt(0);
+  assert.equal(join_model.get('automation_action_pk'), action.get('id'));
+  assert.equal(join_model.get('person_pk'), PersonD.idOne);
+  // who is my join models
+  assert.deepEqual(action.get('automation_action_ticketcc_fks'), [join_model.get('id')]);
+  assert.deepEqual(automation.get('action').objectAt(0).get('automation_action_ticketcc').objectAt(0).get('id'), join_model.get('id'));
+  assert.deepEqual(automation.get('action').objectAt(0).get('automation_action_ticketcc_ids'), [join_model.get('id')]);
+  assert.deepEqual(automation.get('action').objectAt(0).get('automation_action_ticketcc_fks'), [join_model.get('id')]);
+  // who are my people
+  assert.equal(automation.get('action').objectAt(0).get('ticketcc').get('length'), 1);
+  assert.equal(automation.get('action').objectAt(0).get('ticketcc').objectAt(0).get('id'), PersonD.idOne);
+});   
+
+test('deserialize single - ticketcc - existing with same id', assert => {
+  // pre-deserialize
+  run(() => {
+    store.push('automation-action', {id: AAD.idOne, automation_action_ticketcc_fks: [10]});
+    store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
+    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, person_pk: PersonD.idOne});
+    store.push('person', {id: PersonD.idOne, fullname: PersonD.fullname});
+  });
+  const action = automation.get('action').objectAt(0);
+  assert.equal(automation.get('isDirtyOrRelatedDirty'), false);
+  assert.equal(action.get('ticketccIsDirty'), false);
+  assert.deepEqual(action.get('automation_action_ticketcc_ids'), [10]);
+  assert.deepEqual(action.get('automation_action_ticketcc_fks'), [10]);
+  assert.equal(action.get('ticketcc').get('length'), 1);
+  assert.equal(action.get('ticketcc').objectAt(0).get('id'), PersonD.idOne);
+  assert.equal(action.get('ticketcc').objectAt(0).get('fullname'), PersonD.fullname);
+  let json = AF.detail();
+  delete json.actions[0].assignee;
+  json.actions[0].type.id = ATD.idSeven;
+  json.actions[0].type.key = ATD.keySeven;
+  json.actions[0]['ccs'] = [{id: PersonD.idOne, fullname: PersonD.fullname}];
+  run(() => {
+    deserializer.deserialize(json, AD.idOne);
+  });
+  // actions
+  assert.equal(automation.get('action').get('length'), 1);
+  assert.equal(action.get('id'), AAD.idOne);
+  // action-type
+  assert.equal(action.get('type.id'), ATD.idSeven);
+  assert.equal(action.get('type.key'), ATD.keySeven);
+  // ticketcc
+  assert.equal(action.get('ticketcc').objectAt(0).get('id'), PersonD.idOne);
+  assert.equal(action.get('ticketcc').objectAt(0).get('fullname'), PersonD.fullname);
+});
+
+test('deserialize single - ticketcc - different id', assert => {
+  // pre-deserialize
+  run(() => {
+    store.push('automation-action', {id: AAD.idOne, automation_action_ticketcc_fks: [10]});
+    store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
+    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, person_pk: PersonD.idOne});
+    store.push('person', {id: PersonD.idOne, fullname: PersonD.fullname});
+  });
+  const action = automation.get('action').objectAt(0);
+  assert.equal(automation.get('isDirtyOrRelatedDirty'), false);
+  assert.equal(action.get('ticketccIsDirty'), false);
+  assert.deepEqual(action.get('automation_action_ticketcc_ids'), [10]);
+  assert.deepEqual(action.get('automation_action_ticketcc_fks'), [10]);
+  assert.equal(action.get('ticketcc').get('length'), 1);
+  assert.equal(action.get('ticketcc').objectAt(0).get('id'), PersonD.idOne);
+  assert.equal(action.get('ticketcc').objectAt(0).get('fullname'), PersonD.fullname);
+  // deserialize
+  let json = AF.detail();
+  delete json.actions[0].assignee;
+  json.actions[0].type.id = ATD.idSeven;
+  json.actions[0].type.key = ATD.keySeven;
+  json.actions[0]['ccs'] = [{id: PersonD.idTwo, fullname: PersonD.fullname}];
+  run(() => {
+    deserializer.deserialize(json, AD.idOne);
+  });
+  assert.equal(automation.get('id'), AD.idOne);
+  // actions
+  assert.equal(automation.get('action').get('length'), 1);
+  assert.equal(action.get('id'), AAD.idOne);
+  // action-type
+  assert.equal(action.get('type.id'), ATD.idSeven);
+  assert.equal(action.get('type.key'), ATD.keySeven);
+  // ticketcc
+  assert.equal(automation.get('isDirtyOrRelatedDirty'), false);
+  assert.equal(action.get('ticketccIsDirty'), false);
+  assert.deepEqual(action.get('automation_action_ticketcc_ids').length, 1);
+  assert.ok(action.get('automation_action_ticketcc_fks')[0] !== 10);
+  assert.equal(action.get('ticketcc').get('length'), 1);
+  assert.equal(action.get('ticketcc').objectAt(0).get('id'), PersonD.idTwo);
+  assert.equal(action.get('ticketcc').objectAt(0).get('fullname'), PersonD.fullname);
+});
+
+// assignee
 
 test('deserialize single - assignee - no existing', assert => {
   const json = AF.detail();

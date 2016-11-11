@@ -118,8 +118,9 @@ var BSRS_automation_FACTORY = (function() {
       {id: this.actionType.idFour, key: this.actionType.keyFour},
       {id: this.actionType.idFive, key: this.actionType.keyFive},
       {id: this.actionType.idSix, key: this.actionType.keySix},
+      {id: this.actionType.idSeven, key: this.actionType.keySeven},
     ];
-    return {count: 3, next: null, previous: null, results: results};
+    return {count: 8, next: null, previous: null, results: results};
   };
   factory.prototype.list_two = function() {
     var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
@@ -164,30 +165,6 @@ var BSRS_automation_FACTORY = (function() {
       },{
         id: this.event.idTwo,
         key: this.event.keyTwo
-      }]
-    };
-  };
-  // AutomaitonActionType - place here for same reason as AutomationEvent
-  factory.prototype.action_search_power_select = function() {
-    return {
-      count: 2,
-      next: null,
-      previous: null,
-      results: [{
-        id: this.actionType.idOne,
-        key: this.actionType.keyOne
-      },{
-        id: this.actionType.idTwo,
-        key: this.actionType.keyTwo
-      },{
-        id: this.actionType.idThree,
-        key: this.actionType.keyThree
-      },{
-        id: this.actionType.idFour,
-        key: this.actionType.keyFour
-      },{
-        id: this.actionType.idFive,
-        key: this.actionType.keyFive
       }]
     };
   };

@@ -14,7 +14,6 @@
       remove_func="remove_recipient" 
       repository=personRepo 
       searchMethod="findPeople"
-      didValidate=didValidate
     }}
   </div>
   <div class="input-group">
@@ -26,7 +25,6 @@
         className=(concat "t-action-subject" index)
         placeholder=placeholder
         class=(concat "t-action-subject-validator" index)
-        didValidate=didValidate
       }}
   </div>
   <div class="input-group">
@@ -38,7 +36,6 @@
         className=(concat "t-action-body" index)
         placeholder=placeholder
         class=(concat "t-action-body-validator" index)
-        didValidate=didValidate
         textarea=true
       }}
   </div>

@@ -36,6 +36,7 @@ export default Ember.Mixin.create({
       associated_model: 'pfilter',
       join_model: 'automation-join-pfilter'
     },
+
     //deserializer
     criteria: {
       associated_model: 'criteria',
@@ -45,6 +46,10 @@ export default Ember.Mixin.create({
       collection: 'actions',
       property: 'person',
       related_model: 'assignee',
+    },
+    ticketcc: {
+      associated_model: 'person',
+      join_model: 'action-join-person',
     },
     priority: {
       collection: 'actions',

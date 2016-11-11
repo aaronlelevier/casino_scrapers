@@ -13,14 +13,20 @@ export default Ember.Component.extend({
       const id = this.get('uuid').v4();
       this.get('model').add_action({id: id});
     },
-    /* @method setActionType
+    /** 
+     * @method setActionType
      * 1. sets type on automation-action model i.e. 'automation.action.send_email'
-     * 2. set child model on action model i.e. 'sendsms'
+     * 2. set child model on action model i.e. 'sendsms' - need to pass id to actually create the action type child
      */
     setActionType(automationAction, newActionType) {
+
+      // set type
       automationAction.change_type(newActionType);
+
+      // push in a blank child model
       const id = this.get('uuid').v4();
-      switch (newActionType.key) {
+      //TODO: import keys from common file
+      switch (newActionType.key) { 
         case 'automation.actions.ticket_assignee':
           automationAction.change_assignee({id: id});
           break;

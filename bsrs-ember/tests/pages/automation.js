@@ -19,6 +19,9 @@ const ACTION_SEND_EMAIL_RECIPIENT_ONE = `${ACTION_SEND_EMAIL_RECIPIENTS}:eq(0)`;
 const ACTION_SEND_SMS_RECIPIENTS = '.t-action-recipient-select li.ember-power-select-multiple-option'; 
 const ACTION_SEND_SMS_RECIPIENT_ONE = `${ACTION_SEND_SMS_RECIPIENTS}:eq(0)`;
 
+const ACTION_TICKETCC = '.t-action-ticketcc-select li.ember-power-select-multiple-option'; 
+const ACTION_TICKETCC_ONE = `${ACTION_TICKETCC}:eq(0)`;
+
 const EVENTS = '.t-automation-event-select .ember-power-select-multiple-option';
 
 const PRIORITY = '.t-priority-criteria .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
@@ -41,8 +44,8 @@ export default create({
   sendEmailSubjectFillIn: fillable('.t-action-subject0'),
   sendEmailBodyValue: value('.t-action-body0'),
   sendEmailSubjectValue: value('.t-action-subject0'),
-  sendSmsBodyFillIn: fillable('.t-action-message0'),
-  sendSmsBodyValue: value('.t-action-message0'),
+  sendSmsBodyFillIn: fillable('.t-action-body0'),
+  sendSmsBodyValue: value('.t-action-body0'),
 
   ticketRequestFillIn: fillable('.t-automation-ticket-request'),
   ticketRequestValue: value('.t-automation-ticket-request'),
@@ -83,4 +86,5 @@ export default create({
   actionSendEmailRecipientTwo: text(`${ACTION_SEND_EMAIL_RECIPIENTS}:eq(1)`),
   actionSendSmsRecipientOne: text(`${ACTION_SEND_SMS_RECIPIENTS}:eq(0)`),
   actionSendSmsRecipientTwo: text(`${ACTION_SEND_SMS_RECIPIENTS}:eq(1)`),
+  actionTicketccOne: text(`${ACTION_TICKETCC}:eq(0)`),
 });

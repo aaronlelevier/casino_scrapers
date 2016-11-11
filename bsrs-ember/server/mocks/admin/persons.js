@@ -4,6 +4,10 @@ module.exports = function(app) {
   var express = require('express');
   var adminPersonsRouter = express.Router();
 
+  adminPersonsRouter.get('/person__icontains=a/', function(req, res) {
+    res.send(PEOPLE_FIXTURES.list());
+  });
+
   adminPersonsRouter.get('/', function(req, res) {
     var page = req.query.page || 1;
     var sort = req.query.ordering ? req.query.ordering.trim() : '';

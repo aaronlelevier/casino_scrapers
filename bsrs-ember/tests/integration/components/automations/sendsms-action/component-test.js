@@ -44,51 +44,39 @@ test('it renders', function(assert) {
   this.render(hbs`{{automations/sendsms-action model=model index=index}}`);
   assert.equal(this.$('.t-sendsms-recipient-label').text().trim(), trans.t('admin.action.sendsms.recipients'));
   assert.equal(this.$('.t-sendsms-message-label').text().trim(), trans.t('admin.action.sendsms.message'));
-  assert.equal(this.$('.t-action-message0').val(), action.get('sendsms').get('body'));
+  assert.equal(this.$('.t-action-body0').val(), action.get('sendsms').get('body'));
   assert.equal(page.actionSendEmailRecipientOne.replace(/\W/, '').trim(), action.get('sendsms').get('recipient').objectAt(0).get('fullname'));
 });
 
 test('shows validation messages', function(assert) {
-  var done = assert.async();
   this.model = action;
-  this.didValidate = false;
   this.index = 0;
   this.personRepo = person_repo;
-  this.render(hbs`{{automations/sendsms-action model=model index=index didValidate=didValidate personRepo=personRepo}}`);
-  assert.equal(this.$('.t-action-message0').prop('type'), 'textarea');
-  assert.equal(this.$('.t-action-message0').val(), SMSD.bodyOne);
-  let $component = this.$('.t-action-message-validator0');
-  let $component2 = this.$('.t-action-recipient-validator0');
-  assert.equal($component.hasClass('invalid'), false);
+  this.render(hbs`{{automations/sendsms-action model=model index=index personRepo=personRepo}}`);
+  let $component2 = this.$('.t-action-body-validator0');
+  let $component3 = this.$('.t-action-recipient-validator0');
   assert.equal($component2.hasClass('invalid'), false);
+  assert.equal($component3.hasClass('invalid'), false);
   assert.equal(Ember.$('.validated-input-error-dialog:eq(0)').text().trim(), '');
   assert.equal(Ember.$('.validated-input-error-dialog:eq(1)').text().trim(), '');
-  page.sendSmsBodyFillIn('');
+  this.$('.t-action-body0').val('').trigger('keyup');
   nativeMouseDown('.ember-power-select-multiple-remove-btn');
-  this.set('didValidate', true);
-  assert.equal($component.hasClass('invalid'), true);
-  assert.equal($component2.hasClass('invalid'), true);
-  assert.equal(Ember.$('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.sendsms.recipient'));
-  assert.equal(Ember.$('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.sendsms.body'));
-  this.$('.t-action-message0').val('a'.repeat(160)).trigger('keyup');
-  assert.equal($component.hasClass('invalid'), false);
-  this.$('.t-action-message0').val('a'.repeat(261)).trigger('keyup');
-  Ember.run.later(() => {
-    // valid input
-    $component = this.$('.t-action-message-validator0');
-    assert.equal($component.hasClass('invalid'), true);
-    this.$('.t-action-message0').val('this is the message').trigger('keyup');
-    Ember.run.later(() => {
-      assert.equal($component.hasClass('invalid'), false);
+  return waitFor().
+    then(() => {
+      assert.equal($component2.hasClass('invalid'), true);
+      assert.equal($component3.hasClass('invalid'), true);
+      assert.equal(Ember.$('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.sendsms.recipient'));
+      assert.equal(Ember.$('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.sendsms.body'));
+      this.$('.t-action-body0').val('this is the body').trigger('keyup');
       run(() => { typeInSearch('e'); });
-      Ember.run.later(() => {
-        assert.equal(action.get('sendsms').get('recipient').get('length'), 0);
-        nativeMouseUp(`.ember-power-select-option:contains(${PD.fullname})`);
-        assert.equal(action.get('sendsms').get('recipient').get('length'), 1);
-        assert.equal(this.$('.invalid').length, 0);
-        assert.equal($component2.hasClass('invalid'), false);
-        done();
-      }, 300);
-    }, 300);
-  }, 300);
+      return waitFor().
+        then(() => {
+          assert.equal($component2.hasClass('invalid'), false);
+          assert.equal(action.get('sendsms').get('recipient').get('length'), 0);
+          nativeMouseUp(`.ember-power-select-option:contains(${PD.fullname})`);
+          assert.equal(action.get('sendsms').get('recipient').get('length'), 1);
+          assert.equal(this.$('.invalid').length, 0);
+          assert.equal($component3.hasClass('invalid'), false);
+        });
+    });
 });

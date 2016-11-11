@@ -807,6 +807,45 @@ test('select send email filter and update automation', assert => {
   // });
 });
 
+test('select ticketcc filter and update automation', assert => {
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
+    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
+  });
+  xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
+  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keySeven);
+  andThen(() => {
+    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keySeven));
+  });
+  xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
+  selectSearch('.t-action-ticketcc-select', 'e');
+  selectChoose('.t-action-ticketcc-select', PD.fullnameBoy2);
+  andThen(() => {
+    assert.equal(page.actionTicketccOne.replace(/\W/, '').trim(), PD.fullnameBoy2);
+  });
+  clearxhr(listXhr);
+  // let payload = AF.put({
+  //   actions: [{
+  //     id: AAD.idOne,
+  //     type: AATD.idFour,
+  //     content: {
+  //       sendemail: {
+  //         body: SED.bodyTwo,
+  //         subject: SED.subjectTwo,
+  //         recipients: [PD.idSearch]
+  //       } 
+  //     }
+  //   }]
+  // });
+  // xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
+  // generalPage.save();
+  // andThen(() => {
+  //   assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  // });
+});
+
 test('get an action sendsms and update it to a new sendsms', assert => {
   clearxhr(detailXhr);
   const json = AF.detail();

@@ -14,7 +14,6 @@
       remove_func="remove_recipient" 
       repository=personRepo 
       searchMethod="findPeople"
-      didValidate=didValidate
     }}
   </div>
   <div class="input-group">
@@ -23,9 +22,9 @@
         model=model.sendsms
         valuePath="body"
         count=index
-        className=(concat "t-action-message" index)
+        className=(concat "t-action-body" index)
         placeholder=placeholder
-        class=(concat "t-action-message-validator" index)
+        class=(concat "t-action-body-validator" index)
         didValidate=didValidate
         textarea=true
       }}

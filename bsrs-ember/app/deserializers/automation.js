@@ -12,16 +12,15 @@ export default Ember.Object.extend(OptConf, {
     // relationship bindings give us a method called setup_.....
     many_to_many.bind(this)('event', 'automation');
     many_to_many.bind(this)('action', 'automation');
+    many_to_many.bind(this)('pf', 'automation');
     belongs_to.bind(this)('type');
     belongs_to.bind(this)('assignee');
     belongs_to.bind(this)('priority');
     belongs_to.bind(this)('status');
     belongs_to.bind(this)('sendemail');
-    // many_to_many.bind(this)('recipient', 'sendemail');
     belongs_to.bind(this)('sendsms');
-    // many_to_many.bind(this)('sendsms_recipient', 'sendsms');
-    many_to_many.bind(this)('pf', 'automation');
     many_to_many.bind(this)('criteria', 'pfilter');
+    many_to_many.bind(this)('ticketcc', 'automation-action');
   },
   deserialize(response, id) {
     if (id) {
@@ -51,6 +50,7 @@ export default Ember.Object.extend(OptConf, {
 
     let actionTypes = {};
     let assignees = {};
+    let ticketccs = {};
     let priorities = {};
     let statuses = {};
     let sendemails = {};
@@ -63,12 +63,20 @@ export default Ember.Object.extend(OptConf, {
       delete a.type;
       actionTypes[a.id] = type;
       a.type_fk = type.id;
+
+      /* START ACTION TYPE PROCESSING */
       // assignee
       if (a.assignee) {
         const assignee = a.assignee;
         delete a.assignee;
         assignees[a.id] = assignee;
         a.assignee_fk = assignee.id;
+      }
+      // ticketcc
+      if (a.ccs) {
+        const ticketcc = a.ccs;
+        delete a.ccs;
+        ticketccs[a.id] = ticketcc;
       }
       // priority
       if (a.priority) {
@@ -107,6 +115,8 @@ export default Ember.Object.extend(OptConf, {
         sendsmss[a.id] = sendsms;
         a.sendsms_fk = sendsms.id;
       }
+      /* END ACTION TYPE PROCESSING */
+
       // must set as "detail" b/c this is a detail payload
       a.detail = true;
     });
@@ -122,6 +132,15 @@ export default Ember.Object.extend(OptConf, {
       // assignee
       let assignee = assignees[ad.id];
       this.setup_assignee(assignee, action);
+      // ticketcc
+      // action may have different ccs, so need to wipe out join models and make new ones based on server payload
+      action.get('automation_action_ticketcc').forEach((m2m) => {
+        store.push('action-join-person', {id: m2m.get('id'), removed: true});
+      });
+      let ticketcc = ticketccs[ad.id];
+      if (ticketcc) {
+        this.setup_ticketcc(ticketcc, action);
+      }
       // priority
       let priority = priorities[ad.id];
       this.setup_priority(priority, action);

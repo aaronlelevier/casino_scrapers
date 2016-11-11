@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { computed, set } = Ember;
+const { computed, set, get } = Ember;
 import config from 'bsrs-ember/config/environment';
 import { task, timeout } from 'ember-concurrency';
 import { ValidationComponentInit, ValidationComponentPieces } from 'bsrs-ember/mixins/validation-component';
@@ -31,25 +31,19 @@ var DBFetch = Ember.Component.extend(ValidationComponentInit, ValidationComponen
           model[remove_func](old_model.get('id'));
         }
       });
-      if (this.get('isValid')) {
-        set(this, 'localDidValidate', false);
+      if (get(this, 'isInvalid')) { 
+        set(this, 'focusedOut', true); 
       }
-    }
+      if (get(this, 'isValid')) {
+        set(this, 'focusedOut', false);
+      }
+    },
+    focusedOut() {
+      if (get(this, 'isInvalid')) { 
+        set(this, 'focusedOut', true); 
+      }
+    },
   },
-  // validation
-  // attributevalidation: null,
-  // classNameBindings: ['showMessage:invalid'],
-  // init() {
-  //   this._super(...arguments);
-  //   const multiAttr = this.get('multiAttr');
-  //   Ember.defineProperty(this, 'attributeValidation', Ember.computed.oneWay(`model.validations.attrs.${multiAttr}`));
-  //   Ember.defineProperty(this, 'value', Ember.computed.alias(`model.${multiAttr}`));
-  // },
-  // showMessage: Ember.computed('didValidate', function() {
-  //   return this.get('didValidate');
-  // }),
-  // isValid: Ember.computed.oneWay('attributeValidation.isValid'),
-  // isInvalid: Ember.computed.oneWay('attributeValidation.isInvalid')
 });
 
 export default DBFetch;

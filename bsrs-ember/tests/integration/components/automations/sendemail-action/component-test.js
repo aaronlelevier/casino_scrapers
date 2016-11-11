@@ -51,10 +51,9 @@ test('it renders', function(assert) {
 
 test('shows validation messages', function(assert) {
   this.model = action;
-  this.didValidate = false;
   this.index = 0;
   this.personRepo = person_repo;
-  this.render(hbs`{{automations/sendemail-action model=model index=index didValidate=didValidate personRepo=personRepo}}`);
+  this.render(hbs`{{automations/sendemail-action model=model index=index personRepo=personRepo}}`);
   let $component = this.$('.t-action-subject-validator0');
   let $component2 = this.$('.t-action-body-validator0');
   let $component3 = this.$('.t-action-recipient-validator0');
@@ -64,28 +63,30 @@ test('shows validation messages', function(assert) {
   assert.equal(Ember.$('.validated-input-error-dialog:eq(0)').text().trim(), '');
   assert.equal(Ember.$('.validated-input-error-dialog:eq(1)').text().trim(), '');
   assert.equal(Ember.$('.validated-input-error-dialog:eq(2)').text().trim(), '');
-  page.sendEmailBodyFillIn('');
-  page.sendEmailSubjectFillIn('');
+  this.$('.t-action-body0').val('').trigger('keyup');
+  this.$('.t-action-subject0').val('').trigger('keyup');
   nativeMouseDown('.ember-power-select-multiple-remove-btn');
-  this.set('didValidate', true);
-  assert.equal($component.hasClass('invalid'), true);
-  assert.equal($component2.hasClass('invalid'), true);
-  assert.equal($component3.hasClass('invalid'), true);
-  assert.equal(Ember.$('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.sendemail.recipient'));
-  assert.equal(Ember.$('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.sendemail.subject'));
-  assert.equal(Ember.$('.validated-input-error-dialog:eq(2)').text().trim(), trans.t('errors.sendemail.body'));
-  this.$('.t-action-subject0').val('this is the subject').trigger('keyup');
-  this.$('.t-action-body0').val('this is the body').trigger('keyup');
-  assert.equal($component.hasClass('invalid'), false);
-  assert.equal($component2.hasClass('invalid'), false);
-  run(() => { typeInSearch('e'); });
   return waitFor().
     then(() => {
-      assert.equal(action.get('sendemail').get('recipient').get('length'), 0);
-      nativeMouseUp(`.ember-power-select-option:contains(${PD.fullname})`);
-      assert.equal(action.get('sendemail').get('recipient').get('length'), 1);
-      assert.equal(this.$('.invalid').length, 0);
-      assert.equal($component3.hasClass('invalid'), false);
+      assert.equal($component.hasClass('invalid'), true);
+      assert.equal($component2.hasClass('invalid'), true);
+      assert.equal($component3.hasClass('invalid'), true);
+      assert.equal(Ember.$('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.sendemail.recipient'));
+      assert.equal(Ember.$('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.sendemail.subject'));
+      assert.equal(Ember.$('.validated-input-error-dialog:eq(2)').text().trim(), trans.t('errors.sendemail.body'));
+      this.$('.t-action-subject0').val('this is the subject').trigger('keyup');
+      this.$('.t-action-body0').val('this is the body').trigger('keyup');
+      run(() => { typeInSearch('e'); });
+      return waitFor().
+        then(() => {
+          assert.equal($component.hasClass('invalid'), false);
+          assert.equal($component2.hasClass('invalid'), false);
+          assert.equal(action.get('sendemail').get('recipient').get('length'), 0);
+          nativeMouseUp(`.ember-power-select-option:contains(${PD.fullname})`);
+          assert.equal(action.get('sendemail').get('recipient').get('length'), 1);
+          assert.equal(this.$('.invalid').length, 0);
+          assert.equal($component3.hasClass('invalid'), false);
+        });
     });
 });
 

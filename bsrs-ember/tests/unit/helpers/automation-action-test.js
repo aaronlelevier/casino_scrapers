@@ -17,5 +17,7 @@ test('it works', function(assert) {
   assert.equal(result, 'automations/sendsms-action');
   result = automationAction([Ember.Object.create({'key': 'automation.actions.ticket_request'})]);
   assert.equal(result, 'tickets/ticket-request-select-action');
+  result = automationAction([Ember.Object.create({'key': 'automation.actions.ticket_cc'})]);
+  assert.equal(result, 'tickets/ticket-cc-select-action');
 });
 

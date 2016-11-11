@@ -2,23 +2,25 @@ import Ember from 'ember';
 const { run } = Ember;
 import { moduleFor, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import AD from 'bsrs-ember/vendor/defaults/automation';
 import AAD from 'bsrs-ember/vendor/defaults/automation-action';
 import ATD from 'bsrs-ember/vendor/defaults/automation-action-type';
-import PersonD from 'bsrs-ember/vendor/defaults/person';
+import AJAD from 'bsrs-ember/vendor/defaults/automation-join-action';
+import PD from 'bsrs-ember/vendor/defaults/person';
 import TPD from 'bsrs-ember/vendor/defaults/ticket-priority';
 import TSD from 'bsrs-ember/vendor/defaults/ticket-status';
 import SED from 'bsrs-ember/vendor/defaults/sendemail';
 import SMSD from 'bsrs-ember/vendor/defaults/sendsms';
 import SMSJRD from 'bsrs-ember/vendor/defaults/generic-join-recipients';
 import SEDJRD from 'bsrs-ember/vendor/defaults/generic-join-recipients';
-import PD from 'bsrs-ember/vendor/defaults/person';
+
 import page from 'bsrs-ember/tests/pages/automation';
 
-var store, action, actionType, type, assignee, priority, sendEmail, sendsms;
+var store, action, actionType, type, assignee, priority, sendEmail, sendsms, ticketcc;
 
-moduleFor('model:automation-action', 'Unit | Model | automation-action', {
+moduleFor('model:automation-action', 'Unit | Model |  automation-action', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:generic-join-recipients', 'model:generic-join-recipients', 'model:person', 'model:ticket-priority', 'model:ticket-status', 'model:sendemail', 'model:sendsms', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence','validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type', 'validator:belongs-to', 'validator:action-ticket-request']);
+    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:generic-join-recipients', 'model:generic-join-recipients', 'model:person', 'model:ticket-priority', 'model:ticket-status', 'model:sendemail', 'model:sendsms', 'service:person-current', 'service:translations-fetcher','model:action-join-person', 'service:i18n', 'validator:presence','validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type', 'validator:belongs-to', 'validator:action-ticket-request', 'validator:action-ticketcc']);
   }
 });
 
@@ -282,26 +284,96 @@ test('remove_type - removes the action type from the action', assert => {
   assert.equal(action.get('type'), undefined);
 });
 
+// Action - ticketcc
+test('automation action has a related ticketcc', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, automation_action_ticketcc_fks: [10]});
+    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, person_pk: PD.idOne});
+    store.push('person', {id: PD.idOne, fullname: PD.fullname});
+  });
+  assert.equal(action.get('ticketcc').get('length'), 1);
+  assert.equal(action.get('ticketcc').objectAt(0).get('id'), PD.idOne);
+  assert.equal(action.get('ticketcc').objectAt(0).get('fullname'), PD.fullname);
+});
+
+test('add_ticketcc and dirty tracking', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, automation_action_ticketcc_fks: [10]});
+    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, person_pk: PD.idOne});
+    store.push('person', {id: PD.idOne, fullname: PD.fullname});
+  });
+  assert.equal(action.get('ticketcc').get('length'), 1);
+  assert.equal(action.get('isNotDirtyOrRelatedNotDirty'), true);
+  assert.equal(action.get('ticketccIsNotDirty'), true);
+  action.add_ticketcc({id: PD.idTwo});
+  assert.equal(action.get('ticketcc').get('length'), 2);
+  assert.equal(action.get('isNotDirtyOrRelatedNotDirty'), false);
+  assert.equal(action.get('ticketccIsNotDirty'), false);
+});
+
+test('ticketcc property will update when the m2m array suddenly removes the person', (assert) => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, automation_action_cc_fks: [10]});
+    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, person_pk: PD.idOne});
+    store.push('person', {id: PD.idOne, fullname: PD.fullname});
+  });
+  assert.equal(action.get('ticketcc').get('length'), 1);
+  action.remove_ticketcc(PD.idOne);
+  assert.equal(action.get('ticketcc').get('length'), 0);
+});
+
+test('rollback cc will revert and reboot the dirty ticketcc to clean', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, automation_action_ticketcc_fks: [10]});
+    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, person_pk: PD.idOne});
+    store.push('person', {id: PD.idOne, fullname: PD.fullname});
+  });
+  assert.ok(action.get('ticketcc').objectAt(0).get('id'), PD.idOne);
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+  action.add_ticketcc({id: PD.idTwo});
+  assert.ok(action.get('ticketcc').objectAt(0).get('id'), PD.idTwo);
+  assert.ok(action.get('isDirtyOrRelatedDirty'));
+  action.rollback();
+  assert.equal(action.get('ticketcc').objectAt(0).get('id'), PD.idOne);
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('saveRelated for ticketcc to save model and make it clean', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, automation_action_ticketcc_fks: [10]});
+    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, person_pk: PD.idOne});
+    store.push('person', {id: PD.idOne, fullname: PD.fullname});
+  });
+  assert.ok(action.get('ticketcc').objectAt(0).get('id'), PD.idOne);
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+  action.add_ticketcc({id: PD.idTwo});
+  assert.ok(action.get('ticketcc').objectAt(0).get('id'), PD.idTwo);
+  assert.ok(action.get('isDirtyOrRelatedDirty'));
+  action.saveRelated();
+  assert.equal(action.get('ticketcc').objectAt(0).get('id'), PD.idOne);
+  assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
+});
+
 // Action - Assignee
 
 test('action has a related assignee', assert => {
   run(() => {
     action = store.push('automation-action', {id: AAD.idOne, type_fk: ATD.idOne});
-    store.push('person', {id: PersonD.idOne, fullname: PersonD.fullname, actions: [AAD.idOne]});
+    store.push('person', {id: PD.idOne, fullname: PD.fullname, actions: [AAD.idOne]});
   });
-  assert.equal(action.get('assignee').get('id'), PersonD.idOne);
-  assert.equal(action.get('assignee.fullname'), PersonD.fullname);
+  assert.equal(action.get('assignee').get('id'), PD.idOne);
+  assert.equal(action.get('assignee.fullname'), PD.fullname);
 });
 
 test('change_assignee and dirty tracking', assert => {
   run(() => {
     action = store.push('automation-action', {id: AAD.idOne});
-    assignee = store.push('person', {id: PersonD.idOne});
+    assignee = store.push('person', {id: PD.idOne});
   });
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(action.get('assigneeIsNotDirty'));
-  action.change_assignee({id: PersonD.idOne});
-  assert.equal(action.get('assignee').get('id'), PersonD.idOne);
+  action.change_assignee({id: PD.idOne});
+  assert.equal(action.get('assignee').get('id'), PD.idOne);
   assert.ok(action.get('isDirtyOrRelatedDirty'));
   assert.ok(action.get('assigneeIsDirty'));
   assert.ok(assignee.get('isNotDirtyOrRelatedNotDirty'));
@@ -309,31 +381,31 @@ test('change_assignee and dirty tracking', assert => {
 
 test('rollback assignee will revert and reboot the dirty assignee to clean', assert => {
   run(() => {
-    action = store.push('automation-action', {id: AAD.idOne, assignee_fk: PersonD.idOne});
-    store.push('person', {id: PersonD.idOne, actions: [AAD.idOne]});
+    action = store.push('automation-action', {id: AAD.idOne, assignee_fk: PD.idOne});
+    store.push('person', {id: PD.idOne, actions: [AAD.idOne]});
   });
-  assert.equal(action.get('assignee').get('id'), PersonD.idOne);
+  assert.equal(action.get('assignee').get('id'), PD.idOne);
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
-  action.change_assignee({id: PersonD.idTwo});
-  assert.equal(action.get('assignee').get('id'), PersonD.idTwo);
+  action.change_assignee({id: PD.idTwo});
+  assert.equal(action.get('assignee').get('id'), PD.idTwo);
   assert.ok(action.get('isDirtyOrRelatedDirty'));
   action.rollback();
-  assert.equal(action.get('assignee').get('id'), PersonD.idOne);
+  assert.equal(action.get('assignee').get('id'), PD.idOne);
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('saveRelated for assignee to save model and make it clean', assert => {
   run(() => {
-    action = store.push('automation-action', {id: AAD.idOne, assignee_fk: PersonD.idOne});
-    store.push('person', {id: PersonD.idOne, actions: [AAD.idOne]});
+    action = store.push('automation-action', {id: AAD.idOne, assignee_fk: PD.idOne});
+    store.push('person', {id: PD.idOne, actions: [AAD.idOne]});
   });
-  assert.equal(action.get('assignee').get('id'), PersonD.idOne);
+  assert.equal(action.get('assignee').get('id'), PD.idOne);
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
-  action.change_assignee({id: PersonD.idTwo});
-  assert.equal(action.get('assignee').get('id'), PersonD.idTwo);
+  action.change_assignee({id: PD.idTwo});
+  assert.equal(action.get('assignee').get('id'), PD.idTwo);
   assert.ok(action.get('isDirtyOrRelatedDirty'));
   action.saveRelated();
-  assert.equal(action.get('assignee').get('id'), PersonD.idTwo);
+  assert.equal(action.get('assignee').get('id'), PD.idTwo);
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
 });
 
@@ -354,9 +426,10 @@ test('type validation - assignee - if the type is assignee, a related assignee i
   });
   assert.equal(action.get('validations.isValid'), false);
   action.change_type({id: ATD.idOne, key: ATD.keyOne});
-  action.change_assignee({id: PersonD.idOne});
+  action.change_assignee({id: PD.idOne});
   assert.equal(action.get('validations.isValid'), true);
 });
+
 
 test('type validation - priority - if the type is priority, a related priority is required', assert => {
   run(() => {
@@ -398,6 +471,16 @@ test('type validation -sendsms - if the tyoe is sendsms, a related sendsms is re
   assert.equal(action.get('validations.isValid'), false);   
   sendsms.add_recipient({id: PD.idOne});
   assert.equal(action.get('validations.isValid'), true);   
+});
+
+test('type validation - ticketcc - if the type is ticketcc, a related ticketcc is required', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne});
+  });
+  assert.equal(action.get('validations.isValid'), false);
+  action.change_type({id: ATD.idOne, key: ATD.keySeven});
+  action.add_ticketcc({id: PD.idOne});
+  assert.equal(action.get('validations.isValid'), true);
 });
 
 // Action - sendemail
@@ -464,14 +547,14 @@ test('serialize - should only send the content fields that are relevant based on
     store.push('sendemail', {id: SED.idOne, subject: SED.subjectTwo, body: SED.bodyTwo,  generic_recipient_fks: [SEDJRD.idOne], actions: [AAD.idOne]});
     store.push('sendsms', {id: SMSD.idOne, body: SMSD.bodyTwo, generic_recipient_fks: [SMSJRD.idTwo], actions: [AAD.idOne]});
   });
-  action.change_assignee({id: PersonD.idOne});
+  action.change_assignee({id: PD.idOne});
   action.change_priority({id: TPD.idOne});
   action.change_status({id: TSD.idOne});
   action.change_sendemail({id: SED.idOne});
   action.change_sendsms({id: SMSD.idOne});
 
   action.change_type({id: ATD.idOne, key: ATD.keyOne});
-  assert.deepEqual(action.serialize().content, {assignee: PersonD.idOne});
+  assert.deepEqual(action.serialize().content, {assignee: PD.idOne});
   action.change_type({id: ATD.idTwo, key: ATD.keyTwo});
   assert.deepEqual(action.serialize().content, {priority: TPD.idOne});
   action.change_type({id: ATD.idThree, key: ATD.keyThree});

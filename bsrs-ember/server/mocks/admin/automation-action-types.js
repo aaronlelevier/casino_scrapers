@@ -5,7 +5,7 @@ module.exports = function(app) {
   var adminAutomationsRouter = express.Router();
 
   adminAutomationsRouter.get('/', function(req, res) {
-    res.send(AUTOMATION_FIXTURES.action_search_power_select());
+    res.send(AUTOMATION_FIXTURES.list_action_types());
   });
 
   app.use('/api/admin/automation-action-types', adminAutomationsRouter);

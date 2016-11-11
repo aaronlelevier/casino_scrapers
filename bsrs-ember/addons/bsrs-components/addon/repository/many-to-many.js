@@ -68,7 +68,10 @@ var many_to_many_json = function(modelName, _associatedModel, _singularAssociate
   return function(json, model) {
     const store = this.get('simpleStore');
     const relatedModelLookup = Ember.String.underscore(this.OPT_CONF[_associatedModel]['associated_pointer'] || this.OPT_CONF[_associatedModel]['associated_model']);
-    let [m2m_models, relateds, server_sum] = many_to_many_extract(json, store, model, _joinModelName, `${modelName}_pk`, _singularAssociatedName, `${relatedModelLookup}_pk`);
+    const _parentNameUnderscore = modelName.replace(/-/g, '_');
+    let [m2m_models, relateds, server_sum] = many_to_many_extract(json, store, model, _joinModelName, `${_parentNameUnderscore}_pk`, _singularAssociatedName, `${relatedModelLookup}_pk`);
+
+    /* REMAINING pushes in join models and setups _fks for dirty tracking on parent */
     run(() => {
       relateds.forEach((related) => {
         const ass_model = this.OPT_CONF[_associatedModel]['associated_model'];
@@ -83,7 +86,7 @@ var many_to_many_json = function(modelName, _associatedModel, _singularAssociate
       m2m_models.forEach((m2m) => {
         store.push(this.OPT_CONF[_associatedModel]['join_model'], m2m);
       });
-      store.push(modelName, {id: model.get('id'), [`${modelName}_${_associatedModel}_fks`]: server_sum});
+      store.push(modelName, {id: model.get('id'), [`${_parentNameUnderscore}_${_associatedModel}_fks`]: server_sum});
     });
     // return optional
     return [m2m_models, relateds, server_sum];

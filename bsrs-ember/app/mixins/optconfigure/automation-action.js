@@ -44,6 +44,10 @@ export default Ember.Mixin.create({
     sendsms: {
       collection: 'actions',
       property: 'sendsms'
-    }
+    },
+    ticketcc: {
+      associated_model: 'person',
+      join_model: 'action-join-person'
+    },
   }
 });
