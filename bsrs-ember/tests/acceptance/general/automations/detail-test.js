@@ -925,7 +925,6 @@ test('get an action ticket request and update it to a new ticket request', asser
 });
 
 test('select ticket request filter and update automation', assert => {
-  const json = AF.detail();
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);

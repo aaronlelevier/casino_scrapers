@@ -278,10 +278,8 @@ test('clicking and typing into power select for people will fire off xhr request
   });
   let PEOPLE_TICKETS_URL = `${PEOPLE_URL}person__icontains=a/`;
   xhr(PEOPLE_TICKETS_URL, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
-  selectSearch()
-  page.ccClickDropdown();
-  fillIn(`${CC_SEARCH}`, 'a');
-  page.ccClickDonald();
+  selectSearch(TICKET_CC_SELECT, 'a');
+  selectChoose(TICKET_CC_SELECT, PD.donald);
   andThen(() => {
     let ticket = store.find('ticket', TD.idOne);
     assert.equal(ticket.get('cc').get('length'), 2);
@@ -291,38 +289,9 @@ test('clicking and typing into power select for people will fire off xhr request
     assert.equal(page.ccTwoSelected.indexOf(PD.first_name), 2);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
-  page.ccClickDropdown();
-  fillIn(`${CC_SEARCH}`, '');
-  andThen(() => {
-    assert.equal(page.ccOptionLength, 1);
-    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
-  });
-  fillIn(`${CC_SEARCH}`, 'a');
-  andThen(() => {
-    assert.equal(page.ccSelected.indexOf(PD.donald), 2);
-    assert.equal(page.ccTwoSelected.indexOf(PD.first_name), 2);
-    assert.equal(page.ccOptionLength, 1);
-    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), PD.donald);
-    let ticket = store.find('ticket', TD.idOne);
-    assert.equal(ticket.get('cc').get('length'), 2);
-    assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
-    assert.equal(ticket.get('cc').objectAt(1).get('first_name'), PD.first_name);
-  });
-  //search specific cc
-  page.ccClickDropdown();
   xhr(`${PEOPLE_URL}person__icontains=Boy/`, 'GET', null, {}, 200, PF.search_power_select());
-  fillIn(`${CC_SEARCH}`, 'Boy');
-  andThen(() => {
-    assert.equal(page.ccSelected.indexOf(PD.donald), 2);
-    assert.equal(page.ccTwoSelected.indexOf(PD.first_name), 2);
-    assert.equal(page.ccOptionLength, 10);
-    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-    let ticket = store.find('ticket', TD.idOne);
-    assert.equal(ticket.get('cc').get('length'), 2);
-    assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
-    assert.equal(ticket.get('cc').objectAt(1).get('first_name'), PD.first_name);
-  });
-  page.ccClickOptionOne();
+  selectSearch(TICKET_CC_SELECT, 'Boy');
+  selectChoose(TICKET_CC_SELECT, PD.nameBoy);
   andThen(() => {
     assert.equal(page.ccSelected.indexOf(PD.donald), 2);
     assert.equal(page.ccTwoSelected.indexOf(PD.first_name), 2);
