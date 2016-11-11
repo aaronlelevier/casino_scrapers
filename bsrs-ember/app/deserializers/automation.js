@@ -84,9 +84,10 @@ export default Ember.Object.extend(OptConf, {
         statuses[a.id] = status;
         a.status_fk = status.id;
       }
+
       //sendemail - delete recipients, type, body, subject (re-assign) and gen up uuid for send_email model
       if (type.key === 'automation.actions.send_email') {
-        recipient = a.recipients;
+        recipient = a.recipients; // {type: 'role', id: '1xxx'}
         delete a.recipients;
         let { body, subject } = a;
         delete a.body;
@@ -95,28 +96,29 @@ export default Ember.Object.extend(OptConf, {
         sendemails[a.id] = sendemail;
         a.sendemail_fk = sendemail.id;
       }
+
       // sendsms
       if (type.key === 'automation.actions.send_sms') {
         sendsms_recipient = a.recipients;
         delete a.recipients;
-        let { message } = a;
-        delete a.message;
-        const sendsms = { id: this.get('uuid').v4(), message: message };
+        let { body } = a;
+        delete a.body;
+        const sendsms = { id: this.get('uuid').v4(), body: body };
         sendsmss[a.id] = sendsms;
         a.sendsms_fk = sendsms.id;
       }
       // must set as "detail" b/c this is a detail payload
       a.detail = true;
     });
-    // push in the actions in the store and those are returned
-    // actions == pojo's
+
+    // push in the actions (pojo's) in the store and those are returned
     const [,actionData,] = this.setup_action(actions, automation);
-    // actionData - pojo
     actionData.forEach((ad) => {
       const action = store.find('automation-action', ad.id);
       // type
       let type = actionTypes[ad.id];
       this.setup_type(type, action);
+
       // assignee
       let assignee = assignees[ad.id];
       this.setup_assignee(assignee, action);
@@ -126,6 +128,7 @@ export default Ember.Object.extend(OptConf, {
       // status - adds the action id to the array of 'actions' in the status model
       let status = statuses[ad.id];
       this.setup_status(status, action);
+
       //sendemail
       let sendemail = sendemails[ad.id];
       this.setup_sendemail(sendemail, action);
@@ -144,6 +147,7 @@ export default Ember.Object.extend(OptConf, {
         });
         // this.setup_recipient(recipient, sendemail_hydrated);
       }
+
       // sendsms
       let sendsms = sendsmss[ad.id];
       this.setup_sendsms(sendsms, action);

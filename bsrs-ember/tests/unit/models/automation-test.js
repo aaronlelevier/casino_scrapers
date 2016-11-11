@@ -41,7 +41,7 @@ test('dirty test | description', assert => {
   assert.equal(automation.get('isDirty'), false);
 });
 
-test(' serialize', assert => {
+test('serialize', assert => {
   let pfilter, event, action;
   run(() => {
     automation = store.push('automation', {id: AD.idOne, description: AD.descriptionOne, automation_pf_fks: [AJFD.idOne], automation_event_fks: [AJED.idOne], automation_action_fks: [AAD.idOne]});
@@ -54,7 +54,7 @@ test(' serialize', assert => {
     store.push('automation-action-type', {id: ATD.idOne, key: ATD.keyFive, actions: [AAD.idOne]});
     store.push('generic-join-recipients', {id: SMSJRD.idOne, generic_pk: SMSD.idOne, recipient_pk: PD.idOne});
     store.push('person', {id: PD.idOne});
-    store.push('sendsms', {id: SMSD.idOne, message: SMSD.messageTwo, generic_recipient_fks: [SMSJRD.idOne], actions: [AAD.idOne]});
+    store.push('sendsms', {id: SMSD.idOne, body: SMSD.bodyTwo, generic_recipient_fks: [SMSJRD.idOne], actions: [AAD.idOne]});
   });
   assert.equal(automation.get('pf').get('length'), 1);
   let ret = automation.serialize();
@@ -66,7 +66,7 @@ test(' serialize', assert => {
   assert.deepEqual(ret.actions, [action.serialize()]);
   assert.equal(ret.actions.length, 1);
   assert.equal(ret.actions[0].type, ATD.idOne);
-  assert.deepEqual(ret.actions[0].content, {sendsms: {message: SMSD.messageTwo, recipients: [PD.id]}});
+  assert.deepEqual(ret.actions[0].content, {body: SMSD.bodyTwo, recipients: [PD.id]});
 });
 
 test('NewMixin is mixed into the Automation Model, so on save will set _new_ keys to undefined, and future CRUD will be PUTs', assert => {

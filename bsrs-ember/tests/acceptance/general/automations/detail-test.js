@@ -751,11 +751,9 @@ test('get an action sendemail and update it to a new sendemail', assert => {
       id: AAD.idOne,
       type: AATD.idFour,
       content: {
-        sendemail: {
-          body: SED.bodyTwo,
-          subject: SED.subjectTwo,
-          recipients: [PD.idOne, PD.idSearch]
-        } 
+        body: SED.bodyTwo,
+        subject: SED.subjectTwo,
+        recipients: [PD.idOne, PD.idSearch]
       }
     }]
   });
@@ -813,7 +811,7 @@ test('get an action sendsms and update it to a new sendsms', assert => {
   clearxhr(detailXhr);
   const json = AF.detail();
   json.actions[0]['type'] = { id: AATD.idFive, key: AATD.keyFive };
-  json.actions[0]['message'] = SMSD.messageOne;
+  json.actions[0]['body'] = SMSD.bodyOne;
   json.actions[0]['recipients'] = [{id: PD.idOne, fullname: PD.fullname}];
   xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
   page.visitDetail();
@@ -821,14 +819,14 @@ test('get an action sendsms and update it to a new sendsms', assert => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(page.actionTypeSelectedOne, AATD.keyFive, 'Type sendsms selected');
     assert.equal(page.actionSendSmsRecipientOne.replace(/\W/, '').trim(), PD.fullname, 'full name recipient shows');
-    assert.equal(page.sendSmsMessageValue, SMSD.messageOne, 'sendsms message shows');
+    assert.equal(page.sendSmsBodyValue, SMSD.bodyOne, 'sendsms body shows');
   });
-  page.sendSmsMessageFillIn(SMSD.messageTwo);
+  page.sendSmsBodyFillIn(SMSD.bodyTwo);
   xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
   selectSearch('.t-action-recipient-select', 'e');
   selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
   andThen(() => {
-    assert.equal(page.sendSmsMessageValue, SMSD.messageTwo, 'message is updated');
+    assert.equal(page.sendSmsBodyValue, SMSD.bodyTwo, 'body is updated');
     assert.equal(page.actionSendSmsRecipientTwo.replace(/\W/, '').trim(), PD.fullnameBoy2, 'new recipient shows');
   });
   clearxhr(listXhr);
@@ -838,7 +836,7 @@ test('get an action sendsms and update it to a new sendsms', assert => {
   //     type: AATD.idFive,
   //     content: {
   //       sendsms: { 
-  //         message: SMSD.messageTwo,
+  //         body: SMSD.bodyTwo,
   //         recipients: [PD.id, PD.idSearch]
   //       } 
   //     }
@@ -863,12 +861,12 @@ test('select sendsms filter and update automation', assert => {
     // Failing Jenkins
     // assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyFive), 'selected type');
   });
-  page.sendSmsMessageFillIn(SMSD.messageTwo);
+  page.sendSmsBodyFillIn(SMSD.bodyTwo);
   xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
   selectSearch('.t-action-recipient-select', 'e');
   selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
   andThen(() => {
-    assert.equal(page.sendSmsMessageValue, SMSD.messageTwo, 'sms message');
+    assert.equal(page.sendSmsBodyValue, SMSD.bodyTwo, 'sms body');
     assert.equal(page.actionSendSmsRecipientOne.replace(/\W/, '').trim(), PD.fullnameBoy2, 'recipient selected for sendsms');
   });
   clearxhr(listXhr);
@@ -878,7 +876,7 @@ test('select sendsms filter and update automation', assert => {
   //     type: AATD.idFive,
   //     content: {
   //       sendsms: { 
-  //         message: SMSD.messageTwo,
+  //         body: SMSD.bodyTwo,
   //         recipients: [PD.idSearch]
   //       } 
   //     }

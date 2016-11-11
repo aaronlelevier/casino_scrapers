@@ -26,7 +26,7 @@ moduleForComponent('automations/sendsms-action', 'Integration | Component | auto
     loadTranslations(trans, translations.generate('en'));
     translation.initialize(this);
     action = store.push('automation-action', {id: AAD.idOne, sendemail_fk: SMSD.idOne});
-    store.push('sendsms', {id: SMSD.idOne, message: SMSD.messageOne, generic_recipient_fks: [SMSJRD.idOne], actions: [AAD.idOne]});
+    store.push('sendsms', {id: SMSD.idOne, body: SMSD.bodyOne, generic_recipient_fks: [SMSJRD.idOne], actions: [AAD.idOne]});
     store.push('person', {id: PD.idOne, fullname: PD.fullname});
     store.push('generic-join-recipients', {id: SMSJRD.idOne, generic_pk: SMSD.idOne, recipient_pk: PD.idOne});
     person_repo = repository.initialize(this.container, this.registry, 'person');
@@ -44,7 +44,7 @@ test('it renders', function(assert) {
   this.render(hbs`{{automations/sendsms-action model=model index=index}}`);
   assert.equal(this.$('.t-sendsms-recipient-label').text().trim(), trans.t('admin.action.sendsms.recipients'));
   assert.equal(this.$('.t-sendsms-message-label').text().trim(), trans.t('admin.action.sendsms.message'));
-  assert.equal(this.$('.t-action-message0').val(), action.get('sendsms').get('message'));
+  assert.equal(this.$('.t-action-message0').val(), action.get('sendsms').get('body'));
   assert.equal(page.actionSendEmailRecipientOne.replace(/\W/, '').trim(), action.get('sendsms').get('recipient').objectAt(0).get('fullname'));
 });
 
@@ -56,20 +56,20 @@ test('shows validation messages', function(assert) {
   this.personRepo = person_repo;
   this.render(hbs`{{automations/sendsms-action model=model index=index didValidate=didValidate personRepo=personRepo}}`);
   assert.equal(this.$('.t-action-message0').prop('type'), 'textarea');
-  assert.equal(this.$('.t-action-message0').val(), SMSD.messageOne);
+  assert.equal(this.$('.t-action-message0').val(), SMSD.bodyOne);
   let $component = this.$('.t-action-message-validator0');
   let $component2 = this.$('.t-action-recipient-validator0');
   assert.equal($component.hasClass('invalid'), false);
   assert.equal($component2.hasClass('invalid'), false);
   assert.equal(Ember.$('.validated-input-error-dialog:eq(0)').text().trim(), '');
   assert.equal(Ember.$('.validated-input-error-dialog:eq(1)').text().trim(), '');
-  page.sendSmsMessageFillIn('');
+  page.sendSmsBodyFillIn('');
   nativeMouseDown('.ember-power-select-multiple-remove-btn');
   this.set('didValidate', true);
   assert.equal($component.hasClass('invalid'), true);
   assert.equal($component2.hasClass('invalid'), true);
   assert.equal(Ember.$('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.sendsms.recipient'));
-  assert.equal(Ember.$('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.sendsms.message'));
+  assert.equal(Ember.$('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.sendsms.body'));
   this.$('.t-action-message0').val('a'.repeat(160)).trigger('keyup');
   assert.equal($component.hasClass('invalid'), false);
   this.$('.t-action-message0').val('a'.repeat(261)).trigger('keyup');

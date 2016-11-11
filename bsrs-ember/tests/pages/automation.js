@@ -43,8 +43,8 @@ export default create({
   sendEmailSubjectFillIn: fillable('.t-action-subject0'),
   sendEmailBodyValue: value('.t-action-body0'),
   sendEmailSubjectValue: value('.t-action-subject0'),
-  sendSmsMessageFillIn: fillable('.t-action-message0'),
-  sendSmsMessageValue: value('.t-action-message0'),
+  sendSmsBodyFillIn: fillable('.t-action-message0'),
+  sendSmsBodyValue: value('.t-action-message0'),
 
   ticketRequestFillIn: fillable('.t-automation-ticket-request'),
   ticketRequestValue: value('.t-automation-ticket-request'),

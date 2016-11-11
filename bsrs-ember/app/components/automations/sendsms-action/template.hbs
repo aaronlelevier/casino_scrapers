@@ -21,7 +21,7 @@
     <span class="input-group-addon action-label t-sendsms-message-label">{{t "admin.action.sendsms.message"}}</span>
       {{validated-input
         model=model.sendsms
-        valuePath="message"
+        valuePath="body"
         count=index
         className=(concat "t-action-message" index)
         placeholder=placeholder

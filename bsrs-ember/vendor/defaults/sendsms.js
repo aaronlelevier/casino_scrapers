@@ -5,8 +5,8 @@ var BSRS_SENDSMS_DEFAULTS_OBJECT = (function() {
     return {
       idOne: 'a199568e-3e9c-4949-be7c-aadc03f4fe38',
       idTwo: 'a199568e-3e9c-4949-be7c-aadc03f4fe39',
-      messageOne: 'Foo',
-      messageTwo: 'Bar',
+      bodyOne: 'Foo',
+      bodyTwo: 'Bar',
     };
   };
   return factory;

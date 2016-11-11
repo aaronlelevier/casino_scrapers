@@ -307,7 +307,7 @@ test('deserialize single - sendemail - different recipient', assert => {
 test('deserialize single - sendsms - no existing', assert => {
   const json = AF.detail();
   delete json.actions[0].assignee;
-  json.actions[0]['message'] = SMSD.messageOne;
+  json.actions[0]['body'] = SMSD.bodyOne;
   json.actions[0]['recipients'] = [{id: PersonD.idOne, fullname: PersonD.fullname}];
   json.actions[0].type.key = 'automation.actions.send_sms';
   assert.equal(automation.get('isNotDirtyOrRelatedNotDirty'), true);
@@ -332,7 +332,7 @@ test('deserialize single - sendsms - no existing', assert => {
   // sendsms
   assert.ok(automation.get('action').objectAt(0).get('sendsms_fk'));
   assert.ok(automation.get('action').objectAt(0).get('sendsms').get('id'));
-  assert.equal(automation.get('action').objectAt(0).get('sendsms').get('message'), SMSD.messageOne);
+  assert.equal(automation.get('action').objectAt(0).get('sendsms').get('body'), SMSD.bodyOne);
   assert.equal(automation.get('action').objectAt(0).get('sendsms').get('recipient').get('length'), 1);
   assert.equal(automation.get('action').objectAt(0).get('sendsms').get('recipient').objectAt(0).get('id'), PersonD.idOne);
   assert.equal(automation.get('action').objectAt(0).get('sendsms').get('recipient').objectAt(0).get('fullname'), PersonD.fullname);
@@ -343,7 +343,7 @@ test('deserialize single - sendsms- existing with same id', assert => {
   run(() => {
     store.push('automation-action', {id: AAD.idOne, sendsms_fk: SMSD.idOne });
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
-    store.push('sendsms', {id: SMSD.idOne, message: SMSD.messageOne, generic_recipient_fks: [SMSJRD.idOne], actions: [AAD.idOne]});
+    store.push('sendsms', {id: SMSD.idOne, body: SMSD.bodyOne, generic_recipient_fks: [SMSJRD.idOne], actions: [AAD.idOne]});
     store.push('person', {id: PersonD.idOne, fullname: PersonD.fullname});
     store.push('generic-join-recipients', {id: SMSJRD.idOne, generic_pk: SMSD.idOne, recipient_pk: PersonD.idOne});
   });
@@ -356,11 +356,11 @@ test('deserialize single - sendsms- existing with same id', assert => {
   assert.equal(automation.get('action').objectAt(0).get('sendsms').get('isDirtyOrRelatedDirty'), false);
   assert.equal(automation.get('action').objectAt(0).get('sendsms_fk'), SMSD.idOne);
   assert.equal(automation.get('action').objectAt(0).get('sendsms').get('id'), SMSD.idOne);
-  assert.equal(automation.get('action').objectAt(0).get('sendsms').get('message'), SMSD.messageOne);
+  assert.equal(automation.get('action').objectAt(0).get('sendsms').get('body'), SMSD.bodyOne);
   // deserialize
   const json = AF.detail();
   delete json.actions[0].assignee;
-  json.actions[0]['message'] = SMSD.messageOne;
+  json.actions[0]['body'] = SMSD.bodyOne;
   json.actions[0]['recipients'] = [{id: PersonD.idOne, fullname: PersonD.fullname}];
   json.actions[0].type.key = 'automation.actions.send_sms';
   run(() => {
@@ -377,7 +377,7 @@ test('deserialize single - sendsms- existing with same id', assert => {
   // sendsms
   assert.ok(automation.get('action').objectAt(0).get('sendsms_fk'));
   assert.ok(automation.get('action').objectAt(0).get('sendsms').get('id'));
-  assert.equal(automation.get('action').objectAt(0).get('sendsms').get('message'), SMSD.messageOne);
+  assert.equal(automation.get('action').objectAt(0).get('sendsms').get('body'), SMSD.bodyOne);
   assert.equal(automation.get('action').objectAt(0).get('sendsms').get('recipient').objectAt(0).get('id'), PersonD.idOne);
   assert.equal(automation.get('action').objectAt(0).get('sendsms').get('recipient').objectAt(0).get('fullname'), PersonD.fullname);
 });
@@ -387,7 +387,7 @@ test('deserialize single - sendsms- different id', assert => {
   run(() => {
     store.push('automation-action', {id: AAD.idOne, sendsms_fk: SMSD.idOne});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
-    store.push('sendsms', {id: SMSD.idOne, message: SMSD.messageOne, generic_recipient_fks: [SMSJRD.idOne], actions: [AAD.idOne]});
+    store.push('sendsms', {id: SMSD.idOne, body: SMSD.bodyOne, generic_recipient_fks: [SMSJRD.idOne], actions: [AAD.idOne]});
     store.push('person', {id: PersonD.idOne});
     store.push('generic-join-recipients', {id: SMSJRD.idOne, generic_pk: SMSD.idOne, recipient_pk: PersonD.idOne});
   });
@@ -395,11 +395,11 @@ test('deserialize single - sendsms- different id', assert => {
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(automation.get('action').objectAt(0).get('sendsms_fk'), SMSD.idOne);
   assert.equal(automation.get('action').objectAt(0).get('sendsms').get('id'), SMSD.idOne);
-  assert.equal(automation.get('action').objectAt(0).get('sendsms').get('message'), SMSD.messageOne);
+  assert.equal(automation.get('action').objectAt(0).get('sendsms').get('body'), SMSD.bodyOne);
   // deserialize
   const json = AF.detail();
   delete json.actions[0].assignee;
-  json.actions[0]['message'] = SMSD.messageTwo;
+  json.actions[0]['body'] = SMSD.bodyTwo;
   json.actions[0]['recipients'] = [{id: PersonD.idTwo, fullname: PersonD.fullname}];
   json.actions[0].type.key = 'automation.actions.send_sms';
   run(() => {
@@ -416,7 +416,7 @@ test('deserialize single - sendsms- different id', assert => {
   // sensms
   assert.ok(automation.get('action').objectAt(0).get('sendsms_fk') !== SMSD.idOne);
   assert.ok(automation.get('action').objectAt(0).get('sendsms').get('id') !== SMSD.idOne);
-  assert.equal(automation.get('action').objectAt(0).get('sendsms').get('message'), SMSD.messageTwo);
+  assert.equal(automation.get('action').objectAt(0).get('sendsms').get('body'), SMSD.bodyTwo);
   assert.equal(automation.get('action').objectAt(0).get('sendsms').get('recipient').objectAt(0).get('id'), PersonD.idTwo);
   assert.equal(automation.get('action').objectAt(0).get('sendsms').get('recipient').objectAt(0).get('fullname'), PersonD.fullname);
 });
@@ -438,7 +438,7 @@ test('deserialize single - sendsms - different recipient', assert => {
   // deserialize
   const json = AF.detail();
   delete json.actions[0].assignee;
-  json.actions[0]['message'] = SMSD.messageTwo;
+  json.actions[0]['body'] = SMSD.bodyTwo;
   json.actions[0]['recipients'] = [{id: PersonD.idTwo, fullname: PersonD.fullname}];
   json.actions[0].type.key = 'automation.actions.send_sms';
   run(() => {
@@ -455,8 +455,8 @@ test('deserialize single - sendsms - different recipient', assert => {
   // sendsms
   assert.ok(automation.get('action').objectAt(0).get('sendsms_fk') !== SMSD.idOne);
   assert.ok(automation.get('action').objectAt(0).get('sendsms').get('id') !== SMSD.idOne);
-  assert.equal(automation.get('action').objectAt(0).get('message'), undefined);
-  assert.equal(automation.get('action').objectAt(0).get('sendsms').get('message'), SMSD.messageTwo);
+  assert.equal(automation.get('action').objectAt(0).get('body'), undefined);
+  assert.equal(automation.get('action').objectAt(0).get('sendsms').get('body'), SMSD.bodyTwo);
   assert.equal(automation.get('action').objectAt(0).get('sendsms').get('recipient').objectAt(0).get('id'), PersonD.idTwo);
   assert.equal(automation.get('action').objectAt(0).get('sendsms').get('recipient').objectAt(0).get('fullname'), PersonD.fullname);
 });

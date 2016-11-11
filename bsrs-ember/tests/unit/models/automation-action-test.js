@@ -394,7 +394,7 @@ test('type validation -sendsms - if the tyoe is sendsms, a related sendsms is re
   action.change_sendsms({id: SMSD.idOne});
   assert.equal(action.get('validations.isValid'), false);   
   const sendsms = store.find('sendsms', SMSD.idOne);
-  sendsms.set('message', 'message section');
+  sendsms.set('body', 'body section');
   assert.equal(action.get('validations.isValid'), false);   
   sendsms.add_recipient({id: PD.idOne});
   assert.equal(action.get('validations.isValid'), true);   
@@ -462,7 +462,7 @@ test('serialize - should only send the content fields that are relevant based on
     store.push('person', {id: PD.idOne});
     store.push('person', {id: PD.idTwo});
     store.push('sendemail', {id: SED.idOne, subject: SED.subjectTwo, body: SED.bodyTwo,  generic_recipient_fks: [SEDJRD.idOne], actions: [AAD.idOne]});
-    store.push('sendsms', {id: SMSD.idOne, message: SMSD.messageTwo, generic_recipient_fks: [SMSJRD.idTwo], actions: [AAD.idOne]});
+    store.push('sendsms', {id: SMSD.idOne, body: SMSD.bodyTwo, generic_recipient_fks: [SMSJRD.idTwo], actions: [AAD.idOne]});
   });
   action.change_assignee({id: PersonD.idOne});
   action.change_priority({id: TPD.idOne});
@@ -477,11 +477,11 @@ test('serialize - should only send the content fields that are relevant based on
   action.change_type({id: ATD.idThree, key: ATD.keyThree});
   assert.deepEqual(action.serialize().content, {status: TSD.idOne});
   action.change_type({id: ATD.idFour, key: ATD.keyFour});
-  assert.deepEqual(action.serialize().content, {sendemail: {body: SED.bodyTwo, recipients: [PD.id], subject: SED.subjectTwo}});
+  assert.deepEqual(action.serialize().content, {body: SED.bodyTwo, recipients: [PD.id], subject: SED.subjectTwo});
   action.change_type({id: ATD.idFive, key: ATD.keyFive});
   assert.equal(action.get('sendsms').get('id'), SMSD.idOne);
   assert.deepEqual(action.get('sendsms').get('recipient').mapBy('id'), [PD.idTwo]);
-  assert.deepEqual(action.serialize().content, {sendsms: {message: SMSD.messageTwo, recipients: [PD.idTwo]}});
+  assert.deepEqual(action.serialize().content, {body: SMSD.bodyTwo, recipients: [PD.idTwo]});
   action.change_type({id: ATD.idSix, key: ATD.keySix});
   assert.equal(action.get('type').get('key'), ATD.keySix);
   assert.deepEqual(action.serialize().content, {request: AAD.requestOne});

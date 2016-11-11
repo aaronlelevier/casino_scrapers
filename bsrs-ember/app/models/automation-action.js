@@ -10,7 +10,7 @@ const Validations = buildValidations({
   request: validator('action-ticket-request'),
   type: validator('presence', {
     presence: true,
-    message: 'errors.automation.type'
+    body: 'errors.automation.type'
   }),
   sendemail: validator('belongs-to'),
   sendsms: validator('belongs-to'),
@@ -73,19 +73,15 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
         break;
       case 'automation.actions.send_email':
         content = {
-          sendemail: {
-            body: this.get('sendemail.body'),
-            subject: this.get('sendemail.subject'),
-            recipients: this.get('sendemail.recipient_ids'),
-          }
+          body: this.get('sendemail.body'),
+          subject: this.get('sendemail.subject'),
+          recipients: this.get('sendemail.recipient_ids'),
         };
         break;
       case 'automation.actions.send_sms':
         content = {
-          sendsms: {
-            message: this.get('sendsms.message'),
-            recipients: this.get('sendsms.recipient_ids'),
-          }
+          body: this.get('sendsms.body'),
+          recipients: this.get('sendsms.recipient_ids'),
         };
         break;
       case 'automation.actions.ticket_request':
