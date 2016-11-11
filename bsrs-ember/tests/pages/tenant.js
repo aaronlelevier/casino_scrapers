@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import { create, visitable, fillable, text, value, clickable } from 'ember-cli-page-object';
-import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BASEURLS, { TENANT_URL, TENANT_LIST_URL } from 'bsrs-ember/utilities/urls';
 import TD from 'bsrs-ember/vendor/defaults/tenant';
 

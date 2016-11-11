@@ -28,7 +28,7 @@ import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/location';
 import random from 'bsrs-ember/models/random';
-import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import { POWER_SELECT_OPTIONS, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BASEURLS, { LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -839,13 +839,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   let response = {'results': [LF.get_no_related(LD.unusedId, LD.apple), LF.get_no_related(LD.idParent, LD.storeNameParent), LF.get_no_related(LD.idParentTwo, LD.storeNameParentTwo)]};
   xhr(location_endpoint, 'GET', null, {}, 200, response);
   selectSearch(CHILDREN, 'a');
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.childrenSelected.indexOf(LD.storeNameTwo), 2);
-    assert.equal(page.childrenOptionLength, 3);
-    assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(1)`).text().trim(), LD.storeNameParent);
-  });
-  page.childrenClickApple();
+  selectChoose(CHILDREN, LD.apple);
   andThen(() => {
     let location = store.find('location', LD.idOne);
     assert.equal(location.get('children').get('length'), 3);
@@ -879,21 +873,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   let response_2 = { 'results': [LF.get_no_related('abc123', LD.boondocks)] };
   xhr(location_endpoint_2, 'GET', null, {}, 200, response_2);
   selectSearch(CHILDREN, 'BooNdocks');
-  andThen(() => {
-    assert.equal(page.childrenSelected.indexOf(LD.storeNameTwo), 2);
-    assert.equal(page.childrenOptionLength, 1);
-    assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), LD.boondocks);
-    let location = store.find('location', LD.idOne);
-    assert.equal(location.get('children').get('length'), 3);
-    assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
-    assert.equal(location.get('children').objectAt(1).get('name'), LD.storeNameThree);
-    assert.equal(location.get('children').objectAt(2).get('name'), LD.apple);
-    assert.equal(page.childrenSelected.indexOf(LD.storeNameTwo), 2);
-    assert.equal(page.childrenTwoSelected.indexOf(LD.storeNameThree), 2);
-    assert.equal(page.childrenThreeSelected.indexOf(LD.apple), 2);
-    assert.ok(location.get('isDirtyOrRelatedDirty'));
-  });
-  page.childrenClickOptionOne();
+  selectChoose(CHILDREN, LD.boondocks);
   andThen(() => {
     let location = store.find('location', LD.idOne);
     assert.equal(location.get('children').get('length'), 4);
@@ -935,15 +915,7 @@ test('can remove and add back same children and save empty children', (assert) =
   let response = {'results': [LF.get_no_related(LD.unusedId, LD.baseStoreName), LF.get_no_related(LD.idParent, LD.storeNameParent), LF.get(LD.idParentTwo, LD.storeNameParentTwo)]};
   xhr(location_endpoint, 'GET', null, {}, 200, response);
   selectSearch(CHILDREN, 'a');
-  andThen(() => {
-    assert.equal(page.childrenOptionLength, 3);
-    let location = store.find('location', LD.idOne);
-    assert.equal(location.get('location_children_fks').length, 2);
-    assert.equal(location.get('children').get('length'), 1);
-    assert.ok(location.get('childrenIsDirty'));
-    assert.ok(location.get('isDirtyOrRelatedDirty'));
-  });
-  page.childrenClickOptionStoreNameOne();
+  selectChoose(CHILDREN, LD.baseStoreName);
   andThen(() => {
     let location = store.find('location', LD.idOne);
     assert.equal(location.get('location_children_fks').length, 2);
@@ -961,7 +933,7 @@ test('can remove and add back same children and save empty children', (assert) =
   location_endpoint = `${LOCATIONS_URL}get-level-children/${LLD.idOne}/${LD.idOne}/location__icontains=d/`;
   xhr(location_endpoint, 'GET', null, {}, 200, LF.search_power_select());
   selectSearch(CHILDREN, 'd');
-  page.childrenClickOptionStoreNameTwo();
+  selectChoose(CHILDREN, LD.storeNameTwo);
   page.nameFillIn(LD.storeNameTwo);
   andThen(() => {
     let location = store.find('location', LD.idOne);
@@ -1003,7 +975,7 @@ test('starting with multiple children, can remove all children (while not popula
   let location_endpoint = `${LOCATIONS_URL}get-level-children/${LLD.idOne}/${LD.idOne}/location__icontains=d/`;
   xhr(location_endpoint, 'GET', null, {}, 200, LF.search_power_select());
   selectSearch(CHILDREN, 'd');
-  page.childrenClickOptionStoreNameTwo();
+  selectChoose(CHILDREN, LD.storeNameTwo);
   andThen(() => {
     let location = store.find('location', LD.idOne);
     assert.equal(location.get('children').get('length'), 1);
@@ -1015,7 +987,7 @@ test('starting with multiple children, can remove all children (while not popula
   response.results.push(LF.get(LD.idThree, LD.storeNameThree));
   xhr(location_endpoint, 'GET', null, {}, 200, response);
   selectSearch(CHILDREN, 'g');
-  page.childrenClickOptionStoreNameThree();
+  selectChoose(CHILDREN, LD.storeNameThree);
   page.nameFillIn(LD.storeNameTwo);
   andThen(() => {
     let location = store.find('location', LD.idOne);
@@ -1031,18 +1003,6 @@ test('starting with multiple children, can remove all children (while not popula
   });
 });
 
-test('clicking and typing into power select for location will not filter if spacebar pressed', (assert) => {
-  clearxhr(list_xhr);
-  page.visitDetail();
-  page.childrenClickDropdown();
-  selectSearch(CHILDREN, ' ');
-  andThen(() => {
-    assert.equal(page.childrenSelected.indexOf(LD.storeNameTwo), 2);
-    assert.equal(page.childrenOptionLength, 1);
-    assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
-  });
-});
-
 /*PARENTS*/
 test('clicking and typing into power select for location will fire off xhr request for all location parents', (assert) => {
   page.visitDetail();
@@ -1055,15 +1015,8 @@ test('clicking and typing into power select for location will fire off xhr reque
   let location_endpoint = `${LOCATIONS_URL}get-level-parents/${LLD.idOne}/${LD.idOne}/location__icontains=a/`;
   let response = { 'results': [LF.get_no_related(LD.unusedId, LD.apple), LF.get_no_related(LD.idParent, LD.storeNameParent), LF.get_no_related(LD.idParentTwo, LD.storeNameParentTwo)]};
   xhr(location_endpoint, 'GET', null, {}, 200, response);
-  page.parentsClickDropdown();
   selectSearch(PARENTS, 'a');
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.parentsSelected.indexOf(LD.storeNameParent), 2);
-    assert.equal(page.parentsOptionLength, 3);
-    assert.equal(find(`${options} > li:eq(1)`).text().trim(), LD.storeNameParent);
-  });
-  page.parentsClickApple();
+  selectChoose(PARENTS, LD.apple);
   andThen(() => {
     let location = store.find('location', LD.idOne);
     assert.equal(location.get('parents').get('length'), 3);
@@ -1074,11 +1027,6 @@ test('clicking and typing into power select for location will fire off xhr reque
     assert.equal(page.parentsTwoSelected.indexOf(LD.storeNameParentTwo), 2);
     assert.equal(page.parentsThreeSelected.indexOf(LD.apple), 2);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
-  });
-  selectSearch(PARENTS, '');
-  andThen(() => {
-    assert.equal(page.parentsOptionLength, 1);
-    assert.equal(find(`${options} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
   });
   selectSearch(PARENTS, 'a');
   andThen(() => {
@@ -1097,21 +1045,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   let response_2 = {'results': [LF.get_no_related('abc123', LD.boondocks)]};
   xhr(location_endpoint_2, 'GET', null, {}, 200, response_2);
   selectSearch(PARENTS, 'BooNdocks');
-  andThen(() => {
-    assert.equal(page.parentsSelected.indexOf(LD.storeNameParent), 2);
-    assert.equal(page.parentsOptionLength, 1);
-    assert.equal(find(`${options} > li:eq(0)`).text().trim(), LD.boondocks);
-    let location = store.find('location', LD.idOne);
-    assert.equal(location.get('parents').get('length'), 3);
-    assert.equal(location.get('parents').objectAt(0).get('name'), LD.storeNameParent);
-    assert.equal(location.get('parents').objectAt(1).get('name'), LD.storeNameParentTwo);
-    assert.equal(location.get('parents').objectAt(2).get('name'), LD.apple);
-    assert.equal(page.parentsSelected.indexOf(LD.storeNameParent), 2);
-    assert.equal(page.parentsTwoSelected.indexOf(LD.storeNameParentTwo), 2);
-    assert.equal(page.parentsThreeSelected.indexOf(LD.apple), 2);
-    assert.ok(location.get('isDirtyOrRelatedDirty'));
-  });
-  page.parentsClickOptionOne();
+  selectChoose(PARENTS, LD.boondocks);
   andThen(() => {
     let location = store.find('location', LD.idOne);
     assert.equal(location.get('parents').get('length'), 4);
@@ -1257,7 +1191,7 @@ test('clicking and typing into power select for location will not filter if spac
   andThen(() => {
     assert.equal(page.parentsSelected.indexOf(LD.storeNameParent), 2);
     assert.equal(page.parentsOptionLength, 1);
-    assert.equal(find(`${options} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
   });
 });
 

@@ -1,10 +1,8 @@
 import Ember from 'ember';
 import PageObject from 'bsrs-ember/tests/page-object';
 let { value, visitable, fillable, clickable, hasClass, count, text } = PageObject;
-import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import { POWER_SELECT_OPTIONS } from 'bsrs-ember/tests/helpers/power-select-terms';
 
-
-const DROPDOWN = options;
 const START_DTD_SELECT = '.t-settings-dt_start-select .ember-basic-dropdown-trigger';
 
 var SettingsPage = PageObject.create({
@@ -39,7 +37,7 @@ var SettingsPage = PageObject.create({
   titleText: text('.t-settings-title'),
   startDtdInput: text(START_DTD_SELECT),
   startDtdClickDropdown: clickable(START_DTD_SELECT),
-  startDtdClickOne: clickable('.ember-power-select-option:eq(1)', { scope: DROPDOWN }),
+  startDtdClickOne: clickable('.ember-power-select-option:eq(1)', { scope: POWER_SELECT_OPTIONS }),
   startDtdTextOne: text('.ember-power-select-option:eq(1)'),
 
   deleteDropdownClick: clickable('.t-dropdown-delete'),

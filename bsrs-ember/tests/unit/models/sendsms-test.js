@@ -18,13 +18,13 @@ moduleFor('model:sendsms', 'Unit | Model | sendSms', {
   }
 });
 
-test('dirty test | message', assert => {
+test('dirty test | body', assert => {
   assert.equal(sendSms.get('isDirty'), false);
   assert.equal(sendSms.get('isDirtyOrRelatedDirty'), false);
-  sendSms.set('message', 'wat');
+  sendSms.set('body', 'wat');
   assert.equal(sendSms.get('isDirty'), true);
   assert.equal(sendSms.get('isDirtyOrRelatedDirty'), true);
-  sendSms.set('message', '');
+  sendSms.set('body', '');
   assert.equal(sendSms.get('isDirty'), false);
   assert.equal(sendSms.get('isDirtyOrRelatedDirty'), false);
 });
@@ -97,14 +97,14 @@ test('rollback - recipient', assert => {
 });
 
 test('rollback - primitive', assert => {
-  assert.equal(sendSms.get('message'), undefined);
+  assert.equal(sendSms.get('body'), undefined);
   assert.equal(sendSms.get('isDirty'), false);
   assert.equal(sendSms.get('isDirtyOrRelatedDirty'), false);
-  sendSms.set('message', 'wat');
+  sendSms.set('body', 'wat');
   assert.equal(sendSms.get('isDirty'), true);
   assert.equal(sendSms.get('isDirtyOrRelatedDirty'), true);
   sendSms.rollback();
-  assert.equal(sendSms.get('message'), undefined);
+  assert.equal(sendSms.get('body'), undefined);
   assert.equal(sendSms.get('isDirty'), false);
   assert.equal(sendSms.get('isDirtyOrRelatedDirty'), false);
 });

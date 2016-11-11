@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import { create, visitable, fillable, text, value, clickable } from 'ember-cli-page-object';
-import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BASEURLS, { AUTOMATION_URL, AUTOMATION_LIST_URL } from 'bsrs-ember/utilities/urls';
 import AD from 'bsrs-ember/vendor/defaults/automation';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
@@ -9,7 +8,6 @@ import CD from 'bsrs-ember/vendor/defaults/criteria';
 
 const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
 const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
-const DROPDOWN = options;
 const AF_SELECT_ONE = '.t-automation-pf-select:eq(0) .ember-basic-dropdown-trigger';
 const ACTION_ASSIGNEE_SELECT_ONE = '.t-automation-action-assignee-select:eq(0)';
 const ACTION_PRIORITY_SELECT_ONE = '.t-ticket-priority-select:eq(0)';

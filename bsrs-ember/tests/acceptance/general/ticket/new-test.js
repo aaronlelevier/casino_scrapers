@@ -20,7 +20,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/tickets';
 import moment from 'moment';
-import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import { POWER_SELECT_OPTIONS, TICKET_ASSIGNEE_SELECT, TICKET_STATUS_SELECT, TICKET_PRIORITY_SELECT, TICKET_LOCATION_SELECT } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BASEURLS, { TICKETS_URL, LOCATIONS_URL, PEOPLE_URL, CATEGORIES_URL, DT_URL } from 'bsrs-ember/utilities/urls';
 
 const BASE_URL = BASEURLS.base_tickets_url;
@@ -32,7 +32,6 @@ const LETTER_B = {keyCode: 66};
 const BACKSPACE = {keyCode: 8};
 const SPACEBAR = {keyCode: 32};
 const LOCATION = '.t-ticket-location-select .ember-basic-dropdown-trigger';
-const DROPDOWN = options;
 const ASSIGNEE = '.t-ticket-assignee-select .ember-basic-dropdown-trigger';
 const CC = '.t-ticket-cc-select .ember-basic-dropdown-trigger';
 const CC_SEARCH = '.ember-power-select-trigger-multiple-input';
@@ -63,12 +62,12 @@ test('validation works and when hit save, we do same post', (assert) => {
   });
   click('.t-add-new');
   ajax(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
-  selectSearch('.t-ticket-assignee-select', 'b');
-  selectChoose('.t-ticket-assignee-select', PD.fullnameBoy2);
-  selectChoose('.t-ticket-status-select', TD.statusOne);
-  selectChoose('.t-ticket-priority-select', TD.priorityOne);
-  selectSearch('.t-ticket-location-select', '6');
-  selectChoose('.t-ticket-location-select', LD.storeNameTwo);
+  selectSearch(TICKET_ASSIGNEE_SELECT, 'b');
+  selectChoose(TICKET_ASSIGNEE_SELECT, PD.fullnameBoy2);
+  selectChoose(TICKET_STATUS_SELECT, TD.statusOne);
+  selectChoose(TICKET_PRIORITY_SELECT, TD.priorityOne);
+  selectSearch(TICKET_LOCATION_SELECT, '6');
+  selectChoose(TICKET_LOCATION_SELECT, LD.storeNameTwo);
   // page.locationClickOptionTwo();
   let top_level_categories_endpoint = `${CATEGORIES_URL}parents/`;
   xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
@@ -349,9 +348,9 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
   fillIn(SEARCH, 'b');
   andThen(() => {
     assert.equal(page.assigneeInput, t(GLOBALMSG.assignee_power_select));
-    assert.equal(page.assigneeOptionLength, 10);
-    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-    assert.equal(find(`${DROPDOWN} > li:eq(1)`).text().trim(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
+    assert.equal(page.assigneeOptionLength, 10, 'option length 10');
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(1)`).text().trim(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
   });
   page.assigneeClickOptionOne();
   andThen(() => {
@@ -367,8 +366,8 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
   andThen(() => {
     assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
     assert.equal(page.assigneeOptionLength, 10);
-    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-    assert.equal(find(`${DROPDOWN} > li:eq(1)`).text().trim(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(1)`).text().trim(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
   });
   page.assigneeClickOptionTwo();
   andThen(() => {
@@ -384,7 +383,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
   fillIn(SEARCH, 'Boy1');
   andThen(() => {
     assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
-    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
   });
   page.assigneeClickOptionOne();
   andThen(() => {
@@ -418,7 +417,7 @@ test('location new component shows location for ticket and will fire off xhr to 
   page.locationClickDropdown();
   fillIn(SEARCH, '6');
   andThen(() => {
-    assert.equal(find(`${DROPDOWN} > li`).length, 2);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li`).length, 2);
   });
   page.locationClickOptionTwo();
   andThen(() => {
@@ -440,7 +439,7 @@ test('removes location dropdown on search to change location', (assert) => {
   });
   fillIn(SEARCH, ' ');
   andThen(() => {
-    assert.equal(find(`${DROPDOWN}`).text().trim(), GLOBALMSG.power_search);
+    assert.equal(find(`${POWER_SELECT_OPTIONS}`).text().trim(), GLOBALMSG.power_search);
   });
   fillIn(SEARCH, '6');
   andThen(() => {
@@ -463,7 +462,7 @@ test('clicking and typing into power select for people will fire off xhr request
   fillIn(`${CC_SEARCH}`, 'a');
   andThen(() => {
     assert.equal(page.ccOptionLength, 1);
-    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), PD.donald);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), PD.donald);
   });
   page.ccClickDonald();
   andThen(() => {
@@ -477,13 +476,13 @@ test('clicking and typing into power select for people will fire off xhr request
   fillIn(`${CC_SEARCH}`, '');
   andThen(() => {
     assert.equal(page.ccOptionLength, 1);
-    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
   });
   fillIn(`${CC_SEARCH}`, 'a');
   andThen(() => {
     assert.equal(page.ccSelected.indexOf(PD.donald), 2);
     assert.equal(page.ccOptionLength, 1);
-    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), PD.donald);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), PD.donald);
     let ticket = store.findOne('ticket');
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
@@ -495,7 +494,7 @@ test('clicking and typing into power select for people will fire off xhr request
   andThen(() => {
     assert.equal(page.ccSelected.indexOf(PD.donald), 2);
     assert.equal(page.ccOptionLength, 10);
-    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
     let ticket = store.findOne('ticket');
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
@@ -525,7 +524,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
   fillIn(`${CC_SEARCH}`, 'a');
   andThen(() => {
     assert.equal(page.ccOptionLength, 1);
-    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), PD.donald);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), PD.donald);
   });
   page.ccClickDonald();
   andThen(() => {
@@ -625,12 +624,12 @@ test('adding a new ticket should allow for another new ticket to be created afte
     patchRandom(counter);
   });
   click('.t-add-new');
-  selectSearch('.t-ticket-assignee-select', 'b');
-  selectChoose('.t-ticket-assignee-select', PD.fullnameBoy2);
-  selectChoose('.t-ticket-status-select', TD.statusOne);
-  selectChoose('.t-ticket-priority-select', TD.priorityOne);
-  selectSearch('.t-ticket-location-select', '6');
-  selectChoose('.t-ticket-location-select', LD.storeNameTwo);
+  selectSearch(TICKET_ASSIGNEE_SELECT, 'b');
+  selectChoose(TICKET_ASSIGNEE_SELECT, PD.fullnameBoy2);
+  selectChoose(TICKET_STATUS_SELECT, TD.statusOne);
+  selectChoose(TICKET_PRIORITY_SELECT, TD.priorityOne);
+  selectSearch(TICKET_LOCATION_SELECT, '6');
+  selectChoose(TICKET_LOCATION_SELECT, LD.storeNameTwo);
   // page.locationClickOptionTwo();
   let top_level_categories_endpoint = `${CATEGORIES_URL}parents/`;
   xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());

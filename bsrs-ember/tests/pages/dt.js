@@ -6,9 +6,7 @@ import BASEURLS from 'bsrs-ember/utilities/urls';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import FD from 'bsrs-ember/vendor/defaults/field';
 import OD from 'bsrs-ember/vendor/defaults/option';
-import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
-const DROPDOWN = options;
 const BASE_URL = BASEURLS.base_dtd_url;
 const DTDS_URL = `${BASE_URL}`;
 const NEW_URL = `${BASE_URL}/new/1`;

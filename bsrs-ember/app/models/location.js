@@ -47,6 +47,7 @@ var LocationModel = Model.extend(CopyMixin, ParentMixin, ChildrenMixin, Location
     set(this, 'location_phonenumbers_fks', get(this, 'location_phonenumbers_fks') || []);
     set(this, 'location_emails_fks', get(this, 'location_emails_fks') || []);
     set(this, 'location_addresses_fks', get(this, 'location_addresses_fks') || []);
+    set(this, 'tickets', get(this, 'tickets') || []);
   },
   simpleStore: Ember.inject.service(),
   name: attr(''),

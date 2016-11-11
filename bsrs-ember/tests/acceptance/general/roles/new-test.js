@@ -21,6 +21,7 @@ import page from 'bsrs-ember/tests/pages/role';
 import personPage from 'bsrs-ember/tests/pages/person';
 import inputCurrencyPage from 'bsrs-ember/tests/pages/input-currency';
 import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
+import { LLEVEL_SELECT } from 'bsrs-ember/tests/helpers/power-select-terms';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -120,8 +121,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     assert.notOk(page.nameValidationErrorVisible);
   });
   page.nameFill(RD.nameOne);
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
+  selectChoose(LLEVEL_SELECT, LLD.nameCompany);
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
     assert.notOk(page.nameValidationErrorVisible);
@@ -307,8 +307,7 @@ test('adding a new role should allow for another new role to be created after th
   page.visit();
   click('.t-add-new');
   fillIn('.t-role-name', RD.nameOne);
-  page.locationLevelClickDropdown();
-  page.locationLevelClickOptionOne();
+  selectChoose(LLEVEL_SELECT, LLD.nameCompany);
   ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
   page.categoryClickDropdown();
   page.categoryClickOptionOneEq();

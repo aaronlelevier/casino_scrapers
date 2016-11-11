@@ -312,12 +312,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   let response = {'results': [LF.get_no_related(LD.unusedId, LD.apple)]};
   ajax(location_endpoint, 'GET', null, {}, 201, response);
   selectSearch(CHILDREN, 'a');
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_NEW_URL);
-    assert.equal(page.childrenOptionLength, 1);
-    assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), LD.apple);
-  });
-  page.childrenClickApple();
+  selectChoose(CHILDREN, LD.apple);
   andThen(() => {
     let location = store.find('location', UUID.value);
     assert.equal(location.get('children').get('length'), 1);
@@ -335,16 +330,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   let response_2 = {'results': [LF.get_no_related('abc123', LD.boondocks)]};
   xhr(location_endpoint_2, 'GET', null, {}, 201, response_2);
   selectSearch(CHILDREN, 'BooNdocks');
-  andThen(() => {
-    assert.equal(page.childrenSelected.indexOf(LD.apple), 2);
-    assert.equal(page.childrenOptionLength, 1);
-    assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), LD.boondocks);
-    let location = store.find('location', UUID.value);
-    assert.equal(location.get('children').get('length'), 1);
-    assert.equal(location.get('children').objectAt(0).get('name'), LD.apple);
-    assert.ok(location.get('isDirtyOrRelatedDirty'));
-  });
-  page.childrenClickOptionOne();
+  selectChoose(CHILDREN, LD.boondocks);
   andThen(() => {
     let location = store.find('location', UUID.value);
     assert.equal(location.get('children').get('length'), 2);
@@ -376,19 +362,14 @@ test('can add and remove all children (while not populating options) and add bac
   let response = {'results': [LF.get_no_related(LD.unusedId, LD.apple)]};
   ajax(location_endpoint, 'GET', null, {}, 201, response);
   selectSearch(CHILDREN, 'a');
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_NEW_URL);
-    assert.equal(page.childrenOptionLength, 1);
-    assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), LD.apple);
-  });
-  page.childrenClickApple();
+  selectChoose(CHILDREN, LD.apple);
   //search specific children
   let location_endpoint_2 = `${LOCATIONS_URL}get-level-children/${LLD.idOne}/${UUID.value}/location__icontains=BooNdocks/`;
   let response_2 = LF.list_power_select();
   response_2.results.push(LF.get('abc123', LD.boondocks));
   xhr(location_endpoint_2, 'GET', null, {}, 201, response_2);
   selectSearch(CHILDREN, 'BooNdocks');
-  page.childrenClickOptionOne();
+  selectChoose(CHILDREN, LD.boondocks);
   page.childrenTwoRemove();
   andThen(() => {
     let location = store.find('location',UUID.value);
@@ -401,9 +382,9 @@ test('can add and remove all children (while not populating options) and add bac
     assert.equal(location.get('children').get('length'), 0);
   });
   selectSearch(CHILDREN, 'a');
-  page.childrenClickApple();
+  selectChoose(CHILDREN, LD.apple);
   selectSearch(CHILDREN, 'BooNdocks');
-  page.childrenClickOptionOne();
+  selectChoose(CHILDREN, LD.boondocks);
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
   ajax(LOCATIONS_URL, 'POST', JSON.stringify(children_payload), {}, 201);

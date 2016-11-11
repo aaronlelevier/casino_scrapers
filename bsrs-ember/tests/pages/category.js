@@ -2,7 +2,7 @@ import PageObject from 'bsrs-ember/tests/page-object';
 import BASEURLS from 'bsrs-ember/utilities/urls';
 import CD from 'bsrs-ember/vendor/defaults/category';
 let { visitable, fillable, clickable, count, text, value, hasClass } = PageObject;
-import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import { POWER_SELECT_OPTIONS, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
 
 
 const BASE_URL = BASEURLS.base_categories_url;
@@ -35,9 +35,9 @@ var CategoryPage = PageObject.create({
   categorySelected: text(`${CATEGORY_ONE}`),
   categoryOneRemove: clickable(`${CATEGORY_ONE} > .ember-power-select-multiple-remove-btn`),
   categoryTwoSelected: text(`${CATEGORY_TWO}`),
-  categoryClickOptionOneEq: clickable(`${options} > .ember-power-select-option:eq(0)`),
-  categoryClickOptionTwoEq: clickable(`${options} > .ember-power-select-option:eq(1)`),
-  categoryOptionLength: count(`${options} > li`),
+  categoryClickOptionOneEq: clickable(`${POWER_SELECT_OPTIONS} > .ember-power-select-option:eq(0)`),
+  categoryClickOptionTwoEq: clickable(`${POWER_SELECT_OPTIONS} > .ember-power-select-option:eq(1)`),
+  categoryOptionLength: count(`${POWER_SELECT_OPTIONS} > li`),
   categoriesSelected: count(CATEGORIES),
   
   //validation

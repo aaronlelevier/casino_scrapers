@@ -32,7 +32,7 @@ import locationPage from 'bsrs-ember/tests/pages/location';
 import page from 'bsrs-ember/tests/pages/person';
 import inputCurrencyPage from 'bsrs-ember/tests/pages/input-currency';
 import random from 'bsrs-ember/models/random';
-import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import { POWER_SELECT_OPTIONS, PERSON_LOCATION_SELECT, PERSON_STATUS_SELECT, PERSON_ROLE_SELECT } from 'bsrs-ember/tests/helpers/power-select-terms';
 import { LOCALE_SELECT } from 'bsrs-ember/tests/helpers/const-names';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
 import BASEURLS, { PEOPLE_URL, PEOPLE_LIST_URL, ROLES_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
@@ -42,8 +42,6 @@ const POWER_SELECT_LENGTH = 10;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const BASE_LOCATION_URL = BASEURLS.base_locations_url;
 const DETAIL_URL = `${BASE_PEOPLE_URL}/${PD.idOne}`;
-const LOCATION = '.t-person-locations-select';
-const LOCATION_DROPDOWN = options;
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 var store, list_xhr, people_detail_data, detail_xhr, url, translations, role_route_data_endpoint;
@@ -95,7 +93,6 @@ test('username backend validation', (assert) => {
 // can change locale to inactive for person and save (power select)
 test('when you deep link to the person detail view you get bound attrs', (assert) => {
   page.visitDetail();
-  page.localeClickDropdown();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     var person = store.find('person', PD.idOne);
@@ -120,36 +117,12 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     assert.equal(find('.t-input-multi-phone').find('input').length, 2);
     assert.equal(find('.t-input-multi-phone').find('input:eq(0)').val(), PND.numberOne);
     assert.equal(find('.t-input-multi-phone').find('input:eq(1)').val(), PND.numberTwo);
-
-    // assert.equal(find('.t-input-multi-address').find('.t-address-group').length, 2);
-    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type').val(), ATD.officeId);
-    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type option:selected').text(), t(ATD.officeName));
-    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-address').val(), AD.streetOne);
-    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-city').val(), AD.cityOne);
-    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-state').val(), AD.stateTwo);
-    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-postal-code').val(), AD.zipOne);
-    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-country').val(), AD.countryOne);
-    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type').val(), ATD.shippingId);
-    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type option:selected').text(), t(ATD.shippingName));
-    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-address').val(), AD.streetTwo);
-    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-city').val(), AD.cityTwo);
-    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-state').val(), AD.stateTwo);
-    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), AD.zipTwo);
-    // assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), AD.countryTwo);
     assert.equal(page.statusInput, t(SD.activeName));
     assert.equal(page.localeInput, PD.localeFull);
-    assert.equal(page.localeOptionLength, 2);
-    assert.equal(page.localeOne, PD.localeFull);
-    assert.equal(page.localeTwo, PD.localeTwoFull);
     assert.equal(page.roleInput, RD.nameOne);
     assert.equal(find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol);
   });
-  const username_response = {
-    'count': 0,
-    'next': null,
-    'previous': null,
-    'results': []
-  };
+  const username_response = { 'count': 0, 'next': null, 'previous': null, 'results': [] };
   xhr(`${PEOPLE_URL}?username=${PD_PUT.username}`, 'get', null, {}, 200, username_response);
   fillIn('.t-person-username', PD_PUT.username);
   fillIn('.t-person-first-name', PD_PUT.first_name);
@@ -699,7 +672,7 @@ test('when you change a related role it will be persisted correctly', (assert) =
   let people_detail_data_two = PF.detail(PD.idOne);
   people_detail_data_two.role = RD.idTwo;
   ajax(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
-  selectChoose('.t-person-role-select', RD.nameTwo);
+  selectChoose(PERSON_ROLE_SELECT, RD.nameTwo);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
   });
@@ -728,7 +701,7 @@ test('when you deep link to the person detail view you can alter the role and ro
   let people_detail_data_two = PF.detail(PD.idOne);
   people_detail_data_two.role = RD.idTwo;
   ajax(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, people_detail_data_two);
-  selectChoose('.t-person-role-select', RD.nameTwo);
+  selectChoose(PERSON_ROLE_SELECT, RD.nameTwo);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
     assert.equal(page.roleInput, RD.nameTwo);
@@ -775,7 +748,7 @@ test('when you deep link to the person detail view you can alter the role and ch
       assert.equal(page.roleInput, RD.nameOne);
       assert.equal(person.get('role.id'), RD.idOne);
     });
-    selectChoose('.t-person-role-select', RD.nameTwo);
+    selectChoose(PERSON_ROLE_SELECT, RD.nameTwo);
     andThen(() => {
       assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
       assert.equal(page.roleInput, RD.nameTwo);
@@ -791,7 +764,7 @@ test('when you deep link to the person detail view you can alter the role and ch
       page.middleInitialFill(PD.middle_initial);
       page.lastNameFill(PD.last_name);
       xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_three);
-      selectChoose('.t-person-role-select', RD.nameOne);
+      selectChoose(PERSON_ROLE_SELECT, RD.nameOne);
       andThen(() => {
         assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idOne);
         assert.equal(page.roleInput, RD.nameOne);
@@ -827,7 +800,7 @@ test('when you change a related role it will change the related locations as wel
   clearxhr(detail_xhr);
   let people_detail_data_two = PF.detail(PD.idOne);
   xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
-  selectChoose('.t-person-role-select', RD.nameTwo);
+  selectChoose(PERSON_ROLE_SELECT, RD.nameTwo);
   andThen(() => {
     let person = store.find('person', PD.idOne);
     assert.equal(person.get('locationsIsDirty'), false);
@@ -849,34 +822,32 @@ test('when you change a related role it will change the related locations as wel
   people_list_data_mod.results[0].role = RD.idTwo;
   list_xhr = xhr(PEOPLE_URL + '?page=1', 'GET', null, {}, 200, people_list_data_mod);
   page.visitDetail();
-  let url = PREFIX + DETAIL_URL + '/';
-  let role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
-  let payload = PF.put({id: PD.id, role: role.id, locations: []});
-  xhr(url,'PUT',JSON.stringify(payload),{},200);
   andThen(() => {
     let locations_endpoint = `${LOCATIONS_URL}location__icontains=a/?location_level=${LLD.idOne}`;
     xhr(locations_endpoint, 'GET', null, {}, 200, LF.list_power_select());
-    page.locationClickDropdown();
-    fillIn(LOCATION_SEARCH, 'a');
+    selectSearch(PERSON_LOCATION_SELECT, 'a');
     andThen(() => {
       let person = store.find('person', PD.idOne);
       assert.equal(person.get('locationsIsDirty'), false);
       assert.equal(person.get('locations').get('length'), 1);
     });
-    fillIn(LOCATION_SEARCH, '');
+    selectSearch(PERSON_LOCATION_SELECT, '');
     andThen(() => {
-      assert.equal(page.locationOptionLength, 1);
-      assert.equal(find(LOCATION_DROPDOWN).text().trim(), GLOBALMSG.power_search);
+      assert.equal(find(POWER_SELECT_OPTIONS).text().trim(), GLOBALMSG.power_search);
     });
     clearxhr(detail_xhr);
     let people_detail_data_two = PF.detail(PD.idOne);
     people_detail_data_two.role = RD.idTwo;
     xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
-    selectChoose('.t-person-role-select', RD.nameTwo);
+    selectChoose(PERSON_ROLE_SELECT, RD.nameTwo);
     andThen(() => {
       let person = store.find('person', PD.idOne);
       assert.equal(person.get('role.id'), RD.idTwo);
     });
+    const url = PREFIX + DETAIL_URL + '/';
+    const role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
+    const payload = PF.put({id: PD.id, role: role.id, locations: []});
+    xhr(url,'PUT',JSON.stringify(payload),{},200);
     generalPage.save();
     andThen(() => {
       assert.equal(currentURL(), PEOPLE_LIST_URL);
@@ -896,21 +867,13 @@ test('deep link to person and clicking in the person-locations-select component 
     assert.equal(page.locationOneSelected.indexOf(LD.storeName), 2);
   });
   xhr(`${LOCATIONS_URL}location__icontains=ABC1234/?location_level=${LLD.idOne}`, 'GET', null, {}, 200, LF.list_power_select());
-  selectSearch(LOCATION, 'ABC1234');
-  selectChoose(LOCATION, `${LD.baseStoreName}4`);
+  selectSearch(PERSON_LOCATION_SELECT, 'ABC1234');
+  selectChoose(PERSON_LOCATION_SELECT, `${LD.baseStoreName}4`);
   andThen(() => {
     let person = store.find('person', PD.idOne);
     assert.equal(person.get('locations').get('length'), 2);
     assert.equal(page.locationOneSelected.indexOf(LD.storeName), 2);
     assert.equal(page.locationTwoSelected.indexOf(LD.storeNameFive), 2);
-    assert.ok(person.get('isDirtyOrRelatedDirty'));
-  });
-  page.locationClickDropdown();
-  fillIn(LOCATION_SEARCH, '');
-  andThen(() => {
-    assert.equal(page.locationOptionLength, 1);
-    assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
-    let person = store.find('person', PD.idOne);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
   });
   let url = PREFIX + DETAIL_URL + '/';
@@ -935,8 +898,8 @@ test('can remove and add back same location', (assert) => {
   const response = LF.list_power_select();
   response.results.push(LF.get_no_related(LD.idOne, LD.storeName));
   xhr(locations_endpoint, 'GET', null, {}, 200, response);
-  fillIn(LOCATION_SEARCH, 'a');
-  page.locationClickOptionOne();
+  selectSearch(PERSON_LOCATION_SELECT, 'a');
+  selectChoose(PERSON_LOCATION_SELECT, LD.storeName);
   andThen(() => {
     let person = store.find('person', PD.idOne);
     assert.equal(person.get('locations').get('length'), 1);
@@ -967,9 +930,8 @@ test('starting with multiple locations, can remove all locations (while not popu
   let locations_endpoint = `${LOCATIONS_URL}location__icontains=a/?location_level=${LLD.idOne}`;
   const response = LF.list_power_select();
   xhr(locations_endpoint, 'GET', null, {}, 200, response);
-  page.locationClickDropdown();
-  fillIn(LOCATION_SEARCH, 'a');
-  page.locationClickOptionOneEq();
+  selectSearch(PERSON_LOCATION_SELECT, 'a');
+  selectChoose(PERSON_LOCATION_SELECT, LD.storeNameOne);
   andThen(() => {
     let person = store.find('person', PD.idOne);
     assert.equal(person.get('locations').get('length'), 1);
@@ -985,37 +947,17 @@ test('starting with multiple locations, can remove all locations (while not popu
   });
 });
 
-test('clicking and typing into power select for people will not filter if spacebar pressed', (assert) => {
-  clearxhr(list_xhr);
-  page.visitDetail();
-  fillIn(LOCATION_SEARCH, '');
-  andThen(() => {
-    assert.equal(page.locationOptionLength, 1);
-    assert.equal(find(LOCATION_DROPDOWN).text().trim(), GLOBALMSG.power_search);
-  });
-});
-
 test('when you deep link to the person detail view you can alter the locations and rolling back will reset it', (assert) => {
   clearxhr(detail_xhr);
   page.visitDetail();
   people_detail_data = PF.detail(PD.idOne);
   people_detail_data.locations = [];
-  page.locationClickDropdown();
-  andThen(() => {
-    assert.equal(page.locationOptionLength, 1);
-    assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
-    let person = store.find('person', PD.idOne);
-    assert.equal(person.get('locations').get('length'), 0);
-    var previous_location_m2m = store.find('person-location', {person_pk: PD.id});
-    assert.deepEqual(person.get('person_locations_fks'), []);
-    assert.equal(previous_location_m2m.get('length'), 0);
-  });
   xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data);
   let locations_endpoint = `${LOCATIONS_URL}location__icontains=ABC1234/?location_level=${LLD.idOne}`;
   const response = LF.list_power_select();
   xhr(locations_endpoint, 'GET', null, {}, 200, response);
-  fillIn(LOCATION_SEARCH, 'ABC1234');
-  page.locationClickOptionTwo();
+  selectSearch(PERSON_LOCATION_SELECT, 'ABC1234');
+  selectChoose(PERSON_LOCATION_SELECT, `${LD.baseStoreName}4`);
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
@@ -1052,16 +994,7 @@ test('can change status to inactive for person and save (power select)', (assert
   andThen(() => {
     assert.equal(page.statusInput, t(SD.activeName));
   });
-  page.statusClickDropdown();
-  andThen(() => {
-    assert.equal(page.statusOptionLength, 3);
-    assert.equal(page.statusOne, t(SD.activeName));
-    assert.equal(page.statusTwo, t(SD.inactiveName));
-    assert.equal(page.statusThree, t(SD.expiredName));
-    const person = store.find('person', PD.idOne);
-    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  });
-  page.statusClickOptionTwo();
+  selectChoose(PERSON_STATUS_SELECT, SD.inactiveNameTranslated);
   andThen(() => {
     const person = store.find('person', PD.idOne);
     assert.equal(person.get('status_fk'), SD.activeId);

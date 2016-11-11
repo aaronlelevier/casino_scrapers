@@ -28,7 +28,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import dtdPage from 'bsrs-ember/tests/pages/dtd';
 // import timemachine from 'vendor/timemachine';
 import moment from 'moment';
-import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import { POWER_SELECT_OPTIONS, TICKET_CC_SELECT } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BASEURLS, { TICKETS_URL, LOCATIONS_URL, PEOPLE_URL, CATEGORIES_URL, DT_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -47,9 +47,7 @@ const NUMBER_6 = {keyCode: 54};
 const SPACEBAR = {keyCode: 32};
 const BACKSPACE = {keyCode: 8};
 const LOCATION = '.t-ticket-location-select .ember-basic-dropdown-trigger';
-const DROPDOWN = options;
 const ASSIGNEE = '.t-ticket-assignee-select .ember-basic-dropdown-trigger';
-const CC = '.t-ticket-cc-select';
 const CC_SEARCH = '.ember-power-select-trigger-multiple-input';
 const SEARCH = '.ember-power-select-search input';
 const categories = '.categories-power-select-search input';
@@ -280,14 +278,9 @@ test('clicking and typing into power select for people will fire off xhr request
   });
   let PEOPLE_TICKETS_URL = `${PEOPLE_URL}person__icontains=a/`;
   xhr(PEOPLE_TICKETS_URL, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
+  selectSearch()
   page.ccClickDropdown();
   fillIn(`${CC_SEARCH}`, 'a');
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.ccSelected.indexOf(PD.first_name), 2);
-    assert.equal(page.ccOptionLength, 1);
-    // assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), PD.donald);
-  });
   page.ccClickDonald();
   andThen(() => {
     let ticket = store.find('ticket', TD.idOne);
@@ -302,14 +295,14 @@ test('clicking and typing into power select for people will fire off xhr request
   fillIn(`${CC_SEARCH}`, '');
   andThen(() => {
     assert.equal(page.ccOptionLength, 1);
-    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
   });
   fillIn(`${CC_SEARCH}`, 'a');
   andThen(() => {
     assert.equal(page.ccSelected.indexOf(PD.donald), 2);
     assert.equal(page.ccTwoSelected.indexOf(PD.first_name), 2);
     assert.equal(page.ccOptionLength, 1);
-    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), PD.donald);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), PD.donald);
     let ticket = store.find('ticket', TD.idOne);
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
@@ -323,7 +316,7 @@ test('clicking and typing into power select for people will fire off xhr request
     assert.equal(page.ccSelected.indexOf(PD.donald), 2);
     assert.equal(page.ccTwoSelected.indexOf(PD.first_name), 2);
     assert.equal(page.ccOptionLength, 10);
-    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
     let ticket = store.find('ticket', TD.idOne);
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
@@ -358,7 +351,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   });
-  removeMultipleOption(CC, PD.fullname);
+  removeMultipleOption(TICKET_CC_SELECT, PD.fullname);
   andThen(() => {
     let ticket = store.find('ticket', TD.idOne);
     assert.equal(ticket.get('cc').get('length'), 0);
@@ -367,8 +360,8 @@ test('can remove and add back same cc and save empty cc', (assert) => {
   });
   let PEOPLE_TICKETS_URL = `${PEOPLE_URL}person__icontains=a/`;
   xhr(PEOPLE_TICKETS_URL, 'GET', null, {}, 200, PF.get_for_power_select(PD.idDonald, PD.donald_first_name, PD.donald_last_name));
-  selectSearch(CC, 'a');
-  selectChoose(CC, PD.donald);
+  selectSearch(TICKET_CC_SELECT, 'a');
+  selectChoose(TICKET_CC_SELECT, PD.donald);
   andThen(() => {
     let ticket = store.find('ticket', TD.idOne);
     assert.equal(ticket.get('ticket_cc_fks').length, 1);
@@ -376,7 +369,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
-  removeMultipleOption(CC, PD.donald);
+  removeMultipleOption(TICKET_CC_SELECT, PD.donald);
   andThen(() => {
     let ticket = store.find('ticket', TD.idOne);
     assert.equal(ticket.get('cc').get('length'), 0);
@@ -384,10 +377,10 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
   xhr(`${PEOPLE_URL}person__icontains=Mel/`, 'GET', null, {}, 200, PF.get_for_power_select());
-  selectSearch(CC, 'Mel');
-  selectChoose(CC, PD.nameMel);
-  selectSearch(CC, 'a');
-  selectChoose(CC, PD.donald);
+  selectSearch(TICKET_CC_SELECT, 'Mel');
+  selectChoose(TICKET_CC_SELECT, PD.nameMel);
+  selectSearch(TICKET_CC_SELECT, 'a');
+  selectChoose(TICKET_CC_SELECT, PD.donald);
   andThen(() => {
     let ticket = store.find('ticket', TD.idOne);
     assert.equal(ticket.get('cc').get('length'), 2);
@@ -456,11 +449,11 @@ test('clicking and typing into db-multi power select for people will fire xhr if
   clearxhr(list_xhr);
   page.visitDetail();
   page.ccClickDropdown();
-  selectSearch(CC, ' ');
+  selectSearch(TICKET_CC_SELECT, ' ');
   andThen(() => {
     assert.equal(page.ccSelected.indexOf(PD.first_name), 2);
     assert.equal(page.ccOptionLength, 1);
-    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
   });
 });
 
@@ -817,8 +810,8 @@ test('location component shows location for ticket and will fire off xhr to fetc
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(page.locationInput, LD.storeName);
     assert.equal(page.locationOptionLength, 2);
-    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), LD.storeNameFour);
-    assert.equal(find(`${DROPDOWN} > li:eq(1)`).text().trim(), LD.storeNameTwo);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), LD.storeNameFour);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(1)`).text().trim(), LD.storeNameTwo);
   });
   page.locationClickOptionTwo();
   andThen(() => {
@@ -828,14 +821,14 @@ test('location component shows location for ticket and will fire off xhr to fetc
   fillIn(`${SEARCH}`, '');
   andThen(() => {
     assert.equal(page.locationOptionLength, 1);
-    assert.equal(find(`${DROPDOWN}`).text().trim(), GLOBALMSG.power_search);
+    assert.equal(find(`${POWER_SELECT_OPTIONS}`).text().trim(), GLOBALMSG.power_search);
   });
   fillIn(`${SEARCH}`, '6');
   andThen(() => {
     assert.equal(page.locationInput, LD.storeNameTwo);
     assert.equal(page.locationOptionLength, 2);
-    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), LD.storeNameFour);
-    assert.equal(find(`${DROPDOWN} > li:eq(1)`).text().trim(), LD.storeNameTwo);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), LD.storeNameFour);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(1)`).text().trim(), LD.storeNameTwo);
   });
   page.locationClickOptionTwo();
   andThen(() => {
@@ -855,7 +848,7 @@ test('location component shows location for ticket and will fire off xhr to fetc
   andThen(() => {
     assert.equal(page.locationInput, LD.storeNameTwo);
     assert.equal(page.locationOptionLength, 1);
-    assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), LD.storeNameThree);
+    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), LD.storeNameThree);
   });
   page.locationClickIdThree();
   andThen(() => {
@@ -891,7 +884,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
   await fillIn(`${SEARCH}`, 'b');
   assert.equal(page.assigneeInput, PD.fullname);
   assert.equal(page.assigneeOptionLength, 10);
-  assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+  assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
   await page.assigneeClickOptionOne();
   assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
   await page.assigneeClickDropdown();
@@ -901,7 +894,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
   await fillIn(`${SEARCH}`, 'b');
   assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
   assert.equal(page.assigneeOptionLength, 10);
-  assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+  assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
   await page.assigneeClickOptionTwo();
   assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
   ticket = store.find('ticket', TD.idOne);
@@ -917,7 +910,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
   await fillIn(`${SEARCH}`, 'Boy1');
   assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
   assert.equal(page.assigneeOptionLength, 10);
-  assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+  assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
   await page.assigneeClickOptionOne();
   assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
   ticket = store.find('ticket', TD.idOne);
@@ -941,7 +934,7 @@ test('clicking and typing into db-fetch power select for people will not fire xh
   await page.assigneeClickDropdown();
   await fillIn(`${SEARCH}`, ' ');
   assert.equal(page.assigneeOptionLength, 1);
-  assert.equal(find(`${DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
+  assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
 });
 
 /* OTHER */

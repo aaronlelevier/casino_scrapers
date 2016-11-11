@@ -1,7 +1,6 @@
 import PageObject from 'bsrs-ember/tests/page-object';
 let { text, visitable, fillable, clickable, count, hasClass } = PageObject;
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
-import { options, multiple_options } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BASEURLS, { LOCATION_LEVELS_URL } from 'bsrs-ember/utilities/urls';
 
 

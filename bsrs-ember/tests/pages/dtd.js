@@ -6,9 +6,8 @@ import BASEURLS from 'bsrs-ember/utilities/urls';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import FD from 'bsrs-ember/vendor/defaults/field';
 import OD from 'bsrs-ember/vendor/defaults/option';
-import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import { POWER_SELECT_OPTIONS } from 'bsrs-ember/tests/helpers/power-select-terms';
 
-const DROPDOWN = options;
 const BASE_URL = BASEURLS.base_dtd_url;
 const DTDS_URL = `${BASE_URL}`;
 const NEW_URL = `${BASE_URL}/new/1`;
@@ -50,11 +49,11 @@ var DTDPage = PageObject.create({
   destinationInput: text(DESTINATION),
   destinationClickDropdownOne: clickable(`${DESTINATION}:eq(0)`),
   destinationClickDropdownTwo: clickable(`${DESTINATION}:eq(1)`),
-  // destinationClickOptionOne: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${PD.name})`),
-  destinationClickOptionOne: clickable(`.ember-power-select-option:eq(0)`, { scope: DROPDOWN }),
-  destinationClickOptionTwo: clickable(`.ember-power-select-option:eq(1)`, { scope: DROPDOWN }),
-  // destinationClickIdThree: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${PD.storeNameThree})`),
-  // destinationOptionLength: count('li', { scope: DROPDOWN }),
+  // destinationClickOptionOne: clickable(`${POWER_SELECT_OPTIONS} > .ember-power-select-option:contains(${PD.name})`),
+  destinationClickOptionOne: clickable(`.ember-power-select-option:eq(0)`, { scope: POWER_SELECT_OPTIONS }),
+  destinationClickOptionTwo: clickable(`.ember-power-select-option:eq(1)`, { scope: POWER_SELECT_OPTIONS }),
+  // destinationClickIdThree: clickable(`${POWER_SELECT_OPTIONS} > .ember-power-select-option:contains(${PD.storeNameThree})`),
+  // destinationOptionLength: count('li', { scope: POWER_SELECT_OPTIONS }),
   destinationSearch: fillable('.ember-power-select-search > input'),
 
   // Link 2
@@ -103,8 +102,8 @@ var DTDPage = PageObject.create({
   // noteTypeLength: count('.t-dtd-note_type'),
   noteTypeInput: text('.t-dtd-note_type'),
   noteTypeClickDropdown: clickable('.t-dtd-note_type .ember-basic-dropdown-trigger'),
-  noteTypeClickOptionTwo: clickable(`.ember-power-select-option:contains(${DTD.noteTypeTwo})`, { scope: DROPDOWN }),
-  noteTypeClickOptionTwoValue: clickable(`.ember-power-select-option:contains(${DTD.noteTypeTwoValue})`, { scope: DROPDOWN }),
+  noteTypeClickOptionTwo: clickable(`.ember-power-select-option:contains(${DTD.noteTypeTwo})`, { scope: POWER_SELECT_OPTIONS }),
+  noteTypeClickOptionTwoValue: clickable(`.ember-power-select-option:contains(${DTD.noteTypeTwoValue})`, { scope: POWER_SELECT_OPTIONS }),
 
 
   fieldLabelCount: count('.t-dtd-field-label'),
@@ -115,11 +114,11 @@ var DTDPage = PageObject.create({
   fieldLabelOneFillin: fillable('.t-dtd-field-label:eq(0)'),
   fieldTypeOne: text('.t-dtd-field-type:eq(0)'),
   fieldTypeOneClickDropdown: clickable('.t-dtd-field-type .ember-basic-dropdown-trigger'),
-  fieldTypeOneClickOptionTwo: clickable(`.ember-power-select-option:contains(${FD.typeTwo})`, { scope: DROPDOWN }),
-  fieldTypeOneClickOptionThree: clickable(`.ember-power-select-option:contains(${FD.typeThree})`, { scope: DROPDOWN }),
-  fieldTypeOneClickOptionFourTranslated: clickable(`.ember-power-select-option:contains(${FD.typeFour})`, { scope: DROPDOWN }),
-  fieldTypeOneClickOptionFour: clickable(`.ember-power-select-option:contains(${FD.typeFourValue})`, { scope: DROPDOWN }),
-  fieldTypeOneClickOptionSix: clickable(`.ember-power-select-option:contains(${FD.typeSix})`, { scope: DROPDOWN }),
+  fieldTypeOneClickOptionTwo: clickable(`.ember-power-select-option:contains(${FD.typeTwo})`, { scope: POWER_SELECT_OPTIONS }),
+  fieldTypeOneClickOptionThree: clickable(`.ember-power-select-option:contains(${FD.typeThree})`, { scope: POWER_SELECT_OPTIONS }),
+  fieldTypeOneClickOptionFourTranslated: clickable(`.ember-power-select-option:contains(${FD.typeFour})`, { scope: POWER_SELECT_OPTIONS }),
+  fieldTypeOneClickOptionFour: clickable(`.ember-power-select-option:contains(${FD.typeFourValue})`, { scope: POWER_SELECT_OPTIONS }),
+  fieldTypeOneClickOptionSix: clickable(`.ember-power-select-option:contains(${FD.typeSix})`, { scope: POWER_SELECT_OPTIONS }),
   fieldRequiredOneNotChecked: () => Ember.$('.t-dtd-field-required:eq(0)').is(':not(:checked)'),
   fieldRequiredOneChecked: () => Ember.$('.t-dtd-field-required:eq(0)').is(':checked'),
   fieldRequiredOneClick: clickable('.t-dtd-field-required:eq(0)'),
@@ -131,9 +130,9 @@ var DTDPage = PageObject.create({
   fieldLabelTwoFillin: fillable('.t-dtd-field-label:eq(1)'),
   fieldTypeTwo: text('.t-dtd-field-type:eq(1)'),
   fieldTypeTwoClickDropdown: clickable('.t-dtd-field-type:eq(1) .ember-basic-dropdown-trigger'),
-  fieldTypeTwoClickOptionTwo: clickable(`.ember-power-select-option:contains(${FD.typeTwoValue})`, { scope: DROPDOWN }),
-  // fieldTypeTwoClickOptionTwoValue: clickable(`.ember-power-select-option:contains(${FD.typeTwoValue})`, { scope: DROPDOWN }),
-  fieldTypeTwoClickOptionFour: clickable(`.ember-power-select-option:contains(${FD.typeFourValue})`, { scope: DROPDOWN }),
+  fieldTypeTwoClickOptionTwo: clickable(`.ember-power-select-option:contains(${FD.typeTwoValue})`, { scope: POWER_SELECT_OPTIONS }),
+  // fieldTypeTwoClickOptionTwoValue: clickable(`.ember-power-select-option:contains(${FD.typeTwoValue})`, { scope: POWER_SELECT_OPTIONS }),
+  fieldTypeTwoClickOptionFour: clickable(`.ember-power-select-option:contains(${FD.typeFourValue})`, { scope: POWER_SELECT_OPTIONS }),
   fieldRequiredTwoNotChecked: () => Ember.$('.t-dtd-field-required:eq(1)').is(':not(:checked)'),
   fieldRequiredTwoChecked: () => Ember.$('.t-dtd-field-required:eq(1)').is(':checked'),
   fieldRequiredTwoClick: clickable('.t-dtd-field-required:eq(1)'),
@@ -157,7 +156,7 @@ var DTDPage = PageObject.create({
   fieldClickCheckboxOne: clickable('.t-dtd-field-checkbox:eq(0)'),
   clickNextBtn: clickable('.t-dtd-preview-btn'),
   selectClickDropdown: clickable(FIELD_SELECT_OPTION),
-  selectOneOption: clickable(`.ember-power-select-option:contains(${OD.textOne})`, { scope: DROPDOWN }),
+  selectOneOption: clickable(`.ember-power-select-option:contains(${OD.textOne})`, { scope: POWER_SELECT_OPTIONS }),
   selectOneValue: text(FIELD_SELECT_OPTION),
 
   breadcrumbText: text('.t-dt-breadcrumb'),

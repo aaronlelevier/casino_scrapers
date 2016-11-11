@@ -6,7 +6,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import SD from 'bsrs-ember/vendor/defaults/status';
-import { options } from 'bsrs-ember/tests/helpers/power-select-terms';
+import { POWER_SELECT_OPTIONS } from 'bsrs-ember/tests/helpers/power-select-terms';
 
 let { visitable, text, clickable, count, fillable, value, hasClass } = PageObject;
 
@@ -15,7 +15,6 @@ const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const PEOPLE_URL = `${BASE_PEOPLE_URL}/index`;
 const DETAIL_URL = `${BASE_PEOPLE_URL}/${PD.idOne}`;
 const STATUS = '.t-status-select .ember-basic-dropdown-trigger';
-const DROPDOWN = options;
 const LOCATION = '.t-person-locations-select .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
 const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-option`;
 const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
@@ -30,18 +29,18 @@ export default PageObject.create({
   visitDetail: visitable(DETAIL_URL),
   statusInput: text(STATUS),
   statusClickDropdown: clickable(STATUS),
-  statusClickOptionOne: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${SD.activeNameTranslated})`),
-  statusClickOptionTwo: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${SD.inactiveNameTranslated})`),
-  statusOptionLength: count(`${DROPDOWN} > li`),
-  statusOne: text(`${DROPDOWN} > li:eq(0)`),
-  statusTwo: text(`${DROPDOWN} > li:eq(1)`),
-  statusThree: text(`${DROPDOWN} > li:eq(2)`),
+  statusClickOptionOne: clickable(`${POWER_SELECT_OPTIONS} > .ember-power-select-option:contains(${SD.activeNameTranslated})`),
+  statusClickOptionTwo: clickable(`${POWER_SELECT_OPTIONS} > .ember-power-select-option:contains(${SD.inactiveNameTranslated})`),
+  statusOptionLength: count(`${POWER_SELECT_OPTIONS} > li`),
+  statusOne: text(`${POWER_SELECT_OPTIONS} > li:eq(0)`),
+  statusTwo: text(`${POWER_SELECT_OPTIONS} > li:eq(1)`),
+  statusThree: text(`${POWER_SELECT_OPTIONS} > li:eq(2)`),
 
   locationClickDropdown: clickable(LOCATION),
-  locationClickOptionOne: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${LD.storeName})`),
-  locationClickOptionOneEq: clickable(`${DROPDOWN} > .ember-power-select-option:eq(0)`),
-  locationClickOptionTwo: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${LD.baseStoreName}4)`),
-  locationOptionLength: count(`${DROPDOWN} > li`),
+  locationClickOptionOne: clickable(`${POWER_SELECT_OPTIONS} > .ember-power-select-option:contains(${LD.storeName})`),
+  locationClickOptionOneEq: clickable(`${POWER_SELECT_OPTIONS} > .ember-power-select-option:eq(0)`),
+  locationClickOptionTwo: clickable(`${POWER_SELECT_OPTIONS} > .ember-power-select-option:contains(${LD.baseStoreName}4)`),
+  locationOptionLength: count(`${POWER_SELECT_OPTIONS} > li`),
   locationOneRemove: clickable(`${LOCATION_ONE} > .ember-power-select-multiple-remove-btn`),
   locationOneSelected: text(LOCATION_ONE),
   locationTwoSelected: text(LOCATION_TWO),
@@ -50,10 +49,10 @@ export default PageObject.create({
 
   localeInput: text(LOCALE),
   localeClickDropdown: clickable(LOCALE),
-  localeClickOptionTwo: clickable(`${DROPDOWN} > .ember-power-select-option:contains(${PD.localeTwo})`),
-  localeOne: text(`${DROPDOWN} > li:eq(0)`),
-  localeTwo: text(`${DROPDOWN} > li:eq(1)`),
-  localeOptionLength: count(`${DROPDOWN} > li`),
+  localeClickOptionTwo: clickable(`${POWER_SELECT_OPTIONS} > .ember-power-select-option:contains(${PD.localeTwo})`),
+  localeOne: text(`${POWER_SELECT_OPTIONS} > li:eq(0)`),
+  localeTwo: text(`${POWER_SELECT_OPTIONS} > li:eq(1)`),
+  localeOptionLength: count(`${POWER_SELECT_OPTIONS} > li`),
 
   firstNameFill: fillable('.t-person-first-name'),
   middleInitialFill: fillable('.t-person-middle-initial'),
