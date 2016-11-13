@@ -17,12 +17,12 @@ moduleForComponent('photo-avatar', 'Integration | Component | photo avatar', {
 test('it renders with person photo', function(assert) {
   this.item = person;
   this.render(hbs`{{photo-avatar item=item}}`);
-  assert.equal(this.$('[data-test-id="user-avatar"]').attr('src'), 'wat.jpg');
+  assert.ok(this.$('[data-test-id="user-avatar"]').css('background-image').indexOf('wat.jpg'));
 });
 
 test('if no photo renders fa-icon', function(assert) {
   this.item = {id: 1};
   this.render(hbs`{{photo-avatar item=item}}`);
-  assert.equal(this.$('[data-test-id="user-avatar"]').attr('src'), undefined);
-  assert.ok(this.$('i').hasClass('fa-user'));
+  assert.equal(this.$('[data-test-id="user-avatar"]').css('background-image').indexOf('wat.jpg'), -1);
+  assert.ok(this.$('[data-test-id="user-avatar"]').hasClass('empty'));
 });

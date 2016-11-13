@@ -50,5 +50,5 @@ export default GridViewComponent.extend({
     filterComponent: 'grid/filters/checkbox-list',
     filterModelName: 'status',
     multiple: true,
-  } ]
+  }]
 });

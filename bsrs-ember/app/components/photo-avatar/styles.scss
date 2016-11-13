@@ -1,14 +1,31 @@
 & {
-  .user-avatar {
+  display: table-row;
+  .avatar {
+    display: table-cell;
+    vertical-align: middle;
     width: $photoSmallSize;
     height: $photoSmallSize;
     border-radius: $photoBorderRadius;
-    margin: -1px 5px 0 0;
+    background-color: $gray;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
   }
-  // if no photo, fa icon shows
-  i {
-    font-size: 2.2rem;
-    color: $medGray;
-    margin: -3px 5px 0 0;
+  .empty{
+    &:before {
+      @include font-awesome("\f007");
+      font-size: 1.5rem;
+      text-align: center;
+      color: $medGray;
+      width: $photoSmallSize;
+      height: $photoSmallSize;
+      line-height: $photoSmallSize;
+      display: block;
+    }
+  }
+  .username{
+    vertical-align: middle;
+    display: table-cell;
+    padding-left: 6px;
   }
 }

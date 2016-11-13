@@ -107,6 +107,18 @@
         margin: 20px -15px;
         border-bottom: 1px solid #e5e5e5;
         padding: 0 15px 0;
+        &.card-title--photo{
+          .form-photo{
+            float: left;
+            margin: 0 15px 15px 0;
+          }
+          h1{
+            padding-top: 10px;
+          }
+        }
+        p{
+          color: $medGray;
+        }
       }
       .row {
         margin: 0;

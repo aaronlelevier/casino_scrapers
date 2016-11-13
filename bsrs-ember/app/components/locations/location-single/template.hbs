@@ -17,20 +17,14 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <section class="card-title">
-        <div class="row">
-          <h1 class="col-md-12">
-            {{model.name}} <small>{{model.number}}</small>
-          </h1>
-          <p class="col-md-12">{{model.location_level.name}}</p>
-        </div>
-      </section>
-    </div>
-    <div class="col-md-4 user-info">
-      <section>
+      <section class="card-title card-title--photo">
         <div class="row">
           <div class="col-md-12">
             {{form-photo icon="building" model=model}}
+            <h1>
+              {{model.name}} <small>{{model.number}}</small>
+            </h1>
+            <p>{{model.location_level.name}}</p>
           </div>
         </div>
       </section>

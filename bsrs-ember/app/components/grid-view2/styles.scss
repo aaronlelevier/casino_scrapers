@@ -53,14 +53,15 @@ div.rowTable {
       }
       //table column widths
       td, th{
-        font-size: 1.3rem;
+        font-size: 1.2rem;
         vertical-align: middle;
+        .tag{
+          vertical-align: middle;
+          width: 110px;
+          @include truncate;
+        }
         &.ticket-priority{
           width: 120px;
-          .tag{
-            max-width: 110px;
-            @include truncate;
-          }
         }
         &.ticket-status{
           width: 120px;

@@ -1,8 +1,6 @@
-{{#if item.photo}}
-  <img src={{item.photo.image_thumbnail}} class="user-avatar" data-test-id="user-avatar" />
+{{#if item.photo.image_thumbnail}}
+  <span class="avatar" style="background-image: url('{{item.photo.image_thumbnail}}')" data-test-id="user-avatar"></span>
 {{else}}
-  {{fa-icon "user"}}
+  <span class="avatar empty" data-test-id="user-avatar"></span>
 {{/if}}
-
-{{item.fullname}}
-
+<span class="username">{{item.fullname}}</span>

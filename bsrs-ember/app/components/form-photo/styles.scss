@@ -3,15 +3,16 @@
 	height: $photoHeightWidth;
 	width: $photoHeightWidth;
 	background: $light;
-	font-size: 60px;
+	font-size: 50px;
 	text-align:center;
 	color: $gray;
   position: relative;
   border-radius: $photoBorderRadius;
   overflow: hidden;
-  float: left;
-  margin-right: 10px;
   &:before {
     @include font-awesome("\f007");
   }
+	&.building:before {
+		@include font-awesome("\f1ad");
+	}
 }

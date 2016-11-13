@@ -1,4 +1,4 @@
-<div class="col-md-8">
+<div class="col-md-12">
   <section>
     <div class="row">
       <div class="col-md-12">
@@ -31,11 +31,11 @@
     <div class="row">
       <div class="col-md-12">
         {{#form-group title="admin.location.label.location_level" for="location_location_level_select"}}
-          {{power-select-foreign-key 
-            model=model 
-            selected=model.location_level 
-            change_method="change_location_level" 
-            relatedModelName="location-level" 
+          {{power-select-foreign-key
+            model=model
+            selected=model.location_level
+            change_method="change_location_level"
+            relatedModelName="location-level"
             notTranslated=true
             valuePath="location_level"
             didValidate=didValidate
@@ -46,10 +46,10 @@
     <div class="row">
       <div class="col-md-12">
         {{#form-group title="admin.location.label.status-name" for="location_status"}}
-          {{power-select-foreign-key 
-            model=model 
-            selected=model.status 
-            change_method="change_status" 
+          {{power-select-foreign-key
+            model=model
+            selected=model.status
+            change_method="change_status"
             relatedModelName="location-status"
             valuePath="status"
             didValidate=didValidate
