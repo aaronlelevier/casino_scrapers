@@ -7,13 +7,14 @@
   background-size: cover;
   background-repeat: no-repeat;
   border-radius: $photoBorderRadius;
+  cursor: pointer;
 
   // responds to drag state on component
   &.active {
     background: $activeColor !important;
     // turn on dropImage text
     p {
-      color: $white;
+      color: $light !important;
       display: block;
     }
     // turn off over text
@@ -29,13 +30,12 @@
     bottom: 0;
     left: 0;
     right: 0;
-    color: $white;
     background: rgba(0, 0, 0, 0.6);
     z-index: 2;
     border-radius: $photoBorderRadius;
 
     p {
-      color: $white;
+      color: $light !important;
       display: block;
       font-size: $imageOverlayText;
       width: 100%;
@@ -65,21 +65,15 @@
   margin: 0 auto;
 }
 
-// & .text {
-//   width: 100%;
-
-//   // transform: translateY(-50%);
-// }
-
 & input[type=file] {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
+  top: -100px;
+  left: -100px;
+  right: -100px;
+  bottom: -100px;
+  width: 300px;
+  height: 300px;
   opacity: 0;
-  cursor: pointer;
+  cursor: inherit;
   z-index: 3;
 }
