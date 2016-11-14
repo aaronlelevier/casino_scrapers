@@ -15,7 +15,7 @@ import page from 'bsrs-ember/tests/pages/automation';
 import { clickTrigger, triggerKeydown, nativeMouseUp, nativeMouseDown, typeInSearch } from 'bsrs-ember/tests/helpers/ember-power-select';
 import waitFor from 'ember-test-helpers/wait';
 
-var store, trans, action, person_repo;
+var store, trans, action, automation_repo;
 
 moduleForComponent('automations/sendemail-action', 'Integration | Component | automations/sendemail action', {
   integration: true,
@@ -29,8 +29,8 @@ moduleForComponent('automations/sendemail-action', 'Integration | Component | au
     store.push('sendemail', {id: SED.idOne, subject: SED.subjectOne, body: SED.bodyOne, generic_recipient_fks: [SEJRD.idOne], actions: [AAD.idOne]});
     store.push('person', {id: PD.idOne, fullname: PD.fullname});
     store.push('generic-join-recipients', {id: SEJRD.idOne, generic_pk: SED.idOne, recipient_pk: PD.idOne});
-    person_repo = repository.initialize(this.container, this.registry, 'person');
-    person_repo.findPeople = function() { return [{id: PD.idTwo, fullname: PD.fullname}]; };
+    automation_repo = repository.initialize(this.container, this.registry, 'person');
+    automation_repo.getEmailRecipients = function() { return [{id: PD.idTwo, fullname: PD.fullname, type: 'person'}]; };
   },
   afterEach() {
     page.removeContext(this);
@@ -52,8 +52,8 @@ test('it renders', function(assert) {
 test('shows validation messages', function(assert) {
   this.model = action;
   this.index = 0;
-  this.personRepo = person_repo;
-  this.render(hbs`{{automations/sendemail-action model=model index=index personRepo=personRepo}}`);
+  this.automationRepo = automation_repo;
+  this.render(hbs`{{automations/sendemail-action model=model index=index automationRepo=automationRepo}}`);
   let $component = this.$('.t-action-subject-validator0');
   let $component2 = this.$('.t-action-body-validator0');
   let $component3 = this.$('.t-action-recipient-validator0');
@@ -83,6 +83,7 @@ test('shows validation messages', function(assert) {
           assert.equal($component2.hasClass('invalid'), false);
           assert.equal(action.get('sendemail').get('recipient').get('length'), 0);
           nativeMouseUp(`.ember-power-select-option:contains(${PD.fullname})`);
+          assert.equal(action.get('sendemail').get('recipient').objectAt(0).get('type'), 'person');
           assert.equal(action.get('sendemail').get('recipient').get('length'), 1);
           assert.equal(this.$('.invalid').length, 0);
           assert.equal($component3.hasClass('invalid'), false);

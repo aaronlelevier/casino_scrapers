@@ -24,7 +24,7 @@ const NEW_URL = `${BASE_URL}/new/1`;
 
 var store, listXhr;
 
-moduleForAcceptance('scott Acceptance | general automation new test', {
+moduleForAcceptance('Acceptance | general automation new test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
     const listData = AF.list();

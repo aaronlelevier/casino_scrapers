@@ -8,5 +8,5 @@ import inject from 'bsrs-ember/utilities/inject';
  * - index
  */
 export default Ember.Component.extend({
-  personRepo: inject('person'),
+  automationRepo: inject('automation'),
 });

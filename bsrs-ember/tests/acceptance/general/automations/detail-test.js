@@ -726,7 +726,7 @@ test('get an action sendemail and update it to a new sendemail', assert => {
   json.actions[0]['type'] = { id: AATD.idFour, key: AATD.keyFour };
   json.actions[0]['subject'] = SED.subjectOne;
   json.actions[0]['body'] = SED.bodyOne;
-  json.actions[0]['recipients'] = [{id: PD.idOne, fullname: PD.fullname}];
+  json.actions[0]['recipients'] = [{id: PD.idOne, fullname: PD.fullname, type: 'person'}];
   xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
   page.visitDetail();
   andThen(() => {
@@ -738,7 +738,7 @@ test('get an action sendemail and update it to a new sendemail', assert => {
   });
   page.sendEmailBodyFillIn(SED.bodyTwo);
   page.sendEmailSubjectFillIn(SED.subjectTwo);
-  xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
+  xhr(`${PEOPLE_URL}email-recipients/?search=e`, 'GET', null, {}, 200, PF.sms_power_select());
   selectSearch('.t-action-recipient-select', 'e');
   selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
   andThen(() => {
@@ -753,7 +753,7 @@ test('get an action sendemail and update it to a new sendemail', assert => {
       content: {
         body: SED.bodyTwo,
         subject: SED.subjectTwo,
-        recipients: [PD.idOne, PD.idSearch]
+        recipients: [{id: PD.idOne, type: 'person'}, {id: PD.idSearch, type: 'person'}]
       }
     }]
   });
@@ -778,7 +778,7 @@ test('select send email filter and update automation', assert => {
   });
   page.sendEmailBodyFillIn(SED.bodyTwo);
   page.sendEmailSubjectFillIn(SED.subjectTwo);
-  xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
+  xhr(`${PEOPLE_URL}email-recipients/?search=e`, 'GET', null, {}, 200, PF.search_power_select());
   selectSearch('.t-action-recipient-select', 'e');
   selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
   andThen(() => {
@@ -861,7 +861,7 @@ test('get an action sendsms and update it to a new sendsms', assert => {
     assert.equal(page.sendSmsBodyValue, SMSD.bodyOne, 'sendsms body shows');
   });
   page.sendSmsBodyFillIn(SMSD.bodyTwo);
-  xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
+  xhr(`${PEOPLE_URL}sms-recipients/?search=e`, 'GET', null, {}, 200, PF.sms_power_select());
   selectSearch('.t-action-recipient-select', 'e');
   selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
   andThen(() => {
@@ -901,7 +901,7 @@ test('select sendsms filter and update automation', assert => {
     // assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyFive), 'selected type');
   });
   page.sendSmsBodyFillIn(SMSD.bodyTwo);
-  xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
+  xhr(`${PEOPLE_URL}sms-recipients/?search=e`, 'GET', null, {}, 200, PF.sms_power_select());
   selectSearch('.t-action-recipient-select', 'e');
   selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
   andThen(() => {

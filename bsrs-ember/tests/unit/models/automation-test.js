@@ -53,7 +53,7 @@ test('serialize', assert => {
     action = store.push('automation-action', {id: AAD.idOne});
     store.push('automation-action-type', {id: ATD.idOne, key: ATD.keyFive, actions: [AAD.idOne]});
     store.push('generic-join-recipients', {id: SMSJRD.idOne, generic_pk: SMSD.idOne, recipient_pk: PD.idOne});
-    store.push('person', {id: PD.idOne});
+    store.push('person', {id: PD.idOne, type: 'person'});
     store.push('sendsms', {id: SMSD.idOne, body: SMSD.bodyTwo, generic_recipient_fks: [SMSJRD.idOne], actions: [AAD.idOne]});
   });
   assert.equal(automation.get('pf').get('length'), 1);
@@ -66,7 +66,7 @@ test('serialize', assert => {
   assert.deepEqual(ret.actions, [action.serialize()]);
   assert.equal(ret.actions.length, 1);
   assert.equal(ret.actions[0].type, ATD.idOne);
-  assert.deepEqual(ret.actions[0].content, {body: SMSD.bodyTwo, recipients: [PD.id]});
+  assert.deepEqual(ret.actions[0].content, {body: SMSD.bodyTwo, recipients: [{id: PD.idOne, type: 'person'}]});
 });
 
 test('NewMixin is mixed into the Automation Model, so on save will set _new_ keys to undefined, and future CRUD will be PUTs', assert => {

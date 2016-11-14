@@ -29,6 +29,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     belongs_to.bind(this)('sendemail', 'automation-action');
     belongs_to.bind(this)('sendsms', 'automation-action');
     many_to_many.bind(this)('ticketcc', 'automation-action');
+    // documentation for m2m models fk array used for dirty tracking
     set(this, 'ticketcc_fks', get(this, 'ticketcc_fks') || []);
   },
   simpleStore: Ember.inject.service(),
@@ -81,16 +82,22 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
         content = {status: this.get('status.id')};
         break;
       case 'automation.actions.send_email':
+        let recipients = this.get('sendemail.recipient').map((person) => {
+          return {id: get(person, 'id'), type: 'person'};
+        });
         content = {
           body: this.get('sendemail.body'),
           subject: this.get('sendemail.subject'),
-          recipients: this.get('sendemail.recipient_ids'),
+          recipients: recipients,
         };
         break;
       case 'automation.actions.send_sms':
+        recipients = this.get('sendsms.recipient').map((person) => {
+          return {id: get(person, 'id'), type: 'person'};
+        });
         content = {
           body: this.get('sendsms.body'),
-          recipients: this.get('sendsms.recipient_ids'),
+          recipients: recipients
         };
         break;
       case 'automation.actions.ticket_request':

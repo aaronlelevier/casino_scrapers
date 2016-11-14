@@ -6,7 +6,7 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
 import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
-import BASEURLS, { AUTOMATION_URL, AUTOMATION_AVAILABLE_FILTERS_URL, AUTOMATION_EVENTS_URL, AUTOMATION_ACTION_TYPES_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { PEOPLE_URL, AUTOMATION_URL, AUTOMATION_AVAILABLE_FILTERS_URL, AUTOMATION_EVENTS_URL, AUTOMATION_ACTION_TYPES_URL } from 'bsrs-ember/utilities/urls';
 
 export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: 'automation',
@@ -27,5 +27,11 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
   },
   getEvents() {
     return PromiseMixin.xhr(AUTOMATION_EVENTS_URL, 'GET').then(response => response);
+  },
+  getSmsRecipients(search) {
+    return PromiseMixin.xhr(`${PEOPLE_URL}sms-recipients/?search=${search}`, 'GET').then(response => response.results);
+  },
+  getEmailRecipients(search) {
+    return PromiseMixin.xhr(`${PEOPLE_URL}email-recipients/?search=${search}`, 'GET').then(response => response.results);
   }
 });

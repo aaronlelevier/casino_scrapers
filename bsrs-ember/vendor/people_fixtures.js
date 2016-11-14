@@ -194,6 +194,14 @@ var BSRS_PEOPLE_FACTORY = (function() {
     }
     return {count:10,next:null,previous:null,results: response};
   };
+  factory.prototype.sms_power_select = function() {
+    const response = this.search_power_select();
+    const new_results = response.results.map(function(person) {
+      person['type'] = 'person';
+      return person;
+    });
+    return {count:10,next:null,previous:null,results: new_results};
+  };
 
   return factory;
 })();

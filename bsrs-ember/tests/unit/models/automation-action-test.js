@@ -542,8 +542,8 @@ test('serialize - should only send the content fields that are relevant based on
     action = store.push('automation-action', {id: AAD.idOne, request: AAD.requestOne});
     store.push('generic-join-recipients', {id: SEDJRD.idOne, generic_pk: SED.idOne, recipient_pk: PD.idOne});
     store.push('generic-join-recipients', {id: SMSJRD.idTwo, generic_pk: SMSD.idOne, recipient_pk: PD.idTwo});
-    store.push('person', {id: PD.idOne});
-    store.push('person', {id: PD.idTwo});
+    store.push('person', {id: PD.idOne, type: 'person'});
+    store.push('person', {id: PD.idTwo, type: 'person'});
     store.push('sendemail', {id: SED.idOne, subject: SED.subjectTwo, body: SED.bodyTwo,  generic_recipient_fks: [SEDJRD.idOne], actions: [AAD.idOne]});
     store.push('sendsms', {id: SMSD.idOne, body: SMSD.bodyTwo, generic_recipient_fks: [SMSJRD.idTwo], actions: [AAD.idOne]});
   });
@@ -560,11 +560,12 @@ test('serialize - should only send the content fields that are relevant based on
   action.change_type({id: ATD.idThree, key: ATD.keyThree});
   assert.deepEqual(action.serialize().content, {status: TSD.idOne});
   action.change_type({id: ATD.idFour, key: ATD.keyFour});
-  assert.deepEqual(action.serialize().content, {body: SED.bodyTwo, recipients: [PD.id], subject: SED.subjectTwo});
+  assert.equal(action.get('sendemail').get('recipient.length'), 1);
+  assert.deepEqual(action.serialize().content, { body: SED.bodyTwo, recipients: [{id: PD.idOne, type: 'person'}], subject: SED.subjectTwo });
   action.change_type({id: ATD.idFive, key: ATD.keyFive});
   assert.equal(action.get('sendsms').get('id'), SMSD.idOne);
   assert.deepEqual(action.get('sendsms').get('recipient').mapBy('id'), [PD.idTwo]);
-  assert.deepEqual(action.serialize().content, {body: SMSD.bodyTwo, recipients: [PD.idTwo]});
+  assert.deepEqual(action.serialize().content, { body: SMSD.bodyTwo, recipients: [{id: PD.idTwo, type: 'person'}] });
   action.change_type({id: ATD.idSix, key: ATD.keySix});
   assert.equal(action.get('type').get('key'), ATD.keySix);
   assert.deepEqual(action.serialize().content, {request: AAD.requestOne});

@@ -271,11 +271,9 @@ var many_to_many_save = function(_joinModelName, _associatedModel, _modelName) {
  */
 var add_many_to_many = function(_associatedModel, _joinModelName, _parentNameUnderscore) {
   return function(many_related) {
-    // const relatedModelName = this.OPT_CONF[_associatedModel]['associated_model'];
     const lookup_pk = Ember.String.underscore(this.OPT_CONF[_associatedModel]['associated_pointer'] || this.OPT_CONF[_associatedModel]['associated_model']);
     const many_fk = `${lookup_pk}_pk`;
     const main_many_fk = `${_parentNameUnderscore}_pk`;
-    // const join_model = this.OPT_CONF[_associatedModel]['join_model'];
     const store = this.get('simpleStore');
     let new_many_related = store.find(this.OPT_CONF[_associatedModel]['associated_model'], many_related.id);
     if(!new_many_related.get('content') || new_many_related.get('isNotDirtyOrRelatedNotDirty')){
