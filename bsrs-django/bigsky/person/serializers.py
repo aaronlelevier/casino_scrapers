@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer
-from generic.serializers import AttachmentSerializer
+from generic.serializers import AttachmentSerializer, AttachmentThumbnailSerializer
 from contact.serializers import (PhoneNumberSerializer, EmailSerializer, AddressSerializer,
     AddressUpdateSerializer)
 from location.serializers import LocationIdNameOnlySerializer, LocationStatusFKSerializer
@@ -107,7 +107,7 @@ class PersonStatusSerializer(serializers.ModelSerializer):
 class PersonListSerializer(serializers.ModelSerializer):
 
     status = PersonStatusSerializer(required=False)
-    photo = AttachmentSerializer(required=False)
+    photo = AttachmentThumbnailSerializer(required=False)
 
     class Meta:
         model = Person
@@ -116,9 +116,11 @@ class PersonListSerializer(serializers.ModelSerializer):
 
 class PersonSearchSerializer(serializers.ModelSerializer):
 
+    photo = AttachmentThumbnailSerializer(required=False)
+
     class Meta:
         model = Person
-        fields = ('id', 'fullname', 'username', 'email')
+        fields = ('id', 'fullname', 'username', 'email', 'photo')
 
 
 class PersonTicketSerializer(serializers.ModelSerializer):
@@ -130,9 +132,12 @@ class PersonTicketSerializer(serializers.ModelSerializer):
 
 class PersonTicketListSerializer(serializers.ModelSerializer):
     # Role and Status is not needed in Ticket Grid
+
+    photo = AttachmentThumbnailSerializer(required=False)
+
     class Meta:
         model = Person
-        fields = ('id', 'fullname',)
+        fields = ('id', 'fullname', 'photo')
 
 
 class PersonDetailSerializer(serializers.ModelSerializer):

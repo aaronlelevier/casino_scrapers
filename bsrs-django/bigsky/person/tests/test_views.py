@@ -328,8 +328,8 @@ class PersonListTests(TestCase):
         self.assertTrue(data['photo']['filename'])
         self.assertTrue(data['photo']['id'])
         self.assertTrue(data['photo']['image_thumbnail'])
-        self.assertTrue(data['photo']['image_full'])
-        self.assertTrue(data['photo']['image_medium'])
+        self.assertNotIn('image_full', data['photo'])
+        self.assertTrue('image_medium', data['photo'])
 
     ### CUSTOM LIST ROUTES
 
@@ -347,6 +347,10 @@ class PersonListTests(TestCase):
         self.assertEqual(data['results'][0]['id'], str(person1.id))
         self.assertEqual(data['results'][0]['username'], 'watter')
         self.assertEqual(data['results'][0]['fullname'], 'nothing nothing')
+        self.assertEqual(data['results'][0]['photo']['id'], str(person1.photo.id))
+        self.assertNotIn('image_full', data['results'][0]['photo'])
+        self.assertNotIn('image_medium', data['results'][0]['photo'])
+        self.assertTrue(data['results'][0]['photo']['image_thumbnail'])
         self.assertNotIn('title', data['results'][0])
         self.assertNotIn('role', data['results'][0])
         self.assertNotIn('status', data['results'][0])
