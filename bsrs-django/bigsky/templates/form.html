@@ -6,48 +6,36 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <title>Login</title>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}"/>
         <link rel="shortcut icon" type="image/png" href="{{ STATIC_URL }}images/favicon.ico"/>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/basscss.min.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/fonts.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}"/>
     </head>
     <body>
-        <!-- Top content -->
-        <div class="top-content">
-            <div class="inner-bg">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-sm-8 col-sm-offset-2 text">
-                            <h1></h1>
-                        </div>
+        <main class="flex items-center justify-center login">
+            <div class="login__panel rounded bg-white">
+                <header class="login__header flex rounded-top bg-offWhite">
+                    <div class="login__logo flex_auto">
+                        <img src="{{ STATIC_URL }}images/logo.png" class="login__logo__img">
                     </div>
-                    <div class="row">
-                        <div class="col-sm-6 col-sm-offset-3 form-box">
-                        	<div class="form-top">
-                        		<div class="form-top-center">
-                                    <img src="{{ STATIC_URL }}images/logo.png">
-                        		</div>
-                            </div>
-                            <div class="form-bottom">
-			                    <form role="form" action="" method="post" class="login-form">
-                                    {% csrf_token %}
-                                    {% for field in form %}
-                                    <div class="form-group">
-                                        <div class="form-group">
-                                            {{ field.errors }}
-    			                    		<label class="sr-only" for="form-username">{{ field.label_tag }}</label>
-                                            <input id="{{ field.id_for_label }}" name="{{ field.name }}" type="{{ field|fieldtype }}" autofocus/>
-    			                        </div>
-                                    </div>
-                                    {% endfor %}
-                                    {{ form.non_field_errors }}
-			                        <button type="submit" class="btn login">{% if submit_button %}{{ submit_button }}{% else %}Submit{% endif %}</button>
-                                    <input type="hidden" name="next" value="{{ next }}" />
-                                </form>
-		                    </div>
-                        </div>
+                    <h1 class="h3 login__title">Login</h1>
+                </header>
+                <form role="form" action="" method="post" class="login__form flex flex-column items-center p2">
+                    {% csrf_token %}
+                    <div class="login__form-fields">
+                        {% for field in form %}
+                            {{ field.errors }}
+                            {{ field.label_tag }}
+                            <input class="input" id="{{ field.id_for_label }}" name="{{ field.name }}" type="{{ field|fieldtype }}" autofocus/>
+                        {% endfor %}
+                        {{ form.non_field_errors }}
                     </div>
-                </div>
+                    <button type="submit" class="login__btn btn mt0 mb1 open-sans-regular bg-lightGreen white rounded" tabindex="1">
+                        {% if submit_button %}{{ submit_button }}{% else %}Login{% endif %}
+                    </button>
+                    <input type="hidden" name="next" value="{{ next }}" />
+                </form>
             </div>
-        </div>
+        </main>
     </body>
 </html>
