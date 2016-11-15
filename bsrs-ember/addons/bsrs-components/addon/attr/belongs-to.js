@@ -87,7 +87,7 @@ var change_belongs_to = function(_ownerName) {
   return function(new_related) {
     const collection = this.OPT_CONF[_ownerName]['collection'];
     const name = this.OPT_CONF[_ownerName]['property'];
-    const this_related_model = this.OPT_CONF[_ownerName]['related_model'];
+    const this_override_property_getter = this.OPT_CONF[_ownerName]['override_property_getter'];
     const store = this.get('simpleStore');
     let push_related;
     if(new_related && typeof new_related === 'object'){
@@ -100,7 +100,7 @@ var change_belongs_to = function(_ownerName) {
         });
       }
     }
-    const related = this_related_model || name.replace('-', '_');
+    const related = this_override_property_getter || name.replace('-', '_');
     const current_related = this.get(related);
     if(current_related) {
       //filter out calling id from array if null.  Needs to happen before adding back

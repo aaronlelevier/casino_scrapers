@@ -20,7 +20,7 @@ export default Ember.Mixin.create({
     <%= secondPropertySnake %>: {
       collection: '<%= dasherizedModuleName %>s',
       property: '<%= secondModel %>',
-      related_model: '<%= secondProperty %>',
+      override_property_getter: '<%= secondProperty %>',
     },
     <%= thirdPropertySnake %>: {
       associated_model: '<%= thirdAssociatedModel %>',

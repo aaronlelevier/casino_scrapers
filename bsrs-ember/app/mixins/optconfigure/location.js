@@ -21,7 +21,7 @@ export default Ember.Mixin.create({
     status: {
       collection: 'locations',
       property: 'location-status',
-      related_model: 'status'
+      override_property_getter: 'status'
     },
     country: {
       collection: 'locations',
@@ -35,7 +35,7 @@ export default Ember.Mixin.create({
     phone_number_type: {
       collection: 'locations',
       property: 'phone-number-type',
-      related_model: 'phone_number_type',
+      override_property_getter: 'phone_number_type',
     },
     phonenumbers: {
       associated_model: 'phonenumber',

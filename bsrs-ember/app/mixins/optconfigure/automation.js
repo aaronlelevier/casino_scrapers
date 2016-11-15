@@ -30,7 +30,7 @@ export default Ember.Mixin.create({
     type: {
       collection: 'actions',
       property: 'automation-action-type',
-      related_model: 'type',
+      override_property_getter: 'type',
     },
     pf: {
       associated_model: 'pfilter',
@@ -45,7 +45,7 @@ export default Ember.Mixin.create({
     assignee: {
       collection: 'actions',
       property: 'person',
-      related_model: 'assignee',
+      override_property_getter: 'assignee',
     },
     ticketcc: {
       associated_model: 'person',
@@ -54,12 +54,12 @@ export default Ember.Mixin.create({
     priority: {
       collection: 'actions',
       property: 'ticket-priority',
-      related_model: 'priority',
+      override_property_getter: 'priority',
     },
     status: {
       collection: 'actions',
       property: 'ticket-status',
-      related_model: 'status'
+      override_property_getter: 'status'
     },
     
     // deserializer - keys determine ..._fks property on the model

@@ -9,7 +9,7 @@ export default Ember.Mixin.create({
     photo: {
       collection: 'people',
       property: 'attachment',
-      related_model: 'photo',
+      override_property_getter: 'photo',
     },
     role: {
       collection: 'people',
@@ -26,7 +26,7 @@ export default Ember.Mixin.create({
     phone_number_type: {
       collection: 'people',
       property: 'phone-number-type',
-      related_model: 'phone_number_type',
+      override_property_getter: 'phone_number_type',
     },
     email_type: {
       collection: 'people',

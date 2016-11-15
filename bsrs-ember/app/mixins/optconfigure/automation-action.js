@@ -20,22 +20,22 @@ export default Ember.Mixin.create({
     assignee: {
       collection: 'actions',
       property: 'person',
-      related_model: 'assignee'
+      override_property_getter: 'assignee'
     },
     priority: {
       collection: 'actions',
       property: 'ticket-priority',
-      related_model: 'priority'
+      override_property_getter: 'priority'
     },
     type: {
       collection: 'actions',
       property: 'automation-action-type',
-      related_model: 'type'
+      override_property_getter: 'type'
     },
     status: {
       collection: 'actions',
       property: 'ticket-status',
-      related_model: 'status'
+      override_property_getter: 'status'
     },
     sendemail: {
       collection: 'actions',

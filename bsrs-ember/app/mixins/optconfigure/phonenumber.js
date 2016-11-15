@@ -5,7 +5,7 @@ export default Ember.Mixin.create({
     phone_number_type: {
       collection: 'phonenumbers',
       property: 'phone-number-type',
-      related_model: 'phone_number_type'
+      override_property_getter: 'phone_number_type'
     }
   }
 });

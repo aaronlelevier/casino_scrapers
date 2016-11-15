@@ -13,7 +13,7 @@ import Ember from 'ember';
  * Then this file will configure the:
  *   - collection for which the property will find the association, i.e. location model will store an array of ticket []
  *   - property that is used as the store model and property on the belongs_to model (ticket)
- *   - related model that overrides the property when doing a this.get('status') method
+ *   - override_property_getter - that overrides the property when doing a this.get('status') method
  *   - main_model used for m2m in order to override a generic model definition in the init method with the parent model (ticket instead of generic for attachments)
  */
 export default Ember.Mixin.create({
@@ -21,17 +21,17 @@ export default Ember.Mixin.create({
     status: {
       collection: 'tickets',
       property: 'ticket-status',
-      related_model: 'status',
+      override_property_getter: 'status',
     },
     priority: {
       collection: 'tickets',
       property: 'ticket-priority',
-      related_model: 'priority',
+      override_property_getter: 'priority',
     },
     assignee: {
       collection: 'assigned_tickets',
       property: 'person',
-      related_model: 'assignee',
+      override_property_getter: 'assignee',
     },
     location: {
       collection: 'tickets',
@@ -56,7 +56,7 @@ export default Ember.Mixin.create({
     photo: {
       collection: 'people',
       property: 'attachment',
-      related_model: 'photo',
+      override_property_getter: 'photo',
     },
   },
 });
