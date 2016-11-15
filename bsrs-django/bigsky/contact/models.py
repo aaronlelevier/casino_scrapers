@@ -310,7 +310,7 @@ class EmailManager(EmailAndSmsMixin, BaseManager):
         """
         Generic method to send an email.
         """
-        from_email, to = settings.EMAIL_HOST_USER, settings.EMAIL_HOST_USER
+        from_email, to = settings.EMAIL_HOST_USER, email.email
         msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
         msg.attach_alternative(html_content, "text/html")
         msg.send()

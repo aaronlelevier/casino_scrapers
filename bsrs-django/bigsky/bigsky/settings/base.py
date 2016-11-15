@@ -193,7 +193,7 @@ CORS_ORIGIN_REGEX_WHITELIST = (r'^https?://(\w+\.)?bs-webdev03.bigskytech\.com:8
 # APP SETTINGS #
 ################
 
-SITE_URL = 'denali.com'
+SITE_URL = 'http://denali.bigskytech.com'
 
 ### CATEGORY
 TOP_LEVEL_CATEGORY_LABEL = 'Type'

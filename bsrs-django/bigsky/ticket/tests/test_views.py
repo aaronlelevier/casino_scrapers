@@ -96,7 +96,7 @@ class TicketListTests(TicketSetupMixin, APITestCase):
         self.assertEqual(assignee['id'], str(self.ticket.assignee.id))
         self.assertEqual(assignee['fullname'], self.ticket.assignee.fullname)
         self.assertEqual(assignee['photo']['id'], str(self.person.photo.id))
-        self.assertEqual(assignee['photo']['image_thumbnail'], str(self.person.photo.image_thumbnail))
+        self.assertTrue(assignee['photo']['image_thumbnail'])
         self.assertNotIn('image_medium', assignee['photo'])
         self.assertNotIn('image_full', assignee['photo'])
         self.assertNotIn('first_name', assignee)
