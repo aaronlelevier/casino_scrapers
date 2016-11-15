@@ -95,7 +95,18 @@
       </div>
       <div class="col-md-12">
         {{#form-group title="ticket.label.cc" for="cc"}}
-        {{db-fetch-multi-select model=model multiAttr="cc" multiAttrIds="cc_ids" selectedAttr=model.cc className="t-ticket-cc-select" displayName="fullname" add_func="add_cc" remove_func="remove_cc" repository=personRepo searchMethod="findPeople"}}
+        {{db-fetch-multi-select 
+          model=model 
+          multiAttr="cc" 
+          multiAttrIds="cc_ids" 
+          selectedAttr=model.cc 
+          className="t-ticket-cc-select" 
+          displayName="fullname" 
+          add_func="add_cc" 
+          remove_func="remove_cc" 
+          repository=personRepo 
+          searchMethod="findPeople"
+        }}
         {{/form-group}}
       </div>
       <div class="col-md-12">

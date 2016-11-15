@@ -366,7 +366,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
 });
 
 test('starting with multiple cc, can remove all ccs (while not populating options) and add back', (assert) => {
-  detail_data.cc = [...detail_data.cc, PF.get(PD.idTwo)];
+  detail_data.cc = [...detail_data.cc, PF.get_no_related(PD.idTwo)];
   detail_data.cc[1].first_name = PD.first_name + 'i';
   page.visitDetail();
   andThen(() => {

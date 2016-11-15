@@ -13,7 +13,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
     this.config = config;
   };
   factory.prototype.get = function(i, first_name, last_name) {
-    //right now function used for tickets
+    //right now function used for tickets - needed as role and status for ticket detail
     var first_name = first_name || this.person_defaults.first_name;
     var last_name = last_name || this.person_defaults.last_name;
     var fullname = first_name + ' ' + last_name;
@@ -37,7 +37,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
       first_name: first_name,
       last_name: last_name,
       fullname: fullname,
-      title: 'wat'
+      photo: {id: '80f530c4-ce6c-4724-9cfd-47y16e38900' + i, image_thumbnail: 'http://www.femalefirst.co.uk/image-library/square/250/m/xmel-gibson-awi.jpg.pagespeed.ic.6BxCJhF4Ru.jpg'},
     }
   };
   factory.prototype.get_for_power_select = function(i, first_name, last_name) {
@@ -55,7 +55,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
       title : this.person_defaults.title,
       status : {id: this.status_defaults.activeId, name: this.status_defaults.activeName},
       role: this.role_defaults.idOne,
-      photo: {id: '80f530c4-ce6c-4724-9cfd-47y16e38900' + i, image_full: 'http://www.femalefirst.co.uk/image-library/square/250/m/xmel-gibson-awi.jpg.pagespeed.ic.6BxCJhF4Ru.jpg', image_medium: 'http://www.femalefirst.co.uk/image-library/square/250/m/xmel-gibson-awi.jpg.pagespeed.ic.6BxCJhF4Ru.jpg', image_thumbnail: 'http://www.femalefirst.co.uk/image-library/square/250/m/xmel-gibson-awi.jpg.pagespeed.ic.6BxCJhF4Ru.jpg'},
+      photo: {id: '80f530c4-ce6c-4724-9cfd-47y16e38900' + i, image_thumbnail: 'http://www.femalefirst.co.uk/image-library/square/250/m/xmel-gibson-awi.jpg.pagespeed.ic.6BxCJhF4Ru.jpg'},
     }
   };
   factory.prototype.generate = function(i) {
@@ -125,7 +125,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
     person.acceptassign = false;
     person.emails = this.emails.get();
     person.phone_numbers = this.phone_number_fixtures.get();
-    // person.addresses = this.address_fixtures.get();
     person.locations = [this.location_fixtures.get_fk()];
     person.inherited = this.person_defaults.inherited;
     return person;

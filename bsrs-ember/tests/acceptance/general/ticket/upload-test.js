@@ -43,7 +43,6 @@ test('upload will post form data, show progress and on save append the attachmen
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(PROGRESS_BAR).length, 0);
-    assert.equal(store.find('attachment').get('length'), 0);
   });
   ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
@@ -52,7 +51,6 @@ test('upload will post form data, show progress and on save append the attachmen
     assert.equal(find(PROGRESS_BAR).length, 1);
     assert.ok(find(PROGRESS_BAR).is(':visible'));
     assert.equal(find(PROGRESS_BAR).attr('style'), 'width: 100%;');
-    assert.equal(store.find('attachment').get('length'), 1);
     assert.equal(model.get('attachments').get('length'), 1);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isDirtyOrRelatedDirty'));
@@ -63,7 +61,6 @@ test('upload will post form data, show progress and on save append the attachmen
   andThen(() => {
     model = store.find('ticket', TD.idOne);
     assert.equal(currentURL(), TICKET_URL);
-    assert.equal(store.find('attachment').get('length'), 1);
     assert.equal(model.get('attachments').get('length'), 1);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
@@ -78,13 +75,11 @@ test('uploading a file, then rolling back should throw out any previously associ
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(PROGRESS_BAR).length, 0);
-    assert.equal(store.find('attachment').get('length'), 0);
     assert.equal(find('.dirty').length, 0);
   });
   ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
   andThen(() => {
-    assert.equal(store.find('attachment').get('length'), 1);
     assert.equal(model.get('attachments').get('length'), 1);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isDirtyOrRelatedDirty'));
@@ -106,7 +101,6 @@ test('uploading a file, then rolling back should throw out any previously associ
   click('.t-modal-rollback-btn');
   andThen(() => {
     assert.equal(model.get('attachments').get('length'), 0);
-    assert.equal(store.find('attachment').get('length'), 0);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
   });
@@ -123,7 +117,6 @@ test('previously attached files do not show up after file upload', (assert) => {
     model = store.find('ticket', TD.idOne);
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(PROGRESS_BAR).length, 0);
-    assert.equal(store.find('attachment').get('length'), 1);
     assert.equal(model.get('attachments').get('length'), 1);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
@@ -136,7 +129,6 @@ test('previously attached files do not show up after file upload', (assert) => {
     assert.equal(find(PROGRESS_BAR).length, 1);
     assert.ok(find(PROGRESS_BAR).is(':visible'));
     assert.equal(find(PROGRESS_BAR).attr('style'), 'width: 100%;');
-    assert.equal(store.find('attachment').get('length'), 2);
     assert.equal(model.get('attachments').get('length'), 2);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isDirtyOrRelatedDirty'));
@@ -151,7 +143,6 @@ test('delete attachment is successful when the user confirms yes (before the fil
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(PROGRESS_BAR).length, 0);
-    assert.equal(store.find('attachment').get('length'), 0);
   });
   ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
@@ -159,7 +150,6 @@ test('delete attachment is successful when the user confirms yes (before the fil
     assert.equal(currentURL(), DETAIL_URL);
     model = store.find('ticket', TD.idOne);
     assert.equal(find(PROGRESS_BAR).length, 1);
-    assert.equal(store.find('attachment').get('length'), 1);
     assert.equal(model.get('attachments').get('length'), 1);
   });
   ajax(ATTACHMENT_DELETE_URL, 'DELETE', null, {}, 204, {});
@@ -176,7 +166,6 @@ test('delete attachment is successful when the user confirms yes (before the fil
       assert.equal(currentURL(), DETAIL_URL);
       model = store.find('ticket', TD.idOne);
       assert.equal(find(PROGRESS_BAR).length, 0);
-      assert.equal(store.find('attachment').get('length'), 0);
       assert.equal(model.get('attachments').get('length'), 0);
     });
   });
@@ -194,7 +183,6 @@ test('delete attachment is aborted when the user confirms no (before the file is
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(PROGRESS_BAR).length, 0);
-    assert.equal(store.find('attachment').get('length'), 0);
   });
   ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
@@ -202,7 +190,6 @@ test('delete attachment is aborted when the user confirms no (before the file is
     assert.equal(currentURL(), DETAIL_URL);
     model = store.find('ticket', TD.idOne);
     assert.equal(find(PROGRESS_BAR).length, 1);
-    assert.equal(store.find('attachment').get('length'), 1);
     assert.equal(model.get('attachments').get('length'), 1);
   });
   click('.t-remove-attachment');
@@ -210,7 +197,6 @@ test('delete attachment is aborted when the user confirms no (before the file is
     assert.equal(currentURL(), DETAIL_URL);
     model = store.find('ticket', TD.idOne);
     assert.equal(find(PROGRESS_BAR).length, 1);
-    assert.equal(store.find('attachment').get('length'), 1);
     assert.equal(model.get('attachments').get('length'), 1);
   });
 });
@@ -223,7 +209,6 @@ test('user cannot see progress bar for uploaded attachment that is associated wi
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(PROGRESS_BAR).length, 0);
-    assert.equal(store.find('attachment').get('length'), 0);
   });
   ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
@@ -231,7 +216,6 @@ test('user cannot see progress bar for uploaded attachment that is associated wi
     assert.equal(currentURL(), DETAIL_URL);
     model = store.find('ticket', TD.idOne);
     assert.equal(find(PROGRESS_BAR).length, 1);
-    assert.equal(store.find('attachment').get('length'), 1);
     assert.equal(model.get('attachments').get('length'), 1);
     assert.equal(find('.t-remove-attachment').length, 1);
   });
@@ -241,7 +225,6 @@ test('user cannot see progress bar for uploaded attachment that is associated wi
   andThen(() => {
     model = store.find('ticket', TD.idOne);
     assert.equal(currentURL(), TICKET_URL);
-    assert.equal(store.find('attachment').get('length'), 1);
     assert.equal(model.get('attachments').get('length'), 1);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
@@ -265,7 +248,6 @@ test('file upload supports multiple attachments', (assert) => {
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(PROGRESS_BAR).length, 0);
-    assert.equal(store.find('attachment').get('length'), 0);
   });
   patchRandomAsync(0);
   ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
@@ -275,7 +257,6 @@ test('file upload supports multiple attachments', (assert) => {
     assert.equal(find(PROGRESS_BAR).length, 2);
     assert.ok(find(PROGRESS_BAR).is(':visible'));
     assert.equal(find(PROGRESS_BAR).attr('style'), 'width: 100%;');
-    assert.equal(store.find('attachment').get('length'), 2);
     assert.equal(model.get('attachments').get('length'), 2);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isDirtyOrRelatedDirty'));
@@ -286,7 +267,6 @@ test('file upload supports multiple attachments', (assert) => {
   andThen(() => {
     model = store.find('ticket', TD.idOne);
     assert.equal(currentURL(), TICKET_URL);
-    assert.equal(store.find('attachment').get('length'), 2);
     assert.equal(model.get('attachments').get('length'), 2);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
@@ -304,7 +284,6 @@ test('rolling back should only remove files not yet associated with a given tick
     model = store.find('ticket', TD.idOne);
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(PROGRESS_BAR).length, 0);
-    assert.equal(store.find('attachment').get('length'), 1);
     assert.equal(model.get('attachments').get('length'), 1);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
@@ -317,7 +296,6 @@ test('rolling back should only remove files not yet associated with a given tick
     assert.equal(find(PROGRESS_BAR).length, 1);
     assert.ok(find(PROGRESS_BAR).is(':visible'));
     assert.equal(find(PROGRESS_BAR).attr('style'), 'width: 100%;');
-    assert.equal(store.find('attachment').get('length'), 2);
     assert.equal(model.get('attachments').get('length'), 2);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isDirtyOrRelatedDirty'));
@@ -335,7 +313,6 @@ test('rolling back should only remove files not yet associated with a given tick
   click('.t-modal-rollback-btn');
   andThen(() => {
     assert.equal(model.get('attachments').get('length'), 1);
-    assert.equal(store.find('attachment').get('length'), 1);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
   });
@@ -347,7 +324,6 @@ test('when multiple tabs are open only attachments associated with the rollback 
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(store.find('attachment').get('length'), 0);
     assert.equal(store.find('ticket', TD.idOne).get('attachments').get('length'), 0);
   });
   patchRandomAsync(0);
@@ -355,7 +331,6 @@ test('when multiple tabs are open only attachments associated with the rollback 
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, store.find('ticket', TD.idOne));
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(store.find('attachment').get('length'), 1);
     assert.equal(store.find('ticket', TD.idOne).get('attachments').get('length'), 1);
   });
   ajax(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
@@ -368,14 +343,12 @@ test('when multiple tabs are open only attachments associated with the rollback 
   visit(DETAIL_TWO_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_TWO_URL);
-    assert.equal(store.find('attachment').get('length'), 1);
     assert.equal(store.find('ticket', TD.idTwo).get('attachments').get('length'), 0);
   });
   ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, store.find('ticket', TD.idTwo));
   andThen(() => {
     assert.equal(currentURL(), DETAIL_TWO_URL);
-    assert.equal(store.find('attachment').get('length'), 2);
     assert.equal(store.find('ticket', TD.idTwo).get('attachments').get('length'), 1);
   });
   ajax(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
@@ -397,7 +370,6 @@ test('when multiple tabs are open only attachments associated with the rollback 
   ajax(`${ATTACHMENTS_URL}batch-delete/`, 'DELETE', {ids: ['abc123']}, {}, 204, {});
   click('.t-modal-rollback-btn');
   andThen(() => {
-      // assert.equal(store.find('attachment').get('length'), 1);
       // TODO: fix once figure out delete
       assert.equal(store.find('ticket', TD.idOne).get('attachments').get('length'), 0);
       // assert.equal(store.find('ticket', TD.idOne).get('isDirtyOrRelatedDirty'), false);

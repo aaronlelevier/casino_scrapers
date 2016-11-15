@@ -146,6 +146,35 @@ test('ticket with existing assignee should not modify locations as it will not b
   assert.equal(ticket.get('assignee').id, PD.id);
 });
 
+test('ticket assignee setups properly with embedded photo', (assert) => {
+  let response = TF.generate(TD.idOne);
+  response.assignee.photo = {id: '9', image_thumbnail: 'wat.jpg'};
+  response.cc.forEach(person => delete person.photo); // delete photo for cc so no fake results
+  run(function() {
+    subject.deserialize(response, TD.idOne);
+  });
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  // photo is setup correctly
+  let assignee = ticket.get('assignee');
+  const person = store.find('person', assignee.get('id'));
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(assignee.get('photo').get('id'));
+  assert.ok(assignee.get('photo').get('image_thumbnail'));
+});
+
+test('ticket assignee setups properly with no photo', (assert) => {
+  let response = TF.generate(TD.idOne);
+  response.cc.forEach(person => delete person.photo);
+  delete response.assignee.photo;
+  let assignee = ticket.get('assignee');
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  run(function() {
+    subject.deserialize(response, TD.idOne);
+  });
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(ticket.get('assignee').get('photo'), undefined, 'photo is not related to assignee');
+});
+
 /*TICKET LOCATION 1-2-Many*/
 test('ticket location will be deserialized into its own store when deserialize list is invoked (no existing location)', (assert) => {
   let location;
@@ -471,7 +500,7 @@ test('ticket status will be updated when server returns same status (single)', (
 //     assert.equal(ticket.get('status_fk'), TD.statusTwoId);
 // });
 
-/*TICKET PERSON M2M*/
+/*TICKET PERSON M2M CC*/
 test('ticket-join-person m2m is set up correctly using deserialize single (starting with no m2m relationship)', (assert) => {
   let response = TF.generate(TD.idOne);
   let cc = ticket.get('cc');
@@ -487,6 +516,8 @@ test('ticket-join-person m2m is set up correctly using deserialize single (start
   assert.equal(store.find('ticket-join-person').get('length'), 1);
   assert.ok(original.get('isNotDirty'));
   assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
+  const person = store.find('person', cc.objectAt(0).get('id'));
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('ticket-status m2m is added after deserialize single (starting with existing m2m relationship)', (assert) => {
@@ -519,8 +550,8 @@ test('ticket-join-person m2m is removed when server payload no longer reflects w
   store.push('person', {id: PD.id, name: PD.fullname});
   assert.equal(ticket.get('cc').get('length'), 1);
   let response = TF.generate(TD.id);
-  let second_person = PF.get(PD.unusedId);
-  let third_person = PF.get(PD.idTwo);
+  let second_person = PF.get_no_related(PD.unusedId);
+  let third_person = PF.get_no_related(PD.idTwo);
   response.cc = [second_person, third_person];
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   run(function() {
@@ -574,6 +605,38 @@ test('ticket-join-person m2m added even when ticket did not exist before the des
   assert.ok(ticket.get('isNotDirty'));
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(store.find('ticket-join-person').get('length'), 1);
+});
+
+test('ticket cc setups properly with embedded photo', (assert) => {
+  let response = TF.generate(TD.idOne);
+  let cc = ticket.get('cc');
+  assert.equal(cc.get('length'), 0);
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  run(function() {
+    subject.deserialize(response, TD.idOne);
+  });
+  assert.equal(cc.get('length'), 1);
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  // photo is setup correctly
+  const person = store.find('person', cc.objectAt(0).get('id'));
+  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(cc.objectAt(0).get('photo').get('id'));
+  assert.ok(cc.objectAt(0).get('photo').get('image_thumbnail'));
+});
+
+test('ticket cc setups properly with no photo', (assert) => {
+  let response = TF.generate(TD.idOne);
+  response.cc.forEach(person => delete person.photo);
+  delete response.assignee.photo;
+  let cc = ticket.get('cc');
+  assert.equal(cc.get('length'), 0);
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  run(function() {
+    subject.deserialize(response, TD.idOne);
+  });
+  assert.equal(cc.get('length'), 1);
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(ticket.get('cc').objectAt(0).get('photo'), undefined, 'photo is not related to photo');
 });
 
 /*TICKET CATEGORY M2M*/
@@ -796,7 +859,7 @@ test('attachment added for each attachment on ticket', (assert) => {
   assert.equal(attachments.objectAt(0).get('id'), TD.attachmentOneId);
   assert.ok(ticket.get('isNotDirty'));
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(store.find('attachment').get('length'), 1);
+  assert.equal(store.find('attachment').get('length'), 2);
 });
 
 test('attachment added for each attachment on ticket (when ticket has existing attachments)', (assert) => {
@@ -817,7 +880,7 @@ test('attachment added for each attachment on ticket (when ticket has existing a
   assert.equal(attachments.objectAt(1).get('id'), TD.attachmentOneId);
   assert.ok(ticket.get('isNotDirty'));
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(store.find('attachment').get('length'), 2);
+  assert.equal(store.find('attachment').get('length'), 3);
 });
 
 /* DT Path */

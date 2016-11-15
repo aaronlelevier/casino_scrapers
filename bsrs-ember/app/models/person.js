@@ -94,7 +94,7 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMi
   locale_repo: injectRepo('locale'),
   username: attr(''),
   usernameIsDirty() {
-    // NOTES: why do this?
+    // TODO: NOTES: why do this?
     return this.get('_dirty')['username'];
   },
   password: attr(''),
