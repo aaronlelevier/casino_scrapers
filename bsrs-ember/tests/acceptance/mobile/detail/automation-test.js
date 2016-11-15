@@ -38,7 +38,7 @@ test('can click from admin to automation grid to detail', async assert => {
   assert.equal(currentURL(), BASEURLS.base_admin_url);
   await pageDrawer.clickDrawer();
   await pageDrawer.clickAdmin();
-  await generalPage.clickautomations();
+  await generalPage.clickAutomations();
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
   await generalPage.gridItemZeroClick();
   assert.equal(currentURL(), GRID_DETAIL_URL);

@@ -54,6 +54,7 @@ test('clicking on filter icon will show filters and cancel will close it out', a
   assert.throws(find('.t-mobile-filters'));
 });
 
+// FAILING ON CHROME
 test('search presents results on slideUp pane w/o pushing into store', async assert => {
   xhr(PREFIX + BASE_URL + '/?search=ape','GET',null,{},200,TF.searched('ape', 'request'));
   xhr(PREFIX + BASE_URL + '/?search=subb2','GET',null,{},200,TF.searched('subb2', 'request'));

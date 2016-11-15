@@ -23,12 +23,12 @@ moduleForAcceptance('Acceptance | general automation list test', {
   },
 });
 
-test('can click automations from the Dashboard to grid  and then to detail', assert => {
+test('can click automations from the Dashboard to grid and then to detail', assert => {
   visit(BASEURLS.base_admin_url);
   andThen(() => {
     assert.equal(currentURL(), BASEURLS.base_admin_url);
   });
-  generalPage.clickautomations();
+  generalPage.clickAutomations();
   andThen(() => {
     assert.equal(currentURL(), AUTOMATION_LIST_URL);
   });

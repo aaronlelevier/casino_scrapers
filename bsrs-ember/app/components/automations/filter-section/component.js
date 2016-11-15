@@ -48,7 +48,7 @@ export default Ember.Component.extend({
     * @param {object} old_pfilter - is either undefined or a model.pf instance
     * @param {object} pfilter - is the selected pfilter
     */
-    setautomationFilter(old_pfilter, avail_filter) {
+    setAutomationFilter(old_pfilter, avail_filter) {
       const id = old_pfilter.get('id');
       old_pfilter.get('criteria').forEach(c => {
         old_pfilter.remove_criteria(c.get('id'));

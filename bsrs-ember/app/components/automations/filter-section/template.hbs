@@ -43,12 +43,12 @@
             selected=(model-at model.pf index)
             options=options
             placeholder=(t "admin.automation.placeholder.available_filter")
-            onchange=(action "setautomationFilter" (model-at model.pf index))
+            onchange=(action "setAutomationFilter" (model-at model.pf index))
             onopen=(action "fetchFilters" index)
             searchEnabled=false
             as |pf|
           }}
-            {{t pf.key}} {{if pf.existingautomation (concat (t "admin.automation.selected_in") " " pf.existingautomation)}}
+            {{t pf.key}}
           {{/power-select}}
         </div>
         {{component (automation-filter (model-at model.pf index))
