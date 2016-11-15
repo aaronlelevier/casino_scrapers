@@ -12,11 +12,13 @@ var es5Shim = funnel('node_modules/es5-shim', {
 
 module.exports = function(defaults) {
   var isProdBuild = (EmberApp.env() === 'production');
+  var isLocalServerBuild = (process.env.LOCAL_SERVER === 'true');
+  var isStandAloneBuild = !isProdBuild && !isLocalServerBuild; // test|development
   var app = new EmberApp(defaults, {
     'fingerprint': {
       prepend: '/static/',
       exclude: ['assets/icons'],
-      enabled: isProdBuild,
+      enabled: isProdBuild || isLocalServerBuild,
     },
     babel: {
       optional: ['es7.decorators'],
@@ -24,12 +26,12 @@ module.exports = function(defaults) {
     },
     minifyJS: {
       enabled: false
-    },
+    }
   });
   app.import('vendor/defaults/uuid.js');
   app.import('vendor/defaults/global-message.js');
   app.import('bower_components/ember/ember-template-compiler.js');
-  if(app.env !== 'production') {
+  if (isStandAloneBuild) {
     app.import('bower_components/fauxjax-toranb/dist/fauxjax.min.js');
     app.import('vendor/address_fixtures.js');
     app.import('vendor/admin_translation_fixtures.js');
@@ -129,4 +131,4 @@ module.exports = function(defaults) {
   // along with the exports of each module as its value.
 
   return app.toTree([es5Shim]);
-}
+};
