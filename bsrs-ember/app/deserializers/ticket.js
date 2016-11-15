@@ -11,6 +11,7 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     belongs_to.bind(this)('priority', 'ticket');
     belongs_to.bind(this)('assignee', 'person');
     belongs_to.bind(this)('location', 'location');
+    belongs_to.bind(this)('photo');
     many_to_many.bind(this)('cc', 'ticket');
     many_to_many.bind(this)('attachments', 'ticket');
   },
@@ -21,45 +22,30 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
       this._deserializeList(response);
     }
   },
-  _deserializeSingle(response) {
-    let store = this.get('simpleStore');
-    // belongs-to
-    let location_json = response.location;
-    // TODO: ticket always have a location?
-    response.location_fk = location_json.id;
-    delete response.location;
-    let assignee_json = response.assignee;
-    response.assignee_fk = response.assignee ? response.assignee.id : undefined;
-    delete response.assignee;
-    // m2m
-    let cc_json = response.cc;
-    delete response.cc;
-    let attachments_json = response.attachments.map((id) => { return { id: id }; });
-    delete response.attachments;
-    const categories_json = response.categories;
-    delete response.categories;
-    response.detail = true;
-    let ticket = store.push('ticket', response);
-    this.setup_status(response.status_fk, ticket);
-    this.setup_priority(response.priority_fk, ticket);
-    if (assignee_json) {
-      this.setup_assignee(assignee_json, ticket);
-    }
-    if (location_json) {
-      this.setup_location(location_json, ticket);
-    }
-    this.setup_cc(cc_json, ticket);
-    // this.setup_attachments(attachments_json, ticket);
-    let [m2m_attachments, attachments, m2m_attachment_fks] = many_to_many_extract(attachments_json, store, ticket, 'generic_attachments', 'generic_pk', 'attachment', 'attachment_pk');
-    run(() => {
-      attachments.forEach((att) => {
-        store.push('attachment', att);
-      });
-      m2m_attachments.forEach((m2m) => {
-        store.push('generic-join-attachment', m2m);
-      });
-      store.push('ticket', {id: ticket.get('id'), generic_attachments_fks: m2m_attachment_fks});
+  setupCC(cc_json, ticket) {
+    const store = this.get('simpleStore');
+    let photo_array = [];
+    cc_json = cc_json.map((cc) => {
+      // push into attachment model and setup relationship w/ cc.  User may not have a photo
+      if (cc.photo) {
+        photo_array.push({ [cc.id]: cc.photo });
+        cc.photo_fk = cc.photo.id;
+        delete cc.photo;
+        cc.detail = true;
+      }
+      return cc;
     });
+    // setup cc
+    this.setup_cc(cc_json, ticket);
+    // setup photo belongs to cc
+    photo_array.forEach((photo) => {
+      const person_id = Object.keys(photo)[0];
+      const person = store.find('person', person_id);
+      this.setup_photo(photo[person_id], person);
+    });
+  },
+  setupCategories(categories_json, ticket) {
+    const store = this.get('simpleStore');
     let [m2m_categories, categories, server_sum] = many_to_many_extract(categories_json, store, ticket, 'model_categories', 'model_pk', 'category', 'category_pk');
     run(() => {
       categories.forEach((cat) => {
@@ -80,8 +66,57 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
       m2m_categories.forEach((m2m) => {
         store.push('model-category', m2m);
       });
-      ticket = store.push('ticket', {id: response.id, model_categories_fks: server_sum});
+      ticket = store.push('ticket', {id: ticket.get('id'), model_categories_fks: server_sum});
       ticket.save();
+    });
+  },
+  _deserializeSingle(response) {
+    const store = this.get('simpleStore');
+    // belongs-to
+    let location_json = response.location;
+    // TODO: ticket always have a location?
+    response.location_fk = location_json.id;
+    delete response.location;
+    let assignee_json = response.assignee;
+    response.assignee_fk = response.assignee ? response.assignee.id : undefined;
+    delete response.assignee;
+    // m2m
+    let cc_json = response.cc;
+    delete response.cc;
+    let attachments_json = response.attachments.map((id) => { return { id: id }; });
+    delete response.attachments;
+    const categories_json = response.categories;
+    delete response.categories;
+    response.detail = true;
+    let ticket = store.push('ticket', response);
+    
+    // SETUP
+    this.setup_status(response.status_fk, ticket);
+    this.setup_priority(response.priority_fk, ticket);
+    if (assignee_json) {
+      const assignee_photo = assignee_json.photo;
+      delete assignee_json.photo;
+      const assignee = this.setup_assignee(assignee_json, ticket);
+      if (assignee_photo) {
+        assignee.change_photo(assignee_photo);
+      }
+    }
+    if (location_json) {
+      this.setup_location(location_json, ticket);
+    }
+    this.setupCC(cc_json, ticket);
+    this.setupCategories(categories_json, ticket);
+
+    // this.setup_attachments(attachments_json, ticket);
+    let [m2m_attachments, attachments, m2m_attachment_fks] = many_to_many_extract(attachments_json, store, ticket, 'generic_attachments', 'generic_pk', 'attachment', 'attachment_pk');
+    run(() => {
+      attachments.forEach((att) => {
+        store.push('attachment', att);
+      });
+      m2m_attachments.forEach((m2m) => {
+        store.push('generic-join-attachment', m2m);
+      });
+      store.push('ticket', {id: ticket.get('id'), generic_attachments_fks: m2m_attachment_fks});
     });
     return ticket;
   },

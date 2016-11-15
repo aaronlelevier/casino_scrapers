@@ -268,7 +268,7 @@ test('clicking on a new model from the grid view will not dirty the original tab
   });
   const id = 'bf2b9c85-f6bd-4345-9834-c5d51de53d02';
   const data = TF.detail(id);
-  data.cc = [PF.get(PD.idTwo)];
+  data.cc = [PF.get_no_related(PD.idTwo)];
   ajax(endpoint + id + '/', 'GET', null, {}, 200, data);
   ajax(`/api/tickets/${id}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
   click('.t-grid-data:eq(1)');

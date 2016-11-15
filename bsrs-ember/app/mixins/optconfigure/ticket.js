@@ -11,7 +11,7 @@ import Ember from 'ember';
  *   - statusIsDirty
  *   - statusIsNotDirty
  * Then this file will configure the:
- *   - collection for which the property will find the association
+ *   - collection for which the property will find the association, i.e. location model will store an array of ticket []
  *   - property that is used as the store model and property on the belongs_to model (ticket)
  *   - related model that overrides the property when doing a this.get('status') method
  *   - main_model used for m2m in order to override a generic model definition in the init method with the parent model (ticket instead of generic for attachments)
@@ -50,6 +50,13 @@ export default Ember.Mixin.create({
       associated_model: 'category',
       join_model: 'model-category',
       main_model: 'ticket'
-    }
+    },
+
+    // deserializer
+    photo: {
+      collection: 'people',
+      property: 'attachment',
+      related_model: 'photo',
+    },
   },
 });

@@ -9,7 +9,7 @@ import CategoriesMixin from 'bsrs-ember/mixins/model/category';
 import TicketLocationMixin from 'bsrs-ember/mixins/model/ticket/location';
 import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
 import { belongs_to, change_belongs_to } from 'bsrs-components/attr/belongs-to';
-import { many_to_many } from 'bsrs-components/attr/many-to-many';
+import { many_to_many, add_many_to_many } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 const Validations = buildValidations({
@@ -55,7 +55,7 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     belongs_to.bind(this)('priority', 'ticket', {bootstrapped:true});
     belongs_to.bind(this)('assignee', 'ticket', {change_func:false, rollback:false});//change_assignee_container (below): change_belongs_to
     belongs_to.bind(this)('location', 'ticket', {change_func:false});
-    many_to_many.bind(this)('cc', 'ticket');
+    many_to_many.bind(this)('cc', 'ticket', {add_func: false});
     many_to_many.bind(this)('attachment', 'generic', {plural: true});
     many_to_many.bind(this)('category', 'model', {plural:true, add_func:false});
   },
@@ -103,6 +103,10 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
       });
     }
   },
+  /**
+   * @method person_status_role_setup
+   * @return {Object Proxy} person
+   */
   person_status_role_setup(person_json) {
     const store = get(this, 'simpleStore');
     const role = store.find('role', person_json.role);
@@ -119,11 +123,48 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     return pushed_person;
   },
   change_assignee_container: change_belongs_to('assignee'),
+  /**
+   * @method change_assignee
+   * extra belongs_to processing for assignee.  Usually called from a power select OR ticket detail setup_assignee
+   * 1. setup role and status - will change role and status on person, which will affect the person's locations (person's role determines the location level, and the llevel determines what locations the person has)
+   * 2. setup photo - person may not have a photo
+   * @param {Object} - id, fullname, photo
+   * @return {Object Proxy} - hydrated person model
+   */
   change_assignee(new_assignee) {
-    this.person_status_role_setup(new_assignee);
+    const photo = new_assignee.photo;
+    if (photo) {
+      delete new_assignee.photo;
+      new_assignee.photo_fk = photo.id;
+    }
+    const person = this.person_status_role_setup(new_assignee);
     this.change_assignee_container(new_assignee.id);
+    if (photo) {
+      person.change_photo(photo);
+    }
+    return person;
   },
-  /* @method saveAttachmentsContainer
+  /**
+   * @method add_cc - overrides attr
+   * 1. setup photo - person may not have a photo
+   * @params {Object} - id, fullname, photo
+   */
+  add_cc(json) {
+    const store = this.get('simpleStore');
+    const photo = json.photo;
+    if (photo) {
+      delete json.photo;
+      json.photo_fk = photo.id;
+    }
+    this.add_cc_container(json);
+    const person = store.find('person', json.id);
+    if (photo) {
+      person.change_photo(photo);
+    }
+  },
+  add_cc_container: add_many_to_many('cc', 'ticket_cc', 'ticket'),
+  /**
+   * @method saveAttachmentsContainer
    * sets new flag so template can render differently for the attachment
    */
   saveAttachmentsContainer() {
