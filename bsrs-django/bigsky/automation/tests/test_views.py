@@ -44,7 +44,7 @@ class AutomationEventTests(APITestCase):
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
-        self.assertTrue(data['count'] > 0)
+        self.assertTrue(data['count'] == len(AutomationEvent.ALL))
         self.assertEqual(len(data['results'][0]), 2)
         event = AutomationEvent.objects.get(id=data['results'][0]['id'])
         self.assertEqual(data['results'][0]['key'], event.key)

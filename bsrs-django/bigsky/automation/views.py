@@ -9,6 +9,7 @@ from automation.models import (AutomationEvent, Automation, AutomationFilterType
 from automation import serializers as rs
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.views import BaseModelViewSet
+from utils.pagination import LargeResultsSetPagination
 
 
 class AutomationEventViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -16,6 +17,7 @@ class AutomationEventViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     queryset = AutomationEvent.objects.all()
     serializer_class = rs.AutomationEventSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    pagination_class = LargeResultsSetPagination 
 
 
 class AutomationActionTypeViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
