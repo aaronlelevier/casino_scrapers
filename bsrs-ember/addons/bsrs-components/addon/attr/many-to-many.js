@@ -38,7 +38,7 @@ var many_to_many = function(_associatedModel, _modelName, noSetup) {
 
   //add
   if (add_func) {
-    Ember.defineProperty(this, `add_${_singularName}`, undefined, add_many_to_many(_associatedModel, _joinModelName, _parentNameUnderscore));
+    Ember.defineProperty(this, `add_${_singularName}`, undefined, add_many_to_many(_associatedModel, _parentNameUnderscore));
   }
   //remove
   if (remove_func) {
@@ -269,7 +269,7 @@ var many_to_many_save = function(_joinModelName, _associatedModel, _modelName) {
  * @method add_many_to_many
  * @return {function}
  */
-var add_many_to_many = function(_associatedModel, _joinModelName, _parentNameUnderscore) {
+var add_many_to_many = function(_associatedModel, _parentNameUnderscore) {
   return function(many_related) {
     const lookup_pk = Ember.String.underscore(this.OPT_CONF[_associatedModel]['associated_pointer'] || this.OPT_CONF[_associatedModel]['associated_model']);
     const many_fk = `${lookup_pk}_pk`;

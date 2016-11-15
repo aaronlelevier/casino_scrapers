@@ -164,7 +164,7 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
       person.change_photo(photo);
     }
   },
-  add_cc_container: add_many_to_many('cc', 'ticket_cc', 'ticket'),
+  add_cc_container: add_many_to_many('cc', 'ticket'),
   /**
    * @method saveAttachmentsContainer
    * sets new flag so template can render differently for the attachment

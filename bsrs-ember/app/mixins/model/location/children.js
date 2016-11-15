@@ -12,7 +12,7 @@ var ChildrenMixin = Ember.Mixin.create({
         delete children.location_level;
         this.add_child_container(children);
     },
-    add_child_container: add_many_to_many('children', 'location_children', 'location'),
+    add_child_container: add_many_to_many('children', 'location'),
 });
 
 export default ChildrenMixin;
