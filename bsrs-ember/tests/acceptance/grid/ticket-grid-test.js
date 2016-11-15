@@ -52,6 +52,8 @@ test('initial load should only show first ${PAGE_SIZE} records ordered by id wit
     assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text().trim(), LD.baseStoreName);
     assert.ok(find('.t-grid-data:eq(0) .t-ticket-priority-emergency'));
     assert.ok(find('.t-grid-data:eq(0) .t-ticket-status-new'));
+    assert.equal(find('[data-test-id="user-fullname"]:eq(0)').text().trim(), PD.fullname);
+    assert.ok(find('[data-test-id="user-avatar"]:eq(0)'));
     const time = moment(new Date()).calendar();
     assert.equal(find('.t-grid-data:eq(0) .t-ticket-created').text().trim(), `${time}`);
     pagination(assert);

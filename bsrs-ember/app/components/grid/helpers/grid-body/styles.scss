@@ -57,12 +57,12 @@
     display: inline-block;
     @include font-awesome("\f041");
   }
-  .ticket-assignee:before{
-    margin-right: 2%;
-    color: $medGray;
-    display: inline-block;
-    @include font-awesome("\f007");
-  }
+  // .ticket-assignee:before{
+  //   margin-right: 2%;
+  //   color: $medGray;
+  //   display: inline-block;
+  //   @include font-awesome("\f007");
+  // }
   .person-fullname {
     font-size: 1.6rem;
     padding: 4px 0 0;

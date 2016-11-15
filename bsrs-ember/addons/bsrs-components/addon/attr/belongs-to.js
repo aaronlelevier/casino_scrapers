@@ -80,7 +80,7 @@ var belongs_to_generator = function(_ownerName) {
  *   - need this method to setup model in store
  *
  * @method change_belongs_to
- * @param {object}
+ * @param {Object} or {String}
  * @return func
  */
 var change_belongs_to = function(_ownerName) {
@@ -114,6 +114,8 @@ var change_belongs_to = function(_ownerName) {
         store.push(this.OPT_CONF[_ownerName]['property'], current_related_pojo);
       });
     }
+
+    // passed in object if not bootstrapped
     if (new_related && typeof new_related === 'object') {
       //push calling id back in array
       const related_collection = push_related.get(collection) || [];
@@ -122,6 +124,7 @@ var change_belongs_to = function(_ownerName) {
       run(() => {
         store.push(this.OPT_CONF[_ownerName]['property'], new_related_pojo);
       });
+    // passed in id if bootstrapped
     } else if (typeof new_related !== 'object') { //may be # or string
       let new_related_obj = store.find(this.OPT_CONF[_ownerName]['property'], new_related);
       const new_related_existing = new_related_obj.get(collection) || [];

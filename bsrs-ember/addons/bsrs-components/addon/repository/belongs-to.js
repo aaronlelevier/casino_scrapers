@@ -1,8 +1,10 @@
 import Ember from 'ember';
 const { run } = Ember;
 
-/*
- * TODO: NEED TO REFACTOR
+/**
+ * @method belongs_to_extract
+ * use extract rather than just change method b/c we do not want to push in the related model if it is the same as what existed locally
+ * detail flag is used to differentiate b/w list and detail parent models
  */
 var belongs_to_extract = function(type, store, parent_model, ownerName, relatedModelName, collection) {
   // DETAIL: belongs_to_extract(response.priority_fk, store, ticket, 'priority', 'ticket', 'tickets');

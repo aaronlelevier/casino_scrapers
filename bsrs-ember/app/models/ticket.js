@@ -105,6 +105,7 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
   },
   /**
    * @method person_status_role_setup
+   * need to pass role and status in ticket detail assignee b/c dont want to dirty the persom model 
    * @return {Object Proxy} person
    */
   person_status_role_setup(person_json) {
@@ -118,6 +119,7 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     run(() => {
       pushed_person = store.push('person', person_json);
     });
+    // change role is defined on the person model, not from the attrs
     pushed_person.change_role(role);
     pushed_person.change_status(person_json.status_fk);
     return pushed_person;
