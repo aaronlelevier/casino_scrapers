@@ -74,11 +74,11 @@ var many_to_many_json = function(modelName, _associatedModel, _singularAssociate
     /* REMAINING pushes in join models and setups _fks for dirty tracking on parent */
     run(() => {
       relateds.forEach((related) => {
-        const ass_model = this.OPT_CONF[_associatedModel]['associated_model'];
-        const existing_ass_model = store.find(ass_model, related.id);
+        const associated_model = this.OPT_CONF[_associatedModel]['associated_model'];
+        const existing_ass_model = store.find(associated_model, related.id);
         if (!existing_ass_model.get('id') || existing_ass_model.get('isNotDirtyOrRelatedNotDirty')) {
           /* jshint ignore:start */
-          const model = store.push(this.OPT_CONF[_associatedModel]['associated_model'], related);
+          const model = store.push(associated_model, related);
           model.save && model.save();
           /* jshint ignore:end */
         }

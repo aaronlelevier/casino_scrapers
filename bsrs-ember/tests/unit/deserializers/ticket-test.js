@@ -51,7 +51,7 @@ test('ticket has appropriate detail tag', (assert) => {
 test('ticket assignee will be deserialized into its own store with no assignee (detail)', (assert) => {
   let json = TF.generate(TD.idOne);
   json.assignee = null;
-  run(function() {
+  run(() => {
     subject.deserialize(json, json.id);
   });
   ticket = store.find('ticket', TD.idOne);
@@ -64,7 +64,7 @@ test('ticket assignee will be deserialized into its own store with no assignee (
   let json = TF.generate_list(TD.idOne);
   json.assignee = null;
   let response = {'count':1,'next':null,'previous':null,'results': [json]};
-  run(function() {
+  run(() => {
     subject.deserialize(response);
   });
   ticket = store.find('ticket', TD.idOne);
@@ -75,7 +75,7 @@ test('ticket assignee will be deserialized into its own store with no assignee (
 
 test('deserialize detail with no existing assignee (detail)', (assert) => {
   let json = TF.generate(TD.idOne);
-  run(function() {
+  run(() => {
     subject.deserialize(json, json.id);
   });
   ticket = store.find('ticket', TD.idOne);
@@ -121,7 +121,7 @@ test('deserialize list with existing assignee (list)', (assert) => {
   let json = TF.generate_list(TD.idOne);
   delete json.cc;
   let response = {'count':1,'next':null,'previous':null,'results': [json]};
-  run(function() {
+  run(() => {
     subject.deserialize(response);
   });
   ticket = store.find('ticket-list', TD.idOne);
@@ -129,36 +129,15 @@ test('deserialize list with existing assignee (list)', (assert) => {
   assert.equal(ticket.get('assignee').id, PD.idOne);
 });
 
-// test('scott ticket with existing assignee should not modify locations as it will not be in the json payload from the api', (assert) => {
-//   ticket = store.push('ticket', {id: TD.idOne, assignee_fk: PD.id});
-//   store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
-//   store.push('related-person', {id: PD.idOne, person_locations_fks: [PERSON_LD.idOne], assigned_tickets: [TD.idOne]});
-//   assert.equal(ticket.get('assignee').get('id'), PD.idOne);
-//   assert.equal(ticket.get('assignee').get('locations').get('length'), 1);
-//   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//   let json = TF.generate_list(TD.idOne);
-//   assert.equal(json.assignee.locations, undefined);
-//   let response = {'count':1,'next':null,'previous':null,'results': [json]};
-//   run(function() {
-//     subject.deserialize(response);
-//   });
-//   ticket = store.find('ticket-list', TD.idOne);
-//   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//   // assert.equal(ticket.get('assignee').get('id'), PD.idOne);
-// });
-
 test('ticket assignee setups properly with embedded photo', (assert) => {
   let response = TF.generate(TD.idOne);
   response.assignee.photo = {id: '9', image_thumbnail: 'wat.jpg'};
-  response.cc.forEach(person => delete person.photo); // delete photo for cc so no fake results
-  run(function() {
+  run(() => {
     subject.deserialize(response, TD.idOne);
   });
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   // photo is setup correctly w/ no related attachment model 
   let assignee = ticket.get('assignee');
-  const person = store.find('person', assignee.get('id'));
-  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(assignee.photo.id);
   assert.ok(assignee.photo.image_thumbnail);
 });
@@ -169,7 +148,7 @@ test('ticket assignee setups properly with no photo', (assert) => {
   delete response.assignee.photo;
   let assignee = ticket.get('assignee');
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(response, TD.idOne);
   });
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -184,7 +163,7 @@ test('ticket location will be deserialized into its own store when deserialize l
   delete json.cc;
   let response = {'count':1,'next':null,'previous':null,'results': [json]};
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(response);
   });
   ticket = store.find('ticket-list', TD.idOne);
@@ -198,7 +177,7 @@ test('ticket location will be deserialized into its own store when deserialize l
   let json = TF.generate_list(TD.idOne);
   delete json.cc;
   let response = {'count':1,'next':null,'previous':null,'results': [json]};
-  run(function() {
+  run(() => {
     subject.deserialize(response);
   });
   let location = store.findOne('location-list');
@@ -214,7 +193,7 @@ test('ticket location will be deserialized into its own store when deserialize d
   location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
   let json = TF.generate(TD.idOne);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(json, ticket.get('id'));
   });
   assert.deepEqual(location.get('tickets'), [TD.idOne]);
@@ -224,7 +203,7 @@ test('ticket location will be deserialized into its own store when deserialize d
 
 test('ticket location will be deserialized into its own store when deserialize detail is invoked (when ticket did not have location)', (assert) => {
   let json = TF.generate(TD.idOne);
-  run(function() {
+  run(() => {
     subject.deserialize(json, TD.idOne);
   });
   let location = store.findOne('location');
@@ -241,7 +220,7 @@ test('ticket location will be deserialized into its own store when deserialize d
   location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
   let json = TF.generate(TD.idOne);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(json, ticket.get('id'));
   });
   assert.deepEqual(location.get('tickets'), [TD.idOne]);
@@ -259,7 +238,7 @@ test('ticket location will be deserialized into its own store when deserialize d
 //     json.location = {id: LD.idTwo, name: LD.storeNameTwo, location_level: LLD.idOne};
 //     let response = {'count':1,'next':null,'previous':null,'results': [json]};
 //     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//     run(function() {
+//     run(() => {
 //         subject.deserialize(response);
 //     });
 //     ticket = store.find('ticket-list', TD.idOne);
@@ -281,7 +260,7 @@ test('ticket location will be updated when server returns different location (de
   let json = TF.generate(TD.idOne);
   json.location = {id: LD.idTwo, name: LD.storeNameTwo, location_level: LLD.idOne};
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(json, ticket.get('id'));
   });
   assert.deepEqual(location.get('tickets'), []);
@@ -296,7 +275,7 @@ test('ticket priority will be deserialized into its own store when deserialize l
   let json = TF.generate_list(TD.idOne);
   let response = {'count':1,'next':null,'previous':null,'results': [json]};
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(response);
   });
   ticket = store.find('ticket-list', TD.idOne);
@@ -308,7 +287,7 @@ test('ticket priority will be deserialized into its own store when deserialize l
 test('ticket priority will be deserialized into its own store when deserialize list is invoked (when ticket did not exist before)', (assert) => {
   let json = TF.generate_list(TD.idOne);
   let response = {'count':1,'next':null,'previous':null,'results': [json]};
-  run(function() {
+  run(() => {
     subject.deserialize(response);
   });
   ticket = store.find('ticket-list', TD.idOne);
@@ -322,7 +301,7 @@ test('ticket priority will be deserialized into its own store when deserialize l
 test('ticket priority will be deserialized into its own store when deserialize detail is invoked (with existing non-wired priority model)', (assert) => {
   let json = TF.generate(TD.idOne);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(json, ticket.get('id'));
   });
   assert.deepEqual(ticket_priority.get('tickets'), [TD.idOne]);
@@ -332,7 +311,7 @@ test('ticket priority will be deserialized into its own store when deserialize d
 
 test('ticket priority will be deserialized into its own store when deserialize detail is invoked (when ticket did not exist before)', (assert) => {
   let json = TF.generate(TD.idOne);
-  run(function() {
+  run(() => {
     subject.deserialize(json, TD.idOne);
   });
   assert.deepEqual(ticket_priority.get('tickets'), [TD.idOne]);
@@ -346,7 +325,7 @@ test('ticket priority will be deserialized into its own store when deserialize d
   ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne, 99]});
   let json = TF.generate(TD.idOne);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(json, ticket.get('id'));
   });
   assert.deepEqual(ticket_priority.get('tickets'), [TD.idOne, 99]);
@@ -366,7 +345,7 @@ test('ticket priority will be deserialized into its own store when deserialize d
 //     let response = {'count':1,'next':null,'previous':null,'results': [json]};
 //     ticket = store.find('ticket-list', TD.idOne);
 //     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//     run(function() {
+//     run(() => {
 //         subject.deserialize(response);
 //     });
 //     ticket_priority = store.find('ticket-priority-list', TD.priorityOneId);
@@ -413,7 +392,7 @@ test('ticket status will be deserialized into its own store when deserialize lis
   let json = TF.generate_list(TD.idOne);
   let response = {'count':1,'next':null,'previous':null,'results': [json]};
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(response);
   });
   ticket = store.find('ticket-list', TD.idOne);
@@ -425,7 +404,7 @@ test('ticket status will be deserialized into its own store when deserialize lis
 test('ticket status will be deserialized into its own store when deserialize detail is invoked', (assert) => {
   let json = TF.generate(TD.idOne);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(json, ticket.get('id'));
   });
   assert.deepEqual(ticket_status.get('tickets'), [TD.idOne]);
@@ -438,7 +417,7 @@ test('ticket status will be deserialized into its own store when deserialize det
 //     delete json.cc;
 //     let response = {'count':1,'next':null,'previous':null,'results': [json]};
 //     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//     run(function() {
+//     run(() => {
 //         subject.deserialize(response);
 //     });
 //     ticket = store.find('ticket-list', TD.idOne);
@@ -451,7 +430,7 @@ test('ticket status will be deserialized into its own store when deserialize det
 test('ticket status will be updated when server returns same status (single)', (assert) => {
   let json = TF.generate(TD.idOne);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(json, ticket.get('id'));
   });
   assert.deepEqual(ticket_status.get('tickets'), [TD.idOne]);
@@ -468,7 +447,7 @@ test('ticket status will be updated when server returns same status (single)', (
 //     json.status_fk = TD.statusTwoId;
 //     let response = {'count':1,'next':null,'previous':null,'results': [json]};
 //     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//     run(function() {
+//     run(() => {
 //         subject.deserialize(response);
 //     });
 //     ticket = store.find('ticket-list', TD.idOne);
@@ -490,7 +469,7 @@ test('ticket status will be updated when server returns same status (single)', (
 //     delete json.cc;
 //     json.status_fk = TD.statusTwoId;
 //     let response = {'count':1,'next':null,'previous':null,'results': [json]};
-//     run(function() {
+//     run(() => {
 //         subject.deserialize(response);
 //     });
 //     assert.deepEqual(ticket_status.get('tickets'), []);
@@ -507,7 +486,7 @@ test('ticket-join-person m2m is set up correctly using deserialize single (start
   let cc = ticket.get('cc');
   assert.equal(cc.get('length'), 0);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(response, TD.idOne);
   });
   let original = store.find('ticket', TD.idOne);
@@ -517,21 +496,19 @@ test('ticket-join-person m2m is set up correctly using deserialize single (start
   assert.equal(store.find('ticket-join-person').get('length'), 1);
   assert.ok(original.get('isNotDirty'));
   assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
-  const person = store.find('person', cc.objectAt(0).get('id'));
-  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('ticket-status m2m is added after deserialize single (starting with existing m2m relationship)', (assert) => {
   ticket.set('ticket_cc_fks', [TICKET_PERSON_DEFAULTS.idOne]);
   ticket.save();
-  store.push('ticket-join-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
-  store.push('person', {id: PD.idOne, fullname: PD.fullname});
+  store.push('ticket-join-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, related_person_pk: PD.id});
+  store.push('related-person', {id: PD.idOne, fullname: PD.fullname});
   assert.equal(ticket.get('cc.length'), 1);
   let response = TF.generate(TD.idOne);
   let second_person = PF.get_no_related(PD.unusedId);
   response.cc = [PF.get_no_related(), second_person];
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(response, TD.idOne);
   });
   let original = store.find('ticket', TD.idOne);
@@ -547,15 +524,15 @@ test('ticket-status m2m is added after deserialize single (starting with existin
 test('ticket-join-person m2m is removed when server payload no longer reflects what server has for m2m relationship', (assert) => {
   ticket.set('ticket_cc_fks', [TICKET_PERSON_DEFAULTS.idOne]);
   ticket.save();
-  store.push('ticket-join-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
-  store.push('person', {id: PD.idOne, name: PD.fullname});
+  store.push('ticket-join-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, related_person_pk: PD.id});
+  store.push('related-person', {id: PD.idOne, fullname: PD.fullname});
   assert.equal(ticket.get('cc').get('length'), 1);
   let response = TF.generate(TD.id);
   let second_person = PF.get_no_related(PD.unusedId);
   let third_person = PF.get_no_related(PD.idTwo);
   response.cc = [second_person, third_person];
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(response, TD.idOne);
   });
   let original = store.find('ticket', TD.idOne);
@@ -613,16 +590,15 @@ test('ticket cc setups properly with embedded photo', (assert) => {
   let cc = ticket.get('cc');
   assert.equal(cc.get('length'), 0);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(response, TD.idOne);
   });
+  cc = ticket.get('cc');
   assert.equal(cc.get('length'), 1);
-  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(ticket.get('isNotDirtyOrRelatedNotDirty'), true);
   // photo is setup correctly
-  const person = store.find('person', cc.objectAt(0).get('id'));
-  assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-  assert.ok(cc.objectAt(0).get('photo').get('id'));
-  assert.ok(cc.objectAt(0).get('photo').get('image_thumbnail'));
+  assert.ok(cc.objectAt(0).photo.id);
+  assert.ok(cc.objectAt(0).photo.image_thumbnail);
 });
 
 test('ticket cc setups properly with no photo', (assert) => {
@@ -632,12 +608,13 @@ test('ticket cc setups properly with no photo', (assert) => {
   let cc = ticket.get('cc');
   assert.equal(cc.get('length'), 0);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(response, TD.idOne);
   });
+  cc = ticket.get('cc');
   assert.equal(cc.get('length'), 1);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(ticket.get('cc').objectAt(0).get('photo'), undefined, 'photo is not related to photo');
+  assert.equal(ticket.get('cc').objectAt(0).photo, undefined, 'photo is not related to photo');
 });
 
 /*TICKET CATEGORY M2M*/
@@ -646,7 +623,7 @@ test('model-category m2m is set up correctly using deserialize single (starting 
   let categories = ticket.get('categories');
   assert.equal(categories.get('length'), 0);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(response, TD.idOne);
   });
   let original = store.find('ticket', TD.idOne);
@@ -678,7 +655,7 @@ test('model-category m2m is set up correctly using deserialize single (starting 
 //     let categories = ticket.get('categories');
 //     assert.equal(categories.get('length'), 0);
 //     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//     run(function() {
+//     run(() => {
 //         subject.deserialize(response);
 //     });
 //     let original = store.find('ticket', TD.idOne);
@@ -732,7 +709,7 @@ test('ticket-category m2m is added after deserialize single (starting with exist
 //   delete json.cc;
 //   let response = {'count':1,'next':null,'previous':null,'results': [json]};
 //   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//   run(function() {
+//   run(() => {
 //     subject.deserialize(response);
 //   });
 //   let original = store.find('ticket-list', TD.idOne);
@@ -751,7 +728,7 @@ test('model-category m2m is removed when server payload no longer reflects what 
   let response = TF.generate(TD.id);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(ticket.get('categoriesIsNotDirty'));
-  run(function() {
+  run(() => {
     subject.deserialize(response, TD.idOne);
   });
   let original = store.find('ticket', TD.idOne);
@@ -776,7 +753,7 @@ test('model-category m2m is removed when server payload no longer reflects what 
 //     let json = TF.generate(TD.idOne);
 //     let response = {'count':1,'next':null,'previous':null,'results': [json]};
 //     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//     run(function() {
+//     run(() => {
 //         subject.deserialize(response);
 //     });
 //     let original = store.find('ticket', TD.idOne);
@@ -798,7 +775,7 @@ test('model-category m2m is removed when server payload no longer reflects what 
 //     let json = TF.generate(TD.idOne);
 //     let response = {'count':1,'next':null,'previous':null,'results': [json]};
 //     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//     run(function() {
+//     run(() => {
 //         subject.deserialize(response);
 //     });
 //     let original = store.find('ticket', TD.idOne);
@@ -817,7 +794,7 @@ test('model-category m2m is removed when server payload no longer reflects what 
 test('model-category m2m added even when ticket did not exist before the deserializer executes (single)', (assert) => {
   let response = TF.generate(TD.idOne);
   response.categories.splice(1, 1);
-  run(function() {
+  run(() => {
     subject.deserialize(response, TD.idOne);
   });
   ticket = store.find('ticket', TD.idOne);
@@ -835,7 +812,7 @@ test('model-category m2m added even when ticket did not exist before the deseria
 //     delete json.cc;
 //     json.categories.splice(1, 1);
 //     let response = {'count':1,'next':null,'previous':null,'results': [json]};
-//     run(function() {
+//     run(() => {
 //         subject.deserialize(response);
 //     });
 //     ticket = store.find('ticket', TD.idOne);
@@ -851,7 +828,7 @@ test('model-category m2m added even when ticket did not exist before the deseria
 test('attachment added for each attachment on ticket', (assert) => {
   let json = TF.generate(TD.idOne);
   json.attachments = [TD.attachmentOneId];
-  run(function() {
+  run(() => {
     subject.deserialize(json, json.id);
   });
   ticket = store.find('ticket', TD.idOne);
@@ -860,7 +837,6 @@ test('attachment added for each attachment on ticket', (assert) => {
   assert.equal(attachments.objectAt(0).get('id'), TD.attachmentOneId);
   assert.ok(ticket.get('isNotDirty'));
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(store.find('attachment').get('length'), 2);
 });
 
 test('attachment added for each attachment on ticket (when ticket has existing attachments)', (assert) => {
@@ -871,7 +847,7 @@ test('attachment added for each attachment on ticket (when ticket has existing a
   assert.equal(ticket.get('attachments').get('length'), 1);
   let json = TF.generate(TD.id);
   json.attachments = [TD.attachmentTwoId, TD.attachmentOneId];
-  run(function() {
+  run(() => {
     subject.deserialize(json, json.id);
   });
   ticket = store.find('ticket', TD.idOne);
@@ -881,7 +857,7 @@ test('attachment added for each attachment on ticket (when ticket has existing a
   assert.equal(attachments.objectAt(1).get('id'), TD.attachmentOneId);
   assert.ok(ticket.get('isNotDirty'));
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  assert.equal(store.find('attachment').get('length'), 3);
+  assert.equal(store.find('attachment').get('length'), 2);
 });
 
 /* DT Path */

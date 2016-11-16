@@ -38,7 +38,7 @@ export default Ember.Mixin.create({
       property: 'location',
     },
     cc: {
-      associated_model: 'person',
+      associated_model: 'related-person',
       join_model: 'ticket-join-person'
     },
     attachments: {

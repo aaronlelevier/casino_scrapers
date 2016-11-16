@@ -55,7 +55,7 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     belongs_to.bind(this)('priority', 'ticket', {bootstrapped:true});
     belongs_to.bind(this)('assignee', 'ticket');
     belongs_to.bind(this)('location', 'ticket', {change_func:false});
-    many_to_many.bind(this)('cc', 'ticket', {add_func: false});
+    many_to_many.bind(this)('cc', 'ticket');
     many_to_many.bind(this)('attachment', 'generic', {plural: true});
     many_to_many.bind(this)('category', 'model', {plural:true, add_func:false});
   },
@@ -82,25 +82,6 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
   }),
   isDirtyOrRelatedDirty: Ember.computed.or('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'locationIsDirty', 'attachmentsIsDirty').readOnly(), 
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty').readOnly(),
-  /**
-   * @method add_cc - overrides attr
-   * 1. setup photo - person may not have a photo
-   * @params {Object} - id, fullname, photo
-   */
-  add_cc(json) {
-    const store = this.get('simpleStore');
-    const photo = json.photo;
-    if (photo) {
-      delete json.photo;
-      json.photo_fk = photo.id;
-    }
-    this.add_cc_container(json);
-    const person = store.find('person', json.id);
-    if (photo) {
-      person.change_photo(photo);
-    }
-  },
-  add_cc_container: add_many_to_many('cc', 'ticket'),
   /**
    * @method saveAttachmentsContainer
    * sets new flag so template can render differently for the attachment

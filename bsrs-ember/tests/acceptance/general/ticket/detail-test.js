@@ -283,33 +283,26 @@ test('clicking and typing into power select for people will fire off xhr request
   andThen(() => {
     let ticket = store.find('ticket', TD.idOne);
     assert.equal(ticket.get('cc').get('length'), 2);
-    assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
-    assert.equal(ticket.get('cc').objectAt(1).get('first_name'), PD.first_name);
-    assert.equal(page.ccSelected.indexOf(PD.donald), 2);
-    assert.equal(page.ccTwoSelected.indexOf(PD.first_name), 2);
+    assert.equal(ticket.get('cc').objectAt(1).get('first_name'), PD.donald_first_name);
+    assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.first_name);
+    assert.equal(page.ccTwoSelected.indexOf(PD.donald), 2);
+    assert.equal(page.ccSelected.indexOf(PD.first_name), 2);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
   xhr(`${PEOPLE_URL}person__icontains=Boy/`, 'GET', null, {}, 200, PF.search_power_select());
   selectSearch(TICKET_CC_SELECT, 'Boy');
   selectChoose(TICKET_CC_SELECT, PD.nameBoy);
   andThen(() => {
-    assert.equal(page.ccSelected.indexOf(PD.donald), 2);
-    assert.equal(page.ccTwoSelected.indexOf(PD.first_name), 2);
+    assert.equal(page.ccTwoSelected.indexOf(PD.donald), 2);
+    assert.equal(page.ccSelected.indexOf(PD.first_name), 2);
     assert.equal(page.ccThreeSelected.indexOf(PD.nameBoy), 2);
     let ticket = store.find('ticket', TD.idOne);
-    assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
-    assert.equal(ticket.get('cc').objectAt(1).get('first_name'), PD.first_name);
+    assert.equal(ticket.get('cc').objectAt(1).get('first_name'), PD.donald_first_name);
+    assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.first_name);
     assert.equal(ticket.get('cc').objectAt(2).get('id'), PD.idBoy);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
-  let response_put = TF.detail(TD.idOne);
-  response_put.cc = {id: PD.idThree, name: PD.storeNameThree};
-  const payload_two = TF.put({id: TD.idOne, cc: [PD.idDonald, PD.idOne, PD.idBoy]});
-  xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload_two), {}, 200, response_put);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
-  });
+  clearxhr(list_xhr);
 });
 
 test('can remove and add back same cc and save empty cc', (assert) => {
@@ -356,7 +349,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
   });
-  let payload = TF.put({id: TD.idOne, cc: [PD.idDonald, PD.idOne]});
+  let payload = TF.put({id: TD.idOne, cc: [PD.idOne, PD.idDonald]});
   const response = Ember.$.extend(true, {}, payload);
   xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
   generalPage.save();

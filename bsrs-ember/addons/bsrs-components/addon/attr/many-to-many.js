@@ -225,8 +225,6 @@ var many_to_many_rollback = function(_associatedModel, _joinModelName, _parentNa
  */
 var many_to_many_save = function(_joinModelName, _associatedModel, _modelName) {
   return function() {
-    //TODO: test main_model
-    // const model_name = this.OPT_CONF[_associatedModel]['main_model'] || _modelName;
     const m2m_models = _joinModelName;
     const m2m_models_ids = `${_joinModelName}_ids`;
     const m2m_models_fks = `${_joinModelName}_fks`;

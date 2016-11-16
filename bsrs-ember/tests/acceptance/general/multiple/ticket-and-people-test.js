@@ -155,19 +155,12 @@ test('adding a new cc and navigating to the people url wont dirty the person mod
   andThen(() => {
     assert.equal(currentURL(), TICKET_DETAIL_URL);
     ticket = store.find('ticket', TD.idOne);
-    assert.ok(ticket.get('ccIsDirty'));
-    person = store.find('person', PD.personListTwo);
-    assert.ok(person.get('isNotDirty'));
-    assert.ok(person.get('roleIsNotDirty'));
-    // assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('ccIsDirty'), true);
   });
   generalPage.clickAdmin();
   ajax(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, PF.list());
   generalPage.clickPeople();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_LIST_URL);
-    person = store.find('person', PD.personListTwo);
-    assert.ok(person.get('isNotDirty'));
-    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   });
 });

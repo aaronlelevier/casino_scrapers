@@ -23,26 +23,7 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     }
   },
   setupCC(cc_json, ticket) {
-    const store = this.get('simpleStore');
-    let photo_array = [];
-    cc_json = cc_json.map((cc) => {
-      // push into attachment model and setup relationship w/ cc.  User may not have a photo
-      if (cc.photo) {
-        photo_array.push({ [cc.id]: cc.photo });
-        cc.photo_fk = cc.photo.id;
-        delete cc.photo;
-        cc.detail = true;
-      }
-      return cc;
-    });
-    // setup cc
     this.setup_cc(cc_json, ticket);
-    // setup photo belongs to cc
-    photo_array.forEach((photo) => {
-      const person_id = Object.keys(photo)[0];
-      const person = store.find('person', person_id);
-      this.setup_photo(photo[person_id], person);
-    });
   },
   setupCategories(categories_json, ticket) {
     const store = this.get('simpleStore');
