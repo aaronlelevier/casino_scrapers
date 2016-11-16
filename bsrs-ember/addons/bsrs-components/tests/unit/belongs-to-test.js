@@ -68,7 +68,8 @@ test('users array can be undefined', function(assert) {
   let user = store.push('user', {id: 1});
   let hat = store.push('hat', {id: 2, users: undefined});
   assert.equal(user.get('hat'), undefined);
-  user.change_hat(2);
+  const returned_user = user.change_hat(2);
+  assert.equal(returned_user.get('id'), 2);
   assert.deepEqual(hat.get('users'), [1]);
   assert.equal(user.get('hat.id'), 2);
   let hats = store.find('hat');

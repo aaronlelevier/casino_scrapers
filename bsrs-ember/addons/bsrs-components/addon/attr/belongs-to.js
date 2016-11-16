@@ -85,6 +85,8 @@ var belongs_to_generator = function(_ownerName) {
  */
 var change_belongs_to = function(_ownerName) {
   return function(new_related) {
+
+    /* push in owning model into store if object (not bootstrapped) */
     const collection = this.OPT_CONF[_ownerName]['collection'];
     const name = this.OPT_CONF[_ownerName]['property'];
     const this_override_property_getter = this.OPT_CONF[_ownerName]['override_property_getter'];
@@ -100,6 +102,8 @@ var change_belongs_to = function(_ownerName) {
         });
       }
     }
+    
+    /* Find existing and update fk array w/o parent model id */
     const related = this_override_property_getter || name.replace('-', '_');
     const current_related = this.get(related);
     if(current_related) {
@@ -115,23 +119,25 @@ var change_belongs_to = function(_ownerName) {
       });
     }
 
-    // passed in object if not bootstrapped
+    let return_related;
+    /* IF object: use owning model and update it's collection */
     if (new_related && typeof new_related === 'object') {
       //push calling id back in array
       const related_collection = push_related.get(collection) || [];
       const new_related_pojo = {id: push_related.get('id')};
       new_related_pojo[collection] = related_collection.concat(this.get('id'));
       run(() => {
-        store.push(this.OPT_CONF[_ownerName]['property'], new_related_pojo);
+        return_related = store.push(this.OPT_CONF[_ownerName]['property'], new_related_pojo);
       });
-    // passed in id if bootstrapped
+    /* IF NOT object: find bootstrapped model and update its fk array pointing to parent */
     } else if (typeof new_related !== 'object') { //may be # or string
       let new_related_obj = store.find(this.OPT_CONF[_ownerName]['property'], new_related);
       const new_related_existing = new_related_obj.get(collection) || [];
       run(() => {
-        store.push(this.OPT_CONF[_ownerName]['property'], { id: new_related_obj.get('id'), [collection]: new_related_existing.concat(this.get('id')) });
+        return_related = store.push(this.OPT_CONF[_ownerName]['property'], { id: new_related_obj.get('id'), [collection]: new_related_existing.concat(this.get('id')) });
       });
     }
+    return return_related;
   };
 };
 
