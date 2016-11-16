@@ -30,7 +30,7 @@ export default Ember.Mixin.create({
     },
     assignee: {
       collection: 'assigned_tickets',
-      property: 'person',
+      property: 'related-person',
       override_property_getter: 'assignee',
     },
     location: {

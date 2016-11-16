@@ -94,12 +94,7 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     this.setup_status(response.status_fk, ticket);
     this.setup_priority(response.priority_fk, ticket);
     if (assignee_json) {
-      const assignee_photo = assignee_json.photo;
-      delete assignee_json.photo;
-      const assignee = this.setup_assignee(assignee_json, ticket);
-      if (assignee_photo) {
-        assignee.change_photo(assignee_photo);
-      }
+      this.setup_assignee(assignee_json, ticket);
     }
     if (location_json) {
       this.setup_location(location_json, ticket);

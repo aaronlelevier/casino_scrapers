@@ -4,7 +4,6 @@ import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
-import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import waitFor from 'ember-test-helpers/wait';
@@ -21,9 +20,9 @@ moduleForComponent('ticket-assignee-select', 'integration: ticket-assignee-selec
     store = module_registry(this.container, this.registry, ['model:ticket', 'model:person']);
     run(function() {
       ticket = store.push('ticket', {id: TD.idOne, assignee_fk: PD.idOne});
-      person_one = store.push('person', {id: PD.idOne, first_name: PD.nameOne, last_name: PD.lastNameOne, username: PD.usernameOne, title: PD.titleOne});
-      person_two = store.push('person', {id: PD.idTwo, first_name: PD.nameTwo, last_name: PD.lastNameTwo, username: PD.usernameTwo, title: PD.titleTwo});
-      person_three = store.push('person', {id: PD.unusedId, first_name: PD.nameThree, last_name: PD.lastNameThree, username: PD.usernameThree, title: PD.titleThree});
+      person_one = store.push('related-person', {id: PD.idOne, first_name: PD.nameOne, last_name: PD.lastNameOne, username: PD.usernameOne, title: PD.titleOne});
+      person_two = store.push('related-person', {id: PD.idTwo, first_name: PD.nameTwo, last_name: PD.lastNameTwo, username: PD.usernameTwo, title: PD.titleTwo});
+      person_three = store.push('related-person', {id: PD.unusedId, first_name: PD.nameThree, last_name: PD.lastNameThree, username: PD.usernameThree, title: PD.titleThree});
     });
     person_repo = repository.initialize(this.container, this.registry, 'person');
     person_repo.findTicketAssignee = function() {
@@ -36,40 +35,10 @@ moduleForComponent('ticket-assignee-select', 'integration: ticket-assignee-selec
   }
 });
 
-// test('should render a selectbox when person options are empty (initial state of power select)', function(assert) {
-//   this.ticket = ticket;
-//   this.render(hbs`{{db-fetch-select model=ticket}}`);
-//   run(() => {
-//     clickTrigger();
-//   });
-//   assert.equal($(`${DROPDOWN}`).length, 1);
-//   assert.equal(this.$('.ember-power-select-placeholder').text(), GLOBALMSG.assignee_power_select);
-//   assert.equal($('.ember-power-select-options > li').length, 1);
-//   assert.ok(!ticket.get('assignee'));
-// });
-
-// test('should render a selectbox with bound options after type ahead for search', function(assert) {
-//   person_one.set('assigned_tickets', [TD.idOne]);
-//   this.model = ticket;
-//   this.set('person_repo', person_repo);
-//   this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
-//   clickTrigger();
-//   run(() => { typeInSearch('a'); });
-//   return waitFor().
-//     then(() => {
-//       assert.equal($(`${DROPDOWN}`).length, 1);
-//       assert.equal($('.ember-power-select-option').length, 3);
-//       assert.equal($('li.ember-power-select-option:eq(0)').text().trim(), `${PD.nameOne} ${PD.lastNameOne}`);
-//       assert.equal($('li.ember-power-select-option:eq(1)').text().trim(), `${PD.nameTwo} ${PD.lastNameTwo}`);
-//       assert.equal($('li.ember-power-select-option:eq(2)').text().trim(), `${PD.nameThree} ${PD.lastNameThree}`);
-//       assert.equal($(`${PowerSelect}`).text().trim(), `${PD.nameOne} ${PD.lastNameOne}`);
-//     });
-// });
-
 test('should be able to select new person when one doesnt exist', function(assert) {
   this.model = ticket;
   this.set('person_repo', person_repo);
-  this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
+  this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
   clickTrigger();
   run(() => { typeInSearch('a'); });
   return waitFor().
@@ -86,7 +55,7 @@ test('should be able to select same person when ticket already has a person', fu
   person_one.set('assigned_tickets', [TD.idOne]);
   this.model = ticket;
   this.set('person_repo', person_repo);
-  this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
+  this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
   clickTrigger();
   run(() => { typeInSearch('a'); });
   return waitFor().
@@ -109,7 +78,15 @@ test('should be able to select new person when ticket already has a person', fun
   person_one.set('assigned_tickets', [TD.idOne]);
   this.model = ticket;
   this.set('person_repo', person_repo);
-  this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
+  this.render(hbs`{{db-fetch-select 
+    model=model 
+    selectedAttr=model.assignee 
+    className="t-ticket-assignee-select" 
+    displayName="fullname" 
+    change_func="change_assignee" 
+    repository=person_repo 
+    searchMethod="findTicketAssignee"
+  }}`);
   clickTrigger();
   run(() => { typeInSearch('a'); });
   return waitFor().
@@ -123,6 +100,7 @@ test('should be able to select new person when ticket already has a person', fun
       assert.equal($('.ember-power-select-options > li').length, 0);
       assert.equal($(`${PowerSelect}`).text().trim(), `${PD.nameTwo} ${PD.lastNameTwo}`);
       assert.equal(ticket.get('assignee').get('id'), PD.idTwo);
+      assert.equal(ticket.get('assignee').get('fullname'), `${PD.nameTwo} ${PD.lastNameTwo}`);
       assert.deepEqual(person_one.get('assigned_tickets'), []);
       assert.deepEqual(person_two.get('assigned_tickets'), [TD.idOne]);
     });
@@ -132,7 +110,7 @@ test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
   var done = assert.async();
   this.model = ticket;
   this.set('person_repo', person_repo);
-  this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" remove_func="remove_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
+  this.render(hbs`{{db-fetch-select model=model selectedAttr=model.assignee className="t-ticket-assignee-select" displayName="fullname" change_func="change_assignee" repository=person_repo searchMethod="findTicketAssignee"}}`);
   clickTrigger();
   run(() => { typeInSearch('a'); });
   Ember.run.later(() => {

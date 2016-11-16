@@ -43,7 +43,7 @@ moduleForComponent('ticket-location-select', 'integration: ticket-location-selec
 // test('should render a selectbox when location options are empty (initial state of power select)', function(assert) {
 //   this.model = ticket;
 //   this.locationRepo = location_repo;
-//   this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket"}}`);
+//   this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" repository=locationRepo searchMethod="findTicket"}}`);
 //   let $component = this.$(`${COMPONENT}`);
 //   clickTrigger();
 //   assert.equal(this.$(`${DROPDOWN}`).length, 1);
@@ -57,7 +57,7 @@ moduleForComponent('ticket-location-select', 'integration: ticket-location-selec
 //   location_one.set('tickets', [TD.idOne]);
 //   this.model = ticket;
 //   this.locationRepo = location_repo;
-//   this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket"}}`);
+//   this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" repository=locationRepo searchMethod="findTicket"}}`);
 //   let $component = this.$(`${COMPONENT}`);
 //   clickTrigger();
 //   run(() => { typeInSearch('a'); });
@@ -75,7 +75,7 @@ moduleForComponent('ticket-location-select', 'integration: ticket-location-selec
 test('should be able to select new location when one doesnt exist', function(assert) {
   this.model = ticket;
   this.locationRepo = location_repo;
-  this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket"}}`);
+  this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" repository=locationRepo searchMethod="findTicket"}}`);
   let $component = this.$(`${COMPONENT}`);
   clickTrigger();
   run(() => { typeInSearch('a'); });
@@ -93,7 +93,7 @@ test('should be able to select new location when ticket already has a location',
   location_one.set('tickets', [TD.idOne]);
   this.model = ticket;
   this.locationRepo = location_repo;
-  this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket"}}`);
+  this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" repository=locationRepo searchMethod="findTicket"}}`);
   let $component = this.$(`${COMPONENT}`);
   clickTrigger();
   run(() => { typeInSearch('a'); });
@@ -117,7 +117,7 @@ test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
   var done = assert.async();
   this.model = ticket;
   this.locationRepo = location_repo;
-  this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" remove_func="remove_location" repository=locationRepo searchMethod="findTicket"}}`);
+  this.render(hbs`{{db-fetch-select model=model selectedAttr=model.location className="t-ticket-location-select" displayName="name" change_func="change_location" repository=locationRepo searchMethod="findTicket"}}`);
   clickTrigger();
   run(() => { typeInSearch('a'); });
   Ember.run.later(() => {

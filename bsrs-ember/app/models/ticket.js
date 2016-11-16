@@ -53,7 +53,7 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     set(this, 'generic_attachments_fks', get(this, 'generic_attachments_fks') || []);
     belongs_to.bind(this)('status', 'ticket', {bootstrapped:true});
     belongs_to.bind(this)('priority', 'ticket', {bootstrapped:true});
-    belongs_to.bind(this)('assignee', 'ticket', {change_func:false, rollback:false});//change_assignee_container (below): change_belongs_to
+    belongs_to.bind(this)('assignee', 'ticket');
     belongs_to.bind(this)('location', 'ticket', {change_func:false});
     many_to_many.bind(this)('cc', 'ticket', {add_func: false});
     many_to_many.bind(this)('attachment', 'generic', {plural: true});
@@ -80,72 +80,8 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     const name = get(this, 'priority.name');
     return name ? name.replace(/\./g, '-') : '';
   }),
-  rollbackAssignee() {
-    const { assignee, assignee_fk } = this.getProperties('assignee', 'assignee_fk');
-    if(assignee && get(assignee, 'id') !== assignee_fk) {
-      const assignee_object = {id: assignee_fk};
-      this.change_assignee(assignee_object);
-    }
-  },
   isDirtyOrRelatedDirty: Ember.computed.or('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'locationIsDirty', 'attachmentsIsDirty').readOnly(), 
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty').readOnly(),
-  remove_assignee: function() {
-    const ticket_id = get(this, 'id');
-    const store = get(this, 'simpleStore');
-    const old_assignee = get(this, 'assignee');
-    if(old_assignee) {
-      const old_assignee_tickets = get(old_assignee, 'assigned_tickets') || [];
-      const updated_old_assignee_tickets = old_assignee_tickets.filter((id) => {
-        return id !== ticket_id;
-      });
-      run(() => {
-        store.push('person', {id: get(old_assignee, 'id'), assigned_tickets: updated_old_assignee_tickets});
-      });
-    }
-  },
-  /**
-   * @method person_status_role_setup
-   * need to pass role and status in ticket detail assignee b/c dont want to dirty the persom model 
-   * @return {Object Proxy} person
-   */
-  person_status_role_setup(person_json) {
-    const store = get(this, 'simpleStore');
-    const role = store.find('role', person_json.role);
-    delete person_json.role;
-    person_json.role_fk = get(role, 'id');
-    person_json.status_fk = person_json.status;
-    delete person_json.status;
-    let pushed_person;
-    run(() => {
-      pushed_person = store.push('person', person_json);
-    });
-    // change role is defined on the person model, not from the attrs
-    pushed_person.change_role(role);
-    pushed_person.change_status(person_json.status_fk);
-    return pushed_person;
-  },
-  change_assignee_container: change_belongs_to('assignee'),
-  /**
-   * @method change_assignee
-   * extra belongs_to processing for assignee.  Usually called from a power select OR ticket detail setup_assignee
-   * 1. setup role and status - will change role and status on person, which will affect the person's locations (person's role determines the location level, and the llevel determines what locations the person has)
-   * 2. setup photo - person may not have a photo
-   * @param {Object} - id, fullname, photo
-   * @return {Object Proxy} - hydrated person model
-   */
-  change_assignee(new_assignee) {
-    const photo = new_assignee.photo;
-    if (photo) {
-      delete new_assignee.photo;
-      new_assignee.photo_fk = photo.id;
-    }
-    const person = this.person_status_role_setup(new_assignee);
-    this.change_assignee_container(new_assignee.id);
-    if (photo) {
-      person.change_photo(photo);
-    }
-    return person;
-  },
   /**
    * @method add_cc - overrides attr
    * 1. setup photo - person may not have a photo

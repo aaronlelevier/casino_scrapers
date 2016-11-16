@@ -19,7 +19,7 @@ var store, ticket, link;
 
 module('unit: ticket test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:location', 'model:ticket-join-person', 'model:model-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'model:attachment', 'model:status', 'model:role', 'model:location-level', 'model:dtd', 'model:link', 'model:generic-join-attachment']);
+    store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:location', 'model:ticket-join-person', 'model:model-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'model:attachment', 'model:status', 'model:role', 'model:location-level', 'model:dtd', 'model:link', 'model:generic-join-attachment', 'model:related-person']);
     run(() => {
       store.push('status', {id: SD.activeId, name: SD.activeName});
       store.push('role', {id: RD.idOne, name: RD.nameOne, location_level_fk: LLD.idOne});
@@ -134,7 +134,7 @@ test('status property returns associated object or undefined', (assert) => {
   let status = ticket.get('status');
   assert.equal(status.get('id'), TD.statusOneId);
   assert.equal(status.get('name'), TD.statusOne);
-  run(function() {
+  run(() => {
     store.push('ticket-status', {id: status.get('id'), tickets: []});
   });
   status = ticket.get('status');
@@ -171,7 +171,7 @@ test('cc property should return all associated cc or empty array', (assert) => {
   let cc = ticket.get('cc');
   assert.equal(cc.get('length'), 1);
   assert.equal(cc.objectAt(0).get('id'), PD.idOne);
-  run(function() {
+  run(() => {
     store.push('ticket-join-person', {id: m2m.get('id'), removed: true});
   });
   assert.equal(ticket.get('cc').get('length'), 0);
@@ -197,7 +197,7 @@ test('cc property is not dirty when attr on person is changed', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne, ticket_cc_fks: [TPD.idOne]});
   assert.equal(ticket.get('cc').get('length'), 1);
   assert.ok(ticket.get('ccIsNotDirty'));
-  run(function() {
+  run(() => {
     store.push('person', {id: PD.id, first_name: PD.first_name});
   });
   assert.ok(person.get('isDirty'));
@@ -995,7 +995,7 @@ test('priority property returns associated object or undefined', (assert) => {
   let priority = ticket.get('priority');
   assert.equal(priority.get('id'), TD.priorityOneId);
   assert.equal(priority.get('name'), TD.priorityOne);
-  run(function() {
+  run(() => {
     store.push('ticket-priority', {id: priority.get('id'), tickets: []});
   });
   priority = ticket.get('priority');
@@ -1069,30 +1069,35 @@ test('rollback priority will revert and reboot the dirty priority to clean', (as
 /*TICKET to ASSIGNEE*/
 test('assignee property returns associated object or undefined', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne});
-  store.push('person', {id: TD.assigneeOneId, name: TD.assigneeOne, assigned_tickets: [TD.idOne]});
+  store.push('related-person', {id: TD.assigneeOneId, fullname: TD.assigneeOne, assigned_tickets: [TD.idOne]});
   let assignee = ticket.get('assignee');
   assert.equal(assignee.get('id'), TD.assigneeOneId);
-  assert.equal(assignee.get('name'), TD.assigneeOne);
-  run(function() {
-    store.push('person', {id: assignee.get('id'), assigned_tickets: []});
+  assert.equal(assignee.get('fullname'), TD.assigneeOne);
+  run(() => {
+    store.push('related-person', {id: assignee.get('id'), assigned_tickets: []});
   });
   assignee = ticket.get('assignee');
   assert.equal(assignee, undefined);
 });
 
-test('change_assignee will append the ticket id to the new assignee assigned_tickets array', function(assert) {
+test('change_assignee will append the ticket id to the new assignee assigned_tickets array and ticket will be dirty', function(assert) {
   ticket = store.push('ticket', {id: TD.idOne});
   const person_json = {id: TD.assigneeOneId};
-  let assignee = store.push('person', {id: TD.assigneeOneId, fullname: TD.assigneeOne, assigned_tickets: [9]});
+  let assignee = store.push('related-person', {id: TD.assigneeOneId, fullname: TD.assigneeOne, assigned_tickets: [9]});
+  assert.equal(ticket.get('assignee.id'), undefined);
+  assert.equal(ticket.get('isNotDirtyOrRelatedNotDirty'), true);
+  assert.deepEqual(assignee.get('assigned_tickets'), [9]);
   ticket.change_assignee(person_json);
   assert.deepEqual(assignee.get('assigned_tickets'), [9, TD.idOne]);
-  assert.ok(assignee.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(ticket.get('assignee_fk'), undefined);
+  assert.equal(ticket.get('assignee.id'), TD.assigneeOneId);
+  assert.equal(ticket.get('isNotDirtyOrRelatedNotDirty'), false);
 });
 
 test('change_assignee will remove the ticket id from the prev assignee assigned_tickets array', function(assert) {
   ticket = store.push('ticket', {id: TD.idOne});
-  let assignee = store.push('person', {id: TD.assigneeOneId, fullname: TD.assigneeOne, assigned_tickets: [9, TD.idOne]});
-  store.push('person', {id: TD.assigneeTwoId, fullname: TD.assigneeTwo, assigned_tickets: []});
+  let assignee = store.push('related-person', {id: TD.assigneeOneId, fullname: TD.assigneeOne, assigned_tickets: [9, TD.idOne]});
+  store.push('related-person', {id: TD.assigneeTwoId, fullname: TD.assigneeTwo, assigned_tickets: []});
   const person_json = {id: TD.assigneeTwoId};
   ticket.change_assignee(person_json);
   assert.deepEqual(assignee.get('assigned_tickets'), [9]);
@@ -1100,33 +1105,31 @@ test('change_assignee will remove the ticket id from the prev assignee assigned_
 
 test('change assignee will add photo to person', function(assert) {
   ticket = store.push('ticket', {id: TD.idOne});
-  let assignee = store.push('person', {id: TD.assigneeOneId, fullname: TD.assigneeOne, assigned_tickets: [TD.idOne]});
+  let assignee = store.push('related-person', {id: TD.assigneeOneId, fullname: TD.assigneeOne, assigned_tickets: [TD.idOne]});
   const person_json = {id: TD.assigneeTwoId, fullname: TD.assigneeTwo, photo: { id: '9', image_thumbnail: 'wat.jpg'} };
   ticket.change_assignee(person_json);
-  assert.equal(ticket.get('assignee').get('photo').get('id'), '9');
-  assert.equal(ticket.get('assignee').get('photo').get('image_thumbnail'), 'wat.jpg');
-  assert.equal(ticket.get('assignee').get('photo_fk'), '9');
-  assert.equal(ticket.get('assignee').get('isNotDirtyOrRelatedNotDirty'), true);
+  assert.equal(ticket.get('assignee').photo.id, '9');
+  assert.equal(ticket.get('assignee').photo.image_thumbnail, 'wat.jpg');
 });
 
-test('remove_assignee will remove the ticket id from the assignee assigned_tickets array', function(assert) {
-  ticket = store.push('ticket', {id: TD.idOne});
-  let assignee = store.push('person', {id: TD.assigneeOneId, name: TD.assigneeOne, assigned_tickets: [9, TD.idOne]});
-  assert.deepEqual(assignee.get('assigned_tickets'), [9, TD.idOne]);
-  ticket.remove_assignee();
-  assert.deepEqual(assignee.get('assigned_tickets'), [9]);
-});
+// test('remove_assignee will remove the ticket id from the assignee assigned_tickets array', function(assert) {
+//   ticket = store.push('ticket', {id: TD.idOne});
+//   let assignee = store.push('related-person', {id: TD.assigneeOneId, name: TD.assigneeOne, assigned_tickets: [9, TD.idOne]});
+//   assert.deepEqual(assignee.get('assigned_tickets'), [9, TD.idOne]);
+//   ticket.remove_assignee();
+//   assert.deepEqual(assignee.get('assigned_tickets'), [9]);
+// });
 
-test('remove_assignee will do nothing if the ticket has no assignee', function(assert) {
-  ticket = store.push('ticket', {id: TD.idOne});
-  assert.ok(!ticket.get('assignee'));
-  ticket.remove_assignee();
-  assert.ok(!ticket.get('assignee'));
-});
+// test('remove_assignee will do nothing if the ticket has no assignee', function(assert) {
+//   ticket = store.push('ticket', {id: TD.idOne});
+//   assert.ok(!ticket.get('assignee'));
+//   ticket.remove_assignee();
+//   assert.ok(!ticket.get('assignee'));
+// });
 
 test('assignee will save correctly as undefined', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne, assignee_fk: undefined});
-  store.push('person', {id: TD.assigneeOneId, name: TD.assigneeOne, assigned_tickets: []});
+  store.push('related-person', {id: TD.assigneeOneId, name: TD.assigneeOne, assigned_tickets: []});
   ticket.saveRelated();
   ticket.get('assignee');
   assert.equal(ticket.get('assignee_fk'), undefined);
@@ -1134,7 +1137,7 @@ test('assignee will save correctly as undefined', (assert) => {
 
 test('ticket is dirty or related is dirty when existing assignee is altered', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne, assignee_fk: TD.assigneeOneId});
-  store.push('person', {id: TD.assigneeOneId, name: TD.assigneeOne, assigned_tickets: [TD.idOne]});
+  store.push('related-person', {id: TD.assigneeOneId, name: TD.assigneeOne, assigned_tickets: [TD.idOne]});
   const assignee_two = {id: TD.assigneeTwoId};
   assert.equal(ticket.get('assignee.id'), TD.assigneeOneId);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -1155,7 +1158,7 @@ test('ticket is dirty or related is dirty when existing assignee is altered (sta
 
 test('rollback assignee will revert and reboot the dirty assignee to clean', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne, assignee_fk: TD.assigneeOneId});
-  store.push('person', {id: TD.assigneeOneId, name: TD.assigneeOne, assigned_tickets: [TD.idOne]});
+  store.push('related-person', {id: TD.assigneeOneId, name: TD.assigneeOne, assigned_tickets: [TD.idOne]});
   const assignee_two = {id: TD.assigneeTwoId};
   assert.equal(ticket.get('assignee.id'), TD.assigneeOneId);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -1269,7 +1272,7 @@ test('there is no leaky state when instantiating ticket (set)', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne, name: TD.nameOne});
   store.push('ticket', {id: TD.idOne, model_categories_fks: [TCD.idOne]});
   assert.deepEqual(ticket.get('model_categories_fks'), [TCD.idOne]);
-  run(function() {
+  run(() => {
     ticket_two = store.push('ticket', {id: TD.idTwo, name: TD.nameOne});
   });
   assert.deepEqual(ticket_two.get('model_categories_fks'), []);
@@ -1278,17 +1281,17 @@ test('there is no leaky state when instantiating ticket (set)', (assert) => {
 test('attachments property returns associated array or empty array', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne, generic_attachments_fks: []});
   assert.equal(ticket.get('attachments').get('length'), 0);
-  run(function() {
+  run(() => {
     store.push('attachment', {id: 8});
     store.push('generic-join-attachment', {id: 4, attachment_pk: 8, generic_pk: TD.idOne});
     store.push('ticket', {id: TD.idOne, generic_attachments_fks: [4]});
   });
   assert.equal(ticket.get('attachments').get('length'), 1);
-  run(function() {
+  run(() => {
     store.push('attachment', {id: 9});
   });
   assert.equal(ticket.get('attachments').get('length'), 1);
-  run(function() {
+  run(() => {
     store.push('attachment', {id: 7});
     store.push('generic-join-attachment', {id: 5, attachment_pk: 7, generic_pk: TD.idOne});
     ticket = store.push('ticket', {id: TD.idOne, generic_attachments_fks: [4, 5]});
@@ -1402,7 +1405,7 @@ test('status_class returns empty string when no status found and valid class whe
   ticket = store.push('ticket', {id: TD.idOne});
   assert.equal(ticket.get('status'), undefined);
   assert.equal(ticket.get('status_class'), '');
-  run(function() {
+  run(() => {
     store.push('ticket-status', {id: TD.statusOneId, tickets: [TD.idOne]});
   });
   assert.equal(ticket.get('status'), status);
@@ -1414,7 +1417,7 @@ test('priority_class returns empty string when no priority found and valid class
   ticket = store.push('ticket', {id: TD.idOne});
   assert.equal(ticket.get('priority'), undefined);
   assert.equal(ticket.get('priority_class'), '');
-  run(function() {
+  run(() => {
     store.push('ticket-priority', {id: TD.priorityOneId, tickets: [TD.idOne]});
   });
   assert.equal(ticket.get('priority'), priority);
