@@ -7,7 +7,7 @@ module.exports = {
         var environment = this.app.env.toString();
         var config_data = '';
         if (type === 'head') {
-            if (environment === 'production') {
+            if (environment === 'production' || process.env.LOCAL_SERVER === 'true') {
                 config_data += "<script type='text/preload' charset='utf-8' data-preload-phonenumber_types='phonenumber_types' data-configuration='{{phone_number_types_config|escape}}'></script>";
                 config_data += "<script type='text/preload' charset='utf-8' data-preload-email_types='email_types' data-configuration='{{email_types_config|escape}}'></script>";
                 config_data += "<script type='text/preload' charset='utf-8' data-preload-address_types='address_types' data-configuration='{{address_types|escape}}'></script>";
@@ -41,11 +41,61 @@ module.exports = {
             return config_data;
         }
         if (type === 'body-footer') {
-            if (environment === 'production') {
+            if (environment === 'production' || process.env.LOCAL_SERVER === 'true') {
                 return '<script type="text/javascript">jQuery(document).ajaxSend(function(event, xhr, settings) { if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) { xhr.setRequestHeader("X-CSRFToken", "{{csrf_token}}"); } }); </script>';
             } else {
                 return '<script type="text/javascript">jQuery(document).ajaxSend(function(event, xhr, settings) { if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) { xhr.setRequestHeader("X-CSRFToken", "faketoken1234"); } }); </script>';
             }
         }
+    },
+
+    isDevelopingAddon: function() {
+        return true;
+    },
+
+    /**
+      Copy build output into the sibling Django app
+
+      To run the build, watch and develop with the backend server use:
+
+      - `export LOCAL_SERVER=true && ember build -w`
+
+      Be sure you have your python env activated and source env vars for Django app
+    */
+    outputReady: function() {
+        if (process.env.LOCAL_SERVER === 'true') {
+            this.promoteToDjango();
+        }
+    },
+    promoteToDjango: function() {
+        var fs = require('fs-extra');
+        var exec = require('child_process').execSync;
+        try {
+            fs.emptyDirSync(serverPath(['ember', 'assets']));
+            fs.copySync(distPath(['assets']), serverPath(['ember', 'assets']));
+            fs.emptyDirSync(serverPath(['ember', 'fonts']));
+            fs.copySync(distPath(['fonts']), serverPath(['ember', 'fonts']));
+            fs.copySync(distPath(['index.html']), serverPath(['templates', 'index.html']));
+            exec('./manage.py collectstatic --noinput', { cwd: serverPath() });
+        } catch (e) {
+            console.error(e);
+        }
     }
 };
+
+function serverPath(array) {
+    array = array || [];
+    var path = require('path');
+    var cwd = process.cwd(); // path to… bsrs-ember
+    var serverDir = [cwd, '../', 'bsrs-django', 'bigsky'];
+    return path.resolve.apply(null, serverDir.concat(array));
+}
+
+function distPath(array) {
+    array = array || [];
+    var path = require('path');
+    var cwd = process.cwd(); // path to… bsrs-ember
+    var distDir = [cwd, 'dist'];
+    return path.resolve.apply(null, distDir.concat(array));
+}
+
