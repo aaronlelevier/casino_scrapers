@@ -248,14 +248,14 @@ test('rollbackBillingPhoneNumber - billing_phone_number - tenant will set billin
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(tenant.get('billing_phone_number_fk'), PND.idOne);
   assert.equal(tenant.get('billing_phone_number.id'), PND.idOne);
-  tenant.change_billing_phone_number({id: other_billing_phone_number.get('id')});
-  assert.equal(tenant.get('billing_phone_number_fk'), PND.idOne);
-  assert.equal(tenant.get('billing_phone_number.id'), PND.idTwo);
+  // tenant.change_billing_phone_number({id: other_billing_phone_number.get('id')});
+  // assert.equal(tenant.get('billing_phone_number_fk'), PND.idOne);
+  // assert.equal(tenant.get('billing_phone_number.id'), PND.idTwo);
   let phonenumber = tenant.get('billing_phone_number');
   phonenumber.change_phone_number_type({id: PNTD.idOne});
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
   assert.ok(tenant.get('billingPhoneNumberIsDirty'));
-  tenant.rollbackBillingPhoneNumber();
+  tenant.rollback();
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(!tenant.get('billingPhoneNumberIsDirty'));
   assert.equal(tenant.get('billing_phone_number.id'), PND.idOne);
@@ -324,20 +324,28 @@ test('rollbackBillingEmail - email - tenant will set email to current email_fk',
     store.push('email', {id: ED.idOne, tenants: [TD.idOne]});
     other_email = store.push('email', {id: ED.idTwo, tenants: []});
   });
-  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(tenant.get('isNotDirtyOrRelatedNotDirty'), true);
+  assert.equal(tenant.get('billingEmailIsDirty'), false);
   assert.equal(tenant.get('billing_email_fk'), ED.idOne);
   assert.equal(tenant.get('billing_email.id'), ED.idOne);
+  // we only call change from new route and don't dirty model
   tenant.change_billing_email({id: other_email.get('id')});
+  assert.equal(tenant.get('isNotDirtyOrRelatedNotDirty'), true);
+  assert.equal(tenant.get('billingEmailIsDirty'), false);
   assert.equal(tenant.get('billing_email_fk'), ED.idOne);
   assert.equal(tenant.get('billing_email.id'), ED.idTwo);
   let email = tenant.get('billing_email');
+  assert.equal(email.get('isDirtyOrRelatedDirty'), false);
   email.change_email_type({id: ETD.idOne});
-  assert.ok(tenant.get('isDirtyOrRelatedDirty'));
-  assert.ok(tenant.get('billingEmailIsDirty'));
-  tenant.rollbackBillingEmail();
-  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
-  assert.ok(!tenant.get('billingEmailIsDirty'));
-  assert.equal(tenant.get('billing_email.id'), ED.idOne);
+  assert.equal(tenant.get('isNotDirtyOrRelatedNotDirty'), false);
+  assert.equal(tenant.get('billingEmailIsDirty'), true);
+  assert.equal(email.get('isDirtyOrRelatedDirty'), true);
+  tenant.rollback();
+  assert.equal(tenant.get('isNotDirtyOrRelatedNotDirty'), true);
+  assert.equal(tenant.get('billingEmailIsDirty'), false);
+  assert.equal(email.get('isDirtyOrRelatedDirty'), false);
+  // rollback does not rollback the email on the tenant model b/c not needed.  Only used for tenant new route
+  // assert.equal(tenant.get('billing_email.id'), ED.idOne);
   assert.equal(tenant.get('billing_email_fk'), ED.idOne);
 });
 
@@ -407,16 +415,18 @@ test('rollbackBillingAddress - address - tenant will set address to current addr
   assert.equal(tenant.get('billing_address_fk'), AD.idOne);
   assert.equal(tenant.get('billing_address.id'), AD.idOne);
   tenant.change_billing_address({id: other_address.get('id')});
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(tenant.get('billing_address_fk'), AD.idOne);
   assert.equal(tenant.get('billing_address.id'), AD.idTwo);
   let address = tenant.get('billing_address');
   address.change_address_type({id: ATD.idOne});
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
   assert.ok(tenant.get('billingAddressIsDirty'));
-  tenant.rollbackBillingAddress();
+  tenant.rollback();
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(!tenant.get('billingAddressIsDirty'));
-  assert.equal(tenant.get('billing_address.id'), AD.idOne);
+  // rollback does not rollback the email on the tenant model b/c not needed.  Only used for tenant new route
+  // assert.equal(tenant.get('billing_address.id'), AD.idOne);
   assert.equal(tenant.get('billing_address_fk'), AD.idOne);
 });
 
@@ -486,16 +496,17 @@ test('rollbackImplementationEmail - email - tenant will set email to current ema
   assert.equal(tenant.get('implementation_email_fk'), ED.idOne);
   assert.equal(tenant.get('implementation_email.id'), ED.idOne);
   tenant.change_implementation_email({id: other_email.get('id')});
+  assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(tenant.get('implementation_email_fk'), ED.idOne);
   assert.equal(tenant.get('implementation_email.id'), ED.idTwo);
   let email = tenant.get('implementation_email');
   email.change_email_type({id: ETD.idOne});
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
   assert.ok(tenant.get('implementationEmailIsDirty'));
-  tenant.rollbackImplementationEmail();
+  tenant.rollback();
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(!tenant.get('implementationEmailIsDirty'));
-  assert.equal(tenant.get('implementation_email.id'), ED.idOne);
+  // assert.equal(tenant.get('implementation_email.id'), ED.idOne);
   assert.equal(tenant.get('implementation_email_fk'), ED.idOne);
 });
 

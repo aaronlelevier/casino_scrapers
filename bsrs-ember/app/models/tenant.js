@@ -53,13 +53,14 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('default_currency', 'tenant');
-    belongs_to.bind(this)('billing_phone_number', 'tenant', {dirty: false, track_related_model: true});
-    belongs_to.bind(this)('billing_email', 'tenant', {dirty: false, track_related_model: true});
-    belongs_to.bind(this)('billing_address', 'tenant', {dirty: false, track_related_model: true});
-    belongs_to.bind(this)('implementation_email', 'tenant', {dirty: false, track_related_model: true});
+    belongs_to.bind(this)('billing_phone_number', 'tenant', {dirty: false, rollback: false, track_related_model: true});
+    belongs_to.bind(this)('billing_email', 'tenant', {dirty: false, rollback: false, track_related_model: true});
+    belongs_to.bind(this)('billing_address', 'tenant', {dirty: false, rollback: false, track_related_model: true});
+    belongs_to.bind(this)('implementation_email', 'tenant', {dirty: false, rollback: false, track_related_model: true});
     belongs_to.bind(this)('implementation_contact', 'tenant');
     belongs_to.bind(this)('dtd_start', 'tenant');
     many_to_many.bind(this)('country', 'tenant', {plural:true});
+    // documentation for m2m array that stores array of join model ids used for dirty tracking
     set(this, 'tenant_countries_fks', get(this, 'tenant_countries_fks') || []);
   },
   simpleStore: Ember.inject.service(),
@@ -88,11 +89,15 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
   rollback() {
     this.rollbackDefaultCurrency();
     this.rollbackCountries();
-    this.rollbackImplementationEmail();
+    // this.rollbackImplementationEmail();
+    this.rollbackRelatedSingle('implementation_email');
     this.rollbackImplementationContact();
-    this.rollbackBillingEmail();
-    this.rollbackBillingPhoneNumber();
-    this.rollbackBillingAddress();
+    // this.rollbackBillingEmail();
+    this.rollbackRelatedSingle('billing_email');
+    this.rollbackRelatedSingle('billing_phone_number');
+    this.rollbackRelatedSingle('billing_address');
+    // this.rollbackBillingPhoneNumber();
+    // this.rollbackBillingAddress();
     this.rollbackDtdStart();
     this._super(...arguments);
   },
