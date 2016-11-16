@@ -60,6 +60,14 @@ div.rowTable {
           width: 110px;
           @include truncate;
         }
+        .photo-avatar {
+          display: table-row;
+          .avatar,
+          .username {
+            display: table-cell;
+            vertical-align: middle;
+          }
+        }
         &.ticket-priority{
           width: 120px;
         }

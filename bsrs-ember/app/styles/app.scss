@@ -69,6 +69,7 @@
 * mobile-grid-filter..........grid filter and sort options slide up from bottom for grids
 * mobile-general..........bucket for general mobile styles
 * validated-input..........tether dialog component
+* photo-avatar-power-select.......power select specific styles for avatar
 */
 @import 'app/styles/components/checkbox.scss';
 @import 'app/styles/components/dropdown.scss';
@@ -84,6 +85,7 @@
 @import 'app/styles/components/nav-list.scss';
 @import 'app/styles/components/validated-input.scss';
 @import 'app/styles/components/ember-power-select-mobile.scss';
+@import 'app/styles/components/photo-avatar-power-select.scss';
 
 /*
 * MOBILE

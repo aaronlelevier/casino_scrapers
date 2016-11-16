@@ -1,0 +1,14 @@
+.ember-power-select-selected-item {
+ .photo-avatar {
+    border-radius: $borderRadius;
+    border: $borderStyle;
+    margin-left: -8px;
+    @extend %photoAvatarSelectedOption;
+  }
+}
+
+.ember-power-select-option {
+  .photo-avatar {
+    @extend %photoAvatarOption;
+  }
+}

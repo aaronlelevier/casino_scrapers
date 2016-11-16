@@ -1,0 +1,13 @@
+<span id={{if count (concat valuePath count) valuePath}}></span>
+{{#power-select
+  selected=selectedAttr
+  class=className
+  tagName="div"
+  search=(perform searchRepo)
+  onchange=(action "selected")
+  triggerClass=(if showMessage "invalid")
+  as |optionModel|
+}}
+  {{photo-avatar item=optionModel}}
+{{/power-select}}
+

@@ -1,0 +1,11 @@
+.ember-power-select-multiple-option {
+  .photo-avatar {
+    @extend %photoAvatarSelectedOption;
+  }
+}
+
+.ember-power-select-option {
+  .photo-avatar {
+    @extend %photoAvatarOption;
+  }
+}

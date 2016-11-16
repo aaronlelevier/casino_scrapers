@@ -108,14 +108,15 @@
 .ember-power-select-option[aria-current=true]{
   background: $hoverColorLight;
 }
+.ember-power-select-selected-item,
+.ember-power-select-placeholder{
+  margin: 0
+}
+
 //Ticket and DTD styles
 .ticket-priority-select,
 .ticket-status-select{
   li{
     font-size: 1.2rem;
   }
-}
-.ember-power-select-selected-item,
-.ember-power-select-placeholder{
-  margin: 0
 }

@@ -1,0 +1,25 @@
+%photoAvatarSelectedOption {
+  background: $light;
+  vertical-align: middle;
+  margin-left: -5px;
+  margin-top: -3px;
+  line-height: 20px;
+  .avatar {
+    border-radius: $borderRadiusLeft;
+    width: 20px;
+    height: 20px;
+  }
+  .username {
+    padding-right: 6px;
+  }
+}
+
+%photoAvatarOption {
+  line-height: 28px;
+  margin: 0 -7px;
+  display: flex;
+  .avatar {
+    width: 20px;
+    height: 20px;
+  }
+}

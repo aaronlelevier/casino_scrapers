@@ -78,7 +78,7 @@
       </div>
       <div class="col-md-12">
         {{#form-group title="ticket.label.assignee-fullname" for="assignee"}}
-          {{db-fetch-select
+          {{db-fetch-person-select
             model=model
             selectedAttr=model.assignee
             className="t-ticket-assignee-select"
@@ -93,7 +93,7 @@
       </div>
       <div class="col-md-12">
         {{#form-group title="ticket.label.cc" for="cc"}}
-        {{db-fetch-multi-select 
+        {{db-fetch-person-multi-select 
           model=model 
           multiAttr="cc" 
           multiAttrIds="cc_ids" 

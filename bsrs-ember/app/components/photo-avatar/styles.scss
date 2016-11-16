@@ -1,8 +1,7 @@
 & {
-  display: table-row;
+  display: inline-flex;
+  align-items: center;
   .avatar {
-    display: table-cell;
-    vertical-align: middle;
     width: $photoSmallSize;
     height: $photoSmallSize;
     border-radius: $photoBorderRadius;
@@ -24,8 +23,6 @@
     }
   }
   .username{
-    vertical-align: middle;
-    display: table-cell;
     padding-left: 6px;
   }
 }
