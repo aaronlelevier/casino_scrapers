@@ -95,5 +95,8 @@
       font-size: 100px;
       display: block;
     }
+    &:hover{
+      cursor: default !important;
+    }
   }
 }
