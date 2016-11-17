@@ -80,6 +80,7 @@ input:-webkit-autofill:focus {
     width: 32rem;
     max-width: 90%;
     max-height: 90%;
+    min-height: 18.6rem;
     -webkit-box-shadow: 0px 0px 10px 5px rgba(26,26,26,0.26);
     -moz-box-shadow: 0px 0px 10px 5px rgba(26,26,26,0.26);
     box-shadow: 0px 0px 10px 5px rgba(26,26,26,0.26);

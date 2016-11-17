@@ -73,6 +73,8 @@ module.exports = {
         try {
             fs.emptyDirSync(serverPath(['ember', 'assets']));
             fs.copySync(distPath(['assets']), serverPath(['ember', 'assets']));
+            fs.emptyDirSync(serverPath(['ember', 'css']));
+            fs.copySync(distPath(['css']), serverPath(['ember', 'css']));
             fs.emptyDirSync(serverPath(['ember', 'fonts']));
             fs.copySync(distPath(['fonts']), serverPath(['ember', 'fonts']));
             fs.copySync(distPath(['index.html']), serverPath(['templates', 'index.html']));
