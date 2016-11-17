@@ -43,7 +43,7 @@ test('it renders with existing ticketcc', function(assert) {
   this.model = action;
   this.index = 0;
   this.render(hbs`{{tickets/ticket-cc-select-action model=model index=index}}`);
-  assert.equal(this.$('[data-test-id=automation-ticket-cc]').text().trim(), trans.t('admin.action.cc'));
+  assert.equal(this.$('[data-test-id=automation-ticket-cc]').text().trim(), trans.t('automation.actions.cc'));
   assert.equal(action.get('ticketcc').get('length'), 1);
   assert.equal(page.actionTicketccOne.replace(/\W/, '').trim(), action.get('ticketcc').objectAt(0).get('fullname'));
 });

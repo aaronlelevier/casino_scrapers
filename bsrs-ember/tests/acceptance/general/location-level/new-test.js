@@ -90,7 +90,7 @@ test('when editing the location level name to invalid, it checks for validation'
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
     assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), 'errors.location_level.name');
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.location_level.name'));
     assert.ok(page.nameValidationErrorVisible);
   });
 });

@@ -11,12 +11,19 @@ var BSRS_AUTOMATION_ACTION_TYPE_DEFAULTS = (function() {
       idSix: '64a4401d-bfc1-492a-9b58-aa2310a81da640',
       idSeven: '64a4401d-bfc1-492a-9b58-aa2310a81da641',
       keyOne: 'automation.actions.ticket_assignee',
+      keyOneTrans: 'Ticket: Assignee',
       keyTwo: 'automation.actions.ticket_priority',
+      keyTwoTrans: 'Ticket: Priority',
       keyThree: 'automation.actions.ticket_status',
+      keyThreeTrans: 'Ticket: Status',
       keyFour: 'automation.actions.send_email',
+      keyFourTrans: 'Send Email',
       keyFive: 'automation.actions.send_sms',
+      keyFiveTrans: 'Send Text Message',
       keySix: 'automation.actions.ticket_request',
+      keySixTrans: 'Ticket: Request',
       keySeven: 'automation.actions.ticket_cc',
+      keySevenTrans: 'Ticket: CC',
     };
   };
   return factory;

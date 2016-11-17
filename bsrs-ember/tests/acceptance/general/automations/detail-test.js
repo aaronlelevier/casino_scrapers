@@ -484,7 +484,7 @@ test('add and delete an action', assert => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(Ember.$('.t-automation-action-type-select').length, 1);
     assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
-    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
+    assert.equal(page.actionTypeSelectedOne, AATD.keyOneTrans);
   });
   page.clickAddActionBtn();
   andThen(() => {
@@ -495,7 +495,7 @@ test('add and delete an action', assert => {
   andThen(() => {
     assert.equal(Ember.$('.t-automation-action-type-select').length, 1);
     assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
-    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
+    assert.equal(page.actionTypeSelectedOne, AATD.keyOneTrans);
   });
   page.clickDeleteActionBtn();
   andThen(() => {
@@ -514,9 +514,9 @@ test('select ticket assginee filter and update automation', assert => {
     assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
   });
   xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
-  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyOne);
+  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyOneTrans);
   andThen(() => {
-    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyOne));
+    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyOneTrans));
   });
   let personData = PF.search_power_select();
   let personOneId = personData.results[0].id;
@@ -550,7 +550,7 @@ test('visit detail and update an actions assignee', assert => {
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     // action type
-    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
+    assert.equal(page.actionTypeSelectedOne, AATD.keyOneTrans);
     // action content - assignee
     assert.equal(page.actionAssigneeSelectedOne, PD.fullname);
   });
@@ -599,7 +599,7 @@ test('get an action priority and update it to a new priority', assert => {
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     // // action type
-    assert.equal(page.actionTypeSelectedOne, AATD.keyTwo);
+    assert.equal(page.actionTypeSelectedOne, AATD.keyTwoTrans);
     // action content - priority
     assert.equal(page.actionPrioritySelectedOne, TPD.priorityOne);
   });
@@ -631,9 +631,9 @@ test('select priority filter and update automation', assert => {
     assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
   });
   xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
-  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyTwo);
+  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyTwoTrans);
   andThen(() => {
-    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyTwo));
+    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyTwoTrans));
   });
   selectChoose('.t-ticket-priority-select', TPD.priorityTwo);
   andThen(() => {
@@ -665,7 +665,7 @@ test('get an action status and update it to a new status', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.actionTypeSelectedOne, AATD.keyThree);
+    assert.equal(page.actionTypeSelectedOne, AATD.keyThreeTrans);
     assert.equal(page.actionStatusSelectedOne, TSD.keyOneValue);
   });
   selectChoose('.t-ticket-status-select', TSD.keyTwoValue);
@@ -696,9 +696,9 @@ test('select status filter and update automation', assert => {
     assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
   });
   xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
-  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyThree);
+  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyThreeTrans);
   andThen(() => {
-    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyThree));
+    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyThreeTrans));
   });
   selectChoose('.t-ticket-status-select', TSD.keyTwoValue);
   andThen(() => {
@@ -731,7 +731,7 @@ test('get an action sendemail and update it to a new sendemail', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.actionTypeSelectedOne, AATD.keyFour);
+    assert.equal(page.actionTypeSelectedOne, AATD.keyFourTrans);
     assert.equal(page.actionSendEmailRecipientOne.replace(/\W/, '').trim(), PD.fullname);
     assert.equal(page.sendEmailBodyValue, SED.bodyOne);
     assert.equal(page.sendEmailSubjectValue, SED.subjectOne);
@@ -772,9 +772,9 @@ test('select send email filter and update automation', assert => {
     assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
   });
   xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
-  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyFour);
+  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyFourTrans);
   andThen(() => {
-    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyFour));
+    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyFourTrans));
   });
   page.sendEmailBodyFillIn(SED.bodyTwo);
   page.sendEmailSubjectFillIn(SED.subjectTwo);
@@ -815,9 +815,9 @@ test('select ticketcc filter and update automation', assert => {
     assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
   });
   xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
-  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keySeven);
+  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keySevenTrans);
   andThen(() => {
-    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keySeven));
+    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keySevenTrans));
   });
   xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
   selectSearch('.t-action-ticketcc-select', 'e');
@@ -856,7 +856,7 @@ test('get an action sendsms and update it to a new sendsms', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.actionTypeSelectedOne, AATD.keyFive, 'Type sendsms selected');
+    assert.equal(page.actionTypeSelectedOne, AATD.keyFiveTrans, 'Type sendsms selected');
     assert.equal(page.actionSendSmsRecipientOne.replace(/\W/, '').trim(), PD.fullname, 'full name recipient shows');
     assert.equal(page.sendSmsBodyValue, SMSD.bodyOne, 'sendsms body shows');
   });
@@ -895,7 +895,7 @@ test('select sendsms filter and update automation', assert => {
     assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey), 'priority initially selected');
   });
   xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
-  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyFive);
+  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyFiveTrans);
   andThen(() => {
     // Failing Jenkins
     // assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyFive), 'selected type');
@@ -939,7 +939,7 @@ test('get an action ticket request and update it to a new ticket request', asser
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.actionTypeSelectedOne, AATD.keySix, 'type selected');
+    assert.equal(page.actionTypeSelectedOne, AATD.keySixTrans, 'type selected');
     assert.equal(page.ticketRequestValue, AAD.requestOne, 'exisiting request');
   });
   page.ticketRequestFillIn(AAD.requestOne);
@@ -967,12 +967,12 @@ test('select ticket request filter and update automation', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
+    assert.equal(page.actionTypeSelectedOne, AATD.keyOneTrans);
   });
   xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
-  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keySix);
+  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keySixTrans);
   andThen(() => {
-    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keySix));
+    assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keySixTrans));
   });
   page.ticketRequestFillIn(AAD.requestTwo);
   andThen(() => {

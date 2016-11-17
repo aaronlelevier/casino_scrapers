@@ -101,7 +101,7 @@ test('when editing the category name to invalid, it checks for validation', (ass
   andThen(() => {
     assert.equal(currentURL(), CATEGORY_NEW_URL);
     assert.equal($('.validated-input-error-dialog').length, 1);
-    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), 'errors.category.name');
+    assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.category.name'));
     assert.ok(page.nameValidationErrorVisible);
   });
   page.nameFill(CD.nameOne);

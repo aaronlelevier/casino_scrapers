@@ -29,7 +29,7 @@ moduleForComponent('tickets/ticket-request-select-action', 'Integration | Compon
 test('it renders with model bound values', function(assert) {
   this.model = action;
   this.render(hbs`{{tickets/ticket-request-select-action model=model}}`);
-  assert.equal(this.$('[data-test-id=automation-request]').text().trim(), trans.t('admin.automation.request'));
+  assert.equal(this.$('[data-test-id=automation-request]').text().trim(), trans.t('automation.actions.request'));
   assert.equal(this.$('.t-automation-ticket-request').prop('type'), 'textarea');
   assert.equal(this.$('.t-automation-ticket-request').val(), '');
   page.ticketRequestFillIn(AAD.requestOne);

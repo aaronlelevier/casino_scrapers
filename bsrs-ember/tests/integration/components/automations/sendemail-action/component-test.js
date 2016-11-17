@@ -41,9 +41,9 @@ test('it renders', function(assert) {
   this.model = action;
   this.index = 0;
   this.render(hbs`{{automations/sendemail-action model=model index=index}}`);
-  assert.equal(this.$('.t-sendemail-recipient-label').text().trim(), trans.t('admin.action.sendemail.recipients'));
-  assert.equal(this.$('.t-sendemail-subject-label').text().trim(), trans.t('admin.action.subject'));
-  assert.equal(this.$('.t-sendemail-body-label').text().trim(), trans.t('admin.action.body'));
+  assert.equal(this.$('.t-sendemail-recipient-label').text().trim(), trans.t('automation.actions.recipients'));
+  assert.equal(this.$('.t-sendemail-subject-label').text().trim(), trans.t('automation.actions.subject'));
+  assert.equal(this.$('.t-sendemail-body-label').text().trim(), trans.t('automation.actions.body'));
   assert.equal(this.$('.t-action-subject0').val(), action.get('sendemail').get('subject'));
   assert.equal(this.$('.t-action-body0').val(), action.get('sendemail').get('body'));
   assert.equal(page.actionSendEmailRecipientOne.replace(/\W/, '').trim(), action.get('sendemail').get('recipient').objectAt(0).get('fullname'));

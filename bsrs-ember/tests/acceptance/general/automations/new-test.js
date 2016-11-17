@@ -182,7 +182,6 @@ test('clicking cancel button with no edits will take from detail view to list vi
   });
 });
 
-// TODO: need to figure out a way to show validation messages.
 test('validation - at least one event is required, each action must have a type', assert => {
   clearxhr(listXhr);
   visit(NEW_URL);
@@ -200,10 +199,10 @@ test('validation - at least one event is required, each action must have a type'
   });
   // set to type 'assignee', and should see an 'assignee required msg' b/c assignee not yet selected
   xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.list_action_types());
-  selectChoose('.t-automation-action-type-select', AATD.keyOne);
+  selectChoose('.t-automation-action-type-select', AATD.keyOneTrans);
   andThen(() => {
-    // not btn disabled
-    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
+    // btn not disabled
+    assert.equal(page.actionTypeSelectedOne, AATD.keyOneTrans);
     assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
   });
   xhr(AUTOMATION_EVENTS_URL, 'GET', null, {}, 200, AF.event_search_power_select());
@@ -222,9 +221,9 @@ test('validation - if type is priority, a ticket priority must be selected', ass
     assert.equal($('[data-test-id="validation-action0"]').length, 0);
   });
   xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.list_action_types());
-  selectChoose('.t-automation-action-type-select', AATD.keyTwo);
+  selectChoose('.t-automation-action-type-select', 'Ticket: Priority');
   andThen(() => {
-    assert.equal(page.actionTypeSelectedOne, AATD.keyTwo);
+    assert.equal(page.actionTypeSelectedOne, 'Ticket: Priority');
     assert.equal(Ember.$('.t-ticket-priority-select').length, 1);
   });
   generalPage.save();
