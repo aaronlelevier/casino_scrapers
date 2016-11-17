@@ -1109,21 +1109,6 @@ test('change assignee will add photo to person', function(assert) {
   assert.equal(ticket.get('assignee').photo.image_thumbnail, 'wat.jpg');
 });
 
-// test('remove_assignee will remove the ticket id from the assignee assigned_tickets array', function(assert) {
-//   ticket = store.push('ticket', {id: TD.idOne});
-//   let assignee = store.push('related-person', {id: TD.assigneeOneId, name: TD.assigneeOne, assigned_tickets: [9, TD.idOne]});
-//   assert.deepEqual(assignee.get('assigned_tickets'), [9, TD.idOne]);
-//   ticket.remove_assignee();
-//   assert.deepEqual(assignee.get('assigned_tickets'), [9]);
-// });
-
-// test('remove_assignee will do nothing if the ticket has no assignee', function(assert) {
-//   ticket = store.push('ticket', {id: TD.idOne});
-//   assert.ok(!ticket.get('assignee'));
-//   ticket.remove_assignee();
-//   assert.ok(!ticket.get('assignee'));
-// });
-
 test('assignee will save correctly as undefined', (assert) => {
   ticket = store.push('ticket', {id: TD.idOne, assignee_fk: undefined});
   store.push('related-person', {id: TD.assigneeOneId, name: TD.assigneeOne, assigned_tickets: []});

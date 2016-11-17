@@ -43,7 +43,7 @@ select.form-control{
 }
 .input-group-addon{
   font-size: 1.3rem;
-	background-color: $lightGray;
+  background-color: $lightGray;
 }
 .input-group-addon:first-child{
   border-radius: $borderRadiusLeft;
@@ -171,4 +171,14 @@ fieldset[disabled] .form-control,
     }
   }
 
+}
+
+.btn.disabled, .btn[disabled], fieldset[disabled] .btn {
+  opacity: 1;
+  background: $lightGray;
+  color: $medGray;
+}
+.btn-default.disabled.focus, .btn-default.disabled:focus, .btn-default.disabled:hover, .btn-default[disabled].focus, .btn-default[disabled]:focus, .btn-default[disabled]:hover, fieldset[disabled] .btn-default.focus, fieldset[disabled] .btn-default:focus, fieldset[disabled] .btn-default:hover {
+  background-color: $lightGray;
+  border-color: $gray;
 }

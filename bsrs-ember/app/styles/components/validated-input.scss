@@ -50,7 +50,7 @@ input.invalid { // for invalid class on input for things like input-currency
   border-color: $orange;
 }
 .invalid {
-  input, textarea, div {
+  input.form-control, textarea.form-control, div {
     border-color: $orange;
   }
 }

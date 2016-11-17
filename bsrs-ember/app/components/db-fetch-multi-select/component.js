@@ -32,15 +32,18 @@ var DBFetch = Ember.Component.extend(ValidationComponentInit, ValidationComponen
         }
       });
       if (get(this, 'isInvalid')) { 
-        set(this, 'focusedOut', true); 
+        this.set('showMessage', true);
+        this.set('invalidClass', true); 
       }
       if (get(this, 'isValid')) {
-        set(this, 'focusedOut', false);
+        this.set('showMessage', false);
+        this.set('invalidClass', false); 
       }
     },
     focusedOut() {
       if (get(this, 'isInvalid')) { 
-        set(this, 'focusedOut', true); 
+        this.set('showMessage', true);
+        this.set('invalidClass', true); 
       }
     },
   },

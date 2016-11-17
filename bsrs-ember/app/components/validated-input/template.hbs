@@ -21,8 +21,8 @@
     value=value
     class=(concat "form-control " className)
     id=valuePath
-    focus-out="focusedOut"
-    key-up="keyedUp"
+    focus-out=(action "focusedOut")
+    key-up=(action "keyedUp")
   }}
   {{show-validation-message 
     model=model 

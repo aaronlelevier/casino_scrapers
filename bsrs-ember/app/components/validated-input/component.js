@@ -14,47 +14,36 @@ const TIMEOUT = config.APP.VALIDATION_TIMEOUT_INTERVAL;
 * - 'maxlength' for html5 validation
 * - 'valuePath'
 * - 'placeholder'
-* - 'didValidate'
 * - 'className'
 */
 export default Ember.Component.extend(ValidationComponentPieces, ValidationComponentInit, {
   type: 'text',
-  focusedOut: false,
   tageName: '',
-  // attributeValidation: null,
-  // classNameBindings: ['showMessage:invalid'],
-  // init() {
-  //   this._super(...arguments);
-  //   const valuePath = this.get('valuePath');
-  //   defineProperty(this, 'attributeValidation', computed.oneWay(`model.validations.attrs.${valuePath}`));
-  //   defineProperty(this, 'value', computed.alias(`model.${valuePath}`));
-  // },
-  // showMessage: computed('localDidValidate', 'focusedOut', function() {
-  //   return this.get('localDidValidate') || this.get('focusedOut');
-  // }),
-  // localDidValidate: Ember.computed('didValidate', function() {
-  //   // Create local didValidate boolean so that can show err msg right away on save and
-  //   // set back when fill in input
-  //   return this.get('didValidate') && this.get('isInvalid');
-  // }),
-  // isValid: computed.oneWay('attributeValidation.isValid'),
-  // isInvalid: computed.oneWay('attributeValidation.isInvalid'),
   setFocusedOut: task(function * () {
     yield timeout(TIMEOUT);
     if (this.get('isInvalid')) {
-      this.set('focusedOut', true);
+      if (this.get('focused')) {
+        this.set('showMessage', true);
+      }
+      this.set('invalidClass', true); 
     }
   }).restartable(),
   actions: {
     focusedOut() {
-      if (this.get('isInvalid')) { this.set('focusedOut', true); }
+      if (this.get('isInvalid')) { 
+        this.set('showMessage', false);
+        this.set('invalidClass', true); 
+        this.set('focused', false); 
+      }
     },
     keyedUp() {
       if (this.get('isInvalid')) {
         this.get('setFocusedOut').perform();
+        this.set('focused', true); 
       } else {
-        this.set('localDidValidate', false);
-        this.set('focusedOut', false);
+        this.set('showMessage', false);
+        this.set('invalidClass', false); 
+        this.set('focused', true); 
       }
     }
   }

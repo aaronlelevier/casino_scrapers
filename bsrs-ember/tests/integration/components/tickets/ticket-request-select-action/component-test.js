@@ -1,5 +1,6 @@
 import Ember from 'ember';
 const { set, run } = Ember;
+import wait from 'ember-test-helpers/wait';
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
@@ -40,13 +41,16 @@ test('it renders with model bound values', function(assert) {
 
 test('it renders with validation', function(assert) {
   this.model = action;
-  this.didValidate = false;
-  this.render(hbs`{{tickets/ticket-request-select-action model=model didValidate=didValidate}}`);
+  this.render(hbs`{{tickets/ticket-request-select-action model=model}}`);
   let $component = this.$('.t-automation-ticket-request-validator');
   assert.equal($component.hasClass('invalid'), false);
-  this.set('didValidate', true);
-  assert.equal($component.hasClass('invalid'), true);
-  assert.equal(Ember.$('.t-validation-request').text().trim(), trans.t('errors.automation.request'));
-  this.$('.t-automation-ticket-request').val(AAD.requestOne).trigger('keyup');
-  assert.equal($component.hasClass('invalid'), false);
+  this.$('.t-automation-ticket-request').val('').trigger('keyup');
+  return wait().then(() => {
+    assert.equal($component.hasClass('invalid'), true);
+    assert.equal(Ember.$('.t-validation-request').text().trim(), trans.t('errors.automation.request'));
+    this.$('.t-automation-ticket-request').val(AAD.requestOne).trigger('keyup');
+    return wait().then(() => {
+      assert.equal($component.hasClass('invalid'), false);
+    });
+  });
 });
