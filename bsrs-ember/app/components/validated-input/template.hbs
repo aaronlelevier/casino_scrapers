@@ -5,7 +5,7 @@
     placeholder=placeholder
     value=value
     class=(concat "form-control " className)
-    id=(if count (concat valuePath count) valuePath)
+    id=(if (gt count -1) (concat valuePath count) valuePath)
     focus-out=(action "focusedOut")
     key-up=(action "keyedUp")
   }}
@@ -13,6 +13,7 @@
     model=model 
     valuePath=valuePath
     showMessage=showMessage
+    count=count
   }}
 {{else}}
   {{textarea
@@ -28,5 +29,6 @@
     model=model 
     valuePath=valuePath
     showMessage=showMessage
+    count=count
   }}
 {{/unless}}
