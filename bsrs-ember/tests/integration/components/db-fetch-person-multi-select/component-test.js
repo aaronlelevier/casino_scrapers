@@ -23,7 +23,7 @@ moduleForComponent('db-fetch-person-multi-select', 'Integration | Component | db
     translation.initialize(this);
     person_repo = repository.initialize(this.container, this.registry, 'person');
     ticket = store.push('ticket', {id: TD.idOne});
-    store.push('person', {id: PD.idOne, fullname: PD.fullname, assigned_tickets: [TD.idOne], photo_fk: '9'});
+    store.push('related-person', {id: PD.idOne, fullname: PD.fullname, assigned_tickets: [TD.idOne], photo_fk: '9'});
     store.push('attachment', {id: '9', image_thumbnail: 'foo.jpg', people: [PD.idOne]});
     person_repo.findPeople = function() {
       return [
