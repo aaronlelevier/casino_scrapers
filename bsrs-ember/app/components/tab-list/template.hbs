@@ -26,12 +26,16 @@
       {{/if}}
     {{/each}}
     <div class="new tab" {{action "homeModalShowing"}}>
+      {{!--
       {{#if homeModalShowing}}
         {{#modal-dialog translucentOverlay=true close="homeModalShowing"}}
         <span {{action "homeModalShowing"}}>{{#link-to "dt.new" tagName="button" class="btn btn-success t-launch-dt-ticket" action="homeModalShowing"}}{{t "dt.ticket.launch"}}{{/link-to}}</span>
         {{/modal-dialog}}
       {{/if}}
-      <span class="t-home-modal-show">{{fa-icon "plus"}}</span>
+      --}}
+      {{#link-to "tickets.new" tagName="span" class="t-home-modal-show"}}
+        {{fa-icon "plus"}}
+      {{/link-to}}
     </div>
   </box>
 </nav>

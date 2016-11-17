@@ -1,4 +1,4 @@
-{{#form-group title=(concat "admin.person.label." field) for=field}}
+{{#form-group title=(concat "admin.person.label." field) optional=optional for=field}}
   {{validated-input
     model=model
     placeholder=(t (concat "admin.person.label." field))

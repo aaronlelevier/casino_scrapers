@@ -7,7 +7,7 @@
   <section>
     <div class="row">
       <div class="col-md-12">
-        {{#form-group title="admin.location.label.phone_number.other"}}
+        {{#form-group title="admin.location.label.phone_number.other" optional="true"}}
           {{input-multi-phone
             placeholder=(t "admin.location.label.phone_number.one")
             numbers=model.phonenumbers
@@ -19,7 +19,7 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        {{#form-group title="admin.location.label.email.other"}}
+        {{#form-group title="admin.location.label.email.other" optional="true"}}
           {{input-multi-email
             placeholder=(t "admin.location.label.email.one")
             emails=model.emails
@@ -31,7 +31,7 @@
     </div>
     <div class="row">
       <div class="col-md-12">
-        {{#form-group title="admin.location.label.address.other"}}
+        {{#form-group title="admin.location.label.address.other" optional="true"}}
           {{input-multi-address
             placeholder=(t "admin.location.label.address.one")
             addresses=model.addresses

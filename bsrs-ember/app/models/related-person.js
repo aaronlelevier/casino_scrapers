@@ -9,7 +9,7 @@ export default Model.extend({
   /**
    * @method isDirtyOrRelatedDirty
    * all models need this property
-   * returning false tells the attr that you are free to push into the store w/ no consequences
+   * returning false tells the attr addon that you are free to push into the store w/ no consequences
    */
   isDirtyOrRelatedDirty: Ember.computed(function() {
     return false;

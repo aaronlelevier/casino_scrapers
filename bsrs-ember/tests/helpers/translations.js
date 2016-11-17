@@ -7,5 +7,5 @@ export default function (service, json) {
 }
 
 export function getLabelText(input) {
-    return Ember.$('label[for="'+ input +'"]').text();
+  return Ember.$('label[for="'+ input +'"]').text().trim();
 }

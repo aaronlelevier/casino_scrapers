@@ -9,4 +9,11 @@
 	.mobile-form-group {
 		display: inline;
 	}
+  .optional {
+    color: $medGray;
+    &:before {
+      content: "-";
+      padding: 0 5px;
+    }
+  }
 }
