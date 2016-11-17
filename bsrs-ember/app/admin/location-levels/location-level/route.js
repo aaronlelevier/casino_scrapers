@@ -16,8 +16,8 @@ var LocationLevelRoute = TabRoute.extend(FindById, {
     const override = true;
     /* MOBILE SPECIFIC */
     const hashComponents = [
-      {'title': this.get('i18n').t('admin.location-level.section.details'), 'component': 'location-levels/detail-section', active: 'active'},
-      {'title': this.get('i18n').t('admin.location-level.section.children'), 'component': 'location-levels/children-section'},
+      {'title': this.get('i18n').t('admin.locationlevel.section.details'), 'component': 'location-levels/detail-section', active: 'active'},
+      {'title': this.get('i18n').t('admin.locationlevel.section.children'), 'component': 'location-levels/children-section'},
     ];
     return this.findByIdScenario(location_level, pk, {repository:repository, hashComponents:hashComponents}, override);
   },

@@ -1,23 +1,23 @@
 <div class="input-group-vertical t-action-group">
   <div class="input-group">
-    <span class="input-group-addon action-label t-sendemail-recipient-label">{{t "admin.action.sendemail.recipients"}}</span>
-    {{db-fetch-multi-select 
+    <span class="input-group-addon action-label t-sendemail-recipient-label">{{t "automation.actions.recipients"}}</span>
+    {{db-fetch-multi-select
       model=model.sendemail
-      multiAttr="recipient" 
-      valuePath="recipient" 
-      multiAttrIds="recipient_ids" 
-      selectedAttr=model.sendemail.recipient 
-      className="t-action-recipient-select" 
+      multiAttr="recipient"
+      valuePath="recipient"
+      multiAttrIds="recipient_ids"
+      selectedAttr=model.sendemail.recipient
+      className="t-action-recipient-select"
       class=(concat "t-action-recipient-validator" index)
-      displayName="fullname" 
-      add_func="add_recipient" 
-      remove_func="remove_recipient" 
-      repository=automationRepo 
+      displayName="fullname"
+      add_func="add_recipient"
+      remove_func="remove_recipient"
+      repository=automationRepo
       searchMethod="getEmailRecipients"
     }}
   </div>
   <div class="input-group">
-    <span class="input-group-addon action-label t-sendemail-subject-label">{{t "admin.action.subject"}}</span>
+    <span class="input-group-addon action-label t-sendemail-subject-label">{{t "automation.actions.subject"}}</span>
       {{validated-input
         model=model.sendemail
         valuePath="subject"
@@ -28,7 +28,7 @@
       }}
   </div>
   <div class="input-group">
-    <span class="input-group-addon action-label t-sendemail-body-label">{{t "admin.action.body"}}</span>
+    <span class="input-group-addon action-label t-sendemail-body-label">{{t "automation.actions.body"}}</span>
       {{validated-input
         model=model.sendemail
         valuePath="body"

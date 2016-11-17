@@ -10,7 +10,8 @@
 export default function missingMessage(locale, key /*, data */) {
   // NOTE: comment out for time being b/c output being generated alongside
   // tests, and tests harder to debug.
-
-  // Ember.Logger.warn('Missing translation: ' + key);
+  if(key && key.indexOf && key.indexOf('.') != -1 && !$.isNumeric(key)){
+    Ember.Logger.warn(key);
+  }
   return key;
 }

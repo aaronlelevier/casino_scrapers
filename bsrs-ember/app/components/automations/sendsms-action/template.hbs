@@ -1,24 +1,24 @@
 <div class="input-group-vertical t-action-group">
   <div class="input-group">
-    <span class="input-group-addon action-label t-sendsms-recipient-label">{{t "admin.action.sendsms.recipients"}}</span>
-    {{db-fetch-multi-select 
+    <span class="input-group-addon action-label t-sendsms-recipient-label">{{t "admin.action.recipients"}}</span>
+    {{db-fetch-multi-select
       model=model.sendsms
-      multiAttr="recipient" 
-      valuePath="recipient" 
-      multiAttrIds="recipient_ids" 
-      selectedAttr=model.sendsms.recipient 
-      className="t-action-recipient-select" 
+      multiAttr="recipient"
+      valuePath="recipient"
+      multiAttrIds="recipient_ids"
+      selectedAttr=model.sendsms.recipient
+      className="t-action-recipient-select"
       class=(concat "t-action-recipient-validator" index)
-      displayName="fullname" 
-      add_func="add_recipient" 
-      remove_func="remove_recipient" 
-      repository=automationRepo 
+      displayName="fullname"
+      add_func="add_recipient"
+      remove_func="remove_recipient"
+      repository=automationRepo
       searchMethod="getSmsRecipients"
       didValidate=didValidate
     }}
   </div>
   <div class="input-group">
-    <span class="input-group-addon action-label t-sendsms-message-label">{{t "admin.action.sendsms.message"}}</span>
+    <span class="input-group-addon action-label t-sendsms-message-label">{{t "automation.actions.message"}}</span>
       {{validated-input
         model=model.sendsms
         valuePath="body"

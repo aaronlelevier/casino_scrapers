@@ -1,18 +1,18 @@
 <div class="input-group-vertical t-action-group">
   <div class="input-group">
-    <span class="input-group-addon action-label" data-test-id="automation-ticket-cc">{{t "admin.action.cc"}}</span>
-    {{db-fetch-multi-select 
+    <span class="input-group-addon action-label" data-test-id="automation-ticket-cc">{{t "automation.actions.cc"}}</span>
+    {{db-fetch-multi-select
       model=model
-      multiAttr="ticketcc" 
-      valuePath="ticketcc" 
-      multiAttrIds="ticketcc_ids" 
+      multiAttr="ticketcc"
+      valuePath="ticketcc"
+      multiAttrIds="ticketcc_ids"
       selectedAttr=model.ticketcc
-      className="t-action-ticketcc-select" 
+      className="t-action-ticketcc-select"
       class=(concat "t-action-ticketcc-validator" index)
-      displayName="fullname" 
-      add_func="add_ticketcc" 
-      remove_func="remove_ticketcc" 
-      repository=personRepo 
+      displayName="fullname"
+      add_func="add_ticketcc"
+      remove_func="remove_ticketcc"
+      repository=personRepo
       searchMethod="findPeople"
       didValidate=didValidate
     }}
