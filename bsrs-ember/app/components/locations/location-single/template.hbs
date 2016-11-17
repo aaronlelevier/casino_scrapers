@@ -22,9 +22,14 @@
           <div class="col-md-12">
             {{form-photo icon="building" model=model}}
             <h1>
-              {{model.name}} <small>{{model.number}}</small>
+              {{#if model.name}}
+                {{model.name}}
+                {{#if model.number}}<small>{{model.number}}</small>{{/if}}
+              {{else}}
+                <span class="new">{{t 'admin.location.new'}}</span>
+              {{/if}}
             </h1>
-            <p>{{model.location_level.name}}</p>
+            {{#if model.location_level.name}}<p>{{model.location_level.name}}</p>{{/if}}
           </div>
         </div>
       </section>
