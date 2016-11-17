@@ -1,20 +1,5 @@
 <section>
   <div class="col-md-12">
-    {{#form-group title="ticket.label.location-name" for="location"}}
-      {{db-fetch-select 
-        model=model 
-        selectedAttr=model.location 
-        className="t-ticket-location-select" 
-        displayName="name" 
-        change_func="change_location" 
-        repository=locationRepo 
-        searchMethod="findTicket"
-        valuePath="location"
-        didValidate=didValidate
-      }}
-    {{/form-group}}
-  </div>
-  <div class="col-md-12">
     {{#form-group title="ticket.label.priority-name" for="priority"}}
       {{power-select-foreign-key 
         model=model 
@@ -41,7 +26,7 @@
     {{/form-group}}
   </div>
   <div class="col-md-12">
-    {{#form-group title="ticket.label.cc" for="cc"}}
+    {{#form-group title="ticket.label.cc" optional="true" for="cc"}}
       {{db-fetch-person-multi-select 
         model=model multiAttr="cc" 
         multiAttrIds="cc_ids" 
@@ -56,7 +41,7 @@
     {{/form-group}}
   </div>
   <div class="col-md-12">
-    {{#form-group title="ticket.label.assignee-fullname" for="assignee"}}
+    {{#form-group title="ticket.label.assignee-fullname" optional="true" for="assignee"}}
       {{db-fetch-person-select 
         model=model 
         selectedAttr=model.assignee 

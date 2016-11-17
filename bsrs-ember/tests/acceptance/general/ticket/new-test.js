@@ -121,8 +121,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
   });
   let top_level_categories_endpoint = `${CATEGORIES_URL}parents/`;
   xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
-  page.categoryOneClickDropdown();
-  page.categoryOneClickOptionOne();
+  selectChoose('.t-model-category-select:eq(0)', CD.nameOne);
   andThen(() => {
     let components = page.powerSelectComponents;
     assert.equal(store.find('ticket').get('length'), 1);
@@ -137,8 +136,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
     assert.equal(find('.t-model-category-label:eq(1)').text(), CD.subCatLabelOne);
   });
   ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [], CD.idOne, 1));
-  page.categoryTwoClickDropdown();
-  page.categoryTwoClickOptionOne();
+  selectChoose('.t-model-category-select:eq(1)', CD.nameTwo);
   andThen(() => {
     let components = page.powerSelectComponents;
     let tickets = store.find('ticket');
@@ -211,8 +209,7 @@ test('selecting category tree and removing a top level category will remove chil
   //first select
   let top_level_categories_endpoint = `${CATEGORIES_URL}parents/`;
   xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
-  page.categoryOneClickDropdown();
-  page.categoryOneClickOptionOne();
+  selectChoose('.t-model-category-select:eq(0)', CD.nameOne);
   andThen(() => {
     let components = page.powerSelectComponents;
     assert.equal(store.find('ticket').get('length'), 1);
@@ -222,8 +219,7 @@ test('selecting category tree and removing a top level category will remove chil
   });
   //second select
   ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
-  page.categoryTwoClickDropdown();
-  page.categoryTwoClickOptionOne();
+  selectChoose('.t-model-category-select:eq(1)', CD.nameTwo);
   andThen(() => {
     let components = page.powerSelectComponents;
     let tickets = store.find('ticket');
@@ -233,8 +229,7 @@ test('selecting category tree and removing a top level category will remove chil
   });
   //third select
   ajax(`${CATEGORIES_URL}?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
-  page.categoryThreeClickDropdown();
-  page.categoryThreeClickOptionOne();
+  selectChoose('.t-model-category-select:eq(2)', CD.nameElectricalChild);
   andThen(() => {
     let components = page.powerSelectComponents;
     let tickets = store.find('ticket');
@@ -244,8 +239,7 @@ test('selecting category tree and removing a top level category will remove chil
   });
   //change second with same children as electrical (outlet);
   ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.unusedId, CD.nameUnused, [{id: CD.idChild}], CD.idOne, 1));
-  page.categoryTwoClickDropdown();
-  page.categoryTwoClickOptionTwo();
+  selectChoose('.t-model-category-select:eq(1)', CD.nameUnused);
   andThen(() => {
     let components = page.powerSelectComponents;
     let tickets = store.find('ticket');
@@ -254,8 +248,7 @@ test('selecting category tree and removing a top level category will remove chil
     assert.equal(components, 3);
   });
   //change top level
-  page.categoryOneClickDropdown();
-  page.categoryOneClickOptionTwo();
+  selectChoose('.t-model-category-select:eq(0)', CD.nameThree);
   andThen(() => {
     let components = page.powerSelectComponents;
     let tickets = store.find('ticket');
@@ -344,32 +337,18 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   });
   xhr(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
-  page.assigneeClickDropdown();
-  fillIn(SEARCH, 'b');
-  andThen(() => {
-    assert.equal(page.assigneeInput, t(GLOBALMSG.assignee_power_select));
-    assert.equal(page.assigneeOptionLength, 10, 'option length 10');
-    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(1)`).text().trim(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
-  });
-  page.assigneeClickOptionOne();
+  selectSearch(TICKET_ASSIGNEE_SELECT, 'b');
+  selectChoose(TICKET_ASSIGNEE_SELECT, PD.fullnameBoy);
   andThen(() => {
     assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
   });
-  page.assigneeClickDropdown();
-  fillIn(SEARCH, '');
+  selectSearch(TICKET_ASSIGNEE_SELECT, '');
   andThen(() => {
     assert.equal(page.assigneeOptionLength, 1);
     assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
   });
-  fillIn(SEARCH, 'b');
-  andThen(() => {
-    assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
-    assert.equal(page.assigneeOptionLength, 10);
-    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(1)`).text().trim(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
-  });
-  page.assigneeClickOptionTwo();
+  selectSearch(TICKET_ASSIGNEE_SELECT, 'b');
+  selectChoose(TICKET_ASSIGNEE_SELECT, PD.fullnameBoy2);
   andThen(() => {
     assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
     let ticket = store.findOne('ticket');
@@ -379,13 +358,8 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
   });
   //search specific assignee
   xhr(`${PEOPLE_URL}person__icontains=Boy1/`, 'GET', null, {}, 200, PF.search_power_select());
-  page.assigneeClickDropdown();
-  fillIn(SEARCH, 'Boy1');
-  andThen(() => {
-    assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
-    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-  });
-  page.assigneeClickOptionOne();
+  selectSearch(TICKET_ASSIGNEE_SELECT, 'Boy1');
+  selectChoose(TICKET_ASSIGNEE_SELECT, PD.fullnameBoy);
   andThen(() => {
     assert.equal(page.assigneeInput, `${PD.nameBoy} ${PD.lastNameBoy}`);
     let ticket = store.findOne('ticket');
@@ -399,11 +373,9 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
 test('selecting new location will not affect other power select components and will only render one tab', (assert) => {
   clearxhr(list_xhr);
   page.visitNew();
-  page.priorityClickDropdown();
-  page.priorityClickOptionOne();
-  page.locationClickDropdown();
-  fillIn(SEARCH, '6');
-  page.locationClickOptionTwo();
+  selectChoose(TICKET_PRIORITY_SELECT, TD.priorityOne);
+  selectSearch(TICKET_LOCATION_SELECT, '6');
+  selectChoose(TICKET_LOCATION_SELECT, LD.storeNameTwo);
   andThen(() => {
     assert.equal(page.priorityInput, TD.priorityOne);
     assert.equal(page.locationInput, LD.storeNameTwo);
@@ -414,12 +386,8 @@ test('selecting new location will not affect other power select components and w
 test('location new component shows location for ticket and will fire off xhr to fetch locations on search to change location', (assert) => {
   clearxhr(list_xhr);
   page.visitNew();
-  page.locationClickDropdown();
-  fillIn(SEARCH, '6');
-  andThen(() => {
-    assert.equal(find(`${POWER_SELECT_OPTIONS} > li`).length, 2);
-  });
-  page.locationClickOptionTwo();
+  selectSearch(TICKET_LOCATION_SELECT, '6');
+  selectChoose(TICKET_LOCATION_SELECT, LD.storeNameTwo);
   andThen(() => {
     assert.equal(page.locationInput, LD.storeNameTwo);
     let ticket = store.find('ticket');
@@ -432,8 +400,7 @@ test('location new component shows location for ticket and will fire off xhr to 
 test('removes location dropdown on search to change location', (assert) => {
   clearxhr(list_xhr);
   page.visitNew();
-  page.locationClickDropdown();
-  fillIn(SEARCH, '6');
+  selectSearch(TICKET_LOCATION_SELECT, '6');
   andThen(() => {
     assert.equal(page.locationOptionLength, 2);
   });
