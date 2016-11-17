@@ -82,3 +82,18 @@
   width: 100%;
   display: block;
 }
+.no-results {
+  td {
+    background: $white;
+    text-align: center;
+    padding: 100px 0 0;
+    color: $medGray;
+    font-size: 1.3rem !important;
+    i {
+      color: $gray;
+      margin-bottom: 30px;
+      font-size: 100px;
+      display: block;
+    }
+  }
+}

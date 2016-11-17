@@ -54,13 +54,15 @@
           {{/each}}
           {{/link-to}}
         {{else}}
-          <td colspan="100%">
-            {{#unless error}}
-              {{fa-icon 'binoculars'}} {{t 'grid.no_results'}}
-            {{else}}
-              {{error.message}}
-            {{/unless}}
-          </td>
+          <tr class="no-results">
+            <td colspan="100%">
+              {{#unless error}}
+                {{fa-icon 'binoculars'}} {{t 'grid.no_results'}}
+              {{else}}
+                {{error.message}}
+              {{/unless}}
+            </td>
+          </tr>
         {{/each}}
       </tbody>
     </table>
