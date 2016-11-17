@@ -22,6 +22,13 @@ db.sqlite3
 dist/
 tmp/
 npm-debug.log
+bsrs-django/bigsky/templates/index.html
+bsrs-django/bigsky/ember/assets/*
+!bsrs-django/bigsky/ember/assets/.gitkeep
+bsrs-django/bigsky/ember/css/*
+!bsrs-django/bigsky/ember/css/.gitkeep
+bsrs-django/bigsky/ember/fonts/*
+!bsrs-django/bigsky/ember/fonts/.gitkeep
 
 # dependencies
 node_modules/

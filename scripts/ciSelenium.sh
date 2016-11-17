@@ -48,6 +48,7 @@ function copyEmberAssetsToDjango {
     rm -rf templates/index.html
     wait
     cp -r ../../bsrs-ember/dist/assets ember/assets
+    cp -r ../../bsrs-ember/dist/css ember/css
     cp -r ../../bsrs-ember/dist/fonts ember/fonts
     cp -r ../../bsrs-ember/dist/index.html templates
     COPY_EMBER_ASSETS=$?

@@ -113,6 +113,7 @@ TEST=$?; if [ "$TEST" == 1 ]; then echo "rm old static failed"; exit $TEST; fi
 
 wait
 cp -r ../../bsrs-ember/dist/assets ember/assets
+cp -r ../../bsrs-ember/dist/css ember/css
 cp -r ../../bsrs-ember/dist/fonts ember/fonts
 cp ../../bsrs-ember/dist/index.html templates
 TEST=$?; if [ "$TEST" == 1 ]; then echo "cp new static failed"; exit $TEST; fi

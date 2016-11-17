@@ -22,6 +22,7 @@ rm -rf static/*
 rm -rf templates/index.html
 wait
 cp -r ../../bsrs-ember/dist/assets ember
+cp -r ../../bsrs-ember/dist/css ember
 cp -r ../../bsrs-ember/dist/fonts ember
 cp -r ../../bsrs-ember/dist/index.html templates
 wait

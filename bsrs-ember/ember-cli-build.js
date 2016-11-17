@@ -15,9 +15,14 @@ module.exports = function(defaults) {
   var isLocalServerBuild = (process.env.LOCAL_SERVER === 'true');
   var isStandAloneBuild = !isProdBuild && !isLocalServerBuild; // test|development
   var app = new EmberApp(defaults, {
-    'fingerprint': {
+    inlineContent: {
+      staticPath: {
+        content: (isProdBuild || isLocalServerBuild) ? '/static/' : '/'
+      }
+    },
+    fingerprint: {
       prepend: '/static/',
-      exclude: ['assets/icons'],
+      exclude: ['assets/icons', 'fonts'],
       enabled: isProdBuild || isLocalServerBuild,
     },
     babel: {
