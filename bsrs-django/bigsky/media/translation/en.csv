@@ -80,12 +80,16 @@ en,admin.category.new,New Category,New Category,,"'admin.category.new':'New Cate
 en,admin.category.one,Category,Category,,"'admin.category.one':'Category',",Category,Category
 en,admin.category.other,Categories,Categories,,"'admin.category.other':'Categories',",Categories,Categories
 en,admin.category.search,Search Categories,Search Categories,,"'admin.category.search':'Search Categories',",Search Categories,Search Categories
+en,admin.category.section.cost,Cost Information,Cost Information,,"'admin.category.section.cost':'Cost Information',",Cost Information,Cost Information
+en,admin.category.section.details,Details,Details,,"'admin.category.section.details':'Details',",Details,Details
+en,admin.category.section.other,Organization,Organization,,"'admin.category.section.other':'Organization',",Organization,Organization
 en,admin.category.status.active,Active,Active,,"'admin.category.status.active':'Active',",Active,Active
 en,admin.category.status.inactive,Inactive,Inactive,,"'admin.category.status.inactive':'Inactive',",Inactive,Inactive
 en,admin.categoryType.one,Category Type,Category Type,,"'admin.categoryType.one':'Category Type',",Category Type,Category Type
 en,admin.categoryType.other,Category Types,Category Types,,"'admin.categoryType.other':'Category Types',",Category Types,Category Types
 en,admin.company.one,Company,Company,,"'admin.company.one':'Company',",Company,Company
 en,admin.company.other,Companies,Companies,,"'admin.company.other':'Companies',",Companies,Companies
+en,admin.contractor-assignment,Preferred Providers,Preferred Providers,,"'admin.contractor-assignment':'Preferred Providers',",Preferred Providers,Preferred Providers
 en,admin.contractor.one,Contractor,Contractor,,"'admin.contractor.one':'Contractor',",Contractor,Contractor
 en,admin.contractor.other,Contractors,Contractors,,"'admin.contractor.other':'Contractors',",Contractors,Contractors
 en,admin.contractorautomation.one,Contractor automation,Contractor automation,,"'admin.contractorautomation.one':'Contractor automation',",Contractor automation,Contractor automation
@@ -179,10 +183,10 @@ en,admin.location.label.phone_number.other,Phone Numbers,Phone Numbers,,"'admin.
 en,admin.location.label.status-name,Status,Status,,"'admin.location.label.status-name':'Status',",Status,Status
 en,admin.location.one,Location,Location,,"'admin.location.one':'Location',",Location,Location
 en,admin.location.other,Locations,Locations,,"'admin.location.other':'Locations',",Locations,Locations
-en,admin.location.section.details,Details,Details,,"'admin.location.section.details':'Details',",Details,Details
-en,admin.location.section.contact,Contact,Contact,,"'admin.location.section.contact':'Contact',",Contact,Contact
-en,admin.location.section.organization,Organizations,Organizations,,"'admin.location.section.organization':'Organizations',",Organizations,Organizations
 en,admin.location.search,Search Locations,Search Locations,,"'admin.location.search':'Search Locations',",Search Locations,Search Locations
+en,admin.location.section.contact,Contact,Contact,,"'admin.location.section.contact':'Contact',",Contact,Contact
+en,admin.location.section.details,Details,Details,,"'admin.location.section.details':'Details',",Details,Details
+en,admin.location.section.organization,Organizations,Organizations,,"'admin.location.section.organization':'Organizations',",Organizations,Organizations
 en,admin.location.status.closed,Closed,Closed,,"'admin.location.status.closed':'Closed',",Closed,Closed
 en,admin.location.status.future,Future,Future,,"'admin.location.status.future':'Future',",Future,Future
 en,admin.location.status.open,Open,Open,,"'admin.location.status.open':'Open',",Open,Open
@@ -199,12 +203,16 @@ en,admin.locationlevel.one,Location Level,Location Level,,"'admin.locationlevel.
 en,admin.locationlevel.other,Location Levels,Location Levels,,"'admin.locationlevel.other':'Location Levels',",Location Levels,Location Levels
 en,admin.locationlevel.region,Region,Region,,"'admin.locationlevel.region':'Region',",Region,Region
 en,admin.locationlevel.search,Search Location Levels,Search Location Levels,,"'admin.locationlevel.search':'Search Location Levels',",Search Location Levels,Search Location Levels
+en,admin.locationlevel.section.children,Children,Children,,"'admin.locationlevel.section.children':'Children',",Children,Children
+en,admin.locationlevel.section.details,Details,Details,,"'admin.locationlevel.section.details':'Details',",Details,Details
 en,admin.locationlevel.store,Store,Store,,"'admin.locationlevel.store':'Store',",Store,Store
 en,admin.notification.one,Notification Profile,Notification Profile,,"'admin.notification.one':'Notification Profile',",Notification Profile,Notification Profile
 en,admin.notification.other,Notification Profiles,Notification Profiles,,"'admin.notification.other':'Notification Profiles',",Notification Profiles,Notification Profiles
+en,admin.person.label.add_profile_picture,Add Profile Picture,Add Profile Picture,,"'admin.person.label.add_profile_picture':'Add Profile Picture',",Add Profile Picture,Add Profile Picture
 en,admin.person.label.address,Address,Address,,"'admin.person.label.address':'Address',",Address,Address
 en,admin.person.label.auth_amount,Auth. Amount,Auth. Amount,,"'admin.person.label.auth_amount':'Auth. Amount',",Auth. Amount,Auth. Amount
 en,admin.person.label.change_password,Change,Change,,"'admin.person.label.change_password':'Change',",Change,Change
+en,admin.person.label.change_profile_picture,Change Profile Picture,Change Profile Picture,,"'admin.person.label.change_profile_picture':'Change Profile Picture',",Change Profile Picture,Change Profile Picture
 en,admin.person.label.contact,Contact,Contact,,"'admin.person.label.contact':'Contact',",Contact,Contact
 en,admin.person.label.credentials,Credentials,Credentials,,"'admin.person.label.credentials':'Credentials',",Credentials,Credentials
 en,admin.person.label.email,Email,Email,,"'admin.person.label.email':'Email',",Email,Email
@@ -215,11 +223,12 @@ en,admin.person.label.general,General,General,,"'admin.person.label.general':'Ge
 en,admin.person.label.language,Language,Language,,"'admin.person.label.language':'Language',",Language,Language
 en,admin.person.label.last_name,Last Name,Last Name,,"'admin.person.label.last_name':'Last Name',",Last Name,Last Name
 en,admin.person.label.location,Location,Location,,"'admin.person.label.location':'Location',",Location,Location
-en,admin.person.label.middle_initial,Middle Initial,Middle Initial,,"'admin.person.label.middle_initial':'Middle Initial',",Middle Initial,Middle Initial
+en,admin.person.label.middle_initial,M,M,,"'admin.person.label.middle_initial':'M',",M,M
 en,admin.person.label.password,Password,Password,,"'admin.person.label.password':'Password',",Password,Password
 en,admin.person.label.phone_number_region,Phone Number Region,Phone Number Region,,"'admin.person.label.phone_number_region':'Phone Number Region',",Phone Number Region,Phone Number Region
 en,admin.person.label.phone_number.one,Phone Number,Phone Number,,"'admin.person.label.phone_number.one':'Phone Number',",Phone Number,Phone Number
 en,admin.person.label.phone_number.other,Phone Numbers,Phone Numbers,,"'admin.person.label.phone_number.other':'Phone Numbers',",Phone Numbers,Phone Numbers
+en,admin.person.label.photo,Photo,Photo,,"'admin.person.label.photo':'Photo',",Photo,Photo
 en,admin.person.label.role-name,Role,Role,,"'admin.person.label.role-name':'Role',",Role,Role
 en,admin.person.label.settings,Settings,Settings,,"'admin.person.label.settings':'Settings',",Settings,Settings
 en,admin.person.label.status,Status,Status,,"'admin.person.label.status':'Status',",Status,Status
@@ -268,7 +277,7 @@ en,admin.role.new,New Role,New Role,,"'admin.role.new':'New Role',",New Role,New
 en,admin.role.one,Role,Role,,"'admin.role.one':'Role',",Role,Role
 en,admin.role.other,Roles,Roles,,"'admin.role.other':'Roles',",Roles,Roles
 en,admin.role.search,Search Role,Search Role,,"'admin.role.search':'Search Role',",Search Role,Search Role
-en,admin.role.section.detail,Role Details,Role Details,,"'admin.role.section.detail':'Role Details',",Role Details,Role Details
+en,admin.role.section.details,Role Details,Role Details,,"'admin.role.section.details':'Role Details',",Role Details,Role Details
 en,admin.role.section.settings,Role Settings,Role Settings,,"'admin.role.section.settings':'Role Settings',",Role Settings,Role Settings
 en,admin.role.type.internal,Internal,Internal,,"'admin.role.type.internal':'Internal',",Internal,Internal
 en,admin.role.type.third_party,Third Party,Third Party,,"'admin.role.type.third_party':'Third Party',",Third Party,Third Party
@@ -305,6 +314,8 @@ en,admin.tenant.implementation,Implementation,Implementation,,"'admin.tenant.imp
 en,admin.tenant.implementation,Implementation,Implementation,,"'admin.tenant.implementation':'Implementation',",Implementation,Implementation
 en,admin.tenant.implementation_contact,Implementation Contact,Implementation Contact,,"'admin.tenant.implementation_contact':'Implementation Contact',",Implementation Contact,Implementation Contact
 en,admin.tenant.implementation_email,Implementation Email,Implementation Email,,"'admin.tenant.implementation_email':'Implementation Email',",Implementation Email,Implementation Email
+en,admin.tenant.label.dtd_start,Decision Tree Origin,Decision Tree Origin,,"'admin.tenant.label.dtd_start':'Decision Tree Origin',",Decision Tree Origin,Decision Tree Origin
+en,admin.tenant.label.test_mode,Test Mode,Test Mode,,"'admin.tenant.label.test_mode':'Test Mode',",Test Mode,Test Mode
 en,admin.third_party.label.name,Name,Name,,"'admin.third_party.label.name':'Name',",Name,Name
 en,admin.third_party.label.number,Number,Number,,"'admin.third_party.label.number':'Number',",Number,Number
 en,admin.third_party.status.active,Inactive,Inactive,,"'admin.third_party.status.active':'Inactive',",Inactive,Inactive
@@ -322,6 +333,21 @@ en,admin.work_order.close.do_not_display,Do not display,Do not display,,"'admin.
 en,admin.work_order.close.unchecked,Unchecked,Unchecked,,"'admin.work_order.close.unchecked':'Unchecked',",Work,Work
 en,attachment.fail,File failed to upload,File failed to upload,,"'attachment.fail':'File failed to upload',",Work,Work
 en,attachment.too_large,File is too large,File is too large,,"'attachment.too_large':'File is too large',",Work,Work
+en,automation.actions.body,Body,Body,,"'automation.actions.body':'Body',",Work,Work
+en,automation.actions.cc,CC(s),CC(s),,"'automation.actions.cc':'CC(s)',",Work,Work
+en,automation.actions.message,Message,Message,,"'automation.actions.message':'Message',",Work,Work
+en,automation.actions.recipients,Recipients,Recipients,,"'automation.actions.recipients':'Recipients',",Work,Work
+en,automation.actions.request,Request Text,Request Text,,"'automation.actions.request':'Request Text',",Work,Work
+en,automation.actions.send_email,Send Email,Send Email,,"'automation.actions.send_email':'Send Email',",Work,Work
+en,automation.actions.send_sms,Send Text Message,Send Text Message,,"'automation.actions.send_sms':'Send Text Message',",Work,Work
+en,automation.actions.status,Status,Status,,"'automation.actions.status':'Status',",Work,Work
+en,automation.actions.status,Status,Status,,"'automation.actions.status':'Status',",Work,Work
+en,automation.actions.subject,Subject,Subject,,"'automation.actions.subject':'Subject',",Work,Work
+en,automation.actions.ticket_assignee,Ticket: Assignee,Ticket: Assignee,,"'automation.actions.ticket_assignee':'Ticket: Assignee',",Work,Work
+en,automation.actions.ticket_cc,Ticket: CC,Ticket: CC,,"'automation.actions.ticket_cc':'Ticket: CC',",Work,Work
+en,automation.actions.ticket_priority,Ticket: Priority,Ticket: Priority,,"'automation.actions.ticket_priority':'Ticket: Priority',",Work,Work
+en,automation.actions.ticket_request,Ticket: Request,Ticket: Request,,"'automation.actions.ticket_request':'Ticket: Request',",Work,Work
+en,automation.actions.ticket_status,Ticket: Status,Ticket: Status,,"'automation.actions.ticket_status':'Ticket: Status',",Work,Work
 en,automation.event.ticket_assignee_change,Ticket Assignee Change,Ticket Assignee Change,,"'automation.event.ticket_assignee_change':'Ticket Assignee Change',",Work,Work
 en,automation.event.ticket_attachment_add,Ticket Attachment,Ticket Attachment,,"'automation.event.ticket_attachment_add':'Ticket Attachment',",Work,Work
 en,automation.event.ticket_category_change,Ticket Category Change,Ticket Category Change,,"'automation.event.ticket_category_change':'Ticket Category Change',",Work,Work
@@ -337,7 +363,7 @@ en,automation.event.ticket_status_in_progress,Ticket: Status In Progress,Ticket:
 en,automation.event.ticket_status_new,Ticket: Status New,Ticket: Status New,,"'automation.event.ticket_status_new':'Ticket: Status New',",Work,Work
 en,automation.event.ticket_status_pending,Ticket: Status Pending,Ticket: Status Pending,,"'automation.event.ticket_status_pending':'Ticket: Status Pending',",Work,Work
 en,automation.event.ticket_status_unsatisfactory,Ticket: Status Unsatisfactory,Ticket: Status Unsatisfactory,,"'automation.event.ticket_status_unsatisfactory':'Ticket: Status Unsatisfactory',",Work,Work
-en,button.add,Add new {{model}},Add new {{model}},,"'button.add':'Add new {{model}}',",Add new {{model_var_,Add new _model_var_
+en,button.add,New {{model}},New {{model}},,"'button.add':'New {{model}}',",New {{model_var_,New _model_var_
 en,button.upload,Attach file,Attach file,,"'button.upload':'Attach file',",Attach file,Attach file
 en,crud.cancel.button,Cancel,Cancel,,"'crud.cancel.button':'Cancel',",Cancel,Cancel
 en,crud.close_tab,Close Tab,Close Tab,,"'crud.close_tab':'Close Tab',",Close Tab,Close Tab
@@ -382,11 +408,15 @@ en,errors.automation.assignee,Please select an Assignee,Please select an Assigne
 en,errors.automation.description.min_max,Description must be at least 5 charachters long,Description must be at least 5 charachters long,,"'errors.automation.description.min_max':'Description must be at least 5 charachters long',",Description must be at least 5 charachters long,
 en,errors.automation.pf.criteria.length,Must have at least one criteria,Must have at least one criteria,,"'errors.automation.pf.criteria.length':'Must have at least one criteria',",Must have at least one criteria,Must have at least one criteria
 en,errors.automation.pf.length,Please add at least one filter,Please add at least one filter,,"'errors.automation.pf.length':'Please add at least one filter',",Please add at least one filter,
+en,errors.automation.ticketcc,Please select a CC,Please select a CC,,"'errors.automation.ticketcc':'Please select a CC',",Please select a CC,
+en,errors.category.name,Name must be provided. ,Name must be provided. ,,"'errors.category.name':'Name must be provided.',",Name must be provided. ,Name must be provided. 
+en,errors.client.default,Client Error,Client Error,,"'errors.client.default':'Client Error',",Client Error,Client Error
 en,errors.dtd.description,Description must be provided,Description must be provided,,"'errors.dtd.description':'Description must be provided',",Description must be provided,Description must be provided
 en,errors.dtd.key,Key must be provided,Key must be provided,,"'errors.dtd.key':'Key must be provided',",Key must be provided,Key must be provided
 en,errors.dtd.key.length,Key must less than 12 characters,Key must less than 12 characters,,"'errors.dtd.key.length':'Key must less than 12 characters',",Key must less than 12 characters,Key must less than 12 characters
 en,errors.email.email,Email required,Email required,,"'errors.email.email':'Email required',",Email required,Email required
 en,errors.link.text,Text must be provided,Text must be provided,,"'errors.link.text':'Text must be provided',",Text must be provided,Text must be provided
+en,errors.location_level.name,Name must be provided. ,Name must be provided. ,,"'errors.location_level.name':'Name must be provided.',",Name must be provided. ,Name must be provided. 
 en,errors.location.location_level,Location Level must be provided. ,Location Level must be provided. ,,"'errors.location.location_level':'Location Level must be provided.',",Location Level must be provided. ,Location Level must be provided. 
 en,errors.location.name,Name must be provided. ,Name must be provided. ,,"'errors.location.name':'Name must be provided.',",Name must be provided. ,Name must be provided. 
 en,errors.location.number,Number must be provided. ,Number must be provided. ,,"'errors.location.number':'Number must be provided.',",Number must be provided. ,Number must be provided. 
@@ -402,7 +432,15 @@ en,errors.person.username,Username must be provided,Username must be provided,,"
 en,errors.phonenumber.number,Phone number required,Phone number required,,"'errors.phonenumber.number':'Phone number required',",Phone number required,Phone number required
 en,errors.profile.description,Description must be provided,Description must be provided,,"'errors.profile.description':'Description must be provided',",Description must be provided,Description must be provided
 en,errors.profile.description.min_max,Must be between 5 and 500 characters,Must be between 5 and 500 characters,,"'errors.profile.description.min_max':'Must be between 5 and 500 characters',",Must be between 5 and 500 characters,Must be between 5 and 500 characters
+en,errors.role.auth_amount,Auth Amount must be provided,Auth Amount must be provided,,"'errors.role.auth_amount':'Auth Amount must be provided',",Auth Amount must be provided,Auth Amount must be provided
+en,errors.role.location_level,Location Level must be provided,Location Level must be provided,,"'errors.role.location_level':'Location Level must be provided',",Location Level must be provided,Location Level must be provided
 en,errors.role.name,Name must be provided,Name must be provided,,"'errors.role.name':'Name must be provided',",Name must be provided,Name must be provided
+en,errors.sendemail.body,Email Body required,Email Body required,,"'errors.sendemail.body':'Email Body required',",Email Body required,Email Body required
+en,errors.sendemail.recipient,SMS Recipient required,SMS Recipient required,,"'errors.sendemail.recipient':'SMS Recipient required',",SMS Recipient required,SMS Recipient required
+en,errors.sendemail.subject,Email Subject required,Email Subject required,,"'errors.sendemail.subject':'Email Subject required',",Email Subject required,Email Subject required
+en,errors.sendsms.body,SMS Body required,SMS Body required,,"'errors.sendsms.body':'SMS Body required',",SMS Body required,SMS Body required
+en,errors.sendsms.recipient,SMS Recipient required,SMS Recipient required,,"'errors.sendsms.recipient':'SMS Recipient required',",SMS Recipient required,SMS Recipient required
+en,errors.server.default,Server Error,Server Error,,"'errors.server.default':'Server Error',",Server Error,Server Error
 en,errors.tenant.billing_contact,Billing Contact must be provided,Billing Contact must be provided,,"'errors.tenant.billing_contact':'Billing Contact must be provided',",Billing Contact must be provided,Billing Contact must be provided
 en,errors.tenant.billing_contact,Billing Contact required,Billing Contact required,,"'errors.tenant.billing_contact':'Billing Contact required',",Billing Contact required,Billing Contact required
 en,errors.tenant.company_code,Company Code,Company Code,,"'errors.tenant.company_code':'Company Code',",Company Code,Company Code
@@ -419,11 +457,14 @@ en,errors.ticket.request,Request must be provided,Request must be provided,,"'er
 en,errors.ticket.request.length,Request must be at least 5 characters,Request must be at least 5 characters,,"'errors.ticket.request.length':'Request must be at least 5 characters',",Request must be at least 5 characters,Request must be at least 5 characters
 en,errors.ticket.requester,Requester must be provided,Requester must be provided,,"'errors.ticket.requester':'Requester must be provided',",Requester must be provided,Requester must be provided
 en,errors.ticket.status,Status must be provided,Status must be provided,,"'errors.ticket.status':'Status must be provided',",Status must be provided,Status must be provided
+en,general.drop.image,Drop Image Here,Drop Image Here,,"'general.drop.image':'Drop Image Here',",Drop Image Here,Drop Image Here
 en,general.new,New,New,,"'general.new':'New',",New,New
+en,general.optional,Optional,Optional,,"'general.optional':'Optional',",Optional,Optional
 en,grid.export,Export,Export,,"'grid.export':'Export',",Export,Export
 en,grid.filter,Filter,Filter,,"'grid.filter':'Filter',",Filter,Filter
 en,grid.filter.other,Filters,Filters,,"'grid.filter.other':'Filters',",Filters,Filters
 en,grid.filterset_name,Name your filter,Name your filter,,"'grid.filterset_name':'Name your filter',",Name your filter,Name your filter
+en,grid.no_results,No Results,No Results,,"'grid.no_results':'No Results',",No Results,No Results
 en,grid.per_page,{{size}} per page,{{size}} per page,,"'grid.per_page':'{{size}} per page',",{{size_var_ per page,_size_var_ per page
 en,grid.reset_all_options,Reset All Options,Reset All Options,,"'grid.reset_all_options':'Reset All Options',",Reset All Options,Reset All Options
 en,grid.save_filter,Save Filter,Save Filter,,"'grid.save_filter':'Save Filter',",Save Filter,Save Filter
@@ -441,6 +482,8 @@ en,modules.tickets.openTickets,Open Tickets,Open Tickets,,"'modules.tickets.open
 en,modules.tickets.titleShort,Tickets,Tickets,,"'modules.tickets.titleShort':'Tickets',",Tickets,Tickets
 en,modules.workOrders.overdue,Overdue Work Orders,Overdue Work Orders,,"'modules.workOrders.overdue':'Overdue Work Orders',",Overdue Work Orders,Overdue Work Orders
 en,modules.workOrders.titleShort,Work Orders,Work Orders,,"'modules.workOrders.titleShort':'Work Orders',",Work Orders,Work Orders
+en,notice.offline,Your network connection is offline.,Your network connection is offline.,,"'notice.offline':'Your network connection is offline.',",Your network connection is offline.,Your network connection is offline.
+en,notice.online,Your network connection is online.,Your network connection is online.,,"'notice.online':'Your network connection is online.',",Your network connection is online.,Your network connection is online.
 en,power.select.select,Click to select,Click to select,,"'power.select.select':'Click to select',",Click to select,Click to select
 en,selects.loading,Loading,Loading,,"'selects.loading':'Loading',",Loading,Loading
 en,selects.noMatchesMessage,No Matches,No Matches,,"'selects.noMatchesMessage':'No Matches',",No Matches,No Matches
@@ -451,14 +494,23 @@ en,tenant.company_code,Company Code must be provided,Company Code must be provid
 en,tenant.company_name,Company Name,Company Name,,"'tenant.company_name':'Company Name',",Company Name,Company Name
 en,tenant.dashboard_text,Dashboard Text,Dashboard Text,,"'tenant.dashboard_text':'Dashboard Text',",Dashboard Text,Dashboard Text
 en,tenant.implementation_contact_initial,Initial Implementation Contact Name,Initial Implementation Contact Name,,"'tenant.implementation_contact_initial':'Initial Implementation Contact Name',",Initial Implementation Contact Name,Initial Implementation Contact Name
-en,tenant.new,New Tenant,New Tenant,,"'tenant.new':'New Tenant',",New Tenant,New Tenant
-en,tenant.scid,Service Channel ID,Service Channel ID,,"'tenant.scid':'Service Channel ID',",Service Channel ID,Service Channel ID
-en,tenant.one,Tenant,Tenant,,"'tenant.one':'Tenant',",Tenant,Tenant
-en,tenant.search,Search Tenants,Search Tenants,,"'tenant.search':'Search Tenants',",Search Tenants,Search Tenants
-en,tenant.label.company_name,Company Name,Company Name,,"'tenant.label.company_name':'Company Name',",Company Name,Company Name
 en,tenant.label.company_code,Company Code,Company Code,,"'tenant.label.company_code':'Company Code',",Company Code,Company Code
+en,tenant.label.company_name,Company Name,Company Name,,"'tenant.label.company_name':'Company Name',",Company Name,Company Name
 en,tenant.label.test_mode,Test Mode,Test Mode,,"'tenant.label.test_mode':'Test Mode',",Test Mode,Test Mode
+en,tenant.new,New Tenant,New Tenant,,"'tenant.new':'New Tenant',",New Tenant,New Tenant
+en,tenant.one,Tenant,Tenant,,"'tenant.one':'Tenant',",Tenant,Tenant
 en,tenant.other,Tenants,Tenants,,"'tenant.other':'Tenants',",Tenants,Tenants
+en,tenant.scid,Service Channel ID,Service Channel ID,,"'tenant.scid':'Service Channel ID',",Service Channel ID,Service Channel ID
+en,tenant.search,Search Tenants,Search Tenants,,"'tenant.search':'Search Tenants',",Search Tenants,Search Tenants
+en,ticket.activity_type.assignee,Assignee Changed,Assignee Changed,,"'ticket.activity_type.assignee':'Assignee Changed',",Assignee Changed,Assignee Changed
+en,ticket.activity_type.attachment_add,Attachment Added,Attachment Added,,"'ticket.activity_type.attachment_add':'Attachment Added',",Attachment Added,Attachment Added
+en,ticket.activity_type.categories,Change Categories,Change Categories,,"'ticket.activity_type.categories':'Change Categories',",Change Categories,Change Categories
+en,ticket.activity_type.cc_add,Add CC,Add CC,,"'ticket.activity_type.cc_add':'Add CC',",Add CC,Add CC
+en,ticket.activity_type.cc_remove,Remove CC,Remove CC,,"'ticket.activity_type.cc_remove':'Remove CC',",Remove CC,Remove CC
+en,ticket.activity_type.comment,Comment,Comment,,"'ticket.activity_type.comment':'Comment',",Comment,Comment
+en,ticket.activity_type.create,Ticket Created,Ticket Created,,"'ticket.activity_type.create':'Ticket Created',",Ticket Created,Ticket Created
+en,ticket.activity_type.prority,Change Piority,Change Piority,,"'ticket.activity_type.prority':'Change Piority',",Change Piority,Change Piority
+en,ticket.activity_type.status,Change Status,Change Status,,"'ticket.activity_type.status':'Change Status',",Change Status,Change Status
 en,ticket.continue,Continue,Continue,,"'ticket.continue':'Continue',",Continue,Continue
 en,ticket.created,{{requester}} created this ticket {{timestamp}},{{requester}} created this ticket {{timestamp}},,"'ticket.created':'{{requester}} created this ticket {{timestamp}}',",{{requester_var_ created this ticket {{timestamp_var_,_requester_var_ created this ticket _timestamp_var_
 en,ticket.label.assignee-fullname,Assignee,Assignee,,"'ticket.label.assignee-fullname':'Assignee',",Assignee,Assignee
@@ -474,6 +526,7 @@ en,ticket.label.priority-name,Priority,Priority,,"'ticket.label.priority-name':'
 en,ticket.label.request,Request,Request,,"'ticket.label.request':'Request',",Request,Request
 en,ticket.label.requester,Requester,Requester,,"'ticket.label.requester':'Requester',",Requester,Requester
 en,ticket.label.status-name,Status,Status,,"'ticket.label.status-name':'Status',",Status,Status
+en,ticket.new,New Tickets,New Tickets,,"'ticket.new':'New Tickets',",New Tickets,New Tickets
 en,ticket.one,Ticket,Ticket,,"'ticket.one':'Ticket',",Ticket,Ticket
 en,ticket.other,Tickets,Tickets,,"'ticket.other':'Tickets',",Tickets,Tickets
 en,ticket.priority.emergency,Emergency,Emergency,,"'ticket.priority.emergency':'Emergency',",Emergency,Emergency
@@ -499,12 +552,3 @@ en,ticket.status.unsatisfactory_completion,Unsatisfactory,Unsatisfactory,,"'tick
 en,upload.progress,Progress,Progress,,"'upload.progress':'Progress',",Progress,Progress
 en,validation.invalid,Invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid,Invalid
 en,validation.valid,Valid,Valid,,"'validation.valid':'Valid',",Valid,Valid
-en,ticket.activity_type.create,Ticket Created,Ticket Created,,"'ticket.activity_type.create':'Ticket Created',",Ticket Created,Ticket Created
-en,ticket.activity_type.assignee,Assignee Changed,Assignee Changed,,"'ticket.activity_type.assignee':'Assignee Changed',",Assignee Changed,Assignee Changed
-en,ticket.activity_type.cc_add,Add CC,Add CC,,"'ticket.activity_type.cc_add':'Add CC',",Add CC,Add CC
-en,ticket.activity_type.cc_remove,Remove CC,Remove CC,,"'ticket.activity_type.cc_remove':'Remove CC',",Remove CC,Remove CC
-en,ticket.activity_type.status,Change Status,Change Status,,"'ticket.activity_type.status':'Change Status',",Change Status,Change Status
-en,ticket.activity_type.prority,Change Piority,Change Piority,,"'ticket.activity_type.prority':'Change Piority',",Change Piority,Change Piority
-en,ticket.activity_type.categories,Change Categories,Change Categories,,"'ticket.activity_type.categories':'Change Categories',",Change Categories,Change Categories
-en,ticket.activity_type.comment,Comment,Comment,,"'ticket.activity_type.comment':'Comment',",Comment,Comment
-en,ticket.activity_type.attachment_add,Attachment Added,Attachment Added,,"'ticket.activity_type.attachment_add':'Attachment Added',",Attachment Added,Attachment Added
