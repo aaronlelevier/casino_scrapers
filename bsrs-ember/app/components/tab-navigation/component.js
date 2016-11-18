@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   tabList: Ember.inject.service(),
-  tagName: '',
+  classNames: 'tab slideInLeft animated-fast'.w(),
   /*
    * singleTabIsDirty 
    * singleTab does not have access to all models in this context, so use tabService showModal function to determine if any of its models are dirty

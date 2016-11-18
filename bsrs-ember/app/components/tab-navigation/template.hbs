@@ -1,17 +1,15 @@
-<div class="tab">
-  {{#link-to tab.routeName (if link_id link_id) classNames="t-tab"}}
+{{#link-to tab.routeName (if link_id link_id) classNames="t-tab"}}
   <span class="t-tab-title">{{tab.parent}}</span>
   <span class="close-wrap">
     <a href="#" class="close-icon t-tab-close" {{action "close" tab bubbles=false}}>
       {{#if tab.model.isDirtyOrRelatedDirty}}
-        {{fa-icon "circle" classNames="dirty"}}
+      {{fa-icon "circle" classNames="dirty"}}
       {{else if (or tab.singleTabModel.isDirtyOrRelatedDirty singleTabIsDirty)}}
-        {{fa-icon "circle" classNames="dirty"}}
+      {{fa-icon "circle" classNames="dirty"}}
       {{else}}
-        {{fa-icon "times-circle"}}
+      {{fa-icon "times-circle"}}
       {{/if}}
     </a>
   </span>
-  {{/link-to}}
-</div>
+{{/link-to}}
 
