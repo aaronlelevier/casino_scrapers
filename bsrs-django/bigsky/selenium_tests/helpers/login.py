@@ -20,4 +20,4 @@ class LoginMixin(object):
         password_input.send_keys(password)
         password_input.send_keys(Keys.RETURN)
 
-        self.wait.until(lambda browser: browser.title.lower().startswith('bsrsember'))
+        self.wait.until(lambda browser: browser.title.lower().startswith('denali'))
