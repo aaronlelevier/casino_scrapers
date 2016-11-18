@@ -8,8 +8,6 @@ var GridViewController = Ember.Controller.extend({
   sort: undefined,
   find: undefined,
   search: undefined,
-  id_in: undefined,
-  infinityIsLoading: false,
   repositoryFilterset: inject('filterset'),
   queryParams: ['page', 'sort', 'search', 'find', 'id_in'],
   hasActiveFilterSet: Ember.computed('filtersets.[]', 'sort', 'find', 'search', function() {
@@ -28,7 +26,11 @@ var GridViewController = Ember.Controller.extend({
       let params = filterset_regex(url);
       return repositoryFilterset.insert(params, routeName, name);
     }
-  }
+  },
+
+  /* MOBILE SPECIFIC */
+  infinityIsLoading: false,
+  id_in: undefined,
 });
 
 export default GridViewController;
