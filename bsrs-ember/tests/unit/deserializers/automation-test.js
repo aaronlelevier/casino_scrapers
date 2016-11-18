@@ -26,7 +26,7 @@ var store, automation, deserializer, pfilter, pfilter_unused;
 
 module('unit: automation deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:automation-event', 'model:automation-join-event', 'model:automation-list', 'model:person', 'model:automation-join-pfilter', 'model:pfilter', 'model:sendemail', 'model:generic-join-recipients', 'model:sendsms', 'model:generic-join-recipients', 'model:criteria', 'model:pfilter-join-criteria', 'model:ticket-priority', 'model:ticket-status', 'model:action-join-person', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:length', 'validator:has-many', 'model:uuid']);
+    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:automation-event', 'model:automation-join-event', 'model:automation-list', 'model:person', 'model:related-person', 'model:automation-join-pfilter', 'model:pfilter', 'model:sendemail', 'model:generic-join-recipients', 'model:sendsms', 'model:generic-join-recipients', 'model:criteria', 'model:pfilter-join-criteria', 'model:ticket-priority', 'model:ticket-status', 'model:action-join-person', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:length', 'validator:has-many', 'model:uuid']);
     const uuid = this.container.lookup('model:uuid');
     deserializer = automationDeserializer.create({ simpleStore: store, uuid: uuid });
     run(() => {
@@ -184,7 +184,7 @@ test('deserialize single - sendemail - existing with same id', assert => {
     store.push('automation-action', {id: AAD.idOne, sendemail_fk: SED.idOne});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
     store.push('sendemail', {id: SED.idOne, subject: SED.subjectOne, body: SED.bodyOne, generic_recipient_fks: [SEJRD.idOne], actions: [AAD.idOne]});
-    store.push('person', {id: PersonD.idOne, fullname: PersonD.fullname});
+    store.push('related-person', {id: PersonD.idOne, fullname: PersonD.fullname});
     store.push('generic-join-recipients', {id: SEJRD.idOne, generic_pk: SED.idOne, recipient_pk: PersonD.idOne});
   });
   assert.equal(automation.get('id'), AD.idOne);
@@ -225,7 +225,7 @@ test('deserialize single - sendemail - different id', assert => {
     store.push('automation-action', {id: AAD.idOne, sendemail_fk: SED.idOne});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
     store.push('sendemail', {id: SED.idOne, subject: SED.subjectOne, body: SED.bodyOne, generic_recipient_fks: [SEJRD.idOne], actions: [AAD.idOne]});
-    store.push('person', {id: PersonD.idOne, fullname: PersonD.fullname});
+    store.push('related-person', {id: PersonD.idOne, fullname: PersonD.fullname});
     store.push('generic-join-recipients', {id: SEJRD.idOne, generic_pk: SED.idOne, recipient_pk: PersonD.idOne});
   });
   assert.equal(automation.get('id'), AD.idOne);
@@ -268,7 +268,7 @@ test('deserialize single - sendemail - different recipient', assert => {
     store.push('automation-action', {id: AAD.idOne, sendemail_fk: SED.idOne});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
     store.push('sendemail', {id: SED.idOne, subject: SED.subjectOne, body: SED.bodyOne, generic_recipient_fks: [SEJRD.idOne], actions: [AAD.idOne]});
-    store.push('person', {id: PersonD.idOne});
+    store.push('related-person', {id: PersonD.idOne});
     store.push('generic-join-recipients', {id: SEJRD.idOne, generic_pk: SED.idOne, recipient_pk: PersonD.idOne});
   });
   assert.equal(automation.get('id'), AD.idOne);
@@ -344,7 +344,7 @@ test('deserialize single - sendsms- existing with same id', assert => {
     store.push('automation-action', {id: AAD.idOne, sendsms_fk: SMSD.idOne });
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
     store.push('sendsms', {id: SMSD.idOne, body: SMSD.bodyOne, generic_recipient_fks: [SMSJRD.idOne], actions: [AAD.idOne]});
-    store.push('person', {id: PersonD.idOne, fullname: PersonD.fullname});
+    store.push('related-person', {id: PersonD.idOne, fullname: PersonD.fullname});
     store.push('generic-join-recipients', {id: SMSJRD.idOne, generic_pk: SMSD.idOne, recipient_pk: PersonD.idOne});
   });
   assert.equal(automation.get('id'), AD.idOne);
@@ -388,7 +388,7 @@ test('deserialize single - sendsms- different id', assert => {
     store.push('automation-action', {id: AAD.idOne, sendsms_fk: SMSD.idOne});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
     store.push('sendsms', {id: SMSD.idOne, body: SMSD.bodyOne, generic_recipient_fks: [SMSJRD.idOne], actions: [AAD.idOne]});
-    store.push('person', {id: PersonD.idOne});
+    store.push('related-person', {id: PersonD.idOne});
     store.push('generic-join-recipients', {id: SMSJRD.idOne, generic_pk: SMSD.idOne, recipient_pk: PersonD.idOne});
   });
   assert.equal(automation.get('id'), AD.idOne);
@@ -427,7 +427,7 @@ test('deserialize single - sendsms - different recipient', assert => {
     store.push('automation-action', {id: AAD.idOne, sendsms_fk: SED.idOne});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
     store.push('sendsms', {id: SED.idOne, subject: SED.subjectOne, body: SED.bodyOne, generic_recipient_fks: [SEJRD.idOne], actions: [AAD.idOne]});
-    store.push('person', {id: PersonD.idOne});
+    store.push('related-person', {id: PersonD.idOne});
     store.push('generic-join-recipients', {id: SEJRD.idOne, generic_pk: SED.idOne, recipient_pk: PersonD.idOne});
   });
   assert.equal(automation.get('id'), AD.idOne);
@@ -487,7 +487,7 @@ test('deserialize single - action has ticket cc', assert => {
   const join_model = store.find('action-join-person').objectAt(0);
   const action = automation.get('action').objectAt(0);
   assert.equal(join_model.get('automation_action_pk'), action.get('id'));
-  assert.equal(join_model.get('person_pk'), PersonD.idOne);
+  assert.equal(join_model.get('related_person_pk'), PersonD.idOne);
   // who is my join models
   assert.deepEqual(action.get('automation_action_ticketcc_fks'), [join_model.get('id')]);
   assert.deepEqual(automation.get('action').objectAt(0).get('automation_action_ticketcc').objectAt(0).get('id'), join_model.get('id'));
@@ -503,8 +503,8 @@ test('deserialize single - ticketcc - existing with same id', assert => {
   run(() => {
     store.push('automation-action', {id: AAD.idOne, automation_action_ticketcc_fks: [10]});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
-    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, person_pk: PersonD.idOne});
-    store.push('person', {id: PersonD.idOne, fullname: PersonD.fullname});
+    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, related_person_pk: PersonD.idOne});
+    store.push('related-person', {id: PersonD.idOne, fullname: PersonD.fullname});
   });
   const action = automation.get('action').objectAt(0);
   assert.equal(automation.get('isDirtyOrRelatedDirty'), false);
@@ -538,8 +538,8 @@ test('deserialize single - ticketcc - different id', assert => {
   run(() => {
     store.push('automation-action', {id: AAD.idOne, automation_action_ticketcc_fks: [10]});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
-    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, person_pk: PersonD.idOne});
-    store.push('person', {id: PersonD.idOne, fullname: PersonD.fullname});
+    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, related_person_pk: PersonD.idOne});
+    store.push('related-person', {id: PersonD.idOne, fullname: PersonD.fullname});
   });
   const action = automation.get('action').objectAt(0);
   assert.equal(automation.get('isDirtyOrRelatedDirty'), false);
@@ -601,7 +601,7 @@ test('deserialize single - assignee- existing with same id', assert => {
   run(() => {
     store.push('automation-action', {id: AAD.idOne, assignee_fk: PersonD.id });
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
-    store.push('person', {id: PersonD.id, fullname: PersonD.fullname, actions: [AAD.idOne]});
+    store.push('related-person', {id: PersonD.id, fullname: PersonD.fullname, actions: [AAD.idOne]});
   });
   assert.equal(automation.get('id'), AD.idOne);
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
@@ -633,7 +633,7 @@ test('deserialize single - assignee- different id', assert => {
   run(() => {
     store.push('automation-action', {id: AAD.idOne, assignee_fk: PersonD.id});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
-    store.push('person', {id: PersonD.id, fullname: PersonD.fullname, actions: [AAD.idOne]});
+    store.push('related-person', {id: PersonD.id, fullname: PersonD.fullname, actions: [AAD.idOne]});
   });
   assert.equal(automation.get('id'), AD.idOne);
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));

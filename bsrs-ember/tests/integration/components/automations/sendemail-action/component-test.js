@@ -27,7 +27,7 @@ moduleForComponent('automations/sendemail-action', 'Integration | Component | au
     translation.initialize(this);
     action = store.push('automation-action', {id: AAD.idOne, sendemail_fk: SED.idOne});
     store.push('sendemail', {id: SED.idOne, subject: SED.subjectOne, body: SED.bodyOne, generic_recipient_fks: [SEJRD.idOne], actions: [AAD.idOne]});
-    store.push('person', {id: PD.idOne, fullname: PD.fullname});
+    store.push('related-person', {id: PD.idOne, fullname: PD.fullname});
     store.push('generic-join-recipients', {id: SEJRD.idOne, generic_pk: SED.idOne, recipient_pk: PD.idOne});
     automation_repo = repository.initialize(this.container, this.registry, 'person');
     automation_repo.getEmailRecipients = function() { return [{id: PD.idTwo, fullname: PD.fullname, type: 'person'}]; };

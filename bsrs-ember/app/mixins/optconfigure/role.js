@@ -4,7 +4,7 @@ export default Ember.Mixin.create({
   OPT_CONF: {
     location_level: {
       collection: 'roles',
-      property: 'location-level',
+      owner: 'location-level',
     },
     categories: {
       associated_model: 'category',

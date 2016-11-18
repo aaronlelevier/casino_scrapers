@@ -29,7 +29,7 @@ export default Ember.Mixin.create({
     },
     type: {
       collection: 'actions',
-      property: 'automation-action-type',
+      owner: 'automation-action-type',
       override_property_getter: 'type',
     },
     pf: {
@@ -44,35 +44,35 @@ export default Ember.Mixin.create({
     },
     assignee: {
       collection: 'actions',
-      property: 'person',
+      owner: 'person',
       override_property_getter: 'assignee',
     },
     ticketcc: {
-      associated_model: 'person',
+      associated_model: 'related-person',
       join_model: 'action-join-person',
     },
     priority: {
       collection: 'actions',
-      property: 'ticket-priority',
+      owner: 'ticket-priority',
       override_property_getter: 'priority',
     },
     status: {
       collection: 'actions',
-      property: 'ticket-status',
+      owner: 'ticket-status',
       override_property_getter: 'status'
     },
     
     // deserializer - keys determine ..._fks property on the model
     sendemail: {
       collection: 'actions',
-      property: 'sendemail',
+      owner: 'sendemail',
     },
     sendsms: {
       collection: 'actions',
-      property: 'sendsms',
+      owner: 'sendsms',
     },
     recipient: {
-      associated_model: 'person',
+      associated_model: 'related-person',
       join_model: 'generic-join-recipients',
       associated_pointer: 'recipient'
     },

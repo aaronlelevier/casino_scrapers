@@ -20,22 +20,22 @@ export default Ember.Mixin.create({
   OPT_CONF: {
     status: {
       collection: 'tickets',
-      property: 'ticket-status',
+      owner: 'ticket-status',
       override_property_getter: 'status',
     },
     priority: {
       collection: 'tickets',
-      property: 'ticket-priority',
+      owner: 'ticket-priority',
       override_property_getter: 'priority',
     },
     assignee: {
       collection: 'assigned_tickets',
-      property: 'related-person',
+      owner: 'related-person',
       override_property_getter: 'assignee',
     },
     location: {
       collection: 'tickets',
-      property: 'location',
+      owner: 'location',
     },
     cc: {
       associated_model: 'related-person',
@@ -55,7 +55,7 @@ export default Ember.Mixin.create({
     // deserializer
     photo: {
       collection: 'people',
-      property: 'attachment',
+      owner: 'attachment',
       override_property_getter: 'photo',
     },
   },

@@ -20,21 +20,21 @@ export default Ember.Mixin.create({
   OPT_CONF: {
     status: {
       collection: 'locations',
-      property: 'location-status',
+      owner: 'location-status',
       override_property_getter: 'status'
     },
     country: {
       collection: 'locations',
-      property: 'country',
+      owner: 'country',
     },
     state: {
       collection: 'locations',
-      property: 'state'
+      owner: 'state'
     },
     //TODO collection needs to be phonenumbers
     phone_number_type: {
       collection: 'locations',
-      property: 'phone-number-type',
+      owner: 'phone-number-type',
       override_property_getter: 'phone_number_type',
     },
     phonenumbers: {
@@ -51,15 +51,15 @@ export default Ember.Mixin.create({
     },
     email_type: {
       collection: 'locations',
-      property: 'email-type',
+      owner: 'email-type',
     },
     address_type: {
       collection: 'locations',
-      property: 'address-type',
+      owner: 'address-type',
     },
     location_level: {
       collection: 'locations',
-      property: 'location-level',
+      owner: 'location-level',
     },
     children: {
       associated_model: 'location',

@@ -4,15 +4,15 @@ export default Ember.Mixin.create({
   OPT_CONF: {
     country: {
       collection: 'addresses',
-      property: 'country',
+      owner: 'country',
     },
     state: {
       collection: 'addresses',
-      property: 'state',
+      owner: 'state',
     },
     address_type: {
       collection: 'addresses',
-      property: 'address-type',
+      owner: 'address-type',
     }
   }
 });

@@ -70,7 +70,7 @@ var belongs_to_generator = function(_ownerName) {
       const many = Ember.get(related, this.OPT_CONF[_ownerName]['collection']);
       return many && many.includes(id);
     };
-    return this.get('simpleStore').find(this.OPT_CONF[_ownerName]['property'], filter);
+    return this.get('simpleStore').find(this.OPT_CONF[_ownerName]['owner'], filter);
   }).property().readOnly();
 };
 
@@ -88,16 +88,16 @@ var change_belongs_to = function(_ownerName) {
 
     /* push in owning model into store if object (not bootstrapped) */
     const collection = this.OPT_CONF[_ownerName]['collection'];
-    const name = this.OPT_CONF[_ownerName]['property'];
+    const name = this.OPT_CONF[_ownerName]['owner'];
     const this_override_property_getter = this.OPT_CONF[_ownerName]['override_property_getter'];
     const store = this.get('simpleStore');
     let push_related;
     if(new_related && typeof new_related === 'object'){
       //push in js object
-      push_related = store.find(this.OPT_CONF[_ownerName]['property'], new_related.id);
+      push_related = store.find(this.OPT_CONF[_ownerName]['owner'], new_related.id);
       if(!push_related.get('content') || push_related.get('isNotDirtyOrRelatedNotDirty')){
         run(() => {
-          let push_related = store.push(this.OPT_CONF[_ownerName]['property'], new_related);
+          let push_related = store.push(this.OPT_CONF[_ownerName]['owner'], new_related);
           push_related.save();
         });
       }
@@ -115,7 +115,7 @@ var change_belongs_to = function(_ownerName) {
       const current_related_pojo = {id: current_related.get('id')};
       current_related_pojo[collection] = updated_current_related_existing;
       run(() => {
-        store.push(this.OPT_CONF[_ownerName]['property'], current_related_pojo);
+        store.push(this.OPT_CONF[_ownerName]['owner'], current_related_pojo);
       });
     }
 
@@ -127,14 +127,14 @@ var change_belongs_to = function(_ownerName) {
       const new_related_pojo = {id: push_related.get('id')};
       new_related_pojo[collection] = related_collection.concat(this.get('id'));
       run(() => {
-        return_related = store.push(this.OPT_CONF[_ownerName]['property'], new_related_pojo);
+        return_related = store.push(this.OPT_CONF[_ownerName]['owner'], new_related_pojo);
       });
     /* IF NOT object: find bootstrapped model and update its fk array pointing to parent */
     } else if (typeof new_related !== 'object') { //may be # or string
-      let new_related_obj = store.find(this.OPT_CONF[_ownerName]['property'], new_related);
+      let new_related_obj = store.find(this.OPT_CONF[_ownerName]['owner'], new_related);
       const new_related_existing = new_related_obj.get(collection) || [];
       run(() => {
-        return_related = store.push(this.OPT_CONF[_ownerName]['property'], { id: new_related_obj.get('id'), [collection]: new_related_existing.concat(this.get('id')) });
+        return_related = store.push(this.OPT_CONF[_ownerName]['owner'], { id: new_related_obj.get('id'), [collection]: new_related_existing.concat(this.get('id')) });
       });
     }
     return return_related;

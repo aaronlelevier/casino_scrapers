@@ -20,7 +20,7 @@ var store, action, actionType, type, assignee, priority, sendEmail, sendsms, tic
 
 moduleFor('model:automation-action', 'Unit | Model |  automation-action', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:generic-join-recipients', 'model:generic-join-recipients', 'model:person', 'model:ticket-priority', 'model:ticket-status', 'model:sendemail', 'model:sendsms', 'service:person-current', 'service:translations-fetcher','model:action-join-person', 'service:i18n', 'validator:presence','validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type', 'validator:belongs-to', 'validator:action-ticket-request', 'validator:action-ticketcc']);
+    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:generic-join-recipients', 'model:generic-join-recipients', 'model:person', 'model:related-person', 'model:ticket-priority', 'model:ticket-status', 'model:sendemail', 'model:sendsms', 'service:person-current', 'service:translations-fetcher','model:action-join-person', 'service:i18n', 'validator:presence','validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type', 'validator:belongs-to', 'validator:action-ticket-request', 'validator:action-ticketcc']);
   }
 });
 
@@ -288,8 +288,8 @@ test('remove_type - removes the action type from the action', assert => {
 test('automation action has a related ticketcc', assert => {
   run(() => {
     action = store.push('automation-action', {id: AAD.idOne, automation_action_ticketcc_fks: [10]});
-    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, person_pk: PD.idOne});
-    store.push('person', {id: PD.idOne, fullname: PD.fullname});
+    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, related_person_pk: PD.idOne});
+    store.push('related-person', {id: PD.idOne, fullname: PD.fullname});
   });
   assert.equal(action.get('ticketcc').get('length'), 1);
   assert.equal(action.get('ticketcc').objectAt(0).get('id'), PD.idOne);
@@ -299,8 +299,8 @@ test('automation action has a related ticketcc', assert => {
 test('add_ticketcc and dirty tracking', assert => {
   run(() => {
     action = store.push('automation-action', {id: AAD.idOne, automation_action_ticketcc_fks: [10]});
-    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, person_pk: PD.idOne});
-    store.push('person', {id: PD.idOne, fullname: PD.fullname});
+    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, related_person_pk: PD.idOne});
+    store.push('related-person', {id: PD.idOne, fullname: PD.fullname});
   });
   assert.equal(action.get('ticketcc').get('length'), 1);
   assert.equal(action.get('isNotDirtyOrRelatedNotDirty'), true);
@@ -314,8 +314,8 @@ test('add_ticketcc and dirty tracking', assert => {
 test('ticketcc property will update when the m2m array suddenly removes the person', (assert) => {
   run(() => {
     action = store.push('automation-action', {id: AAD.idOne, automation_action_cc_fks: [10]});
-    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, person_pk: PD.idOne});
-    store.push('person', {id: PD.idOne, fullname: PD.fullname});
+    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, related_person_pk: PD.idOne});
+    store.push('related-person', {id: PD.idOne, fullname: PD.fullname});
   });
   assert.equal(action.get('ticketcc').get('length'), 1);
   action.remove_ticketcc(PD.idOne);
@@ -325,8 +325,8 @@ test('ticketcc property will update when the m2m array suddenly removes the pers
 test('rollback cc will revert and reboot the dirty ticketcc to clean', assert => {
   run(() => {
     action = store.push('automation-action', {id: AAD.idOne, automation_action_ticketcc_fks: [10]});
-    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, person_pk: PD.idOne});
-    store.push('person', {id: PD.idOne, fullname: PD.fullname});
+    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, related_person_pk: PD.idOne});
+    store.push('related-person', {id: PD.idOne, fullname: PD.fullname});
   });
   assert.ok(action.get('ticketcc').objectAt(0).get('id'), PD.idOne);
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
@@ -341,8 +341,8 @@ test('rollback cc will revert and reboot the dirty ticketcc to clean', assert =>
 test('saveRelated for ticketcc to save model and make it clean', assert => {
   run(() => {
     action = store.push('automation-action', {id: AAD.idOne, automation_action_ticketcc_fks: [10]});
-    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, person_pk: PD.idOne});
-    store.push('person', {id: PD.idOne, fullname: PD.fullname});
+    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, related_person_pk: PD.idOne});
+    store.push('related-person', {id: PD.idOne, fullname: PD.fullname});
   });
   assert.ok(action.get('ticketcc').objectAt(0).get('id'), PD.idOne);
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
@@ -359,7 +359,7 @@ test('saveRelated for ticketcc to save model and make it clean', assert => {
 test('action has a related assignee', assert => {
   run(() => {
     action = store.push('automation-action', {id: AAD.idOne, type_fk: ATD.idOne});
-    store.push('person', {id: PD.idOne, fullname: PD.fullname, actions: [AAD.idOne]});
+    store.push('related-person', {id: PD.idOne, fullname: PD.fullname, actions: [AAD.idOne]});
   });
   assert.equal(action.get('assignee').get('id'), PD.idOne);
   assert.equal(action.get('assignee.fullname'), PD.fullname);
@@ -368,7 +368,7 @@ test('action has a related assignee', assert => {
 test('change_assignee and dirty tracking', assert => {
   run(() => {
     action = store.push('automation-action', {id: AAD.idOne});
-    assignee = store.push('person', {id: PD.idOne});
+    assignee = store.push('related-person', {id: PD.idOne});
   });
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(action.get('assigneeIsNotDirty'));
@@ -382,7 +382,7 @@ test('change_assignee and dirty tracking', assert => {
 test('rollback assignee will revert and reboot the dirty assignee to clean', assert => {
   run(() => {
     action = store.push('automation-action', {id: AAD.idOne, assignee_fk: PD.idOne});
-    store.push('person', {id: PD.idOne, actions: [AAD.idOne]});
+    store.push('related-person', {id: PD.idOne, actions: [AAD.idOne]});
   });
   assert.equal(action.get('assignee').get('id'), PD.idOne);
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
@@ -397,7 +397,7 @@ test('rollback assignee will revert and reboot the dirty assignee to clean', ass
 test('saveRelated for assignee to save model and make it clean', assert => {
   run(() => {
     action = store.push('automation-action', {id: AAD.idOne, assignee_fk: PD.idOne});
-    store.push('person', {id: PD.idOne, actions: [AAD.idOne]});
+    store.push('related-person', {id: PD.idOne, actions: [AAD.idOne]});
   });
   assert.equal(action.get('assignee').get('id'), PD.idOne);
   assert.ok(action.get('isNotDirtyOrRelatedNotDirty'));
@@ -542,8 +542,8 @@ test('serialize - should only send the content fields that are relevant based on
     action = store.push('automation-action', {id: AAD.idOne, request: AAD.requestOne});
     store.push('generic-join-recipients', {id: SEDJRD.idOne, generic_pk: SED.idOne, recipient_pk: PD.idOne});
     store.push('generic-join-recipients', {id: SMSJRD.idTwo, generic_pk: SMSD.idOne, recipient_pk: PD.idTwo});
-    store.push('person', {id: PD.idOne, type: 'person'});
-    store.push('person', {id: PD.idTwo, type: 'person'});
+    store.push('related-person', {id: PD.idOne, type: 'person'});
+    store.push('related-person', {id: PD.idTwo, type: 'person'});
     store.push('sendemail', {id: SED.idOne, subject: SED.subjectTwo, body: SED.bodyTwo,  generic_recipient_fks: [SEDJRD.idOne], actions: [AAD.idOne]});
     store.push('sendsms', {id: SMSD.idOne, body: SMSD.bodyTwo, generic_recipient_fks: [SMSJRD.idTwo], actions: [AAD.idOne]});
   });

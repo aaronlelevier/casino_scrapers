@@ -27,7 +27,7 @@ moduleForComponent('automations/sendsms-action', 'Integration | Component | auto
     translation.initialize(this);
     action = store.push('automation-action', {id: AAD.idOne, sendemail_fk: SMSD.idOne});
     store.push('sendsms', {id: SMSD.idOne, body: SMSD.bodyOne, generic_recipient_fks: [SMSJRD.idOne], actions: [AAD.idOne]});
-    store.push('person', {id: PD.idOne, fullname: PD.fullname});
+    store.push('related-person', {id: PD.idOne, fullname: PD.fullname});
     store.push('generic-join-recipients', {id: SMSJRD.idOne, generic_pk: SMSD.idOne, recipient_pk: PD.idOne});
     automation_repo = repository.initialize(this.container, this.registry, 'person');
     automation_repo.getSmsRecipients = function() { 

@@ -19,34 +19,34 @@ export default Ember.Mixin.create({
   OPT_CONF: {
     assignee: {
       collection: 'actions',
-      property: 'person',
+      owner: 'related-person',
       override_property_getter: 'assignee'
     },
     priority: {
       collection: 'actions',
-      property: 'ticket-priority',
+      owner: 'ticket-priority',
       override_property_getter: 'priority'
     },
     type: {
       collection: 'actions',
-      property: 'automation-action-type',
+      owner: 'automation-action-type',
       override_property_getter: 'type'
     },
     status: {
       collection: 'actions',
-      property: 'ticket-status',
+      owner: 'ticket-status',
       override_property_getter: 'status'
     },
     sendemail: {
       collection: 'actions',
-      property: 'sendemail',
+      owner: 'sendemail',
     },
     sendsms: {
       collection: 'actions',
-      property: 'sendsms'
+      owner: 'sendsms'
     },
     ticketcc: {
-      associated_model: 'person',
+      associated_model: 'related-person',
       join_model: 'action-join-person'
     },
   }

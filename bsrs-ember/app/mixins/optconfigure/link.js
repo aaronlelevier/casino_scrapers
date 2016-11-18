@@ -19,17 +19,17 @@ export default Ember.Mixin.create({
   OPT_CONF: {
     status: {
       collection: 'links',
-      property: 'ticket-status',
+      owner: 'ticket-status',
       override_property_getter: 'status',
     },
     priority: {
       collection: 'links',
-      property: 'ticket-priority',
+      owner: 'ticket-priority',
       override_property_getter: 'priority',
     },
     destination: {
       collection: 'destination_links',
-      property: 'dtd',
+      owner: 'dtd',
       override_property_getter: 'destination',
     },
     categories: {

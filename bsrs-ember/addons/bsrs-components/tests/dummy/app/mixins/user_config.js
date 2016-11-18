@@ -4,15 +4,15 @@ export default Ember.Mixin.create({
   OPT_CONF: {
     hat: {
       collection: 'users',
-      property: 'hat',
+      owner: 'hat',
     },
     shirt: {
       collection: 'users',
-      property: 'shirt',
+      owner: 'shirt',
     },
     user_status: {
       collection: 'users',
-      property: 'user-status',
+      owner: 'user-status',
     },
     shoes: {
       associated_model: 'shoe',

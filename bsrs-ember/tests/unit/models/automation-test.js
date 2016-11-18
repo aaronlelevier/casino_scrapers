@@ -26,7 +26,7 @@ var store, automation, event, action, actionType, pfilter, pf;
 moduleFor('model:automation', 'Unit | Model | automation', {
   needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username', 'validator:has-many', 'validator:belongs-to', 'validator:automation-action-type','validator:action-ticket-request', 'validator:action-ticketcc'],
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-event', 'model:automation-join-event', 'model:automation-join-pfilter', 'model:generic-join-recipients' , 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'model:person', 'model:person-current', 'model:ticket-priority', 'model:sendsms', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-event', 'model:automation-join-event', 'model:automation-join-pfilter', 'model:generic-join-recipients' , 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'model:person', 'model:related-person', 'model:person-current', 'model:ticket-priority', 'model:sendsms', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     run(() => {
       automation = store.push('automation', {id: AD.idOne});
     });
@@ -53,7 +53,7 @@ test('serialize', assert => {
     action = store.push('automation-action', {id: AAD.idOne});
     store.push('automation-action-type', {id: ATD.idOne, key: ATD.keyFive, actions: [AAD.idOne]});
     store.push('generic-join-recipients', {id: SMSJRD.idOne, generic_pk: SMSD.idOne, recipient_pk: PD.idOne});
-    store.push('person', {id: PD.idOne, type: 'person'});
+    store.push('related-person', {id: PD.idOne, type: 'person'});
     store.push('sendsms', {id: SMSD.idOne, body: SMSD.bodyTwo, generic_recipient_fks: [SMSJRD.idOne], actions: [AAD.idOne]});
   });
   assert.equal(automation.get('pf').get('length'), 1);
@@ -558,7 +558,7 @@ test('assignee - changing the assignee should make the automation model dirty', 
     automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AJAD.idOne]});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
     store.push('automation-action', {id: AAD.idOne, assignee_fk: PD.idOne});
-    store.push('person', {id: PD.idOne, actions: [AAD.idOne]});
+    store.push('related-person', {id: PD.idOne, actions: [AAD.idOne]});
   });
   let action = automation.get('action').objectAt(0);
   assert.equal(action.get('assignee.id'), PD.idOne);
@@ -610,7 +610,7 @@ test('rollback - a change in nested actionType and assigee can be rolled back fr
     automation = store.push('automation', {id: AD.idOne, automation_action_fks: [AJAD.idOne]});
     store.push('automation-join-action', {id: AJAD.idOne, automation_pk: AD.idOne, action_pk: AAD.idOne});
     store.push('automation-action', {id: AAD.idOne, assignee_fk: PD.idOne, type_fk: AATD.idOne});
-    store.push('person', {id: PD.idOne, actions: [AAD.idOne]});
+    store.push('related-person', {id: PD.idOne, actions: [AAD.idOne]});
     store.push('automation-action-type', {id: AATD.idOne, key: AATD.keyOne, actions: [AAD.idOne]});
   });
   let action = automation.get('action').objectAt(0);

@@ -11,7 +11,7 @@ var store, sendEmail;
 moduleFor('model:sendemail', 'Unit | Model | sendEmail', {
   needs: ['validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many'],
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:sendemail', 'model:generic-join-recipients', 'model:person', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:sendemail', 'model:generic-join-recipients', 'model:person', 'model:related-person',  'service:person-current', 'service:translations-fetcher', 'service:i18n']);
     run(() => {
       sendEmail = store.push('sendemail', {id: SED.idOne});
     });
@@ -46,7 +46,7 @@ test('recipient property should return all associated recipients, and also confi
   run(() => {
     store.push('generic-join-recipients', {id: SEJRD.idOne, generic_pk: SED.idOne, recipient_pk: PD.idOne});
     sendEmail = store.push('sendemail', {id: SED.idOne, generic_recipient_fks: [SEJRD.idOne]});
-    store.push('person', {id: PD.idOne});
+    store.push('related-person', {id: PD.idOne});
   });
   let recipient = sendEmail.get('recipient');
   assert.equal(recipient.get('length'), 1);
@@ -58,7 +58,7 @@ test('recipient property should return all associated recipients, and also confi
 test('remove_recipient - will remove join model and mark model as dirty', (assert) => {
   run(() => {
     store.push('generic-join-recipients', {id: SEJRD.idOne, generic_pk: SED.idOne, recipient_pk: PD.idOne});
-    store.push('person', {id: PD.idOne});
+    store.push('related-person', {id: PD.idOne});
     sendEmail = store.push('sendemail', {id: SED.idOne, generic_recipient_fks: [SEJRD.idOne]});
   });
   assert.equal(sendEmail.get('recipient').get('length'), 1);
@@ -77,7 +77,7 @@ test('remove_recipient - will remove join model and mark model as dirty', (asser
 test('add_recipient - will create join model and mark model dirty', (assert) => {
   run(() => {
     store.push('generic-join-recipients', {id: SEJRD.idOne, generic_pk: SED.idOne, recipient_pk: PD.idOne});
-    store.push('person', {id: PD.idOne});
+    store.push('related-person', {id: PD.idOne});
     sendEmail = store.push('sendemail', {id: SED.idOne, generic_recipient_fks: [SEJRD.idOne]});
   });
   assert.equal(sendEmail.get('recipient').get('length'), 1);

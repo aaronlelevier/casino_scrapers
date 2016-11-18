@@ -4,20 +4,20 @@ export default Ember.Mixin.create({
   OPT_CONF: {
     status: {
       collection: 'people',
-      property: 'status',
+      owner: 'status',
     },
     photo: {
       collection: 'people',
-      property: 'attachment',
+      owner: 'attachment',
       override_property_getter: 'photo',
     },
     role: {
       collection: 'people',
-      property: 'role',
+      owner: 'role',
     },
     locale: {
       collection: 'people',
-      property: 'locale',
+      owner: 'locale',
     },
     locations: {
       associated_model: 'location',
@@ -25,12 +25,12 @@ export default Ember.Mixin.create({
     },
     phone_number_type: {
       collection: 'people',
-      property: 'phone-number-type',
+      owner: 'phone-number-type',
       override_property_getter: 'phone_number_type',
     },
     email_type: {
       collection: 'people',
-      property: 'email-type'
+      owner: 'email-type'
     },
     phonenumbers: {
       associated_model: 'phonenumber',

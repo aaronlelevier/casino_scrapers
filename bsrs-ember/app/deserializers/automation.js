@@ -154,10 +154,10 @@ export default Ember.Object.extend(OptConf, {
       // setup recipients - req'd by detail payload
       if (sendemail) {
         const sendemail_hydrated = store.find('sendemail', sendemail.id);
-        let [m2m_recipients, recipients, server_sum] = many_to_many_extract(recipient, store, sendemail_hydrated, 'generic_recipient', 'generic_pk', 'person', 'recipient_pk');
+        let [m2m_recipients, recipients, server_sum] = many_to_many_extract(recipient, store, sendemail_hydrated, 'generic_recipient', 'generic_pk', 'related-person', 'recipient_pk');
         run(() => {
-          recipients.forEach((cat) => {
-            store.push('person', cat);
+          recipients.forEach((rec) => {
+            store.push('related-person', rec);
           });
           m2m_recipients.forEach((m2m) => {
             store.push('generic-join-recipients', m2m);
@@ -173,10 +173,10 @@ export default Ember.Object.extend(OptConf, {
       // setup recipients - req'd by detail payload
       if(sendsms) {
         const sendsms_hydrated = store.find('sendsms', sendsms.id);
-        let [m2m_recipients, recipients, server_sum] = many_to_many_extract(sendsms_recipient, store, sendsms_hydrated, 'generic_recipient', 'generic_pk', 'person', 'recipient_pk');
+        let [m2m_recipients, recipients, server_sum] = many_to_many_extract(sendsms_recipient, store, sendsms_hydrated, 'generic_recipient', 'generic_pk', 'related-person', 'recipient_pk');
         run(() => {
-          recipients.forEach((cat) => {
-            store.push('person', cat);
+          recipients.forEach((rec) => {
+            store.push('related-person', rec);
           });
           m2m_recipients.forEach((m2m) => {
             store.push('generic-join-recipients', m2m);
