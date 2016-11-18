@@ -27,10 +27,10 @@ moduleForComponent('tickets/ticket-request-select-action', 'Integration | Compon
     run(function() {
       action = store.push('automation-action', {id: AAD.idOne, type_fk: ATD.idSaven, automation_action_ticketcc_fks: [10]});
       store.push('automation-action-type', {id: ATD.idSeven, key: ATD.keySeven, actions: [AAD.idOne]});
-      store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, person_pk: PD.idOne});
-      store.push('person', {id: PD.idOne, first_name: PD.first_name, last_name: PD.last_name});
-      store.push('person', {id: PD.idTwo, first_name: 'Scooter', last_name: 'McGavin'});
-      store.push('person', {id: PD.unusedId, first_name: 'Aaron', last_name: 'Wat'});
+      store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, related_person_pk: PD.idOne});
+      store.push('related-person', {id: PD.idOne, first_name: PD.first_name, last_name: PD.last_name});
+      store.push('related-person', {id: PD.idTwo, first_name: 'Scooter', last_name: 'McGavin'});
+      store.push('related-person', {id: PD.unusedId, first_name: 'Aaron', last_name: 'Wat'});
     });
     person_repo = repository.initialize(this.container, this.registry, 'person');
     person_repo.findPeople = function() { 
