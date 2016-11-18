@@ -21,7 +21,7 @@
     placeholder=placeholder
     value=value
     class=(concat "form-control " className)
-    id=valuePath
+    id=(if (gt count -1) (concat valuePath count) valuePath)
     focus-out=(action "focusedOut")
     key-up=(action "keyedUp")
   }}

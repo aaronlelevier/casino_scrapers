@@ -84,7 +84,7 @@ test('validation on dtd key works', function(assert) {
 test('validation - clear out text, and validation msg still works', function(assert) {
   var done = assert.async();
   let modalDialogService = this.container.lookup('service:modal-dialog');
-  modalDialogService.destinationElementId = 'text';
+  modalDialogService.destinationElementId = 'text0';
   run(() => {
     dtd = store.push('dtd', {
       id: DTD.idOne,

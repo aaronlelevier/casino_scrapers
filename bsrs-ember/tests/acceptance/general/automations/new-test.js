@@ -60,9 +60,9 @@ test('visit new URL and create a new record', assert => {
   selectChoose('.t-priority-criteria', TD.priorityOne);
   // action w/ a type
   xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.list_action_types());
-  selectChoose('.t-automation-action-type-select', AATD.keyOne);
+  selectChoose('.t-automation-action-type-select', AATD.keyOneTrans);
   andThen(() => {
-    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
+    assert.equal(page.actionTypeSelectedOne, t(AATD.keyOne));
     assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
   });
     // change assignee
@@ -108,9 +108,9 @@ test('when user creates an automation they should see an empty action', assert =
     assert.equal(Ember.$('.t-automation-action-type-select .ember-power-select-placeholder').length, 1);
   });
   xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.list_action_types());
-  selectChoose('.t-automation-action-type-select', AATD.keyOne);
+  selectChoose('.t-automation-action-type-select', AATD.keyOneTrans);
   andThen(() => {
-    assert.equal(page.actionTypeSelectedOne, AATD.keyOne);
+    assert.equal(page.actionTypeSelectedOne, t(AATD.keyOne));
     assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
   });
 });

@@ -51,7 +51,7 @@ test('visiting mobile tenant grid show correct layout', async assert => {
   await tenantPage.visit();
   const tenant = store.findOne('tenant-list');
   assert.equal(currentURL(), TENANT_LIST_URL);
-  assert.equal(find('.t-mobile-grid-title').text().trim(), '19 tenant.other');
+  assert.equal(find('.t-mobile-grid-title').text().trim(), `19 ${t('tenant.other')}`);
   assert.equal(find('.t-grid-data').length, PAGE_SIZE);
   assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').text().trim());
   // Based on tenant-list
