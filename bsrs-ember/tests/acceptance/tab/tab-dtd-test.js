@@ -1,4 +1,5 @@
-import Ember from 'ember'; import { test } from 'qunit';
+import Ember from 'ember'; 
+import { test, skip } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
@@ -154,7 +155,7 @@ test('clicking on a tab that is not dirty from the list url should take you to t
   });
 });
 
-test('(NEW URL) clicking on a tab that is not dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+skip('(NEW URL) clicking on a tab that is not dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
   random.uuid = function() { return UUID.value; };
   clearxhr(detail_xhr);
   page.visitNew();
@@ -178,7 +179,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
   });
 });
 
-test('(NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+skip('(NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
   random.uuid = function() { return UUID.value; };
   clearxhr(detail_xhr);
   page.visitNew();
