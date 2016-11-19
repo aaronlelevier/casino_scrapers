@@ -49,7 +49,8 @@ class ModelPage(JavascriptMixin):
         count += 1
         return (new_model, count)
 
-    def click_name_in_list_pages(self, name, new_model):
+    """ new_model - TODO: remove new_model from args """
+    def click_name_in_list_pages(self, name, new_model=None):
         pagination = self.wait_for_xhr_request("t-pages", debounce=True)
         element_list = pagination.find_elements_by_class_name("t-page")
         element_list_len = len(element_list)
