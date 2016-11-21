@@ -229,7 +229,7 @@ test('when you change a related phone numbers type it will be persisted correctl
   selectChoose('.t-phone-number-type-select', PNTD.officeNameValue);
   var phone_numbers = PNF.put({id: PND.idOne, type: PNTD.officeId});
   page.phonenumberFillIn(PND.numberOne);
-  xhr(LOCATIONS_URL, 'POST', JSON.stringify(phone_number_payload), {}, 201);
+  xhr(LOCATIONS_URL, 'POST', JSON.stringify(phone_number_payload), {}, 201, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(),LOCATION_URL);
@@ -248,7 +248,7 @@ test('when you change a related emails type it will be persisted correctly', (as
   });
   selectChoose('.t-email-type-select', ETD.workName);
   page.emailFillIn(ED.emailOne);
-  xhr(LOCATIONS_URL, 'POST', JSON.stringify(email_payload), {}, 201);
+  xhr(LOCATIONS_URL, 'POST', JSON.stringify(email_payload), {}, 201, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(),LOCATION_URL);
@@ -295,7 +295,7 @@ test('when you change a related address type it will be persisted correctly', (a
   address_put_payload.addresses[0].state = stateId;
   address_put_payload.addresses[0].postal_code = AD.zipOne;
   address_put_payload.addresses[0].country = countryId;
-  xhr(LOCATIONS_URL, 'POST', JSON.stringify(address_put_payload), {}, 201);
+  xhr(LOCATIONS_URL, 'POST', JSON.stringify(address_put_payload), {}, 201, {});
   selectChoose('.t-address-type-select:eq(0)', ATD.shippingNameText);
   generalPage.save();
   andThen(() => {
@@ -382,7 +382,7 @@ test('can add and remove all children (while not populating options) and add bac
   selectChoose(CHILDREN, LD.boondocks);
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
-  ajax(LOCATIONS_URL, 'POST', JSON.stringify(children_payload), {}, 201);
+  ajax(LOCATIONS_URL, 'POST', JSON.stringify(children_payload), {}, 201, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
@@ -506,7 +506,7 @@ test('starting with multiple parents, can remove all parents (while not populati
   page.parentsClickOptionOne();
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
-  ajax(LOCATIONS_URL, 'POST', JSON.stringify(parents_payload), {}, 201);
+  ajax(LOCATIONS_URL, 'POST', JSON.stringify(parents_payload), {}, 201, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);

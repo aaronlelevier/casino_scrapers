@@ -481,7 +481,7 @@ test('when you change a related phone numbers type it will be persisted correctl
   selectChoose('.t-phone-number-type-select', PNTD.mobileNameValue);
   const phone_numbers = PNF.put({id: PND.idOne, type: PNTD.mobileId});
   const payload = LF.put({id: LD.idOne, phone_numbers: phone_numbers});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(),LOCATION_URL);
@@ -493,7 +493,7 @@ test('when you change a related emails type it will be persisted correctly', (as
   selectChoose('.t-email-type-select', ETD.workName);
   const emails = EF.put({id: ED.idOne, type: ETD.workId});
   const payload = LF.put({id: LD.idOne, emails: emails});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(),LOCATION_URL);
@@ -505,7 +505,7 @@ test('when you change a related address type it will be persisted correctly', (a
   selectChoose('.t-address-type-select:eq(0)', ATD.shippingNameText);
   const addresses = AF.put({id: AD.idOne, type: ATD.shippingId});
   const payload = LF.put({id: LD.idOne, addresses: addresses});
-  xhr(url,'PUT',JSON.stringify(payload),{},200);
+  xhr(url,'PUT',JSON.stringify(payload),{},200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(),LOCATION_URL);
@@ -942,7 +942,7 @@ test('can remove and add back same children and save empty children', (assert) =
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
   let payload = LF.put({id: LD.idOne, name: LD.storeNameTwo, children: [LD.idTwo, LD.idThree]});
-  xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
+  xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
@@ -995,7 +995,7 @@ test('starting with multiple children, can remove all children (while not popula
     assert.equal(page.childrenSelected.indexOf(LD.storeNameTwo), 2);
   });
   let payload = LF.put({id: LD.idOne, name: LD.storeNameTwo, children: [LD.idTwo, LD.idThree]});
-  ajax(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
+  ajax(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
@@ -1124,7 +1124,7 @@ test('can remove and add back same parents and save empty parents', (assert) => 
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
   let payload = LF.put({id: LD.idOne, name: LD.storeNameTwo, parents: [LD.idParent, LD.idParentTwo]});
-  xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
+  xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
@@ -1175,7 +1175,7 @@ test('starting with multiple parents, can remove all parents (while not populati
     assert.equal(page.parentsSelected.indexOf(LD.storeNameParent), 2);
   });
   let payload = LF.put({id: LD.idOne, name: LD.storeNameTwo, parents: [LD.idParent, LD.idParentTwo]});
-  ajax(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
+  ajax(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
