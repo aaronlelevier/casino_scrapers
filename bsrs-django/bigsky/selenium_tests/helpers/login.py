@@ -7,7 +7,7 @@ import random
 
 class LoginMixin(object):
 
-    def login(self, username="admin", password="1234"):
+    def login(self, username="admin", password="tangobravo"):
         self.driver.get("http://127.0.0.1:8001/dashboard?_={}".format(random.random()))
 
         username_input = self.driver.find_element_by_id("id_username")

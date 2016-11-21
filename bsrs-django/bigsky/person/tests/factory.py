@@ -21,7 +21,7 @@ from utils import create
 from utils.helpers import generate_uuid
 
 
-PASSWORD = '1234'
+PASSWORD = 'tangobravo'
 PERSON_STATUSES = [
     'admin.person.status.active',
     'admin.person.status.inactive',
