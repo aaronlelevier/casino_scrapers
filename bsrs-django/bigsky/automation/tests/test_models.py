@@ -246,6 +246,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.assertEqual(mock_func.call_args[0][2], self.event.key)
 
     def test_process_actions__ticket_request(self):
+        init_ticket_request = self.ticket.request
         ticket_request = 'bar'
         clear_related(self.automation, 'actions')
         request_action_type = create_automation_action_type(AutomationActionType.TICKET_REQUEST)
@@ -259,8 +260,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
         Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
 
-        # AARON: not working b/c commented out
-        # self.assertEqual(self.ticket.request, ticket_request)
+        self.assertEqual(self.ticket.request, "{}\n{}".format(init_ticket_request, ticket_request))
 
     def test_process_actions__ticket_cc(self):
         person = create_single_person()

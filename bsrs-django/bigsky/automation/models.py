@@ -141,9 +141,8 @@ class AutomationManager(BaseManager):
                 Email.objects.process_send_email(ticket, action, event)
             elif key == AutomationActionType.SEND_SMS:
                 PhoneNumber.objects.process_send_sms(ticket, action, event)
-            # elif key == AutomationActionType.TICKET_REQUEST:
-            #     if ticket.request != action.content['request']:
-            #         ticket.request = action.content['request']
+            elif key == AutomationActionType.TICKET_REQUEST:
+                ticket.request = '{}\n{}'.format(ticket.request, action.content['request'])
             elif key == AutomationActionType.TICKET_CC:
                 existing_ccs = set([str(x['id']) for x in ticket.cc.values('id')])
                 action_ccs = set([str(x) for x in action.content['ccs']])
