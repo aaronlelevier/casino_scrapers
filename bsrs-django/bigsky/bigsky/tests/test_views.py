@@ -1,5 +1,6 @@
 from datetime import timedelta
 import json
+import os
 import time
 
 from django.conf import settings
@@ -25,7 +26,20 @@ from translation.tests.factory import create_locales
 from utils.helpers import media_path
 
 
-class IndexTests(TestCase):
+class SetupMixin(object):
+
+    @classmethod
+    def setUpClass(self):
+        self.index_file = os.path.join(settings.TEMPLATES_DIR, 'index.html')
+        with open(self.index_file, 'w'): pass
+
+    @classmethod
+    def tearDownClass(self):
+        if os.path.exists(self.index_file):
+            os.remove(self.index_file)
+
+
+class IndexTests(SetupMixin, TestCase):
 
     def setUp(self):
         create_categories()
@@ -71,7 +85,7 @@ class IndexTests(TestCase):
         self.assertRedirects(response, reverse('password_change')+'?next='+reverse('index'))
 
 
-class LoginTests(TestCase):
+class LoginTests(SetupMixin, TestCase):
 
     def setUp(self):
         create_categories()
@@ -160,7 +174,7 @@ class LogoutTests(TestCase):
         self.assertIn('_auth_user_id', self.client.session)
 
 
-class BootstrappedDataTests(TestCase):
+class BootstrappedDataTests(SetupMixin, TestCase):
 
     def setUp(self):
         create_categories()
