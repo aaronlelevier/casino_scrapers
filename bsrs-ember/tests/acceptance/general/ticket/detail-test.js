@@ -400,7 +400,7 @@ test('starting with multiple cc, can remove all ccs (while not populating option
     assert.equal(page.ccsSelected, 1);
   });
   let payload = TF.put({id: TD.idOne, cc: [PD.idOne]});
-  ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
+  ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
@@ -490,7 +490,7 @@ test('power select options are rendered immediately when enter detail route and 
     assert.equal(page.categoryTwoInput, CD.nameLossPreventionChild);
   });
   const payload = TF.put({id: TD.idOne, categories: [CD.idThree, CD.idLossPreventionChild]});
-  xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
+  xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), TICKET_URL);
