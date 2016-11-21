@@ -19,8 +19,8 @@ var PowerSelectFKComponent = Ember.Component.extend({
     const valuePath = this.get('valuePath');
     defineProperty(this, 'attributeValidation', computed.oneWay(`model.validations.attrs.${valuePath}`));
   },
-  showMessage: computed('attributeValidation.isDirty', 'isInvalid', 'didValidate', function() {
-    return (this.get('attributeValidation.isDirty') || this.get('didValidate')) && this.get('isInvalid');
+  showMessage: computed('attributeValidation.isDirty', 'isInvalid', function() {
+    return this.get('attributeValidation.isDirty') && this.get('isInvalid');
   }),
   options: Ember.computed(function() {
     return this.get('simpleStore').find(this.get('relatedModelName'));

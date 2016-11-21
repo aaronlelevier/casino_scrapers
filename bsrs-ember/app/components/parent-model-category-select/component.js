@@ -13,8 +13,9 @@ var ParentTicketCategorySelect = Ember.Component.extend({
   showMessage: computed('localDidValidate', 'focusedOut', function() {
     return this.get('localDidValidate');
   }),
-  localDidValidate: computed('didValidate', function() {
-    return this.get('didValidate') && this.get('isInvalid');
+  // TODO: this is incomplete.  Need full story on how to show validtion msgs
+  localDidValidate: computed(function() {
+    return this.get('isInvalid');
   }),
   isValid: computed.oneWay('attributeValidation.isValid'),
   isInvalid: computed.oneWay('attributeValidation.isInvalid'),
