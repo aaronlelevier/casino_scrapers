@@ -37,7 +37,7 @@ test('translation keys', function(assert) {
   this.render(hbs `{{roles/role-single model=model}}`);
   assert.equal(getLabelText('name'), trans.t('admin.role.label.name'));
   assert.equal(getLabelText('role_type'), trans.t('admin.role.label.role_type'));
-  assert.equal(getLabelText('role_location_level_select'), trans.t('admin.location.label.location_level'));
+  assert.equal(getLabelText('role_location_level_select'), trans.t('admin.role.label.location_level'));
   assert.equal(getLabelText('category'), trans.t('admin.role.label.category'));
   assert.equal(getLabelText('auth_amount'), trans.t('admin.person.label.auth_amount'));
   assert.equal(getLabelText('dashboard_text'), trans.t('admin.setting.dashboard_text'));
