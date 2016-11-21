@@ -7,7 +7,6 @@ import { ValidationComponentInit, ValidationComponentPieces } from 'bsrs-ember/m
 const TIMEOUT = config.APP.VALIDATION_TIMEOUT_INTERVAL;
 
 /* @class ValidatedInput
-* didValidate - trigger showMessage and can show mwwage if
 * API
 * - 'model'
 * - 'count' if multiple so can have many ids

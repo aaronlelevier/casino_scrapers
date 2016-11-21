@@ -11,10 +11,6 @@ import { task } from 'ember-concurrency';
 // }
 
 var PersonSingle = Ember.Component.extend(TabMixin, {
-  init() {
-    this._super(...arguments);
-    this.didValidate = false;
-  },
   simpleStore: Ember.inject.service(),
   classNames: ['wrapper', 'form'],
   // passwordValidation: validate('model.password', validatePassword),
@@ -23,7 +19,6 @@ var PersonSingle = Ember.Component.extend(TabMixin, {
       const tab = this.tab();
       yield this.get('save')(tab);
     }
-    this.set('didValidate', true);
   }),
   actions: {
     save() {

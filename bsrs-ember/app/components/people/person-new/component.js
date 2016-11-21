@@ -4,7 +4,6 @@ import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import NewTabMixin from 'bsrs-ember/mixins/components/tab/new';//used for save method that returns a promise and transition to detail
 
 var PersonNewComponent = Ember.Component.extend(TabMixin, NewTabMixin, {
-  didValidate: false,
   repository: inject('person'),
   locale_repo: inject('locale'),
   selectedLocale: Ember.computed('model.locale', function() {
@@ -17,7 +16,6 @@ var PersonNewComponent = Ember.Component.extend(TabMixin, NewTabMixin, {
           this.sendAction('editPerson');
         });
       }
-      this.set('didValidate', true);
     }
   }
 });

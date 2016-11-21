@@ -4,10 +4,6 @@ import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import { task } from 'ember-concurrency';
 
 var TicketSingleComponent = Ember.Component.extend(TabMixin, {
-  init() {
-    this._super(...arguments);
-    this.didValidate = false;
-  },
   personRepo: inject('person'),
   locationRepo: inject('location'),
   activityRepository: inject('activity'),
@@ -25,7 +21,6 @@ var TicketSingleComponent = Ember.Component.extend(TabMixin, {
         this.set('activities', activities);
       }
     }
-    this.set('didValidate', true);
   }),
   actions: {
     /* @method save

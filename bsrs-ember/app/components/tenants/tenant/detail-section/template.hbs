@@ -4,7 +4,6 @@
       {{validated-input
         model=model
         valuePath="company_name"
-        didValidate=didValidate
         className="form-control t-tenant-company_name"
         placeholder=(t "tenant.company_name")
       }}
@@ -18,7 +17,6 @@
         {{validated-input
           model=model
           valuePath="company_code"
-          didValidate=didValidate
           className="form-control t-tenant-company_code"
           placeholder=(t "tenant.company_code")
         }}
@@ -44,7 +42,6 @@
       {{validated-input
         model=model
         valuePath="dashboard_text"
-        didValidate=didValidate
         className="form-control t-tenant-dashboard_text"
         placeholder=(t "tenant.dashboard_text")
       }}
@@ -62,7 +59,6 @@
         relatedModels=currencies
         relatedModelName="currency"
         valuePath="default_currency"
-        didValidate=didValidate
       }}
     {{/form-group}}
   </div>
@@ -73,7 +69,6 @@
       {{power-select-validation
         model=model
         valuePath="countries"
-        didValidate=didValidate
       }}
       {{db-fetch-multi-select
         model=model
@@ -86,7 +81,6 @@
         remove_func="remove_country"
         repository=countryRepo
         searchMethod="findCountry"
-        didValidate=didValidate
         valuePath="countries"
       }}
     {{/form-group}}
@@ -118,7 +112,6 @@
           repository=dtdRepo
           searchMethod="findDTD"
           valuePath="dtd_start"
-          didValidate=didValidate
         }}
       {{/form-group}}
     </div>

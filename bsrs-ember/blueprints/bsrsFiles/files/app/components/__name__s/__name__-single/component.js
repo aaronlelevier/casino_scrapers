@@ -12,7 +12,6 @@ export default Ember.Component.extend(TabMixin, {
       const tab = this.tab();
       yield this.get('save')(tab);
     }
-    this.set('didValidate', true);
   }),
   actions: {
     save() {

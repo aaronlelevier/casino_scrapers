@@ -92,9 +92,4 @@ test('address validation', function(assert) {
     assert.equal($('.t-validation-city').text().trim(), 'errors.address.city');
     assert.equal($('.t-validation-postal_code').text().trim(), 'errors.address.postal_code');
   });
-  // DO not get validation msgs anymore from didValidate.  Need to figure out a different way
-  // assert.equal($('.t-validation-country').text().trim(), 'errors.address.country');
-  // assert.equal($('.t-validation-state').text().trim(), 'errors.address.state');
-  // assert.equal($('.t-validation-address_type').text().trim(), 'errors.address.type');
-
 });

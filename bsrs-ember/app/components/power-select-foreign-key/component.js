@@ -9,7 +9,6 @@ const { run, computed, defineProperty, inject } = Ember;
  * - 'labelText'
  * - 'relatedModelName' - string that finds the related keys in simple store and used in class name
  * - 'valuePath'
- * - 'didValidate'
  * - 'selected'
 */
 var PowerSelectFKComponent = Ember.Component.extend({

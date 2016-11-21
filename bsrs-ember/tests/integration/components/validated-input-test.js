@@ -26,7 +26,6 @@ test('passing a type will change the form fields type', function(assert) {
       placeholder=(t 'admin.person.label.password')
       valuePath='password'
       className='t-person-password'
-      didValidate=didValidate
       class='t-person-password-validator'
       type='password'
       maxlength=2
@@ -41,25 +40,3 @@ test('passing a type will change the form fields type', function(assert) {
   $component.val('wat');
   assert.equal($component.val(), 'wat');
 });
-
-// TODO: Looking to take out didValidate
-// test('didValidate and isInvalid trigger validation', function(assert) {
-//   run(() => {
-//     this.set('model', store.push('person', {}));
-//   });
-//   this.render(hbs`
-//     {{validated-input
-//       model=model
-//       placeholder=(t 'admin.person.label.password')
-//       valuePath='password'
-//       className='t-person-password'
-//       didValidate=didValidate
-//       class='t-person-password-validator'
-//       type='password'
-//       maxlength=2
-//       didValidate=true
-//       isInvalid=true
-//     }}`);
-//   let $component = this.$('.t-person-password-validator');
-//   assert.ok($component.hasClass('invalid'));
-// });

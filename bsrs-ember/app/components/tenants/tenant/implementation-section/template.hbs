@@ -4,7 +4,6 @@
       {{validated-input
         model=model
         valuePath="implementation_contact_initial"
-        didValidate=didValidate
         className="form-control t-tenant-implementation_contact_initial"
         placeholder=(t "tenant.implementation_contact_initial")
       }}
@@ -19,7 +18,6 @@
         email=model.implementation_email
         noDelete=true
         valuePath="implementation_email"
-        didValidate=didValidate
       }}
     {{/form-group}}
   </div>
@@ -39,7 +37,6 @@
           searchMethod="findPeople"
           valuePath="implementation_contact"
           allowClear=true
-          didValidate=didValidate
         }}
       {{/form-group}}
     </div>

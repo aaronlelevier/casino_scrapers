@@ -6,7 +6,6 @@
           {{validated-input
             model=model
             valuePath="name"
-            didValidate=didValidate
             className="t-location-name"
             placeholder=(t "admin.location.label.name")
             class="t-location-name-validator"
@@ -20,7 +19,6 @@
           {{validated-input
             model=model
             valuePath="number"
-            didValidate=didValidate
             className="t-location-number"
             placeholder=(t "admin.location.label.number")
             class="t-location-number-validator"
@@ -38,7 +36,6 @@
             relatedModelName="location-level"
             notTranslated=true
             valuePath="location_level"
-            didValidate=didValidate
           }}
         {{/form-group}}
       </div>
@@ -52,7 +49,6 @@
             change_method="change_status"
             relatedModelName="location-status"
             valuePath="status"
-            didValidate=didValidate
           }}
         {{/form-group}}
       </div>

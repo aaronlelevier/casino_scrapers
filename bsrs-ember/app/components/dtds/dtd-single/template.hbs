@@ -23,7 +23,6 @@
               placeholder=(t "admin.dtd.label.key")
               valuePath="key"
               className="t-dtd-single-key"
-              didValidate=didValidate
               class="t-dtd-key"
             }}
             {{/form-group}}
@@ -44,7 +43,7 @@
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.dtd.label.description" for="description"}}
-            {{validated-input model=model value=model.description placeholder=(t "admin.dtd.label.description") valuePath="description" className="t-dtd-single-description" didValidate=didValidate textarea=true class="t-dtd-description"}}
+            {{validated-input model=model value=model.description placeholder=(t "admin.dtd.label.description") valuePath="description" className="t-dtd-single-description" textarea=true class="t-dtd-description"}}
             {{/form-group}}
           </div>
         </div>
@@ -119,7 +118,6 @@
             priorities=priorities
             statuses=statuses
             repository=repository
-            didValidate=didValidate
           }}
           {{/form-group}}
         </div>

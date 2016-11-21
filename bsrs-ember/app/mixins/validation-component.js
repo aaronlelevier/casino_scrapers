@@ -23,17 +23,6 @@ var ValidationComponentPieces = Ember.Mixin.create({
    */
   focused: false,
   classNameBindings: ['invalidClass:invalid'],
-  // invalidClass: computed('focusedOut', function() {
-  //   return this.get('focusedOut') && this.get('isInvalid');
-  // }),
-  // showMessage: computed('localDidValidate', 'focusedOut', function() {
-  //   return this.get('localDidValidate') || this.get('focusedOut');
-  // }).readOnly(),
-  // localDidValidate: computed('didValidate', function() {
-  //   // Create local didValidate boolean so that can show err msg right away on save and 
-  //   // set back when fill in input
-  //   return this.get('didValidate') && this.get('isInvalid');
-  // }).readOnly(),
 });
 
 export { ValidationComponentInit, ValidationComponentPieces } ;

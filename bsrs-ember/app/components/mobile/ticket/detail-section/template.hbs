@@ -10,7 +10,6 @@
       repository=personRepo 
       searchMethod="findPeople" 
       valuePath="assignee" 
-      didValidate=didValidate 
       errorClass="error t-ticket-assignee-error"
     }}
     {{/form-group}}
@@ -53,7 +52,6 @@
       placeholder=(t "ticket.label.request") 
       valuePath="request" 
       className="t-mobile-ticket-request ticket-request" 
-      didValidate=didValidate 
       textarea=true 
       class="t-ticket-request-validator"
     }}

@@ -27,7 +27,6 @@
               placeholder=(t "admin.person.label.username") 
               className="t-person-username" 
               class="t-person-username-validator"
-              didValidate=didValidate
             }}
             {{/form-group}}
           </div>
@@ -40,7 +39,6 @@
               placeholder=(t "admin.person.label.password")
               valuePath="password"
               className="t-person-password"
-              didValidate=didValidate
               class="t-person-password-validator"
               type="password"
             }}
@@ -53,14 +51,12 @@
             {{people/person-text-input
               model=model
               field="first_name"
-              didValidate=didValidate
             }}
           </div>
           <div class="col-md-2">
             {{people/person-text-input
               model=model
               field="middle_initial"
-              didValidate=didValidate
               optional="true"
             }}
           </div>
@@ -68,7 +64,6 @@
             {{people/person-text-input
               model=model
               field="last_name"
-              didValidate=didValidate
             }}
           </div>
         </div>

@@ -1,7 +1,6 @@
 {{power-select-validation
   model=model
   valuePath="event"
-  didValidate=didValidate
   index="0"
 }}
 <div class="row">
@@ -29,7 +28,6 @@
       {{power-select-validation
         model=model
         valuePath="pf"
-        didValidate=didValidate
         index=index
       }}
       <div class="input-group-vertical" data-validation-target={{concat "pf" index}}>
@@ -53,7 +51,6 @@
         </div>
         {{component (automation-filter (model-at model.pf index))
           model=(model-at model.pf index)
-          didValidate=didValidate
         }}
       </div>
     {{/each}}

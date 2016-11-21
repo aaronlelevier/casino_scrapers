@@ -4,10 +4,6 @@ import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import { task } from 'ember-concurrency';
 
 var LocationSingle = Ember.Component.extend(TabMixin, {
-  init() {
-    this._super(...arguments);
-    this.didValidate = false;
-  },
   repository: inject('location'),
   classNames: ['wrapper', 'form'],
   isDisabled: Ember.computed('model.location_level', function() {
@@ -21,7 +17,6 @@ var LocationSingle = Ember.Component.extend(TabMixin, {
       const tab = this.tab();
       yield this.get('save')(tab);
     }
-    this.set('didValidate', true);
   }),
   extra_params: Ember.computed(function(){
     const llevel = this.get('model.location_level.id') ? this.get('model.location_level.id') : this.get('model.top_location_level.id');

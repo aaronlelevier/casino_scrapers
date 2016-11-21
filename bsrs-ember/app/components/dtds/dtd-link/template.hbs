@@ -9,7 +9,6 @@
         placeholder=(t "admin.dtd.label.link.text")
         valuePath="text"
         className="t-dtd-link-text"
-        didValidate=didValidate
         class="t-link-text"
         count=index
       }}
@@ -62,7 +61,18 @@
     </div>
     <div class="input-group">
       <span class="input-group-addon">{{t "admin.dtd.label.destination"}}</span>
-      {{db-fetch-custom-select model=link selectedAttr=link.destination className="t-link-destination-select" componentName="dtds/dtd-key-desc" selectedComponent="dtds/dtd-key-desc-selected" change_func="change_destination" remove_func="remove_destination" repository=repository searchMethod="findDTD" placeholder=(t "dt.placeholder_submit")}}
+      {{db-fetch-custom-select 
+        model=link 
+        selectedAttr=link.destination 
+        className="t-link-destination-select" 
+        componentName="dtds/dtd-key-desc" 
+        selectedComponent="dtds/dtd-key-desc-selected" 
+        change_func="change_destination" 
+        remove_func="remove_destination" 
+        repository=repository 
+        searchMethod="findDTD" 
+        placeholder=(t "dt.placeholder_submit")
+      }}
     </div>
   </div>
 {{/each}}

@@ -10,7 +10,6 @@
       change_method='change_address_type'
       relatedModelName='address-type'
       model=address
-      didValidate=didValidate
       valuePath="address_type"
     }}
   </div>
@@ -22,7 +21,6 @@
         change_method='change_address_type'
         relatedModelName='address-type'
         model=address
-        didValidate=didValidate
         valuePath="address_type"
       }}
     </div>
@@ -36,7 +34,6 @@
         className=(concat "t-address-address" index)
         placeholder=placeholder
         class=(concat "t-address-address-validator" index)
-        didValidate=didValidate
       }}
   </div>
   <div class="input-group">
@@ -45,7 +42,6 @@
       type="text"
       className=(concat "form-control t-address-city" index)
       model=address
-      didValidate=didValidate
       valuePath="city"
       count=index
     }}
@@ -61,7 +57,6 @@
       repository=stateDbFetch
       searchMethod="findState"
       valuePath="state"
-      didValidate=didValidate
       count=index
     }}
   </div>
@@ -74,7 +69,6 @@
         className=(concat "t-address-postal-code" index)
         placeholder=placeholder
         class=(concat "t-address-postal-code-validator" index)
-        didValidate=didValidate
       }}
   </div>
   <div class="input-group">
@@ -88,7 +82,6 @@
       repository=countryDbFetch
       searchMethod="findCountry"
       valuePath="country"
-      didValidate=didValidate
       count=index
     }}
   </div>

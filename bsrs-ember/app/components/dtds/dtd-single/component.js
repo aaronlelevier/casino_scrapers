@@ -4,10 +4,6 @@ import inject from 'bsrs-ember/utilities/inject';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 
 export default Ember.Component.extend(TabMixin, {
-  init() {
-    this._super(...arguments);
-    this.didValidate = false;
-  },
   simpleStore: Ember.inject.service(),
   error: Ember.inject.service(),
   repository: inject('dtd'),
@@ -27,7 +23,6 @@ export default Ember.Component.extend(TabMixin, {
           this.sendAction('editDTD');
         }
       }
-      this.set('didValidate', true);
     },
     setLinkType(type){
       this.get('model').set('link_type', type);

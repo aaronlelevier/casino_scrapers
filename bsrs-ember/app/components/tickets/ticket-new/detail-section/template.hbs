@@ -10,7 +10,6 @@
     repository=locationRepo 
     searchMethod="findTicket"
     valuePath="location"
-    didValidate=didValidate
     }}
     {{/form-group}}
   </div>
@@ -20,7 +19,6 @@
       {{validated-input
       model=model
       valuePath="requester"
-      didValidate=didValidate
       className="t-ticket-requester"
       placeholder=(t "ticket.label.requester")
       class="t-ticket-requester-validator"
@@ -39,7 +37,6 @@
     <div class="ticket-categories">
       {{parent-model-category-select
       model=model
-      didValidate=didValidate
       valuePath="categories"
       }}
     </div>
@@ -51,7 +48,6 @@
         placeholder=(t "ticket.label.request")
         valuePath="request"
         className="t-ticket-request ticket-request"
-        didValidate=didValidate
         textarea=true
         class="t-ticket-request-validator"
         }}

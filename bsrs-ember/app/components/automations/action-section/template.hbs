@@ -4,7 +4,6 @@
       {{power-select-validation
         model=model
         valuePath="action"
-        didValidate=didValidate
         index=index
       }}
       <div class="input-group-vertical" data-validation-target={{concat "action" index}}>
@@ -29,7 +28,6 @@
         </div>
         {{component (automation-action action.type)
           model=action
-          didValidate=didValidate
           index=index
         }}
       </div>
