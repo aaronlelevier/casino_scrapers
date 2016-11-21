@@ -261,8 +261,7 @@ test('changing location level will update related location level locations array
     assert.ok(location_level_two.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(location.get('parents').get('length'), 0);
     assert.equal(location.get('children').get('length'), 0);
-    //TODO: this is not working
-    // assert.equal(find(`${PARENTS_MULTIPLE_OPTION} > li`).length, 1);
+    assert.equal(find(`${PARENTS_MULTIPLE_OPTION} > li`).length, 0);
   });
   let response = LF.detail(LD.idOne);
   let payload = LF.put({location_level: LLD.idLossRegion, parents: [], children: []});

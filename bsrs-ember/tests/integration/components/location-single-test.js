@@ -65,7 +65,7 @@ test('clicking save will reveal all validation msgs', function(assert) {
   run(() => {
     model = store.push('location', {id: LD.idOne, name: LD.storeName, number: LD.storeNumber, location_level_fk: LLD.idOne, status_fk: LDS.openId});
     store.push('location-level', {id: LLD.idOne, name: LLD.nameDistrict, locations: [LD.idOne]});
-  store.push('location-status', {id: LDS.openId, name: LDS.openName, locations: [LD.idOne]});
+    store.push('location-status', {id: LDS.openId, name: LDS.openName, locations: [LD.idOne]});
   });
   this.model = model;
   this.render(hbs`{{locations/location-single model=model}}`);

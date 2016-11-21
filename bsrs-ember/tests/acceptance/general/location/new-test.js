@@ -306,9 +306,10 @@ test('when you change a related address type it will be persisted correctly', (a
 /*LOCATION TO CHILDREN M2M*/
 test('clicking and typing into power select for location will fire off xhr request for all children locations', (assert) => {
   page.visitNew();
-  selectChoose('.t-location-level-select', LLD.nameCompany);
+  // changing llevel will update the extra_params that go into the xhr for children
+  selectChoose('.t-location-level-select', LLD.nameFacilityManagement);
   selectChoose('.t-location-status-select', LDS.openNameTranslated);
-  let location_endpoint = `${LOCATIONS_URL}get-level-children/${LLD.idOne}/${UUID.value}/location__icontains=a/`;
+  let location_endpoint = `${LOCATIONS_URL}get-level-children/${LLD.idFacility}/${UUID.value}/location__icontains=a/`;
   let response = {'results': [LF.get_no_related(LD.unusedId, LD.apple)]};
   ajax(location_endpoint, 'GET', null, {}, 201, response);
   selectSearch(CHILDREN, 'a');
@@ -326,7 +327,7 @@ test('clicking and typing into power select for location will fire off xhr reque
     assert.equal(find(`${CHILDREN_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
   });
   //search specific children
-  let location_endpoint_2 = `${LOCATIONS_URL}get-level-children/${LLD.idOne}/${UUID.value}/location__icontains=BooNdocks/`;
+  let location_endpoint_2 = `${LOCATIONS_URL}get-level-children/${LLD.idFacility}/${UUID.value}/location__icontains=BooNdocks/`;
   let response_2 = {'results': [LF.get_no_related('abc123', LD.boondocks)]};
   xhr(location_endpoint_2, 'GET', null, {}, 201, response_2);
   selectSearch(CHILDREN, 'BooNdocks');
@@ -340,13 +341,7 @@ test('clicking and typing into power select for location will fire off xhr reque
     assert.equal(page.childrenTwoSelected.indexOf(LD.boondocks), 2);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
-  fillIn('.t-location-name', LD.storeName);
-  fillIn('.t-location-number', LD.storeNumber);
-  xhr(LOCATIONS_URL,'POST',JSON.stringify(children_payload),{},201);
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_URL);
-  });
+  clearxhr(list_xhr);
 });
 
 test('can add and remove all children (while not populating options) and add back', (assert) => {
@@ -407,15 +402,16 @@ test('clicking and typing into power select for location will not filter if spac
 });
 
 /*PARENTS*/
-test('clicking and typing into power select for location will fire off xhr request for all location', (assert) => {
+test('clicking and typing into power select for location will fire off xhr request for all location (parents)', (assert) => {
   page.visitNew();
-  selectChoose('.t-location-level-select', LLD.nameCompany);
+  // changing llevel will update the extra_params that go into the xhr for parents
+  selectChoose('.t-location-level-select', LLD.nameFacilityManagement);
   selectChoose('.t-location-status-select', LDS.openNameTranslated);
   andThen(() => {
     let location = store.find('location',UUID.value);
     assert.equal(location.get('parents').get('length'), 0);
   });
-  let location_endpoint = `${LOCATIONS_URL}get-level-parents/${LLD.idOne}/${UUID.value}/location__icontains=a/`;
+  let location_endpoint = `${LOCATIONS_URL}get-level-parents/${LLD.idFacility}/${UUID.value}/location__icontains=a/`;
   let response = {'results': [LF.get_no_related(LD.unusedId, LD.apple)]};
   ajax(location_endpoint, 'GET', null, {}, 201, response);
   selectSearch(PARENTS, 'a');
@@ -438,7 +434,7 @@ test('clicking and typing into power select for location will fire off xhr reque
     assert.equal(find(`${PARENTS_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
   });
   //search specific parents
-  let location_endpoint_2 = `${LOCATIONS_URL}get-level-parents/${LLD.idOne}/${UUID.value}/location__icontains=BooNdocks/`;
+  let location_endpoint_2 = `${LOCATIONS_URL}get-level-parents/${LLD.idFacility}/${UUID.value}/location__icontains=BooNdocks/`;
   let response_2 = {'results': [LF.get_no_related('abc123', LD.boondocks)]};
   xhr(location_endpoint_2, 'GET', null, {}, 201, response_2);
   selectSearch(PARENTS, 'BooNdocks');
@@ -463,11 +459,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   });
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
-  xhr(LOCATIONS_URL, 'POST', JSON.stringify(parents_payload), {}, 201, {});
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), LOCATION_URL);
-  });
+  clearxhr(list_xhr);
 });
 
 test('starting with multiple parents, can remove all parents (while not populating options) and add back', (assert) => {

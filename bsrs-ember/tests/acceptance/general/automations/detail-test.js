@@ -43,7 +43,7 @@ moduleForAcceptance('Acceptance | general automation detail test', {
     listXhr = xhr(`${AUTOMATION_URL}?page=1`, 'GET', null, {}, 200, listData);
     const detailData = AF.detail();
     detailXhr = xhr(API_DETAIL_URL, 'GET', null, {}, 200, detailData);
-    random.uuid = function() { return UUID.value; };
+    // random.uuid = function() { return UUID.value; };
   },
 });
 
