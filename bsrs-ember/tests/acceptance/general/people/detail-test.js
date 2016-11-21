@@ -681,7 +681,7 @@ test('when you change a related role it will be persisted correctly', (assert) =
   page.lastNameFill(PD.last_name);
   let payload = PF.put({id: PD.id, first_name: PD.first_name, middle_initial: PD.middle_initial, last_name: PD.last_name, role: RD.idTwo});
   payload.locations = [];
-  xhr(url,'PUT',JSON.stringify(payload),{},200);
+  xhr(url,'PUT',JSON.stringify(payload),{},200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_LIST_URL);
@@ -791,7 +791,7 @@ test('when you change a related role it will change the related locations as wel
   let url = PREFIX + DETAIL_URL + '/';
   let role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
   let payload = PF.put({id: PD.id, role: role.id, locations: []});
-  xhr(url,'PUT',JSON.stringify(payload),{},200);
+  xhr(url,'PUT',JSON.stringify(payload),{},200, {});
   andThen(() => {
     let person = store.find('person', PD.idOne);
     assert.equal(person.get('locationsIsDirty'), false);
@@ -847,7 +847,7 @@ test('when you change a related role it will change the related locations as wel
     const url = PREFIX + DETAIL_URL + '/';
     const role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
     const payload = PF.put({id: PD.id, role: role.id, locations: []});
-    xhr(url,'PUT',JSON.stringify(payload),{},200);
+    xhr(url,'PUT',JSON.stringify(payload),{},200, {});
     generalPage.save();
     andThen(() => {
       assert.equal(currentURL(), PEOPLE_LIST_URL);
@@ -878,7 +878,7 @@ test('deep link to person and clicking in the person-locations-select component 
   });
   let url = PREFIX + DETAIL_URL + '/';
   let payload = PF.put({id: PD.idOne, locations: [LD.idOne, LD.gridLocSelect]});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_LIST_URL);
@@ -940,7 +940,7 @@ test('starting with multiple locations, can remove all locations (while not popu
   });
   let url = PREFIX + DETAIL_URL + '/';
   let payload = PF.put({id: PD.idOne, locations: [LD.idOne]});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_LIST_URL);

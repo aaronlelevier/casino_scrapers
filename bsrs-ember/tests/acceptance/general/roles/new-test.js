@@ -220,7 +220,7 @@ test('clicking power select for parent categories will fire off xhr request for 
   page.locationLevelClickOptionOne();
   let category = CF.put({id: CD.idOne, name: CD.nameOne});
   let postPayload = Object.assign(payload, {location_level: LLD.idOne});
-  xhr(url, 'POST', JSON.stringify(postPayload), {}, 200);
+  xhr(url, 'POST', JSON.stringify(postPayload), {}, 201, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ROLE_URL);
@@ -262,7 +262,7 @@ test('adding and removing removing a category in power select for categories wil
   page.locationLevelClickDropdown();
   page.locationLevelClickOptionOne();
   payload.categories = [CD.idThree];
-  xhr(url, 'POST', JSON.stringify(payload), {}, 201);
+  xhr(url, 'POST', JSON.stringify(payload), {}, 201, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ROLE_URL);
@@ -292,7 +292,7 @@ test('can add multiple categories', (assert) => {
   page.locationLevelClickDropdown();
   page.locationLevelClickOptionOne();
   let postPayload = Object.assign(payload, {categories: [CD.idOne, CD.idThree]});
-  xhr(url, 'POST', JSON.stringify(postPayload), {}, 201);
+  xhr(url, 'POST', JSON.stringify(postPayload), {}, 201, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ROLE_URL);

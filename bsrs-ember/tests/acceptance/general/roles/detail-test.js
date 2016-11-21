@@ -257,7 +257,7 @@ test('clicking select for categories will fire off xhr request for all parent ca
     location_level: LLD.idOne,
     categories: [CD.idOne, CD.idThree],
   }));
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ROLE_URL);
@@ -332,7 +332,7 @@ test('search will filter down on categories in store correctly by removing and a
   let payload = RF.put(Object.assign(basePayload, {
     categories: ['abc123', CD.idGridOne],
   }));
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ROLE_URL);
