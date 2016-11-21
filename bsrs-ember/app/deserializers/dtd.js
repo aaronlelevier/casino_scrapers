@@ -2,7 +2,6 @@ import Ember from 'ember';
 const { run } = Ember;
 import { many_to_many_extract } from 'bsrs-components/repository/many-to-many';
 import { belongs_to_extract } from 'bsrs-components/repository/belongs-to';
-import registerCB from 'bsrs-ember/utilities/registerCB';
 
 
 var extract_attachments = function(model, store) {
@@ -135,7 +134,7 @@ var DTDDeserializer = Ember.Object.extend({
   _deserializeList(response) {
     const store = this.get('simpleStore');
     const return_array = [];
-    registerCB(response, function(model) {
+    response.results.forEach((model) => {
       const existing = store.find('dtd-list', model.id);
       if(!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')){
         const dtd = store.push('dtd-list', model);

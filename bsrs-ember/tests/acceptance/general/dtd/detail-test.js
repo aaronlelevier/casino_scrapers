@@ -526,7 +526,7 @@ test('power select options are rendered immediately when enter detail route and 
   assert.equal(ticketPage.categoryTwoOptionLength, 1);
   await ticketPage.categoryTwoClickOptionSecurity();
   assert.equal(ticketPage.categoryTwoInput.split(/\s/)[0], CD.nameLossPreventionChild);
-  xhr(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload_change_categories), {}, 200);
+  xhr(DTD_PUT_URL, 'PUT', JSON.stringify(dtd_payload_change_categories), {}, 200, {});
   await generalPage.save();
   assert.equal(currentURL(), DETAIL_URL);
 });
