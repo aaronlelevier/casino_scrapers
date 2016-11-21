@@ -35,7 +35,7 @@ moduleForComponent('db-fetch-person-multi-select', 'Integration | Component | db
   }
 });
 
-test('terrance it renders', function(assert) {
+test('it renders', function(assert) {
   this.model = ticket;
   this.person_repo = person_repo;
   this.render(hbs`

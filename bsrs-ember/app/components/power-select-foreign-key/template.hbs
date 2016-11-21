@@ -10,7 +10,11 @@
   labelText=labelText
   as |optionModel|
 }}
+{{#if componentArg}}
+  {{component componentArg optionModel=optionModel item=model}}
+{{else}}
   {{unless notTranslated (t (get optionModel displayName)) (get optionModel displayName)}}
+{{/if}}
 {{/power-select-mobile}}
 
 {{#if showMessage}}
