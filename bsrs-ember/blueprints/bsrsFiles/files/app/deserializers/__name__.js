@@ -11,6 +11,7 @@ export default Ember.Object.extend(OptConf, {
   },
   deserialize(response, id) {
     if (id) {
+      response.detail = true;
       return this._deserializeSingle(response);
     } else {
       return this._deserializeList(response);
@@ -23,7 +24,6 @@ export default Ember.Object.extend(OptConf, {
     const <%= thirdPropertySnake %> = response.<%= thirdPropertySnake %>;
     delete response.<%= secondPropertySnake %>;
     delete response.<%= thirdPropertySnake %>;
-    response.detail = true;
     let <%= camelizedModuleName %> = store.push('<%= dasherizedModuleName %>', response);
     // use blocking if properties not required
     // if (<%= secondPropertySnake %>) {
