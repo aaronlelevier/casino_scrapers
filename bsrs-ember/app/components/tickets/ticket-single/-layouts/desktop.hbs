@@ -79,7 +79,7 @@
       </div>
       <div class="col-md-12">
         {{#form-group title="ticket.label.assignee-fullname" for="assignee"}}
-          {{db-fetch-person-select
+          {{db-fetch-select
             model=model
             selectedAttr=model.assignee
             className="t-ticket-assignee-select"
@@ -88,12 +88,13 @@
             repository=personRepo
             searchMethod="findPeople"
             valuePath="assignee"
+            componentArg="photo-avatar"
           }}
         {{/form-group}}
       </div>
       <div class="col-md-12">
         {{#form-group title="ticket.label.cc" for="cc"}}
-        {{db-fetch-person-multi-select 
+        {{db-fetch-multi-select 
           model=model 
           multiAttr="cc" 
           multiAttrIds="cc_ids" 
@@ -104,6 +105,7 @@
           remove_func="remove_cc" 
           repository=personRepo 
           searchMethod="findPeople"
+          componentArg="photo-avatar"
         }}
         {{/form-group}}
       </div>

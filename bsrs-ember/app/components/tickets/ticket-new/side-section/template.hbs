@@ -25,7 +25,7 @@
   </div>
   <div class="col-md-12">
     {{#form-group title="ticket.label.cc" optional="true" for="cc"}}
-      {{db-fetch-person-multi-select 
+      {{db-fetch-multi-select 
         model=model multiAttr="cc" 
         multiAttrIds="cc_ids" 
         selectedAttr=model.cc 
@@ -35,12 +35,13 @@
         remove_func="remove_cc" 
         repository=personRepo 
         searchMethod="findPeople"
+        componentArg="photo-avatar"
       }}
     {{/form-group}}
   </div>
   <div class="col-md-12">
     {{#form-group title="ticket.label.assignee-fullname" optional="true" for="assignee"}}
-      {{db-fetch-person-select 
+      {{db-fetch-select 
         model=model 
         selectedAttr=model.assignee 
         className="t-ticket-assignee-select" 
@@ -48,6 +49,7 @@
         change_func="change_assignee" 
         repository=personRepo 
         searchMethod="findPeople"
+        componentArg="photo-avatar"
       }}
     {{/form-group}}
   </div>

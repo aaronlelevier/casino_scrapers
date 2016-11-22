@@ -9,5 +9,9 @@
   triggerClass=(if showMessage "invalid")
   as |optionModel|
 }}
+{{#if componentArg}}
+  {{component componentArg item=optionModel}}
+{{else}}
   {{get optionModel displayName}}
+{{/if}}
 {{/power-select}}
