@@ -227,7 +227,7 @@ class AttachmentTests(APITestCase):
             response = self.client.post("/api/admin/attachments/", post_data)
             self.assertEqual(response.status_code, 201)
 
-        attachments = Attachment.objects.all()
+        attachments = Attachment.objects.filter(id__in=[id, id2])
 
         # batch delete
         response = self.client.delete("/api/admin/attachments/batch-delete/",
@@ -236,10 +236,11 @@ class AttachmentTests(APITestCase):
         self.assertEqual(response.status_code, 204)
         self.assertFalse(Attachment.objects_all.filter(
             id__in=[id, id2]).exists())
-        # TODO: Aaron - file is not deleted
-        # for a in attachments:
-        #     self.assertFalse(os.path.isfile(
-        #         os.path.join(settings.MEDIA_ROOT, str(a.file))))
+        for a in attachments:
+            self.assertFalse(os.path.isfile(
+                os.path.join(settings.MEDIA_ROOT, str(a.file))),
+                "%s not deleted" % os.path.join(settings.MEDIA_ROOT, str(a.file))
+            )
 
 
 class ExportDataTests(APITestCase):
