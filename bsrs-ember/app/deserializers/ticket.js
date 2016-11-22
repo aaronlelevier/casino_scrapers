@@ -74,12 +74,8 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     // SETUP
     this.setup_status(response.status_fk, ticket);
     this.setup_priority(response.priority_fk, ticket);
-    if (assignee_json) {
-      this.setup_assignee(assignee_json, ticket);
-    }
-    if (location_json) {
-      this.setup_location(location_json, ticket);
-    }
+    this.setup_assignee(assignee_json, ticket);
+    this.setup_location(location_json, ticket);
     this.setupCC(cc_json, ticket);
     this.setupCategories(categories_json, ticket);
 

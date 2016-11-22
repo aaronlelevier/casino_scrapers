@@ -25,6 +25,15 @@ test('repository sets up hat relationship in deserializer', (assert) => {
   assert.deepEqual(hat.get('users'), [1]);
 });
 
+test('accepts null', (assert) => {
+  const json = {id: 1, detail: true, hat_fk: null};
+  run(() => {
+    deserializer.deserialize(json);
+  });
+  const hat = store.find('hat', 2);
+  assert.equal(hat.get('users'), undefined);
+});
+
 test('shoes relationship setup in deserializer', (assert) => {
   const json = {id: 1, shoes: [{id: 2}]};
   run(() => {

@@ -4,6 +4,7 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 import { belongs_to } from 'bsrs-components/repository/belongs-to';
 import { many_to_many_extract, many_to_many } from 'bsrs-components/repository/many-to-many';
 import OptConf from 'bsrs-ember/mixins/optconfigure/automation';
+import { ACTION_SEND_EMAIL, ACTION_SEND_SMS } from 'bsrs-ember/models/automation-action';
 
 export default Ember.Object.extend(OptConf, {
   uuid: injectUUID('uuid'),
@@ -24,6 +25,7 @@ export default Ember.Object.extend(OptConf, {
   },
   deserialize(response, id) {
     if (id) {
+      response.detail = true;
       return this._deserializeSingle(response);
     } else {
       return this._deserializeList(response);
@@ -44,13 +46,15 @@ export default Ember.Object.extend(OptConf, {
       criteriaMap[f.id] = f.criteria;
       delete response.filters[i].criteria;
     }
+
+    // delete keys
     const filters = response.filters;
     const events = response.events;
     const actions = response.actions;
     delete response.filters;
     delete response.events;
     delete response.actions;
-    response.detail = true;
+
     let automation;
     run(() => {
       automation = store.push('automation', response);
@@ -65,33 +69,36 @@ export default Ember.Object.extend(OptConf, {
       let sendsmss = {};
       let recipient;
       let sendsms_recipient;
+
+      // remove type and action related keys before pushing into store
+      // loop through actions, remove type / assignee and setup assignee with the hydrated action
       actions.forEach((a) => {
         // type
         const type = a.type;
         this.extractActionsBelongsTo(a, actionTypes, 'type');
-        // delete a.type;
-        // actionTypes[a.id] = type;
-        // a.type_fk = type.id;
 
         /* START ACTION TYPE PROCESSING */
 
         if (a.assignee) {
           this.extractActionsBelongsTo(a, assignees, 'assignee');
         }
+
         if (a.ccs) {
           const ticketcc = a.ccs;
           delete a.ccs;
           ticketccs[a.id] = ticketcc;
         }
+
         if (a.priority) {
           this.extractActionsBelongsTo(a, priorities, 'priority');
         }
+
         if(a.status) {
           this.extractActionsBelongsTo(a, statuses, 'status');
         }
 
         //sendemail - delete recipients, type, body, subject (re-assign) and gen up uuid for send_email model
-        if (type.key === 'automation.actions.send_email') {
+        if (type.key === ACTION_SEND_EMAIL) {
           recipient = a.recipients; // {type: 'role', id: '1xxx'}
           delete a.recipients;
           let { body, subject } = a;
@@ -103,7 +110,7 @@ export default Ember.Object.extend(OptConf, {
         }
 
         // sendsms
-        if (type.key === 'automation.actions.send_sms') {
+        if (type.key === ACTION_SEND_SMS) {
           sendsms_recipient = a.recipients;
           delete a.recipients;
           let { body } = a;
@@ -112,6 +119,7 @@ export default Ember.Object.extend(OptConf, {
           sendsmss[a.id] = sendsms;
           a.sendsms_fk = sendsms.id;
         }
+
         /* END ACTION TYPE PROCESSING */
 
         // must set as "detail" b/c this is a detail payload
@@ -120,6 +128,7 @@ export default Ember.Object.extend(OptConf, {
 
       // push in the actions (pojo's) in the store and those are returned
       const [,actionData,] = this.setup_action(actions, automation);
+
       actionData.forEach((ad) => {
         const action = store.find('automation-action', ad.id);
         // type
@@ -129,18 +138,18 @@ export default Ember.Object.extend(OptConf, {
         // assignee
         let assignee = assignees[ad.id];
         this.setup_assignee(assignee, action);
-        // ticketcc
+
         // action may have different ccs, so need to wipe out join models and make new ones based on server payload
         action.get('automation_action_ticketcc').forEach((m2m) => {
           store.push('action-join-person', {id: m2m.get('id'), removed: true});
         });
         let ticketcc = ticketccs[ad.id];
-        if (ticketcc) {
-          this.setup_ticketcc(ticketcc, action);
-        }
+        this.setup_ticketcc(ticketcc, action);
+
         // priority
         let priority = priorities[ad.id];
         this.setup_priority(priority, action);
+
         // status - adds the action id to the array of 'actions' in the status model
         let status = statuses[ad.id];
         this.setup_status(status, action);

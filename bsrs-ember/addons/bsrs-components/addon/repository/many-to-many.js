@@ -2,7 +2,8 @@ import Ember from 'ember';
 const { run } = Ember;
 import pluralize from 'bsrs-components/utils/plural';
 
-/** @method many_to_many_extract
+/** 
+ * @method many_to_many_extract
  * pre-processing function
  * extracts javascript objects from payload to prepare to push into store
  * @return m2m_models {array} - join models 'generic-join-recipient' - plain JS obj
@@ -11,6 +12,9 @@ import pluralize from 'bsrs-components/utils/plural';
  */
 var many_to_many_extract = function(json, store, model, join_models_str, main_pk, related_str, related_pk) {
   //cc_json, store, ticket, ticket_cc, ticket_pk, person, person_pk
+  if (!json) {
+    return;
+  }
   const server_sum = [];
   const m2m_models = [];
   const relateds = []; 
@@ -59,13 +63,15 @@ var many_to_many = function(_associatedModel, modelName, noSetup) {
   Ember.defineProperty(this, `setup_${_associatedModel}`, undefined, many_to_many_json(modelName, _associatedModel, _singularAssociatedName, _joinModelName));
 };
 
-/** @method many_to_many_json
- * Creates many to many setup for deserializer
- *
+/** 
  * @method many_to_many_json
+ * Creates many to many setup for deserializer
  */
 var many_to_many_json = function(modelName, _associatedModel, _singularAssociatedName, _joinModelName) {
   return function(json, model) {
+    if (!json) {
+      return;
+    }
     const store = this.get('simpleStore');
     const relatedModelLookup = Ember.String.underscore(this.OPT_CONF[_associatedModel]['associated_pointer'] || this.OPT_CONF[_associatedModel]['associated_model']);
     const _parentNameUnderscore = modelName.replace(/-/g, '_');

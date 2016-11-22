@@ -10,9 +10,9 @@ var belongs_to_extract = function(type, store, parent_model, ownerName, relatedM
   // DETAIL: belongs_to_extract(response.priority_fk, store, ticket, 'priority', 'ticket', 'tickets');
   // LIST: belongs_to_extract(status_json, store, ticket, 'status', 'ticket', 'tickets');
   let model;
-  if (parent_model.get('detail') && parent_model.get(`${ownerName}.id`) !== type) {
+  if (!!type && parent_model.get('detail') && parent_model.get(`${ownerName}.id`) !== type) {
     model = parent_model[`change_${ownerName}`](type);
-  } else if (typeof type === 'object') {
+  } else if (type && typeof type === 'object') {
     const type_list = store.find(`${relatedModelName}-${ownerName}-list`, type.id);
     const type_arr = type_list.get(`${collection}`) || [];
     const updated_type_arr = type_arr.concat(parent_model.get('id')).uniq();

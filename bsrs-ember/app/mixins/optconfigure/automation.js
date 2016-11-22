@@ -37,7 +37,7 @@ export default Ember.Mixin.create({
       join_model: 'automation-join-pfilter'
     },
 
-    //deserializer
+    //deserializer - for nested models
     criteria: {
       associated_model: 'criteria',
       join_model: 'pfilter-join-criteria',

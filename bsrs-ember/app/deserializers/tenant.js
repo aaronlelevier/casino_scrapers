@@ -53,6 +53,7 @@ export default Ember.Object.extend(OptConf, ContactDeserializerMixin, {
     delete response.billing_address;
     delete response.dtd_start;
     delete response.countries;
+
     // setup contact to type relationship
     this.extract_single_phonenumber(billing_phone_number);
     this.extract_single_email(billing_email);
@@ -60,20 +61,14 @@ export default Ember.Object.extend(OptConf, ContactDeserializerMixin, {
     this.extract_single_address(billing_address);
     response.detail = true;
     let tenant = store.push('tenant', response);
-    // TODO: (ayl) both these related models are optional, so need 'if' check n tests
-    // use blocking if properties not required
-    // if (currency) {
-      this.setup_default_currency(currency, tenant);
-    // }
-      this.setup_billing_phone_number(billing_phone_number, tenant);
-      this.setup_billing_email(billing_email, tenant);
-      this.setup_implementation_email(implementation_email, tenant);
-      this.setup_implementation_contact(implementation_contact, tenant);
-      this.setup_billing_address(billing_address, tenant);
-      this.setup_dtd_start(dtd_start, tenant);
-    // if (countrys) {
-      this.setup_countries(countries, tenant);
-    // }
+    this.setup_default_currency(currency, tenant);
+    this.setup_billing_phone_number(billing_phone_number, tenant);
+    this.setup_billing_email(billing_email, tenant);
+    this.setup_implementation_email(implementation_email, tenant);
+    this.setup_implementation_contact(implementation_contact, tenant);
+    this.setup_billing_address(billing_address, tenant);
+    this.setup_dtd_start(dtd_start, tenant);
+    this.setup_countries(countries, tenant);
     tenant.save();
     return tenant;
   },

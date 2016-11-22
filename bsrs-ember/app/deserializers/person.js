@@ -145,18 +145,12 @@ var PersonDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin, 
       run(() => {
         person = store.push('person', model);
         // photo
-        if (photo) {
-          this.setup_photo(photo, person);
-        }
+        this.setup_photo(photo, person);
         // status
         belongs_to_extract(model.status_fk, store, person, 'status', 'person', 'people');
         // contacts
-        if (phonenumber_json) {
-          this.setup_phonenumbers(phonenumber_json, person);
-        }
-        if (email_json) {
-          this.setup_emails(email_json, person);
-        }
+        this.setup_phonenumbers(phonenumber_json, person);
+        this.setup_emails(email_json, person);
         person.save();
       });
     }

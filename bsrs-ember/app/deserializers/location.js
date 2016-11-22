@@ -141,15 +141,9 @@ var LocationDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin
     // TODO: Does it come back w/ a status?
     delete response.status;
     let location = store.push('location', response);
-    if (phonenumber_json) {
-      this.setup_phonenumbers(phonenumber_json, location);
-    }
-    if (email_json) {
-      this.setup_emails(email_json, location);
-    }
-    if (address_json) {
-      this.setup_addresses(address_json, location);
-    }
+    this.setup_phonenumbers(phonenumber_json, location);
+    this.setup_emails(email_json, location);
+    this.setup_addresses(address_json, location);
 
     location.save();
     belongs_to_extract(response.status_fk, store, location, 'status', 'location', 'locations');
