@@ -34,6 +34,7 @@ var TicketSingleRoute = TabRoute.extend(FindById, {
   setupController: function(controller, hash) {
     controller.setProperties(hash);
     if (hash.otherXhrs) {
+      // fetch always returns [] or activities
       controller.set('activities', hash.otherXhrs[0]);
     }
   },

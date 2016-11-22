@@ -4,19 +4,21 @@ import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import { clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
+import PD from 'bsrs-ember/vendor/defaults/person';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
+import { clickTrigger, nativeMouseUp } from 'bsrs-ember/tests/helpers/ember-power-select';
 
-let store, ticket;
+let store, ticket, trans;
 
 moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
   integration: true,
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status', 'model:model-category', 'service:device/layout']);
     translation.initialize(this);
+    trans = this.container.lookup('service:i18n');
     run(() => {
       store.push('model-category', {id: TICKET_CD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
       store.push('model-category', {id: TICKET_CD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
@@ -26,6 +28,10 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
       store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: null});
       store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey});
       store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwoKey});
+      store.push('ticket-status', {id: TD.statusThreeId, name: TD.statusThreeKey});
+      store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOneKey});
+      store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityTwoKey});
+      store.push('ticket-priority', {id: TD.priorityThreeId, name: TD.priorityThreeKey});
       const dt_path = [{
         id: TD.idOne,
         requester: TD.requesterOne,
@@ -46,61 +52,70 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
   },
 });
 
-// test('validation on ticket request works', function(assert) {
-//   const REQUEST = '.t-ticket-request';
-//   let modalDialogService = this.container.lookup('service:modal-dialog');
-//   modalDialogService.destinationElementId = 'request';
-//   var done = assert.async();
-//   let statuses = store.find('ticket-status');
-//   this.model = ticket;
-//   this.statuses = statuses;
-//   this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses}}`);
-//   const $component = this.$('.invalid');
-//   assert.notOk($component.is(':visible'));
-//   this.$(REQUEST).val('').keyup();
-//   Ember.run.later(() => {
-//     const $component = this.$('.invalid');
-//     // assert.ok($component.is(':visible'), 'no entry. Too low');
-//     assert.equal($('.validated-input-error-dialog').text().trim(), trans.t('errors.ticket.request'));
-//     this.$(REQUEST).val('a'.repeat(4)).keyup();
-//     Ember.run.later(() => {
-//       const $component = this.$('.invalid');
-//       // assert.ok($component.is(':visible'), 'only 4 characters. Too low');
-//       assert.equal($('.validated-input-error-dialog').text().trim(), trans.t('errors.ticket.request.length'));
-//       this.$(REQUEST).val('a'.repeat(5)).keyup();
-//       Ember.run.later(() => {
-//         const $component = this.$('.invalid');
-//         assert.notOk($component.is(':visible'), 'meets min length');
-//         done();
-//       }, 300);
-//     }, 300);
-//   }, 300);
-// });
-
-test('each status shows up as a valid select option', function(assert) {
+test('validation on ticket request works', function(assert) {
+  const REQUEST = '.t-ticket-request';
+  let modalDialogService = this.container.lookup('service:modal-dialog');
+  modalDialogService.destinationElementId = 'request';
+  var done = assert.async();
   let statuses = store.find('ticket-status');
-  this.set('model', ticket);
-  this.set('statuses', statuses);
-  this.render(hbs`{{tickets/ticket-single model=model activities=statuses}}`);
-  let $component = this.$('.t-ticket-status-select');
-  assert.equal($component.length, 1);
+  this.model = ticket;
+  this.activities = [];
+  this.render(hbs`{{tickets/ticket-single model=model activities=activities}}`);
+  const $component = this.$('.t-ticket-request-validator.invalid');
+  assert.notOk($component.is(':visible'));
+  this.$(REQUEST).val('').keyup();
+  Ember.run.later(() => {
+    const $component = this.$('.t-ticket-request-validator.invalid');
+    assert.ok($component.is(':visible'), 'no entry. Too low');
+    assert.equal($('.validated-input-error-dialog').text().trim(), trans.t('errors.ticket.request'));
+    this.$(REQUEST).val('a'.repeat(4)).keyup();
+    Ember.run.later(() => {
+      const $component = this.$('.t-ticket-request-validator.invalid');
+      assert.ok($component.is(':visible'), 'only 4 characters. Too low');
+      assert.equal($('.validated-input-error-dialog').text().trim(), trans.t('errors.ticket.request.length'));
+      this.$(REQUEST).val('a'.repeat(5)).keyup();
+      Ember.run.later(() => {
+        const $component = this.$('.invalid');
+        assert.notOk($component.is(':visible'), 'meets min length');
+        done();
+      }, 300);
+    }, 300);
+  }, 300);
 });
 
 test('if save isRunning, btn is disabled', function(assert) {
-  let statuses = store.find('ticket-status');
   this.set('model', ticket);
-  this.set('statuses', statuses);
+  this.set('activities', []);
   // monkey patched.  Not actually passed to component but save.isRunning comes from save ember-concurrency task
   this.saveIsRunning = { isRunning: 'disabled' };
-  this.render(hbs`{{tickets/ticket-single model=model statuses=statuses activities=statuses saveTask=saveIsRunning}}`);
+  this.render(hbs`{{tickets/ticket-single model=model activities=activities saveTask=saveIsRunning}}`);
   assert.equal(this.$('.t-save-btn').attr('disabled'), 'disabled', 'Button is disabled if xhr save is outstanding');
 });
 
-test('each priority shows up as a valid select option', function(assert) {
-  let priorities = store.find('ticket-priority');
+test('click status dropdown and choose status from dropdown', function(assert) {
+  let statuses = store.find('ticket-status');
+  // line in the browser using the stop sign where this.get is undefined
   this.set('model', ticket);
-  this.set('priorities', priorities);
-  this.render(hbs`{{tickets/ticket-single model=model priorities=priorities activities=priorities}}`);
+  this.set('activities', []);
+  this.render(hbs`{{tickets/ticket-single model=model activities=activities}}`);
+  let $component = this.$('.t-ticket-status-select'); // actual component
+  assert.equal($component.length, 1);
+  clickTrigger('.t-ticket-status-select');
+  assert.equal(Ember.$('[data-test-id="status-tag"]').length, 3); // ticket-status tag component
+  nativeMouseUp(`.ember-power-select-option:contains(${TD.statusOneKey})`);
+  assert.equal(Ember.$('[data-test-id="status-tag"]').text().trim(), TD.statusOneKey);
+  assert.equal(Ember.$('[data-test-id="status-tag"]').length, 1);
+});
+
+test('click priority dropdown an choose priority from dropdown', function(assert) {
+  this.set('model', ticket);
+  this.set('activities', []);
+  this.render(hbs`{{tickets/ticket-single model=model activities=activities}}`);
   let $component = this.$('.t-ticket-priority-select');
   assert.equal($component.length, 1);
+  clickTrigger('.t-ticket-priority-select');
+  assert.equal(Ember.$('[data-test-id="priority-tag"]').length, 3);
+  nativeMouseUp(`.ember-power-select-option:contains(${TD.priorityOneKey})`);
+  assert.equal(Ember.$('[data-test-id="priority-tag"]').text().trim(), TD.priorityOneKey);
+  assert.equal(Ember.$('[data-test-id="priority-tag"]').length, 1);
 });

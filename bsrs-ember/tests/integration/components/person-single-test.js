@@ -9,9 +9,11 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
 import RD from 'bsrs-ember/vendor/defaults/role';
+import SD from 'bsrs-ember/vendor/defaults/status';
 import CD from 'bsrs-ember/vendor/defaults/currency';
 import page from 'bsrs-ember/tests/pages/person';
 import general from 'bsrs-ember/tests/pages/general';
+import { clickTrigger, nativeMouseUp } from 'bsrs-ember/tests/helpers/ember-power-select';
 
 var store, role, trans;
 
@@ -67,7 +69,7 @@ test('dropdown displays correct print and duplicate text', function(assert) {
 test('validation on person username works if clear out username', function(assert) {
   var done = assert.async();
   run(() => {
-    this.set('model', store.push('person', {id: PD.id, username: 'foo'}));
+    this.set('model', store.push('person', {id: PD.idOne, username: 'foo'}));
   });
   this.render(hbs`{{people/person-single model=model}}`);
   let $component = this.$('.invalid');
@@ -97,8 +99,8 @@ test('if save isRunning, btn is disabled', function(assert) {
 test('header populates with username and role name', function(assert) {
   let model;
   run(() => {
-    model = store.push('person', {id: PD.id, username: PD.username, role_fk: RD.idOne});
-    store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.id]});
+    model = store.push('person', {id: PD.idOne, username: PD.username, role_fk: RD.idOne});
+    store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.idOne]});
   });
   this.set('model', model);
   this.render(hbs`{{people/person-single model=model}}`);
@@ -111,4 +113,22 @@ test('header populates with username and role name', function(assert) {
   page.middleInitialFill(PD.middle_initial);
   page.lastNameFill(PD.last_name);
   assert.equal(this.$('.t-person-single-header').text().trim(), PD.middle_initial+' '+PD.last_name);
+});
+
+test('click on status dropdown and select status', function(assert) {
+  let model;
+  run(() => {
+    model = store.push('person', {id: PD.idOne, status_fk: SD.activeId});
+    store.push('status', {id: SD.activeId, name: SD.activeNameTranslated, people: [PD.idOne]});
+    store.push('status', {id: SD.inactiveId, name: SD.inactiveNameTranslated});
+    store.push('status', {id: SD.expiredId, name: SD.expiredNameTranslated});
+  });
+  this.set('model', model);
+  this.render(hbs`{{people/person-single model=model}}`);
+  assert.equal(Ember.$('[data-test-id="status-tag"]').length, 1);
+  clickTrigger('.t-status-select');
+  assert.equal(Ember.$('.ember-power-select-option > [data-test-id="status-tag"]').length, 3); 
+  nativeMouseUp(`.ember-power-select-option:contains(${SD.inactiveNameTranslated})`);
+  assert.equal(Ember.$('[data-test-id="status-tag"]').text().trim(), SD.inactiveNameTranslated);
+  assert.equal(Ember.$('[data-test-id="status-tag"]').length, 1);
 });
