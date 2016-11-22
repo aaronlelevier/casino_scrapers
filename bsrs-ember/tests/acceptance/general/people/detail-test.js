@@ -463,7 +463,7 @@ test('when you change a related email numbers type it will be persisted correctl
   selectChoose('.t-email-type-select', ETD.workName);
   var emails = EF.put({id: ED.idOne, type: ETD.workId});
   var payload = PF.put({id: PD.id, emails: emails});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_LIST_URL);
@@ -475,7 +475,7 @@ test('when you change a related phone numbers type it will be persisted correctl
   selectChoose('.t-phone-number-type-select', PNTD.mobileNameValue);
   var phone_numbers = PNF.put({id: PND.idOne, type: PNTD.mobileId});
   var payload = PF.put({id: PD.id, phone_numbers: phone_numbers});
-  xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+  xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_LIST_URL);

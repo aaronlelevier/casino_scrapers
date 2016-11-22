@@ -335,7 +335,7 @@ test('newly added emails without a valid email are ignored and removed when user
   });
 });
 
-test('newly added addresss without a valid address or postal_code are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
+test('newly added addresses without a valid address or postal_code are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
   page.visitDetail();
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);

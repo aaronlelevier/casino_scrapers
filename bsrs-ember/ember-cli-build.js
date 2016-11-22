@@ -37,7 +37,7 @@ module.exports = function(defaults) {
   app.import('vendor/defaults/global-message.js');
   app.import('bower_components/ember/ember-template-compiler.js');
   if (isStandAloneBuild) {
-    app.import('bower_components/fauxjax-toranb/dist/fauxjax.min.js');
+    app.import('bower_components/fauxjax-snewcomer/dist/fauxjax.min.js');
     app.import('vendor/address_fixtures.js');
     app.import('vendor/admin_translation_fixtures.js');
     app.import('vendor/automation_fixtures.js');
