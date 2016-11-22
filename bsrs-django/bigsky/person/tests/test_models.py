@@ -305,21 +305,21 @@ class PersonManagerTests(TestCase):
         person_one = create_single_person()
         person_two = create_single_person()
         person_three = create_single_person()
-        # person 1 - valid - same tenant, ph is type cell
-        phone_cell_type = create_phone_number_type(PhoneNumberType.CELL)
-        create_contact(PhoneNumber, person_one, phone_cell_type)
+        # person 1 - valid - same tenant, has ph
+        phone_type = create_phone_number_type(PhoneNumberType.OFFICE)
+        create_contact(PhoneNumber, person_one, phone_type)
         self.assertEqual(person_one.role.tenant, self.person.role.tenant)
-        self.assertTrue(person_one.phone_numbers.filter(type__name=PhoneNumberType.CELL).exists())
-        # person 2 - invalid - diff tenant
-        create_contact(PhoneNumber, person_two, phone_cell_type)
+        self.assertTrue(person_one.phone_numbers.exists())
+        # person 2 - invalid - diff tenant, has ph
+        create_contact(PhoneNumber, person_two, phone_type)
         tenant_two = get_or_create_tenant('foo')
         person_two.role.tenant = tenant_two
         person_two.role.save()
         self.assertNotEqual(person_two.role.tenant, self.person.role.tenant)
-        self.assertTrue(person_two.phone_numbers.filter(type__name=PhoneNumberType.CELL).exists())
-        # person 3 - invalid - no ph of type cell
+        self.assertTrue(person_two.phone_numbers.exists())
+        # person 3 - invalid - same tenant, no ph
         self.assertEqual(person_three.role.tenant, self.person.role.tenant)
-        self.assertFalse(person_three.phone_numbers.filter(type__name=PhoneNumberType.CELL).exists())
+        self.assertFalse(person_three.phone_numbers.exists())
 
         qs = Person.objects.get_sms_recipients(self.person.role.tenant)
 
@@ -327,8 +327,8 @@ class PersonManagerTests(TestCase):
         self.assertEqual(qs.first(), person_one)
 
     def test_get_sms_recipients__filtered(self):
-        person_one = create_single_person()
-        person_two = create_single_person()
+        person_one = create_single_person('foo')
+        person_two = create_single_person('bar')
         phone_cell_type = create_phone_number_type(PhoneNumberType.CELL)
         create_contact(PhoneNumber, person_one, phone_cell_type)
         create_contact(PhoneNumber, person_two, phone_cell_type)

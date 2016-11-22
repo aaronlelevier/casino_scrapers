@@ -76,34 +76,20 @@ class PhoneNumberManagerTests(TestCase):
         self.event = self.action.automation.events.first()
         self.person = Person.objects.get(id=self.action.content['recipients'][0]['id'])
         self.translation = create_translation_keys_for_fixtures(self.person.locale.locale)
+        mommy.make(TicketActivityType, name=TicketActivityType.SEND_SMS)
         self.ticket = create_standard_ticket()
 
     @patch("contact.models.PhoneNumberManager.send_sms")
     def test_process_send_sms__no_sms(self, mock_func):
+        self.assertEqual(self.person.phone_numbers.count(), 0)
+
         PhoneNumber.objects.process_send_sms(self.ticket, self.action, self.event.key)
 
         self.assertFalse(mock_func.called)
 
     @patch("contact.models.PhoneNumberManager.send_sms")
-    def test_process_send_sms__sms_is_not_type_cell_(self, mock_func):
-        personal_sms_type = create_phone_number_type(PhoneNumberType.TELEPHONE)
-        create_contact(PhoneNumber, self.person, personal_sms_type)
-        # clear log
-        with open(settings.LOGGING_INFO_FILE, 'w'): pass
-
-        PhoneNumber.objects.process_send_sms(self.ticket, self.action, self.event.key)
-
-        self.assertFalse(mock_func.called)
-        # Log
-        with open(settings.LOGGING_INFO_FILE, 'r') as f:
-            content = f.read()
-        # self.assertIn("Person: {person.id}; Fullname: {person.fullname} not sent SMS " \
-        #               "because has no CELL phone number on file, for SMS with body: {body}"
-        #               .format(person=self.person, body=self.action.content['body']), content)
-
-    @patch("contact.models.PhoneNumberManager.send_sms")
-    def test_process_send_sms__sms_is_type_cell(self, mock_func):
-        work_sms_type = create_phone_number_type(PhoneNumberType.CELL)
+    def test_process_send_sms__send_sms_called(self, mock_func):
+        work_sms_type = create_phone_number_type(PhoneNumberType.TELEPHONE)
         phone = create_contact(PhoneNumber, self.person, work_sms_type)
         self.action.content.update({
             'body': "Priority {{ticket.priority}} to view the ticket go to {{ticket.url}}"
@@ -148,6 +134,35 @@ class PhoneNumberManagerTests(TestCase):
                         mock_func.call_args_list[1][0][0]]
         self.assertIn(person_phone, phone_call_args)
         self.assertIn(person_two_phone, phone_call_args)
+
+    @patch("contact.models.PhoneNumberManager.send_sms")
+    def test_process_send_sms__ticket_activity_is_created(self, mock_func):
+        # 1 recipient has 2 sms phs
+        cell_sms_type = create_phone_number_type(PhoneNumberType.CELL)
+        office_sms_type = create_phone_number_type(PhoneNumberType.OFFICE)
+        create_contact(PhoneNumber, self.person, cell_sms_type)
+        create_contact(PhoneNumber, self.person, office_sms_type)
+        # 2nd recipient just 1 sms ph
+        role = Role.objects.get(id=self.action.content['recipients'][1]['id'])
+        person_two = create_single_person()
+        person_two.role = role
+        person_two.save()
+        person_two.locations.add(self.ticket.location)
+        person_two_phone = create_contact(PhoneNumber, person_two, cell_sms_type)
+        # pre-test
+        init_count = TicketActivity.objects.count()
+
+        PhoneNumber.objects.process_send_sms(self.ticket, self.action, self.event.key)
+
+        # send_sms is called 3x, but only 2 People records are logged
+        # because each should be unique
+        self.assertEqual(mock_func.call_count, 3)
+        self.assertEqual(TicketActivity.objects.count(), init_count+1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, TicketActivityType.SEND_SMS)
+        self.assertEqual(activity.ticket, self.ticket)
+        self.assertIsNone(activity.person)
+        self.assertEqual(sorted(activity.content), sorted([str(self.person.id), str(person_two.id)]))
 
 
 class PhoneNumberTests(TestCase):

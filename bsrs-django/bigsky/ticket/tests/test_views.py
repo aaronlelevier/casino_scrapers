@@ -732,6 +732,19 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['results'][0]['content'][0]['id'], str(person.id))
         self.assertEqual(data['results'][0]['content'][0]['fullname'], person.fullname)
 
+    def test_send_sms(self):
+        person = create_single_person()
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.SEND_SMS,
+                                                 content=[str(person.id)])
+
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+        self.assertEqual(data['results'][0]['content'][0]['id'], str(person.id))
+        self.assertEqual(data['results'][0]['content'][0]['fullname'], person.fullname)
+
 
 class TicketAndTicketActivityTests(APITestCase):
 

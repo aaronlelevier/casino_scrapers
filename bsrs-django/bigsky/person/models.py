@@ -308,7 +308,7 @@ class PersonQuerySet(BaseQuerySet):
                            role_name=F('role__name'))
 
     def get_sms_recipients(self, tenant, keyword):
-        qs = (self.filter(role__tenant=tenant, phone_numbers__type__name=PhoneNumberType.CELL)
+        qs = (self.filter(role__tenant=tenant, phone_numbers__isnull=False)
                   .prefetch_related('phone_numbers'))
 
         if keyword:

@@ -18,6 +18,8 @@ class TicketActivityToRepresentation(object):
                 self.set_assignee_data()
             elif self.type.name == TicketActivityType.SEND_EMAIL:
                 self.set_person_data()
+            elif self.type.name == TicketActivityType.SEND_SMS:
+                self.set_person_data()
             elif self.type.name == TicketActivityType.CC_ADD:
                 self.set_person_list_data_with_key(key='added')
             elif self.type.name == TicketActivityType.CC_REMOVE:

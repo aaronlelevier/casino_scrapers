@@ -97,6 +97,12 @@ class EmailAndSmsMixin(object):
 
         return result_list.distinct()
 
+    def create_ticket_activity(self, type_name, ticket, person_ids):
+        TicketActivity = get_model_class("ticketactivity")
+        TicketActivityType = get_model_class("ticketactivitytype")
+        activity_type = TicketActivityType.objects.get(name=type_name)
+        TicketActivity.objects.create(ticket=ticket, type=activity_type, content=list(person_ids))
+
 
 class PhoneNumberType(BaseNameOrderModel):
     TELEPHONE = 'admin.phonenumbertype.telephone'
@@ -124,18 +130,20 @@ class PhoneNumberManager(EmailAndSmsMixin, BaseManager):
 
     def process_send_sms(self, ticket, action, event):
         Person = get_model_class("person")
+        sent_sms_person_ids = set()
 
         for person in self.get_recipients(action, ticket):
-            try:
-                ph = person.phone_numbers.get(type__name=PhoneNumberType.CELL)
-            except PhoneNumber.DoesNotExist:
-                logger.info("Person: {person.id}; Fullname: {person.fullname} not sent SMS " \
-                            "because has no CELL phone number on file, for SMS with body: {body}"
-                            .format(person=person, body=action.content['body']))
-            else:
+
+            for ph in person.phone_numbers.all():
+                sent_sms_person_ids.update([str(person.id)])
+
                 interpolate = Interpolate(ticket, person.locale.translation_, event=event)
                 body = interpolate.text(action.content.get('body', ''))
                 self.send_sms(ph, body)
+
+        TicketActivityType = get_model_class("ticketactivitytype")
+        self.create_ticket_activity(TicketActivityType.SEND_SMS, ticket, sent_sms_person_ids)
+
 
     def send_sms(self, ph, body):
         """
@@ -309,13 +317,8 @@ class EmailManager(EmailAndSmsMixin, BaseManager):
                 self.send_email(email, subject, html_content=html_content,
                                 text_content=text_content)
 
-        self._create_send_email_activity(ticket, sent_email_person_ids)
-
-    def _create_send_email_activity(self, ticket, person_ids):
-        TicketActivity = get_model_class("ticketactivity")
         TicketActivityType = get_model_class("ticketactivitytype")
-        activity_type = TicketActivityType.objects.get(name=TicketActivityType.SEND_EMAIL)
-        TicketActivity.objects.create(ticket=ticket, type=activity_type, content=list(person_ids))
+        self.create_ticket_activity(TicketActivityType.SEND_EMAIL, ticket, sent_email_person_ids)
 
     def send_email(self, email, subject, html_content, text_content):
         """
