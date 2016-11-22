@@ -1,22 +1,23 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
+import { ACTION_SEND_EMAIL, ACTION_SEND_SMS, ACTION_ASSIGNEE, ACTION_PRIORITY, ACTION_STATUS, ACTION_TICKET_REQUEST, ACTION_TICKET_CC } from 'bsrs-ember/models/automation-action';
 
 export function automationAction(params/*, hash*/) {
   if (params[0]) {
     switch (params[0].get('key')) {
-      case 'automation.actions.ticket_assignee':
+      case ACTION_ASSIGNEE:
         return 'tickets/ticket-assignee-select';
-      case 'automation.actions.ticket_priority':
+      case ACTION_PRIORITY:
         return 'tickets/ticket-priority-select-action';
-      case 'automation.actions.ticket_status':
+      case ACTION_STATUS:
         return 'tickets/ticket-status-select-action';
-      case 'automation.actions.send_email':
+      case ACTION_SEND_EMAIL:
         return 'automations/sendemail-action';
-      case 'automation.actions.send_sms':
+      case ACTION_SEND_SMS:
         return 'automations/sendsms-action';
-      case 'automation.actions.ticket_request':
+      case ACTION_TICKET_REQUEST:
         return 'tickets/ticket-request-select-action';
-      case 'automation.actions.ticket_cc':
+      case ACTION_TICKET_CC:
         return 'tickets/ticket-cc-select-action';
     }
   }

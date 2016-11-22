@@ -119,3 +119,11 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     });
   }
 });
+
+export const ACTION_SEND_EMAIL = 'automation.actions.send_email';
+export const ACTION_SEND_SMS = 'automation.actions.send_sms';
+export const ACTION_ASSIGNEE = 'automation.actions.ticket_assignee';
+export const ACTION_PRIORITY = 'automation.actions.ticket_priority';
+export const ACTION_STATUS = 'automation.actions.ticket_status';
+export const ACTION_TICKET_REQUEST = 'automation.actions.ticket_request';
+export const ACTION_TICKET_CC = 'automation.actions.ticket_cc';
