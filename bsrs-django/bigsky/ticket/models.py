@@ -203,7 +203,7 @@ class Ticket(BaseModel):
         return " - ".join(x['name'] for x in sorted(categories, key=lambda k: k['level']))
 
 
-class TicketActivityType(BaseNameModel):
+class TicketActivityType(BaseModel):
     CREATE = 'create'
     ASSIGNEE = 'assignee'
     CC_ADD = 'cc_add'
@@ -213,6 +213,8 @@ class TicketActivityType(BaseNameModel):
     CATEGORIES = 'categories'
     COMMENT = 'comment'
     ATTACHMENT_ADD = 'attachment_add'
+    SEND_EMAIL = 'send_email'
+    SEND_SMS = 'send_sms'
 
     ALL = [
         CREATE,
@@ -223,9 +225,12 @@ class TicketActivityType(BaseNameModel):
         PRIORITY,
         CATEGORIES,
         COMMENT,
-        ATTACHMENT_ADD
+        ATTACHMENT_ADD,
+        SEND_EMAIL,
+        SEND_SMS
     ]
 
+    name = models.CharField(max_length=100, unique=True, choices=[(x,x) for x in ALL])
     weight = models.PositiveIntegerField(blank=True, default=1)
 
 
@@ -234,11 +239,11 @@ class TicketActivity(models.Model):
     Log table for all Activities related to the Ticket.
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    created = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(auto_now_add=True, db_index=True)
     type = models.ForeignKey(TicketActivityType, blank=True, null=True)
     ticket = models.ForeignKey(Ticket, related_name="activities")
-    person = models.ForeignKey(Person, related_name="ticket_activities",
-        help_text="Person who did the TicketActivity")
+    person = models.ForeignKey(Person, null=True, related_name="ticket_activities",
+        help_text="Person who did the TicketActivity. NULL would be a system recoreded Activity")
     content = JSONField(blank=True, null=True)
 
     class Meta:

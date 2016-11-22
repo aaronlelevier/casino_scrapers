@@ -316,6 +316,14 @@ class TicketTests(TestCase):
         )
 
 
+class TicketActivityTypeTests(TestCase):
+
+    def test_name__choices(self):
+        field = TicketActivityType._meta.get_field('name')
+        self.assertEqual([(a) for a,b in field.choices], TicketActivityType.ALL)
+        self.assertEqual(len(TicketActivityType.ALL), 11)
+
+
 class TicketActivityTests(TestCase):
 
     def setUp(self):

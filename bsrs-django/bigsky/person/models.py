@@ -317,8 +317,7 @@ class PersonQuerySet(BaseQuerySet):
         return qs
 
     def get_email_recipients(self, tenant, keyword):
-        qs = (self.filter(role__tenant=tenant, emails__isnull=False,
-                          emails__type__name=EmailType.WORK)
+        qs = (self.filter(role__tenant=tenant, emails__isnull=False)
                   .prefetch_related('emails'))
 
         if keyword:

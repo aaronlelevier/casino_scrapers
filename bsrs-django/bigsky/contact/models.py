@@ -276,10 +276,13 @@ class EmailManager(EmailAndSmsMixin, BaseManager):
             the automation
         """
         Person = get_model_class("person")
+        sent_email_person_ids = set()
 
         for person in self.get_recipients(action, ticket):
 
-            for email in person.emails.filter(type__name=EmailType.WORK):
+            for email in person.emails.all():
+                sent_email_person_ids.update([str(person.id)])
+
                 interpolate = Interpolate(ticket, person.locale.translation_, event=event)
 
                 subject = interpolate.text(action.content.get('subject', ''))
@@ -305,6 +308,14 @@ class EmailManager(EmailAndSmsMixin, BaseManager):
 
                 self.send_email(email, subject, html_content=html_content,
                                 text_content=text_content)
+
+        self._create_send_email_activity(ticket, sent_email_person_ids)
+
+    def _create_send_email_activity(self, ticket, person_ids):
+        TicketActivity = get_model_class("ticketactivity")
+        TicketActivityType = get_model_class("ticketactivitytype")
+        activity_type = TicketActivityType.objects.get(name=TicketActivityType.SEND_EMAIL)
+        TicketActivity.objects.create(ticket=ticket, type=activity_type, content=list(person_ids))
 
     def send_email(self, email, subject, html_content, text_content):
         """

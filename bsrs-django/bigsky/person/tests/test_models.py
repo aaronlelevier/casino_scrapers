@@ -355,18 +355,18 @@ class PersonManagerTests(TestCase):
         person_two = create_single_person()
         person_three = create_single_person()
         # person 1 - valid - same tenant, has an email
-        email_type_work = create_email_type(EmailType.WORK)
+        email_type_work = create_email_type(EmailType.PERSONAL)
         create_contact(Email, person_one, email_type_work)
         self.assertEqual(person_one.role.tenant, self.person.role.tenant)
         self.assertTrue(person_one.emails.exists())
-        # person 2 - invalid - diff tenant
+        # person 2 - invalid - diff tenant, has email
         create_contact(Email, person_two)
         tenant_two = get_or_create_tenant('foo')
         person_two.role.tenant = tenant_two
         person_two.role.save()
         self.assertNotEqual(person_two.role.tenant, self.person.role.tenant)
         self.assertTrue(person_two.emails.exists())
-        # person 3 - invalid - no email
+        # person 3 - invalid - same tenant, no email
         self.assertEqual(person_three.role.tenant, self.person.role.tenant)
         self.assertFalse(person_three.emails.exists())
 
