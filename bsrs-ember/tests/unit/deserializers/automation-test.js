@@ -66,8 +66,7 @@ test('deserialize single - no locale cache to start', assert => {
 });
 
 test('deserialize single - status - no existing', assert => {
-  const json = AF.detail();
-  json.actions[0].status = { id: TSD.idOne, name: TSD.nameOne };
+  const json = AF.detail(AD.idOne, { type: 'status', id: TSD.idOne, name: TSD.nameOne });
   run(() => {
     deserializer.deserialize(json, AD.idOne);
   });
@@ -97,8 +96,7 @@ test('deserialize single - status - existing with same id', assert => {
   assert.equal(automation.get('action').objectAt(0).get('status').get('id'), TSD.idOne);
   assert.equal(automation.get('action').objectAt(0).get('status').get('name'), TSD.nameOne);
   // deserialize
-  const json = AF.detail();
-  json.actions[0].status = { id: TSD.idOne, name: TSD.nameOne };
+  const json = AF.detail(AD.idOne, { type: 'status', id: TSD.idOne, name: TSD.nameOne });
   run(() => {
     deserializer.deserialize(json, AD.idOne);
   });
@@ -129,8 +127,7 @@ test('deserialize single - status - different id', assert => {
   assert.equal(automation.get('action').objectAt(0).get('status').get('id'), TSD.idOne);
   assert.equal(automation.get('action').objectAt(0).get('status').get('name'), TSD.keyOne);
   // deserialize
-  const json = AF.detail();
-  json.actions[0].status = { id: TSD.idTwo, name: TSD.nameTwo };
+  const json = AF.detail(AD.idOne, { type: 'status', id: TSD.idTwo, name: TSD.nameTwo });
   run(() => {
     deserializer.deserialize(json, AD.idOne);
   });
@@ -733,9 +730,8 @@ test('existing automation w/ pf and get same pf', assert => {
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('deserialize single - priority - no existing', assert => {
-  const json = AF.detail();
-  json.actions[0].priority = { id: TPD.idOne, name: TPD.nameOne };
+test('scott deserialize single - priority - no existing', assert => {
+  const json = AF.detail(AD.idOne, { type: 'priority', id: TPD.idOne, name: TPD.nameOne });
   run(() => {
     deserializer.deserialize(json, AD.idOne);
   });
@@ -765,8 +761,7 @@ test('deserialize single - priority - existing with same id', assert => {
   assert.equal(automation.get('action').objectAt(0).get('priority').get('id'), TPD.idOne);
   assert.equal(automation.get('action').objectAt(0).get('priority').get('name'), TPD.nameOne);
   // deserialize
-  const json = AF.detail();
-  json.actions[0].priority = { id: TPD.idOne, name: TPD.nameOne };
+  const json = AF.detail(AD.idOne, { type: 'priority', id: TPD.idOne, name: TPD.nameOne });
   run(() => {
     deserializer.deserialize(json, AD.idOne);
   });
@@ -797,8 +792,7 @@ test('deserialize single - priority - different id', assert => {
   assert.equal(automation.get('action').objectAt(0).get('priority').get('id'), TPD.idOne);
   assert.equal(automation.get('action').objectAt(0).get('priority').get('name'), TPD.keyOne);
   // deserialize
-  const json = AF.detail();
-  json.actions[0].priority = { id: TPD.idTwo, name: TPD.nameTwo };
+  const json = AF.detail(AD.idOne, { type: 'priority', id: TPD.idTwo, name: TPD.nameTwo });
   run(() => {
     deserializer.deserialize(json, AD.idOne);
   });

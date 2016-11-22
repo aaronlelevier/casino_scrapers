@@ -13,9 +13,9 @@ var BSRS_automation_FACTORY = (function() {
     this.sendsms = sendsms;
     this.config = config;
   };
-  factory.prototype.generate = function(i) {
+  factory.prototype.generate = function(i, actionType) {
     var id = i || this.automation.idOne;
-    return {
+    var payload = {
       id: id,
       description: this.automation.descriptionOne,
       // TODO: these are pfilters which should just be the actual filter models. ie. Ticket-Prority
@@ -30,10 +30,6 @@ var BSRS_automation_FACTORY = (function() {
             id: this.actionType.idOne,
             key: this.actionType.keyOne
           },
-          assignee: {
-            id: this.person.idOne,
-            fullname: this.person.fullname
-          }
         },
       ],
       filters: [{
@@ -45,6 +41,14 @@ var BSRS_automation_FACTORY = (function() {
         lookups: {},
       }]
     };
+    // dynamically pass action type for deserializer tests
+    if (actionType) {
+      payload.actions[0][actionType.type] = { id: actionType.id, name: actionType.name };
+    } else { 
+      // otherwise set to assignee
+      payload.actions[0]['assignee'] = { id: this.person.idOne, fullname: this.person.fullname };
+    }
+    return payload;
   };
   factory.prototype.generate_put = function(i) {
     var id = i || this.automation.idOne;
@@ -70,8 +74,8 @@ var BSRS_automation_FACTORY = (function() {
       }]
     };
   };
-  factory.prototype.detail = function(id) {
-    return this.generate(id);
+  factory.prototype.detail = function(id, actionType) {
+    return this.generate(id, actionType);
   };
   factory.prototype.put = function(automation) {
     var id = automation && automation.id || this.automation.idOne;
