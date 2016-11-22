@@ -29,6 +29,12 @@ export default Ember.Object.extend(OptConf, {
       return this._deserializeList(response);
     }
   },
+  extractActionsBelongsTo(action, extracted_obj, nested_string) {
+    const nested = action[nested_string];
+    delete action[nested_string];
+    extracted_obj[action.id] = nested;
+    action[`${nested_string}_fk`] = nested.id;
+  },
   _deserializeSingle(response) {
     const store = this.get('simpleStore');
     // extract criteria
@@ -62,37 +68,26 @@ export default Ember.Object.extend(OptConf, {
       actions.forEach((a) => {
         // type
         const type = a.type;
-        delete a.type;
-        actionTypes[a.id] = type;
-        a.type_fk = type.id;
+        this.extractActionsBelongsTo(a, actionTypes, 'type');
+        // delete a.type;
+        // actionTypes[a.id] = type;
+        // a.type_fk = type.id;
 
         /* START ACTION TYPE PROCESSING */
-        // assignee
+
         if (a.assignee) {
-          const assignee = a.assignee;
-          delete a.assignee;
-          assignees[a.id] = assignee;
-          a.assignee_fk = assignee.id;
+          this.extractActionsBelongsTo(a, assignees, 'assignee');
         }
-        // ticketcc
         if (a.ccs) {
           const ticketcc = a.ccs;
           delete a.ccs;
           ticketccs[a.id] = ticketcc;
         }
-        // priority
         if (a.priority) {
-          const priority = a.priority;
-          delete a.priority;
-          priorities[a.id] = priority;
-          a.priority_fk = priority.id;
+          this.extractActionsBelongsTo(a, priorities, 'priority');
         }
-        //status
         if(a.status) {
-          const status = a.status;
-          delete a.status;
-          statuses[a.id] = status;
-          a.status_fk = status.id;
+          this.extractActionsBelongsTo(a, statuses, 'status');
         }
 
         //sendemail - delete recipients, type, body, subject (re-assign) and gen up uuid for send_email model
