@@ -144,14 +144,17 @@ class AutomationManager(BaseManager):
             elif key == AutomationActionType.TICKET_REQUEST:
                 ticket.request = '{}\n{}'.format(ticket.request, action.content['request'])
             elif key == AutomationActionType.TICKET_CC:
-                existing_ccs = set([str(x['id']) for x in ticket.cc.values('id')])
-                action_ccs = set([str(x) for x in action.content['ccs']])
-                # TODO: AARON - this is causing errors
-                # new_ccs = action_ccs - existing_ccs
-                # if new_ccs:
-                #     people = Person.objects.filter(id__in=new_ccs)
-                #     for p in people:
-                #         ticket.cc.add(p)
+                # Only process on existing tickets. If a ticket is created for the first time,
+                # don't need to diff the ccs. If proccessed before initial save, trying to
+                # add ccs to a ticket that isn't in the db yet will cause an IntegrityError
+                if ticket.created:
+                    existing_ccs = set([str(x['id']) for x in ticket.cc.values('id')])
+                    action_ccs = set([str(x) for x in action.content['ccs']])
+                    new_ccs = action_ccs - existing_ccs
+                    if new_ccs:
+                        people = Person.objects.filter(id__in=new_ccs)
+                        for p in people:
+                            ticket.cc.add(p)
 
 
 class Automation(BaseModel):

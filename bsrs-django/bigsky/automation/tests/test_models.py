@@ -278,9 +278,8 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
         Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
 
-        # AARON: not working b/c commented out
-        # self.assertEqual(self.ticket.cc.count(), 2)
-        # self.assertIn(person, self.ticket.cc.all())
+        self.assertEqual(self.ticket.cc.count(), 2)
+        self.assertIn(person, self.ticket.cc.all())
 
 
 class AutomationTests(SetupMixin, TestCase):
