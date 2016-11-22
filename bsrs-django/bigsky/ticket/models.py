@@ -7,6 +7,7 @@ from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import JSONField
 
+from automation import tasks
 from category.models import Category
 from generic.models import Attachment
 from location.models import Location
@@ -178,9 +179,10 @@ class Ticket(BaseModel):
     class Meta:
         ordering = ('-created',)
 
-    def save(self, *args, **kwargs):
-        self._process_ticket_if_new()
+    def save(self, process_automations=True, *args, **kwargs):
         super(Ticket, self).save(*args, **kwargs)
+        if process_automations:
+            self._process_ticket_if_new()
 
     def _process_ticket_if_new(self):
         if not self.deleted and self.status.name == TicketStatus.NEW:
@@ -189,8 +191,7 @@ class Ticket(BaseModel):
                                  ticket=self, event=AutomationEvent.STATUS_NEW)
 
     def _process_ticket(self, tenant_id, ticket, event):
-        Automation = apps.get_model("automation", "automation")
-        Automation.objects.process_ticket(tenant_id, ticket, event)
+        tasks.process_ticket.delay(tenant_id, ticket, event)
 
     @property
     def category(self):
@@ -234,7 +235,24 @@ class TicketActivityType(BaseModel):
     weight = models.PositiveIntegerField(blank=True, default=1)
 
 
-class TicketActivity(models.Model):
+class TicketActivityQuerySet(BaseQuerySet):
+
+    def filter_out_unsupported_types(self):
+        return (self.exclude(type__name__in=[TicketActivityType.REQUEST, TicketActivityType.SEND_EMAIL,
+                                             TicketActivityType.SEND_SMS])
+                    .exclude(type__name=TicketActivityType.ASSIGNEE, content__contains={'from':None})
+                    .exclude(person__isnull=True))
+
+
+class TicketActivityManager(BaseManager):
+
+    queryset_cls = TicketActivityQuerySet
+
+    def filter_out_unsupported_types(self):
+        return self.get_queryset().filter_out_unsupported_types()
+
+
+class TicketActivity(BaseModel):
     """
     Log table for all Activities related to the Ticket.
     """
@@ -245,6 +263,8 @@ class TicketActivity(models.Model):
     person = models.ForeignKey(Person, null=True, related_name="ticket_activities",
         help_text="Person who did the TicketActivity. NULL would be a system recoreded Activity")
     content = JSONField(blank=True, null=True)
+
+    objects = TicketActivityManager()
 
     class Meta:
         ordering = ('-created',)

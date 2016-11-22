@@ -73,7 +73,8 @@ class TicketActivityViewSet(BaseModelViewSet):
         # custom: start
         pk = kwargs.get('pk', None)
         if pk:
-            queryset = queryset.filter(ticket=pk)
+            queryset = (queryset.filter(ticket=pk)
+                                .filter_out_unsupported_types())
         # custom: end
         page = self.paginate_queryset(queryset)
         if page is not None:

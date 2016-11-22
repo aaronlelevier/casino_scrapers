@@ -127,6 +127,8 @@ class AutomationManager(BaseManager):
             if match:
                 self.process_actions(automation, ticket, event)
 
+        ticket.save(process_automations=False)
+
     def process_actions(self, automation, ticket, event):
         for action in automation.actions.all():
             key = action.type.key
@@ -152,9 +154,26 @@ class AutomationManager(BaseManager):
                     action_ccs = set([str(x) for x in action.content['ccs']])
                     new_ccs = action_ccs - existing_ccs
                     if new_ccs:
-                        people = Person.objects.filter(id__in=new_ccs)
-                        for p in people:
-                            ticket.cc.add(p)
+                        people = Person.objects.filter(id__in=list(new_ccs))
+                        ticket.cc.set([p for p in people])
+                        self._log_ticket_cc_add_activity(ticket, new_ccs)
+
+    def _log_from_to_activity(self, type_name, ticket, from_obj, to_obj):
+        activity_type = TicketActivityType.objects.get(name=type_name)
+        TicketActivity.objects.create(type=activity_type, ticket=ticket,
+                                      content={'from': str(from_obj.id) if from_obj else None,
+                                               'to': str(to_obj.id) if to_obj else None})
+
+    def _log_ticket_request_activity(self, ticket, request):
+        activity_type = TicketActivityType.objects.get(name=TicketActivityType.REQUEST)
+        TicketActivity.objects.create(type=activity_type, ticket=ticket,
+                                      content={'added': request})
+
+    def _log_ticket_cc_add_activity(self, ticket, new_ccs):
+        activity_type = TicketActivityType.objects.get(name=TicketActivityType.CC_ADD)
+        new_ccs_dict = {str(i): cc for i,cc in enumerate(new_ccs)}
+        TicketActivity.objects.create(type=activity_type, ticket=ticket,
+                                      content=new_ccs_dict)
 
 
 class Automation(BaseModel):
@@ -273,7 +292,7 @@ class AutomationFilter(BaseModel):
             return str(getattr(ticket, self.source.field).id) in self.criteria
         # categories
         elif isinstance(field_type, models.ManyToManyField):
-            category_ids = (str(x) for x in ticket.categories.values_list('id', flat=True))
+            category_ids = {str(x) for x in ticket.categories.values_list('id', flat=True)}
             return set(category_ids).intersection(set(self.criteria))
 
     def _is_address_match(self, ticket, related__id):

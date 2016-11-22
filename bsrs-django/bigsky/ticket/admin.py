@@ -29,4 +29,7 @@ class TicketActivityTypeAdmin(admin.ModelAdmin):
 
 @admin.register(models.TicketActivity)
 class TicketActivityAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('created', 'type_name', 'content',)
+
+    def type_name(self, obj):
+        return obj.type.name

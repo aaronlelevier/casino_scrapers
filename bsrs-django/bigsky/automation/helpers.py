@@ -6,7 +6,7 @@ from django.utils.html import strip_tags
 
 from premailer import transform
 
-from utils.helpers import KwargsAsObject, get_model_class
+from utils.helpers import KwargsAsObject
 
 
 class Interpolate(object):

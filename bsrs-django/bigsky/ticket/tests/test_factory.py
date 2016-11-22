@@ -5,8 +5,6 @@ from django.db.models import Max
 from django.utils.timezone import now
 from django.test import TestCase
 
-from model_mommy import mommy
-
 from category.models import Category
 from category.tests.factory import create_categories
 from dtd.tests.factory import create_dtd_fixture_data

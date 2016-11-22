@@ -17,9 +17,10 @@ from location.tests.factory import create_location
 from person.models import Role, Person
 from person.tests.factory import create_person, create_single_person
 from tenant.tests.factory import get_or_create_tenant
-from ticket.models import TicketActivity, TicketActivityType
+from ticket.models import Ticket, TicketStatus, TicketActivity, TicketActivityType
 from ticket.tests.factory import create_standard_ticket, create_ticket
 from translation.tests.factory import create_translation_keys_for_fixtures
+from utils.tests.test_helpers import create_default
 
 
 class StateManagerTests(TestCase):

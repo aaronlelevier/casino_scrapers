@@ -13,11 +13,12 @@ from location.models import LocationStatus
 from location.tests.factory import create_location
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketManager, TicketQuerySet, TicketStatus, TicketPriority,
-    TicketActivityType, TicketActivity,)
+    TicketActivityType, TicketActivity, TicketActivityManager,)
 from ticket.tests.factory_related import create_ticket_statuses, create_ticket_priorities
-from ticket.tests.factory import RegionManagerWithTickets, create_ticket, create_tickets
+from ticket.tests.factory import (RegionManagerWithTickets, create_ticket, create_tickets,
+    create_ticket_activity)
 from ticket.tests.mixins import TicketCategoryOrderingSetupMixin
-from utils.tests.test_helpers import create_default
+from utils.tests.test_helpers import create_default, clear_related
 
 
 class TicketStatusTests(TestCase):
@@ -281,6 +282,15 @@ class TicketTests(TestCase):
         self.assertEqual(Ticket._meta.ordering, ('-created',))
 
     @patch("ticket.models.Ticket._process_ticket")
+    def test_save__process_ticket__on_fresh_create_only_called_once(self, mock_func):
+        status_new = create_default(TicketStatus)
+        location = create_location()
+
+        mommy.make(Ticket, status=status_new, location=location)
+
+        self.assertEqual(mock_func.call_count, 1)
+
+    @patch("ticket.models.Ticket._process_ticket")
     def test_save__process_ticket__new_status(self, mock_func):
         # This is the only tiime that wee wan't the "process_ticket"
         # function to be called
@@ -304,10 +314,11 @@ class TicketTests(TestCase):
     def test_category(self):
         # categories - are joined directly onto the Ticket, but do
         # need the parent/child relationship in order to setup level
-        parent = self.ticket.categories.first()
+        clear_related(self.ticket, 'categories')
+        parent = create_single_category()
         child = create_single_category(parent=parent)
         grand_child = create_single_category(parent=child)
-        self.ticket.categories.add(child, grand_child)
+        self.ticket.categories.add(parent, child, grand_child)
         self.assertEqual(self.ticket.categories.count(), 3)
 
         self.assertEqual(
@@ -434,3 +445,38 @@ class TicketCategoryOrderingTests(TicketCategoryOrderingSetupMixin, TestCase):
             " - ".join(ordered_categories),
             "Loss Prevention - Locks - Drawer Lock"
         )
+
+
+class TicketActivityManagerTests(TestCase):
+
+    def setUp(self):
+        create_categories()
+        self.person = create_single_person()
+        self.ticket = create_ticket()
+
+    def test_filter_out_unsupported_frontent_types(self):
+        person = create_single_person()
+        a = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.REQUEST)
+        b = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.ASSIGNEE,
+                                   content={'from': None, 'to': str(person.id)})
+        c = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.SEND_EMAIL,
+                                   content=[str(person.id)])
+        d = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.SEND_SMS,
+                                   content=[str(person.id)])
+        e = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.COMMENT)
+        e.person = None
+        e.save()
+
+        ret = TicketActivity.objects.filter_out_unsupported_types()
+
+        self.assertNotIn(a, ret.all())
+        self.assertNotIn(b, ret.all())
+        self.assertNotIn(c, ret.all())
+        self.assertNotIn(d, ret.all())
+        self.assertNotIn(e, ret.all())
+
+
+class TicketActivityTests(TestCase):
+
+    def test_manager(self):
+        self.assertIsInstance(TicketActivity.objects, TicketActivityManager)

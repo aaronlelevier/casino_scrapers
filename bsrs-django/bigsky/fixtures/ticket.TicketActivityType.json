@@ -1,76 +1,10 @@
 [
 {
   "model": "ticket.ticketactivitytype",
-  "pk": "0fe9df06-da54-4f59-a7ea-779e83dbbef9",
+  "pk": "09722f01-6fc5-4492-a79e-1921e23ad541",
   "fields": {
-    "created": "2016-05-06T21:06:56.215Z",
-    "modified": "2016-05-06T21:06:56.215Z",
-    "deleted": null,
-    "name": "assignee",
-    "weight": 1
-  }
-},
-{
-  "model": "ticket.ticketactivitytype",
-  "pk": "1ebd466a-3730-4ebe-bdfd-6b045d47c160",
-  "fields": {
-    "created": "2016-05-06T21:06:56.218Z",
-    "modified": "2016-05-06T21:06:56.218Z",
-    "deleted": null,
-    "name": "cc_remove",
-    "weight": 1
-  }
-},
-{
-  "model": "ticket.ticketactivitytype",
-  "pk": "712f08cc-d69e-4ced-bcf5-0bf0361b6c7a",
-  "fields": {
-    "created": "2016-05-06T21:06:56.211Z",
-    "modified": "2016-05-06T21:06:56.211Z",
-    "deleted": null,
-    "name": "create",
-    "weight": 1
-  }
-},
-{
-  "model": "ticket.ticketactivitytype",
-  "pk": "781624e0-fd12-46b3-80aa-a52cc81e65f4",
-  "fields": {
-    "created": "2016-05-06T21:06:56.220Z",
-    "modified": "2016-05-06T21:06:56.220Z",
-    "deleted": null,
-    "name": "status",
-    "weight": 1
-  }
-},
-{
-  "model": "ticket.ticketactivitytype",
-  "pk": "92596f0c-0d6f-46ce-afa8-4343b9b6b6a5",
-  "fields": {
-    "created": "2016-05-06T21:06:56.224Z",
-    "modified": "2016-05-06T21:06:56.224Z",
-    "deleted": null,
-    "name": "categories",
-    "weight": 1
-  }
-},
-{
-  "model": "ticket.ticketactivitytype",
-  "pk": "abd5a3ac-e461-461e-95d2-5c1d8bdffa14",
-  "fields": {
-    "created": "2016-05-06T21:06:56.225Z",
-    "modified": "2016-05-06T21:06:56.225Z",
-    "deleted": null,
-    "name": "comment",
-    "weight": 1
-  }
-},
-{
-  "model": "ticket.ticketactivitytype",
-  "pk": "ad41ac2b-6d47-4087-abdc-e5f8d1c08738",
-  "fields": {
-    "created": "2016-05-06T21:06:56.222Z",
-    "modified": "2016-05-06T21:06:56.222Z",
+    "created": "2016-11-21T19:16:14.611Z",
+    "modified": "2016-11-21T19:16:14.612Z",
     "deleted": null,
     "name": "priority",
     "weight": 1
@@ -78,10 +12,87 @@
 },
 {
   "model": "ticket.ticketactivitytype",
-  "pk": "e912409c-5f4d-4911-bb31-0837db896806",
+  "pk": "0c145f14-c68c-4c79-ac73-8c14d16bfd27",
   "fields": {
-    "created": "2016-05-06T21:06:56.227Z",
-    "modified": "2016-05-06T21:06:56.227Z",
+    "created": "2016-11-21T19:16:14.605Z",
+    "modified": "2016-11-21T19:16:14.605Z",
+    "deleted": null,
+    "name": "assignee",
+    "weight": 1
+  }
+},
+{
+  "model": "ticket.ticketactivitytype",
+  "pk": "227b69db-6864-405c-94f3-9a6343345bab",
+  "fields": {
+    "created": "2016-11-23T01:44:07.718Z",
+    "modified": "2016-11-23T01:44:07.718Z",
+    "deleted": null,
+    "name": "send_sms",
+    "weight": 1
+  }
+},
+{
+  "model": "ticket.ticketactivitytype",
+  "pk": "27c896f2-d31e-4e71-b659-3878b06fc75b",
+  "fields": {
+    "created": "2016-11-23T01:44:07.715Z",
+    "modified": "2016-11-23T01:44:07.715Z",
+    "deleted": null,
+    "name": "send_email",
+    "weight": 1
+  }
+},
+{
+  "model": "ticket.ticketactivitytype",
+  "pk": "31ce4d39-845f-4eb6-b72a-ed83ebcba7e1",
+  "fields": {
+    "created": "2016-11-21T19:16:14.615Z",
+    "modified": "2016-11-21T19:16:14.615Z",
+    "deleted": null,
+    "name": "comment",
+    "weight": 1
+  }
+},
+{
+  "model": "ticket.ticketactivitytype",
+  "pk": "582ded63-1140-4b54-b9ef-e4b007e996e2",
+  "fields": {
+    "created": "2016-11-21T19:16:14.603Z",
+    "modified": "2016-11-21T19:16:14.603Z",
+    "deleted": null,
+    "name": "create",
+    "weight": 1
+  }
+},
+{
+  "model": "ticket.ticketactivitytype",
+  "pk": "6515b501-8a8b-4de6-9eeb-b6294d7c4f61",
+  "fields": {
+    "created": "2016-11-21T19:16:14.608Z",
+    "modified": "2016-11-21T19:16:14.608Z",
+    "deleted": null,
+    "name": "cc_remove",
+    "weight": 1
+  }
+},
+{
+  "model": "ticket.ticketactivitytype",
+  "pk": "81b5b844-05f7-4caa-abff-185f75be7601",
+  "fields": {
+    "created": "2016-11-21T19:16:14.607Z",
+    "modified": "2016-11-21T19:16:14.607Z",
+    "deleted": null,
+    "name": "cc_add",
+    "weight": 1
+  }
+},
+{
+  "model": "ticket.ticketactivitytype",
+  "pk": "a93fc2fb-df71-4d02-8a6f-6db83f148a58",
+  "fields": {
+    "created": "2016-11-21T19:16:14.616Z",
+    "modified": "2016-11-21T19:16:14.616Z",
     "deleted": null,
     "name": "attachment_add",
     "weight": 1
@@ -89,12 +100,23 @@
 },
 {
   "model": "ticket.ticketactivitytype",
-  "pk": "ee8530ff-623b-4593-8011-d05f6ae358fd",
+  "pk": "c0eeef0b-bc75-4646-beba-d33d53549b50",
   "fields": {
-    "created": "2016-05-06T21:06:56.216Z",
-    "modified": "2016-05-06T21:06:56.216Z",
+    "created": "2016-11-21T19:16:14.613Z",
+    "modified": "2016-11-21T19:16:14.613Z",
     "deleted": null,
-    "name": "cc_add",
+    "name": "categories",
+    "weight": 1
+  }
+},
+{
+  "model": "ticket.ticketactivitytype",
+  "pk": "e72c3d94-b2ff-4ca5-8a36-18fc7c5a70cf",
+  "fields": {
+    "created": "2016-11-21T19:16:14.610Z",
+    "modified": "2016-11-21T19:16:14.610Z",
+    "deleted": null,
+    "name": "status",
     "weight": 1
   }
 }
