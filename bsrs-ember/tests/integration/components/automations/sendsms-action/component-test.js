@@ -50,7 +50,8 @@ test('it renders', function(assert) {
   assert.equal(page.actionSendEmailRecipientOne.replace(/\W/, '').trim(), action.get('sendsms').get('recipient').objectAt(0).get('fullname'));
 });
 
-skip('shows validation messages', function(assert) {
+test('shows validation messages', function(assert) {
+  const done = assert.async();
   this.model = action;
   this.index = 0;
   this.automationRepo = automation_repo;
@@ -70,7 +71,7 @@ skip('shows validation messages', function(assert) {
       assert.equal(Ember.$('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.sendsms.recipient'));
       assert.equal(Ember.$('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.sendsms.body'));
       this.$('.t-action-body0').val('this is the body').trigger('keyup');
-      run(() => { typeInSearch('a'); });
+      typeInSearch('a');
       return wait().
         then(() => {
           assert.equal($component2.hasClass('invalid'), false);
@@ -80,6 +81,7 @@ skip('shows validation messages', function(assert) {
           assert.equal(action.get('sendsms').get('recipient').objectAt(0).get('type'), 'person');
           assert.equal(this.$('.invalid').length, 0);
           assert.equal($component3.hasClass('invalid'), false);
+          done();
         });
     });
 });
