@@ -113,7 +113,7 @@
         {{#form-group title="ticket.label.status-name" for="status"}}
           {{power-select-foreign-key
             model=model
-            componentArg="tickets/ticket-status-tag-ps"
+            componentArg="tickets/ticket-status-tag"
             selected=model.status
             change_method="change_status"
             relatedModelName="ticket-status"
@@ -124,7 +124,7 @@
         {{#form-group title="ticket.label.priority-name" for="priority"}}
           {{power-select-foreign-key
             model=model
-            componentArg="tickets/ticket-priority-tag-ps"
+            componentArg="tickets/ticket-priority-tag"
             selected=model.priority
             change_method="change_priority"
             relatedModelName="ticket-priority"
