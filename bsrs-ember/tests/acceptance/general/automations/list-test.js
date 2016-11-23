@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { test } from 'qunit';
+import { test, skip } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
@@ -23,7 +23,7 @@ moduleForAcceptance('Acceptance | general automation list test', {
   },
 });
 
-test('can click automations from the Dashboard to grid and then to detail', assert => {
+skip('can click automations from the Dashboard to grid and then to detail', assert => {
   visit(BASEURLS.base_admin_url);
   andThen(() => {
     assert.equal(currentURL(), BASEURLS.base_admin_url);
