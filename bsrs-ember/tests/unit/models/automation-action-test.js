@@ -20,7 +20,7 @@ var store, action, actionType, type, assignee, priority, sendEmail, sendsms, tic
 
 moduleFor('model:automation-action', 'Unit | Model |  automation-action', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:generic-join-recipients', 'model:generic-join-recipients', 'model:person', 'model:related-person', 'model:ticket-priority', 'model:ticket-status', 'model:sendemail', 'model:sendsms', 'service:person-current', 'service:translations-fetcher','model:action-join-person', 'service:i18n', 'validator:presence','validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type', 'validator:belongs-to', 'validator:action-ticket-request', 'validator:action-ticketcc']);
+    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:generic-join-recipients', 'model:generic-join-recipients', 'model:person', 'model:related-person', 'model:ticket-priority', 'model:ticket-status', 'model:sendemail', 'model:sendsms', 'service:person-current', 'service:translations-fetcher','model:action-join-person', 'service:i18n', 'validator:presence','validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type', 'validator:belongs-to', 'validator:action-ticket-request', 'validator:action-ticketcc', 'validator:action-assignee']);
   }
 });
 
@@ -426,10 +426,13 @@ test('type validation - assignee - if the type is assignee, a related assignee i
   });
   assert.equal(action.get('validations.isValid'), false);
   action.change_type({id: ATD.idOne, key: ATD.keyOne});
-  action.change_assignee({id: PD.idOne});
+  assert.equal(action.get('type').get('id'), ATD.idOne);
+  assert.equal(action.get('validations.isValid'), false);
+  action.change_assignee({id: PD.idOne, fullname: ''});
+  assert.equal(action.get('validations.isValid'), false);
+  action.change_assignee({id: PD.idOne, fullname: 'wat'});
   assert.equal(action.get('validations.isValid'), true);
 });
-
 
 test('type validation - priority - if the type is priority, a related priority is required', assert => {
   run(() => {
@@ -479,7 +482,10 @@ test('type validation - ticketcc - if the type is ticketcc, a related ticketcc i
   });
   assert.equal(action.get('validations.isValid'), false);
   action.change_type({id: ATD.idOne, key: ATD.keySeven});
-  action.add_ticketcc({id: PD.idOne});
+  assert.equal(action.get('validations.isValid'), false);
+  action.add_ticketcc({id: PD.idOne, fullname: ''});
+  assert.equal(action.get('validations.isValid'), false);
+  action.add_ticketcc({id: PD.idOne, fullname: 'wat'});
   assert.equal(action.get('validations.isValid'), true);
 });
 

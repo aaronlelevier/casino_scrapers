@@ -11,6 +11,7 @@ import AD from 'bsrs-ember/vendor/defaults/automation';
 import AATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import ED from 'bsrs-ember/vendor/defaults/automation-event';
 import AF from 'bsrs-ember/vendor/automation_fixtures';
+import PD from 'bsrs-ember/vendor/defaults/person';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
@@ -200,6 +201,9 @@ test('validation - at least one event is required, each action must have a type'
   // set to type 'assignee', and should see an 'assignee required msg' b/c assignee not yet selected
   xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.list_action_types());
   selectChoose('.t-automation-action-type-select', AATD.keyOneTrans);
+  xhr(`${PEOPLE_URL}person__icontains=a/`, 'GET', null, {}, 200, PersonF.search_power_select());
+  selectSearch('.t-automation-action-assignee-select', 'a');
+  selectChoose('.t-automation-action-assignee-select', PD.fullnameBoy);
   andThen(() => {
     // btn not disabled
     assert.equal(page.actionTypeSelectedOne, AATD.keyOneTrans);

@@ -1,19 +1,13 @@
 import BaseValidator from 'ember-cp-validations/validators/base';
-import { ACTION_TICKET_CC } from 'bsrs-ember/models/automation-action';
+import { ACTION_ASSIGNEE } from 'bsrs-ember/models/automation-action';
 
-const ActionTicketcc = BaseValidator.extend({
+const ActionAssignee = BaseValidator.extend({
   validate(_value, _options, model, _attribute) {
-    if (model.get('type.key') !== ACTION_TICKET_CC) {
-      return true;
-    } else if (model.get('ticketcc').get('length') > 0 && !!model.get('ticketcc').objectAt(0).get('fullname')) {
-      return true;
-    } else {
-      return 'errors.automation.ticketcc';
-    }
+    return model.get('type.key') !== ACTION_ASSIGNEE ? true : model.get('assignee.fullname') ? true : 'errors.automation.assignee';
   }
 });
 
-ActionTicketcc.reopenClass({
+ActionAssignee.reopenClass({
   /**
    * Define attribute specific dependent keys for your validator
    *
@@ -31,4 +25,4 @@ ActionTicketcc.reopenClass({
   }
 });
 
-export default ActionTicketcc;
+export default ActionAssignee;

@@ -15,7 +15,12 @@ const Validations = buildValidations({
   }),
   sendemail: validator('belongs-to'),
   sendsms: validator('belongs-to'),
-  ticketcc: validator('action-ticketcc'),
+  ticketcc: validator('action-ticketcc', {
+    dependentKeys: ['model.type']
+  }),
+  assignee: validator('action-assignee', {
+    dependentKeys: ['model.type']
+  }),
 });
 
 export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {

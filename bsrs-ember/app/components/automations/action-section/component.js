@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import injectRepo from 'bsrs-ember/utilities/inject';
 import injectUUID from 'bsrs-ember/utilities/uuid';
+import { ACTION_SEND_EMAIL, ACTION_SEND_SMS, ACTION_ASSIGNEE, ACTION_PRIORITY, ACTION_STATUS, ACTION_TICKET_REQUEST, ACTION_TICKET_CC } from 'bsrs-ember/models/automation-action';
 
 export default Ember.Component.extend({
   repository: injectRepo('automation'),
@@ -25,21 +26,20 @@ export default Ember.Component.extend({
 
       // push in a blank child model
       const id = this.get('uuid').v4();
-      //TODO: import keys from common file
       switch (newActionType.key) { 
-        case 'automation.actions.ticket_assignee':
-          automationAction.change_assignee({id: id});
+        case ACTION_ASSIGNEE:
+          automationAction.change_assignee({id: id, fullname: ''});
           break;
-        case 'automation.actions.ticket_priority':
+        case ACTION_PRIORITY:
           automationAction.change_priority({id: id});
           break;
-        case 'automation.actions.ticket_status':
+        case ACTION_STATUS:
           automationAction.change_status({id: id});
           break;
-        case 'automation.actions.send_email':
+        case ACTION_SEND_EMAIL:
           automationAction.change_sendemail({id: id});
           break;
-        case 'automation.actions.send_sms':
+        case ACTION_SEND_SMS:
           automationAction.change_sendsms({id: id});
           break;
       }
