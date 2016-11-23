@@ -332,7 +332,7 @@ class TicketActivityTypeTests(TestCase):
     def test_name__choices(self):
         field = TicketActivityType._meta.get_field('name')
         self.assertEqual([(a) for a,b in field.choices], TicketActivityType.ALL)
-        self.assertEqual(len(TicketActivityType.ALL), 11)
+        self.assertEqual(len(TicketActivityType.ALL), 12)
 
 
 class TicketActivityTests(TestCase):

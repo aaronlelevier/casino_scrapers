@@ -7,6 +7,7 @@ from django.test import TestCase
 from pretend import stub
 
 from automation import helpers
+from automation.models import AutomationEvent
 from automation.tests.factory import create_automation_event
 from person.tests.factory import create_single_person
 from ticket.models import TicketPriority, TicketStatus
@@ -49,14 +50,12 @@ class InterpolateTests(TestCase):
         self.assertEqual(self.interpolate.text(s), TicketPriority.MEDIUM.split('.')[-1])
         s = "{{ticket.status}}"
         self.assertEqual(self.interpolate.text(s), TicketStatus.NEW.split('.')[-1])
+        s = "{{automation.event}}"
+        self.assertEqual(self.interpolate.text(s), AutomationEvent.STATUS_NEW.split('.')[-1])
 
     def test_text__ticket_request(self):
         s = "{{ticket.request}}"
         self.assertEqual(self.interpolate.text(s), self.ticket.request)
-
-    def test_text__automation_event(self):
-        s = "{{automation.event}}"
-        self.assertEqual(self.interpolate.text(s), self.automation.event.key)
 
     def test_text__ticket_url(self):
         s = "{{ticket.url}}"

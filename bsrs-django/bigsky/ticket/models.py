@@ -216,6 +216,7 @@ class TicketActivityType(BaseModel):
     ATTACHMENT_ADD = 'attachment_add'
     SEND_EMAIL = 'send_email'
     SEND_SMS = 'send_sms'
+    REQUEST = 'request'
 
     ALL = [
         CREATE,
@@ -228,7 +229,8 @@ class TicketActivityType(BaseModel):
         COMMENT,
         ATTACHMENT_ADD,
         SEND_EMAIL,
-        SEND_SMS
+        SEND_SMS,
+        REQUEST
     ]
 
     name = models.CharField(max_length=100, unique=True, choices=[(x,x) for x in ALL])

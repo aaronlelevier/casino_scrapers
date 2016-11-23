@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.test import TestCase
 
 from contact.models import Email, PhoneNumber
@@ -12,12 +13,13 @@ def send_email():
     """
     person = create_single_person()
     email = create_contact(Email, person)
-    email.email = 'a@a.com'
+    email.email = settings.EMAIL_HOST_USER
     email.save()
     subject = 'foo'
-    body = 'bar'
+    html_content = '<p>bar</p><p><em>biz</em></p>'
+    text_content = 'bar\nbiz'
 
-    Email.objects.send_email(email, subject, body)
+    Email.objects.send_email(email, subject, html_content, text_content)
 
 
 def send_sms():

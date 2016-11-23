@@ -5,7 +5,7 @@ from django.db import models
 from contact.models import Email, PhoneNumber
 from person.models import Person
 from tenant.models import Tenant
-from ticket.models import TicketPriority, TicketStatus
+from ticket.models import TicketPriority, TicketStatus, TicketActivity, TicketActivityType
 from utils import classproperty
 from utils.models import BaseQuerySet, BaseManager, BaseModel
 
@@ -134,17 +134,28 @@ class AutomationManager(BaseManager):
             key = action.type.key
 
             if key == AutomationActionType.TICKET_ASSIGNEE:
-                ticket.assignee = Person.objects.get(id=action.content['assignee'])
+                init_assignee = ticket.assignee
+                new_assignee = Person.objects.get(id=action.content['assignee'])
+                ticket.assignee = new_assignee
+                self._log_from_to_activity(TicketActivityType.ASSIGNEE, ticket, init_assignee, new_assignee)
             elif key == AutomationActionType.TICKET_PRIORITY:
-                ticket.priority = TicketPriority.objects.get(id=action.content['priority'])
+                init_priority = ticket.priority
+                new_priority = TicketPriority.objects.get(id=action.content['priority'])
+                ticket.priority = new_priority
+                self._log_from_to_activity(TicketActivityType.PRIORITY, ticket, init_priority, new_priority)
             elif key == AutomationActionType.TICKET_STATUS:
-                ticket.status = TicketStatus.objects.get(id=action.content['status'])
+                init_status = ticket.status
+                new_status = TicketStatus.objects.get(id=action.content['status'])
+                ticket.status = new_status
+                self._log_from_to_activity(TicketActivityType.STATUS, ticket, init_status, new_status)
             elif key == AutomationActionType.SEND_EMAIL:
                 Email.objects.process_send_email(ticket, action, event)
             elif key == AutomationActionType.SEND_SMS:
                 PhoneNumber.objects.process_send_sms(ticket, action, event)
             elif key == AutomationActionType.TICKET_REQUEST:
-                ticket.request = '{}\n{}'.format(ticket.request, action.content['request'])
+                request = action.content['request']
+                ticket.request = '{}\n{}'.format(ticket.request, request)
+                self._log_ticket_request_activity(ticket, request)
             elif key == AutomationActionType.TICKET_CC:
                 # Only process on existing tickets. If a ticket is created for the first time,
                 # don't need to diff the ccs. If proccessed before initial save, trying to
