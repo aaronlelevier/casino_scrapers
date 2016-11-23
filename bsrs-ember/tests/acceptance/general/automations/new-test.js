@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { test } from 'qunit';
+import { test, skip } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
@@ -34,7 +34,7 @@ moduleForAcceptance('Acceptance | general automation new test', {
   },
 });
 
-test('visit new URL and create a new record', assert => {
+skip('visit new URL and create a new record', assert => {
   visit(NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
