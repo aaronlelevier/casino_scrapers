@@ -7,6 +7,7 @@ import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import translations from "bsrs-ember/vendor/translation_fixtures";
 import PD from 'bsrs-ember/vendor/defaults/person';
+import wait from 'ember-test-helpers/wait';
 
 var store, trans;
 const ERR_TEXT = '.validated-input-error-dialog';
@@ -36,29 +37,33 @@ test('first_name validation error if not present or greater than 30 characters',
   let $err = Ember.$('.invalid');
   assert.equal($err.text().trim(), '');
   this.$(FIRST_NAME).val('').keyup();
-  Ember.run.later(() => {
+  return wait().
+    then(() => {
     let $err = Ember.$('.invalid');
     assert.ok($err.is(':visible'));
     assert.equal(Ember.$(ERR_TEXT).text().trim(), trans.t('errors.person.first_name'));
     this.$(FIRST_NAME).val('a').keyup();
-    Ember.run.later(() => {
+    return wait().
+      then(() => {
       // valid input
       $err = Ember.$('.invalid');
       assert.notOk($err.is(':visible'));
       this.$(FIRST_NAME).val('a'.repeat(31)).keyup();
-      Ember.run.later(() => {
+      return wait().
+        then(() => {
         $err = Ember.$('.invalid');
         assert.ok($err.is(':visible'));
         assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.person.first_name.length'));
         this.$(FIRST_NAME).val('a'.repeat(30)).keyup();
-        Ember.run.later(() => {
+        return wait().
+          then(() => {
           $err = Ember.$('.invalid');
           assert.notOk($err.is(':visible'));
           done();
-        }, 300);
-      }, 300);
-    }, 300);
-  }, 300);
+        });
+      });
+    });
+  });
 });
 
 test('middle_initial validation error if number entered (max-length 1 fyi)', function(assert) {
@@ -71,23 +76,26 @@ test('middle_initial validation error if number entered (max-length 1 fyi)', fun
   let $err = this.$('.invalid');
   assert.equal($err.text().trim(), '');
   this.$(MIDDLE_INITIAL).val('').keyup();
-  Ember.run.later(() => {
+  return wait().
+    then(() => {
     let $err = this.$('.invalid');
     assert.notOk($err.is(':visible'));
     this.$(MIDDLE_INITIAL).val('a').keyup();
-    Ember.run.later(() => {
+    return wait().
+      then(() => {
       // valid input
       $err = this.$('.invalid');
       assert.notOk($err.is(':visible'));
       this.$(MIDDLE_INITIAL).val('1').keyup();
-      Ember.run.later(() => {
+      return wait().
+        then(() => {
         $err = this.$('.invalid');
         assert.ok($err.is(':visible'));
         assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.person.middle_initial'));
          done();
-      }, 300);
-    }, 300);
-  }, 300);
+      });
+    });
+  });
 });
 
 test('last_name validation error if not present or greater than 30 characters', function(assert) {
@@ -100,27 +108,31 @@ test('last_name validation error if not present or greater than 30 characters', 
   let $err = this.$('.invalid');
   assert.equal($err.text().trim(), '');
   this.$(LAST_NAME).val('').keyup();
-  Ember.run.later(() => {
+  return wait().
+    then(() => {
     let $err = this.$('.invalid');
     assert.ok($err.is(':visible'));
     assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.person.last_name'));
     this.$(LAST_NAME).val('a').keyup();
-    Ember.run.later(() => {
+    return wait().
+      then(() => {
       // valid input
       $err = this.$('.invalid');
       assert.notOk($err.is(':visible'));
       this.$(LAST_NAME).val('a'.repeat(31)).keyup();
-      Ember.run.later(() => {
+      return wait().
+        then(() => {
         $err = this.$('.invalid');
         assert.ok($err.is(':visible'));
         assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.person.last_name.length'));
         this.$(LAST_NAME).val('a'.repeat(30)).keyup();
-        Ember.run.later(() => {
+        return wait().
+          then(() => {
           $err = this.$('.invalid');
           assert.notOk($err.is(':visible'));
           done();
-        }, 300);
-      }, 300);
-    }, 300);
-  }, 300);
+        });
+      });
+    });
+  });
 });

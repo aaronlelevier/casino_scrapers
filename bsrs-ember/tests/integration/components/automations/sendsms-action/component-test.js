@@ -13,7 +13,7 @@ import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import { clickTrigger, triggerKeydown, nativeMouseUp, nativeMouseDown, typeInSearch } from 'bsrs-ember/tests/helpers/ember-power-select';
-import waitFor from 'ember-test-helpers/wait';
+import wait from 'ember-test-helpers/wait';
 
 var store, trans, action, automation_repo;
 
@@ -63,7 +63,7 @@ test('shows validation messages', function(assert) {
   assert.equal(Ember.$('.validated-input-error-dialog:eq(1)').text().trim(), '');
   this.$('.t-action-body0').val('').trigger('keyup');
   nativeMouseDown('.ember-power-select-multiple-remove-btn');
-  return waitFor().
+  return wait().
     then(() => {
       assert.equal($component2.hasClass('invalid'), true);
       assert.equal($component3.hasClass('invalid'), true);
@@ -71,7 +71,7 @@ test('shows validation messages', function(assert) {
       assert.equal(Ember.$('.validated-input-error-dialog:eq(1)').text().trim(), trans.t('errors.sendsms.body'));
       this.$('.t-action-body0').val('this is the body').trigger('keyup');
       run(() => { typeInSearch('a'); });
-      return waitFor().
+      return wait().
         then(() => {
           assert.equal($component2.hasClass('invalid'), false);
           assert.equal(action.get('sendsms').get('recipient').get('length'), 0);

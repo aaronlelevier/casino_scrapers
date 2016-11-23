@@ -5,7 +5,7 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import typeInSearch from 'bsrs-ember/tests/helpers/type-in-search';
-import waitFor from 'ember-test-helpers/wait';
+import wait from 'ember-test-helpers/wait';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
@@ -53,7 +53,7 @@ test('should render a selectbox with bound options after type ahead for search',
   this.repository = category_repo;
   this.render(hbs`{{db-fetch-multi-select model=model multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-category-children-select" displayName="name" add_func="add_children" remove_func="remove_child" repository=repository searchMethod="findCategoryChildren"}}`);
   run(() => { typeInSearch('a'); });
-  return waitFor().
+  return wait().
     then(() => {
       assert.equal(Ember.$(DROPDOWN).length, 1);
       assert.equal(Ember.$('.ember-power-select-options > li').length, 3);

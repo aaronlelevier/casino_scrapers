@@ -17,7 +17,7 @@ import TCD from 'bsrs-ember/vendor/defaults/model-category';
 import page from 'bsrs-ember/tests/pages/dtd';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import ticketPage from 'bsrs-ember/tests/pages/tickets';
-import waitFor from 'ember-test-helpers/wait';
+import wait from 'ember-test-helpers/wait';
 
 let store, dtd, uuid, trans, link, field, dtd_repo;
 const DROPDOWN = '.ember-power-select-dropdown';
@@ -62,23 +62,26 @@ test('validation on dtd key works', function(assert) {
   assert.equal(page.key, 'wat');
   assert.notOk($component.is(':visible'));
   this.$('.t-dtd-single-key:eq(0)').val('').keyup();
-  Ember.run.later(() => {
+  return wait().
+    then(() => {
     const $component = this.$('.invalid');
     assert.ok($component.is(':visible'));
     assert.equal(Ember.$(ERR_TEXT).text().trim(), trans.t('errors.dtd.key'));
     this.$('.t-dtd-single-key:eq(0)').val('a'.repeat(12)).keyup();
-    Ember.run.later(() => {
+    return wait().
+      then(() => {
       const $component = this.$('.invalid');
       assert.notOk($component.is(':visible'));
       this.$('.t-dtd-single-key:eq(0)').val('a'.repeat(13)).keyup();
-      Ember.run.later(() => {
+      return wait().
+        then(() => {
         const $component = this.$('.invalid');
         assert.ok($component.is(':visible'));
         assert.equal(Ember.$(ERR_TEXT).text().trim(), trans.t('errors.dtd.key.length'));
         done();
-      }, 300);
-    }, 300);
-  }, 300);
+      });
+    });
+  });
 });
 
 test('validation - clear out text, and validation msg still works', function(assert) {
@@ -508,7 +511,7 @@ test('selecting link destination will populate dropdown with key', function(asse
   run(() => {
     typeInSearch('a');
   });
-  return waitFor().
+  return wait().
   then(() => {
     assert.equal(Ember.$(DROPDOWN).length, 1);
     assert.equal(this.$('.ember-power-select-option').length, 2);
