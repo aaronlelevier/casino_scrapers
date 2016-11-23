@@ -730,7 +730,7 @@ test('existing automation w/ pf and get same pf', assert => {
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('scott deserialize single - priority - no existing', assert => {
+test('deserialize single - priority - no existing', assert => {
   const json = AF.detail(AD.idOne, { type: 'priority', id: TPD.idOne, name: TPD.nameOne });
   run(() => {
     deserializer.deserialize(json, AD.idOne);

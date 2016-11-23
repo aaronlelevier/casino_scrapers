@@ -888,46 +888,6 @@ test('get an action sendsms and update it to a new sendsms', assert => {
   // });
 });
 
-test('select sendsms filter and update automation', assert => {
-  page.visitDetail();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL, 'at detail url');
-    assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey), 'priority initially selected');
-  });
-  xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
-  selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyFiveTrans);
-  andThen(() => {
-    // Failing Jenkins
-    // assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyFive), 'selected type');
-  });
-  page.sendSmsBodyFillIn(SMSD.bodyTwo);
-  xhr(`${PEOPLE_URL}sms-recipients/?search=e`, 'GET', null, {}, 200, PF.sms_power_select());
-  selectSearch('.t-action-recipient-select', 'e');
-  selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
-  andThen(() => {
-    assert.equal(page.sendSmsBodyValue, SMSD.bodyTwo, 'sms body');
-    assert.equal(page.actionSendSmsRecipientOne.replace(/\W/, '').trim(), PD.fullnameBoy2, 'recipient selected for sendsms');
-  });
-  clearxhr(listXhr);
-  // let payload = AF.put({
-  //   actions: [{
-  //     id: AAD.idOne,
-  //     type: AATD.idFive,
-  //     content: {
-  //       sendsms: { 
-  //         body: SMSD.bodyTwo,
-  //         recipients: [PD.idSearch]
-  //       } 
-  //     }
-  //   }]
-  // });
-  // xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
-  // generalPage.save();
-  // andThen(() => {
-  //   assert.equal(currentURL(), AUTOMATION_LIST_URL, 'at list url');
-  // });
-});
-
 // Ticket request
 test('get an action ticket request and update it to a new ticket request', assert => {
   clearxhr(detailXhr);

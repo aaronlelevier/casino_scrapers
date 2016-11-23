@@ -3,8 +3,15 @@ const { run } = Ember;
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
+import { typeInSearch, triggerKeydown, clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
+import wait from 'ember-test-helpers/wait';
+import repository from 'bsrs-ember/tests/helpers/repository';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import AD from 'bsrs-ember/vendor/defaults/automation';
+import PD from 'bsrs-ember/vendor/defaults/person';
+import ATD from 'bsrs-ember/vendor/defaults/automation-action-type';
+import SED from 'bsrs-ember/vendor/defaults/sendemail';
+import SMSD from 'bsrs-ember/vendor/defaults/sendsms';
 import page from 'bsrs-ember/tests/pages/automation';
 import generalPage from 'bsrs-ember/tests/pages/general';
 
@@ -29,6 +36,36 @@ moduleForComponent('automation-single', 'integration: automation-single test', {
     const breakpoints = flexi.get('breakpoints');
     const width = breakpoints.find(bp => bp.name === 'desktop').begin + 5;
     flexi.set('width', width);
+
+    let automation_repo = repository.initialize(this.container, this.registry, 'automation');
+    automation_repo.getEmailRecipients = function() {
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        resolve({ results: [
+            { id: PD.idOne, fullname: PD.fullname },
+            { id: PD.idTwo, fullname: PD.fullnameBoy },
+          ]});
+      });
+    };
+    automation_repo.getSmsRecipients = function() {
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        resolve([
+            { id: PD.idOne, fullname: PD.fullname },
+            { id: PD.idTwo, fullname: PD.fullnameBoy },
+          ]);
+      });
+    };
+    automation_repo.getActionTypes = function() {
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        resolve({ results: [
+            { id: ATD.idOne, key: ATD.keyOne },
+            { id: ATD.idTwo, key: ATD.keyTwo },
+            { id: ATD.idFour, key: ATD.keyFour },
+            { id: ATD.idFive, key: ATD.keyFive },
+            { id: ATD.idSix, key: ATD.keySix },
+            { id: ATD.idSeven, key: ATD.keySeven },
+          ]});
+      });
+    };
   },
   afterEach() {
     page.removeContext(this);
@@ -85,4 +122,30 @@ test('labels are translated', function(assert) {
   this.model = model;
   this.render(hbs `{{automations/automation-single model=model}}`);
   assert.equal(getLabelText('description'), trans.t('admin.automation.description'));
+});
+
+test('selecting assignee shows empty select power select', function(assert) {
+  model.add_action({id: '1'});
+  this.model = model;
+  this.render(hbs `{{automations/automation-single model=model}}`);
+  clickTrigger('.t-automation-action-type-select');  
+  nativeMouseUp('.ember-power-select-option:eq(0)');
+  assert.equal(Ember.$('.t-automation-action-assignee-select .ember-power-select-selected-item').text().trim(), '');
+});
+
+test('select sendsms filter and update automation', function(assert) {
+  model.add_action({id: '1'});
+  this.model = model;
+  this.render(hbs `{{automations/automation-single model=model}}`);
+  clickTrigger('.t-automation-action-type-select');
+  nativeMouseUp('.ember-power-select-option:eq(3)');
+  assert.equal(this.$('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), trans.t(ATD.keyFive), 'selected type');
+  page.sendSmsBodyFillIn(SMSD.bodyTwo);
+  clickTrigger('.t-action-recipient-select');
+  typeInSearch('a');
+  return wait().then(() => {
+    nativeMouseUp('.ember-power-select-option:eq(0)');
+    assert.equal(page.sendSmsBodyValue, SMSD.bodyTwo, 'sms body');
+    assert.equal(page.actionSendSmsRecipientOne.replace(/\W/, '').trim(), PD.fullname, 'recipient selected for sendsms');
+  });
 });
