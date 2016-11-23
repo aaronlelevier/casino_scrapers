@@ -1,6 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
-import { moduleForComponent, test } from 'ember-qunit';
+import { moduleForComponent, skip, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import SMSD from 'bsrs-ember/vendor/defaults/sendsms';
@@ -50,7 +50,7 @@ test('it renders', function(assert) {
   assert.equal(page.actionSendEmailRecipientOne.replace(/\W/, '').trim(), action.get('sendsms').get('recipient').objectAt(0).get('fullname'));
 });
 
-test('shows validation messages', function(assert) {
+skip('shows validation messages', function(assert) {
   this.model = action;
   this.index = 0;
   this.automationRepo = automation_repo;
