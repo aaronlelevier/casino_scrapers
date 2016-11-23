@@ -40,10 +40,10 @@ moduleForComponent('automation-single', 'integration: automation-single test', {
     let automation_repo = repository.initialize(this.container, this.registry, 'automation');
     automation_repo.getEmailRecipients = function() {
       return new Ember.RSVP.Promise((resolve, reject) => {
-        resolve({ results: [
+        resolve([
             { id: PD.idOne, fullname: PD.fullname },
             { id: PD.idTwo, fullname: PD.fullnameBoy },
-          ]});
+          ]);
       });
     };
     automation_repo.getSmsRecipients = function() {
@@ -147,5 +147,22 @@ test('select sendsms filter and update automation', function(assert) {
     nativeMouseUp('.ember-power-select-option:eq(0)');
     assert.equal(page.sendSmsBodyValue, SMSD.bodyTwo, 'sms body');
     assert.equal(page.actionSendSmsRecipientOne.replace(/\W/, '').trim(), PD.fullname, 'recipient selected for sendsms');
+  });
+});
+
+test('select sendemail filter and update automation', function(assert) {
+  model.add_action({id: '1'});
+  this.model = model;
+  this.render(hbs `{{automations/automation-single model=model}}`);
+  clickTrigger('.t-automation-action-type-select');
+  nativeMouseUp('.ember-power-select-option:eq(2)');
+  assert.equal(this.$('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), trans.t(ATD.keyFour), 'selected type');
+  page.sendEmailBodyFillIn(SED.bodyTwo);
+  clickTrigger('.t-action-recipient-select');
+  typeInSearch('a');
+  return wait().then(() => {
+    nativeMouseUp('.ember-power-select-option:eq(0)');
+    assert.equal(page.sendEmailBodyValue, SED.bodyTwo, 'sms body');
+    assert.equal(page.actionSendEmailRecipientOne.replace(/\W/, '').trim(), PD.fullname, 'recipient selected for sendemail');
   });
 });
