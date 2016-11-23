@@ -846,48 +846,6 @@ test('select ticketcc filter and update automation', assert => {
   // });
 });
 
-test('get an action sendsms and update it to a new sendsms', assert => {
-  clearxhr(detailXhr);
-  const json = AF.detail();
-  json.actions[0]['type'] = { id: AATD.idFive, key: AATD.keyFive };
-  json.actions[0]['body'] = SMSD.bodyOne;
-  json.actions[0]['recipients'] = [{id: PD.idOne, fullname: PD.fullname}];
-  xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
-  page.visitDetail();
-  andThen(() => {
-    assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.actionTypeSelectedOne, AATD.keyFiveTrans, 'Type sendsms selected');
-    assert.equal(page.actionSendSmsRecipientOne.replace(/\W/, '').trim(), PD.fullname, 'full name recipient shows');
-    assert.equal(page.sendSmsBodyValue, SMSD.bodyOne, 'sendsms body shows');
-  });
-  page.sendSmsBodyFillIn(SMSD.bodyTwo);
-  xhr(`${PEOPLE_URL}sms-recipients/?search=e`, 'GET', null, {}, 200, PF.sms_power_select());
-  selectSearch('.t-action-recipient-select', 'e');
-  selectChoose('.t-action-recipient-select', PD.fullnameBoy2);
-  andThen(() => {
-    assert.equal(page.sendSmsBodyValue, SMSD.bodyTwo, 'body is updated');
-    assert.equal(page.actionSendSmsRecipientTwo.replace(/\W/, '').trim(), PD.fullnameBoy2, 'new recipient shows');
-  });
-  clearxhr(listXhr);
-  // let payload = AF.put({
-  //   actions: [{
-  //     id: AAD.idOne,
-  //     type: AATD.idFive,
-  //     content: {
-  //       sendsms: { 
-  //         body: SMSD.bodyTwo,
-  //         recipients: [PD.id, PD.idSearch]
-  //       } 
-  //     }
-  //   }]
-  // });
-  // xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
-  // generalPage.save();
-  // andThen(() => {
-  //   assert.equal(currentURL(), AUTOMATION_LIST_URL);
-  // });
-});
-
 // Ticket request
 test('get an action ticket request and update it to a new ticket request', assert => {
   clearxhr(detailXhr);
