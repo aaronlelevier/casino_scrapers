@@ -1,6 +1,5 @@
 import Ember from 'ember';
 const { computed, defineProperty } = Ember;
-import { task, timeout } from 'ember-concurrency';
 
 var ValidationComponentInit = Ember.Mixin.create({
   init() {
