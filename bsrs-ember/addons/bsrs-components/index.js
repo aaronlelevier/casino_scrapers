@@ -40,13 +40,6 @@ module.exports = {
             }
             return config_data;
         }
-        if (type === 'body-footer') {
-            if (environment === 'production' || process.env.LOCAL_SERVER === 'true') {
-                return '<script type="text/javascript">jQuery(document).ajaxSend(function(event, xhr, settings) { if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) { xhr.setRequestHeader("X-CSRFToken", "{{csrf_token}}"); } }); </script>';
-            } else {
-                return '<script type="text/javascript">jQuery(document).ajaxSend(function(event, xhr, settings) { if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) { xhr.setRequestHeader("X-CSRFToken", "faketoken1234"); } }); </script>';
-            }
-        }
     },
 
     isDevelopingAddon: function() {
