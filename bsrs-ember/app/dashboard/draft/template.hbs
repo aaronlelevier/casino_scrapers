@@ -15,9 +15,9 @@
   noun="ticket"
   plural=(t "ticket.other")
   grid_title=(concat (t "ticket.status.draft") " " (t "ticket" count="2"))
-  list_url="tickets.index"
-  detail_url=(if FlexiLayout.isMobile "tickets.index.ticket" "tickets.index.ticket")
-  add_model_url="tickets.index.new"
+  list_url="main.tickets.index"
+  detail_url=(if FlexiLayout.isMobile "main.tickets.index.ticket" "main.tickets.index.ticket")
+  add_model_url="main.tickets.index.new"
   search_placeholder=(t "ticket.search")
   add_model_text=(t "ticket.one")
   save_filterset=(action "save_filterset")

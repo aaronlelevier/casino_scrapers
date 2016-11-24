@@ -13,7 +13,7 @@ moduleFor('service:tab-list', 'Unit | Service | tab list', {
     store = module_registry(this.container, this.registry, ['model:ticket', 'model:tab', 'model:dtd', 'model:dtd-list', 'service:i18n']);
     ticket = store.push('ticket', {id: TD.idOne});
     dtd = store.push('dtd', {id: DTD.idOne});
-    tab = store.push('tab', {id: TD.idOne, module: 'ticket', tabType: 'multiple', redirectRoute: 'tickets.index'});
+    tab = store.push('tab', {id: TD.idOne, module: 'ticket', tabType: 'multiple', redirectRoute: 'main.tickets.index'});
     tab_single = store.push('tab', {id: DTD.idOne, tabType: 'single', module: 'dtd', moduleList: 'dtd-list', closeTabRedirect: 'admin', deleteRedirect: 'dtds.index'});
   }
 });
@@ -41,8 +41,8 @@ test('it exists for single tabs', function(assert) {
 // test('redirects based on action', function(assert) {
 //   let service = this.subject();
 //   const tab = service.findTab(TD.idOne);
-//   const route = service.redirectRoute(tab, 'tickets.index.ticket', 'closeTab');
-//   assert.equal(route, 'tickets.index');
+//   const route = service.redirectRoute(tab, 'main.tickets.index.ticket', 'closeTab');
+//   assert.equal(route, 'main.tickets.index');
 //   const tab_dtd = service.findTab(DTD.idOne);
 //   let route_dtd = service.redirectRoute(tab_dtd, 'dtds.dtd', 'closeTab', );
 //   assert.equal(route_dtd, 'admin');

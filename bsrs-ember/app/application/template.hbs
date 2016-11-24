@@ -30,3 +30,10 @@
     on-dismiss=(action 'dismiss_errors')
   }}
 {{/if}}
+
+{{#if loginHtml}}
+  {{django-login
+    rawHtml=loginHtml
+    doLogin=(route-action 'postLogin')
+  }}
+{{/if}}

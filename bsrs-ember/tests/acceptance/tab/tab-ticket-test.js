@@ -19,9 +19,9 @@ import BASEURLS, { PREFIX, TICKET_LIST_URL, ROLE_LIST_URL } from 'bsrs-ember/uti
 
 const NEW_URL = TICKET_LIST_URL + '/new/1';
 const DETAIL_URL = TICKET_LIST_URL + '/' + TD.idOne;
-const NEW_ROUTE = 'tickets.index.new';
-const INDEX_ROUTE = 'tickets.index';
-const DETAIL_ROUTE = 'tickets.index.ticket';
+const NEW_ROUTE = 'main.tickets.index.new';
+const INDEX_ROUTE = 'main.tickets.index';
+const DETAIL_ROUTE = 'main.tickets.index.ticket';
 const DOC_TYPE = 'ticket';
 const TAB_TITLE = '.t-tab-title:eq(0)';
 const ACTIVITY_ITEMS = '.t-activity-list-item';

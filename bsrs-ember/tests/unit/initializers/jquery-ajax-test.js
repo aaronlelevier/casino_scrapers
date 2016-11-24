@@ -21,6 +21,7 @@ module('Unit | Initializer | jquery ajax', {
   afterEach() {
     delete this.mockResponse;
     delete this.server;
+    this.sandbox.restore();
     delete this.sandbox;
   }
 });

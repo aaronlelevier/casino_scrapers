@@ -15,7 +15,9 @@ var FindByIdRepo = Ember.Mixin.create({
       if (xhr.status === 404) {
         const err = xhr.responseJSON;
         const key = Object.keys(err);
-        return Ember.RSVP.Promise.reject( new ClientError(err[key[0]]) );
+        return Ember.RSVP.Promise.reject(
+          new ClientError(err[key[0]], 'error', xhr)
+        );
       }
     });
 

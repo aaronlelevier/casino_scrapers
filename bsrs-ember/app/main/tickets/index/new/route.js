@@ -10,7 +10,7 @@ var TicketNewRoute = TabNewRoute.extend({
   repository: inject('ticket'),
   statusRepository: inject('ticket-status'),
   priorityRepository: inject('ticket-priority'),
-  redirectRoute: 'tickets.index',
+  redirectRoute: 'main.tickets.index',
   module: 'ticket',
   templateModelField: 'Ticket',
   priorities: Ember.computed(function() {

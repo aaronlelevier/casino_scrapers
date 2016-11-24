@@ -7,9 +7,9 @@ var BSRS_TAB_DEFAULTS_OBJECT = (function() {
             typeOne: 'single',
             typeTwo: 'multiple',
             module_one: 'ticket',
-            routeName_one: 'tickets.index.ticket',
+            routeName_one: 'main.tickets.index.ticket',
             templateModelField_one: 'categories',
-            redirect_one: 'tickets.index',
+            redirect_one: 'main.tickets.index',
             newModel_one: false,
             // two
             id_two:     'f4e7f207-1d75-456a-9c6a-52241741dfd3',
@@ -19,7 +19,6 @@ var BSRS_TAB_DEFAULTS_OBJECT = (function() {
             id_six:     '0fd32933-1031-4e3b-9726-96652cdd8289',
             id_seven:   'e80ce170-dd29-4883-838d-d3d1c6f8cab8',
             id_eight:   '808fde0a-b986-433b-8614-a66de2325149'
-
         }
     };
     return factory;
