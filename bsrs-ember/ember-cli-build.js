@@ -22,7 +22,7 @@ module.exports = function(defaults) {
     },
     fingerprint: {
       prepend: '/static/',
-      exclude: ['assets/icons', 'fonts'],
+      exclude: ['assets/icons', 'fonts', 'basscss', 'form'],
       enabled: isProdBuild || isLocalServerBuild,
     },
     babel: {

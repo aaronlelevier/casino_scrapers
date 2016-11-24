@@ -11,14 +11,14 @@
         <link rel="stylesheet" type="text/css" href="{% static 'css/fonts.css' %}"/>
         <link rel="stylesheet" type="text/css" href="{% static 'css/form.css' %}"/>
     </head>
-    <body>
+    <body id="login">
         <main class="flex items-center justify-center login">
             <div class="login__panel rounded bg-white">
                 <header class="login__header flex rounded-top bg-offWhite">
                     <div class="login__logo flex_auto">
                         <img src="{{ STATIC_URL }}images/logo.png" class="login__logo__img">
                     </div>
-                    <h1 class="h3 login__title">Login</h1>
+                    <h1 class="login__title">Login</h1>
                 </header>
                 <form role="form" action="" method="post" class="login__form flex flex-column items-center p2">
                     {% csrf_token %}
@@ -26,7 +26,7 @@
                         {% for field in form %}
                             {{ field.errors }}
                             {{ field.label_tag }}
-                            <input class="input" id="{{ field.id_for_label }}" name="{{ field.name }}" type="{{ field|fieldtype }}" autofocus/>
+                            <input class="input" id="{{ field.id_for_label }}" name="{{ field.name }}" type="{{ field|fieldtype }}" autofocus required/>
                         {% endfor %}
                         {{ form.non_field_errors }}
                     </div>
