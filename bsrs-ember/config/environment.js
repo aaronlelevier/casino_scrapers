@@ -60,9 +60,9 @@ module.exports = function(environment) {
     // Testem prefers this...
     ENV.locationType = 'none';
 
-    ENV.DEBOUNCE_TIMEOUT_INTERVAL = 0;
+    ENV.DEBOUNCE_TIMEOUT_INTERVAL = 15;
     ENV.APP.ANIMATION_TIME = 15;
-    ENV.APP.VALIDATION_TIMEOUT_INTERVAL = 0;
+    ENV.APP.VALIDATION_TIMEOUT_INTERVAL = 15;
     ENV.APP.emberModalDialog = {
       modalRootElementId: 'ember-testing'
     };

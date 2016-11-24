@@ -10,6 +10,7 @@ import CD from 'bsrs-ember/vendor/defaults/category';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 import { clickTrigger, nativeMouseUp } from 'bsrs-ember/tests/helpers/ember-power-select';
+import wait from 'ember-test-helpers/wait';
 
 let store, ticket, trans;
 
@@ -64,23 +65,26 @@ test('validation on ticket request works', function(assert) {
   const $component = this.$('.t-ticket-request-validator.invalid');
   assert.notOk($component.is(':visible'));
   this.$(REQUEST).val('').keyup();
-  Ember.run.later(() => {
+  return wait().
+    then(() => {
     const $component = this.$('.t-ticket-request-validator.invalid');
     // assert.ok($component.is(':visible'), 'no entry. Too low');
     // assert.equal($('.validated-input-error-dialog').text().trim(), trans.t('errors.ticket.request'));
     this.$(REQUEST).val('a'.repeat(4)).keyup();
-    Ember.run.later(() => {
+    return wait().
+      then(() => {
       const $component = this.$('.t-ticket-request-validator.invalid');
       assert.ok($component.is(':visible'), 'only 4 characters. Too low');
       assert.equal($('.validated-input-error-dialog').text().trim(), trans.t('errors.ticket.request.length'));
       this.$(REQUEST).val('a'.repeat(5)).keyup();
-      Ember.run.later(() => {
+      return wait().
+        then(() => {
         const $component = this.$('.invalid');
         assert.notOk($component.is(':visible'), 'meets min length');
         done();
-      }, 300);
-    }, 300);
-  }, 300);
+      });
+    });
+  });
 });
 
 test('if save isRunning, btn is disabled', function(assert) {

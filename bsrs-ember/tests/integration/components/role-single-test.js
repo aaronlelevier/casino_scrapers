@@ -5,6 +5,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import { getLabelText } from 'bsrs-ember/tests/helpers/translations';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import CD from 'bsrs-ember/vendor/defaults/currency';
+import wait from 'ember-test-helpers/wait';
 
 var store, trans;
 const ERR_TEXT = '.validated-input-error-dialog';
@@ -53,11 +54,12 @@ test('auth amount required', function(assert) {
   this.$('.t-amount').val('8').trigger('keyup');
   assert.notOk(Ember.$('.invalid').is(':visible'));
   this.$('.t-amount').val('').trigger('keyup');
-  Ember.run.later(() => {
+  return wait().
+    then(() => {
     assert.ok(Ember.$('.invalid').is(':visible'));
     assert.equal(Ember.$(ERR_TEXT).text().trim(), trans.t('errors.role.auth_amount'));
     done();
-  }, 300);
+  });
 });
 
 test('if save isRunning, btn is disabled', function(assert) {
