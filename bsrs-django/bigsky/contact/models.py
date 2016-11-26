@@ -143,7 +143,7 @@ class PhoneNumberManager(EmailAndSmsMixin, BaseManager):
         """
         # if statement, so we're not sending SMS during a unittest run
         if settings.DEBUG:
-            return true
+            return True
         else:
             try:
                 twilio_account_sid = os.environ['TWILIO_ACCOUNT_SID']
