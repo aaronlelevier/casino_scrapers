@@ -24,7 +24,7 @@
     {{#if attachment.new}}
     <div class="col-md-12 progress-wrap">
       <div class="progress active {{attachment.complete_class}}" role="progressbar" aria-valuemin="100" aria-valuemax="100" aria-valuenow="0">
-        <div class={{attach-file-progress attachment.percent}} style={{attachment.progress}}>
+        <div class={{attach-file-progress attachment.percent}} style={{html-safe attachment.progress}}>
           <span class="attachment-title">{{attachment.title}}</span>
           {{#unless attachment.complete}}
           <span class="attachment-progress"> - {{t "upload.progress"}}: {{attachment.percent}}%</span>
