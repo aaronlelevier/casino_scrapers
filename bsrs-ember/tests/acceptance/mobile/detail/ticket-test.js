@@ -20,14 +20,12 @@ import page from 'bsrs-ember/tests/pages/ticket-mobile';
 import ticketPage from 'bsrs-ember/tests/pages/tickets';
 import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS, { TICKETS_URL, PEOPLE_URL, CATEGORIES_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, PEOPLE_URL, CATEGORIES_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
 var store, list_xhr, activity;
 
 const PAGE_SIZE = config.APP.PAGE_SIZE;
-const BASE_URL = BASEURLS.base_tickets_url;
-const TICKET_URL = `${BASE_URL}/index`;
-const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
+const DETAIL_URL = `${TICKET_LIST_URL}/${TD.idOne}`;
 const ASSIGNEE = '.t-ticket-assignee-select';
 const CC = '.t-ticket-cc-select';
 const LOCATION = '.t-ticket-location-select';
@@ -51,17 +49,17 @@ test('can click to detail, show activities, and go back to list', async assert =
   clearxhr(activity);
   ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
   await ticketPage.visit();
-  assert.equal(currentURL(), TICKET_URL);
+  assert.equal(currentURL(), TICKET_LIST_URL);
   await click('.t-grid-data:eq(0)');
   assert.equal(currentURL(), DETAIL_URL);
   const ticket = store.find('ticket', TD.idOne);
   assert.equal(find('.t-detail-title').text(), `#${ticket.get('number')}`);
-  assert.equal(find('[data-test-id="priority-tag"]').text().trim(), t(ticket.get('priority').get('name')));
-  assert.equal(find('[data-test-id="status-tag"]').text().trim(), t(ticket.get('status').get('name')));
+  assert.equal(find('[data-test-id="mobile-meta-data__priority-status"] > [data-test-id="priority-tag"]').text().trim(), t(ticket.get('priority').get('name')));
+  assert.equal(find('[data-test-id="mobile-meta-data__priority-status"] > [data-test-id="status-tag"]').text().trim(), t(ticket.get('status').get('name')));
   assert.ok(find('[data-test-id="created-tag"]').text().trim().includes(ticket.get('assignee.fullname')));
   assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
   await generalMobilePage.backButtonClick();
-  assert.equal(currentURL(), TICKET_URL);
+  assert.equal(currentURL(), TICKET_LIST_URL);
 });
 
 test('can click through component sections and save to redirect to index', async assert => {
@@ -76,7 +74,7 @@ test('can click through component sections and save to redirect to index', async
   const payload = TF.put({id: TD.idOne});
   xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   await generalPage.save();
-  assert.equal(currentURL(), TICKET_URL);
+  assert.equal(currentURL(), TICKET_LIST_URL);
 });
 
 
@@ -94,8 +92,8 @@ test('can update all fields and save', async assert => {
   selectChoose(ASSIGNEE, PD.fullnameBoy);
   selectSearch(CC, 'b');
   selectChoose(CC, PD.fullnameBoy);
-  const TOP_LEVEL_CATEGORIES_TICKET_URL = `${CATEGORIES_URL}parents/`;
-  const top_level_xhr = xhr(TOP_LEVEL_CATEGORIES_TICKET_URL, 'GET', null, {}, 200, CF.top_level());
+  const TOP_LEVEL_CATEGORIES_TICKET_LIST_URL = `${CATEGORIES_URL}parents/`;
+  const top_level_xhr = xhr(TOP_LEVEL_CATEGORIES_TICKET_LIST_URL, 'GET', null, {}, 200, CF.top_level());
   await ticketPage.categoryOneClickDropdown();
   await ticketPage.categoryOneClickOptionTwo();
   await generalMobilePage.footerItemThreeClick();
@@ -108,12 +106,11 @@ test('can update all fields and save', async assert => {
   let payload = TF.put({id: TD.idOne, request: 'my request', assignee: PD.idBoy, cc: [PD.idOne, PD.idBoy], categories: [CD.idThree], location: LD.idTwo});
   xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response_put);
   await generalPage.save()
-  assert.equal(currentURL(), TICKET_URL);
+  assert.equal(currentURL(), TICKET_LIST_URL);
   assert.equal(ticket.get('assignee').get('id'), PD.idBoy);
 });
 
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async assert => {
-  clearxhr(list_xhr);
   await page.visitDetail();
   await click('.t-mobile-footer-item:eq(1)');
   await page.requestFillIn('wat');
@@ -158,7 +155,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), TICKET_URL);
+      assert.equal(currentURL(), TICKET_LIST_URL);
       const ticket = store.find('ticket', TD.idOne);
       assert.notEqual(find('.t-mobile-ticket-request').val(), 'wat');
       assert.throws(Ember.$('.ember-modal-dialog'));
@@ -167,7 +164,6 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
 });
 
 test('can add comment and click update to show new activity', async assert => {
-  clearxhr(list_xhr);
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   await ticketPage.commentFillIn(TD.commentOne);

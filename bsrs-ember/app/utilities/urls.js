@@ -42,7 +42,7 @@ export const PEOPLE_LIST_URL = '/admin/people/index';
 export const ROLE_LIST_URL = '/admin/roles/index';
 export const THIRD_PARTY_LIST_URL = '/admin/third-parties/index';
 export const TENANT_LIST_URL = '/admin/tenants/index';
-export const TICKET_LIST_URL = '/tickets/index';
+export const TICKET_LIST_URL = '/tickets';
 
 var BASEURLS = {
   base_admin_url: '/admin',

@@ -17,7 +17,7 @@ import page from 'bsrs-ember/tests/pages/tickets';
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const TICKET_LIST = `${PREFIX}${BASEURLS.base_tickets_url}/?page=1`;
-const TICKET_LIST_URL = `${BASEURLS.base_tickets_url}/index`;
+const TICKET_LIST_URL = `${BASEURLS.base_tickets_url}`;
 const TICKET_DETAIL_URL = `${BASEURLS.base_tickets_url}/${TD.idOne}`;
 const CATEGORY_LIST = `${PREFIX}${BASEURLS.base_categories_url}/`;
 const CATEGORY_LIST_URL = `${BASEURLS.base_categories_url}/index`;
@@ -33,17 +33,14 @@ var application, store, category, ticket;
 
 moduleForAcceptance('Acceptance | general ticket and category test', {
     beforeEach() {
-        
         store = this.application.__container__.lookup('service:simpleStore');
-    },
-    afterEach() {
-        
     }
 });
 
 test('clicking between category detail and ticket detail will not dirty the active category model', (assert) => {
     ajax(TICKET_ACTIVITIES_URL, 'GET', null, {}, 200, TA_FIXTURES.empty());
     ajax(`${PREFIX}${BASEURLS.base_tickets_url}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail());
+    ajax(TICKET_LIST,'GET', null, {}, 200, TF.list());
     visit(TICKET_DETAIL_URL);
     ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [], CD.idOne, 1));
     page.categoryTwoClickDropdown();

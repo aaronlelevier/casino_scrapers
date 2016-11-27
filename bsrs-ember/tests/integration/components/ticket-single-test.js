@@ -54,7 +54,7 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
 });
 
 test('validation on ticket request works', function(assert) {
-  const REQUEST = '.t-ticket-request';
+  const REQUEST = '.t-ticket-request-single';
   let modalDialogService = this.container.lookup('service:modal-dialog');
   modalDialogService.destinationElementId = 'request';
   var done = assert.async();

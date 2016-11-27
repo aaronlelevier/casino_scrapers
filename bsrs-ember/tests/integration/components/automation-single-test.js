@@ -167,7 +167,7 @@ test('select sendemail filter and update automation', function(assert) {
   });
 });
 
-test('scott select sendemail filter will remove old related model', function(assert) {
+test('select sendemail filter will remove old related model', function(assert) {
   model.add_action({id: '1'});
   const action = store.find('automation-action', 1);
   action.change_type({id: ATD.idOne, key: ATD.keyOne});

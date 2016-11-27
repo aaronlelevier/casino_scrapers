@@ -10,11 +10,12 @@ import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import locationPage from 'bsrs-ember/tests/pages/location';
+import ticketPage from 'bsrs-ember/tests/pages/tickets';
 import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, PEOPLE_URL, PEOPLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
-const TICKET_DETAIL_URL = `${BASEURLS.base_tickets_url}/${TD.idOne}`;
+const TICKET_DETAIL_URL = `${TICKET_LIST_URL}/${TD.idOne}`;
 const PEOPLE_DETAIL_URL = `${BASEURLS.base_people_url}/${PD.idOne}`;
 const PEOPLE_DONALD_DETAIL_URL = `${BASEURLS.base_people_url}/${PD.idDonald}`;
 const TICKET_ACTIVITIES_URL = `${TICKETS_URL}${TD.idOne}/activity/`;
@@ -39,8 +40,8 @@ test('clicking between person detail and ticket detail will not dirty the active
     assert.equal(person.get('person_locations_fks').length, 1);
     assert.equal(person.get('locations.length'), 1);
   });
-  ajax(`${PREFIX}${BASEURLS.base_tickets_url}/?page=1`, 'GET', null, {}, 200, TF.list());
-  visit(TICKET_LIST_URL);
+  ajax(`${PREFIX}${TICKET_LIST_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
+  ticketPage.visit();
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
     person = store.find('person', PD.idOne);
@@ -91,8 +92,8 @@ test('clicking between person detail and ticket detail will not dirty the active
 
 test('filter tickets by their location matching the logged in Persons location', (assert) => {
   // Tickets - are all viewable
-  ajax(`${PREFIX}${BASEURLS.base_tickets_url}/?page=1`, 'GET', null, {}, 200, TF.list());
-  visit(TICKET_LIST_URL);
+  ajax(`${PREFIX}${TICKET_LIST_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
+  ticketPage.visit();
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
@@ -129,13 +130,13 @@ test('filter tickets by their location matching the logged in Persons location',
   payload.phone_numbers = [];
   ajax(`${PREFIX}${BASEURLS.base_people_url}/${PD.idDonald}/`, 'PUT', JSON.stringify(payload), {}, 200, {});
   ajax(`${PREFIX}${BASEURLS.base_people_url}/?page=1`, 'GET', null, {}, 200, PF.list());
-  click('.t-save-btn');
+  generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), `${BASEURLS.base_people_url}/index`);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
   });
   // Tickets - no longer viewable b/c Person has no matching Locations to Ticket.locations
-  ajax(`${PREFIX}${BASEURLS.base_tickets_url}/?page=1`, 'GET', null, {}, 200, TF.list());
-  visit(TICKET_LIST_URL);
+  ajax(`${PREFIX}${TICKET_LIST_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
+  ticketPage.visit();
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
     // assert.equal(find('.t-grid-data').length, 0);
@@ -143,8 +144,8 @@ test('filter tickets by their location matching the logged in Persons location',
 });
 
 test('adding a new cc and navigating to the people url wont dirty the person model', (assert) => {
-  ajax(`${PREFIX}${BASEURLS.base_tickets_url}/?page=1`, 'GET', null, {}, 200, TF.list());
-  visit(TICKET_LIST_URL);
+  ajax(`${PREFIX}${TICKET_LIST_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
+  ticketPage.visit();
   ajax(`${PREFIX}${TICKET_DETAIL_URL}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   ajax(TICKET_ACTIVITIES_URL, 'GET', null, {}, 200, TA_FIXTURES.empty());
   click('.t-grid-data:eq(0)');

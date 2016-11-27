@@ -1,4 +1,6 @@
 import Ember from 'ember';
+const { run } = Ember;
+import config from 'bsrs-ember/config/environment';
 import UpdateFind from 'bsrs-ember/mixins/update-find';
 import SaveFiltersetMixin from 'bsrs-ember/mixins/components/grid/save-filterset';
 
@@ -12,17 +14,30 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
     this.showSaveFilterInput = false;
     this.searchResults = [];
   },
+  slideOutDown: false,
+  slideInUp: true,
+
   actions: {
     toggleSaveFilterSetModal() {
       this.toggleProperty('savingFilter');
     },
-    /*
-    * MOBILE - Need to see how Ember modularization RFC pans out.  Same component functions duplicated right now
-    * EVERYTHING BELOW
-    */
-    /* @method keyup
-    * asks repository for raw results w/ 'search' query param
-    */
+    /** 
+     * @method export
+     * takes no params and sends command to repository
+     */
+    exportGrid(){
+      this.get('exportGrid')();
+    },
+
+    /**
+     * MOBILE - Need to see how Ember modularization RFC pans out.  Same component functions duplicated right now
+     * EVERYTHING BELOW
+     */
+
+    /**
+     * @method keyup
+     * asks repository for raw results w/ 'search' query param
+     */
     keyup(searchValue) {
       const repo = this.get('repository');
       repo.mobileSearch(searchValue).then((results) => {
@@ -31,20 +46,14 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
       // this.setProperties({ page:1, search: searchValue });
     },
     /*
-    * @method export
-    * takes no params and sends command to repository
-    */
-    exportGrid(){
-      this.get('exportGrid')();
-    },
     // searchGrid() {
-      // this.toggleProperty('showSaveFilterInput');
+    // this.toggleProperty('showSaveFilterInput');
     // },
     /*
-    * @method filterGrid
-    * takes gridFilterParams && gridIdInParams object and turns values into a string
-    * calls grid route model hook after find or id_in are set
-    */
+     * @method filterGrid
+     * takes gridFilterParams && gridIdInParams object and turns values into a string
+     * calls grid route model hook after find or id_in are set
+     */
     filterGrid() {
       this.toggleProperty('mobileFilter');
       /* shows input box in horizontal scroll of save filterset */
@@ -87,13 +96,23 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
       }
     },
     toggleMobileSearch() {
+      this.setProperties({slideInUp: true, slideOutDown: false});
       this.toggleProperty('mobileSearch');
     },
     toggleMobileFilter() {
+      this.setProperties({slideInUp: true, slideOutDown: false});
       this.toggleProperty('mobileFilter');
     },
     toggleFilterModal(column) {
       this.toggle(column);
     },
+    closeMobileFilter() {
+      this.setProperties({slideInUp: false, slideOutDown: true});
+      run.later(this, 'send', 'toggleMobileFilter', config.APP.ANIMATION_TIME);
+    },
+    closeMobileSearch() {
+      this.setProperties({slideInUp: false, slideOutDown: true});
+      run.later(this, 'send', 'toggleMobileSearch', config.APP.ANIMATION_TIME);
+    }
   }
 });

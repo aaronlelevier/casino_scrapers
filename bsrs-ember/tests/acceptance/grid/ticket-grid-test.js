@@ -42,7 +42,7 @@ moduleForAcceptance('Acceptance | ticket grid test', {
   },
 });
 
-test('initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr', function(assert) {
+test(`initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr`, function(assert) {
   visit(TICKET_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
@@ -55,7 +55,7 @@ test('initial load should only show first ${PAGE_SIZE} records ordered by id wit
     assert.equal(find('[data-test-id="user-fullname"]:eq(0)').text().trim(), PD.fullname);
     assert.ok(find('[data-test-id="user-avatar"]:eq(0)'));
     const time = moment(new Date()).calendar();
-    assert.equal(find('.t-grid-data:eq(0) .t-ticket-created').text().trim(), `${time}`);
+    assert.equal(find('.t-grid-data:eq(0) .t-ticket-created').text().trim(), time);
     pagination(assert);
   });
 });
@@ -83,7 +83,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     const time = moment(new Date()).calendar();
-    assert.equal(find('.t-grid-data:eq(0) .t-ticket-created').text().trim(), `${time}`);
+    assert.equal(find('.t-grid-data:eq(0) .t-ticket-created').text().trim(), time);
     pagination(assert);
   });
 });

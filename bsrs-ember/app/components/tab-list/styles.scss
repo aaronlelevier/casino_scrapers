@@ -23,6 +23,9 @@ nav.tabs{
     border-radius: $borderRadiusTop;
     position: relative;
     transition: width .25s ease-in-out;
+    // span.tab-title { // will overflow tabs when screen gets smaller. Need to figure out something else w/ flexbox
+    //   @include truncate;
+    // }
   }
     // li{
     //   height: $tabHeight;

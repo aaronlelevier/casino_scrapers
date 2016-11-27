@@ -6,10 +6,10 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import { POWER_SELECT_OPTIONS } from 'bsrs-ember/tests/helpers/power-select-terms';
-import BASEURLS from 'bsrs-ember/utilities/urls';
+import BASEURLS, { TICKET_LIST_URL } from 'bsrs-ember/utilities/urls';
 
 const BASE_URL = BASEURLS.base_tickets_url;
-const TICKETS_URL = BASE_URL + '/index';
+const TICKETS_URL = BASE_URL;
 const NEW_URL = BASE_URL + '/new/1';
 const DETAIL_URL = BASE_URL + '/' + TD.idOne;
 const CC = '.t-ticket-cc-select .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
@@ -98,15 +98,13 @@ var TicketPage = PageObject.create({
   statusNine: text('li:eq(8)', { scope: POWER_SELECT_OPTIONS }),
 
   assigneeInput: text(ASSIGNEE),
-  assigneeClickDropdown: clickable(ASSIGNEE),
-  // assigneeClickOptionOne: clickable(`${POWER_SELECT_OPTIONS} > .ember-power-select-option:contains(${PD.name})`),
   assigneeClickOptionOne: clickable(`.ember-power-select-option:eq(0)`, { scope: POWER_SELECT_OPTIONS }),
   assigneeClickOptionTwo: clickable(`.ember-power-select-option:eq(1)`, { scope: POWER_SELECT_OPTIONS }),
   // assigneeClickIdThree: clickable(`${POWER_SELECT_OPTIONS} > .ember-power-select-option:contains(${PD.storeNameThree})`),
   assigneeOptionLength: count('li', { scope: POWER_SELECT_OPTIONS }),
 
-  request: value('.t-ticket-request'),
-  requestFillIn: fillable('.t-ticket-request'),
+  request: value('.t-ticket-request-single'),
+  requestFillIn: fillable('.t-ticket-request-single'),
   requesterFillIn: fillable('.t-ticket-requester'),
   comment: value('.t-ticket-comment'),
   commentFillIn: fillable('.t-ticket-comment'),

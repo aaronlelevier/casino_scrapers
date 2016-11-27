@@ -4,6 +4,7 @@ import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance'
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import config from 'bsrs-ember/config/environment';
+import page from 'bsrs-ember/tests/pages/tickets';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
@@ -13,7 +14,7 @@ import BASEURLS from 'bsrs-ember/utilities/urls';
 
 const idTwo = 'bf2b9c85-f6bd-4345-9834-c5d51de53d02';
 const PREFIX = config.APP.NAMESPACE;
-const TICKET_LIST_URL = `${BASEURLS.base_tickets_url}/index`;
+const TICKET_LIST_URL = `${BASEURLS.base_tickets_url}`;
 const TICKET_ONE_DETAIL_URL = `${BASEURLS.base_tickets_url}/${TD.idOne}`;
 const TICKET_TWO_DETAIL_URL = `${BASEURLS.base_tickets_url}/${idTwo}`;
 const TOP_LEVEL_CATEGORIES_URL = `${PREFIX}/admin/categories/parents/`;
@@ -61,7 +62,7 @@ test('rolling back should have no effect on another open tickets dirty status', 
     ticket_two = store.find('ticket', idTwo);
     assert.equal(ticket_two.get('isDirtyOrRelatedDirty'), false);
   });
-  fillIn('.t-ticket-request', 'something random');
+  page.requestFillIn('something random');
   andThen(() => {
     assert.equal(currentURL(), TICKET_TWO_DETAIL_URL);
     ticket_one = store.find('ticket', TD.idOne);

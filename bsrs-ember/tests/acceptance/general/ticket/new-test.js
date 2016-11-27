@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { test } from 'qunit';
+import { test, skip } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
@@ -21,28 +21,18 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/tickets';
 import moment from 'moment';
 import { POWER_SELECT_OPTIONS, TICKET_ASSIGNEE_SELECT, TICKET_STATUS_SELECT, TICKET_PRIORITY_SELECT, TICKET_LOCATION_SELECT } from 'bsrs-ember/tests/helpers/power-select-terms';
-import BASEURLS, { TICKETS_URL, LOCATIONS_URL, PEOPLE_URL, CATEGORIES_URL, DT_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, LOCATIONS_URL, PEOPLE_URL, CATEGORIES_URL, DT_URL } from 'bsrs-ember/utilities/urls';
+import { TICKET_ASSIGNEE, PS_SEARCH } from 'bsrs-ember/tests/helpers/const-names';
 
-const BASE_URL = BASEURLS.base_tickets_url;
-const TICKET_URL = `${BASE_URL}/index`;
-const TICKET_NEW_URL = BASE_URL + '/new/1';
-const TICKET_POST_URL = TICKETS_URL;
-const NUMBER_6 = {keyCode: 54};
-const LETTER_B = {keyCode: 66};
-const BACKSPACE = {keyCode: 8};
-const SPACEBAR = {keyCode: 32};
-const LOCATION = '.t-ticket-location-select .ember-basic-dropdown-trigger';
-const ASSIGNEE = '.t-ticket-assignee-select .ember-basic-dropdown-trigger';
-const CC = '.t-ticket-cc-select .ember-basic-dropdown-trigger';
+const TICKET_NEW_URL = TICKET_LIST_URL + '/new/1';
 const CC_SEARCH = '.ember-power-select-trigger-multiple-input';
-const SEARCH = '.ember-power-select-search input';
 
 let store, list_xhr, location_xhr, people_xhr, counter;
 
 moduleForAcceptance('Acceptance | general ticket new test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
-    list_xhr = xhr(TICKETS_URL+'?page=1', 'GET', null, {}, 200, TF.empty());
+    list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.empty());
     location_xhr = xhr(`${LOCATIONS_URL}location__icontains=6/`, 'GET', null, {}, 200, LF.search_power_select());
     counter = 0;
     random.uuid = function() { return UUID.value; };
@@ -88,7 +78,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     assert.notOk(page.categoryValidationErrorVisible);
   });
   page.requestFillIn('');
-  triggerEvent('.t-ticket-request', 'keyup', {keyCode: 32});
+  triggerEvent('.t-ticket-request-single', 'keyup', {keyCode: 32});
   page.requesterFillIn('');
   triggerEvent('.t-ticket-requester', 'keyup', {keyCode: 32});
   andThen(() => {
@@ -187,14 +177,13 @@ test('selecting a top level category will alter the url and can cancel/discard c
   generalPage.clickModalRollback();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), TICKET_URL);
+      assert.equal(currentURL(), TICKET_LIST_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
 
 test('selecting category tree and removing a top level category will remove children categories already selected', (assert) => {
-  clearxhr(list_xhr);
   clearxhr(location_xhr);
   //clear out first xhr to change unusedId has_children to true
   page.visitNew();
@@ -258,7 +247,6 @@ test('selecting category tree and removing a top level category will remove chil
 });
 
 test('when selecting a new parent cateogry it should remove previously selected child category', (assert) => {
-  clearxhr(list_xhr);
   clearxhr(location_xhr);
   page.visitNew();
   andThen(() => {
@@ -324,7 +312,6 @@ test('when selecting a new parent cateogry it should remove previously selected 
 
 /*TICKET TO ASSIGNEE*/
 test('assignee component shows assignee for ticket and will fire off xhr to fetch assignees on search to change assignee', (assert) => {
-  clearxhr(list_xhr);
   clearxhr(location_xhr);
   page.visitNew();
   andThen(() => {
@@ -369,7 +356,6 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
 
 /*TICKET TO LOCATION 1 to Many*/
 test('selecting new location will not affect other power select components and will only render one tab', (assert) => {
-  clearxhr(list_xhr);
   page.visitNew();
   selectChoose(TICKET_PRIORITY_SELECT, TD.priorityOne);
   selectSearch(TICKET_LOCATION_SELECT, '6');
@@ -382,7 +368,6 @@ test('selecting new location will not affect other power select components and w
 });
 
 test('location new component shows location for ticket and will fire off xhr to fetch locations on search to change location', (assert) => {
-  clearxhr(list_xhr);
   page.visitNew();
   selectSearch(TICKET_LOCATION_SELECT, '6');
   selectChoose(TICKET_LOCATION_SELECT, LD.storeNameTwo);
@@ -396,17 +381,16 @@ test('location new component shows location for ticket and will fire off xhr to 
 });
 
 test('removes location dropdown on search to change location', (assert) => {
-  clearxhr(list_xhr);
   page.visitNew();
   selectSearch(TICKET_LOCATION_SELECT, '6');
   andThen(() => {
     assert.equal(page.locationOptionLength, 2);
   });
-  fillIn(SEARCH, ' ');
+  fillIn(PS_SEARCH, ' ');
   andThen(() => {
     assert.equal(find(`${POWER_SELECT_OPTIONS}`).text().trim(), GLOBALMSG.power_search);
   });
-  fillIn(SEARCH, '6');
+  fillIn(PS_SEARCH, '6');
   andThen(() => {
     assert.equal(page.locationOptionLength, 2);
   });
@@ -414,7 +398,6 @@ test('removes location dropdown on search to change location', (assert) => {
 
 /*TICKET CC M2M*/
 test('clicking and typing into power select for people will fire off xhr request for all people', (assert) => {
-  clearxhr(list_xhr);
   clearxhr(location_xhr);
   page.visitNew();
   andThen(() => {
@@ -476,7 +459,6 @@ test('clicking and typing into power select for people will fire off xhr request
 });
 
 test('can remove and add back same cc and save empty cc', (assert) => {
-  clearxhr(list_xhr);
   clearxhr(location_xhr);
   page.visitNew();
   andThen(() => {
@@ -506,81 +488,80 @@ test('can remove and add back same cc and save empty cc', (assert) => {
   });
 });
 
-//test('all required fields persist correctly when the user submits a new ticket form', (assert) => {
-//  page.visit();
-//  andThen(() => {
-//    patchRandom(counter);
-//  });
-//  click('.t-add-new');
-//  andThen(() => {
-//    assert.equal(currentURL(), TICKET_NEW_URL);
-//    assert.equal(store.find('ticket').get('length'), 1);
-//    const ticket = store.find('ticket', UUID.value);
-//    assert.ok(ticket.get('isNotDirty'));
-//  });
-//  people_xhr = xhr(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
-//  page.assigneeClickDropdown();
-//  fillIn(SEARCH, 'b');
-//  page.assigneeClickOptionTwo();
-//  andThen(() => {
-//    assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
-//    let ticket = store.findOne('ticket');
-//    assert.ok(ticket.get('assignee'));
-//    assert.equal(ticket.get('assignee').get('id'), PD.idSearch);
-//    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-//  });
-//  page.statusClickDropdown();
-//  page.statusClickOptionOne();
-//  page.priorityClickDropdown();
-//  page.priorityClickOptionOne();
-//  andThen(() => {
-//    let ticket = store.find('ticket', UUID.value);
-//    assert.equal(ticket.get('assignee').get('id'), PD.idSearch);
-//    assert.equal(ticket.get('status.id'), TD.statusOneId);
-//    assert.equal(ticket.get('priority.id'), TD.priorityOneId);
-//  });
-//  page.locationClickDropdown();
-//  fillIn(SEARCH, '6');
-//  andThen(() => {
-//    //ensure route doesn't change current selections
-//    assert.equal(page.locationOptionLength, 2);
-//    let ticket = store.find('ticket', UUID.value);
-//    assert.equal(ticket.get('assignee').get('id'), PD.idSearch);
-//    assert.equal(ticket.get('status.id'), TD.statusOneId);
-//    assert.equal(ticket.get('priority.id'), TD.priorityOneId);
-//  });
-//  page.locationClickOptionTwo();
-//  let top_level_categories_endpoint = `${CATEGORIES_URL}parents/`;
-//  xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
-//  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
-//  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
-//  ajax(`${CATEGORIES_URL}?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
-//  page.categoryOneClickDropdown();
-//  page.categoryOneClickOptionOne();
-//  page.categoryTwoClickDropdown();
-//  page.categoryTwoClickOptionOne();
-//  page.categoryThreeClickDropdown();
-//  page.categoryThreeClickOptionOne();
-//  page.requestFillIn(TD.requestOneGrid);
-//  page.requesterFillIn(TD.requesterOne);
-//  required_ticket_payload.request = TD.requestOneGrid;
-//  xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
-//  generalPage.save();
-//  andThen(() => {
-//    assert.equal(currentURL(), TICKET_URL);
-//    assert.equal(store.find('ticket').get('length'), 1);
-//    let persisted = store.find('ticket', UUID.value);
-//    assert.ok(persisted.get('assignee'));
-//    assert.equal(persisted.get('new'), undefined);
-//    assert.equal(persisted.get('assignee.id'), PD.idSearch);
-//    assert.equal(persisted.get('request'), TD.requestOneGrid);
-//    assert.ok(persisted.get('location'));
-//    assert.equal(persisted.get('location.id'), LD.idTwo);
-//    assert.equal(persisted.get('status.id'), TD.statusOneId);
-//    assert.ok(persisted.get('isNotDirty'));
-//    assert.ok(persisted.get('isNotDirtyOrRelatedNotDirty'));
-//  });
-//});
+skip('all required fields persist correctly when the user submits a new ticket form', (assert) => {
+  page.visit();
+  andThen(() => {
+    patchRandom(counter);
+  });
+  click('.t-add-new');
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.equal(store.find('ticket').get('length'), 1);
+    const ticket = store.find('ticket', UUID.value);
+    assert.ok(ticket.get('isNotDirty'));
+  });
+  people_xhr = xhr(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
+  selectSearch(TICKET_ASSIGNEE, 'b');
+  page.assigneeClickOptionTwo();
+  andThen(() => {
+    assert.equal(page.assigneeInput, `${PD.nameBoy2} ${PD.lastNameBoy2}`);
+    let ticket = store.findOne('ticket');
+    assert.ok(ticket.get('assignee'));
+    assert.equal(ticket.get('assignee').get('id'), PD.idSearch);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  });
+  page.statusClickDropdown();
+  page.statusClickOptionOne();
+  page.priorityClickDropdown();
+  page.priorityClickOptionOne();
+  andThen(() => {
+    let ticket = store.find('ticket', UUID.value);
+    assert.equal(ticket.get('assignee').get('id'), PD.idSearch);
+    assert.equal(ticket.get('status.id'), TD.statusOneId);
+    assert.equal(ticket.get('priority.id'), TD.priorityOneId);
+  });
+  page.locationClickDropdown();
+  fillIn(PS_SEARCH, '6');
+  andThen(() => {
+    //ensure route doesn't change current selections
+    assert.equal(page.locationOptionLength, 2);
+    let ticket = store.find('ticket', UUID.value);
+    assert.equal(ticket.get('assignee').get('id'), PD.idSearch);
+    assert.equal(ticket.get('status.id'), TD.statusOneId);
+    assert.equal(ticket.get('priority.id'), TD.priorityOneId);
+  });
+  page.locationClickOptionTwo();
+  let top_level_categories_endpoint = `${CATEGORIES_URL}parents/`;
+  xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
+  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
+  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
+  ajax(`${CATEGORIES_URL}?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+  page.categoryOneClickDropdown();
+  page.categoryOneClickOptionOne();
+  page.categoryTwoClickDropdown();
+  page.categoryTwoClickOptionOne();
+  page.categoryThreeClickDropdown();
+  page.categoryThreeClickOptionOne();
+  page.requestFillIn(TD.requestOneGrid);
+  page.requesterFillIn(TD.requesterOne);
+  required_ticket_payload.request = TD.requestOneGrid;
+  xhr(TICKETS_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_LIST_URL);
+    assert.equal(store.find('ticket').get('length'), 1);
+    let persisted = store.find('ticket', UUID.value);
+    assert.ok(persisted.get('assignee'));
+    assert.equal(persisted.get('new'), undefined);
+    assert.equal(persisted.get('assignee.id'), PD.idSearch);
+    assert.equal(persisted.get('request'), TD.requestOneGrid);
+    assert.ok(persisted.get('location'));
+    assert.equal(persisted.get('location.id'), LD.idTwo);
+    assert.equal(persisted.get('status.id'), TD.statusOneId);
+    assert.ok(persisted.get('isNotDirty'));
+    assert.ok(persisted.get('isNotDirtyOrRelatedNotDirty'));
+  });
+});
 
 test('adding a new ticket should allow for another new ticket to be created after the first is persisted', (assert) => {
   ajax(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
@@ -607,16 +588,16 @@ test('adding a new ticket should allow for another new ticket to be created afte
   page.requestFillIn(TD.requestOneGrid);
   page.requesterFillIn(TD.requesterOne);
   required_ticket_payload.request = TD.requestOneGrid;
-  xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
+  xhr(TICKETS_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
   generalPage.save();
   andThen(() => {
-    assert.ok(urlContains(currentURL(), TICKET_URL));
+    assert.ok(urlContains(currentURL(), TICKET_LIST_URL));
     assert.equal(store.find('ticket').get('length'), 1);
   });
   click('.t-add-new');
   andThen(() => {
-    assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.ok(urlContains(currentURL(), TICKET_NEW_URL));
     assert.equal(store.find('ticket').get('length'), 2);
-    assert.equal(find('.t-ticket-request').val(), '');
+    assert.equal(page.request, '');
   });
 });

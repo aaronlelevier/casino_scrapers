@@ -18,7 +18,7 @@ class ModelPage(JavascriptMixin):
 
     def find_wait_and_assert_elem(self, elem, value):
         elem_input = self.wait_for_xhr_request(elem)
-        assert elem_input.get_attribute("value") == value
+        assert value in elem_input.get_attribute("value")
 
     def find_and_assert_elems(self, **kwargs):
         for k, v in kwargs.items():
@@ -44,7 +44,7 @@ class ModelPage(JavascriptMixin):
             pass
         list_view_elements = self.find_list_name()
         for row in list_view_elements:
-            if row.text and row.text == name:
+            if row.text and name in row.text:
                 new_model = row
         count += 1
         return (new_model, count)

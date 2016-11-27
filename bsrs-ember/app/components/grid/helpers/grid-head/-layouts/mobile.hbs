@@ -12,11 +12,15 @@
 
 {{#if mobileFilter}}
   {{#ember-wormhole to="mobile-grid-filter-wormhole"}}
-  <div class="filters animated-fast slideInUp t-mobile-filters">
+  {{#animation-wrapper 
+    slideInUp=slideInUp 
+    slideOutDown=slideOutDown 
+    class="animated-fast filters t-mobile-filters"
+  }}
     <vbox class="mobile-wrap">
       <header class="mobile-header flex-item--none">
         <hbox class="filters__head">
-          <button class="filters__head__btn mobile-btn t-mobile-filter-first-btn" {{action "toggleMobileFilter"}}>{{t "crud.cancel.button"}}</button>
+          <button class="filters__head__btn mobile-btn t-mobile-filter-first-btn" {{action "closeMobileFilter"}}>{{t "crud.cancel.button"}}</button>
           <h1 class="filters__head__title t-mobile-filter-title">{{t "grid.filter" count=2}}</h1>
           <button class="filters__head__btn filters__head__btn--action mobile-btn t-mobile-filter-second-btn" {{action "filterGrid"}}>{{t "grid.filter"}}</button>
         </hbox>
@@ -29,15 +33,19 @@
         {{/each}}
       </section>
     </vbox>
-  </div>
+  {{/animation-wrapper}}
   {{/ember-wormhole}}
 {{else if mobileSearch}}
   {{#ember-wormhole to="mobile-grid-filter-wormhole"}}
-  <div class="filters animated-fast slideInUp t-mobile-search-slideUp">
+  {{#animation-wrapper 
+    slideInUp=slideInUp 
+    slideOutDown=slideOutDown 
+    class="animated-fast filters t-mobile-search-slideUp"
+  }}
     <vbox class="mobile-wrap">
       <header class="mobile-header flex-item--none">
         <hbox class="filters__head">
-          <button class="filters__head__btn mobile-btn flex-item--none t-mobile-filter-first-btn" {{action "toggleMobileSearch"}}>{{fa-icon "arrow-left"}}</button>
+          <button class="filters__head__btn mobile-btn flex-item--none t-mobile-filter-first-btn" {{action "closeMobileSearch"}}>{{fa-icon "arrow-left"}}</button>
             {{grid-search-input classNames="mobile-header__input--dark flex-item--auto" placeholder=search_placeholder keyup=(action "keyup") focusInput=true}}
           <button class="filters__head__btn filters__head__btn--action mobile-btn flex-item--none t-mobile-filter-second-btn" {{action "searchGrid"}}>{{fa-icon "search"}}</button>
         </hbox>
@@ -50,6 +58,6 @@
         {{/each}}
       </section>
     </vbox>
-  </div>
+  {{/animation-wrapper}}
   {{/ember-wormhole}}
 {{/if}}

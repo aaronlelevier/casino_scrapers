@@ -1,4 +1,4 @@
-<nav class="tabs">
+<nav class="tabs" data-test-id="tabs">
   <box horizontal>
     {{#each tabs as |tab|}}
       {{#if tab.model.new}}
@@ -33,7 +33,7 @@
         {{/modal-dialog}}
       {{/if}}
       --}}
-      {{#link-to "tickets.new" tagName="span" class="t-home-modal-show"}}
+      {{#link-to "tickets.index.new" tagName="span" class="t-home-modal-show"}}
         {{fa-icon "plus"}}
       {{/link-to}}
     </div>

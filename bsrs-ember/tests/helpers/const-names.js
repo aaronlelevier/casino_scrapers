@@ -6,3 +6,6 @@ export const LOCATION_SELECT = '.t-person-locations-select';
 export const LLEVEL_SELECT = '.t-location-level-select';
 export const LOCATION_PARENTS_SELECT = '.t-location-parent-select';
 export const LOCATION_CHILDREN_SELECT = '.t-location-children-select';
+export const TICKET_ASSIGNEE = '.t-ticket-assignee-select';
+export const TICKET_LOCATION = '.t-ticket-location-select';
+export const PS_SEARCH = '.ember-power-select-search input';

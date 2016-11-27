@@ -3,14 +3,13 @@ import inject from 'bsrs-ember/utilities/inject';
 import filterset_regex from 'bsrs-ember/utilities/filterset-regex';
 
 var GridViewController = Ember.Controller.extend({
-  ts: undefined,
   page: 1,
   page_size: undefined,
   sort: undefined,
   find: undefined,
   search: undefined,
   repositoryFilterset: inject('filterset'),
-  queryParams: ['page', 'sort', 'search', 'find', 'id_in', 'ts'],
+  queryParams: ['page', 'sort', 'search', 'find', 'id_in'],
   hasActiveFilterSet: Ember.computed('filtersets.[]', 'sort', 'find', 'search', function() {
     const { filtersets, sort, find, search, routeName } = this.getProperties('filtersets', 'sort', 'find', 'search', 'routeName');
     let active = sort || find || search;

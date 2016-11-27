@@ -7,6 +7,8 @@ var FullScreen = Ember.Component.extend(FullScreenMixin, {
   activityRepository: inject('activity'),
   mobile: true,
   mobileDialog: false,
+  slideInRight: true,
+  slideOutRight: false,
   init() {
     this._super(...arguments);
     this.componentStringFunc();

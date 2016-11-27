@@ -1,5 +1,7 @@
 & {
+
   @include fullScreen;
+
   hbox.detail__head {
     align-items: center;
     height: $mobileHeaderHeight;

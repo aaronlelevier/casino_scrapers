@@ -16,7 +16,7 @@ var application, store;
 const PREFIX = config.APP.NAMESPACE;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 const BASE_URL = BASEURLS.base_tickets_url;
-const TICKET_URL = `${BASE_URL}/index`;
+const TICKET_URL = `${BASE_URL}`;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
 moduleForAcceptance('Acceptance | general dashboard', {

@@ -31,7 +31,8 @@ module.exports = function(environment) {
       // '2010-2020' - 2010-2020, all timezones
       // 'none' - no data, just timezone API
       includeTimezone: 'all',
-      includeLocales: true
+      includeLocales: true,
+      allowEmpty: true // default: false. prevent console errors
     },
 
     APP: {

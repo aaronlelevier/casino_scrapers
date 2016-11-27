@@ -112,7 +112,7 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
         simpleStore.push('ticket', {id: id, comment: ''});
       });
     }
-    if(!get(this, 'created')) { this.createdAt(); }
+    // if(!get(this, 'created')) { this.createdAt(); }
     return payload;
   },
   patchFields: ['request'],
@@ -135,13 +135,14 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     });
     return payload;
   },
-  createdAt() {
-    const date = new Date();
-    const iso = date.toISOString();
-    run(() => {
-      get(this, 'simpleStore').push('ticket', {id: get(this, 'id'), created: iso});
-    });
-  },
+  // unsure what this was used for
+  // createdAt() {
+  //   const date = new Date();
+  //   const iso = date.toISOString();
+  //   run(() => {
+  //     get(this, 'simpleStore').push('ticket', {id: get(this, 'id'), created: iso});
+  //   });
+  // },
   removeRecord() {
     run(() => {
       get(this, 'simpleStore').remove('ticket', get(this, 'id'));

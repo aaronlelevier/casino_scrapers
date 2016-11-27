@@ -17,21 +17,15 @@ import page from 'bsrs-ember/tests/pages/ticket-mobile';
 import ticketPage from 'bsrs-ember/tests/pages/tickets';
 import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS, { TICKETS_URL, PEOPLE_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, PEOPLE_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
+import { TICKET_ASSIGNEE, TICKET_LOCATION } from 'bsrs-ember/tests/helpers/const-names';
 
 var store, list_xhr;
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
-const BASE_URL = BASEURLS.base_tickets_url;
-const TICKET_URL = `${BASE_URL}/index`;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
-const DETAIL_URL = `${BASE_URL}/index/${TD.idOne}`;
-const ACTIVITY_ITEMS = '.t-activity-list-item';
-const ASSIGNEE = '.t-ticket-assignee-select';
-const LOCATION = '.t-ticket-location-select';
-// const SORT_ASSIGNEE_DIR = '.t-sort-assignee-fullname-dir';
-// const FILTER_PRIORITY = '.t-filter-priority-translated-name';
+const DETAIL_URL = `${TICKET_LIST_URL}/${TD.idOne}`;
 
 moduleForAcceptance('Acceptance | general grid ticket mobile test', {
   beforeEach() {
@@ -53,9 +47,9 @@ test('only renders grid items from server and not other ticket objects already i
   });
   clearxhr(list_xhr);
   xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list_two());
-  visit(TICKET_URL);
+  visit(TICKET_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
+    assert.equal(currentURL(), TICKET_LIST_URL);
     assert.equal(store.find('ticket-list').get('length'), 9);
   });
 });
@@ -64,7 +58,7 @@ test('visiting mobile ticket grid show correct layout', assert => {
   ticketPage.visit();
   andThen(() => {
     const ticket = store.findOne('ticket-list');
-    assert.equal(currentURL(), TICKET_URL);
+    assert.equal(currentURL(), TICKET_LIST_URL);
     assert.equal(find('.t-mobile-grid-title').text().trim(), '19 Tickets');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').text().trim());
@@ -86,8 +80,8 @@ test('ticket request filter will filter down results and reset page to 1', async
   xhr(`${TICKETS_URL}?page=1&request__icontains=ape19`, 'GET', null, {}, 200, TF.searched('ape19', 'request'));
   clearxhr(list_xhr);
   xhr(`${TICKETS_URL}?page=2`, 'GET', null, {}, 200, TF.list());
-  await visit(TICKET_URL+'?page=2');
-  assert.equal(currentURL(), TICKET_URL + '?page=2');
+  await visit(TICKET_LIST_URL+'?page=2');
+  assert.equal(currentURL(), TICKET_LIST_URL + '?page=2');
   assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
   await generalMobilePage.clickFilterOpen();
   await page.clickFilterRequest();
@@ -179,17 +173,17 @@ test('filtering assignee on power select and can remove', async assert => {
   assert.equal(store.find('ticket-list').get('length'), 10);
   await generalMobilePage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 0);
-  assert.equal(find(ASSIGNEE).length, 0);
+  assert.equal(find(TICKET_ASSIGNEE).length, 0);
   await page.clickFilterAssignee();
   assert.equal(find('.t-filter__input-wrap').length, 1);
   xhr(`${PEOPLE_URL}person__icontains=boy/`, 'GET', null, {}, 200, PF.search_power_select());
-  await selectSearch(ASSIGNEE, 'boy');
-  await selectChoose(ASSIGNEE, PD.fullnameBoy);
+  await selectSearch(TICKET_ASSIGNEE, 'boy');
+  await selectChoose(TICKET_ASSIGNEE, PD.fullnameBoy);
   assert.equal(page.assigneeInput.split(' ')[1], PD.nameBoy);
   await generalMobilePage.submitFilterSort();
   await generalMobilePage.clickFilterOpen();
   assert.equal(page.assigneeInput.split(' ')[1], PD.nameBoy);
-  removeMultipleOption(ASSIGNEE, PD.fullnameBoy);
+  removeMultipleOption(TICKET_ASSIGNEE, PD.fullnameBoy);
   await generalMobilePage.submitFilterSort();
 });
 
@@ -202,12 +196,12 @@ test('filtering location on power select and can remove', async assert => {
   assert.equal(store.find('ticket-list').get('length'), 10);
   await generalMobilePage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 0);
-  assert.equal(find(LOCATION).length, 0);
+  assert.equal(find(TICKET_LOCATION).length, 0);
   await page.clickFilterLocation();
   assert.equal(find('.t-filter__input-wrap').length, 1);
   xhr(`${LOCATIONS_URL}location__icontains=6/`, 'GET', null, {}, 200, LF.search_power_select());
-  await selectSearch(LOCATION, '6');
-  await selectChoose(LOCATION, 'ZXY863');
+  await selectSearch(TICKET_LOCATION, '6');
+  await selectChoose(TICKET_LOCATION, 'ZXY863');
   await generalMobilePage.submitFilterSort();
   await generalMobilePage.clickFilterOpen();
   assert.equal(page.locationInput.split(' ')[1], 'ZXY863');
@@ -217,14 +211,14 @@ test('filtering location on power select and can remove', async assert => {
   // Select another location
   await generalMobilePage.clickFilterOpen();
   xhr(`${LOCATIONS_URL}location__icontains=9/`, 'GET', null, {}, 200, LF.search_idThree());
-  await selectSearch(LOCATION, '9');
-  await selectChoose(LOCATION, 'GHI789');
+  await selectSearch(TICKET_LOCATION, '9');
+  await selectChoose(TICKET_LOCATION, 'GHI789');
   await generalMobilePage.submitFilterSort();
   await generalMobilePage.clickFilterOpen();
   assert.equal(page.locationInput.split(' ')[1], 'ZXY863');
   assert.equal(page.locationInput.split(' ')[3], 'GHI789');
   // Remove
-  await removeMultipleOption(LOCATION, 'ZXY863');
+  await removeMultipleOption(TICKET_LOCATION, 'ZXY863');
   await generalMobilePage.submitFilterSort();
   await generalMobilePage.clickFilterOpen();
   assert.equal(page.locationInput.split(' ')[1], 'GHI789');
@@ -236,12 +230,12 @@ test('removing find or id_in filter will reset grid', async assert => {
   await generalMobilePage.clickFilterOpen();
   await page.clickFilterAssignee();
   xhr(`${PEOPLE_URL}person__icontains=boy/`, 'GET', null, {}, 200, PF.search_power_select());
-  await selectSearch(ASSIGNEE, 'boy');
-  await selectChoose(ASSIGNEE, PD.fullnameBoy);
+  await selectSearch(TICKET_ASSIGNEE, 'boy');
+  await selectChoose(TICKET_ASSIGNEE, PD.fullnameBoy);
   await generalMobilePage.submitFilterSort();
   await generalMobilePage.clickFilterOpen();
   assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), '');
-  removeMultipleOption(ASSIGNEE, PD.fullnameBoy);
+  removeMultipleOption(TICKET_ASSIGNEE, PD.fullnameBoy);
   await generalMobilePage.submitFilterSort();
   assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
   await generalMobilePage.clickFilterOpen();

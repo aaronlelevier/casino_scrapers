@@ -51,10 +51,7 @@ var GridViewRoute = Ember.Route.extend({
     },
     id_in: {
       refreshModel: true
-    },
-    ts: {
-      refreshModel: true
-    },
+    }
   },
   model(params, transition) {
     const { filtersetRepository, repository, special_url, routeName } = this.getProperties('filtersetRepository', 'repository', 'special_url', 'routeName');
@@ -66,17 +63,17 @@ var GridViewRoute = Ember.Route.extend({
     const search = query.search;
     const count = repository.findCount();
     set_filter_model_attrs(this.filterModel, query.find);
-    let model;
+    let model, promise;
     if (this.get('device').get('isMobile')) {
       this.controllerFor(routeName).set('infinityIsLoading', true);
-      return new Ember.RSVP.Promise((resolve, reject) => {
+      promise = new Ember.RSVP.Promise((resolve, reject) => {
         return repository.findWithQueryMobile(query.page, query.search, query.find, query.id_in, special_url).then((model) => {
           this.controllerFor(routeName).set('infinityIsLoading', false);
           resolve({ count, model, requested, filtersets, routeName, search, repository });
         });
       });
     } else {
-      return new Ember.RSVP.Promise((resolve, reject) => {
+      promise = new Ember.RSVP.Promise((resolve, reject) => {
         return repository.findWithQuery(query.page, query.search, query.find, query.id_in, query.page_size, query.sort, special_url).then((model) => {
           resolve({ count, model, requested, filtersets, routeName, search, repository });
         }, (xhr) => {
@@ -88,6 +85,9 @@ var GridViewRoute = Ember.Route.extend({
         });
       });
     }
+    return promise.catch((err) => {
+      Ember.Logger.error(err);
+    });
   },
   setupController: function(controller, hash) {
     if ( !(hash instanceof ServerError) )  {

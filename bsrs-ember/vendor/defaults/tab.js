@@ -7,7 +7,7 @@ var BSRS_TAB_DEFAULTS_OBJECT = (function() {
             typeOne: 'single',
             typeTwo: 'multiple',
             module_one: 'ticket',
-            routeName_one: 'tickets.ticket',
+            routeName_one: 'tickets.index.ticket',
             templateModelField_one: 'categories',
             redirect_one: 'tickets.index',
             newModel_one: false,

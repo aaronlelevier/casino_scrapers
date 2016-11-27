@@ -1,5 +1,5 @@
 {{#if item.photo.image_thumbnail}}
-  <span class="avatar" style="background-image: url('{{item.photo.image_thumbnail}}')" data-test-id="user-avatar"></span>
+  <span class="avatar" style="background-image: url('{{html-safe item.photo.image_thumbnail}}')" data-test-id="user-avatar"></span>
 {{else}}
   <span class="avatar empty" data-test-id="user-avatar"></span>
 {{/if}}

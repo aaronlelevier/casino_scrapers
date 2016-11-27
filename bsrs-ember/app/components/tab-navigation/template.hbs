@@ -1,5 +1,5 @@
 {{#link-to tab.routeName (if link_id link_id) classNames="t-tab"}}
-  <span class="t-tab-title">{{tab.parent}}</span>
+  <span class="tab-title t-tab-title">{{tab.parent}}</span>
   <span class="close-wrap">
     <a href="#" class="close-icon t-tab-close" {{action "close" tab bubbles=false}}>
       {{#if tab.model.isDirtyOrRelatedDirty}}

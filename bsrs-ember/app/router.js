@@ -57,9 +57,10 @@ Router.map(function() {
     });
   });
   this.route('tickets', function() {
-    this.route('index');
-    this.route('new', {path: 'new/:new_id'});
-    this.route('ticket', {path: '/:ticket_id'});
+    this.route('index', { path: '/' }, function() {
+      this.route('ticket', {path: '/:ticket_id'});
+      this.route('new', {path: 'new/:new_id'});
+    });
   });
   this.route('dtds', function() {
     this.route('new', {path: 'new/:new_id'});

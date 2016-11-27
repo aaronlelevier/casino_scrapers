@@ -1,4 +1,6 @@
 import Ember from 'ember';
+const { run } = Ember;
+import config from 'bsrs-ember/config/environment';
 
 /* @mixin FullScreen
  * Not using save and cancel b/c no tabs that exist in desktop
@@ -18,8 +20,9 @@ export default Ember.Mixin.create({
           const pk = model.get('id');
           return this.get('activityRepository').find('ticket', 'tickets', pk, model);
         } else {
+          this.setProperties({slideOutRight: false, slideOutUp: true, slideInRight: false});
           const redirectRoute = this.get('redirectRoute');
-          this.sendAction('close', redirectRoute);
+          run.later(this, 'sendAction', 'close', redirectRoute, config.APP.ANIMATION_TIME);
         }
       }, (xhr) => {
         if(xhr.status === 400) {
@@ -35,7 +38,8 @@ export default Ember.Mixin.create({
       const model = this.get('model');
       const redirectRoute = this.get('redirectRoute');
       if (model.get('isNotDirtyOrRelatedNotDirty')) {
-        this.sendAction('close', redirectRoute);
+        this.setProperties({slideOutRight: true, slideOutUp: false, slideInRight: false});
+        run.later(this, 'sendAction', 'close', redirectRoute, config.APP.ANIMATION_TIME);
       } else {
         this.set('mobileDialog', true);
       }

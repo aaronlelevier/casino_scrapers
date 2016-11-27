@@ -22,13 +22,11 @@ import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/tickets';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS, { TICKETS_URL, LOCATIONS_URL, PEOPLE_URL, CATEGORIES_URL, DT_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, LOCATIONS_URL, PEOPLE_URL, CATEGORIES_URL, DT_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
-const BASE_URL = BASEURLS.base_tickets_url;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
-const TICKET_URL = `${BASE_URL}/index`;
-const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
+const DETAIL_URL = `${TICKET_LIST_URL}/${TD.idOne}`;
 const TICKET_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
 const ACTIVITY_ITEMS = '.t-activity-list-item';
 
@@ -40,9 +38,10 @@ moduleForAcceptance('Acceptance | general ticket activity test', {
     //   dateString: 'December 25, 2015 13:12:59'
     // });
     store = this.application.__container__.lookup('service:simpleStore');
-    endpoint = `${PREFIX}${BASE_URL}/`;
+    endpoint = `${PREFIX}${TICKET_LIST_URL}/`;
     const detail_data = TF.detail(TD.idOne);
     detail_xhr = ajax(endpoint + TD.idOne + '/', 'GET', null, {}, 200, detail_data);
+    xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
   },
 });
 

@@ -45,6 +45,7 @@ var BSRS_TICKET_FACTORY = (function() {
       location: this.location_fixtures.get_no_related(),
       categories: this.categories(),
       requester: this.people_defaults.nameMel,
+      created: new Date()
     }
   };
   factory.prototype.generate = function(i, status_id, dt_path) {
@@ -65,6 +66,7 @@ var BSRS_TICKET_FACTORY = (function() {
       assignee: this.people_fixtures.get(),
       location: location,
       attachments: [],
+      created: new Date(),
       dt_path: dt_path || [{ //need to improve this dt_path object to reflect what it will actually look like (dtd needs more)
         ticket: {
           id: this.ticket.idOne,
@@ -164,6 +166,7 @@ var BSRS_TICKET_FACTORY = (function() {
     delete response.status_fk;
     delete response.priority_fk;
     delete response.number;
+    delete response.created;
     for(var key in ticket) {
       response[key] = ticket[key];
     }

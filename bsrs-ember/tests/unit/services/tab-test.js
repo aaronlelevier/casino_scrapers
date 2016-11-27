@@ -41,7 +41,7 @@ test('it exists for single tabs', function(assert) {
 // test('redirects based on action', function(assert) {
 //   let service = this.subject();
 //   const tab = service.findTab(TD.idOne);
-//   const route = service.redirectRoute(tab, 'tickets.ticket', 'closeTab');
+//   const route = service.redirectRoute(tab, 'tickets.index.ticket', 'closeTab');
 //   assert.equal(route, 'tickets.index');
 //   const tab_dtd = service.findTab(DTD.idOne);
 //   let route_dtd = service.redirectRoute(tab_dtd, 'dtds.dtd', 'closeTab', );

@@ -22,15 +22,17 @@ export default Ember.Service.extend({
     const tabType = tab.get('tabType');
     /* Need to fix this */
     if (action === 'closeTab') {
-      return closeTabRedirect ? transitionFunc(closeTabRedirect) : transitionFunc(redirectRoute);
+      return closeTabRedirect ? transitionFunc(closeTabRedirect) : transitionFunc(redirectRoute).then(((route) => {
+        route.refresh();
+      }));
     } else if (action === 'save') {
-      if (config.TICKET_INDEX_REFRESH === redirectRoute) {
-        return closeTabRedirect ? transitionFunc(closeTabRedirect) : transitionFunc(redirectRoute, { queryParams: {ts: Date.now()} });
-      } else {
-        return closeTabRedirect ? transitionFunc(closeTabRedirect) : transitionFunc(redirectRoute);
-      }
+        return closeTabRedirect ? transitionFunc(closeTabRedirect) : transitionFunc(redirectRoute).then((route) => {
+          route.refresh();
+        });
     } else if (action === 'delete') {
-      return transitionFunc(redirectRoute);
+      return transitionFunc(redirectRoute).then((route) => {
+        route.refresh();
+      });
     } else if (tabType === 'single') {
       if (action === 'delete' && confirmed) {
         return transitionFunc(redirectRoute);
