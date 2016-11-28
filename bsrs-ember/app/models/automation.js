@@ -78,6 +78,7 @@ export default Model.extend(OptConf, Validations, NewMixin, SaveAndRollbackRelat
     });
   },
   serialize() {
+    // there could be many pf/actions that were added but never used.
     this.get('pf').forEach(f => {
       if (!f.get('source_id')) {
         this.remove_pf(f.get('id'));

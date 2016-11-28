@@ -17,10 +17,15 @@ export default Ember.Component.extend({
     /** 
      * @method setActionType
      * 1. sets type on automation-action model i.e. 'automation.action.send_email'
-     * 2. set child model on action model i.e. 'sendsms' - need to pass id to actually create the action type child
+     * 2. if has existing type, need to remove old related (sendemail, sendsms, status, priority)
+     * 3. set child model on action model i.e. 'sendsms' - need to pass id to actually create the action type child
      */
     setActionType(automationAction, newActionType) {
 
+      // if existing type, can remove related models
+      if (automationAction.get('type.id')) {
+        automationAction.remove_related();
+      }
       // set type
       automationAction.change_type(newActionType);
 
@@ -49,9 +54,15 @@ export default Ember.Component.extend({
         this.set('optionz', response.results);
       });
     },
+    /** 
+     * @method delete
+     * - if action length > 1, remove action
+     * - if action length === 1, remove type and remove all other related models, but keep action.  Cant delete action or else shows jenk on UI
+     */
     delete(item) {
       let model = this.get('model');
       if (model.get('action.length') === 1) {
+        model.get('action').objectAt(0).remove_related();
         model.get('action').objectAt(0).remove_type(item.get('type.id'));
       } else {
         model.remove_action(item.get('id'));

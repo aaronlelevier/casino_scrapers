@@ -330,41 +330,41 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         assert body.get_attribute('value') == 'body'
 
 
-        # # ACTION - SEND SMS TYPE
-        # action_type_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-action-type-select ')]/div")
-        # action_type_dropdown.click()
-        # self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
-        # time.sleep(1)
-        # self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]//li[text() = 'Send Text Message']").click()
+        # ACTION - SEND SMS TYPE
+        action_type_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-action-type-select ')]/div")
+        action_type_dropdown.click()
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(1)
+        self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]//li[text() = 'Send Text Message']").click()
 
-        # subject_input = self.wait_for_xhr_request('t-action-body0')
-        # subject_input.send_keys('body')
+        subject_input = self.wait_for_xhr_request('t-action-body0')
+        subject_input.send_keys('body')
 
-        # recipient_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-action-recipient-select ')]/div")
-        # recipient_dropdown.click()
-        # recipient_input = self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class, ' '), ' t-action-recipient-select ')]/div/div/ul/input")
-        # recipient_input.send_keys('a')
-        # self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
-        # time.sleep(1)
-        # selected_recipient = self.driver.find_element_by_xpath("//*[@aria-current='true']")
-        # recipient_name = selected_recipient.text
-        # selected_recipient.click()
-        # self.gen_elem_page.click_save_btn()
+        recipient_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-action-recipient-select ')]/div")
+        recipient_dropdown.click()
+        recipient_input = self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class, ' '), ' t-action-recipient-select ')]/div/div/ul/input")
+        recipient_input.send_keys('a')
+        self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
+        time.sleep(1)
+        selected_recipient = self.driver.find_element_by_xpath("//*[@aria-current='true']")
+        recipient_name = selected_recipient.text
+        selected_recipient.click()
+        self.gen_elem_page.click_save_btn()
 
-        # # Find in list
-        # automation = page.find_list_data()
-        # list_view = page.find_list_name()
-        # new_automation = page.click_name_in_list_pages(description)
-        # try:
-        #     new_automation.click()
-        # except AttributeError as e:
-        #     raise e("new automation not found")
+        # Find in list
+        automation = page.find_list_data()
+        list_view = page.find_list_name()
+        new_automation = page.click_name_in_list_pages(description)
+        try:
+            new_automation.click()
+        except AttributeError as e:
+            raise e("new automation not found")
 
-        # self.wait_for_xhr_request("t-automation-description")
-        # selected_recipient = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-action-recipient-select ')]/div/div/span")
-        # selected_recipient.text == recipient_name
-        # subject = self.wait_for_xhr_request('t-action-body0')
-        # assert subject.get_attribute('value') == 'body'
+        self.wait_for_xhr_request("t-automation-description")
+        selected_recipient = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-action-recipient-select ')]/div/div/span")
+        selected_recipient.text == recipient_name
+        subject = self.wait_for_xhr_request('t-action-body0')
+        assert subject.get_attribute('value') == 'body'
 
         # Update - DO AFTER TESTING ALL ACTION TYPES
         # description

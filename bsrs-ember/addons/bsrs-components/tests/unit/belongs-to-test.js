@@ -3,7 +3,7 @@ import {test, module} from '../helpers/qunit';
 import module_registry from '../helpers/module_registry';
 import camel from 'bsrs-components/utils/camel';
 import caps from 'bsrs-components/utils/caps';
-import { belongs_to_rollback_simple } from 'bsrs-components/attr/belongs-to';
+// import { belongs_to_rollback_simple } from 'bsrs-components/attr/belongs-to';
 
 var store, user; 
 

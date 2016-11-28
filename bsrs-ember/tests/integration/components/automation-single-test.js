@@ -166,3 +166,28 @@ test('select sendemail filter and update automation', function(assert) {
     assert.equal(page.actionSendEmailRecipientOne.replace(/\W/, '').trim(), PD.fullname, 'recipient selected for sendemail');
   });
 });
+
+test('scott select sendemail filter will remove old related model', function(assert) {
+  model.add_action({id: '1'});
+  const action = store.find('automation-action', 1);
+  action.change_type({id: ATD.idOne, key: ATD.keyOne});
+  action.change_assignee({id: PD.idOne});
+  assert.equal(action.get('assignee').get('id'), PD.idOne);
+  assert.equal(action.get('assignee_fk'), undefined);
+  this.model = model;
+  this.render(hbs `{{automations/automation-single model=model}}`);
+  clickTrigger('.t-automation-action-type-select');
+  nativeMouseUp('.ember-power-select-option:eq(2)');
+  assert.equal(this.$('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), trans.t(ATD.keyFour), 'selected type');
+  page.sendEmailBodyFillIn(SED.bodyTwo);
+  clickTrigger('.t-action-recipient-select');
+  typeInSearch('a');
+  return wait().then(() => {
+    nativeMouseUp('.ember-power-select-option:eq(0)');
+    assert.equal(page.sendEmailBodyValue, SED.bodyTwo, 'sms body');
+    assert.equal(page.actionSendEmailRecipientOne.replace(/\W/, '').trim(), PD.fullname, 'recipient selected for sendemail');
+    assert.equal(action.get('assignee'), undefined);
+    assert.equal(action.get('assignee_fk'), undefined);
+    assert.ok(action.get('sendemail').get('id'));
+  });
+});

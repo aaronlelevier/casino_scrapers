@@ -7,6 +7,14 @@ import { validator, buildValidations } from 'ember-cp-validations';
 import OptConf from 'bsrs-ember/mixins/optconfigure/automation-action';
 import SaveAndRollbackRelatedMixin from 'bsrs-ember/mixins/model/save-and-rollback-related';
 
+export const ACTION_SEND_EMAIL = 'automation.actions.send_email';
+export const ACTION_SEND_SMS = 'automation.actions.send_sms';
+export const ACTION_ASSIGNEE = 'automation.actions.ticket_assignee';
+export const ACTION_PRIORITY = 'automation.actions.ticket_priority';
+export const ACTION_STATUS = 'automation.actions.ticket_status';
+export const ACTION_TICKET_REQUEST = 'automation.actions.ticket_request';
+export const ACTION_TICKET_CC = 'automation.actions.ticket_cc';
+
 const Validations = buildValidations({
   request: validator('action-ticket-request'),
   type: validator('presence', {
@@ -115,6 +123,33 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
       content: content
     };
   },
+  remove_related() {
+    switch (this.get('type').get('key')) { 
+      case ACTION_ASSIGNEE:
+        this.change_assignee();
+        set(this, 'assignee_fk', undefined);
+        break;
+      case ACTION_PRIORITY:
+        this.change_priority();
+        set(this, 'priority_fk', undefined);
+        break;
+      case ACTION_STATUS:
+        this.change_status();
+        set(this, 'status_fk', undefined);
+        break;
+      case ACTION_SEND_EMAIL:
+        this.change_sendemail();
+        set(this, 'sendemail_fk', undefined);
+        break;
+      case ACTION_SEND_SMS:
+        this.change_sendsms();
+        set(this, 'sendsms_fk', undefined);
+        break;
+      case ACTION_TICKET_CC:
+        this.remove_ticketcc(this.get('ticketcc').objectAt(0).get('id'));
+        break;
+    }
+  },
   remove_type(id) {
     const store = this.get('simpleStore');
     let actionsArr = store.find('automation-action-type', id).get('actions');
@@ -124,11 +159,3 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     });
   }
 });
-
-export const ACTION_SEND_EMAIL = 'automation.actions.send_email';
-export const ACTION_SEND_SMS = 'automation.actions.send_sms';
-export const ACTION_ASSIGNEE = 'automation.actions.ticket_assignee';
-export const ACTION_PRIORITY = 'automation.actions.ticket_priority';
-export const ACTION_STATUS = 'automation.actions.ticket_status';
-export const ACTION_TICKET_REQUEST = 'automation.actions.ticket_request';
-export const ACTION_TICKET_CC = 'automation.actions.ticket_cc';

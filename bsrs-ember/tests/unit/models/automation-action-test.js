@@ -576,3 +576,78 @@ test('serialize - should only send the content fields that are relevant based on
   assert.equal(action.get('type').get('key'), ATD.keySix);
   assert.deepEqual(action.serialize().content, {request: AAD.requestOne});
 });
+
+test('remove_related will remove the current belongs_to or m2m', assert => {
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, priority_fk: TPD.idOne, type_fk: ATD.idTwo});
+    store.push('automation-action-type', {id: ATD.idTwo, key: ATD.keyTwo, actions: [AAD.idOne]});
+    store.push('ticket-priority', {id: TPD.idOne, actions: [AAD.idOne]});
+  });
+  assert.equal(action.get('priority').get('id'), TPD.idOne);
+  assert.equal(action.get('type').get('key'), ATD.keyTwo);
+  action.remove_related();
+  assert.equal(action.get('priority'), undefined);
+  assert.equal(action.get('priority'), undefined);
+  assert.equal(action.get('priority_fk'), undefined);
+
+  action.remove_type(ATD.idTwo);
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, status_fk: TSD.idOne, type_fk: ATD.idThree});
+    store.push('automation-action-type', {id: ATD.idThree, key: ATD.keyThree, actions: [AAD.idOne]});
+    store.push('ticket-status', {id: TSD.idOne, actions: [AAD.idOne]});
+  });
+  assert.equal(action.get('status').get('id'), TSD.idOne);
+  assert.equal(action.get('type').get('key'), ATD.keyThree);
+  action.remove_related();
+  assert.equal(action.get('status'), undefined);
+  assert.equal(action.get('status_fk'), undefined);
+
+
+  action.remove_type(ATD.idThree);
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, assignee_fk: PD.idOne, type_fk: ATD.idOne});
+    store.push('automation-action-type', {id: ATD.idOne, key: ATD.keyOne, actions: [AAD.idOne]});
+    store.push('related-person', {id: PD.idOne, actions: [AAD.idOne]});
+  });
+  assert.equal(action.get('assignee').get('id'), PD.idOne);
+  assert.equal(action.get('type').get('key'), ATD.keyOne);
+  action.remove_related();
+  assert.equal(action.get('assignee'), undefined);
+  assert.equal(action.get('assignee_fk'), undefined);
+  
+  action.remove_type(ATD.idOne);
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, sendsms_fk: SMSD.idOne, type_fk: ATD.idFive});
+    store.push('automation-action-type', {id: ATD.idFive, key: ATD.keyFive, actions: [AAD.idOne]});
+    store.push('sendsms', {id: SMSD.idOne, actions: [AAD.idOne]});
+  });
+  assert.equal(action.get('sendsms').get('id'), SMSD.idOne);
+  assert.equal(action.get('type').get('key'), ATD.keyFive);
+  action.remove_related();
+  assert.equal(action.get('sendsms'), undefined);
+  assert.equal(action.get('sendsms_fk'), undefined);
+
+  action.remove_type(ATD.idFive);
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, sendemail_fk: SED.idOne, type_fk: ATD.idFour});
+    store.push('automation-action-type', {id: ATD.idFour, key: ATD.keyFour, actions: [AAD.idOne]});
+    store.push('sendemail', {id: SED.idOne, actions: [AAD.idOne]});
+  });
+  assert.equal(action.get('sendemail').get('id'), SED.idOne);
+  assert.equal(action.get('type').get('key'), ATD.keyFour);
+  action.remove_related();
+  assert.equal(action.get('sendemail'), undefined);
+  assert.equal(action.get('sendemail_fk'), undefined);
+
+  action.remove_type(ATD.idFour);
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, automation_action_ticketcc_fks: [10], type_fk: ATD.idSeven});
+    store.push('automation-action-type', {id: ATD.idSeven, key: ATD.keySeven, actions: [AAD.idOne]});
+    store.push('action-join-person', {id: 10, automation_action_pk: AAD.idOne, related_person_pk: PD.idOne});
+    store.push('related-person', {id: PD.idOne, actions: [AAD.idOne]});
+  });
+  assert.equal(action.get('ticketcc').objectAt(0).get('id'), PD.idOne);
+  assert.equal(action.get('type').get('key'), ATD.keySeven);
+  action.remove_related();
+  assert.equal(action.get('ticketcc').get('length'), 0);
+});

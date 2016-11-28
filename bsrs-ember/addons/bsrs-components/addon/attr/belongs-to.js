@@ -130,7 +130,7 @@ var change_belongs_to = function(_ownerName) {
         return_related = store.push(this.OPT_CONF[_ownerName]['owner'], new_related_pojo);
       });
     /* IF NOT object: find bootstrapped model and update its fk array pointing to parent */
-    } else if (typeof new_related !== 'object') { //may be # or string
+    } else if (new_related && typeof new_related !== 'object') { //may be # or string
       let new_related_obj = store.find(this.OPT_CONF[_ownerName]['owner'], new_related);
       const new_related_existing = new_related_obj.get(collection) || [];
       run(() => {
