@@ -170,7 +170,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
             raise e("new automation not found")
 
         self.wait_for_xhr_request("t-automation-description")
-        selected_assignee = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-action-assignee-select ')]/div/div/span")
+        selected_assignee = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-action-assignee-select ')]/div/span")
         selected_assignee.text == assignee_name
 
 
