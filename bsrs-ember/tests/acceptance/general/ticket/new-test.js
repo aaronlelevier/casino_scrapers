@@ -610,7 +610,7 @@ test('adding a new ticket should allow for another new ticket to be created afte
   xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
+    assert.ok(urlContains(currentURL(), TICKET_URL));
     assert.equal(store.find('ticket').get('length'), 1);
   });
   click('.t-add-new');

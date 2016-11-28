@@ -1,5 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
+import config from 'bsrs-ember/config/environment';
 
 export default Ember.Service.extend({
   simpleStore: Ember.inject.service(),
@@ -22,6 +23,12 @@ export default Ember.Service.extend({
     /* Need to fix this */
     if (action === 'closeTab') {
       return closeTabRedirect ? transitionFunc(closeTabRedirect) : transitionFunc(redirectRoute);
+    } else if (action === 'save') {
+      if (config.TICKET_INDEX_REFRESH === redirectRoute) {
+        return closeTabRedirect ? transitionFunc(closeTabRedirect) : transitionFunc(redirectRoute, { queryParams: {ts: Date.now()} });
+      } else {
+        return closeTabRedirect ? transitionFunc(closeTabRedirect) : transitionFunc(redirectRoute);
+      }
     } else if (action === 'delete') {
       return transitionFunc(redirectRoute);
     } else if (tabType === 'single') {
@@ -69,7 +76,7 @@ export default Ember.Service.extend({
    */
   showModal(tab, action, confirmed) {
     /* if single tab need to check all models due to split pane only when closeTab and cancel actions are invoked */
-    if (tab.get('tabType') === 'single' && (action === 'closeTab' || action === 'cancel')) {
+    if (tab.get('tabType') === 'single' && (action === 'save' || action === 'closeTab' || action === 'cancel')) {
       const store = this.get('simpleStore');
       /* if new model, only check the one tab single new model */
       if (tab.get('newModel')) {

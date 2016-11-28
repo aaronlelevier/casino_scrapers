@@ -199,7 +199,7 @@ var ApplicationRoute = Route.extend({
         tab.set('saveModel', persisted);
         if(!update){
           //All other routes
-           this.send('closeTabMaster', tab, {action:'closeTab'});
+          this.send('closeTabMaster', tab, {action:'save'});
         } else if (update && updateActivities) {
           //TICKET sends update in args
           return activityRepository.find('ticket', 'tickets', pk, model);

@@ -88,7 +88,7 @@ test('you can add a comment and post it while not updating created property', as
   xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_comment), {}, 200, response);
   xhr(TICKETS_URL + '?page=1', 'GET', null, {}, 200, TF.list());
   await generalPage.save();
-  assert.equal(currentURL(), TICKET_URL);
+  assert.ok(urlContains(currentURL(), TICKET_URL));
   ticket = store.find('ticket', TD.idOne);
   assert.ok(ticket.get('isNotDirty'));
   assert.equal(ticket.get('comment'), '');
@@ -121,7 +121,7 @@ test('when you deep link to the ticket detail view you get bound attrs', async a
   xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail_one_category), {}, 200, response);
   xhr(TICKETS_URL + '?page=1', 'GET', null, {}, 200, TF.list());
   await generalPage.save();
-  assert.equal(currentURL(), TICKET_URL);
+  assert.ok(urlContains(currentURL(), TICKET_URL));
   ticket = store.find('ticket', TD.idOne);
   assert.ok(ticket.get('isNotDirty'));
 });
@@ -193,7 +193,7 @@ test('when click delete, modal displays and when click ok, ticket is deleted and
   generalPage.clickModalDelete();
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), TICKET_URL);
+      assert.ok(urlContains(currentURL(), TICKET_URL));
       assert.equal(store.find('ticket', TD.idOne).get('length'), undefined);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
@@ -354,7 +354,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
   xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
+    assert.ok(urlContains(currentURL(), TICKET_URL));
   });
 });
 
@@ -403,7 +403,7 @@ test('starting with multiple cc, can remove all ccs (while not populating option
   ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
+    assert.ok(urlContains(currentURL(), TICKET_URL));
   });
 });
 
@@ -493,7 +493,7 @@ test('power select options are rendered immediately when enter detail route and 
   xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
+    assert.ok(urlContains(currentURL(), TICKET_URL));
   });
 });
 
@@ -726,7 +726,7 @@ test('when selecting a new parent category it should remove previously selected 
   xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
+    assert.ok(urlContains(currentURL(), TICKET_URL));
   });
 });
 
@@ -829,7 +829,7 @@ test('location component shows location for ticket and will fire off xhr to fetc
   xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response_put);
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), TICKET_URL);
+    assert.ok(urlContains(currentURL(), TICKET_URL));
   });
 });
 
@@ -887,7 +887,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
   let payload = TF.put({id: TD.idOne, assignee: PD.idBoy});
   xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response_put);
   await generalPage.save();
-  assert.equal(currentURL(), TICKET_URL);
+  assert.ok(urlContains(currentURL(), TICKET_URL));
 });
 
 test('clicking and typing into db-fetch power select for people will not fire xhr if spacebar pressed', async assert => {

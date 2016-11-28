@@ -60,7 +60,7 @@ test('upload will post form data, show progress and on save append the attachmen
   generalPage.save();
   andThen(() => {
     model = store.find('ticket', TD.idOne);
-    assert.equal(currentURL(), TICKET_URL);
+    assert.ok(urlContains(currentURL(), TICKET_URL));
     assert.equal(model.get('attachments').get('length'), 1);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
@@ -224,7 +224,7 @@ test('user cannot see progress bar for uploaded attachment that is associated wi
   generalPage.save();
   andThen(() => {
     model = store.find('ticket', TD.idOne);
-    assert.equal(currentURL(), TICKET_URL);
+    assert.ok(urlContains(currentURL(), TICKET_URL));
     assert.equal(model.get('attachments').get('length'), 1);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
@@ -266,7 +266,7 @@ test('file upload supports multiple attachments', (assert) => {
   generalPage.save();
   andThen(() => {
     model = store.find('ticket', TD.idOne);
-    assert.equal(currentURL(), TICKET_URL);
+    assert.ok(urlContains(currentURL(), TICKET_URL));
     assert.equal(model.get('attachments').get('length'), 2);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));

@@ -52,6 +52,9 @@ var GridViewRoute = Ember.Route.extend({
     id_in: {
       refreshModel: true
     },
+    ts: {
+      refreshModel: true
+    },
   },
   model(params, transition) {
     const { filtersetRepository, repository, special_url, routeName } = this.getProperties('filtersetRepository', 'repository', 'special_url', 'routeName');

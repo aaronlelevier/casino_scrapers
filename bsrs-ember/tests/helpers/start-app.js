@@ -11,6 +11,7 @@ import substring_up_to_num from './substring_up_to_num';
 import substringBreadcrumb from './substring-breadcrumb';
 import { pginator as pagination, pginator2 as pagination2 } from './pagination';
 import { errorSetup, errorTearDown } from './error-setup';
+import urlContains from './url-contains';
 import setWidth from './set-width';
 import uuidReset from './uuid-reset';
 import registerPowerSelectHelpers from '../../tests/helpers/ember-power-select';
