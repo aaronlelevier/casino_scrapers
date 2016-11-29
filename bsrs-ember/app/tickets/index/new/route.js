@@ -4,6 +4,9 @@ import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 
 var TicketNewRoute = TabNewRoute.extend({
   i18n: Ember.inject.service(),
+  title() {
+    return this.get('i18n').t('doctitle.ticket.new');
+  },
   repository: inject('ticket'),
   statusRepository: inject('ticket-status'),
   priorityRepository: inject('ticket-priority'),

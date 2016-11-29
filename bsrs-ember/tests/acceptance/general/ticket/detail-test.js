@@ -81,6 +81,7 @@ test('when you deep link to the ticket detail view you get bound attrs', async a
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   var ticket = store.find('ticket', TD.idOne);
+  assert.equal(document.title, t('doctitle.ticket.single'));
   assert.ok(ticket.get('isNotDirty'));
   assert.equal(page.priorityInput, TD.priorityOne);
   assert.equal(page.statusInput, TD.statusOne);

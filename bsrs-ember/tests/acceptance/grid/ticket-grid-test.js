@@ -46,6 +46,7 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
   visit(TICKET_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
+    assert.equal(document.title, t('doctitle.ticket.index'));
     assert.equal(find('.t-grid-title').text(), 'Tickets');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);

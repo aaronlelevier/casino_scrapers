@@ -71,6 +71,7 @@ test('validation works and when hit save, we do same post', (assert) => {
   page.requesterFillIn(TD.requesterOne);
   andThen(() => {
     assert.equal(currentURL(), TICKET_NEW_URL);
+    assert.equal(document.title, t('doctitle.ticket.new'));
     assert.equal(Ember.$('.validated-input-error-dialog').length, 0, 'initial validation errors is zero');
     assert.notOk(page.requestValidationErrorVisible);
     assert.notOk(page.requesterValidationErrorVisible);
