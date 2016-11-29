@@ -15,16 +15,15 @@ import PF from 'bsrs-ember/vendor/people_fixtures';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import page from 'bsrs-ember/tests/pages/ticket-mobile';
+import ticketPage from 'bsrs-ember/tests/pages/tickets';
 import generalPage, { mobileSearch } from 'bsrs-ember/tests/pages/general-mobile';
 import random from 'bsrs-ember/models/random';
-import BASEURLS, { TICKETS_URL, PEOPLE_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, PEOPLE_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
 var store, list_xhr;
 
 const PREFIX = config.APP.NAMESPACE;
-const BASE_URL = BASEURLS.base_tickets_url;
-const TICKET_URL = `${BASE_URL}/index`;
-const DETAIL_2_URL = `${BASE_URL}/${TD.idGridTwo}`;
+const DETAIL_2_URL = `${TICKET_LIST_URL}/${TD.idGridTwo}`;
 const HEADER_WRAP_CLASS = '.t-grid-mobile-header';
 const LETTER_A = {keyCode: 65};
 const LETTER_S = {keyCode: 83};
@@ -43,9 +42,9 @@ moduleForAcceptance('Acceptance | general grid-head mobile', {
 /* jshint ignore:start */
 
 test('clicking on filter icon will show filters and cancel will close it out', async assert => {
-  await visit(TICKET_URL);
+  await ticketPage.visit();
   await click('.t-mobile-filter');
-  assert.equal(currentURL(), TICKET_URL);
+  assert.equal(currentURL(), TICKET_LIST_URL);
   assert.equal(find('.t-mobile-filters').length, 1);
   assert.equal(find('.t-mobile-filter-title').text(), t('grid.filter.other'));
   assert.equal(find('.t-mobile-filter-first-btn').text(), t('crud.cancel.button'));
@@ -54,12 +53,11 @@ test('clicking on filter icon will show filters and cancel will close it out', a
   assert.throws(find('.t-mobile-filters'));
 });
 
-// FAILING ON CHROME
 test('search presents results on slideUp pane w/o pushing into store', async assert => {
-  xhr(PREFIX + BASE_URL + '/?search=ape','GET',null,{},200,TF.searched('ape', 'request'));
-  xhr(PREFIX + BASE_URL + '/?search=subb2','GET',null,{},200,TF.searched('subb2', 'request'));
-  await visit(TICKET_URL);
-  assert.equal(currentURL(), TICKET_URL);
+  xhr(PREFIX + TICKET_LIST_URL + '/?search=ape','GET',null,{},200,TF.searched('ape', 'request'));
+  xhr(PREFIX + TICKET_LIST_URL + '/?search=subb2','GET',null,{},200,TF.searched('subb2', 'request'));
+  await ticketPage.visit();
+  assert.equal(currentURL(), TICKET_LIST_URL);
   assert.equal(store.find('ticket-list').get('length'), 10);
   await generalPage.clickSearchIcon();
   assert.equal(find(mobileSearch).attr('placeholder'), t('ticket.search'));
@@ -67,14 +65,14 @@ test('search presents results on slideUp pane w/o pushing into store', async ass
   // isFocused('.t-mobile-search-slideUp .t-mobile-search-wrap .t-grid-search-input');
   await generalPage.mobileSearch('ape');
   await triggerEvent(mobileSearch, 'keyup', LETTER_A);
-  assert.equal(currentURL(), TICKET_URL);
+  assert.equal(currentURL(), TICKET_LIST_URL);
   assert.equal(store.find('ticket-list').get('length'), 10);
   assert.equal(find('.t-grid-search-data').length, 9);
   assert.equal(find('.t-mobile-search-result__title:eq(0)').text().trim(), 'Repair');
   assert.equal(find('.t-mobile-search-result__meta:eq(0)').text().trim(), TD.locationTwo);
   await generalPage.mobileSearch('subb2');
   await triggerEvent(mobileSearch, 'keyup', LETTER_S);
-  assert.equal(currentURL(), TICKET_URL);
+  assert.equal(currentURL(), TICKET_LIST_URL);
   assert.equal(store.find('ticket-list').get('length'), 10); //store length is same b/c search does not touch store
   assert.equal(find('.t-grid-search-data').length, 1);
   assert.equal(find('.t-mobile-search-result__title:eq(0)').text().trim(), 'Repair • Plumbing • Toilet Leak');
@@ -88,8 +86,8 @@ test('search presents results on slideUp pane w/o pushing into store', async ass
 
 // test('savefilterset will fire off xhr', async assert => {
 //   random.uuid = function() { return UUID.value; };
-//   xhr(PREFIX + BASE_URL + '/?page=1&request__icontains=ape19', 'GET', null, {}, 200, TF.searched('ape19', 'request'));
-//   await visit(TICKET_URL);
+//   xhr(PREFIX + TICKET_LIST_URL + '/?page=1&request__icontains=ape19', 'GET', null, {}, 200, TF.searched('ape19', 'request'));
+//   await ticketPage.visit();
 //   await generalPage.clickFilterOpen();
 //   await page.clickFilterRequest();
 //   await generalPage.filterInput('ape19');
@@ -116,8 +114,8 @@ test('search presents results on slideUp pane w/o pushing into store', async ass
 
 test('savefilterset input will close if have filters and decide not to fill it in', async assert => {
   random.uuid = function() { return UUID.value; };
-  xhr(PREFIX + BASE_URL + '/?page=1&request__icontains=ape19', 'GET', null, {}, 200, TF.searched('ape19', 'request'));
-  await visit(TICKET_URL);
+  xhr(PREFIX + TICKET_LIST_URL + '/?page=1&request__icontains=ape19', 'GET', null, {}, 200, TF.searched('ape19', 'request'));
+  await ticketPage.visit();
   await generalPage.clickFilterOpen();
   await page.clickFilterRequest();
   await fillIn('.t-filter-input', 'ape19');
@@ -129,7 +127,7 @@ test('savefilterset input will close if have filters and decide not to fill it i
 });
 
 test('clicking on filter twice will keep results in grid', async assert => {
-  await visit(TICKET_URL);
+  await ticketPage.visit();
   await generalPage.clickFilterOpen();
   await generalPage.submitFilterSort();
   assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
