@@ -116,14 +116,14 @@ test('status power select shows status tag component in options and selected sta
     model = store.push('location', {id: LD.idOne, name: LD.storeName, number: LD.storeNumber, location_level_fk: LLD.idOne, status_fk: LDS.openId});
     store.push('location-level', {id: LLD.idOne, name: LLD.nameDistrict, locations: [LD.idOne]});
     store.push('location-status', {id: LDS.openId, name: LDS.openName, locations: [LD.idOne]});
-    store.push('location-status', {id: LDS.closeId, name: LDS.closedNameTranslated});
+    store.push('location-status', {id: LDS.closedId, name: LDS.closedNameTranslated});
   });
   this.model = model;
   this.render(hbs`{{locations/location-single model=model}}`);
   assert.equal(Ember.$('[data-test-id="status-tag"]').length, 1);
   clickTrigger('.t-location-status-select');
   assert.equal(Ember.$('.ember-power-select-option > [data-test-id="status-tag"]').length, 2);
-  nativeMouseUp(`.ember-power-select-option:contains(${LDS.closedNameTranslated})`);
+  nativeMouseUp(`.ember-power-select-option:eq(1)`);
   assert.equal(Ember.$('[data-test-id="status-tag"]').text().trim(), LDS.closedNameTranslated);
   assert.equal(Ember.$('[data-test-id="status-tag"]').length, 1);
 });
