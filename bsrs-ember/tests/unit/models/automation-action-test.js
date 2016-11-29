@@ -549,7 +549,7 @@ test('serialize - should only send the content fields that are relevant based on
     store.push('generic-join-recipients', {id: SEDJRD.idOne, generic_pk: SED.idOne, recipient_pk: PD.idOne});
     store.push('generic-join-recipients', {id: SMSJRD.idTwo, generic_pk: SMSD.idOne, recipient_pk: PD.idTwo});
     store.push('related-person', {id: PD.idOne, type: 'person'});
-    store.push('related-person', {id: PD.idTwo, type: 'person'});
+    store.push('related-person', {id: PD.idTwo, type: 'role'});
     store.push('sendemail', {id: SED.idOne, subject: SED.subjectTwo, body: SED.bodyTwo,  generic_recipient_fks: [SEDJRD.idOne], actions: [AAD.idOne]});
     store.push('sendsms', {id: SMSD.idOne, body: SMSD.bodyTwo, generic_recipient_fks: [SMSJRD.idTwo], actions: [AAD.idOne]});
   });
@@ -571,7 +571,7 @@ test('serialize - should only send the content fields that are relevant based on
   action.change_type({id: ATD.idFive, key: ATD.keyFive});
   assert.equal(action.get('sendsms').get('id'), SMSD.idOne);
   assert.deepEqual(action.get('sendsms').get('recipient').mapBy('id'), [PD.idTwo]);
-  assert.deepEqual(action.serialize().content, { body: SMSD.bodyTwo, recipients: [{id: PD.idTwo, type: 'person'}] });
+  assert.deepEqual(action.serialize().content, { body: SMSD.bodyTwo, recipients: [{id: PD.idTwo, type: 'role'}] });
   action.change_type({id: ATD.idSix, key: ATD.keySix});
   assert.equal(action.get('type').get('key'), ATD.keySix);
   assert.deepEqual(action.serialize().content, {request: AAD.requestOne});

@@ -96,7 +96,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
         break;
       case 'automation.actions.send_email':
         let recipients = this.get('sendemail.recipient').map((person) => {
-          return {id: get(person, 'id'), type: 'person'};
+          return {id: get(person, 'id'), type: get(person, 'type')};
         });
         content = {
           body: this.get('sendemail.body'),
@@ -106,7 +106,7 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
         break;
       case 'automation.actions.send_sms':
         recipients = this.get('sendsms.recipient').map((person) => {
-          return {id: get(person, 'id'), type: 'person'};
+          return {id: get(person, 'id'), type: get(person, 'type')};
         });
         content = {
           body: this.get('sendsms.body'),
