@@ -24,7 +24,7 @@
 <div class="row">
   <div class="col-md-12">
     {{#form-group title="admin.automation.filters"}}
-    {{#each model.pf as |_ index|}}
+    {{#each model.pf as |pf index|}}
       {{power-select-validation
         model=model
         valuePath="pf"
@@ -33,15 +33,15 @@
       <div class="input-group-vertical" data-validation-target={{concat "pf" index}}>
         <div class="input-group">
           <span class="input-group-btn">
-            <button class="t-del-pf-btn btn btn-default btn-sm delete" type="button" {{action "delete" (model-at model.pf index)}}>{{fa-icon "minus"}}</button>
+            <button class="t-del-pf-btn btn btn-default btn-sm delete" type="button" {{action "delete" pf}}>{{fa-icon "minus"}}</button>
           </span>
           {{#power-select
             class="t-automation-pf-select"
             tagName="div"
-            selected=(model-at model.pf index)
+            selected=pf
             options=options
             placeholder=(t "admin.automation.placeholder.available_filter")
-            onchange=(action "setAutomationFilter" (model-at model.pf index))
+            onchange=(action "setAutomationFilter" pf)
             onopen=(action "fetchFilters" index)
             searchEnabled=false
             as |pf|
@@ -49,8 +49,8 @@
             {{t pf.key}}
           {{/power-select}}
         </div>
-        {{component (automation-filter (model-at model.pf index))
-          model=(model-at model.pf index)
+        {{component (automation-filter pf.field)
+          model=pf
         }}
       </div>
     {{/each}}

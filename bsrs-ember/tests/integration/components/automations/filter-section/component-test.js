@@ -136,7 +136,7 @@ test('add new pfilter, and automation is not dirty until select pfilter which di
   // now the automation is dirty b/c pfilter has an criteria
   assert.ok(automation.get('isDirtyOrRelatedDirty'));
   assert.equal(this.$('.t-automation-pf-select').length, 2);
-  // // both power-selects render
+  // both power-selects render
   assert.equal(this.$('.t-priority-criteria').length, 1);
   assert.equal(this.$('.t-ticket-location-select').length, 1);
   assert.equal(this.$('.ember-power-select-trigger-multiple-input:eq(0)').get(0)['placeholder'], trans.t('admin.placeholder.location_filter_select'));

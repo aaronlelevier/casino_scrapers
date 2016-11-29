@@ -325,8 +325,8 @@ test('select category filter and update automation', async assert => {
   const firstItemId = response.results[0]['id'];
   const firstItemName = response.results[0]['name'];
   xhr(`/api/admin/categories/automation-criteria/${keyword}/`, 'GET', null, {}, 200, response);
-  selectSearch('.t-ticket-category-select', keyword);
-  selectChoose('.t-ticket-category-select', firstItemName);
+  await selectSearch('.t-ticket-category-select', keyword);
+  await selectChoose('.t-ticket-category-select', firstItemName);
   assert.equal(page.categorySelectedOne.split(/\s+/)[1], firstItemName);
   let payload = AF.put({
     description: AD.descriptionOne,

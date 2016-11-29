@@ -3,7 +3,7 @@ import hbs from 'htmlbars-inline-precompile';
 
 export function automationFilter(params/*, hash*/) {
   if (params[0]) {
-    switch (params[0].get('field')) {
+    switch (params[0]) {
       case 'priority':
         return 'tickets/ticket-priority-select';
       case 'location':
