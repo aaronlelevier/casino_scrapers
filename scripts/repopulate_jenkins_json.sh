@@ -43,6 +43,7 @@ wait
 ./manage.py create_all_people
 wait
 ./manage.py dumpdata person --indent=2 > fixtures/person.json
+./manage.py dumpdata generic --indent=2 > fixtures/generic.json
 ./manage.py dumpdata tenant --indent=2 > fixtures/tenant.json
 
 wait
