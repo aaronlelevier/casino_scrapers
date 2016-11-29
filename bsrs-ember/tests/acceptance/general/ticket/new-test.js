@@ -601,3 +601,33 @@ test('adding a new ticket should allow for another new ticket to be created afte
     assert.equal(page.request, '');
   });
 });
+
+test('ticket category shows validation messages as you select through the tree', (assert) => {
+  clearxhr(location_xhr);
+  page.visit();
+  click('.t-add-new');
+  let top_level_categories_endpoint = `${CATEGORIES_URL}parents/`;
+  xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
+  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id: CD.idChild}], CD.idOne, 1));
+  ajax(`${CATEGORIES_URL}?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+  click('.t-model-category-select .ember-power-select-trigger');
+  triggerEvent('.t-model-category-select .ember-power-select-trigger', 'blur');
+  andThen(() => {
+    assert.equal(Ember.$('.t-validation-ticket-category-top').length, 1);
+    assert.equal(Ember.$('.t-validation-ticket-category-top').text().trim(), 'errors.ticket.category.top');
+  });
+  selectChoose('.t-model-category-select:eq(0)', CD.nameOne);
+  click('.t-model-category-select:eq(1) .ember-power-select-trigger');
+  triggerEvent('.t-model-category-select:eq(1) .ember-power-select-trigger', 'blur');
+  andThen(() => {
+    assert.equal(Ember.$('.t-validation-ticket-category').length, 1);
+    assert.equal(Ember.$('.t-validation-ticket-category').text().trim(), 'errors.ticket.categoryTrade');
+  });
+  selectChoose('.t-model-category-select:eq(1)', CD.nameTwo);
+  click('.t-model-category-select:eq(2) .ember-power-select-trigger');
+  triggerEvent('.t-model-category-select:eq(2) .ember-power-select-trigger', 'blur');
+  andThen(() => {
+    assert.equal(Ember.$('.t-validation-ticket-category').length, 1);
+    assert.equal(Ember.$('.t-validation-ticket-category').text().trim(), 'errors.ticket.category');
+  });
+});

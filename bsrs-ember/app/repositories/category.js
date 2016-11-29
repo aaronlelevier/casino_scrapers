@@ -32,6 +32,12 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
         return response.results;
       });
     }
+  },
+  findCategoryParent() {
+    const url = CATEGORIES_URL + 'parents/';
+    return PromiseMixin.xhr(url, 'GET').then((response) => {
+      return response.results;
+    });
   }
 });
 

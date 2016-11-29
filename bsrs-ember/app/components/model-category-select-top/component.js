@@ -43,10 +43,8 @@ var TicketCategories = Ember.Component.extend({
       set(this, 'showMessage', false);
     },
     handleOpen() {
-      const url = CATEGORIES_URL + 'parents/';
-      const _this = this;
-      PromiseMixin.xhr(url, 'GET').then((response) => {
-        _this.set('options', response.results);
+      this.get('categoryRepo').findCategoryParent().then((options) => {
+        this.set('options', options);
       });
     },
     blurOut() {
