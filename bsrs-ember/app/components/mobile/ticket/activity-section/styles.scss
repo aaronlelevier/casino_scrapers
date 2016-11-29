@@ -106,6 +106,7 @@
       &:visited{
         color: $dark;
         font-weight: bold;
+        font-family: $fontfamilybold;
       }
     }
     // Styling for File uploads and Comments only
@@ -172,5 +173,6 @@
     text-align: center;
     font-size: 1.8rem;
     font-weight: bold;
+    font-family: $fontfamilybold;
   }
 }
