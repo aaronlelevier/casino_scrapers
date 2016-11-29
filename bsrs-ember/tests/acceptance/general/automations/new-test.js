@@ -34,49 +34,39 @@ moduleForAcceptance('Acceptance | general automation new test', {
   },
 });
 
-skip('visit new URL and create a new record', assert => {
-  visit(NEW_URL);
-  andThen(() => {
-    assert.equal(currentURL(), NEW_URL);
-  });
+/* jshint ignore:start */
+
+test('visit new URL and create a new record', async assert => {
+  await visit(NEW_URL);
+  assert.equal(currentURL(), NEW_URL);
   // description
-  page.descriptionFill(AD.descriptionOne);
-  andThen(() => {
-    assert.equal(page.descriptionValue, AD.descriptionOne);
-  });
+  await page.descriptionFill(AD.descriptionOne);
+  assert.equal(page.descriptionValue, AD.descriptionOne);
   // events
   xhr(AUTOMATION_EVENTS_URL, 'GET', null, {}, 200, AF.event_search_power_select());
-  selectChoose('.t-automation-event-select', ED.keyOneValue);
-  andThen(() => {
-    let v = page.eventSelectedOne;
-    assert.equal(page.eventSelectedOne.split('× ')[1], ED.keyOneValue);
-  });
+  await selectChoose('.t-automation-event-select', ED.keyOneValue);
+  let v = page.eventSelectedOne;
+  assert.equal(page.eventSelectedOne.split('× ')[1], ED.keyOneValue);
   // filter w/ a criteria
-  page.addFilter();
-  andThen(() => {
-    assert.equal(find('.t-automation-pf-select').length, 1);
-  });
+  await page.addFilter();
+  assert.equal(find('.t-automation-pf-select').length, 1);
   xhr(AUTOMATION_AVAILABLE_FILTERS_URL, 'GET', null, {}, 200, AF.list_pfilters());
-  selectChoose('.t-automation-pf-select:eq(0)', PFD.keyOneTranslated);
-  selectChoose('.t-priority-criteria', TD.priorityOne);
+  await selectChoose('.t-automation-pf-select:eq(0)', PFD.keyOneTranslated);
+  await selectChoose('.t-priority-criteria', TD.priorityOne);
   // action w/ a type
   xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.list_action_types());
-  selectChoose('.t-automation-action-type-select', AATD.keyOneTrans);
-  andThen(() => {
-    assert.equal(page.actionTypeSelectedOne, t(AATD.keyOne));
-    assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
-  });
-    // change assignee
+  await selectChoose('.t-automation-action-type-select', AATD.keyOneTrans);
+  assert.equal(page.actionTypeSelectedOne, t(AATD.keyOne));
+  assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
+  // change assignee
   let personData = PersonF.search_power_select();
   let personOneId = personData.results[0].id;
   let personOneFullname = personData.results[0].fullname;
   let keyword = 'a';
   xhr(`${PEOPLE_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, personData);
-  selectSearch('.t-automation-action-assignee-select', keyword);
-  selectChoose('.t-automation-action-assignee-select', personOneFullname);
-  andThen(() => {
-    assert.equal(page.actionAssigneeSelectedOne, personOneFullname);
-  });
+  await selectSearch('.t-automation-action-assignee-select', keyword);
+  await selectChoose('.t-automation-action-assignee-select', personOneFullname);
+  assert.equal(page.actionAssigneeSelectedOne, personOneFullname);
   // POSt
   xhr(AUTOMATION_URL, 'POST', AF.put({
     id: UUID.value,
@@ -95,33 +85,25 @@ skip('visit new URL and create a new record', assert => {
       lookups: {}
     }]
   }), {}, 200, AF.list());
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), AUTOMATION_LIST_URL);
-  });
+  await generalPage.save();
+  assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
-test('when user creates an automation they should see an empty action', assert => {
+test('when user creates an automation they should see an empty action', async assert => {
   clearxhr(listXhr);
-  visit(NEW_URL);
-  andThen(() => {
-    assert.equal(currentURL(), NEW_URL);
-    assert.equal(Ember.$('.t-automation-action-type-select .ember-power-select-placeholder').length, 1);
-  });
+  await visit(NEW_URL);
+  assert.equal(currentURL(), NEW_URL);
+  assert.equal(Ember.$('.t-automation-action-type-select .ember-power-select-placeholder').length, 1);
   xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.list_action_types());
-  selectChoose('.t-automation-action-type-select', AATD.keyOneTrans);
-  andThen(() => {
-    assert.equal(page.actionTypeSelectedOne, t(AATD.keyOne));
-    assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
-  });
+  await selectChoose('.t-automation-action-type-select', AATD.keyOneTrans);
+  assert.equal(page.actionTypeSelectedOne, t(AATD.keyOne));
+  assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
 });
 
-test('when user can visit new automation with, which stats with an empty action widget, and can cancel hit with no modal', assert => {
-  visit(NEW_URL);
-  andThen(() => {
-    assert.equal(Ember.$('.t-automation-action-type-select .ember-power-select-placeholder').length, 1);
-  });
-  generalPage.cancel();
+test('when user can visit new automation with, which stats with an empty action widget, and can cancel hit with no modal', async assert => {
+  await visit(NEW_URL);
+  assert.equal(Ember.$('.t-automation-action-type-select .ember-power-select-placeholder').length, 1);
+  await generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), AUTOMATION_LIST_URL);
@@ -132,11 +114,11 @@ test('when user can visit new automation with, which stats with an empty action 
 
 // cancel modal tests
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', async assert => {
   clearxhr(listXhr);
-  visit(NEW_URL);
-  page.descriptionFill(AD.descriptionTwo);
-  generalPage.cancel();
+  await visit(NEW_URL);
+  await page.descriptionFill(AD.descriptionTwo);
+  await generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), NEW_URL);
@@ -144,7 +126,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
       assert.equal(find('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
     });
   });
-  generalPage.clickModalCancel();
+  await generalPage.clickModalCancel();
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), NEW_URL);
@@ -172,67 +154,51 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('clicking cancel button with no edits will take from detail view to list view', (assert) => {
-  visit(NEW_URL);
-  andThen(() => {
-    assert.equal(currentURL(), NEW_URL);
-  });
-  generalPage.cancel();
-  andThen(() => {
-    assert.equal(currentURL(), AUTOMATION_LIST_URL);
-  });
+test('clicking cancel button with no edits will take from detail view to list view', async assert => {
+  await visit(NEW_URL);
+  assert.equal(currentURL(), NEW_URL);
+  await generalPage.cancel();
+  assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
-test('validation - at least one event is required, each action must have a type', assert => {
+test('validation - at least one event is required, each action must have a type', async assert => {
   clearxhr(listXhr);
-  visit(NEW_URL);
-  andThen(() => {
-    assert.equal(currentURL(), NEW_URL);
-  });
-  page.descriptionFill(AD.descriptionTwo);
-  andThen(() => {
-    assert.equal(currentURL(), NEW_URL);
-    // btn disabled
-     assert.equal(find('.t-save-btn').attr('disabled'), 'disabled');
-    // TODO: user needs to be aware of validation errs
-    // assert.equal($('[data-test-id="validation-event0"]').text().trim(), t('errors.automation.event.length'));
-    // assert.equal($('[data-test-id="validation-action0"]').text().trim(), t('errors.automation.type'));
-  });
+  await visit(NEW_URL);
+  assert.equal(currentURL(), NEW_URL);
+  await page.descriptionFill(AD.descriptionTwo);
+  assert.equal(currentURL(), NEW_URL);
+  // btn disabled
+  assert.equal(find('.t-save-btn').attr('disabled'), 'disabled');
+  // TODO: user needs to be aware of validation errs
+  // assert.equal($('[data-test-id="validation-event0"]').text().trim(), t('errors.automation.event.length'));
+  // assert.equal($('[data-test-id="validation-action0"]').text().trim(), t('errors.automation.type'));
   // set to type 'assignee', and should see an 'assignee required msg' b/c assignee not yet selected
   xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.list_action_types());
-  selectChoose('.t-automation-action-type-select', AATD.keyOneTrans);
+  await selectChoose('.t-automation-action-type-select', AATD.keyOneTrans);
   xhr(`${PEOPLE_URL}person__icontains=a/`, 'GET', null, {}, 200, PersonF.search_power_select());
-  selectSearch('.t-automation-action-assignee-select', 'a');
-  selectChoose('.t-automation-action-assignee-select', PD.fullnameBoy);
-  andThen(() => {
-    // btn not disabled
-    assert.equal(page.actionTypeSelectedOne, AATD.keyOneTrans);
-    assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
-  });
+  await selectSearch('.t-automation-action-assignee-select', 'a');
+  await selectChoose('.t-automation-action-assignee-select', PD.fullnameBoy);
+  // btn not disabled
+  assert.equal(page.actionTypeSelectedOne, AATD.keyOneTrans);
+  assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
   xhr(AUTOMATION_EVENTS_URL, 'GET', null, {}, 200, AF.event_search_power_select());
-  selectChoose('.t-automation-event-select', ED.keyOneValue);
-  andThen(() => {
-    assert.equal(find('.t-save-btn').attr('disabled'), undefined);
-    assert.equal(Ember.$('.t-automation-event-select').length, 1);
-  });
+  await selectChoose('.t-automation-event-select', ED.keyOneValue);
+  assert.equal(find('.t-save-btn').attr('disabled'), undefined);
+  assert.equal(Ember.$('.t-automation-event-select').length, 1);
 });
 
-test('validation - if type is priority, a ticket priority must be selected', assert => {
+test('validation - if type is priority, a ticket priority must be selected', async assert => {
   clearxhr(listXhr);
-  visit(NEW_URL);
-  andThen(() => {
-    assert.equal(currentURL(), NEW_URL);
-    assert.equal($('[data-test-id="validation-action0"]').length, 0);
-  });
+  await visit(NEW_URL);
+  assert.equal(currentURL(), NEW_URL);
+  assert.equal($('[data-test-id="validation-action0"]').length, 0);
   xhr(AUTOMATION_ACTION_TYPES_URL, 'GET', null, {}, 200, AF.list_action_types());
-  selectChoose('.t-automation-action-type-select', 'Ticket: Priority');
-  andThen(() => {
-    assert.equal(page.actionTypeSelectedOne, 'Ticket: Priority');
-    assert.equal(Ember.$('.t-ticket-priority-select').length, 1);
-  });
-  generalPage.save();
-  andThen(() => {
-    assert.equal(currentURL(), NEW_URL);
-    assert.equal($('[data-test-id="validation-action0"]').length, 0);
-  });
+  await selectChoose('.t-automation-action-type-select', 'Ticket: Priority');
+  assert.equal(page.actionTypeSelectedOne, 'Ticket: Priority');
+  assert.equal(Ember.$('.t-ticket-priority-select').length, 1);
+  await generalPage.save();
+  assert.equal(currentURL(), NEW_URL);
+  assert.equal($('[data-test-id="validation-action0"]').length, 0);
 });
+
+/* jshint ignore:end */
