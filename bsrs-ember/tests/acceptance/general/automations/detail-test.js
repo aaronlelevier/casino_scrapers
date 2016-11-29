@@ -83,7 +83,7 @@ test('detail and update all fields', async assert => {
   xhr(AUTOMATION_AVAILABLE_FILTERS_URL, 'GET', null, {}, 200, AF.list_pfilters());
   await page.addFilter();
   let keyword = 'a';
-  selectChoose('.t-automation-pf-select:eq(1)', PFD.keyTwo);
+  await selectChoose('.t-automation-pf-select:eq(1)', PFD.keyTwo);
   xhr(`/api/admin/locations/location__icontains=${keyword}/?location_level=${PFD.lookupsDynamic.id}`, 'GET', null, {}, 200, LF.search_power_select());
   await selectSearch('.t-ticket-location-select', keyword);
   await selectChoose('.t-ticket-location-select', LD.storeNameFour);
@@ -271,7 +271,7 @@ test('changing from one dynamic location available filter to another changes the
   await selectChoose('.t-ticket-location-select', LD.storeNameFour);
   assert.equal(page.locationSelectedOne.split(/\s+/)[1], LD.storeNameFour);
   // 2nd filter
-  selectChoose('.t-automation-pf-select:eq(0)', PFD.keyThree);
+  await selectChoose('.t-automation-pf-select:eq(0)', PFD.keyThree);
   keyword = 'b';
   // main thing we're testing is this 'xhr' mock, that the location_level query param changed
   xhr(`/api/admin/locations/location__icontains=${keyword}/?location_level=${PFD.lookupsDynamicTwo.id}`, 'GET', null, {}, 200, LF.search_power_select());
@@ -325,8 +325,8 @@ test('select category filter and update automation', async assert => {
   const firstItemId = response.results[0]['id'];
   const firstItemName = response.results[0]['name'];
   xhr(`/api/admin/categories/automation-criteria/${keyword}/`, 'GET', null, {}, 200, response);
-  await selectSearch('.t-ticket-category-select', keyword);
-  await selectChoose('.t-ticket-category-select', firstItemName);
+  selectSearch('.t-ticket-category-select', keyword);
+  selectChoose('.t-ticket-category-select', firstItemName);
   assert.equal(page.categorySelectedOne.split(/\s+/)[1], firstItemName);
   let payload = AF.put({
     description: AD.descriptionOne,

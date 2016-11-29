@@ -31,95 +31,95 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
     def tearDown(self):
         self.driver.close()
 
-    # def test_file_upload(self):
-    #     # Create Ticket Page Object
-    #     ticket_page = ModelPage(
-    #         driver = self.driver,
-    #         new_link = "t-add-new",
-    #         list_name = "t-ticket-request",
-    #         list_data = "t-grid-data"
-    #     )
-    #     self.wait_for_xhr_request("t-sort-request-dir").click()
-    #     tickets = ticket_page.find_list_data()
-    #     tickets[0].click()
-    #     # Detail View
-    #     attach_file_btn = self.wait_for_xhr_request_xpath("//input[@type='file']")
-    #     attach_file_btn.send_keys(os.path.join(
-    #         os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    #         "media/test_in/es.csv"
-    #     ))
-    #     self.gen_elem_page.click_save_btn()
-    #     # List View
-    #     tickets = ticket_page.find_list_data()
+    def test_file_upload(self):
+        # Create Ticket Page Object
+        ticket_page = ModelPage(
+            driver = self.driver,
+            new_link = "t-add-new",
+            list_name = "t-ticket-request",
+            list_data = "t-grid-data"
+        )
+        self.wait_for_xhr_request("t-sort-request-dir").click()
+        tickets = ticket_page.find_list_data()
+        tickets[0].click()
+        # Detail View
+        attach_file_btn = self.wait_for_xhr_request_xpath("//input[@type='file']")
+        attach_file_btn.send_keys(os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            "media/test_in/es.csv"
+        ))
+        self.gen_elem_page.click_save_btn()
+        # List View
+        tickets = ticket_page.find_list_data()
 
-    # def test_image_upload(self):
-    #     # Create Ticket Page Object
-    #     ticket_page = ModelPage(
-    #         driver = self.driver,
-    #         new_link = "t-add-new",
-    #         list_name = "t-ticket-request",
-    #         list_data = "t-grid-data"
-    #     )
-    #     self.wait_for_xhr_request("t-sort-request-dir").click()
-    #     tickets = ticket_page.find_list_data()
-    #     tickets[0].click()
-    #     # Detail View
-    #     attach_file_btn = self.wait_for_xhr_request_xpath("//input[@type='file']")
-    #     attach_file_btn.send_keys(os.path.join(
-    #         os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    #         "media/test_in/aaron.jpeg"
-    #     ))
-    #     self.gen_elem_page.click_save_btn()
-    #     # List View
-    #     tickets = ticket_page.find_list_data()
+    def test_image_upload(self):
+        # Create Ticket Page Object
+        ticket_page = ModelPage(
+            driver = self.driver,
+            new_link = "t-add-new",
+            list_name = "t-ticket-request",
+            list_data = "t-grid-data"
+        )
+        self.wait_for_xhr_request("t-sort-request-dir").click()
+        tickets = ticket_page.find_list_data()
+        tickets[0].click()
+        # Detail View
+        attach_file_btn = self.wait_for_xhr_request_xpath("//input[@type='file']")
+        attach_file_btn.send_keys(os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            "media/test_in/aaron.jpeg"
+        ))
+        self.gen_elem_page.click_save_btn()
+        # List View
+        tickets = ticket_page.find_list_data()
 
-    # def test_file_delete(self):
-    #     """
-    #     Upload 2 Attachments for a Ticket, but then navigate away, and the
-    #     Attachments should be deleted.
-    #     """
-    #     # Create Ticket Page Object
-    #     ticket_page = ModelPage(
-    #         driver = self.driver,
-    #         new_link = "t-add-new",
-    #         list_name = "t-ticket-request",
-    #         list_data = "t-grid-data"
-    #     )
-    #     self.wait_for_xhr_request("t-sort-request-dir").click()
-    #     tickets = ticket_page.find_list_data()
-    #     tickets[0].click()
-    #     # Detail View
-    #     # File 1
-    #     attach_file_btn = self.wait_for_xhr_request_xpath("//input[@type='file']")
-    #     attach_file_btn.send_keys(os.path.join(
-    #         os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    #         "media/test_in/es.csv"
-    #     ))
-    #     # File 2
-    #     attach_file_btn = self.driver.find_element_by_xpath("//input[@type='file']")
-    #     attach_file_btn.send_keys(os.path.join(
-    #         os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    #         "media/test_in/jp.csv"
-    #     ))
-    #     # Go to Ticket Area
-    #     self.driver.execute_script("window.scrollTo(0, 0);")
-    #     self.nav_page.find_ticket_link().click()
-    #     tab = self.wait_for_xhr_request("t-tab-close")
-    #     # tab.click()
-    #     # self.wait_for_xhr_request("application-modal", debounce=True).click()
-    #     # # self.driver_wait.find_element_by_class_name("application-modal")
-    #     # WebDriverWait(self.driver, 10).until(
-    #     #     EC.presence_of_element_located((By.CLASS_NAME, "modal-title"))
-    #     # )
-    #     # rollback_btn = self.wait_for_xhr_request("t-modal-rollback-btn", debounce=True)
-    #     # rollback_btn.click()
-    #     # # revisit page
-    #     # tickets = ticket_page.find_list_data()
-    #     # tickets[0].click()
-    #     # # no more attachments on page
-    #     # self.driver.refresh()
-    #     # with self.assertRaises(InvalidSelectorException):
-    #     #     self.driver.find_elements_by_class_name("progress active")
+    def test_file_delete(self):
+        """
+        Upload 2 Attachments for a Ticket, but then navigate away, and the
+        Attachments should be deleted.
+        """
+        # Create Ticket Page Object
+        ticket_page = ModelPage(
+            driver = self.driver,
+            new_link = "t-add-new",
+            list_name = "t-ticket-request",
+            list_data = "t-grid-data"
+        )
+        self.wait_for_xhr_request("t-sort-request-dir").click()
+        tickets = ticket_page.find_list_data()
+        tickets[0].click()
+        # Detail View
+        # File 1
+        attach_file_btn = self.wait_for_xhr_request_xpath("//input[@type='file']")
+        attach_file_btn.send_keys(os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            "media/test_in/es.csv"
+        ))
+        # File 2
+        attach_file_btn = self.driver.find_element_by_xpath("//input[@type='file']")
+        attach_file_btn.send_keys(os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            "media/test_in/jp.csv"
+        ))
+        # Go to Ticket Area
+        self.driver.execute_script("window.scrollTo(0, 0);")
+        self.nav_page.find_ticket_link().click()
+        tab = self.wait_for_xhr_request("t-tab-close")
+        # tab.click()
+        # self.wait_for_xhr_request("application-modal", debounce=True).click()
+        # # self.driver_wait.find_element_by_class_name("application-modal")
+        # WebDriverWait(self.driver, 10).until(
+        #     EC.presence_of_element_located((By.CLASS_NAME, "modal-title"))
+        # )
+        # rollback_btn = self.wait_for_xhr_request("t-modal-rollback-btn", debounce=True)
+        # rollback_btn.click()
+        # # revisit page
+        # tickets = ticket_page.find_list_data()
+        # tickets[0].click()
+        # # no more attachments on page
+        # self.driver.refresh()
+        # with self.assertRaises(InvalidSelectorException):
+        #     self.driver.find_elements_by_class_name("progress active")
 
     def test_ticket(self):
         ### CREATE
