@@ -3,7 +3,7 @@ import PhoneNumber from 'bsrs-ember/models/phonenumber';
 import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number';
 
 moduleForComponent('input-dynamic', 'Unit | Component | input dynamic', {
-    unit: true,
+  unit: true,
 });
 
 test('value is dynamic based on model and property value', function(assert) {

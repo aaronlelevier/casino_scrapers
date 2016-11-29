@@ -33,7 +33,7 @@ test('passing a type will change the form fields type', function(assert) {
   let $component = this.$('.t-person-password');
   assert.equal($component.attr('type'), 'password');
   assert.equal($component.attr('placeholder'), trans.t('admin.person.label.password'));
-  assert.equal($component.attr('class'), 'form-control t-person-password ember-view ember-text-field');
+  assert.equal($component.attr('class'), 'form-control t-person-password ember-text-field ember-view');
   assert.equal($component.attr('id'), 'password');
   assert.equal($component.attr('maxlength'), '2');
   assert.equal($component.val(), '');
