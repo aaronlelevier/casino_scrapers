@@ -1,8 +1,10 @@
 import Ember from 'ember';
+const { set } = Ember;
 import PromiseMixin from 'ember-promise/mixins/promise';
 import { CATEGORIES_URL } from 'bsrs-ember/utilities/urls';
 
 var TicketCategories = Ember.Component.extend({
+  showMessage: false,
   classNames: ['category'],
   label: Ember.computed('ticket.categories.[]', function() {
     return this.get('categories_selected.label') || this.get('category.subcategory_label');
@@ -40,13 +42,23 @@ var TicketCategories = Ember.Component.extend({
       if(!cat_ids.includes(category.id)){
         ticket.change_category_tree(category);
       }
+      set(this, 'showMessage', false);
     },
+    /**
+     * category_parent_id {String} - the previous category selected (Repair)
+     * use category id to find all categories whose parent was the previous selected category
+     */
     handleOpen(category_parent_id) {
       const url = `${CATEGORIES_URL}?parent=${category_parent_id}&page_size=1000`;
       const _this = this;
       PromiseMixin.xhr(url, 'GET').then((response) => {
         _this.set('options', response.results);
       });
+    },
+    blurOut() {
+      if(!this.get('ticket').get('sorted_categories').objectAt(this.get('index'))) {
+        set(this, 'showMessage', true);
+      }
     }
   }
 });

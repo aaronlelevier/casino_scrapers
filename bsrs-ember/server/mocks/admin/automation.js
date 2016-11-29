@@ -10,16 +10,16 @@ module.exports = function(app) {
     var search = req.query.search ? req.query.search.trim() : '';
     var page_size = req.query.page_size ? req.query.page_size.trim() : '';
     if(search && search.length > 0) {
-        var term = decodeURIComponent(search);
-        res.send(automation_FIXTURES.searched(term, sort, page));
+      var term = decodeURIComponent(search);
+      res.send(automation_FIXTURES.searched(term, sort, page));
     } else if(sort && sort.length > 0) {
-        res.send(automation_FIXTURES.sorted(sort, page));
+      res.send(automation_FIXTURES.sorted(sort, page));
     } else if(page_size && page_size.length > 0) {
-        res.send(automation_FIXTURES.paginated(page_size));
+      res.send(automation_FIXTURES.paginated(page_size));
     } else if(parseInt(page) > 1) {
-        res.send(automation_FIXTURES.list_two());
+      res.send(automation_FIXTURES.list_two());
     } else {
-        res.send(automation_FIXTURES.list());
+      res.send(automation_FIXTURES.list());
     }
   });
 

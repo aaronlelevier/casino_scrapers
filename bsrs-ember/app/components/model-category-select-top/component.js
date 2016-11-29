@@ -1,8 +1,10 @@
 import Ember from 'ember';
+const { set } = Ember;
 import PromiseMixin from 'ember-promise/mixins/promise';
 import { CATEGORIES_URL } from 'bsrs-ember/utilities/urls';
 
 var TicketCategories = Ember.Component.extend({
+  showMessage: false,
   classNames: ['category'],
   categories_selected: Ember.computed('model.top_level_category', 'model.categories.[]', function() {
     let index = this.get('index');
@@ -37,6 +39,8 @@ var TicketCategories = Ember.Component.extend({
         return;
       }
       ticket.change_category_tree(category);
+      // remove validation if present
+      set(this, 'showMessage', false);
     },
     handleOpen() {
       const url = CATEGORIES_URL + 'parents/';
@@ -44,6 +48,11 @@ var TicketCategories = Ember.Component.extend({
       PromiseMixin.xhr(url, 'GET').then((response) => {
         _this.set('options', response.results);
       });
+    },
+    blurOut() {
+      if (!this.get('selection')) {
+        set(this, 'showMessage', true);
+      }
     }
   }
 });

@@ -1,10 +1,8 @@
-<span id="category-validation" />
 {{model-category-select-top
   model=model
   selection=model.top_level_category
   ticket_category_options=category.children
   allowClear=allowClear
-  invalid=(if (and showMessage (eq model.sorted_categories.length 0)) "invalid")
 }}
 
 {{#each model.sorted_categories as |category index|}}
@@ -15,15 +13,6 @@
       category=category
       ticket_category_options=category.children
       allowClear=allowClear
-      idTether=(concat valuePath (plus-one index))
-      invalid=(if (and showMessage (eq model.sorted_categories.length (plus-one index))) "invalid")
     }}
   {{/if}}
 {{/each}}
-
-{{show-validation-message 
-  model=model 
-  valuePath=valuePath
-  showMessage=showMessage
-  targetId="#category-validation"
-}}

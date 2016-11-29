@@ -1,4 +1,4 @@
-<div class="input-group">
+<div id={{concat "category-validation" index}} class="input-group">
   <span class="input-group-addon t-model-category-label">{{label}}</span>
   {{#power-select
     selected=categories_selected
@@ -7,6 +7,7 @@
     tagName="div"
     onchange=(action "selected")
     onopen=(action "handleOpen" category.id)
+    onblur=(action "blurOut")
     searchEnabled=false
     allowClear=allowClear
     as |category|
@@ -14,3 +15,19 @@
     {{category.name}}
   {{/power-select}}
 </div>
+
+
+{{#if showMessage}}
+  {{#tether-dialog
+    constraints=(array (hash to="scrollParent" pin=true attachment="together"))
+    container-class="tether-dialog-reset"
+    target=(concat "#category-validation" index)
+    hasOverlay=false
+    attachment="bottom left"
+    targetAttachment="top left"
+  }}
+    <div class="validated-input-error-dialog animated flipInX error t-validation-ticket-category-top">
+      {{t (concat "errors.ticket.category" label)}}
+    </div>
+  {{/tether-dialog}}
+{{/if}}
