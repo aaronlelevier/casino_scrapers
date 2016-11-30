@@ -14,7 +14,7 @@ import page from 'bsrs-ember/tests/pages/person-mobile';
 import personPage from 'bsrs-ember/tests/pages/person';
 import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS, { PEOPLE_URL, PEOPLE_LIST_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { PEOPLE_URL, PEOPLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
 var store, list_xhr;
 

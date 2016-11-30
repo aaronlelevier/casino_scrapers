@@ -77,11 +77,7 @@ $Placeholders: ();
   bottom: 0;
   left: 0;
   z-index: 40;
-  background: $light;
   @include nav-box-shadow(25px);
-  &.transparent {
-    background: transparent;
-  }
 }
 
 @mixin borderStyle($borderWidth: 1px) {

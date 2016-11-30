@@ -24,6 +24,7 @@ section.mobile-main {
   @include smoothScrolling;
   display: flex;
   flex-direction: column;
+  background: $light;
   .mobile-inner{
     @include generalPadding;
     background: $white;

@@ -22,6 +22,7 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
       nameGrid: 'zap4',
       nameGridTen: 'zap10',
       nameGridXav: 'xav14',
+      nameLastPage2Grid: 'xav19',
       namePut: 'Broom Pusher',
       locationLevelNameOne: this.location_level.nameCompany,
       locationLevelNameTwo: this.location_level.nameRegion,
