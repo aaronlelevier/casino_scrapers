@@ -1,5 +1,6 @@
 import Ember from 'ember';
 
+// TODO: '$' in comment type may need to be more strict
 var commentActivity = Ember.Component.extend({
   person: Ember.computed(function() {
     const i18n_string = this.get('i18nString');

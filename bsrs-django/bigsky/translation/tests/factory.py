@@ -1,5 +1,6 @@
 import copy
 
+from automation.models import AutomationEvent
 from ticket.models import TicketStatus, TicketPriority
 from translation.models import Locale, Translation
 from utils.create import random_lorem
@@ -69,6 +70,9 @@ def create_translation_keys_for_fixtures(locale='en'):
         values[v] = v.split('.')[-1]
     for v in TicketPriority.ALL:
         values[v] = v.split('.')[-1]
+    for v in AutomationEvent.ALL:
+        values[v] = v.split('.')[-1]
+
 
     translation = Translation.objects.create(locale=locale_obj, values=values)
 

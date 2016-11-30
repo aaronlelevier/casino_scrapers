@@ -11,14 +11,16 @@ from automation.tests.factory import create_automation_action_send_email, create
 from contact.models import (State, StateManager, StateQuerySet, Country, PhoneNumber,
     PhoneNumberManager, PhoneNumberType, Address, AddressType, Email, EmailType, EmailManager)
 from contact.tests.factory import (create_contact, create_address_type, create_email_type,
-    create_phone_number_type)
+    create_email_types, create_phone_number_type)
 from location.models import Location
 from location.tests.factory import create_location
 from person.models import Role, Person
 from person.tests.factory import create_person, create_single_person
 from tenant.tests.factory import get_or_create_tenant
+from ticket.models import Ticket, TicketStatus, TicketActivity, TicketActivityType
 from ticket.tests.factory import create_standard_ticket, create_ticket
 from translation.tests.factory import create_translation_keys_for_fixtures
+from utils.tests.test_helpers import create_default
 
 
 class StateManagerTests(TestCase):
@@ -75,34 +77,20 @@ class PhoneNumberManagerTests(TestCase):
         self.event = self.action.automation.events.first()
         self.person = Person.objects.get(id=self.action.content['recipients'][0]['id'])
         self.translation = create_translation_keys_for_fixtures(self.person.locale.locale)
+        mommy.make(TicketActivityType, name=TicketActivityType.SEND_SMS)
         self.ticket = create_standard_ticket()
 
     @patch("contact.models.PhoneNumberManager.send_sms")
     def test_process_send_sms__no_sms(self, mock_func):
+        self.assertEqual(self.person.phone_numbers.count(), 0)
+
         PhoneNumber.objects.process_send_sms(self.ticket, self.action, self.event.key)
 
         self.assertFalse(mock_func.called)
 
     @patch("contact.models.PhoneNumberManager.send_sms")
-    def test_process_send_sms__sms_is_not_type_cell_(self, mock_func):
-        personal_sms_type = create_phone_number_type(PhoneNumberType.TELEPHONE)
-        create_contact(PhoneNumber, self.person, personal_sms_type)
-        # clear log
-        with open(settings.LOGGING_INFO_FILE, 'w'): pass
-
-        PhoneNumber.objects.process_send_sms(self.ticket, self.action, self.event.key)
-
-        self.assertFalse(mock_func.called)
-        # Log
-        with open(settings.LOGGING_INFO_FILE, 'r') as f:
-            content = f.read()
-        # self.assertIn("Person: {person.id}; Fullname: {person.fullname} not sent SMS " \
-        #               "because has no CELL phone number on file, for SMS with body: {body}"
-        #               .format(person=self.person, body=self.action.content['body']), content)
-
-    @patch("contact.models.PhoneNumberManager.send_sms")
-    def test_process_send_sms__sms_is_type_cell(self, mock_func):
-        work_sms_type = create_phone_number_type(PhoneNumberType.CELL)
+    def test_process_send_sms__send_sms_called(self, mock_func):
+        work_sms_type = create_phone_number_type(PhoneNumberType.TELEPHONE)
         phone = create_contact(PhoneNumber, self.person, work_sms_type)
         self.action.content.update({
             'body': "Priority {{ticket.priority}} to view the ticket go to {{ticket.url}}"
@@ -147,6 +135,35 @@ class PhoneNumberManagerTests(TestCase):
                         mock_func.call_args_list[1][0][0]]
         self.assertIn(person_phone, phone_call_args)
         self.assertIn(person_two_phone, phone_call_args)
+
+    @patch("contact.models.PhoneNumberManager.send_sms")
+    def test_process_send_sms__ticket_activity_is_created(self, mock_func):
+        # 1 recipient has 2 sms phs
+        cell_sms_type = create_phone_number_type(PhoneNumberType.CELL)
+        office_sms_type = create_phone_number_type(PhoneNumberType.OFFICE)
+        create_contact(PhoneNumber, self.person, cell_sms_type)
+        create_contact(PhoneNumber, self.person, office_sms_type)
+        # 2nd recipient just 1 sms ph
+        role = Role.objects.get(id=self.action.content['recipients'][1]['id'])
+        person_two = create_single_person()
+        person_two.role = role
+        person_two.save()
+        person_two.locations.add(self.ticket.location)
+        person_two_phone = create_contact(PhoneNumber, person_two, cell_sms_type)
+        # pre-test
+        init_count = TicketActivity.objects.count()
+
+        PhoneNumber.objects.process_send_sms(self.ticket, self.action, self.event.key)
+
+        # send_sms is called 3x, but only 2 People records are logged
+        # because each should be unique
+        self.assertEqual(mock_func.call_count, 3)
+        self.assertEqual(TicketActivity.objects.count(), init_count+1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, TicketActivityType.SEND_SMS)
+        self.assertEqual(activity.ticket, self.ticket)
+        self.assertIsNone(activity.person)
+        self.assertEqual(sorted(activity.content), sorted([str(self.person.id), str(person_two.id)]))
 
 
 class PhoneNumberTests(TestCase):
@@ -265,22 +282,29 @@ class EmailManagerTests(TestCase):
         self.event = self.action.automation.events.first()
         self.person = Person.objects.get(id=self.action.content['recipients'][0]['id'])
         self.translation = create_translation_keys_for_fixtures(self.person.locale.locale)
+        mommy.make(TicketActivityType, name=TicketActivityType.SEND_EMAIL)
         self.ticket = create_standard_ticket()
 
     @patch("contact.models.EmailManager.send_email")
     def test_process_send_email__no_email(self, mock_func):
+        self.assertEqual(self.person.emails.count(), 0)
+
         Email.objects.process_send_email(self.ticket, self.action, self.event.key)
 
         self.assertFalse(mock_func.called)
 
     @patch("contact.models.EmailManager.send_email")
     def test_process_send_email__email_is_not_type_work(self, mock_func):
-        personal_email_type = create_email_type(EmailType.PERSONAL)
-        create_contact(Email, self.person, personal_email_type)
+        email_types = create_email_types()
+        for et in email_types:
+            create_contact(Email, self.person, et)
+        # pre-test - # of email types
+        self.assertEqual(email_types.count(), 4)
+        self.assertEqual(self.person.emails.count(), 4)
 
         Email.objects.process_send_email(self.ticket, self.action, self.event.key)
 
-        self.assertFalse(mock_func.called)
+        self.assertEqual(mock_func.call_count, 4, "should have been called 1x for each email")
 
     @patch("contact.models.EmailManager.send_email")
     def test_process_send_email__is_called_with_html_and_text_content(self, mock_func):
@@ -374,6 +398,35 @@ class EmailManagerTests(TestCase):
                         mock_func.call_args_list[1][0][0]]
         self.assertIn(person_email, email_call_args)
         self.assertIn(person_two_email, email_call_args)
+
+    @patch("contact.models.EmailManager.send_email")
+    def test_process_send_email__ticket_activity_is_created(self, mock_func):
+        # 1 recipient has 2 emails
+        work_email_type = create_email_type(EmailType.WORK)
+        personal_email_type = create_email_type(EmailType.PERSONAL)
+        person_work_email = create_contact(Email, self.person, work_email_type)
+        person_personal_email = create_contact(Email, self.person, personal_email_type)
+        # 2nd recipient just  1 email
+        role = Role.objects.get(id=self.action.content['recipients'][1]['id'])
+        person_two = create_single_person()
+        person_two.role = role
+        person_two.save()
+        person_two.locations.add(self.ticket.location)
+        person_two_email = create_contact(Email, person_two, work_email_type)
+        # pre-test
+        init_count = TicketActivity.objects.count()
+
+        Email.objects.process_send_email(self.ticket, self.action, self.event.key)
+
+        # send_email is called 3x, but only 2 People records are logged
+        # because each should be unique
+        self.assertEqual(mock_func.call_count, 3)
+        self.assertEqual(TicketActivity.objects.count(), init_count+1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, TicketActivityType.SEND_EMAIL)
+        self.assertEqual(activity.ticket, self.ticket)
+        self.assertIsNone(activity.person)
+        self.assertEqual(sorted(activity.content), sorted([str(self.person.id), str(person_two.id)]))
 
 
 class EmailTests(TestCase):

@@ -308,7 +308,7 @@ class PersonQuerySet(BaseQuerySet):
                            role_name=F('role__name'))
 
     def get_sms_recipients(self, tenant, keyword):
-        qs = (self.filter(role__tenant=tenant, phone_numbers__type__name=PhoneNumberType.CELL)
+        qs = (self.filter(role__tenant=tenant, phone_numbers__isnull=False)
                   .prefetch_related('phone_numbers'))
 
         if keyword:
@@ -317,8 +317,7 @@ class PersonQuerySet(BaseQuerySet):
         return qs
 
     def get_email_recipients(self, tenant, keyword):
-        qs = (self.filter(role__tenant=tenant, emails__isnull=False,
-                          emails__type__name=EmailType.WORK)
+        qs = (self.filter(role__tenant=tenant, emails__isnull=False)
                   .prefetch_related('emails'))
 
         if keyword:

@@ -16,6 +16,10 @@ class TicketActivityToRepresentation(object):
         if self.data['content']:
             if self.type.name == TicketActivityType.ASSIGNEE:
                 self.set_assignee_data()
+            elif self.type.name == TicketActivityType.SEND_EMAIL:
+                self.set_person_data()
+            elif self.type.name == TicketActivityType.SEND_SMS:
+                self.set_person_data()
             elif self.type.name == TicketActivityType.CC_ADD:
                 self.set_person_list_data_with_key(key='added')
             elif self.type.name == TicketActivityType.CC_REMOVE:
@@ -33,6 +37,10 @@ class TicketActivityToRepresentation(object):
         for k,v in self.data['content'].items():
             person = Person.objects_all.get(id=v)
             self.data['content'][k] = person.to_simple_fullname_dict()
+
+    def set_person_data(self):
+        self.data['content'] = (Person.objects.filter(id__in=self.data['content'])
+                                              .values('id', 'fullname'))
 
     def set_person_list_data_with_key(self, key):
         person_ids = list(self.data['content'].values())

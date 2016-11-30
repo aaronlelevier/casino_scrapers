@@ -6,7 +6,7 @@ from django.utils.html import strip_tags
 
 from premailer import transform
 
-from utils.helpers import KwargsAsObject, get_model_class
+from utils.helpers import KwargsAsObject
 
 
 class Interpolate(object):
@@ -14,7 +14,7 @@ class Interpolate(object):
     Does string interplolation for Automation actions where a message
     needs to be sent. i.e email/sms
     """
-    i18n_FIELDS = ['ticket.priority', 'ticket.status']
+    i18n_FIELDS = ['ticket.priority', 'ticket.status', 'automation.event']
 
     def __init__(self, ticket, translation, **kwargs):
         """
@@ -71,11 +71,19 @@ class Interpolate(object):
             # if present because will be generated later
             return string.replace(substring, '')
         elif tag in self.i18n_FIELDS:
-            model, field = tag.split('.')
+            model_str, field = tag.split('.')
+            model = getattr(self, model_str)
+            field_name = self._get_model_field_name(model_str)
             return string.replace(
                 substring,
-                self.translation.get_value(getattr(getattr(self.ticket, field), 'name')))
+                self.translation.get_value(getattr(getattr(model, field), field_name)))
         return string.replace(substring, substring[1:-1])
+
+    def _get_model_field_name(self, model):
+        if model == 'ticket':
+            return 'name'
+        elif model == 'automation':
+            return 'key'
 
     def _ticket_url(self):
         return '{}/tickets/{}'.format(settings.SITE_URL, self.ticket.id)

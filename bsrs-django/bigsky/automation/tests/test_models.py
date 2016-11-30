@@ -23,8 +23,8 @@ from automation.tests.factory import (
     create_automation_action_send_email, create_automation_action_send_sms,
     create_automation_event)
 from tenant.tests.factory import get_or_create_tenant
-from ticket.models import TicketPriority, TicketStatus
-from ticket.tests.factory import create_ticket
+from ticket.models import TicketPriority, TicketStatus, TicketActivityType
+from ticket.tests.factory import create_ticket, create_ticket_activity_types
 from ticket.tests.factory_related import create_ticket_statuses
 from utils.helpers import create_default, clear_related
 
@@ -60,6 +60,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
         self.tenant = self.person.role.tenant
         create_ticket_statuses()
+        create_ticket_activity_types()
 
         self.ticket.assignee = None
         self.ticket.location = create_top_level_location()
@@ -170,7 +171,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
     # process_actions
 
-    def test_process_actions__assign_assignee_to_ticket(self):
+    def test_process_actions__assignee(self):
         self.assertIsNone(self.ticket.assignee)
         self.assertEqual(self.automation.actions.count(), 1)
         action = self.automation.actions.first()
@@ -182,6 +183,19 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
         self.assertEqual(self.ticket.assignee, action_assignee)
         self.assertEqual(self.ticket.status.name, TicketStatus.NEW)
+
+    @patch("automation.models.AutomationManager._log_from_to_activity")
+    def test_process_actions__assignee__log_from_to_activity(self, mock_func):
+        action = self.automation.actions.first()
+        action_assignee_id = action.content['assignee']
+        action_assignee = Person.objects.get(id=action_assignee_id)
+
+        Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
+
+        self.assertEqual(mock_func.call_args[0][0], TicketActivityType.ASSIGNEE)
+        self.assertEqual(mock_func.call_args[0][1], self.ticket)
+        self.assertEqual(mock_func.call_args[0][2], None)
+        self.assertEqual(mock_func.call_args[0][3], action_assignee)
 
     def test_process_actions__ticket_priority(self):
         clear_related(self.automation, 'actions')
@@ -199,6 +213,22 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
         self.assertEqual(self.ticket.priority, ticket_priority)
 
+    @patch("automation.models.AutomationManager._log_from_to_activity")
+    def test_process_actions__ticket_priority__log_from_to_activity(self, mock_func):
+        init_priority = self.ticket.priority
+        clear_related(self.automation, 'actions')
+        ticket_priority = mommy.make(TicketPriority)
+        priority_action_type = create_automation_action_type(AutomationActionType.TICKET_PRIORITY)
+        action = mommy.make(AutomationAction, automation=self.automation,
+                            type=priority_action_type, content={'priority': ticket_priority.id})
+
+        Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
+
+        self.assertEqual(mock_func.call_args[0][0], TicketActivityType.PRIORITY)
+        self.assertEqual(mock_func.call_args[0][1], self.ticket)
+        self.assertEqual(mock_func.call_args[0][2], init_priority)
+        self.assertEqual(mock_func.call_args[0][3], ticket_priority)
+
     def test_process_actions__ticket_status(self):
         clear_related(self.automation, 'actions')
         ticket_status = mommy.make(TicketStatus)
@@ -214,6 +244,22 @@ class AutomationManagerTests(SetupMixin, TestCase):
         Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
 
         self.assertEqual(self.ticket.status, ticket_status)
+
+    @patch("automation.models.AutomationManager._log_from_to_activity")
+    def test_process_actions__ticket_status__log_from_to_activity(self, mock_func):
+        init_status = self.ticket.status
+        clear_related(self.automation, 'actions')
+        ticket_status = mommy.make(TicketStatus)
+        status_action_type = create_automation_action_type(AutomationActionType.TICKET_STATUS)
+        action = mommy.make(AutomationAction, automation=self.automation,
+                            type=status_action_type, content={'status': ticket_status.id})
+
+        Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
+
+        self.assertEqual(mock_func.call_args[0][0], TicketActivityType.STATUS)
+        self.assertEqual(mock_func.call_args[0][1], self.ticket)
+        self.assertEqual(mock_func.call_args[0][2], init_status)
+        self.assertEqual(mock_func.call_args[0][3], ticket_status)
 
     @patch("contact.models.EmailManager.process_send_email")
     def test_process_actions__send_email(self, mock_func):
@@ -262,8 +308,22 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
         self.assertEqual(self.ticket.request, "{}\n{}".format(init_ticket_request, ticket_request))
 
+    @patch("automation.models.AutomationManager._log_ticket_request_activity")
+    def test_process_actions__ticket_request__log_ticket_request_activity(self, mock_func):
+        init_ticket_request = self.ticket.request
+        ticket_request = 'bar'
+        clear_related(self.automation, 'actions')
+        request_action_type = create_automation_action_type(AutomationActionType.TICKET_REQUEST)
+        action = mommy.make(AutomationAction, automation=self.automation,
+                            type=request_action_type, content={'request': ticket_request})
+
+        Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
+
+        self.assertEqual(mock_func.call_args[0][0], self.ticket)
+        self.assertEqual(mock_func.call_args[0][1], ticket_request)
+
     def test_process_actions__ticket_cc(self):
-        person = create_single_person()
+        person = create_single_person('foo')
         clear_related(self.automation, 'actions')
         cc_action_type = create_automation_action_type(AutomationActionType.TICKET_CC)
         action = mommy.make(AutomationAction, automation=self.automation,
@@ -272,14 +332,69 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.assertEqual(self.automation.actions.count(), 1)
         self.assertEqual(self.automation.actions.first(), action)
         self.assertTrue(self.automation.is_match(self.ticket))
-        self.assertNotIn(person, self.ticket.cc.all())
         # person not present
         self.assertNotIn(person, self.ticket.cc.all())
 
         Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
 
-        self.assertEqual(self.ticket.cc.count(), 2)
         self.assertIn(person, self.ticket.cc.all())
+
+    @patch("automation.models.AutomationManager._log_ticket_cc_add_activity")
+    def test_process_actions__ticket_cc__log_ticket_cc_add_activity(self, mock_func):
+        person = create_single_person()
+        clear_related(self.automation, 'actions')
+        cc_action_type = create_automation_action_type(AutomationActionType.TICKET_CC)
+        action = mommy.make(AutomationAction, automation=self.automation,
+                            type=cc_action_type, content={'ccs': [str(person.id)]})
+
+        Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
+
+        self.assertEqual(mock_func.call_args[0][0], self.ticket)
+        self.assertEqual(mock_func.call_args[0][1], set([str(person.id)]))
+
+    # create ticket activities
+
+    def test_log_from_to_activity(self):
+        self.assertEqual(self.ticket.activities.count(), 0)
+
+        Automation.objects._log_from_to_activity(TicketActivityType.ASSIGNEE, self.ticket, None, self.person)
+
+        self.assertEqual(self.ticket.activities.count(), 1)
+        activity = self.ticket.activities.first()
+        self.assertEqual(activity.type.name, TicketActivityType.ASSIGNEE)
+        self.assertEqual(activity.ticket, self.ticket)
+        self.assertIsNone(activity.person)
+        self.assertEqual(len(activity.content), 2)
+        self.assertEqual(activity.content['from'], None)
+        self.assertEqual(activity.content['to'], str(self.person.id))
+
+    def test_log_ticket_request_activity(self):
+        request = 'foo'
+        self.assertEqual(self.ticket.activities.count(), 0)
+
+        Automation.objects._log_ticket_request_activity(self.ticket, request)
+
+        self.assertEqual(self.ticket.activities.count(), 1)
+        activity = self.ticket.activities.first()
+        self.assertEqual(activity.type.name, TicketActivityType.REQUEST)
+        self.assertEqual(activity.ticket, self.ticket)
+        self.assertIsNone(activity.person)
+        self.assertEqual(len(activity.content), 1)
+        self.assertEqual(activity.content['added'], 'foo')
+
+    def test_log_ticket_cc_add_activity(self):
+        new_ccs = set([str(self.person.id)])
+        self.assertEqual(self.ticket.activities.count(), 0)
+
+        Automation.objects._log_ticket_cc_add_activity(self.ticket, new_ccs)
+
+        self.assertEqual(self.ticket.activities.count(), 1)
+        activity = self.ticket.activities.first()
+        self.assertEqual(activity.type.name, TicketActivityType.CC_ADD)
+        self.assertEqual(activity.ticket, self.ticket)
+        self.assertIsNone(activity.person)
+        self.assertEqual(len(activity.content), 1)
+        self.assertEqual(activity.content['0'], str(self.person.id))
 
 
 class AutomationTests(SetupMixin, TestCase):

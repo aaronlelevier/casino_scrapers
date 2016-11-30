@@ -13,14 +13,13 @@ from location.tests.factory import create_location, create_locations
 from generic.models import Attachment
 from generic.tests.factory import create_file_attachment
 from person.tests.factory import PASSWORD, create_single_person, DistrictManager
-from automation.tests.factory import create_automation
 from ticket.models import Ticket, TicketStatus, TicketActivity, TicketActivityType
 from ticket.serializers import TicketCreateSerializer
-from ticket.tests.factory_related import create_ticket_priority, create_ticket_status
 from ticket.tests.factory import (create_ticket, create_ticket_activity,
     create_ticket_activity_type, create_ticket_activity_types,)
+from ticket.tests.factory_related import create_ticket_priority, create_ticket_status
 from ticket.tests.mixins import TicketSetupNoLoginMixin, TicketSetupMixin
-from utils.helpers import media_path, create_default
+from utils.helpers import media_path
 
 
 class TicketListFulltextTests(TicketSetupMixin, APITestCase):
@@ -430,15 +429,15 @@ class TicketActivityViewSetTests(APITestCase):
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
         self.assertEqual(response.status_code, 200)
 
-    def test_ticket_count(self):
-        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 2)
-
     def test_ticket_details(self):
-        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
-        data = json.loads(response.content.decode('utf8'))
+        activity_type = create_ticket_activity_type("comment")
+        create_ticket_activity(ticket=self.ticket, type=activity_type,
+            content={'comment': 'with comment'})
 
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(data['count'])
         activity = TicketActivity.objects.get(id=data['results'][0]['id'])
         self.assertIsInstance(activity, TicketActivity)
         self.assertIsInstance(TicketActivityType.objects.get(name=data['results'][0]['type']), TicketActivityType)
@@ -469,7 +468,7 @@ class TicketActivityViewSetTests(APITestCase):
         response = self.client.get('/api/tickets/{}/activity/?page=1'.format(self.ticket.id))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 2)
+        self.assertTrue(data['count'])
         # page 2
         response = self.client.get('/api/tickets/{}/activity/?page=2'.format(self.ticket.id))
         self.assertEqual(response.status_code, 404)
@@ -480,7 +479,12 @@ class TicketActivityViewSetTests(APITestCase):
             .format(self.ticket.id, person.id))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], TicketActivity.objects.filter(person=person).filter(ticket=self.ticket.id).count())
+        self.assertEqual(
+            data['count'],
+            (TicketActivity.objects.filter(person=person)
+                                   .filter(ticket=self.ticket.id)
+                                   .filter_out_unsupported_types()
+                                   .count()))
 
     def test_filter_field_none(self):
         person = create_single_person()
@@ -488,20 +492,24 @@ class TicketActivityViewSetTests(APITestCase):
             .format(self.ticket.id, person.id))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], TicketActivity.objects.filter(person=person).count())
+        self.assertEqual(
+            data['count'],
+            (TicketActivity.objects.filter(person=person)
+                                   .filter_out_unsupported_types()
+                                   .count()))
 
     def test_filter_related(self):
         person = self.ticket_activity.person
-
         response = self.client.get('/api/tickets/{}/activity/?person__username={}'
             .format(self.ticket.id, person.username))
-
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['count'],
-            TicketActivity.objects.filter(person__username=person.username).filter(ticket=self.ticket.id).count()
-        )
+            (TicketActivity.objects.filter(person__username=person.username)
+                                   .filter(ticket=self.ticket.id)
+                                   .filter_out_unsupported_types()
+                                   .count()))
 
     def test_filter_related_with_arg(self):
         letter = "a"
@@ -511,8 +519,10 @@ class TicketActivityViewSetTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['count'],
-            TicketActivity.objects.filter(person__username__icontains=letter).filter(ticket=self.ticket.id).count()
-        )
+            (TicketActivity.objects.filter(person__username__icontains=letter)
+                                   .filter(ticket=self.ticket.id)
+                                   .filter_out_unsupported_types()
+                                   .count()))
 
 
 class TicketActivityViewSetReponseTests(APITestCase):
@@ -556,7 +566,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
     def test_assignee(self):
         from_assignee = self.ticket.assignee
         to_assignee = create_single_person()
-        ticket_activity = create_ticket_activity(ticket=self.ticket, type='assignee',
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.ASSIGNEE,
             content={'from': str(from_assignee.id), 'to': str(to_assignee.id)})
 
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
@@ -571,7 +581,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
 
     def test_cc_add(self):
         cc = create_single_person()
-        ticket_activity = create_ticket_activity(ticket=self.ticket, type='cc_add',
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.CC_ADD,
             content={'0': str(cc.id)})
 
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
@@ -584,7 +594,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
 
     def test_cc_remove(self):
         cc = create_single_person()
-        ticket_activity = create_ticket_activity(ticket=self.ticket, type='cc_remove',
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.CC_REMOVE,
             content={'0': str(cc.id)})
 
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
@@ -598,7 +608,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
     def test_status(self):
         from_status = self.ticket.status
         to_status = create_ticket_status('ticket.status.new')
-        ticket_activity = create_ticket_activity(ticket=self.ticket, type='status',
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.STATUS,
             content={'from': str(from_status.id), 'to': str(to_status.id)})
 
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
@@ -612,7 +622,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
     def test_priority(self):
         from_priority = self.ticket.priority
         to_priority = create_ticket_priority('ticket.priority.new')
-        ticket_activity = create_ticket_activity(ticket=self.ticket, type='priority',
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.PRIORITY,
             content={'from': str(from_priority.id), 'to': str(to_priority.id)})
 
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
@@ -630,7 +640,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
         to_category = (Category.objects.exclude(id=from_category.id)
                                        .exclude(parent__isnull=True).first())
         to_child_category = Category.objects.filter(parent=str(to_category.id))[0]
-        ticket_activity = create_ticket_activity(ticket=self.ticket, type='categories',
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.CATEGORIES,
                 content={'from_0': str(from_category.id), 'from_1': str(child_child_category.id), 'to_0': str(to_category.id),
                     'to_1': str(to_child_category.id)})
 
@@ -663,7 +673,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
 
     def test_attachment_add(self):
         attachment = create_file_attachment(self.ticket)
-        ticket_activity = create_ticket_activity(ticket=self.ticket, type='attachment_add',
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.ATTACHMENT_ADD,
             content={'0': str(attachment.id)})
 
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
@@ -678,7 +688,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
 
     def test_comment(self):
         my_comment = 'my random comment'
-        ticket_activity = create_ticket_activity(ticket=self.ticket, type='comment',
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.COMMENT,
             content={'comment': my_comment})
 
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
@@ -693,18 +703,18 @@ class TicketActivityViewSetReponseTests(APITestCase):
         person = create_single_person()
         # assignee
         person.delete()
-        ticket_activity = create_ticket_activity(ticket=self.ticket, type='assignee',
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.ASSIGNEE,
             content={'from': str(from_assignee.id), 'to': str(person.id)})
         # cc_add
-        ticket_activity = create_ticket_activity(ticket=self.ticket, type='cc_add',
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.CC_ADD,
             content={'0': str(person.id)})
         # cc_remove
-        ticket_activity = create_ticket_activity(ticket=self.ticket, type='cc_remove',
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.CC_REMOVE,
             content={'0': str(person.id)})
         # attachment
         attachment = create_file_attachment(self.ticket)
         attachment.delete()
-        ticket_activity = create_ticket_activity(ticket=self.ticket, type='attachment_add',
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.ATTACHMENT_ADD,
             content={'0': str(attachment.id)})
         # categories
         from_category = self.ticket.categories.exclude(parent__isnull=True).first()
@@ -712,12 +722,40 @@ class TicketActivityViewSetReponseTests(APITestCase):
         to_category = (Category.objects.exclude(id=from_category.id)
                                        .exclude(parent__isnull=True).first())
         to_category.delete()
-        ticket_activity = create_ticket_activity(ticket=self.ticket, type='categories',
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.CATEGORIES,
                 content={'from_0': str(from_category.id), 'to_0': str(to_category.id)})
 
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
 
         self.assertEqual(response.status_code, 200)
+
+    # TODO: add back assertions once UI supports this type
+    def test_send_email(self):
+        person = create_single_person()
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.SEND_EMAIL,
+                                                 content=[str(person.id)])
+
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 0)
+        # self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+        # self.assertEqual(data['results'][0]['content'][0]['id'], str(person.id))
+        # self.assertEqual(data['results'][0]['content'][0]['fullname'], person.fullname)
+
+    # TODO: add back assertions once UI supports this type
+    def test_send_sms(self):
+        person = create_single_person()
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.SEND_SMS,
+                                                 content=[str(person.id)])
+
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 0)
+        # self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+        # self.assertEqual(data['results'][0]['content'][0]['id'], str(person.id))
+        # self.assertEqual(data['results'][0]['content'][0]['fullname'], person.fullname)
 
 
 class TicketAndTicketActivityTests(APITestCase):

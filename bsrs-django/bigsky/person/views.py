@@ -128,7 +128,7 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
     @list_route(methods=['GET'], url_path=r"sms-recipients")
     def sms_recipients(self, request):
         """
-        Returns people with a related PhoneNumber of PhoneNumberType.CELL
+        Returns people with a related PhoneNumber
         """
         keyword = request.query_params.get('search', '')
         data = PersonAndRole.sms_recipients(request.user.role.tenant, keyword)
