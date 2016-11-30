@@ -62,7 +62,7 @@
           {{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
           {{#if model.inherited.auth_amount.inherits_from}}
           <p class="inherited-msg t-inherited-msg-auth_amount">
-            {{#link-to "admin.roles.role" model.inherited.auth_amount.inherits_from_id class="t-inherited-msg-auth_amount-link"}}
+            {{#link-to "admin.roles.index.role" model.inherited.auth_amount.inherits_from_id class="t-inherited-msg-auth_amount-link"}}
             {{t "crud.inherited_from" from=model.inherited.auth_amount.inherits_from}}
             {{/link-to}}
           </p>

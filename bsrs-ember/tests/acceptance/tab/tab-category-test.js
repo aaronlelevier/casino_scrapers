@@ -5,22 +5,18 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
-import config from 'bsrs-ember/config/environment';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
-import BASEURLS from 'bsrs-ember/utilities/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import random from 'bsrs-ember/models/random';
+import BASEURLS, { PREFIX, ROLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
-const PREFIX = config.APP.NAMESPACE;
 const BASE_CATEGORY_URL = BASEURLS.base_categories_url;
-const BASE_ROLE_URL = BASEURLS.base_roles_url;
 const CATEGORY_URL = BASE_CATEGORY_URL + '/index';
 const NEW_URL = BASE_CATEGORY_URL + '/new/1';
 const NEW_URL_2 = BASE_CATEGORY_URL + '/new/2';
 const DETAIL_URL = BASE_CATEGORY_URL + '/' + CD.idGridOne;
-const ROLE_URL = BASE_ROLE_URL + '/index';
 const NEW_ROUTE = 'admin.categories.new';
 const INDEX_ROUTE = 'admin.categories.index';
 const DETAIL_ROUTE = 'admin.categories.category';
@@ -227,11 +223,11 @@ test('clicking on a tab that is dirty from the role url (or any non related page
     assert.equal(find('.t-tab-title:eq(0)').text(), CD.nameTwo);
   });
   andThen(() => {
-    let endpoint = PREFIX + BASE_ROLE_URL + '/';
+    let endpoint = PREFIX + ROLE_LIST_URL + '/';
     xhr(endpoint + '?page=1','GET',null,{},200,RF.list());
-    visit(ROLE_URL);
+    visit(ROLE_LIST_URL);
     andThen(() => {
-      assert.equal(currentURL(), ROLE_URL);
+      assert.equal(currentURL(), ROLE_LIST_URL);
     });
   });
   click('.t-tab:eq(0)');
@@ -259,11 +255,11 @@ test('clicking on a tab that is not dirty from the role url (or any non related 
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), CD.nameOne);
   });
-  let role_endpoint = PREFIX + BASE_ROLE_URL + '/';
+  let role_endpoint = PREFIX + ROLE_LIST_URL + '/';
   xhr(role_endpoint + '?page=1','GET',null,{},200, RF.list());
   click('.t-nav-admin-role');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
   });
   click('.t-tab:eq(0)');
   andThen(() => {
@@ -357,11 +353,11 @@ test('(NEW URL) opening a new tab, navigating to a diff module and closing the t
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), 'New Category');
   });
-  xhr(`${PREFIX}${BASE_ROLE_URL}/?page=1`,'GET',null,{},200,RF.list());
-  visit(ROLE_URL);
+  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1`,'GET',null,{},200,RF.list());
+  visit(ROLE_LIST_URL);
   click('.t-tab-close:eq(0)');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });

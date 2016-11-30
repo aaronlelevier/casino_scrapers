@@ -3,7 +3,7 @@ const { run } = Ember;
 import { test } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import config from 'bsrs-ember/config/environment';
-import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
+import { xhr } from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
@@ -14,7 +14,6 @@ import CD from 'bsrs-ember/vendor/defaults/category';
 import TD from 'bsrs-ember/vendor/defaults/tenant';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currency';
-import BASEURLS from 'bsrs-ember/utilities/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/role';
@@ -22,15 +21,10 @@ import personPage from 'bsrs-ember/tests/pages/person';
 import inputCurrencyPage from 'bsrs-ember/tests/pages/input-currency';
 import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
 import { LLEVEL_SELECT } from 'bsrs-ember/tests/helpers/power-select-terms';
+import BASEURLS, { PREFIX, ROLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
-const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
-const BASE_URL = BASEURLS.base_roles_url;
-const ROLE_URL = BASE_URL + '/index';
-const NEW_URL = BASE_URL + '/new/1';
-const SPACEBAR = {keyCode: 32};
-const CATEGORY = '.t-role-category-select .ember-basic-dropdown-trigger';
-const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-select-options';
+const NEW_URL = ROLE_LIST_URL + '/new/1';
 
 let store, payload, list_xhr, url, counter;
 
@@ -46,10 +40,10 @@ moduleForAcceptance('Acceptance | general role new', {
     };
 
     store = this.application.__container__.lookup('service:simpleStore');
-    let endpoint = PREFIX + BASE_URL + '/';
+    let endpoint = PREFIX + ROLE_LIST_URL + '/';
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, RF.empty());
     random.uuid = function() { return UUID.value; };
-    url = `${PREFIX}${BASE_URL}/`;
+    url = `${PREFIX}${ROLE_LIST_URL}/`;
     counter=0;
     run(function() {
       store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
@@ -65,7 +59,7 @@ moduleForAcceptance('Acceptance | general role new', {
 
 test('visiting role/new', (assert) => {
   page.visit();
-  click('.t-add-new');
+  generalPage.new();
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
     assert.equal(store.find('role').get('length'), 7);
@@ -83,7 +77,7 @@ test('visiting role/new', (assert) => {
     const role = store.find('role', UUID.value);
     assert.ok(role.get('new'));
   });
-  fillIn('.t-role-name', RD.nameOne);
+  page.nameFill(RD.nameOne);
   fillIn('.t-settings-dashboard_text', RD.dashboard_textTwo);
   selectChoose('.t-role-role-type', RD.roleTypeGeneral);
   selectChoose('.t-location-level-select', LLD.nameCompany);
@@ -101,7 +95,7 @@ test('visiting role/new', (assert) => {
   xhr(url, 'POST', JSON.stringify(postPayload), {}, 201, {});
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     assert.equal(store.find('role').get('length'), 7);
     let role = store.find('role', UUID.value);
     assert.equal(role.get('new'), undefined);
@@ -115,7 +109,7 @@ test('visiting role/new', (assert) => {
 
 test('validation works and when hit save, we do same post', (assert) => {
   page.visit();
-  click('.t-add-new');
+  generalPage.new();
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
     assert.notOk(page.nameValidationErrorVisible);
@@ -127,7 +121,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     assert.notOk(page.nameValidationErrorVisible);
   });
   page.nameFill('');
-  triggerEvent('.t-role-name', 'keyup', {keyCode: 32});
+  triggerEvent('.t-role-name-single', 'keyup', {keyCode: 32});
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 1);
     assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), t('errors.role.name'));
@@ -136,9 +130,8 @@ test('validation works and when hit save, we do same post', (assert) => {
 });
 
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
-  clearxhr(list_xhr);
   page.visitNew();
-  fillIn('.t-role-name', RD.nameOne);
+  page.nameFill(RD.nameOne);
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
@@ -154,7 +147,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), NEW_URL);
-      assert.equal(find('.t-role-name').val(), RD.nameOne);
+      assert.equal(find('.t-role-name-single').val(), RD.nameOne);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
@@ -162,7 +155,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
   page.visitNew();
-  fillIn('.t-role-name', RD.nameOne);
+  page.nameFill(RD.nameOne);
   generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
@@ -179,7 +172,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   click('.t-modal-footer .t-modal-rollback-btn');
   andThen(() => {
     waitFor(assert, () => {
-      assert.equal(currentURL(), ROLE_URL);
+      assert.equal(currentURL(), ROLE_LIST_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));
       let role = store.find('role', {id: UUID.value});
       assert.equal(role.get('length'), 0);
@@ -215,7 +208,7 @@ test('clicking power select for parent categories will fire off xhr request for 
     assert.ok(role.get('isDirtyOrRelatedDirty'));
     assert.equal(page.categoriesSelected, 1);
   });
-  fillIn('.t-role-name', RD.nameOne);
+  page.nameFill(RD.nameOne);
   page.locationLevelClickDropdown();
   page.locationLevelClickOptionOne();
   let category = CF.put({id: CD.idOne, name: CD.nameOne});
@@ -223,7 +216,7 @@ test('clicking power select for parent categories will fire off xhr request for 
   xhr(url, 'POST', JSON.stringify(postPayload), {}, 201, {});
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
   });
 });
 
@@ -258,14 +251,14 @@ test('adding and removing removing a category in power select for categories wil
   });
   page.categoryClickDropdown();
   page.categoryClickOptionTwoEq();
-  fillIn('.t-role-name', RD.nameOne);
+  page.nameFill(RD.nameOne);
   page.locationLevelClickDropdown();
   page.locationLevelClickOptionOne();
   payload.categories = [CD.idThree];
   xhr(url, 'POST', JSON.stringify(payload), {}, 201, {});
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
   });
 });
 
@@ -288,14 +281,14 @@ test('can add multiple categories', (assert) => {
   });
   page.categoryClickDropdown();
   page.categoryClickOptionTwoEq();
-  fillIn('.t-role-name', RD.nameOne);
+  page.nameFill(RD.nameOne);
   page.locationLevelClickDropdown();
   page.locationLevelClickOptionOne();
   let postPayload = Object.assign(payload, {categories: [CD.idOne, CD.idThree]});
   xhr(url, 'POST', JSON.stringify(postPayload), {}, 201, {});
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
   });
 });
 
@@ -305,8 +298,8 @@ test('adding a new role should allow for another new role to be created after th
   payload.id = 'abc123';
   patchRandomAsync(0);
   page.visit();
-  click('.t-add-new');
-  fillIn('.t-role-name', RD.nameOne);
+  generalPage.new();
+  page.nameFill(RD.nameOne);
   selectChoose(LLEVEL_SELECT, LLD.nameCompany);
   ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
   page.categoryClickDropdown();
@@ -314,13 +307,13 @@ test('adding a new role should allow for another new role to be created after th
   ajax(url, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
   generalPage.save();
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     role_count = store.find('role').get('length');
   });
-  click('.t-add-new');
+  generalPage.new();
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
     assert.equal(store.find('role').get('length'), role_count + 1);
-    assert.equal(find('.t-role-name').val(), '');
+    assert.equal(find('.t-role-name-single').val(), '');
   });
 });

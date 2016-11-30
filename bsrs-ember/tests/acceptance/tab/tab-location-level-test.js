@@ -5,23 +5,19 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
-import config from 'bsrs-ember/config/environment';
 import LLF from 'bsrs-ember/vendor/location-level_fixtures';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
-import BASEURLS from 'bsrs-ember/utilities/urls';
 import random from 'bsrs-ember/models/random';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import BASEURLS, { PREFIX, ROLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
-const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
-const BASE_ROLE_URL = BASEURLS.base_roles_url;
 const LOCATION_LEVEL_URL = BASE_URL + '/index';
 const NEW_URL = BASE_URL + '/new/1';
 const NEW_URL_2 = BASE_URL + '/new/2';
 const DJANGO_DETAIL_URL = PREFIX + BASE_URL + '/' + LLD.idOne + '/';
 const DETAIL_URL = BASE_URL + '/' + LLD.idOne;
-const ROLE_URL = BASE_ROLE_URL + '/index';
 const NEW_ROUTE = 'admin.location-levels.new';
 const INDEX_ROUTE = 'admin.location-levels.index';
 const DETAIL_ROUTE = 'admin.location-levels.location-level';
@@ -231,12 +227,12 @@ test('clicking on a tab that is dirty from the role url (or any non related page
     assert.equal(find('.t-tab-title:eq(0)').text(), LLD.nameDistrict);
   });
   andThen(() => {
-    let endpoint = PREFIX + BASE_ROLE_URL + '/';
+    let endpoint = PREFIX + ROLE_LIST_URL + '/';
     xhr(endpoint + '?page=1','GET',null,{},200,RF.list());
   });
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     let location = store.find('location-level', LLD.idOne);
     assert.equal(location.get('name'), LLD.nameDistrict);
     assert.equal(location.get('isDirtyOrRelatedDirty'), true);
@@ -266,11 +262,11 @@ test('clicking on a tab that is not dirty from the role url (or any non related 
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), LLD.nameCompany);
   });
-  let role_endpoint = PREFIX + BASE_ROLE_URL + '/';
+  let role_endpoint = PREFIX + ROLE_LIST_URL + '/';
   xhr(role_endpoint + '?page=1','GET',null,{},200, RF.list());
   click('.t-nav-admin-role');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
   });
   click('.t-tab:eq(0)');
   andThen(() => {

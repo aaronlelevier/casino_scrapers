@@ -11,6 +11,7 @@ var GeneralPage = PageObject.create({
   save: clickable('.t-save-btn'),
   cancel: clickable('.t-cancel-btn'),
   delete: clickable('.t-delete-btn'),
+  new: clickable('.t-add-new'),
   closeTab: clickable('.t-tab-close:eq(0)'),
   clickModalCancel: clickable('.t-modal-footer .t-modal-cancel-btn'),
   clickModalRollback: clickable('.t-modal-footer .t-modal-rollback-btn'),

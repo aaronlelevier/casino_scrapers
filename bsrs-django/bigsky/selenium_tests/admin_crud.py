@@ -466,7 +466,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # New Role Data
         name = rand_chars()
         role = InputHelper(name=name)
-        self.wait_for_xhr_request("t-role-name")
+        self.wait_for_xhr_request("t-role-name-single")
         self._fill_in(role)
         role_category = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-role-category-select ')]/div")
         role_category.click()
@@ -488,7 +488,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         role_page.click_name_in_list(name, role_list_view)
         ### UPDATE
         # Go to the first Role's Detail view
-        role_page.find_wait_and_assert_elem("t-role-name", name)
+        role_page.find_wait_and_assert_elem("t-role-name-single", name)
         role_name = rand_chars()
         role = InputHelper(name=role_name)
         self._fill_in(role, clear=True)
@@ -842,7 +842,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # person_page.assert_phone_number_inputs(new_phone_one, new_phone_two)
         # person_page.assert_email_inputs(new_email_one, new_email_two)
         # person_page.assert_locations(loc_option_name)
-        self.driver.refresh()
         person_page.find_wait_and_assert_elem("t-person-username", username)
         # assert self.driver.find_element_by_class_name("t-locale-select-trigger").text == "ja - ja"
         person_page.find_and_assert_elems(username=username, first_name=first_name,

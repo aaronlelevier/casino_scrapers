@@ -5,24 +5,20 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
-import config from 'bsrs-ember/config/environment';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
-import BASEURLS from 'bsrs-ember/utilities/urls';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/dtd';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import BASEURLS, { PREFIX, ROLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
-const PREFIX = config.APP.NAMESPACE;
 const BASE_DTD_URL = BASEURLS.base_dtd_url;
-const BASE_ROLE_URL = BASEURLS.base_roles_url;
 const DTD_URL = BASE_DTD_URL;
 const ADMIN_URL = BASEURLS.base_admin_url;
 const NEW_URL = `${BASE_DTD_URL}/new/1`;
 const NEW_URL_2 = `${BASE_DTD_URL}/new/2`;
 const DETAIL_URL = `${BASE_DTD_URL}/${DTD.idOne}`;
-const ROLE_URL = `${BASE_ROLE_URL}/index`;
 const NEW_ROUTE = 'dtds.new';
 const INDEX_ROUTE = 'dtds';
 const DETAIL_ROUTE = 'dtds.dtd';
@@ -258,11 +254,11 @@ test('clicking on a tab that is dirty from the role url (or any non related page
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
   });
-  let endpoint = `${PREFIX}${BASE_ROLE_URL}/`;
+  let endpoint = `${PREFIX}${ROLE_LIST_URL}/`;
   xhr(endpoint + '?page=1','GET',null,{},200,RF.list());
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     let dtd = store.find('dtd', DTD.idOne);
     assert.equal(dtd.get('isDirtyOrRelatedDirty'), true);
     assert.equal(dtd.get('isNotDirtyOrRelatedNotDirty'), false);
@@ -290,11 +286,11 @@ test('clicking on a tab that is not dirty from the role url (or any non related 
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
   });
-  let role_endpoint = PREFIX + BASE_ROLE_URL + '/';
+  let role_endpoint = PREFIX + ROLE_LIST_URL + '/';
   xhr(role_endpoint + '?page=1','GET',null,{},200, RF.list());
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
   });
   click('.t-tab:eq(0)');
   andThen(() => {

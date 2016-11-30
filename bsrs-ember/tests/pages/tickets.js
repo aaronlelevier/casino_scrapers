@@ -40,7 +40,6 @@ var TicketPage = PageObject.create({
   ccThreeSelected: text(CC_THREE),
   ccClickDonald: clickable(`.ember-power-select-option:contains(${PD.donald})`, { scope: POWER_SELECT_OPTIONS }),
   ccClickOptionOne: clickable(`.ember-power-select-option:contains(${PD.nameBoy} Man)`, { scope: POWER_SELECT_OPTIONS }),
-  ccClickOptionTwo: clickable(`.ember-power-select-option:contains(${PD.nameThree})`, { scope: POWER_SELECT_OPTIONS }),
   ccClickMel: clickable(`.ember-power-select-option:contains(${PD.nameMel})`, { scope: POWER_SELECT_OPTIONS }),
   ccOptionLength: count('li', { scope: POWER_SELECT_OPTIONS }),
   ccsSelected: count(CCS),

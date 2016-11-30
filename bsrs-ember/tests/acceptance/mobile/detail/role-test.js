@@ -2,7 +2,7 @@ import Ember from 'ember';
 const { get, run } = Ember;
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import { test } from 'qunit';
-import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
+import { xhr } from 'bsrs-ember/tests/helpers/xhr';
 import { waitFor } from 'bsrs-ember/tests/helpers/utilities';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import RD from 'bsrs-ember/vendor/defaults/role';
@@ -22,8 +22,7 @@ import { LLEVEL_SELECT } from 'bsrs-ember/tests/helpers/const-names';
 
 var store, list_xhr;
 
-const BASE_URL = BASEURLS.base_roles_url;
-const DETAIL_URL = `${BASE_URL}/${RD.idOne}`;
+const DETAIL_URL = `${ROLE_LIST_URL}/${RD.idOne}`;
 const ROLE_PUT_URL = `${ROLES_URL}${RD.idOne}/`;
 
 moduleForAcceptance('Acceptance | general mobile role detail test', {
@@ -33,7 +32,7 @@ moduleForAcceptance('Acceptance | general mobile role detail test', {
     store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${ROLES_URL}?page=1`, 'GET', null, {}, 200, RF.list());
     xhr(`${ROLES_URL}${RD.idOne}/`, 'GET', null, {}, 200, RF.detail());
-    let setting_endpoint = `/api${BASE_URL}/route-data/new/`;
+    let setting_endpoint = `/api${ROLE_LIST_URL}/route-data/new/`;
     xhr(setting_endpoint, 'GET', null, {}, 200, roleNewData);
   },
 });
@@ -84,7 +83,6 @@ test('can update all fields and save', async assert => {
 });
 
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async assert => {
-  clearxhr(list_xhr);
   await page.visitDetail();
   await page.nameFill('wat');
   assert.equal(page.nameValue, 'wat');
@@ -112,7 +110,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit rollback', async assert => {
   await page.visitDetail();
   await page.nameFill('wat');
-  assert.equal(find('.t-role-name').val(), 'wat');
+  assert.equal(page.nameValue, 'wat');
   await generalMobilePage.backButtonClick();
   andThen(() => {
     waitFor(assert, () => {

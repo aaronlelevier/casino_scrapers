@@ -46,9 +46,10 @@ Router.map(function() {
       this.route('person', {path: '/:person_id'});
     });
     this.route('roles', function() {
-      this.route('index');
-      this.route('new', {path: 'new/:new_id'});
-      this.route('role', {path: '/:role_id'});
+      this.route('index', { path: '/' }, function() {
+        this.route('new', {path: 'new/:new_id'});
+        this.route('role', {path: '/:role_id'});
+      });
     });
     this.route('location-levels', function() {
       this.route('index');

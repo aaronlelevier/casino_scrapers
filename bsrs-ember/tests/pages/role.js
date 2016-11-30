@@ -42,8 +42,8 @@ export default PageObject.create({
   locationLevelClickOptionTwo: clickable(`${POWER_SELECT_OPTIONS} > .ember-power-select-option:contains(${LLD.nameRegion})`, {multiple: true}),
   locationLevelClickOptionLossRegion: clickable(`${POWER_SELECT_OPTIONS} > .ember-power-select-option:contains(${LLD.nameLossPreventionRegion})`, {multiple: true}),
 
-  nameFill: fillable('.t-role-name'),
-  nameValue: value('.t-role-name'),
+  nameFill: fillable('.t-role-name-single'),
+  nameValue: value('.t-role-name-single'),
   nameValidationErrorHidden: () => Ember.$('.t-role-name-validator').is(':hidden'),
   nameValidationErrorVisible: hasClass('invalid', '.t-role-name-validator'),
 

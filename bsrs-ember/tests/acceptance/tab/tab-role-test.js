@@ -11,22 +11,19 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import CF from 'bsrs-ember/vendor/category_fixtures';
-import BASEURLS from 'bsrs-ember/utilities/urls';
 import random from 'bsrs-ember/models/random';
 import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
+import page from 'bsrs-ember/tests/pages/role';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import BASEURLS, { PREFIX, ROLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
-const PREFIX = config.APP.NAMESPACE;
-const BASE_ROLE_URL = BASEURLS.base_roles_url;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
-const ROLE_URL = BASE_ROLE_URL + '/index';
-const NEW_URL = BASE_ROLE_URL + '/new/1';
-const NEW_URL_2 = BASE_ROLE_URL + '/new/2';
-const DETAIL_URL = BASE_ROLE_URL + '/' + RD.idGridOne;
+const NEW_URL = ROLE_LIST_URL + '/new/1';
+const DETAIL_URL = ROLE_LIST_URL + '/' + RD.idGridOne;
 const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
-const NEW_ROUTE = 'admin.roles.new';
+const NEW_ROUTE = 'admin.roles.index.new';
 const INDEX_ROUTE = 'admin.roles.index';
-const DETAIL_ROUTE = 'admin.roles.role';
+const DETAIL_ROUTE = 'admin.roles.index.role';
 const DOC_TYPE = 'role';
 
 let application, store, list_xhr, role_detail_data, endpoint, detail_xhr, run = Ember.run;
@@ -34,15 +31,16 @@ let application, store, list_xhr, role_detail_data, endpoint, detail_xhr, run = 
 moduleForAcceptance('Acceptance | tab role test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
-    endpoint = PREFIX + BASE_ROLE_URL + '/';
+    endpoint = PREFIX + ROLE_LIST_URL + '/';
     role_detail_data = RF.detail(RD.idGridOne, RD.nameGrid);
     detail_xhr = xhr(endpoint + RD.idGridOne + '/', 'GET', null, {}, 200, role_detail_data);
     run(() => {
       store.push('role', {id: RD.idGridOne, name: 'wat', categories: [CF.detail()]});
     });
     // Settings
-    let setting_endpoint = `${PREFIX}${BASEURLS.base_roles_url}/route-data/new/`;
+    let setting_endpoint = `${PREFIX}${ROLE_LIST_URL}/route-data/new/`;
     xhr(setting_endpoint, 'GET', null, {}, 200, roleNewData);
+    xhr(endpoint + '?page=1', 'GET', null, {}, 200, RF.list());
   },
 });
 
@@ -78,11 +76,9 @@ test('deep linking the role detail url should push a tab into the tab store with
 });
 
 test('visiting the role detail url from the list url should push a tab into the tab store', (assert) => {
-  let role_list_data = RF.list();
-  list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, role_list_data);
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
     const role = store.find('role-list', RD.idGridOne);
@@ -103,11 +99,9 @@ test('visiting the role detail url from the list url should push a tab into the 
 });
 
 test('clicking on a tab that is not dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
-  let role_list_data = RF.list();
-  list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, role_list_data);
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
@@ -120,9 +114,9 @@ test('clicking on a tab that is not dirty from the list url should take you to t
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameGrid);
   });
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
   });
   click('.t-tab:eq(0)');
   andThen(() => {
@@ -142,10 +136,9 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
     assert.equal(find('.t-tab-title:eq(0)').text(), 'New Role');
   });
   let role_list_data = RF.list();
-  list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, role_list_data);
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
   });
   click('.t-tab:eq(0)');
   andThen(() => {
@@ -163,12 +156,10 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), 'New Role');
   });
-  fillIn('.t-role-name', RD.nameTwo);
-  let role_list_data = RF.list();
-  list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, role_list_data);
-  visit(ROLE_URL);
+  page.nameFill(RD.nameTwo);
+  visit(ROLE_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     let role = store.find('role', UUID.value);//sensitive to changes in number of roles that are bootstrapped.  Bc remove uuid = 'abc123' for new model, need to find specific one
     assert.equal(role.get('name'), RD.nameTwo);
     assert.ok(role.get('isDirtyOrRelatedDirty'));
@@ -183,16 +174,14 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
 });
 
 test('clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
-  let role_list_data = RF.list();
-  list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, role_list_data);
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
   click('.t-grid-data:eq(3)');
-  fillIn('.t-role-name', RD.nameTwo);
+  page.nameFill(RD.nameTwo);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     let role = store.find('role', RD.idGridOne);
@@ -203,9 +192,9 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameTwo);
   });
   andThen(() => {
-    visit(ROLE_URL);
+    visit(ROLE_LIST_URL);
     andThen(() => {
-      assert.equal(currentURL(), ROLE_URL);
+      assert.equal(currentURL(), ROLE_LIST_URL);
     });
   });
   click('.t-tab:eq(0)');
@@ -218,16 +207,14 @@ test('clicking on a tab that is dirty from the list url should take you to the d
 });
 
 test('clicking on a tab that is dirty from the role url (or any non related page) should take you to the detail url and not fire off an xhr request', (assert) => {
-  let role_list_data = RF.list();
-  list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, role_list_data);
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
   click('.t-grid-data:eq(3)');
-  fillIn('.t-role-name', RD.nameTwo);
+  page.nameFill(RD.nameTwo);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     let role = store.find('role', RD.idGridOne);
@@ -239,7 +226,7 @@ test('clicking on a tab that is dirty from the role url (or any non related page
   });
   click('.t-nav-admin-role');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
   });
   click('.t-tab:eq(0)');
   andThen(() => {
@@ -251,10 +238,9 @@ test('clicking on a tab that is dirty from the role url (or any non related page
 });
 
 test('clicking on a tab that is not dirty from the people url (or any non related page) should take you to the detail url and fire off an xhr request', (assert) => {
-  xhr(endpoint + '?page=1','GET',null,{},200,RF.list());
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
@@ -287,18 +273,16 @@ test('a dirty model should add the dirty class to the tab close icon', (assert) 
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.dirty').length, 0);
     let tabs = store.find('tab');
-    assert.equal(tabs.get('length'), 1);
+    assert.equal(find('[data-test-id="tabs"] .dirty').length, 0);
     assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameGrid);
   });
-  fillIn('.t-role-name', RD.nameTwo);
+  page.nameFill(RD.nameTwo);
   andThen(() => {
-    assert.equal(find('.dirty').length, 1);
+    assert.equal(find('[data-test-id="tabs"] .dirty').length, 1);
   });
 });
 
 test('closing a document should close it\'s related tab', (assert) => {
-  let role_list_data = RF.list();
-  list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, role_list_data);
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -308,7 +292,7 @@ test('closing a document should close it\'s related tab', (assert) => {
   });
   click('.t-cancel-btn:eq(0)');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
@@ -316,46 +300,40 @@ test('closing a document should close it\'s related tab', (assert) => {
 
 test('opening a new tab, navigating away and closing the tab should remove the tab', (assert) => {
   clearxhr(detail_xhr);
-  let role_list_data = RF.list();
-  list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, role_list_data);
   visit(NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), 'New Role');
-    visit(ROLE_URL);
+    visit(ROLE_LIST_URL);
   });
   click('.t-tab-close:eq(0)');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
 });
 
 test('opening a tab, navigating away and closing the tab should remove the tab', (assert) => {
-  let role_list_data = RF.list();
-  list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, role_list_data);
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameGrid);
-    visit(ROLE_URL);
+    visit(ROLE_LIST_URL);
   });
   click('.t-tab-close:eq(0)');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
 });
 
 test('opening a tab, making the model dirty, navigating away and closing the tab should display the confirm dialog', (assert) => {
-  let role_list_data = RF.list();
-  list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, role_list_data);
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -363,15 +341,15 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameGrid);
   });
-  fillIn('.t-role-name', RD.nameTwo);
+  page.nameFill(RD.nameTwo);
   andThen(() => {
-    assert.equal(find('.dirty').length, 1);
+    assert.equal(find('[data-test-id="tabs"] .dirty').length, 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), `${RD.nameTwo}`);
   });
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   click('.t-tab-close:eq(0)');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     waitFor(assert, () => {
       assert.equal(find('.t-modal-body').length, 1);
     });
@@ -379,6 +357,7 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
 });
 
 test('(NEW URL) clicking on the new link with a new tab of the same type open will redirect to open tab', (assert) => {
+  random.uuid = function() { return UUID.value; };
   clearxhr(detail_xhr);
   visit(NEW_URL);
   andThen(() => {
@@ -387,16 +366,14 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), 'New Role');
   });
-  let role_list_data = RF.list();
-  xhr(endpoint + '?page=1', 'GET', null, {}, 200, role_list_data);
   generalPage.clickRoles();
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
   });
   click('.t-add-new');
   andThen(() => {
-    assert.equal(currentURL(), NEW_URL_2);
+    assert.equal(currentURL(), NEW_URL);
     let tabs = store.find('tab');
-    assert.equal(tabs.get('length'), 2);
+    assert.equal(tabs.get('length'), 1);
   });
 });

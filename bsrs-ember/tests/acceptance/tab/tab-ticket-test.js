@@ -5,7 +5,6 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
-import config from 'bsrs-ember/config/environment';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import PF from 'bsrs-ember/vendor/people_fixtures';
@@ -16,13 +15,10 @@ import RF from 'bsrs-ember/vendor/role_fixtures';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/tickets';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS, { TICKET_LIST_URL, ROLE_LIST_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { PREFIX, TICKET_LIST_URL, ROLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
-const PREFIX = config.APP.NAMESPACE;
 const NEW_URL = TICKET_LIST_URL + '/new/1';
-const NEW_URL_2 = TICKET_LIST_URL + '/new/2';
 const DETAIL_URL = TICKET_LIST_URL + '/' + TD.idOne;
-const ROLE_URL = ROLE_LIST_URL + '/index';
 const NEW_ROUTE = 'tickets.index.new';
 const INDEX_ROUTE = 'tickets.index';
 const DETAIL_ROUTE = 'tickets.index.ticket';
@@ -287,9 +283,9 @@ test('clicking on a tab that is dirty from the role url (or any non related page
   });
   // let endpoint = PREFIX + ROLE_LIST_URL + '/';
   // xhr(endpoint + '?page=1','GET',null,{},200,RF.list());
-  // visit(ROLE_URL);
+  // visit(ROLE_LIST_URL);
   // andThen(() => {
-  //   assert.equal(currentURL(), ROLE_URL);
+  //   assert.equal(currentURL(), ROLE_LIST_URL);
   // });
   // click('.t-tab:eq(0)');
   // andThen(() => {
@@ -316,9 +312,9 @@ test('clicking on a tab that is not dirty from the role url (or any non related 
   });
   // let role_endpoint = PREFIX + ROLE_LIST_URL + '/';
   // xhr(role_endpoint + '?page=1','GET',null,{},200, RF.list());
-  // visit(ROLE_URL);
+  // visit(ROLE_LIST_URL);
   // andThen(() => {
-  //   assert.equal(currentURL(), ROLE_URL);
+  //   assert.equal(currentURL(), ROLE_LIST_URL);
   // });
   // click('.t-tab:eq(0)');
   // andThen(() => {
@@ -386,10 +382,10 @@ skip('(NEW URL) opening a new tab, navigating to a diff module and closing the t
     assert.equal(tabs.get('length'), 1);
   });
   xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1`,'GET',null,{},200,RF.list());
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   click('.t-tab-close:eq(0)');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
@@ -419,10 +415,10 @@ skip('opening a tab, navigating to a diff module and closing the tab should remo
     assert.equal(tabs.get('length'), 1);
   });
   xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1`,'GET',null,{},200,RF.list());
-  visit(ROLE_URL);
+  visit(ROLE_LIST_URL);
   click('.t-tab-close:eq(0)');
   andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
+    assert.equal(currentURL(), ROLE_LIST_URL);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
@@ -454,7 +450,7 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
   });
 });
 
-skip('(NEW URL) a dirty new tab and clicking on new model button should push new tab into store', (assert) => {
+test('(NEW URL) a dirty new tab and clicking on new model button should not push new tab into store', (assert) => {
   random.uuid = function() { return UUID.value; };
   clearxhr(detail_xhr);
   clearxhr(activity_one);
@@ -471,8 +467,8 @@ skip('(NEW URL) a dirty new tab and clicking on new model button should push new
   generalPage.clickTickets();
   click('.t-add-new');
   andThen(() => {
-    assert.equal(currentURL(), NEW_URL_2);
+    assert.equal(currentURL(), NEW_URL);
     let tabs = store.find('tab');
-    assert.equal(tabs.get('length'), 2);
+    assert.equal(tabs.get('length'), 1);
   });
 });

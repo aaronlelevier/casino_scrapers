@@ -14,8 +14,8 @@ noun="role"
 plural=(t "admin.role.other")
 grid_title=(t "admin.role" count="2")
 list_url="admin.roles.index"
-detail_url="admin.roles.role"
-add_model_url="admin.roles.new"
+detail_url="admin.roles.index.role"
+add_model_url="admin.roles.index.new"
 search_placeholder=(t "admin.role.search")
 add_model_text=(t "admin.role.one")
 save_filterset=(action "save_filterset")
@@ -23,3 +23,5 @@ hasActiveFilterSet=hasActiveFilterSet
 repository=repository
 exportGrid=(route-action "exportGrid" find search sort)
 }}
+
+{{outlet}}

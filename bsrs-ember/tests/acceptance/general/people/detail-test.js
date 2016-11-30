@@ -6,7 +6,6 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
-import config from 'bsrs-ember/config/environment';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import TENANT_DEFAULTS from 'bsrs-ember/vendor/defaults/tenant';
@@ -35,9 +34,8 @@ import random from 'bsrs-ember/models/random';
 import { POWER_SELECT_OPTIONS, PERSON_LOCATION_SELECT, PERSON_STATUS_SELECT, PERSON_ROLE_SELECT } from 'bsrs-ember/tests/helpers/power-select-terms';
 import { LOCALE_SELECT } from 'bsrs-ember/tests/helpers/const-names';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
-import BASEURLS, { PEOPLE_URL, PEOPLE_LIST_URL, ROLES_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { PREFIX, PEOPLE_URL, PEOPLE_LIST_URL, ROLE_LIST_URL, ROLES_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
-const PREFIX = config.APP.NAMESPACE;
 const POWER_SELECT_LENGTH = 10;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const BASE_LOCATION_URL = BASEURLS.base_locations_url;
@@ -252,6 +250,7 @@ test('currency helper displays inherited auth_amount, and can click link-to to g
     assert.equal(inputCurrencyPage.authAmountValue, '');
   });
   xhr(role_route_data_endpoint, 'GET', null, {}, 200, {});
+  xhr(PREFIX + ROLE_LIST_URL + '/' + '?page=1', 'GET', null, {}, 200, RF.list());
   xhr(`${ROLES_URL}${RD.idOne}/`, 'GET', null, {}, 200, RF.detail(RD.idOne));
   inputCurrencyPage.authAmountInheritedFromClick();
   andThen(() => {

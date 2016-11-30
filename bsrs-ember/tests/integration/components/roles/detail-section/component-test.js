@@ -16,6 +16,6 @@ moduleForComponent('roles/detail-section', 'Integration | Component | roles/deta
 test('it renders with correct fields', function(assert) {
   this.model = role;
   this.render(hbs`{{roles/detail-section model=model}}`);
-  assert.equal(this.$('.t-role-name').val(), RD.nameOne);
+  assert.equal(this.$('.t-role-name-single').val(), RD.nameOne);
   // TODO: llevel / role_type
 });
