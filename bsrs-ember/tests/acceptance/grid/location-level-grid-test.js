@@ -517,3 +517,24 @@ test('export csv button shows in grid header', (assert) => {
   xhr(`${EXPORT_DATA_URL}location-level/`, 'GET', null, {}, 200, undefined);
   click('[data-test-id="grid-export-btn"]');
 });
+
+test('loading screen shown before any xhr and hidden after', function(assert) {
+  var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
+  xhr(sort_one ,"GET",null,{},200,LLF.sorted('name'));
+  visitSync(LOCATION_LEVEL_LIST_URL);
+  Ember.run.later(function() {
+    assert.equal(find('.t-grid-loading-graphic').length, 0);
+  }, 0);
+  andThen(() => {
+    assert.equal(currentURL(),LOCATION_LEVEL_LIST_URL);
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-loading-graphic').length, 0);
+  });
+  andThen(() => {
+    Ember.$('.t-sort-name-dir').click();
+    assert.equal(find('.t-grid-loading-graphic').length, 1);
+  });
+  andThen(() => {
+    assert.equal(find('.t-grid-loading-graphic').length, 0);
+  });
+});

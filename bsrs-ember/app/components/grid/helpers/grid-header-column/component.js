@@ -5,7 +5,8 @@ export default Ember.Component.extend({
   tagName: 'th',
   /* accessibility */
   scope: 'col',
-  attributeBindings: ['style', 'dataTestId:data-test-id', 'scope'],
+  colspan: 1,
+  attributeBindings: ['colspan', 'style', 'dataTestId:data-test-id', 'scope'],
   classNameBindings: ['className'],
   className: Ember.computed(function() {
     let classNames = this.get('column.classNames') || [];

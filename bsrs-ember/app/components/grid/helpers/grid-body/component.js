@@ -69,19 +69,20 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, {
       Ember.run.scheduleOnce('actions', this, function() {
         this.set('page', 1);
         this.set('search', search);
+        this.set('isLoading', true);
       }.bind(this));
     },
     sortBy(column) {
       const current = this.get('sort');
       const sorted = this.reorder(current, column);
-      this.setProperties({page: 1, sort: sorted});
+      this.setProperties({page: 1, sort: sorted, isLoading: true});
     },
     toggleFilterModal(column) {
       /* Filter By mixin */
       this.toggle(column);
     },
     resetGrid() {
-      this.setProperties({page: 1, sort: undefined, find: undefined, search: undefined});
+      this.setProperties({page: 1, sort: undefined, find: undefined, search: undefined, isLoading: undefined});
     }
   }
 });

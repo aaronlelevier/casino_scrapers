@@ -315,18 +315,17 @@ test('loading screen shown before any xhr and hidden after', function(assert) {
   xhr(sort_one ,"GET",null,{},200,DTDF.sorted('key'));
   visitSync(DTD_URL);
   Ember.run.later(function() {
-    assert.equal(find('.t-grid-data').length, 0);
-    // assert.equal(find('.t-grid-loading-graphic').length, 1);
+    assert.equal(find('.t-grid-loading-graphic').length, 0);
   }, 0);
   andThen(() => {
     assert.equal(currentURL(),DTD_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-loading-graphic').length, 0);
   });
-  click(SORT_KEY_DIR);
-  Ember.run.later(function() {
-    // assert.equal(find('.t-grid-loading-graphic').length, 1);
-  }, 0);
+  andThen(() => {
+    Ember.$('.t-sort-key-dir').click();
+    assert.equal(find('.t-grid-loading-graphic').length, 1);
+  });
   andThen(() => {
     assert.equal(find('.t-grid-loading-graphic').length, 0);
   });
