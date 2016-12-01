@@ -5,20 +5,28 @@ moduleForComponent('animation-wrapper', 'Integration | Component | animation wra
   integration: true
 });
 
-test('it renders', function(assert) {
-  // Set any properties with this.set('myProperty', 'value');
-  // Handle any actions with this.on('myAction', function(val) { ... });
-
-  this.render(hbs`{{animation-wrapper}}`);
-
-  assert.equal(this.$().text().trim(), '');
-
-  // Template block usage:
-  this.render(hbs`
-    {{#animation-wrapper}}
-      template block text
-    {{/animation-wrapper}}
-  `);
-
-  assert.equal(this.$().text().trim(), 'template block text');
+test('it renders with correct classes', function(assert) {
+  this.slideInUp = true;
+  this.render(hbs` {{#animation-wrapper slideInUp=slideInUp}} {{/animation-wrapper}} `);
+  assert.ok(this.$('animation-wrapper').attr('class').includes('slideInUp'));
+  assert.ok(this.$('animation-wrapper').attr('class').includes('full-screen'));
+  assert.ok(this.$('animation-wrapper').attr('class').includes('desktop'));
+  this.slideOutDown = true;
+  this.render(hbs` {{#animation-wrapper slideOutDown=slideOutDown}} {{/animation-wrapper}} `);
+  assert.ok(this.$('animation-wrapper').attr('class').includes('slideOutDown'));
+  this.slideOutUp = true;
+  this.render(hbs` {{#animation-wrapper slideOutUp=slideOutUp}} {{/animation-wrapper}} `);
+  assert.ok(this.$('animation-wrapper').attr('class').includes('slideOutUp'));
+  this.slideOutRight = true;
+  this.render(hbs` {{#animation-wrapper slideOutRight=slideOutRight}} {{/animation-wrapper}} `);
+  assert.ok(this.$('animation-wrapper').attr('class').includes('slideOutRight'));
+  this.slideOutLeft = true;
+  this.render(hbs` {{#animation-wrapper slideOutLeft=slideOutLeft}} {{/animation-wrapper}} `);
+  assert.ok(this.$('animation-wrapper').attr('class').includes('slideOutLeft'));
+  this.slideInLeft = true;
+  this.render(hbs` {{#animation-wrapper slideInLeft=slideInLeft}} {{/animation-wrapper}} `);
+  assert.ok(this.$('animation-wrapper').attr('class').includes('slideInLeft'));
+  this.slideInRight = true;
+  this.render(hbs` {{#animation-wrapper slideInRight=slideInRight}} {{/animation-wrapper}} `);
+  assert.ok(this.$('animation-wrapper').attr('class').includes('slideInRight'));
 });
