@@ -1,20 +1,55 @@
 import Ember from 'ember';
+const { computed, Component } = Ember;
 
-var toFrom = Ember.Component.extend({
-    person: Ember.computed(function() {
-        const i18n_string = this.get('i18nString');
-        if (i18n_string) {
-            const str = i18n_string.string;
-            const [beg_string, first_var, middle, second_var, timestamp] = str.split('$');
-            this.set('begString', beg_string.trim());
-            this.set('firstVar', first_var.trim());
-            this.set('secondVar', second_var.trim());
-            this.set('timestamp', timestamp.trim());
-            this.set('middle', middle.trim());
-            return this.get('activity').get('person').get('fullname');
-        }
-    }),
-    classNames: ['activity-wrap']
+var toFrom = Component.extend({
+  spliti18nString: computed(function() {
+    const str = this.get('i18nString').string;
+    return str.split('%s');
+  }),
+  /**
+   * @method begString
+   * @return {String} - changed the assignee from
+   */
+  begString: computed({
+    get() {
+      return this.get('spliti18nString')[0].trim();
+    }
+  }),
+  /**
+   * @method firstVar
+   * @return {String} - Boy2 Man2
+   */
+  fromString: computed({
+    get() {
+      return this.get('spliti18nString')[1].trim();
+    }
+  }),
+  /**
+   * @method middle
+   * @return {String} - to 
+   */
+  middleString: computed({
+    get() {
+      return this.get('spliti18nString')[2].trim();
+    }
+  }),
+  /**
+   * @method secondVar
+   * @return {String} - Boy1 Man1
+   */
+  toStringValue: computed({
+    get() {
+      return this.get('spliti18nString')[3].trim();
+    }
+  }),
+  /**
+   * @method name
+   * @return {String} - person fullname or automation description, etc
+   */
+  name: computed(function() {
+    return this.get('activity').get('person').get('fullname');
+  }),
+  classNames: ['activity-wrap']
 });
 
 export default toFrom;

@@ -1,6 +1,7 @@
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PD from 'bsrs-ember/vendor/defaults/person';
+import AD from 'bsrs-ember/vendor/defaults/automation';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import CD from 'bsrs-ember/vendor/defaults/category';
@@ -11,7 +12,9 @@ var store, subject, uuid;
 
 module('unit: activity deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:uuid', 'model:ticket-status', 'model:ticket-priority', 'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity', 'model:activity/assignee', 'model:activity/person', 'model:activity/category-to', 'model:activity/category-from', 'model:activity/attachment-add','model:activity/attachment-remove']);
+        store = module_registry(this.container, this.registry, ['model:uuid', 'model:ticket-status', 'model:ticket-priority', 
+          'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity', 'model:activity/assignee', 'model:activity/person', 
+          'model:activity/category-to', 'model:activity/category-from', 'model:activity/attachment-add','model:activity/attachment-remove']);
         uuid = this.container.lookup('model:uuid');
         subject = ActivityDeserializer.create({simpleStore:store, uuid:uuid});
     }
@@ -154,6 +157,23 @@ test('activity with categories is deserialized correctly', (assert) => {
     assert.equal(store.find('activity').objectAt(0).get('categories_to').objectAt(0).get('name'), CD.nameOne);
     assert.equal(store.find('activity').objectAt(0).get('categories_from').objectAt(0).get('name'), CD.nameTwo);
     assert.notOk(store.find('activity').objectAt(0).get('content'));
+});
+
+test('activity with automation assignee (no person object on activity object)', (assert) => {
+    let response = TA_FIXTURES.automation_assignee_only();
+    subject.deserialize(response);
+    assert.equal(store.find('activity').get('length'), 2);
+    assert.equal(store.find('activity').objectAt(0).get('ticket'), TD.idOne);
+    assert.equal(store.find('activity/assignee').get('length'), 2);
+    assert.equal(store.find('activity').objectAt(0).get('to').get('id'), PD.idSearch);
+    assert.equal(store.find('activity').objectAt(0).get('from').get('id'), PD.idBoy);
+    assert.notOk(store.find('activity').objectAt(0).get('content'));
+    // TODO: spiking on not pushing in model to activity model store
+    // assert.notOk(store.find('activity').objectAt(0).get('automation'));
+    assert.equal(store.find('activity').objectAt(0).get('type'), 'assignee');
+    // assert.equal(store.find('activity/automation').get('length'), 1);
+    assert.equal(store.find('activity').objectAt(0).automation.id, AD.idOne);
+    assert.equal(store.find('activity').objectAt(0).automation.description, AD.descriptionOne);
 });
 
 //existing, then deserialize over the top

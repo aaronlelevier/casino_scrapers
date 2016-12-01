@@ -27,7 +27,11 @@
     <div class="hide activity-empty activity-empty-status_updates">{{t 'activity.empty.status_updates'}}</div>
     {{#each (sort-created activities) as |activity|}}
       <div class="t-activity-list-item activity-list-item activity-{{activity.type}} animated-fast fadeInDown">
-        {{component (component-postfix activity.type) activity=activity i18nString=(activity-description activity timestamp=(moment-from-now activity.created) i18n=i18n) fulltime=(moment-format activity.created 'dddd, MMMM Do YYYY, h:mm:ss a z') }}
+        {{component (component-postfix activity.type) 
+          activity=activity 
+          i18nString=(activity-description activity timestamp=(moment-from-now activity.created) i18n=i18n) 
+          fulltime=(moment-format activity.created 'dddd, MMMM Do YYYY, h:mm:ss a z')
+        }}
       </div>
     {{/each}}
   </div>

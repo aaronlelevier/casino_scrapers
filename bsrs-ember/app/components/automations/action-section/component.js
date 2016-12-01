@@ -8,7 +8,7 @@ export default Ember.Component.extend({
   uuid: injectUUID('uuid'),
   actions: {
     /* @method addAction
-     * adds a dummy action to the automation model
+     * adds a dummy action to the automation model to show specifically on automation new
      */
     addAction() {
       const id = this.get('uuid').v4();
@@ -22,14 +22,14 @@ export default Ember.Component.extend({
      */
     setActionType(automationAction, newActionType) {
 
-      // if existing type, can remove related models
+      // if existing type, can remove related models so dont have multiple related models when only one type is selected (ie assignee and sendsms)
       if (automationAction.get('type.id')) {
         automationAction.remove_related();
       }
       // set type
       automationAction.change_type(newActionType);
 
-      // push in a blank child model
+      // push in a blank child model in order to show one component
       const id = this.get('uuid').v4();
       switch (newActionType.key) { 
         case ACTION_ASSIGNEE:

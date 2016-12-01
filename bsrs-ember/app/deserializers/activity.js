@@ -55,9 +55,11 @@ var extract_to_and_from_or_added_removed = function(store, model) {
 };
 
 var extract_person = function(store, model) {
-  store.push('activity/person', model.person);
-  model.person_fk = model.person.id;
-  delete model.person;
+  if (model.person) {
+    store.push('activity/person', model.person);
+    model.person_fk = model.person.id;
+    delete model.person;
+  }
 };
 
 var ActivityDeserializer = Ember.Object.extend({

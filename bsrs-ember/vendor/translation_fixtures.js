@@ -22,7 +22,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
           'activity.ticket.cc_remove':'removed ${{removed}} $from CC ${{timestamp}}',
           'activity.ticket.comment':'commented ${{timestamp}} ${{comment}}',
           'activity.ticket.create':'created this ticket ${{timestamp}}',
-          'activity.ticket.to_from':'changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}}',
+          'activity.ticket.to_from':'changed the {{type}} from %s{{from}} %sto %s{{to}} %s{{timestamp}}',
           'admin.address_type.location':'Location',
           'admin.address_type.office':'Office',
           'admin.address_type.shipping':'Shipping',
