@@ -2,6 +2,20 @@ import Ember from 'ember';
 const { computed, Component } = Ember;
 
 var toFrom = Component.extend({
+  /**
+   * @method faIcon
+   * @return {String} - fa-icon for activity type
+   */
+  faIcon: computed(function() {
+    switch(this.get('activity.type')) {
+      case 'priority':
+        return 'exclamation-triangle';
+      case 'status':
+        return 'clock-o';
+      case 'assignee':
+        return 'user';
+    }
+  }),
   spliti18nString: computed(function() {
     const str = this.get('i18nString').string;
     return str.split('%s');
@@ -12,7 +26,7 @@ var toFrom = Component.extend({
    */
   begString: computed({
     get() {
-      return this.get('spliti18nString')[0].trim();
+      return this.get('spliti18nString')[0];
     }
   }),
   /**
@@ -21,7 +35,7 @@ var toFrom = Component.extend({
    */
   fromString: computed({
     get() {
-      return this.get('spliti18nString')[1].trim();
+      return this.get('spliti18nString')[1];
     }
   }),
   /**
@@ -30,7 +44,7 @@ var toFrom = Component.extend({
    */
   middleString: computed({
     get() {
-      return this.get('spliti18nString')[2].trim();
+      return this.get('spliti18nString')[2];
     }
   }),
   /**
@@ -39,7 +53,7 @@ var toFrom = Component.extend({
    */
   toStringValue: computed({
     get() {
-      return this.get('spliti18nString')[3].trim();
+      return this.get('spliti18nString')[3];
     }
   }),
   /**

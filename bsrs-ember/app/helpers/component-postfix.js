@@ -10,9 +10,9 @@ export default Ember.Helper.helper((params) => {
     }else if(params[0] === 'create'){
         return 'create-activity';
     }else if(params[0] === 'priority'){
-        return 'to-from-priority';
+        return 'to-from';
     }else if(params[0] === 'status'){
-        return 'to-from-status'; 
+        return 'to-from'; 
     }else if(params[0] === 'cc_add' || params[0] === 'cc_remove') {
         return 'cc-add-remove';
     }else if(params[0] === 'attachment_add' || params[0] === 'attachment_remove') {

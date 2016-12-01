@@ -1,14 +1,19 @@
 import Ember from 'ember';
 
+/** @method activity-description
+ * create, categories, cc_add, cc_remove, attachment_add, attachment_remove, status, priority, assignee
+ * used to build the i18n string, already translated, ready to pass to the respective activity component (to-from component)
+ */
 export default Ember.Helper.helper(function(params, addon) {
   let timestamp = addon.timestamp;
   let i18n = addon.i18n;
   const activity = params[0];
   const type = activity.get('type');
   const person = activity.get('person');
-  if(type === 'create') {
+  if (type === 'create') {
     return i18n.t('activity.ticket.create', {timestamp:timestamp});
-  }else if(type === 'categories') {
+
+  } else if (type === 'categories') {
     let message_to = '';
     let message_from = '';
     const to = activity.get('categories_to');
@@ -28,10 +33,12 @@ export default Ember.Helper.helper(function(params, addon) {
       }
     });
     return i18n.t('activity.ticket.categories', {to:message_to, from:message_from, timestamp:timestamp});
-  }else if(type === 'cc_add') {
+
+  } else if (type === 'cc_add') {
     let message = '';
     const added = activity.get('added');
     const length = added.get('length');
+    // concat string for each added category
     added.forEach((cc, index) => {
       message = message + cc.get('fullname');
       if(index + 1 < length) {
@@ -39,7 +46,8 @@ export default Ember.Helper.helper(function(params, addon) {
       }
     });
     return i18n.t('activity.ticket.cc_add', {added:message, timestamp:timestamp});
-  }else if(type === 'cc_remove') {
+
+  } else if (type === 'cc_remove') {
     let message = '';
     const removed = activity.get('removed');
     const length = removed.get('length');
@@ -50,7 +58,8 @@ export default Ember.Helper.helper(function(params, addon) {
       }
     });
     return i18n.t('activity.ticket.cc_remove', {removed:message, timestamp:timestamp});
-  }else if(type === 'attachment_add') {
+
+  } else if (type === 'attachment_add') {
     let message = '';
     const added = activity.get('added_attachment');
     const length = added.get('length');
@@ -61,7 +70,8 @@ export default Ember.Helper.helper(function(params, addon) {
       }
     });
     return i18n.t('activity.ticket.attachment_add', {count:length, added:message, timestamp:timestamp});
-  }else if(type === 'attachment_remove') {
+
+  } else if (type === 'attachment_remove') {
     let message = '';
     const removed = activity.get('removed_attachment');
     const length = removed.get('length');
@@ -72,9 +82,20 @@ export default Ember.Helper.helper(function(params, addon) {
       }
     });
     return i18n.t('activity.ticket.attachment_remove', {count:length, removed:message, timestamp:timestamp});
-  }else if(type === 'comment') {
+
+  } else if(type === 'comment') {
     const comment = activity.get('comment');
     return i18n.t('activity.ticket.comment', {timestamp:timestamp, comment:comment});    
+
+  } else if (type === 'status') {
+    const to = activity.get('to.name');
+    const from = activity.get('from.name');
+    return i18n.t('activity.ticket.to_from', {type:type, to: i18n.t(to), from:i18n.t(from), timestamp:timestamp});
+
+  } else if (type === 'priority') {
+    const to = activity.get('to.name');
+    const from = activity.get('from.name');
+    return i18n.t('activity.ticket.to_from', {type:type, to: i18n.t(to), from:i18n.t(from), timestamp:timestamp});
   }
 
   // if type is none of the above

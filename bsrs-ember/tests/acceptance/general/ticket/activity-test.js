@@ -94,8 +94,8 @@ test('ticket detail shows the activity list including event data (assignee)', (a
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy2} to ${PD.fullnameBoy} a month ago`);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy2} to ${PD.fullnameBoy} a month ago`);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the assignee from ${PD.fullnameBoy2} to ${PD.fullnameBoy} a month ago`);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the assignee from ${PD.fullnameBoy2} to ${PD.fullnameBoy} a month ago`);
   });
 });
 
@@ -143,9 +143,9 @@ test('ticket detail shows the activity list including event data (status)', (ass
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
     assert.equal(parseInt(find(`${'.t-activity-status-counts'}`).text()), 3);
   });
 });
@@ -165,9 +165,9 @@ test('ticket detail shows the activity list including event data (priority)', (a
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim(), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
     assert.equal(parseInt(find(`${'.t-activity-all-counts'}`).text()), 3);
   });
 });
@@ -459,8 +459,8 @@ test('activities are sorted descending based on created at', (assert) => {
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
   });
 });
