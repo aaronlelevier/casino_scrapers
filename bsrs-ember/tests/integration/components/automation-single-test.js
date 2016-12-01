@@ -41,16 +41,16 @@ moduleForComponent('automation-single', 'integration: automation-single test', {
     automation_repo.getEmailRecipients = function() {
       return new Ember.RSVP.Promise((resolve, reject) => {
         resolve([
-            { id: PD.idOne, fullname: PD.fullname },
-            { id: PD.idTwo, fullname: PD.fullnameBoy },
+            { id: PD.idOne, fullname: PD.fullname, type: 'role' },
+            { id: PD.idTwo, fullname: PD.fullnameBoy, type: 'person' },
           ]);
       });
     };
     automation_repo.getSmsRecipients = function() {
       return new Ember.RSVP.Promise((resolve, reject) => {
         resolve([
-            { id: PD.idOne, fullname: PD.fullname },
-            { id: PD.idTwo, fullname: PD.fullnameBoy },
+            { id: PD.idOne, fullname: PD.fullname, type: 'role' },
+            { id: PD.idTwo, fullname: PD.fullnameBoy, type: 'person' },
           ]);
       });
     };

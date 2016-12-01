@@ -8,6 +8,13 @@ module.exports = function(app) {
     res.send(PEOPLE_FIXTURES.list());
   });
 
+  adminPersonsRouter.get('/sms-recipients', function(req, res) {
+    res.send(PEOPLE_FIXTURES.sms_power_select());
+  });
+  adminPersonsRouter.get('/email-recipients', function(req, res) {
+    res.send(PEOPLE_FIXTURES.sms_power_select());
+  });
+
   adminPersonsRouter.get('/', function(req, res) {
     var page = req.query.page || 1;
     var sort = req.query.ordering ? req.query.ordering.trim() : '';
