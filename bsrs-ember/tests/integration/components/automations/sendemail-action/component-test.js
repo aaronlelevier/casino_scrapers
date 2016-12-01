@@ -92,5 +92,3 @@ skip('shows validation messages', function(assert) {
         });
     });
 });
-
-

@@ -55,7 +55,7 @@ test('visiting mobile role grid show correct layout', async assert => {
   assert.equal(find('.t-grid-data:eq(0) > div:eq(2)').text().trim(), RD.locationLevelNameOne);
 });
 
-test('role username filter will filter down results and reset page to 1', async assert => {
+test('role name filter will filter down results and reset page to 1', async assert => {
   xhr(`${ROLES_URL}?page=1&name__icontains=9`, 'GET', null, {}, 200, RF.searched('9', 'name'));
   clearxhr(list_xhr);
   xhr(`${ROLES_URL}?page=2`, 'GET', null, {}, 200, RF.list());
@@ -70,7 +70,7 @@ test('role username filter will filter down results and reset page to 1', async 
   assert.equal(find('.t-grid-data:eq(0) > div:eq(0)').text().trim(), RD.nameLastPage2Grid);
 });
 
-test('role fullname filter will filter down results and reset page to 1', async assert => {
+test('role type filter will filter down results and reset page to 1', async assert => {
   xhr(`${ROLES_URL}?page=1&role_type__icontains=1`, 'GET', null, {}, 200, RF.searched(RD.roleTypeGeneral, 'role_type'));
   clearxhr(list_xhr);
   xhr(`${ROLES_URL}?page=2`, 'GET', null, {}, 200, RF.list());

@@ -14,8 +14,7 @@ export default GridViewComponent.extend({
     },
     {
       field: 'role_type', 
-      // TODO: styles mobile grid
-      // classNames: ['role-type'],
+      classNames: ['role-type'],
       headerLabel: 'admin.role.label.role_type', 
       headerIsTranslatable: true, 
       isSortable: true, 

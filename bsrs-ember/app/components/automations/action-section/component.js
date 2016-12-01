@@ -7,7 +7,8 @@ export default Ember.Component.extend({
   repository: injectRepo('automation'),
   uuid: injectUUID('uuid'),
   actions: {
-    /* @method addAction
+    /**
+     * @method addAction
      * adds a dummy action to the automation model to show specifically on automation new
      */
     addAction() {
@@ -29,18 +30,9 @@ export default Ember.Component.extend({
       // set type
       automationAction.change_type(newActionType);
 
-      // push in a blank child model in order to show one component
+      // push in a blank child model in order to have a model to add recipients to
       const id = this.get('uuid').v4();
       switch (newActionType.key) { 
-        case ACTION_ASSIGNEE:
-          automationAction.change_assignee({id: id, fullname: ''});
-          break;
-        case ACTION_PRIORITY:
-          automationAction.change_priority({id: id});
-          break;
-        case ACTION_STATUS:
-          automationAction.change_status({id: id});
-          break;
         case ACTION_SEND_EMAIL:
           automationAction.change_sendemail({id: id});
           break;

@@ -9,6 +9,7 @@ import repository from 'bsrs-ember/tests/helpers/repository';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import AD from 'bsrs-ember/vendor/defaults/automation';
 import PD from 'bsrs-ember/vendor/defaults/person';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
 import ATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import SED from 'bsrs-ember/vendor/defaults/sendemail';
 import SMSD from 'bsrs-ember/vendor/defaults/sendsms';
@@ -59,6 +60,7 @@ moduleForComponent('automation-single', 'integration: automation-single test', {
         resolve({ results: [
             { id: ATD.idOne, key: ATD.keyOne },
             { id: ATD.idTwo, key: ATD.keyTwo },
+            { id: ATD.idThree, key: ATD.keyThree },
             { id: ATD.idFour, key: ATD.keyFour },
             { id: ATD.idFive, key: ATD.keyFive },
             { id: ATD.idSix, key: ATD.keySix },
@@ -124,13 +126,27 @@ test('labels are translated', function(assert) {
   assert.equal(getLabelText('description'), trans.t('admin.automation.description'));
 });
 
+test('selecting status show all statuses', function(assert) {
+  run(() => {
+    store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
+  });
+  model.add_action({id: '1'});
+  this.model = model;
+  this.render(hbs `{{automations/automation-single model=model}}`);
+  clickTrigger('.t-automation-action-type-select');  
+  nativeMouseUp(`.ember-power-select-option:contains(${ATD.keyThree})`);
+  clickTrigger('.t-ticket-status-select');
+  assert.equal(Ember.$('li.ember-power-select-option').length, 1);
+});
+
 test('selecting assignee shows empty select power select', function(assert) {
   model.add_action({id: '1'});
   this.model = model;
   this.render(hbs `{{automations/automation-single model=model}}`);
   clickTrigger('.t-automation-action-type-select');  
-  nativeMouseUp('.ember-power-select-option:eq(0)');
+  nativeMouseUp(`.ember-power-select-option:contains(${ATD.keyOne})`);
   assert.equal(Ember.$('.t-automation-action-assignee-select .ember-power-select-selected-item').text().trim(), '');
+  assert.equal(model.get('action').objectAt(0).get('assignee'), undefined);
 });
 
 test('select sendsms filter and update automation', function(assert) {
@@ -138,7 +154,7 @@ test('select sendsms filter and update automation', function(assert) {
   this.model = model;
   this.render(hbs `{{automations/automation-single model=model}}`);
   clickTrigger('.t-automation-action-type-select');
-  nativeMouseUp('.ember-power-select-option:eq(3)');
+  nativeMouseUp(`.ember-power-select-option:contains(${ATD.keyFive})`);
   assert.equal(this.$('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), trans.t(ATD.keyFive), 'selected type');
   page.sendSmsBodyFillIn(SMSD.bodyTwo);
   clickTrigger('.t-action-recipient-select');
@@ -155,7 +171,7 @@ test('select sendemail filter and update automation', function(assert) {
   this.model = model;
   this.render(hbs `{{automations/automation-single model=model}}`);
   clickTrigger('.t-automation-action-type-select');
-  nativeMouseUp('.ember-power-select-option:eq(2)');
+  nativeMouseUp(`.ember-power-select-option:contains(${ATD.keyFour})`);
   assert.equal(this.$('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), trans.t(ATD.keyFour), 'selected type');
   page.sendEmailBodyFillIn(SED.bodyTwo);
   clickTrigger('.t-action-recipient-select');
@@ -177,7 +193,7 @@ test('select sendemail filter will remove old related model', function(assert) {
   this.model = model;
   this.render(hbs `{{automations/automation-single model=model}}`);
   clickTrigger('.t-automation-action-type-select');
-  nativeMouseUp('.ember-power-select-option:eq(2)');
+  nativeMouseUp(`.ember-power-select-option:contains(${ATD.keyFour})`);
   assert.equal(this.$('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), trans.t(ATD.keyFour), 'selected type');
   page.sendEmailBodyFillIn(SED.bodyTwo);
   clickTrigger('.t-action-recipient-select');
