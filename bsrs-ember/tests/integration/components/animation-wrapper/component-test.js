@@ -10,7 +10,6 @@ test('it renders with correct classes', function(assert) {
   this.render(hbs` {{#animation-wrapper slideInUp=slideInUp}} {{/animation-wrapper}} `);
   assert.ok(this.$('animation-wrapper').attr('class').includes('slideInUp'));
   assert.ok(this.$('animation-wrapper').attr('class').includes('full-screen'));
-  assert.ok(this.$('animation-wrapper').attr('class').includes('desktop'));
   this.slideOutDown = true;
   this.render(hbs` {{#animation-wrapper slideOutDown=slideOutDown}} {{/animation-wrapper}} `);
   assert.ok(this.$('animation-wrapper').attr('class').includes('slideOutDown'));
