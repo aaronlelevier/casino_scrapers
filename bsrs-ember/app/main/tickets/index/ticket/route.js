@@ -19,7 +19,7 @@ var TicketSingleRoute = TabRoute.extend(FindById, {
     const remove_attachment_ids = model.get('remove_attachment_ids');
     this.get('attachmentRepository').removeAllUnrelated(remove_attachment_ids);
   },
-  redirectRoute: 'tickets.index',
+  redirectRoute: 'main.tickets.index',
   module: 'ticket',
   templateModelField: 'categories',
   model(params) {
@@ -46,7 +46,7 @@ var TicketSingleRoute = TabRoute.extend(FindById, {
       ];
       controller.set('hashComponents', hashComponents);
     }
-  },
+  }
 });
 
 export default TicketSingleRoute;

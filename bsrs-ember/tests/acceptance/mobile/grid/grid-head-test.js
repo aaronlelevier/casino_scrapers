@@ -99,7 +99,7 @@ test('search presents results on slideUp pane w/o pushing into store', async ass
 //   assert.equal(find('.t-filterset-wrap > hbox > div').length, 5);
 //   await fillIn(FILTERSET_COMPONENT_INPUT, 'foobar');
 //   let name = 'foobar';
-//   let routePath = 'tickets.index';
+//   let routePath = 'main.tickets.index';
 //   let url = window.location.toString();
 //   let query = '?find=request%3Aape19&id_in=';
 //   let section = '.t-grid-wrap';

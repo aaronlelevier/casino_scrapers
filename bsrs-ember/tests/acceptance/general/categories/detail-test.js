@@ -428,7 +428,7 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find('.t-error-message').text(), 'WAT');
+    assert.equal(find('.t-error-message').text(), 'WAT'); // uses `error` route/template
   });
   errorTearDown();
 });

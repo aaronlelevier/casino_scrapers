@@ -16,14 +16,14 @@ moduleForComponent('grid/grid-head', 'Integration | Component | grid-head', {
     flexi.set('width', width);
     run(() => {
       store.push('filterset', {'id': '55639133-fd6f-4a03-b7bc-ec2a6a3cb049', 'name': 'ordered by assignee',
-      'endpoint_name': 'tickets.index', 'endpoint_uri': '?sort=assignee.fullname', 'created': Date.now() });
+      'endpoint_name': 'main.tickets.index', 'endpoint_uri': '?sort=assignee.fullname', 'created': Date.now() });
     });
   },
 });
 
 test('it renders saved filtersets', function(assert) {
   this.grid_title = 'Tickets';
-  this.routeName = 'tickets.index';
+  this.routeName = 'main.tickets.index';
   this.filtersets = store.find('filterset');
   this.render(hbs`{{grid/helpers/grid-head filtersets=filtersets routeName=routeName grid_title=grid_title}}`);
   assert.ok(this.$('.t-mobile-search > i').hasClass('fa-search'));

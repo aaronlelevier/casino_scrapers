@@ -17,7 +17,7 @@ var FindById = Ember.Mixin.create({
         otherXhrs: Ember.RSVP.all(otherXhrs),
         ...deps
       });
-    }else if(model.get('isDirtyOrRelatedDirty')){
+    } else if(model.get('isDirtyOrRelatedDirty')){
       return { model, ...deps };
     }
     /* jshint ignore:end */

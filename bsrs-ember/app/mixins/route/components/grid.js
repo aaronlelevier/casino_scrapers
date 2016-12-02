@@ -2,7 +2,7 @@ import Ember from 'ember';
 const { get, set } = Ember;
 import set_filter_model_attrs from 'bsrs-ember/utilities/filter-model-attrs';
 import inject from 'bsrs-ember/utilities/inject';
-import { ServerError } from 'bsrs-ember/utilities/errors';
+import { ClientError } from 'bsrs-ember/utilities/errors';
 
 var nameRoute = function(route) {
   return route.get('constructor.ClassMixin.ownerConstructor').toString();
@@ -63,34 +63,49 @@ var GridViewRoute = Ember.Route.extend({
     const search = query.search;
     const count = repository.findCount();
     set_filter_model_attrs(this.filterModel, query.find);
-    let model, promise;
-    if (this.get('device').get('isMobile')) {
-      this.controllerFor(routeName).set('infinityIsLoading', true);
-      promise = new Ember.RSVP.Promise((resolve, reject) => {
-        return repository.findWithQueryMobile(query.page, query.search, query.find, query.id_in, special_url).then((model) => {
+    return new Ember.RSVP.Promise((resolve, reject) => {
+      let queryMethod, args, callback;
+      if (this.get('device').get('isMobile')) {
+        queryMethod = repository.findWithQueryMobile;
+        args = [
+          query.page, query.search, query.find, query.id_in, special_url
+        ];
+        this.controllerFor(routeName).set('infinityIsLoading', true);
+        callback = (/*model*/) => {
           this.controllerFor(routeName).set('infinityIsLoading', false);
-          resolve({ count, model, requested, filtersets, routeName, search, repository });
-        });
+        };
+      } else {
+        queryMethod = repository.findWithQuery;
+        args = [
+          query.page, query.search, query.find, query.id_in,
+          query.page_size, query.sort, special_url
+        ];
+      }
+      return queryMethod.apply(repository, args)
+      .then((model) => {
+        if (typeof callback === 'function') {
+          callback.call(this, model);
+        }
+        resolve({ count, model, requested, filtersets, routeName, search, repository });
+      })
+      .catch((xhr) => {
+        let msg;
+        try {
+          msg = xhr.responseJSON[Object.keys(xhr.responseJSON)[0]];
+        } catch(e) {
+          Ember.Logger.debug(e);
+          msg = null;
+        }
+        if ([401,403].includes(xhr.status)) {
+          reject( new ClientError(msg, 'error', xhr) );
+        } else if (xhr.status >= 400) {
+          resolve( new ClientError(msg, 'error', xhr) );
+        }
       });
-    } else {
-      promise = new Ember.RSVP.Promise((resolve, reject) => {
-        return repository.findWithQuery(query.page, query.search, query.find, query.id_in, query.page_size, query.sort, special_url).then((model) => {
-          resolve({ count, model, requested, filtersets, routeName, search, repository });
-        }, (xhr) => {
-          if (xhr.status >= 400) {
-            const err = xhr.responseJSON;
-            const key = Object.keys(err);
-            resolve( new ServerError(err[key[0]]) );
-          }
-        });
-      });
-    }
-    return promise.catch((err) => {
-      Ember.Logger.error(err);
     });
   },
   setupController: function(controller, hash) {
-    if ( !(hash instanceof ServerError) )  {
+    if ( !(hash instanceof Error) )  {
       controller.setProperties(hash);
       controller.set('filterModel', this.filterModel);
       controller.set('gridFilterParams', this.gridFilterParams);

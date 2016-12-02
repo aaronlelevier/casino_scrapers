@@ -11,5 +11,5 @@ export default Ember.Route.extend({
   },
   setupController: function(controller, hash) {
     controller.setProperties(hash);
-  },
+  }
 });

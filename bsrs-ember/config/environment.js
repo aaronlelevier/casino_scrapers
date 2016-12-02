@@ -44,7 +44,7 @@ module.exports = function(environment) {
     },
     DEFAULT_LOCATION: 'Company',
     DEBOUNCE_TIMEOUT_INTERVAL: 300,
-    TICKET_INDEX_REFRESH: 'tickets.index'
+    TICKET_INDEX_REFRESH: 'main.tickets.index'
   };
 
   ENV.APP.NAMESPACE = '/api';

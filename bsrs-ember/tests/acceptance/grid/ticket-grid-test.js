@@ -568,7 +568,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 //   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=location__name';
 //   xhr(sort_one ,'GET',null,{},200,TF.sorted('priority'));
 //   let name = 'foobar';
-//   let routePath = 'tickets.index';
+//   let routePath = 'main.tickets.index';
 //   let url = window.location.toString();
 //   let query = '?sort=priority.name';
 //   let section = '.t-grid-wrap';
@@ -591,7 +591,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 
 test('delete filterset will fire off xhr and remove item from the sidebar navigation', function(assert) {
   let name = 'foobar';
-  let routePath = 'tickets.index';
+  let routePath = 'main.tickets.index';
   let query = '?foo=bar';
   let navigation = '.t-filterset-wrap div';
   let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
@@ -899,7 +899,7 @@ test('export data - search', assert => {
 //   const exception = 'This name is already taken';
 //   let query = '?sort=priority.name';
 //   let name = 'foobar';
-//   let routePath = 'tickets.index';
+//   let routePath = 'main.tickets.index';
 //   let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
 //   xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 400, {});
 //   saveFilterSet(name, routePath);

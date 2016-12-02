@@ -1,16 +1,16 @@
 import Ember from 'ember';
-const { run, set } = Ember;
+const { Route, inject, run, set } = Ember;
 import config from 'bsrs-ember/config/environment';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 import parseError from 'bsrs-ember/utilities/error-response';
 import moment from 'moment';
-const { Route, inject } = Ember;
 
-var ApplicationRoute = Route.extend({
+let ApplicationRoute = Route.extend({
   RoleDeserializer: injectDeserializer('role'),
   PersonDeserializer: injectDeserializer('person'),
   personCurrent: inject.service(),
   translationsFetcher: inject.service(),
+  djangoLogin: inject.service(),
   i18n: inject.service(),
   moment: inject.service(),
   tabList: inject.service(),
@@ -201,7 +201,7 @@ var ApplicationRoute = Route.extend({
           //All other routes
           this.send('closeTabMaster', tab, {action:'save'});
         } else if (update && updateActivities) {
-          //TICKET sends update in args
+          // TICKET sends update in args
           return activityRepository.find('ticket', 'tickets', pk, model);
         }
       }).catch((xhr) => {
@@ -219,6 +219,18 @@ var ApplicationRoute = Route.extend({
      */
     notify(error) {
       this.controllerFor('application').handleNotfication(error);
+    },
+    showLogin() {
+      this.get('djangoLogin').loadForm().then( (response) => {
+        this.controllerFor('application').set('loginHtml', response);
+      });
+    },
+    hideLogin() {
+      this.controllerFor('application').set('loginHtml', null);
+    },
+    postLogin(credentials) {
+      return this.get('djangoLogin').postLogin(credentials)
+      .then( () => this.send('hideLogin') );
     }
   }
 });
