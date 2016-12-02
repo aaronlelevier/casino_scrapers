@@ -9,17 +9,22 @@
       </tr>
     </thead>
     <tbody>
+      {{#if isLoading}}
+        {{grid-loading-graphic}}
+      {{/if}}
       {{#each paginated_content as |item|}}
-      {{#link-to detail_url item.id tagName="tr" class="t-grid-data"}}
-      <td class="selector t-selector">
-        {{#if item.isDirtyOrRelatedDirty}}
-        {{fa-icon 'circle' classNames='dirty'}}
-        {{/if}}
-      </td>
-      {{#each columns as |column|}}
-      {{grid/helpers/grid-body-column noun=noun column=column item=item}}
-      {{/each}}
-      {{/link-to}}
+        {{#link-to detail_url item.id tagName="tr" class="t-grid-data"}}
+          <td class="selector t-selector">
+            {{#if item.isDirtyOrRelatedDirty}}
+            {{fa-icon 'circle' classNames='dirty'}}
+            {{/if}}
+          </td>
+          {{#each columns as |column|}}
+            {{grid/helpers/grid-body-column noun=noun column=column item=item}}
+          {{/each}}
+        {{/link-to}}
+      {{else}}
+        {{grid-no-data tagName="tr" class="no-results" length=(add columns.length 1)}}
       {{/each}}
     </tbody>
   </table>

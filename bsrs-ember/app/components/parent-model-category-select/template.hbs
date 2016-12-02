@@ -10,7 +10,7 @@
   {{#if category.children}}
     {{model-category-select
       ticket=model
-      index=(plus-one index)
+      index=(add index 1)
       category=category
       ticket_category_options=category.children
       allowClear=allowClear

@@ -11,6 +11,7 @@ export default Ember.Component.extend({
       Ember.run.scheduleOnce('actions', this, function() {
         this.set('page', 1);
         this.set('search', search);
+        this.set('isLoading', true);
       }.bind(this));
     },
   }

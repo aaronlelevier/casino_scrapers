@@ -182,4 +182,25 @@ test('export csv button shows in grid header', async (assert) => {
   await click('[data-test-id="grid-export-btn"]');
 });
 
+
+test('loading screen shown before any xhr and hidden after', function(assert) {
+  var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=description';
+  xhr(sort_one ,"GET",null,{},200,AF.sorted('description'));
+  visitSync(AUTOMATION_LIST_URL);
+  Ember.run.later(function() {
+    assert.equal(find('.t-grid-loading-graphic').length, 0);
+  }, 0);
+  andThen(() => {
+    assert.equal(currentURL(),AUTOMATION_LIST_URL);
+    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    assert.equal(find('.t-grid-loading-graphic').length, 0);
+  });
+  andThen(() => {
+    Ember.$('.t-sort-description-dir').click();
+    assert.equal(find('.t-grid-loading-graphic').length, 1);
+  });
+  andThen(() => {
+    assert.equal(find('.t-grid-loading-graphic').length, 0);
+  });
+});
 /* jshint ignore:end */

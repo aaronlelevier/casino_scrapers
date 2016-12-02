@@ -340,19 +340,17 @@ test('loading screen shown before any xhr and hidden after', function(assert) {
   xhr(sort_one ,"GET",null,{},200,LF.sorted('name'));
   visitSync(LOCATION_LIST_URL);
   Ember.run.later(function() {
-    assert.equal(find('.t-grid-data').length, 0);
-    // TODO: loading graphic is not presented b/c template doesn't populate unless xhr has returned
-    // assert.equal(find('.t-grid-loading-graphic').length, 1);
+    assert.equal(find('.t-grid-loading-graphic').length, 0);
   }, 0);
   andThen(() => {
     assert.equal(currentURL(),LOCATION_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-loading-graphic').length, 0);
   });
-  click('.t-sort-name-dir');
-  Ember.run.later(function() {
-    // assert.equal(find('.t-grid-loading-graphic').length, 1);
-  }, 0);
+  andThen(() => {
+    Ember.$('.t-sort-name-dir').click();
+    assert.equal(find('.t-grid-loading-graphic').length, 1);
+  });
   andThen(() => {
     assert.equal(find('.t-grid-loading-graphic').length, 0);
   });

@@ -100,6 +100,7 @@ var GridViewRoute = Ember.Route.extend({
       // need to set model to empty array due to model state preserved in component.  Error shows in place of component
       controller.set('model', []);
     }
+    set(controller, 'isLoading', undefined);
   },
   actions: {
     exportGrid(find, search, sort) {

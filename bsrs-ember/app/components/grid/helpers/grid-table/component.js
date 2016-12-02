@@ -6,6 +6,9 @@ import regex_property from 'bsrs-ember/utilities/regex-property';
 
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
+/**
+ * TODO: duplicated in grid-body component.  Consolidate!
+ */
 export default Ember.Component.extend(SortBy, FilterBy, {
   // searched_content: Ember.computed('find', 'sort', 'page', 'search', 'model.[]', function() {
   //   const search = this.get('search') ? this.get('search').trim().toLowerCase() : '';
@@ -60,7 +63,7 @@ export default Ember.Component.extend(SortBy, FilterBy, {
     sortBy(column) {
       const current = this.get('sort');
       const sorted = this.reorder(current, column);
-      this.setProperties({page: 1, sort: sorted});
+      this.setProperties({page: 1, sort: sorted, isLoading: true});
     },
   }
 });

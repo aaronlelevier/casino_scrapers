@@ -1,0 +1,16 @@
+& {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.5);
+  background-size: cover;
+  background-repeat: none;
+  cursor: wait;
+  .la-ball-clip-rotate {
+    position: absolute;
+    right: 50%;
+  }
+}
