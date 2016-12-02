@@ -261,6 +261,11 @@ LOGGING_DIR = os.path.join(os.path.dirname(BASE_DIR), "log") # ../bsrs-django/lo
 LOGGING_INFO_FILE = os.path.join(LOGGING_DIR, 'info.log')
 LOGGING_REQUEST_FILE = os.path.join(LOGGING_DIR, 'request.log')
 
+### CELERY ###
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
 # LOGGING = {
 #     'version': 1,
 #     'disable_existing_loggers': False,
