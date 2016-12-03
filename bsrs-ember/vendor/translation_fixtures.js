@@ -17,7 +17,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
           'activity.ticket.attachment_add.other':'uploaded ${{count}} files ${{timestamp}} ${{added}}',
           'activity.ticket.attachment_remove.one':'removed ${{count}} file ${{timestamp}} ${{removed}}',
           'activity.ticket.attachment_remove.other':'removed ${{count}} files ${{timestamp}} ${{removed}}',
-          'activity.ticket.categories':'changed the category from ${{from}} $to ${{to}} ${{timestamp}}',
+          'activity.ticket.categories':'changed the category from %s{{from}} %sto %s{{to}} %s{{timestamp}}',
           'activity.ticket.cc_add':'added ${{added}} $to CC ${{timestamp}}',
           'activity.ticket.cc_remove':'removed ${{removed}} $from CC ${{timestamp}}',
           'activity.ticket.comment':'commented ${{timestamp}} ${{comment}}',
