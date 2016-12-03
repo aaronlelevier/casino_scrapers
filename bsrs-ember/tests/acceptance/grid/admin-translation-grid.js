@@ -34,6 +34,7 @@ test('initial load should only show first PAGE_SIZE records ordered by id with c
   visit(I18N_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), I18N_LIST_URL);
+    assert.equal(document.title,  t('doctitle.ticket.index', { count: 10 }));
     assert.equal(find('.t-grid-title').text(), 'Translations');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text().trim(), ATD.keyOneGrid);

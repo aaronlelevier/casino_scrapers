@@ -3,6 +3,10 @@ import inject from 'bsrs-ember/utilities/inject';
 import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 
 var CategoryNewRoute = TabNewRoute.extend({
+  i18n: Ember.inject.service(),
+  title() {
+    return this.get('i18n').t('doctitle.category.new');
+  },
   repository: inject('category'),
   redirectRoute: 'admin.categories.index',
   module: 'category',

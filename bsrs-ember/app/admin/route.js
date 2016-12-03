@@ -2,6 +2,10 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
   personCurrent: Ember.inject.service(),
+  i18n: Ember.inject.service(),
+  title() {
+    return this.get('i18n').t('doctitle.admin.index');
+  },
   model() {
     let personCurrent = this.get('personCurrent');
     return {

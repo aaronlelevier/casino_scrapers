@@ -4,9 +4,13 @@ import TabRoute from 'bsrs-ember/route/tab/route';
 import FindById from 'bsrs-ember/mixins/route/findById';
 
 var PersonRoute = TabRoute.extend(FindById, {
+  i18n: Ember.inject.service(),
+  title() {
+    return this.get('i18n').t('doctitle.people.single', { name: this.get('fullName') });
+  },
+  fullName: undefined,
   repository: inject('person'),
   attachmentRepository: inject('attachment'),
-  i18n: Ember.inject.service(),
   queryParams: {
     role_change: {
       refreshModel: true
@@ -40,6 +44,9 @@ var PersonRoute = TabRoute.extend(FindById, {
   },
   setupController(controller, hash) {
     controller.setProperties(hash);
+
+    // set doctitle
+    this.set('fullName', hash.model.get('fullname'));
   }
 });
 

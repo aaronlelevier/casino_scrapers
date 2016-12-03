@@ -47,7 +47,7 @@ test('visit new URL and create a new record', assert => {
   visit(NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
-    //title
+    assert.equal(document.title,  t('doctitle.tenant.new'));
     assert.equal(page.headerTitleText, t('tenant.new'));
     assert.equal(page.emailTypeOne, ETD.workName);
     assert.equal(page.emailTypeTwo, ETD.workName);

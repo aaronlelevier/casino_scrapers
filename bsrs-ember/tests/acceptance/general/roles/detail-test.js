@@ -72,6 +72,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(document.title,  t('doctitle.role.single', { name:'System Administrator' }));
     const role = store.find('role').objectAt(0);
     assert.ok(role.get('isNotDirty'));
     assert.equal(role.get('location_level').get('id'), LLD.idOne);

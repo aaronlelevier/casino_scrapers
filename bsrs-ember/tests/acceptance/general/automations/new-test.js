@@ -39,6 +39,7 @@ moduleForAcceptance('Acceptance | general automation new test', {
 test('visit new URL and create a new record', async assert => {
   await visit(NEW_URL);
   assert.equal(currentURL(), NEW_URL);
+  assert.equal(document.title,  t('doctitle.automation.new'));
   // description
   await page.descriptionFill(AD.descriptionOne);
   assert.equal(page.descriptionValue, AD.descriptionOne);

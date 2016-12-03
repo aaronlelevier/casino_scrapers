@@ -5,6 +5,10 @@ import FindById from 'bsrs-ember/mixins/route/findById';
 
 var LocationLevelRoute = TabRoute.extend(FindById, {
   i18n: Ember.inject.service(),
+  title() {
+    return this.get('i18n').t('doctitle.location_level.single', { name: this.get('name') });
+  },
+  name: undefined,
   repository: inject('location-level'),
   redirectRoute: 'admin.location-levels.index',
   module: 'location-level',
@@ -23,6 +27,9 @@ var LocationLevelRoute = TabRoute.extend(FindById, {
   },
   setupController: function(controller, hash) {
     controller.setProperties(hash);
+
+    // set doctitle
+    this.set('name', hash.model.get('name'));
   }
 });
 

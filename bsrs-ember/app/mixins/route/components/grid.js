@@ -116,6 +116,9 @@ var GridViewRoute = Ember.Route.extend({
       controller.set('model', []);
     }
     set(controller, 'isLoading', undefined);
+    
+    // set doc title
+    this.set('tabTitleCount', hash.model.get('length'));
   },
   actions: {
     exportGrid(find, search, sort) {

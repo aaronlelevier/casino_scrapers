@@ -29,6 +29,7 @@ moduleForAcceptance('Acceptance | general dashboard', {
 test('welcome h1 header and dashboard_text from settings', assert => {
   visit(DASHBOARD_URL);
   andThen(() => {
+    assert.equal(document.title,  t('doctitle.dashboard.index'));
     assert.equal(find('.t-dashboard-text').text().trim(), 'Welcome');
     assert.equal(find('.t-dashboard-text h1').prop('tagName'), 'H1');
     assert.equal(find('.t-nav-list-home').length, 1);

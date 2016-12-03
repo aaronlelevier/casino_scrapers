@@ -78,6 +78,7 @@ test('clicking save reveals validation messages', (assert) => {
   page.middleInitialFill(PD.middle_initial);
   page.lastNameFill(PD.last_name);
   andThen(() => {
+    assert.equal(document.title, t('doctitle.people.new'));
     assert.equal(find('[data-test-id="first-name"] .invalid').length, 0);
     assert.equal(find('[data-test-id="last-name"] .invalid').length, 0);
     assert.equal(find('[data-test-id="middle-initial"] .invalid').length, 0);

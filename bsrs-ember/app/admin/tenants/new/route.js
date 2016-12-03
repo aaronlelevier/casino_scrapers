@@ -5,6 +5,10 @@ import injectRepo from 'bsrs-ember/utilities/inject';
 import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 
 export default TabNewRoute.extend({
+  i18n: Ember.inject.service(),
+  title() {
+    return this.get('i18n').t('doctitle.tenant.new');
+  },
   repository: inject('tenant'),
   uuid: injectUUID('uuid'),
   redirectRoute: 'admin.tenants.index',

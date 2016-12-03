@@ -4,8 +4,12 @@ import TabRoute from 'bsrs-ember/route/tab/route';
 import FindById from 'bsrs-ember/mixins/route/findById';
 
 var CategorySingle = TabRoute.extend(FindById, {
-  repository: inject('category'),
   i18n: Ember.inject.service(),
+  title() {
+    return this.get('i18n').t('doctitle.category.single', { name: this.get('name') });
+  },
+  name: undefined,
+  repository: inject('category'),
   redirectRoute: 'admin.categories.index',
   module: 'category',
   templateModelField: 'name',
@@ -23,6 +27,9 @@ var CategorySingle = TabRoute.extend(FindById, {
   },
   setupController: function(controller, hash) {
     controller.setProperties(hash);
+    
+    // set doctitle
+    this.set('name', hash.model.get('name'));
   },
 });
 

@@ -33,6 +33,7 @@ test('initial load should only show first PAGE_SIZE records ordered by id with c
   visit(LOCATION_LEVEL_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_LIST_URL);
+    assert.equal(document.title,  t('doctitle.location_level.index', { count: 13 }));
     assert.equal(find('.t-grid-title').text(), 'Location Levels');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text().trim(), LLD.nameCompany);

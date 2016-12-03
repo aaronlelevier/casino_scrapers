@@ -94,6 +94,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     var person = store.find('person', PD.idOne);
+    assert.equal(document.title, t('doctitle.people.single', { name: 'Mel1 Gibson1' }));
     assert.ok(person.get('isNotDirty'));
     assert.equal(person.get('auth_amount'), undefined);
     assert.equal(find('.t-person-username').val(), PD.username);

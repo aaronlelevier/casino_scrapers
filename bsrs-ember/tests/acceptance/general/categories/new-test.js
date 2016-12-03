@@ -64,6 +64,7 @@ test('visiting /category/new', (assert) => {
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), CATEGORY_NEW_URL);
+    assert.equal(document.title,  t('doctitle.category.new'));
     let category = store.find('category', UUID.value);
     assert.ok(category.get('new'));
     assert.equal(find('.t-new-category-name').text(), 'New Category');

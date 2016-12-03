@@ -72,6 +72,7 @@ test('visiting /location/new', (assert) => {
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), LOCATION_NEW_URL);
+    assert.equal(document.title,  t('doctitle.location.new'));
     const location = store.find('location', UUID.value);
     assert.ok(location.get('new'));
     assert.notOk(location.get('name'));

@@ -3,6 +3,10 @@ import injectRepo from 'bsrs-ember/utilities/inject';
 import TabRoute from 'bsrs-ember/route/tab/new-route';
 
 var LocationLevelNew = TabRoute.extend({
+  i18n: Ember.inject.service(),
+  title() {
+    return this.get('i18n').t('doctitle.location_level.new');
+  },
   repository: injectRepo('location-level'),
   redirectRoute: 'admin.location-levels.index',
   module: 'location-level',

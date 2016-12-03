@@ -47,6 +47,7 @@ test('template translation tags as variables', async (assert) => {
 test(`initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr`, async (assert) => {
   await visit(AUTOMATION_LIST_URL);
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
+  assert.equal(document.title,  t('doctitle.automation.index', { count: 10 }));
   assert.equal(find('.t-grid-data').length, PAGE_SIZE);
   assert.equal(page.descriptionGridOne, AD.descriptionOne+'1');
   // assert.equal(page.assigneeGridOne, AD.fullname);

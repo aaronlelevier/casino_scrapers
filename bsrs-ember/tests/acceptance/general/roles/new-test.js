@@ -62,6 +62,7 @@ test('visiting role/new', (assert) => {
   generalPage.new();
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
+    assert.equal(document.title,  t('doctitle.role.new'));
     assert.equal(store.find('role').get('length'), 7);
     assert.equal(store.find('role-type').get('length'), 2);
     assert.equal(page.roleTypeInput, t(RD.t_roleTypeGeneral));

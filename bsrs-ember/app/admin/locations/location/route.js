@@ -4,11 +4,15 @@ import TabRoute from 'bsrs-ember/route/tab/route';
 import FindById from 'bsrs-ember/mixins/route/findById';
 
 var LocationRoute = TabRoute.extend(FindById, {
+  i18n: Ember.inject.service(),
+  title() {
+    return this.get('i18n').t('doctitle.location.single', { name: this.get('name') });
+  },
+  name: undefined,
   repository: inject('location'),
   redirectRoute: 'admin.locations.index',
   module: 'location',
   templateModelField: Ember.computed(function() { return 'name'; }),
-  i18n: Ember.inject.service(),
   model(params) {
     const pk = params.location_id;
     const repository = this.get('repository');
@@ -23,6 +27,9 @@ var LocationRoute = TabRoute.extend(FindById, {
   },
   setupController: function(controller, hash) {
     controller.setProperties(hash);
+
+    // set doctitle
+    this.set('name', hash.model.get('name'));
   }
 });
 

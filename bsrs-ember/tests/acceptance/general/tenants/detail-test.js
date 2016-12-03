@@ -53,6 +53,7 @@ test('visit detail and update all fields', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(document.title, t('doctitle.tenant.single', { companyName: 'foobar' }));
     assert.equal(page.companyNameValue, TD.companyNameOne);
     assert.equal(page.currencyInput, TD.name);
     // fields that only exist on the detail/update record, and not the create

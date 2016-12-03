@@ -3,6 +3,10 @@ import inject from 'bsrs-ember/utilities/inject';
 import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 
 var PersonNew = TabNewRoute.extend({
+  i18n: Ember.inject.service(),
+  title() {
+    return this.get('i18n').t('doctitle.people.new');
+  },
   repository: inject('person'),
   redirectRoute: 'admin.people.index',
   module: 'person',

@@ -3,6 +3,9 @@ import inject from 'bsrs-ember/utilities/inject';
 import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 
 var RoleNewRoute = TabNewRoute.extend({
+  title() {
+    return this.get('i18n').t('doctitle.role.new');
+  },
   repository: inject('role'),
   redirectRoute: 'admin.roles.index',
   module: 'role',

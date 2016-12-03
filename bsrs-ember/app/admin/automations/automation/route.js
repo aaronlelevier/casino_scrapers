@@ -4,11 +4,15 @@ import TabRoute from 'bsrs-ember/route/tab/route';
 import FindById from 'bsrs-ember/mixins/route/findById';
 
 export default TabRoute.extend(FindById, {
+  i18n: Ember.inject.service(),
+  title() {
+    return this.get('i18n').t('doctitle.automation.single', { description: this.get('description') });
+  },
+  description: undefined,
   repository: inject('automation'),
   redirectRoute: 'admin.automations.index',
   module: 'automation',
   templateModelField: 'description',
-  i18n: Ember.inject.service(),
   model(params, transition) {
     const pk = params.automation_id;
     const model = this.get('simpleStore').find('automation', pk);
@@ -21,5 +25,8 @@ export default TabRoute.extend(FindById, {
   },
   setupController(controller, hash) {
     controller.setProperties(hash);
+
+    // set doctitle
+    this.set('description', hash.model.get('description'));
   }
 });

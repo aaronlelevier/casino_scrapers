@@ -4,6 +4,10 @@ import TabRoute from 'bsrs-ember/route/tab/route';
 import FindById from 'bsrs-ember/mixins/route/findById';
 
 var RoleRoute = TabRoute.extend(FindById, {
+  title() {
+    return this.get('i18n').t('doctitle.role.single', { name: this.get('tabName') });
+  },
+  tabName: undefined,
   repository: inject('role'),
   redirectRoute: 'admin.roles.index',
   module: 'role',
@@ -25,6 +29,9 @@ var RoleRoute = TabRoute.extend(FindById, {
   },
   setupController: function(controller, hash) {
     controller.setProperties(hash);
+
+    // set doctitle
+    this.set('tabName', hash.model.get('name'));
   }
 });
 

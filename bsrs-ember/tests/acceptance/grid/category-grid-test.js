@@ -33,6 +33,7 @@ test('initial load should only show first PAGE_SIZE records ordered by id with c
   visit(CATEGORY_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), CATEGORY_LIST_URL);
+    assert.equal(document.title,  t('doctitle.category.index', { count: 10 }));
     assert.equal(find('.t-grid-title').text(), 'Categories');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(1) .t-category-name').text().trim(), CD.nameOne + '2');

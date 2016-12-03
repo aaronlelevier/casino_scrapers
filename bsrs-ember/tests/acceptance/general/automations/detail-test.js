@@ -61,6 +61,7 @@ test('by clicking record in list view, User is sent to detail view', async asser
 test('detail and update all fields', async assert => {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
+  assert.equal(document.title,  t('doctitle.automation.single', { description: "foobar"}));
   assert.equal(page.descriptionValue, AD.descriptionOne);
   assert.equal(page.eventSelectedOne.replace('× ', ''), t(ED.keyOne));
   assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));

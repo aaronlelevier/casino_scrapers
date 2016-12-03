@@ -3,6 +3,10 @@ import inject from 'bsrs-ember/utilities/inject';
 import TabRoute from 'bsrs-ember/route/tab/new-route';
 
 var LocationNewRoute = TabRoute.extend({
+  i18n: Ember.inject.service(),
+  title() {
+    return this.get('i18n').t('doctitle.location.new');
+  },
   repository: inject('location'),
   redirectRoute: 'admin.locations.index',
   module: 'location',

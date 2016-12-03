@@ -60,6 +60,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(document.title,  t('doctitle.category.single', { name: 'Repair' }));
     let category = store.find('category', CD.idOne);
     assert.ok(category.get('isNotDirty'), 'is not dirty');
     assert.equal(page.nameInput, CD.nameOne);

@@ -73,6 +73,7 @@ test('visiting admin/location', (assert) => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(document.title,  t('doctitle.location.single', { name: 'ABC123' }));
     let location = store.find('location', LD.idOne);
     assert.ok(location.get('isNotDirty'));
     assert.equal(location.get('location_level').get('id'), LLD.idOne);

@@ -34,6 +34,7 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
   visit(ROLE_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), ROLE_LIST_URL);
+    assert.equal(document.title,  t('doctitle.role.index', { count: 10 }));
     assert.equal(find('.t-grid-title').text(), 'Roles');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-role-name').text().trim(), RD.nameOne);

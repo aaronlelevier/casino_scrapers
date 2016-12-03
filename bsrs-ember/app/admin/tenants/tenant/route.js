@@ -4,6 +4,11 @@ import TabRoute from 'bsrs-ember/route/tab/route';
 import FindById from 'bsrs-ember/mixins/route/findById';
 
 export default TabRoute.extend(FindById, {
+  i18n: Ember.inject.service(),
+  title() {
+    return this.get('i18n').t('doctitle.tenant.single', { companyName: this.get('tabCompany') });
+  },
+  tabCompany: undefined,
   repository: injectRepo('tenant'),
   redirectRoute: 'admin.tenants.index',
   module: 'tenant',
@@ -21,5 +26,8 @@ export default TabRoute.extend(FindById, {
   },
   setupController(controller, hash) {
     controller.setProperties(hash);
+
+    // set doctitle
+    this.set('tabCompany', hash.model.get('company_name'));
   }
 });

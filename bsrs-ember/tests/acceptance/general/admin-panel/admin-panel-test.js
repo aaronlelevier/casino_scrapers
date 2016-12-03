@@ -27,6 +27,7 @@ test('admin panel displays correct headers and h3 headers', function(assert) {
   visit(ADMIN_URL);
   andThen(() => {
     assert.equal(find(ADMINPANEL + ' h3').length, 5);
+    assert.equal(document.title,  t('doctitle.admin.index'));
     assert.equal(find(ADMINPANEL + ' h3:eq(0)').text().trim(), "Settings");
     assert.equal(find(ADMINPANEL + ' h3:eq(1)').text().trim(), "People");
     assert.equal(find(ADMINPANEL + ' h3:eq(2)').text().trim(), "Locations");

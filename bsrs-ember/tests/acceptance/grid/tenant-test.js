@@ -50,6 +50,7 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
   visit(TENANT_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), TENANT_LIST_URL);
+    assert.equal(document.title,  t('doctitle.tenant.index', { count: 10 }));
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(page.companyNameGridOne, TD.companyNameOne+'0');
     assert.equal(page.companyCodeGridOne, TD.companyCodeOne+'0');

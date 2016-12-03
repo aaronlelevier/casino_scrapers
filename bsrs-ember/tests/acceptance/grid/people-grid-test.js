@@ -39,6 +39,7 @@ test('initial load should only show first 10 records ordered by fullname with co
   visit(PEOPLE_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(),PEOPLE_LIST_URL);
+    assert.equal(document.title,  t('doctitle.people.index', { count: 10 }));
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-person-username').text().trim(), PD.username);
     assert.equal(find('.t-grid-data:eq(0) .t-person-fullname').text().trim(), PD.fullname);

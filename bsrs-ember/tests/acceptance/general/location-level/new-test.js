@@ -60,6 +60,7 @@ test('visiting /location-level/new', (assert) => {
   page.childrenClickOptionSecond();//region
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
+    assert.equal(document.title,  t('doctitle.location_level.new'));
     assert.equal(store.find('location-level').get('length'), 9);
     let location_level = store.find('location-level', UUID.value);
     assert.equal(location_level.get('children_fks').length, 8);

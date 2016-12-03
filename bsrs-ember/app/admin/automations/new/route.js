@@ -4,6 +4,10 @@ import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 
 var automationNewRoute = TabNewRoute.extend({
+  i18n: Ember.inject.service(),
+  title() {
+    return this.get('i18n').t('doctitle.automation.new');
+  },
   repository: inject('automation'),
   uuid: injectUUID('uuid'),
   redirectRoute: 'admin.automations.index',
