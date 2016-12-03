@@ -242,6 +242,8 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         assignee = Person.objects.get(id=action.content['assignee'])
         self.assertEqual(data['actions'][0]['assignee']['id'], str(assignee.id))
         self.assertEqual(data['actions'][0]['assignee']['fullname'], assignee.fullname)
+        self.assertEqual(data['actions'][0]['assignee']['photo']['id'], str(assignee.photo.id))
+        self.assertTrue(data['actions'][0]['assignee']['photo']['image_thumbnail'])
         self.assertNotIn('content', data['actions'][0])
 
     def test_action_priority(self):
@@ -344,6 +346,8 @@ class AutomationDetailTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(len(data['actions'][0]['ccs']), 1)
         person = Person.objects.get(id=data['actions'][0]['ccs'][0]['id'])
         self.assertEqual(data['actions'][0]['ccs'][0]['fullname'], person.fullname)
+        self.assertEqual(data['actions'][0]['ccs'][0]['photo']['id'], str(person.photo.id))
+        self.assertTrue(data['actions'][0]['ccs'][0]['photo']['image_thumbnail'])
 
 
 class AutomationCreateTests(ViewTestSetupMixin, APITestCase):

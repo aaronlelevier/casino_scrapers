@@ -4,6 +4,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
+import wait from 'ember-test-helpers/wait';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import waitFor from 'ember-test-helpers/wait';
@@ -117,4 +118,28 @@ test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
     assert.equal($('.ember-power-select-option').length, 1);
     done();
   }, 150);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
+});
+
+test('ticket assignee should have avatar and fullname', function(assert) {
+  this.model = ticket;
+  this.set('person_repo', person_repo);
+  this.render(hbs`{{db-fetch-select 
+    model=model 
+    selectedAttr=model.assignee 
+    className="t-ticket-assignee-select" 
+    displayName="fullname" 
+    change_func="change_assignee" 
+    repository=person_repo 
+    searchMethod="findTicketAssignee"
+    componentArg="photo-avatar"
+  }}`);
+  clickTrigger('.t-ticket-assignee-select');
+  typeInSearch('a');
+  return wait().then(() => {
+    assert.equal(Ember.$('.ember-power-select-option').length, 3);
+    nativeMouseUp(`.ember-power-select-option:contains(${PD.nameOne})`);
+    assert.equal(Ember.$('.ember-power-select-selected-item').length, 1);
+    assert.equal(Ember.$('[data-test-id="user-avatar"]').length, 1);
+    assert.equal(Ember.$('[data-test-id="user-fullname"]').text().trim(), PD.nameOne + ' ' + PD.lastNameOne);
+  });
 });

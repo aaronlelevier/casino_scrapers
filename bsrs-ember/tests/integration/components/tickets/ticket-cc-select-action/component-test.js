@@ -84,3 +84,24 @@ test('add multiple ticketcc and track to see if valid', function(assert) {
     assert.equal(Ember.$('.validated-input-error-dialog:eq(0)').text().trim(), trans.t('errors.automation.ticketcc'));
   });
 });
+
+test('ticketcc should have avatar and fullname', function(assert) {
+  this.model = action;
+  this.index = 0;
+  this.personRepo = person_repo;
+  this.render(hbs`{{tickets/ticket-cc-select-action
+    model=model
+    index=index 
+    personRepo=personRepo
+    componentArg="photo-avatar"
+  }}`);
+  nativeMouseDown('.ember-power-select-multiple-remove-btn');
+  clickTrigger('.t-action-ticketcc-select');
+  typeInSearch('a');
+  return waitFor().then(() => {
+    assert.equal(Ember.$('.ember-power-select-option').length, 1);
+    nativeMouseUp('.ember-power-select-option:contains("scooter")');
+    assert.equal(Ember.$('[data-test-id="user-avatar"]').length, 1);
+    assert.equal(Ember.$('[data-test-id="user-fullname"]').text().trim(), 'scooter');
+  });
+});

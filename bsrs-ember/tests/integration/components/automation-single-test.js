@@ -137,6 +137,24 @@ test('selecting status show all statuses', function(assert) {
   nativeMouseUp(`.ember-power-select-option:contains(${ATD.keyThree})`);
   clickTrigger('.t-ticket-status-select');
   assert.equal(Ember.$('li.ember-power-select-option').length, 1);
+  assert.equal(Ember.$('[data-test-id="status-tag"]').length, 1);
+  assert.equal(Ember.$('[data-test-id="status-tag"]').text().trim(), TD.statusOne);
+});
+
+
+test('selecting priority show all priorities', function(assert) {
+  run(() => {
+    store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne});
+  });
+  model.add_action({id: '1'});
+  this.model = model;
+  this.render(hbs `{{automations/automation-single model=model}}`);
+  clickTrigger('.t-automation-action-type-select');  
+  nativeMouseUp(`.ember-power-select-option:contains(${ATD.keyTwo})`);
+  clickTrigger('.t-ticket-priority-select');
+  assert.equal(Ember.$('li.ember-power-select-option').length, 1);
+  assert.equal(Ember.$('[data-test-id="priority-tag"]').length, 1);
+  assert.equal(Ember.$('[data-test-id="priority-tag"]').text().trim(), TD.priorityOne);
 });
 
 test('selecting assignee shows empty select power select', function(assert) {

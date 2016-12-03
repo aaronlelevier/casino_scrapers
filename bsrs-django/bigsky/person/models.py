@@ -487,10 +487,8 @@ class Person(BaseModel, AbstractUser):
         }
 
     def to_simple_fullname_dict(self):
-        return {
-            'id': str(self.id),
-            'fullname': self.fullname
-        }
+        from person.serializers import PersonTicketListSerializer
+        return PersonTicketListSerializer(self).data
 
     def _get_locale(self, locale):
         '''
