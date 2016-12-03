@@ -61,7 +61,12 @@ var toFrom = Component.extend({
    * @return {String} - person fullname or automation description, etc
    */
   name: computed(function() {
-    return this.get('activity').get('person').get('fullname');
+    const activity = this.get('activity');
+    if (activity.get('person')) {
+      return activity.get('person').get('fullname');
+    } else if (activity.automation) {
+      return activity.automation.description;
+    }
   }),
   classNames: ['activity-wrap']
 });
