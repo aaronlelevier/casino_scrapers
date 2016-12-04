@@ -8,7 +8,7 @@ import DTD from 'bsrs-ember/vendor/defaults/dtd';
 var ticket, dtd, store, tab, tab_single;
 
 moduleFor('service:tab-list', 'Unit | Service | tab list', {
-  needs: ['validator:presence', 'validator:length', 'validator:ticket-status'],
+  needs: ['validator:presence', 'validator:length', 'validator:ticket-status', 'validator:has-many', 'validator:ticket-categories'],
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:ticket', 'model:tab', 'model:dtd', 'model:dtd-list', 'service:i18n']);
     ticket = store.push('ticket', {id: TD.idOne});

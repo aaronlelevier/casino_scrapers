@@ -12,7 +12,9 @@ var TicketStatusTag = Ember.Component.extend({
     if(this.get('optionModel')) {
       tagClass = this.get('optionModel').get('name').replace(/\./g, '-');
     } else {
-      tagClass = this.get('item.status_class');
+      const name = this.get('item.status.name');
+      tagClass = name ? name.replace(/\./g, '-') : '';
+      // tagClass = this.get('item.status_class');
     }
     return `tag ${tagClass}`;
   }),

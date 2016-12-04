@@ -2,7 +2,8 @@ import Ember from 'ember';
 
 var TabMixin = Ember.Mixin.create({
   tabList: Ember.inject.service(),
-  classNames: ['wrapper', 'form'],
+  tagName: 'article',
+  classNames: ['main'],
   tab() {
     const service = this.get('tabList');
     return service.findTab(this.get('model.id'));

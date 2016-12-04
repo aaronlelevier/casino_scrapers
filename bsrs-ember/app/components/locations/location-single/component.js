@@ -5,7 +5,6 @@ import { task } from 'ember-concurrency';
 
 var LocationSingle = Ember.Component.extend(TabMixin, {
   repository: inject('location'),
-  classNames: ['wrapper', 'form'],
   isDisabled: Ember.computed('model.location_level', function() {
     if(this.get('model').get('new') && !this.get('model').get('location_level')){
       return true;

@@ -12,7 +12,6 @@ import { task } from 'ember-concurrency';
 
 var PersonSingle = Ember.Component.extend(TabMixin, {
   simpleStore: Ember.inject.service(),
-  classNames: ['wrapper', 'form'],
   // passwordValidation: validate('model.password', validatePassword),
   saveTask: task(function * () {
     if (this.get('model.validations.isValid')) {

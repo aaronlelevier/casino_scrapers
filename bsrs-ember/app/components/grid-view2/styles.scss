@@ -52,9 +52,13 @@ div.rowTable {
         }
       }
       //table column widths
+      td {
+        border: none;
+      }
       td, th{
         font-size: 1.2rem;
         vertical-align: middle;
+        padding: 10px 0;
         .tag{
           width: 110px;
           @include truncate;

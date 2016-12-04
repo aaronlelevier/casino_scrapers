@@ -72,7 +72,7 @@ let extract_location_level = (model, store) => {
 var RoleDeserializer = Ember.Object.extend({
   deserialize(response, options) {
     if (typeof options === 'undefined') {
-      this._deserializeList(response);
+      return this._deserializeList(response);
     } else {
       return this._deserializeSingle(response, options);
     }
@@ -94,11 +94,14 @@ var RoleDeserializer = Ember.Object.extend({
   },
   _deserializeList(response) {
     const store = this.get('simpleStore');
+    const results = [];
     response.results.forEach((model) => {
       model.location_level_fk = model.location_level;
       delete model.location_level;
-      store.push('role-list', model);
+      const role = store.push('role-list', model);
+      results.push(role);
     });
+    return results;
   }
 });
 

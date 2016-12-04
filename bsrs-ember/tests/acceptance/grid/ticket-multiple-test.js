@@ -23,11 +23,12 @@ const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const BASE_CATEGORY_URL = BASEURLS.base_categories_url;
 const BASE_LOCATION_URL = BASEURLS.base_locations_url;
 
-var application, store, ticket_endpoint, ticket_list_xhr, people_endpoint, people_list_xhr, category_endpoint, category_list_xhr;
+var application, store, ticket_endpoint, ticket_list_xhr, people_endpoint, people_list_xhr, category_endpoint, category_list_xhr, functionalStore;
 
 moduleForAcceptance('Acceptance | ticket multiple grid test', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
+    functionalStore = this.application.__container__.lookup('service:functional-store');
     ticket_endpoint = `${PREFIX}${BASE_TICKET_URL}/?page=1`;
     ticket_list_xhr = xhr(ticket_endpoint, 'GET', null, {}, 200, TF.list());
     people_endpoint = `${PREFIX}${BASE_PEOPLE_URL}/?page=1`;
@@ -43,7 +44,7 @@ test('navigating between ticket and people and locations and category will not d
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority-translated_name').text().trim(), TD.priorityOne);
-    const tickets = store.find('ticket-list');
+    const tickets = functionalStore.find('ticket-list');
     assert.equal(tickets.get('length'), 10);
     tickets.forEach((ticket) => {
       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -70,7 +71,7 @@ test('navigating between ticket and people and locations and category will not d
     assert.equal(currentURL(), `${TICKET_LIST_URL}?page=2`);
     assert.equal(find('.t-grid-title').text(), 'Tickets');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-    const tickets = store.find('ticket-list');
+    const tickets = functionalStore.find('ticket-list');
     assert.equal(tickets.get('length'), 9);
     tickets.forEach((ticket) => {
       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -95,7 +96,7 @@ test('navigating between ticket and people and locations and category will not d
     assert.equal(currentURL(), PEOPLE_LIST_URL);
     assert.equal(find('.t-grid-title').text(), 'People');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    const tickets = store.find('ticket-list');
+    const tickets = functionalStore.find('ticket-list');
     assert.equal(tickets.get('length'), 9);
     tickets.forEach((ticket) => {
       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -119,7 +120,7 @@ test('navigating between ticket and people and locations and category will not d
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-2);
-    const tickets = store.find('ticket-list');
+    const tickets = functionalStore.find('ticket-list');
     assert.equal(tickets.get('length'), 9);
     tickets.forEach((ticket) => {
       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -144,7 +145,7 @@ test('navigating between ticket and people and locations and category will not d
     assert.equal(currentURL(), CATEGORY_LIST_URL);
     assert.equal(find('.t-grid-title').text(), 'Categories');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    const tickets = store.find('ticket-list');
+    const tickets = functionalStore.find('ticket-list');
     assert.equal(tickets.get('length'), 9);
     tickets.forEach((ticket) => {
       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -168,7 +169,7 @@ test('navigating between ticket and people and locations and category will not d
   andThen(() => {
     assert.equal(currentURL(), CATEGORY_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-    const tickets = store.find('ticket-list');
+    const tickets = functionalStore.find('ticket-list');
     assert.equal(tickets.get('length'), 9);
     tickets.forEach((ticket) => {
       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -193,7 +194,7 @@ test('navigating between ticket and people and locations and category will not d
     assert.equal(currentURL(), LOCATION_LIST_URL);
     assert.equal(find('.t-grid-title').text(), 'Locations');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    const tickets = store.find('ticket-list');
+    const tickets = functionalStore.find('ticket-list');
     assert.equal(tickets.get('length'), 9);
     // const ticket_cats = store.find('model-category');
     // assert.equal(ticket_cats.get('length'), 9);
@@ -214,7 +215,7 @@ test('navigating between ticket and people and locations and category will not d
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-    const tickets = store.find('ticket-list');
+    const tickets = functionalStore.find('ticket-list');
     assert.equal(tickets.get('length'), 9);
     tickets.forEach((ticket) => {
       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -239,7 +240,7 @@ test('navigating between ticket and people and locations and category will not d
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
     assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority-translated_name').text().trim(), TD.priorityOne);
-    const tickets = store.find('ticket-list');
+    const tickets = functionalStore.find('ticket-list');
     assert.equal(tickets.get('length'), 10);
     tickets.forEach((ticket) => {
       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));

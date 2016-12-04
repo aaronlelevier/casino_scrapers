@@ -167,10 +167,13 @@ export default Ember.Object.extend(OptConf, {
   },
   _deserializeList(response) {
     const store = this.get('simpleStore');
+    const results = [];
     response.results.forEach((model) => {
       run(() => {
-        store.push('automation-list', model);
+        const automationList = store.push('automation-list', model);
+        results.push(automationList);
       });
     });
+    return results;
   }
 });
