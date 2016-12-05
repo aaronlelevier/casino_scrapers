@@ -1,12 +1,14 @@
 from mock import patch
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db.models import Q, Max
 from django.test import TestCase
 
 from model_mommy import mommy
 
 from automation.models import AutomationEvent
+from automation.tests.factory import create_automation
 from category.tests.factory import create_categories, create_single_category
 from generic.tests.factory import create_file_attachment
 from location.models import LocationStatus
@@ -347,6 +349,9 @@ class TicketActivityTests(TestCase):
     def test_setup(self):
         self.assertIsInstance(self.activity, TicketActivity)
 
+    def test_manager(self):
+        self.assertIsInstance(TicketActivity.objects, TicketActivityManager)
+
     def test_meta_ordering(self):
         self.activity = mommy.make(TicketActivity, person=self.person)
         self.assertEqual(TicketActivity.objects.count(), 2)
@@ -357,6 +362,13 @@ class TicketActivityTests(TestCase):
             ret.first(),
             TicketActivity.objects.order_by('-created').first()
         )
+
+    def test_save__cant_have_an_fk_to_both_person_and_automation(self):
+        self.activity.person = create_single_person()
+        self.activity.automation = create_automation()
+
+        with self.assertRaises(ValidationError):
+            self.activity.save()
 
     def test_weigh_default(self):
         self.assertEqual(
@@ -463,9 +475,8 @@ class TicketActivityManagerTests(TestCase):
                                    content=[str(person.id)])
         d = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.SEND_SMS,
                                    content=[str(person.id)])
-        e = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.COMMENT)
-        e.person = None
-        e.save()
+        e = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.COMMENT,
+                                   automation=True)
 
         ret = TicketActivity.objects.filter_out_unsupported_types()
 
@@ -473,10 +484,4 @@ class TicketActivityManagerTests(TestCase):
         self.assertNotIn(b, ret.all())
         self.assertNotIn(c, ret.all())
         self.assertNotIn(d, ret.all())
-        self.assertNotIn(e, ret.all())
-
-
-class TicketActivityTests(TestCase):
-
-    def test_manager(self):
-        self.assertIsInstance(TicketActivity.objects, TicketActivityManager)
+        self.assertIn(e, ret.all())

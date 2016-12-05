@@ -6,6 +6,7 @@ from django.db.models import F, Q, Max
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import JSONField
+from django.core.exceptions import ValidationError
 
 from automation import tasks
 from category.models import Category
@@ -239,8 +240,7 @@ class TicketActivityQuerySet(BaseQuerySet):
     def filter_out_unsupported_types(self):
         return (self.exclude(type__name__in=[TicketActivityType.REQUEST, TicketActivityType.SEND_EMAIL,
                                              TicketActivityType.SEND_SMS])
-                    .exclude(type__name=TicketActivityType.ASSIGNEE, content__contains={'from':None})
-                    .exclude(person__isnull=True))
+                    .exclude(type__name=TicketActivityType.ASSIGNEE, content__contains={'from':None}))
 
 
 class TicketActivityManager(BaseManager):
@@ -260,13 +260,20 @@ class TicketActivity(BaseModel):
     type = models.ForeignKey(TicketActivityType, blank=True, null=True)
     ticket = models.ForeignKey(Ticket, related_name="activities")
     person = models.ForeignKey(Person, null=True, related_name="ticket_activities",
-        help_text="Person who did the TicketActivity. NULL would be a system recoreded Activity")
+        help_text="Person who did the TicketActivity. NULL would be an Automation generated Activity")
+    automation = models.ForeignKey("automation.Automation", null=True, related_name="ticket_activities",
+        help_text="Automation who did the TicketActivity. NULL would be a Person generated Activity")
     content = JSONField(blank=True, null=True)
 
     objects = TicketActivityManager()
 
     class Meta:
         ordering = ('-created',)
+
+    def save(self, *args, **kwargs):
+        if self.person and self.automation:
+            raise ValidationError("Record can either have a Person FK or Automation FK, but not both")
+        return super(TicketActivity, self).save(*args, **kwargs)
 
     def __str__(self):
         return "{}: {}".format(self.ticket.number, self.id)

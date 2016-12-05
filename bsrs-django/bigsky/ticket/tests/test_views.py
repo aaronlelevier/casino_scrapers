@@ -445,6 +445,21 @@ class TicketActivityViewSetTests(APITestCase):
         self.assertEqual(data['results'][0]['person']['id'], str(activity.person.id))
         self.assertEqual(data['results'][0]['content'], activity.content)
 
+    def test_data_automation(self):
+        activity_type = create_ticket_activity_type("comment")
+        activity = create_ticket_activity(ticket=self.ticket, type=activity_type,
+            content={'comment': 'with comment'}, automation=True)
+
+        response = self.client.get('/api/tickets/{}/activity/?person__isnull=True'
+                                   .format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(activity.id))
+        self.assertEqual(data['results'][0]['person'], None)
+        self.assertEqual(data['results'][0]['automation']['id'], str(activity.automation.id))
+        self.assertEqual(data['results'][0]['automation']['description'], activity.automation.description)
+
     def test_ticket_two(self):
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket_two.id))
         self.assertEqual(response.status_code, 200)

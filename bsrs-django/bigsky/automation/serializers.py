@@ -174,6 +174,13 @@ class AutomationFilterSerializer(BaseCreateSerializer):
         return data
 
 
+class AutomationIdDescriptionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Automation
+        fields = ('id', 'description')
+
+
 AUTOMATION_FIELDS = ('id', 'tenant', 'description',)
 
 class AutomationCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
