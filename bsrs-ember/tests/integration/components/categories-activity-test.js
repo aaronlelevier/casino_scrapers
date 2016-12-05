@@ -14,7 +14,7 @@ import { clickTrigger, triggerKeydown, nativeMouseUp, nativeMouseDown, typeInSea
 import waitFor from 'ember-test-helpers/wait';
 import moment from 'moment';
 
-var store, trans, activityAutomation, activityPerson, created, timestamp, automation_repo;
+var store, trans, activityAutomation, activityPerson, created, timestamp;
 
 moduleForComponent('categories-activity', 'Integration | Component | categories-activity', {
   integration: true,
@@ -42,7 +42,6 @@ moduleForComponent('categories-activity', 'Integration | Component | categories-
 
 test('content for automation generated ticket activity category added', function(assert) {
   this.activity = activityAutomation;
-  this.i18n = trans;
   // from/to here are assignee names
   this.i18nString = trans.t('activity.ticket.categories',
     {from:'foo', to:'bar', timestamp:timestamp});
@@ -59,7 +58,6 @@ test('content for automation generated ticket activity category added', function
 
 test('content for person generated ticket activity category added', function(assert) {
   this.activity = activityPerson;
-  this.i18n = trans;
   // from/to here are assignee names
   this.i18nString = trans.t('activity.ticket.categories',
     {from:'foo', to:'bar', timestamp:timestamp});

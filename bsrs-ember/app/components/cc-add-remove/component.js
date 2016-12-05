@@ -1,15 +1,26 @@
 import Ember from 'ember';
+const { computed, Component } = Ember;
 
 var ccAddRemove = Ember.Component.extend({
-  person: Ember.computed(function() {
-    const i18n_string = this.get('i18nString');
-    if (i18n_string) {
-      const str = i18n_string.string;
-      const [beg_string, _, middle, timestamp] = str.split('$');
-      this.set('begString', beg_string.trim());
-      this.set('timestamp', timestamp.trim());
-      this.set('middle', middle.trim());
-      return this.get('activity').get('person').get('fullname');
+  spliti18nString: computed(function() {
+    const str = this.get('i18nString').string;
+    return str.split('%s');
+  }),
+  begString: computed({
+    get() { return this.get('spliti18nString')[0].trim(); }
+  }),
+  middle: computed({
+    get() { return this.get('spliti18nString')[2].trim(); }
+  }),
+  timestamp: computed({
+    get() { return this.get('spliti18nString')[3].trim(); }
+  }),
+  name: Ember.computed(function() {
+    const activity = this.get('activity');
+    if (activity.get('person')) {
+      return activity.get('person').get('fullname');
+    } else if (activity.automation) {
+      return activity.automation.description;
     }
   }),
   ccs: Ember.computed(function() {
