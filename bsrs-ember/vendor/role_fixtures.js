@@ -15,7 +15,8 @@ var BSRS_ROLE_FACTORY = (function() {
       location_level: this.location_level_fixtures.detail().id,
       categories: [this.category_fixtures.generate_for_power_select()],
       auth_amount: this.currency_defaults.authAmountOne,
-      inherited: inherited || this.role_defaults.inherited
+      inherited: inherited || this.role_defaults.inherited,
+      permissions: this.role_defaults.permissions
     }
   };
   factory.prototype.generate_list = function(i) {

@@ -1,8 +1,10 @@
+/*global require, module, define*/
 var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
-  var factory = function(location_level, currency, tenant) {
+  var factory = function(location_level, currency, tenant, constants) {
     this.location_level = location_level;
     this.currency = currency;
     this.tenant = tenant;
+    this.constants = constants;
   };
   factory.prototype.defaults = function() {
     return {
@@ -47,25 +49,42 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
           inherits_from: this.tenant.inherits_from_tenant,
           inherits_from_id: this.tenant.id
         }
-      }
+      },
+      permissions: defaultPerms(
+        this.constants.RESOURCES_WITH_PERMISSION,
+        this.constants.PERMISSION_PREFIXES
+      )
     };
   };
   return factory;
 })();
 
+function defaultPerms(resources, prefixes) {
+  let perms = {};
+  resources.forEach(function(resource) {
+    prefixes.forEach(function(prefix) {
+      var key = prefix + '_' + resource;
+      perms[key] = (prefix === 'delete') ? false : true;
+    });
+  });
+  return perms;
+}
+
 if (typeof window === 'undefined') {
   var location_level = require('./location-level');
   var currency = require('./currency');
   var tenant = require('./tenant');
-  module.exports = new BSRS_ROLE_DEFAULTS_OBJECT(location_level, currency, tenant).defaults();
+  var constants = require('./constants');
+  module.exports = new BSRS_ROLE_DEFAULTS_OBJECT(location_level, currency, tenant, constants).defaults();
 } else {
   define('bsrs-ember/vendor/defaults/role',
     ['exports',
     'bsrs-ember/vendor/defaults/location-level',
     'bsrs-ember/vendor/defaults/currency',
-    'bsrs-ember/vendor/defaults/tenant'],
-    function (exports, location_level, currency, tenant) {
+    'bsrs-ember/vendor/defaults/tenant',
+    'bsrs-ember/utilities/constants'],
+    function (exports, location_level, currency, tenant, constants) {
     'use strict';
-    return new BSRS_ROLE_DEFAULTS_OBJECT(location_level, currency, tenant).defaults();
+    return new BSRS_ROLE_DEFAULTS_OBJECT(location_level, currency, tenant, constants).defaults();
   });
 }

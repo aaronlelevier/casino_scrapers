@@ -7,8 +7,9 @@ import equal from 'bsrs-ember/utilities/equal';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import { many_to_many } from 'bsrs-components/attr/many-to-many';
 import OptConf from 'bsrs-ember/mixins/optconfigure/role';
+import { RESOURCES_WITH_PERMISSION, PERMISSION_PREFIXES } from 'bsrs-ember/utilities/constants';
+import { eachPermission } from 'bsrs-ember/utilities/permissions';
 import { validator, buildValidations } from 'ember-cp-validations';
-
 const Validations = buildValidations({
   name: validator('presence', {
     presence: true,
@@ -24,7 +25,19 @@ const Validations = buildValidations({
   }),
 });
 
-var RoleModel = Model.extend(OptConf, Validations, {
+function permissionAttributes() {
+  let perms = {};
+  RESOURCES_WITH_PERMISSION.forEach((resource) => {
+    perms[`permissions_view_${resource}`] = attr();
+    perms[`permissions_add_${resource}`] = attr();
+    perms[`permissions_change_${resource}`] = attr();
+    perms[`permissions_delete_${resource}`] = attr();
+  });
+  return perms;
+}
+let Permissions = Ember.Mixin.create(permissionAttributes());
+
+let RoleModel = Model.extend(OptConf, Validations, Permissions, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('location_level', 'role', {bootstrapped:true, rollback:false});
@@ -44,6 +57,16 @@ var RoleModel = Model.extend(OptConf, Validations, {
     return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('categoriesIsDirty');
   }).readOnly(),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty').readOnly(),
+  permissions: Ember.computed({
+    get() {
+      let props = {};
+      let perms = eachPermission((resource, prefix) => {
+        let key = `permissions_${prefix}_${resource}`;
+        props[`${prefix}_${resource}`] = this.get(key);
+      });
+      return props;
+    }
+  }),
   serialize() {
     const location_level = this.get('location_level');
     let location_level_id;
@@ -58,7 +81,8 @@ var RoleModel = Model.extend(OptConf, Validations, {
       categories: this.get('categories_ids'),
       auth_amount: this.get('auth_amount') ? this.get('auth_amount') : 0.0000,
       auth_currency: this.get('auth_currency'),
-      dashboard_text: this.get('dashboard_text')
+      dashboard_text: this.get('dashboard_text'),
+      permissions: this.get('permissions')
     };
   },
   removeRecord() {
@@ -82,6 +106,26 @@ var RoleModel = Model.extend(OptConf, Validations, {
   toString: function() {
     const name = this.get('name');
     return name ? name : '';
+  }
+});
+
+RoleModel.reopenClass({
+  getDefaults(pk, role_type, new_pk) {
+    let props = {
+      id: pk,
+      auth_amount: 0,
+      role_type: role_type,
+      new: true,
+      new_pk: new_pk
+    };
+    RoleModel.setDefaultPermissions(props);
+    return props;
+  },
+  setDefaultPermissions(props) {
+    eachPermission((resource, prefix) => {
+      let prop = `permissions_${prefix}_${resource}`;
+      props[prop] = (prefix === 'delete') ? false : true;
+    });
   }
 });
 

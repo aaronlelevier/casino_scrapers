@@ -1,7 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
 import copySettingsToFirstLevel from 'bsrs-ember/utilities/copy-settings-to-first-level';
-
+import { eachPermission } from 'bsrs-ember/utilities/permissions';
 
 let extract_category = (model, store, role_existing) => {
   let server_sum_category_fks = [];
@@ -69,7 +69,18 @@ let extract_location_level = (model, store) => {
   return location_level_pk;
 };
 
-var RoleDeserializer = Ember.Object.extend({
+let extract_permissions = (json) => {
+  json.permissions = json.permissions || {};
+  eachPermission((resource, prefix) => {
+    let key = `${prefix}_${resource}`;
+    let prop = `permissions_${key}`;
+    json[prop] = json.permissions[key];
+  });
+  delete json.permissions;
+  return json;
+};
+
+let RoleDeserializer = Ember.Object.extend({
   deserialize(response, options) {
     if (typeof options === 'undefined') {
       return this._deserializeList(response);
@@ -87,6 +98,7 @@ var RoleDeserializer = Ember.Object.extend({
       response.role_categories_fks = extract_category(response, store, existing);
       response.detail = true;
       response = copySettingsToFirstLevel(response);
+      response = extract_permissions(response);
       role = store.push('role', response);
       role.save();
     }

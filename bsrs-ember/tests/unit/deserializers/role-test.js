@@ -10,6 +10,7 @@ import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currency';
 import RoleDeserializer from 'bsrs-ember/deserializers/role';
 import CategoryDeserializer from 'bsrs-ember/deserializers/category';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import { eachPermission } from 'bsrs-ember/utilities/permissions';
 
 let store, uuid, category_deserializer, subject, role, run = Ember.run;
 
@@ -38,7 +39,7 @@ test('category and location level will not be deserialized into its own store wh
     name: LLD.nameCompany,
     roles: [RD.idOne]
   });
-   store.push('category', {
+  store.push('category', {
     id: CD.idOne,
     name: CD.nameOne
   });
@@ -441,4 +442,51 @@ test('inherited copySettingsToFirstLevel', (assert) => {
   // inherited
   assert.deepEqual(role.get('inherited').dashboard_text, RD.inherited.dashboard_text);
   assert.deepEqual(role.get('inherited').auth_currency, RD.inherited.auth_currency);
+});
+
+test('upgroup permissions and set as properties', (assert) => {
+  let response = RF.generate(RD.idOne);
+  eachPermission((resource, prefix) => {
+    let key = `permissions_${prefix}_${resource}`;
+    assert.equal(response[key], undefined, `response.${key} is undefined`);
+    key = `${prefix}_${resource}`;
+    if (prefix === 'delete') {
+      assert.equal(response.permissions[key], false, `response.permissions.${key} is false`);
+    } else {
+      assert.equal(response.permissions[key], true, `response.permissions.${key} is true`);
+    }
+  });
+  run(() => {
+    subject.deserialize(response, RD.idOne);
+  });
+  role = store.find('role', RD.idOne);
+  eachPermission((resource, prefix) => {
+    let prop = `permissions_${prefix}_${resource}`;
+    if (prefix === 'delete') {
+      assert.equal(role.get(prop), false, `role property ${prop} is false`);
+    } else {
+      assert.equal(role.get(prop), true, `role property ${prop} is true`);
+    }
+  });
+});
+
+test('set permissions to non-default values', (assert) => {
+  let response = RF.generate(RD.idOne);
+  eachPermission((resource, prefix) => {
+    let key = `${prefix}_${resource}`;
+    // Toggle response to values opposite the defaults (normally "delete" is false, the rest true)
+    response.permissions[key] = (prefix === 'delete') ? true : false;
+  });
+  run(() => {
+    subject.deserialize(response, RD.idOne);
+  });
+  role = store.find('role', RD.idOne);
+  eachPermission((resource, prefix) => {
+    let prop = `permissions_${prefix}_${resource}`;
+    if (prefix === 'delete') {
+      assert.equal(role.get(prop), true, `role property ${prop} is true`);
+    } else {
+      assert.equal(role.get(prop), false, `role property ${prop} is false`);
+    }
+  });
 });

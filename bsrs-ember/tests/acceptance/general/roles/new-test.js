@@ -37,6 +37,7 @@ moduleForAcceptance('Acceptance | general role new', {
       location_level: RD.locationLevelOne,
       categories: [CD.idOne],
       auth_amount: 0.0000,
+      permissions: RD.permissions
     };
 
     store = this.application.__container__.lookup('service:simpleStore');
