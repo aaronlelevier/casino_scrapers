@@ -615,14 +615,14 @@ test('ticket category shows validation messages as you select through the tree',
   triggerEvent('.t-model-category-select .ember-power-select-trigger', 'blur');
   andThen(() => {
     assert.equal(Ember.$('.t-validation-ticket-category-top').length, 1);
-    assert.equal(Ember.$('.t-validation-ticket-category-top').text().trim(), 'errors.ticket.category.top');
+    assert.equal(Ember.$('.t-validation-ticket-category-top').text().trim(), t('errors.ticket.category.top'));
   });
   selectChoose('.t-model-category-select:eq(0)', CD.nameOne);
   click('.t-model-category-select:eq(1) .ember-power-select-trigger');
   triggerEvent('.t-model-category-select:eq(1) .ember-power-select-trigger', 'blur');
   andThen(() => {
     assert.equal(Ember.$('.t-validation-ticket-category').length, 1);
-    assert.equal(Ember.$('.t-validation-ticket-category').text().trim(), 'errors.ticket.categoryTrade');
+    assert.equal(Ember.$('.t-validation-ticket-category').text().trim(), t('errors.ticket.categoryTrade'));
   });
   selectChoose('.t-model-category-select:eq(1)', CD.nameTwo);
   click('.t-model-category-select:eq(2) .ember-power-select-trigger');

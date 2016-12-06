@@ -58,8 +58,8 @@ var extract_person = function(store, model) {
   if (model.person) {
     store.push('activity/person', model.person);
     model.person_fk = model.person.id;
-    delete model.person;
   }
+  delete model.person;
 };
 
 var ActivityDeserializer = Ember.Object.extend({

@@ -15,6 +15,7 @@ var TICKET_ACTIVITY_FACTORY = (function() {
     var ticket_id = ticket_pk || this.td.idOne;
     var activity = {id: i, type: 'assignee', created: d.setDate(d.getDate()-25), ticket: ticket_id};
     activity.automation = {id: this.ad.idOne, description: this.ad.descriptionOne};
+    activity.person = null;
     activity.content = {to: {id: this.pd.idSearch, fullname: this.pd.fullnameBoy}, from: {id: this.pd.idBoy, fullname: this.pd.fullnameBoy2}};
     return activity;
   },
