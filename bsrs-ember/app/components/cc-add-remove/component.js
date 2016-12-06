@@ -15,14 +15,6 @@ var ccAddRemove = Ember.Component.extend({
   timestamp: computed({
     get() { return this.get('spliti18nString')[3].trim(); }
   }),
-  name: Ember.computed(function() {
-    const activity = this.get('activity');
-    if (activity.get('person')) {
-      return activity.get('person').get('fullname');
-    } else if (activity.automation) {
-      return activity.automation.description;
-    }
-  }),
   ccs: Ember.computed(function() {
     const activity = this.get('activity');
     let ccs;

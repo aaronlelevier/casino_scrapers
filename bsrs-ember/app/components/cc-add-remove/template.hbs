@@ -1,2 +1,2 @@
 <span class="activity-icon">{{fa-icon "user"}}</span>
-{{#link-to "admin.people.person" activity.person.id class="t-link"}}{{name}}{{/link-to}} {{begString}} {{#each ccs as |cc|}}{{#link-to 'admin.people.person' cc.id class="t-ticket-cc-add-remove"}}{{cc.fullname}}{{/link-to}} {{/each}}{{middle}} <span class="activity-timestamp t-activity-timestamp" title="{{fulltime}}">{{timestamp}}</span>
+{{ticket-activity-creator-link activity=activity}} {{begString}} {{#each ccs as |cc|}}{{#link-to 'admin.people.person' cc.id class="t-ticket-cc-add-remove"}}{{cc.fullname}}{{/link-to}} {{/each}}{{middle}} <span class="activity-timestamp t-activity-timestamp" title="{{fulltime}}">{{timestamp}}</span>

@@ -48,7 +48,7 @@ test('content for automation generated ticket activity with assignee', function(
     i18nString=i18nString
     fulltime=(moment-from-now activity.created)
   }}`);
-  assert.equal(this.$('.t-person-activity').text().trim(), AD.descriptionOne);
+  assert.equal(this.$('.t-link').text().trim(), AD.descriptionOne);
   assert.equal(this.$('.t-to-from-new').text().trim(), 'foo');
   assert.equal(this.$('.t-to-from-old').text().trim(), 'bar');
   assert.equal(this.$('.t-activity-timestamp').text().trim(), moment(timestamp).fromNow());
@@ -65,5 +65,5 @@ test('content for person generated ticket activity with assignee', function(asse
     i18nString=i18nString
     fulltime=(moment-from-now activity.created)
   }}`);
-  assert.equal(this.$('.t-person-activity').text().trim(), PD.fullname);
+  assert.equal(this.$('.t-link').text().trim(), PD.fullname);
 });

@@ -1,6 +1,5 @@
 <span class="activity-icon">{{fa-icon "user"}}</span>
-{{#link-to "admin.people.person" activity.person.id class="t-person-activity"}}{{name}}{{/link-to}}
- {{begString}}
+{{ticket-activity-creator-link activity=activity}} {{begString}}
 {{#link-to "admin.people.person" activity.from.id class="t-to-from-new"}}{{fromString}}{{/link-to}}
 {{middleString}}
 {{#link-to "admin.people.person" activity.to.id class="t-to-from-old"}}{{toStringValue}}{{/link-to}}

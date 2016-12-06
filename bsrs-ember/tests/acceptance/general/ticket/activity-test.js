@@ -16,13 +16,15 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TAD from 'bsrs-ember/vendor/defaults/ticket_activity';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
+import AD from 'bsrs-ember/vendor/defaults/automation';
+import AF from 'bsrs-ember/vendor/automation_fixtures';
 import GD from 'bsrs-ember/vendor/defaults/general';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/tickets';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, LOCATIONS_URL, PEOPLE_URL, CATEGORIES_URL, DT_URL } from 'bsrs-ember/utilities/urls';
+import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, LOCATIONS_URL, PEOPLE_URL, CATEGORIES_URL, DT_URL, AUTOMATION_URL } from 'bsrs-ember/utilities/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
@@ -53,11 +55,13 @@ test('can deep link to the person who created the activity', (assert) => {
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
   });
   ajax(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail());
-  click('.t-person-activity');
+  click('.t-link');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idOne}`);
   });
 });
+
+// "to-from" activities
 
 //TODO: this is the line where chrome fails when running full test suite
 test('can deep link to new assignee', (assert) => {
@@ -87,6 +91,96 @@ test('can deep link to old assignee', (assert) => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idSearch}`);
   });
 });
+
+test('deep links to the person who created the record (to-from)', (assert) => {
+  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
+  });
+  ajax(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
+  click('.t-link');
+  andThen(() => {
+    assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idOne}`);
+  });
+});
+
+test('deep links to the automation that created the record (to-from)', (assert) => {
+  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.automation_assignee_only());
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
+  });
+  ajax(`${AUTOMATION_URL}${AD.idOne}/`, 'GET', null, {}, 200, AF.detail(AD.idOne));
+  click('.t-link');
+  andThen(() => {
+    assert.equal(currentURL(), `${BASEURLS.BASE_AUTOMATION_URL}/${AD.idOne}`);
+  });
+});
+
+// "categories-activity"
+
+test('deep links to the automation that created the record (categories-activity)', (assert) => {
+  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.categories_only());
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+  });
+  ajax(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
+  click('.t-link');
+  andThen(() => {
+    assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idOne}`);
+  });
+});
+
+test('deep links to the automation that created the record (categories-activity)', (assert) => {
+  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.automation_categories_only());
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+  });
+  ajax(`${AUTOMATION_URL}${AD.idOne}/`, 'GET', null, {}, 200, AF.detail(AD.idOne));
+  click('.t-link');
+  andThen(() => {
+    assert.equal(currentURL(), `${BASEURLS.BASE_AUTOMATION_URL}/${AD.idOne}`);
+  });
+});
+
+// "cc-add-remove" : start
+
+test('deep links to the automation that created the record (cc-add-remove)', (assert) => {
+  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only());
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+  });
+  ajax(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
+  click('.t-link');
+  andThen(() => {
+    assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idOne}`);
+  });
+});
+
+test('deep links to the automation that created the record (cc-add-remove)', (assert) => {
+  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.automation_cc_add_only());
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+  });
+  ajax(`${AUTOMATION_URL}${AD.idOne}/`, 'GET', null, {}, 200, AF.detail(AD.idOne));
+  click('.t-link');
+  andThen(() => {
+    assert.equal(currentURL(), `${BASEURLS.BASE_AUTOMATION_URL}/${AD.idOne}`);
+  });
+});
+
+// "cc-add-remove" : end
 
 test('ticket detail shows the activity list including event data (assignee)', (assert) => {
   ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());

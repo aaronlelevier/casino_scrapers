@@ -56,18 +56,6 @@ var toFrom = Component.extend({
       return this.get('spliti18nString')[3];
     }
   }),
-  /**
-   * @method name
-   * @return {String} - person fullname or automation description, etc
-   */
-  name: computed(function() {
-    const activity = this.get('activity');
-    if (activity.get('person')) {
-      return activity.get('person').get('fullname');
-    } else if (activity.automation) {
-      return activity.automation.description;
-    }
-  }),
   classNames: ['activity-wrap']
 });
 
