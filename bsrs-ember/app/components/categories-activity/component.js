@@ -1,18 +1,25 @@
 import Ember from 'ember';
+const { computed, Component } = Ember;
 
 var toFrom = Ember.Component.extend({
-  person: Ember.computed(function() {
-    var i18n_string = this.get('i18nString');
-    if (i18n_string) {
-      const str = i18n_string.string;
-      const [beg_string, first_var, middle, second_var, timestamp] = str.split('$');
-      this.set('begString', beg_string.trim());
-      this.set('firstVar', first_var.trim());
-      this.set('secondVar', second_var.trim());
-      this.set('timestamp', timestamp.trim());
-      this.set('middle', middle.trim());
-      return this.get('activity').get('person').get('fullname');
-    }
+  spliti18nString: computed(function() {
+    const str = this.get('i18nString').string;
+    return str.split('%s');
+  }),
+  begString: computed({
+    get() { return this.get('spliti18nString')[0].trim(); }
+  }),
+  firstVar: computed({
+    get() { return this.get('spliti18nString')[1].trim(); }
+  }),
+  middle: computed({
+    get() { return this.get('spliti18nString')[2].trim(); }
+  }),
+  secondVar: computed({
+    get() { return this.get('spliti18nString')[3].trim(); }
+  }),
+  timestamp: computed({
+    get() { return this.get('spliti18nString')[4].trim(); }
   }),
   classNames: ['activity-wrap']
 });

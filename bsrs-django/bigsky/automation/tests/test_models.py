@@ -194,8 +194,9 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
         self.assertEqual(mock_func.call_args[0][0], TicketActivityType.ASSIGNEE)
         self.assertEqual(mock_func.call_args[0][1], self.ticket)
-        self.assertEqual(mock_func.call_args[0][2], None)
-        self.assertEqual(mock_func.call_args[0][3], action_assignee)
+        self.assertEqual(mock_func.call_args[0][2], self.automation)
+        self.assertEqual(mock_func.call_args[1]['from'], None)
+        self.assertEqual(mock_func.call_args[1]['to'], action_assignee)
 
     def test_process_actions__ticket_priority(self):
         clear_related(self.automation, 'actions')
@@ -226,8 +227,9 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
         self.assertEqual(mock_func.call_args[0][0], TicketActivityType.PRIORITY)
         self.assertEqual(mock_func.call_args[0][1], self.ticket)
-        self.assertEqual(mock_func.call_args[0][2], init_priority)
-        self.assertEqual(mock_func.call_args[0][3], ticket_priority)
+        self.assertEqual(mock_func.call_args[0][2], self.automation)
+        self.assertEqual(mock_func.call_args[1]['from'], init_priority)
+        self.assertEqual(mock_func.call_args[1]['to'], ticket_priority)
 
     def test_process_actions__ticket_status(self):
         clear_related(self.automation, 'actions')
@@ -258,8 +260,9 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
         self.assertEqual(mock_func.call_args[0][0], TicketActivityType.STATUS)
         self.assertEqual(mock_func.call_args[0][1], self.ticket)
-        self.assertEqual(mock_func.call_args[0][2], init_status)
-        self.assertEqual(mock_func.call_args[0][3], ticket_status)
+        self.assertEqual(mock_func.call_args[0][2], self.automation)
+        self.assertEqual(mock_func.call_args[1]['from'], init_status)
+        self.assertEqual(mock_func.call_args[1]['to'], ticket_status)
 
     @patch("contact.models.EmailManager.process_send_email")
     def test_process_actions__send_email(self, mock_func):
@@ -320,7 +323,8 @@ class AutomationManagerTests(SetupMixin, TestCase):
         Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
 
         self.assertEqual(mock_func.call_args[0][0], self.ticket)
-        self.assertEqual(mock_func.call_args[0][1], ticket_request)
+        self.assertEqual(mock_func.call_args[0][1], self.automation)
+        self.assertEqual(mock_func.call_args[0][2], ticket_request)
 
     def test_process_actions__ticket_cc(self):
         person = create_single_person('foo')
@@ -350,19 +354,23 @@ class AutomationManagerTests(SetupMixin, TestCase):
         Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
 
         self.assertEqual(mock_func.call_args[0][0], self.ticket)
-        self.assertEqual(mock_func.call_args[0][1], set([str(person.id)]))
+        self.assertEqual(mock_func.call_args[0][1], self.automation)
+        self.assertEqual(mock_func.call_args[0][2], set([str(person.id)]))
 
     # create ticket activities
 
     def test_log_from_to_activity(self):
         self.assertEqual(self.ticket.activities.count(), 0)
+        kwargs = {'from': None, 'to': self.person}
 
-        Automation.objects._log_from_to_activity(TicketActivityType.ASSIGNEE, self.ticket, None, self.person)
+        Automation.objects._log_from_to_activity(TicketActivityType.ASSIGNEE, self.ticket,
+                                                 automation=self.automation, **kwargs)
 
         self.assertEqual(self.ticket.activities.count(), 1)
         activity = self.ticket.activities.first()
         self.assertEqual(activity.type.name, TicketActivityType.ASSIGNEE)
         self.assertEqual(activity.ticket, self.ticket)
+        self.assertEqual(activity.automation, self.automation)
         self.assertIsNone(activity.person)
         self.assertEqual(len(activity.content), 2)
         self.assertEqual(activity.content['from'], None)
@@ -372,12 +380,13 @@ class AutomationManagerTests(SetupMixin, TestCase):
         request = 'foo'
         self.assertEqual(self.ticket.activities.count(), 0)
 
-        Automation.objects._log_ticket_request_activity(self.ticket, request)
+        Automation.objects._log_ticket_request_activity(self.ticket, self.automation, request)
 
         self.assertEqual(self.ticket.activities.count(), 1)
         activity = self.ticket.activities.first()
         self.assertEqual(activity.type.name, TicketActivityType.REQUEST)
         self.assertEqual(activity.ticket, self.ticket)
+        self.assertEqual(activity.automation, self.automation)
         self.assertIsNone(activity.person)
         self.assertEqual(len(activity.content), 1)
         self.assertEqual(activity.content['added'], 'foo')
@@ -386,12 +395,13 @@ class AutomationManagerTests(SetupMixin, TestCase):
         new_ccs = set([str(self.person.id)])
         self.assertEqual(self.ticket.activities.count(), 0)
 
-        Automation.objects._log_ticket_cc_add_activity(self.ticket, new_ccs)
+        Automation.objects._log_ticket_cc_add_activity(self.ticket, self.automation, new_ccs)
 
         self.assertEqual(self.ticket.activities.count(), 1)
         activity = self.ticket.activities.first()
         self.assertEqual(activity.type.name, TicketActivityType.CC_ADD)
         self.assertEqual(activity.ticket, self.ticket)
+        self.assertEqual(activity.automation, self.automation)
         self.assertIsNone(activity.person)
         self.assertEqual(len(activity.content), 1)
         self.assertEqual(activity.content['0'], str(self.person.id))

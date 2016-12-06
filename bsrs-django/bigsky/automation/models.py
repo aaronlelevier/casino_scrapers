@@ -137,17 +137,20 @@ class AutomationManager(BaseManager):
                 init_assignee = ticket.assignee
                 new_assignee = Person.objects.get(id=action.content['assignee'])
                 ticket.assignee = new_assignee
-                self._log_from_to_activity(TicketActivityType.ASSIGNEE, ticket, init_assignee, new_assignee)
+                kwargs = {'from': init_assignee, 'to': new_assignee}
+                self._log_from_to_activity(TicketActivityType.ASSIGNEE, ticket, automation, **kwargs)
             elif key == AutomationActionType.TICKET_PRIORITY:
                 init_priority = ticket.priority
                 new_priority = TicketPriority.objects.get(id=action.content['priority'])
                 ticket.priority = new_priority
-                self._log_from_to_activity(TicketActivityType.PRIORITY, ticket, init_priority, new_priority)
+                kwargs = {'from': init_priority, 'to': new_priority}
+                self._log_from_to_activity(TicketActivityType.PRIORITY, ticket, automation, **kwargs)
             elif key == AutomationActionType.TICKET_STATUS:
                 init_status = ticket.status
                 new_status = TicketStatus.objects.get(id=action.content['status'])
                 ticket.status = new_status
-                self._log_from_to_activity(TicketActivityType.STATUS, ticket, init_status, new_status)
+                kwargs = {'from': init_status, 'to': new_status}
+                self._log_from_to_activity(TicketActivityType.STATUS, ticket, automation, **kwargs)
             elif key == AutomationActionType.SEND_EMAIL:
                 Email.objects.process_send_email(ticket, action, event)
             elif key == AutomationActionType.SEND_SMS:
@@ -155,7 +158,7 @@ class AutomationManager(BaseManager):
             elif key == AutomationActionType.TICKET_REQUEST:
                 request = action.content['request']
                 ticket.request = '{}\n{}'.format(ticket.request, request)
-                self._log_ticket_request_activity(ticket, request)
+                self._log_ticket_request_activity(ticket, automation, request)
             elif key == AutomationActionType.TICKET_CC:
                 # Only process on existing tickets. If a ticket is created for the first time,
                 # don't need to diff the ccs. If proccessed before initial save, trying to
@@ -167,23 +170,25 @@ class AutomationManager(BaseManager):
                     if new_ccs:
                         people = Person.objects.filter(id__in=list(new_ccs))
                         ticket.cc.set([p for p in people])
-                        self._log_ticket_cc_add_activity(ticket, new_ccs)
+                        self._log_ticket_cc_add_activity(ticket, automation, new_ccs)
 
-    def _log_from_to_activity(self, type_name, ticket, from_obj, to_obj):
+    def _log_from_to_activity(self, type_name, ticket, automation, **kwargs):
+        from_obj = kwargs.get('from', None)
+        to_obj = kwargs.get('to', None)
         activity_type = TicketActivityType.objects.get(name=type_name)
-        TicketActivity.objects.create(type=activity_type, ticket=ticket,
+        TicketActivity.objects.create(type=activity_type, ticket=ticket, automation=automation,
                                       content={'from': str(from_obj.id) if from_obj else None,
                                                'to': str(to_obj.id) if to_obj else None})
 
-    def _log_ticket_request_activity(self, ticket, request):
+    def _log_ticket_request_activity(self, ticket, automation, request):
         activity_type = TicketActivityType.objects.get(name=TicketActivityType.REQUEST)
-        TicketActivity.objects.create(type=activity_type, ticket=ticket,
+        TicketActivity.objects.create(type=activity_type, ticket=ticket, automation=automation,
                                       content={'added': request})
 
-    def _log_ticket_cc_add_activity(self, ticket, new_ccs):
+    def _log_ticket_cc_add_activity(self, ticket, automation, new_ccs):
         activity_type = TicketActivityType.objects.get(name=TicketActivityType.CC_ADD)
         new_ccs_dict = {str(i): cc for i,cc in enumerate(new_ccs)}
-        TicketActivity.objects.create(type=activity_type, ticket=ticket,
+        TicketActivity.objects.create(type=activity_type, ticket=ticket, automation=automation,
                                       content=new_ccs_dict)
 
 

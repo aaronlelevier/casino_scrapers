@@ -5,6 +5,7 @@ from django.db.models import Max
 from django.utils.timezone import now
 from django.test import TestCase
 
+from automation.models import Automation
 from category.models import Category
 from category.tests.factory import create_categories
 from dtd.tests.factory import create_dtd_fixture_data
@@ -394,6 +395,16 @@ class CreateTicketActivityTests(TestCase):
         ticket_activity = factory.create_ticket_activity(ticket=ticket)
         self.assertIsInstance(ticket_activity, TicketActivity)
         self.assertEqual(ticket_activity.ticket, ticket)
+
+    def test_create_for_person(self):
+        obj = factory.create_ticket_activity()
+        self.assertIsInstance(obj.person, Person)
+        self.assertIsNone(obj.automation, Automation)
+
+    def test_create_for_automation(self):
+        obj = factory.create_ticket_activity(automation=True)
+        self.assertIsNone(obj.person, Person)
+        self.assertIsInstance(obj.automation, Automation)
 
 
 class CreateTicketsActivityTypesTests(TestCase):

@@ -1,2 +1,2 @@
 <span class="activity-icon">{{fa-icon "sitemap"}}</span>
-{{#link-to "admin.people.person" activity.person.id}}{{person}}{{/link-to}} {{begString}} {{firstVar}} {{middle}} {{secondVar}} <span class="activity-timestamp t-activity-timestamp" title="{{fulltime}}">{{moment-from-now activity.created interval=60000}}</span>
+{{ticket-activity-creator-link activity=activity}}<span data-test-id="t-ticket-category"> {{begString}} {{firstVar}} {{middle}} {{secondVar}} </span><span class="activity-timestamp t-activity-timestamp" title="{{fulltime}}">{{moment-from-now activity.created interval=60000}}</span>

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from automation.serializers import AutomationIdDescriptionSerializer
 from category.models import Category
 from category.serializers import CategoryIDNameSerializer
 from generic.serializers import Attachment
@@ -95,10 +96,11 @@ class TicketSerializer(serializers.ModelSerializer):
 class TicketActivitySerializer(serializers.ModelSerializer):
 
     person = PersonSimpleSerializer()
+    automation = AutomationIdDescriptionSerializer()
 
     class Meta:
         model = TicketActivity
-        fields = ('id', 'created', 'type', 'ticket', 'person', 'content',)
+        fields = ('id', 'created', 'type', 'ticket', 'person', 'automation', 'content',)
 
     def to_representation(self, obj):
         """

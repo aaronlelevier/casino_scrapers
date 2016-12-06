@@ -125,7 +125,7 @@ var TicketPage = PageObject.create({
 
   //DT
   continueDT: clickable('.t-dt-continue'),
-  activityTwoPerson: text('.t-person-activity:eq(0)'),
+  activityTwoPerson: text('.t-link:eq(0)'),
 
   // Grid
   sortGridByNumber: clickable('.t-sort-number-dir'),

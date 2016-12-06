@@ -5,6 +5,7 @@ import uuid
 
 from model_mommy import mommy
 
+from automation.tests.factory import create_automation
 from category.models import Category, CategoryStatus
 from category.tests.factory import create_repair_category, create_single_category
 from dtd.models import TreeData
@@ -303,16 +304,22 @@ def create_extra_ticket_with_categories():
     seven.categories.add(a_locks)
 
 
-def create_ticket_activity(ticket=None, type=None, content=None):
+def create_ticket_activity(ticket=None, type=None, content=None, **kwds):
     type = create_ticket_activity_type(name=type)
     ticket = ticket or create_ticket()
 
-    return mommy.make(TicketActivity,
-        type = type,
-        ticket = ticket,
-        person = ticket.assignee,
-        content = content
-    )
+    kwargs = {
+        'type': type,
+        'ticket': ticket,
+        'content': content
+    }
+
+    if kwds.get('automation'):
+        kwargs.update({'automation': create_automation()})
+    else:
+        kwargs.update({'person': ticket.assignee})
+
+    return mommy.make(TicketActivity, **kwargs)
 
 
 def create_ticket_activity_type(name=None, weight=1):
