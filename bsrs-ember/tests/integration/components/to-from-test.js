@@ -1,17 +1,14 @@
 import Ember from 'ember';
 const { run } = Ember;
-import { moduleForComponent, test, skip } from 'ember-qunit';
+import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import repository from 'bsrs-ember/tests/helpers/repository';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import TAD from 'bsrs-ember/vendor/defaults/ticket_activity';
 import AD from 'bsrs-ember/vendor/defaults/automation';
 import PD from 'bsrs-ember/vendor/defaults/person';
-import { clickTrigger, triggerKeydown, nativeMouseUp, nativeMouseDown, typeInSearch } from 'bsrs-ember/tests/helpers/ember-power-select';
-import waitFor from 'ember-test-helpers/wait';
 import moment from 'moment';
 
 var store, trans, activityAutomation, activityPerson, created, timestamp, automation_repo;
@@ -42,7 +39,6 @@ moduleForComponent('to-from', 'Integration | Component | to-from', {
 
 test('content for automation generated ticket activity with assignee', function(assert) {
   this.activity = activityAutomation;
-  this.i18n = trans;
   // from/to here are assignee names
   this.i18nString = trans.t('activity.ticket.to_from',
     {type:'assignee', from:'foo', to:'bar', timestamp:timestamp});
@@ -50,7 +46,7 @@ test('content for automation generated ticket activity with assignee', function(
     to-from
     activity=activity
     i18nString=i18nString
-    fulltime=(moment-format activity.created 'dddd, MMMM Do YYYY, h:mm:ss a z')
+    fulltime=(moment-from-now activity.created)
   }}`);
   assert.equal(this.$('.t-person-activity').text().trim(), AD.descriptionOne);
   assert.equal(this.$('.t-to-from-new').text().trim(), 'foo');
@@ -60,7 +56,6 @@ test('content for automation generated ticket activity with assignee', function(
 
 test('content for person generated ticket activity with assignee', function(assert) {
   this.activity = activityPerson;
-  this.i18n = trans;
   // from/to here are assignee names
   this.i18nString = trans.t('activity.ticket.to_from',
     {type:'assignee', from:'foo', to:'bar', timestamp:timestamp});
@@ -68,7 +63,7 @@ test('content for person generated ticket activity with assignee', function(asse
     to-from
     activity=activity
     i18nString=i18nString
-    fulltime=(moment-format activity.created 'dddd, MMMM Do YYYY, h:mm:ss a z')
+    fulltime=(moment-from-now activity.created)
   }}`);
   assert.equal(this.$('.t-person-activity').text().trim(), PD.fullname);
 });

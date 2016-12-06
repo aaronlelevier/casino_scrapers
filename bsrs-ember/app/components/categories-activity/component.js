@@ -22,13 +22,12 @@ var toFrom = Ember.Component.extend({
     get() { return this.get('spliti18nString')[4].trim(); }
   }),
   person: Ember.computed(function() {
-      const activity = this.get('activity');
-      if (activity.get('person')) {
-        return activity.get('person').get('fullname');
-      } else if (activity.get('automation')) {
-        return activity.automation.description;
-      }
-    // }
+    const activity = this.get('activity');
+    if (activity.get('person')) {
+      return activity.get('person').get('fullname');
+    } else if (activity.get('automation')) {
+      return activity.automation.description;
+    }
   }),
   classNames: ['activity-wrap']
 });
