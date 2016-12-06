@@ -11,7 +11,7 @@ import AD from 'bsrs-ember/vendor/defaults/automation';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import moment from 'moment';
 
-var store, trans, activityAutomation, activityPerson, created, timestamp, automation_repo;
+var store, trans, activityAutomation, activityPerson, created, timestamp;
 
 moduleForComponent('to-from', 'Integration | Component | to-from', {
   integration: true,

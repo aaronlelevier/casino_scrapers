@@ -1,7 +1,7 @@
 import Ember from 'ember';
 const { computed, Component } = Ember;
 
-var commentActivity = Ember.Component.extend({
+var commentActivity = Component.extend({
   spliti18nString: computed(function() {
     const str = this.get('i18nString').string;
     return str.split('%s');
