@@ -8,7 +8,6 @@ import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currency';
 import RoleDeserializer from 'bsrs-ember/deserializers/role';
-import CategoryDeserializer from 'bsrs-ember/deserializers/category';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import { eachPermission } from 'bsrs-ember/utilities/permissions';
 
@@ -17,14 +16,10 @@ let store, uuid, category_deserializer, subject, role, run = Ember.run;
 module('unit: role deserializer test', {
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:uuid', 'model:role', 'model:role-list', 'model:location-level', 'model:category', 'model:role-category', 'service:i18n']);
-    category_deserializer = CategoryDeserializer.create({
-      simpleStore: store
-    });
     uuid = this.container.lookup('model:uuid');
     subject = RoleDeserializer.create({
       simpleStore: store,
-      uuid: uuid,
-      CategoryDeserializer: category_deserializer
+      uuid: uuid
     });
   }
 });

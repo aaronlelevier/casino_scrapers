@@ -319,3 +319,28 @@ test('adding a new role should allow for another new role to be created after th
     assert.equal(find('.t-role-name-single').val(), '');
   });
 });
+
+test('setting permissions and save', (assert) => {
+  page.visitNew();
+  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
+  page.categoryClickDropdown();
+  page.categoryClickOptionOneEq();
+  page.nameFill(RD.nameOne);
+  page.locationLevelClickDropdown();
+  page.locationLevelClickOptionOne();
+  click('[data-test-id="permission-view-ticket"]');
+  andThen(() => {
+    let role = store.find('role', UUID.value);
+    assert.equal(role.get('isDirtyOrRelatedDirty'), true);
+    assert.equal(find('[data-test-id="permission-view-ticket"]').is(':checked'), false);
+  });
+  let payload = RF.put({id: UUID.value, auth_amount: 0});
+  payload.permissions.view_ticket = false;
+  delete payload.dashboard_text;
+  delete payload.auth_currency;
+  xhr(url, 'POST', JSON.stringify(payload), {}, 201, {});
+  generalPage.save();
+  andThen(() => {
+    assert.equal(currentURL(), ROLE_LIST_URL);
+  });
+});

@@ -1,0 +1,17 @@
+& {
+  .checkbox-permission-items {
+    display: flex;
+    padding-bottom: 1rem;
+    justify-content: flex-start;
+  }
+  .checkbox-label {
+    text-align: left;
+  }
+  .checkbox-permission-items--right {
+    // width is only b/c label is not translated.  Should be min width
+    width: 50px;
+    margin: 0 2rem;
+    display: flex;
+    justify-content: center;
+  }
+}
