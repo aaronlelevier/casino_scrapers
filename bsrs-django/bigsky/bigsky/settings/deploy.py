@@ -13,11 +13,13 @@ DATABASES['default'] = {
 }
 
 CACHES = {
-    'default': {
-        'BACKEND': 'redis_cache.RedisCache',
-        'LOCATION': 'localhost:6379',
-    },
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
 }
-
 MEDIA_ROOT = "/var/www/media/deploy/"
 STATIC_ROOT = "/var/www/static/deploy/"
