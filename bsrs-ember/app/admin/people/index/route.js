@@ -7,7 +7,7 @@ var PersonIndexRoute = GridViewRoute.extend({
   repository: inject('person'),
   tabTitleCount: undefined,
   title() {
-    return this.get('i18n').t('doctitle.location.index', { count: this.get('tabTitleCount') });
+    return this.get('i18n').t('doctitle.people.index', { count: this.get('tabTitleCount') });
   },
 });
 

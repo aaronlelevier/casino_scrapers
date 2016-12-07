@@ -19,7 +19,7 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     if (id) {
       return this._deserializeSingle(response);
     } else {
-      this._deserializeList(response);
+      return this._deserializeList(response);
     }
   },
   setupCC(cc_json, ticket) {
@@ -93,23 +93,23 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     return ticket;
   },
   _deserializeList(response) {
-    const store = this.get('simpleStore');
+    const store = this.get('functionalStore');
+    const results = [];
     response.results.forEach((model) => {
-      const category_json = model.categories;
-      model.category_ids = category_json.mapBy('id');
-      category_json.forEach((category) => {
-        //TODO: test this
-        store.push('category-list', category);
-      });
+      const categories = model.categories;
       delete model.categories;
-      const status_json = model.status;
-      delete model.status;
-      const priority_json = model.priority;
-      delete model.priority;
+      
+      const sorted_categories = categories.sortBy('level');
+      const names = sorted_categories.map((category) => {
+        return category.name;
+      }).join(' &#8226; ');
+
+      model.categories = Ember.String.htmlSafe(names);
+
       const ticket = store.push('ticket-list', model);
-      this.setup_status(status_json, ticket);
-      this.setup_priority(priority_json, ticket);
+      results.push(ticket);
     });
+    return results;
   }
 });
 

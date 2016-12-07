@@ -44,7 +44,7 @@
       <tbody>
         {{#if isLoading}}
           {{grid-loading-graphic}}
-        {{else}}
+        {{/if}}
 
         {{#each paginated_content as |item|}}
           {{#link-to detail_url item.id tagName="tr" class="t-grid-data"}}
@@ -61,7 +61,6 @@
           {{grid-no-data tagName="tr" class="no-results" length=(add columns.length 1) error=error}}
         {{/each}}
 
-        {{/if}}
       </tbody>
     </table>
   </div>

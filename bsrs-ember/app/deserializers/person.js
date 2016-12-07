@@ -96,13 +96,14 @@ var PersonDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin, 
   deserialize(response, options) {
     let location_deserializer = this.get('LocationDeserializer');
     if (typeof options === 'undefined') {
-      this._deserializeList(response);
+      return this._deserializeList(response);
     } else {
       return this._deserializeSingle(response, options, location_deserializer);
     }
   },
   _deserializeList(response) {
     const store = this.get('simpleStore');
+    const results = [];
     response.results.forEach((model) => {
       [model.role_fk] = extract_role(model, store);
       const status_json = model.status;
@@ -116,7 +117,9 @@ var PersonDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin, 
       const person = store.push('person-list', model);
       // photo
       this.setup_status(status_json, person);
+      results.push(person);
     });
+    return results;
   },
   // TODO: refactor w/o id and response
   _deserializeSingle(model, id, location_deserializer) {

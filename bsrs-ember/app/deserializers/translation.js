@@ -19,7 +19,7 @@ var TranslationDeserializer = Ember.Object.extend({
     if (id) {
       this._deserializeSingle(response, id);
     } else {
-      this._deserializeList(response);
+      return this._deserializeList(response);
     }
   },
   _deserializeSingle(model, id) {
@@ -34,9 +34,12 @@ var TranslationDeserializer = Ember.Object.extend({
   },
   _deserializeList(response) {
     const store = this.get('simpleStore');
+    const results = [];
     response.results.forEach((json) => {
-      store.push('translation-list', {id: json});
+      const translation = store.push('translation-list', {id: json});
+      results.push(translation);
     });
+    return results;
   }
 });
 

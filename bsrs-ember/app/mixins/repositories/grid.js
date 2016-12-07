@@ -87,7 +87,6 @@ var GridRepositoryMixin = Ember.Mixin.create({
   },
   /* Non Optimistic Rendering: Mobile */
   findWithQueryMobile(page, search, find, id_in, special_url=undefined) {
-    const store = this.get('simpleStore');
     page = page || 1;
     const url = this.get('url');
     let endpoint = this.modifyEndpoint(url, page, search, find, id_in, special_url);
@@ -100,29 +99,31 @@ var GridRepositoryMixin = Ember.Mixin.create({
   /* Non Optimistic Rendering: Desktop */
   findWithQuery(page, search, find, id_in, page_size, sort, special_url=undefined) {
     const store = this.get('simpleStore');
+    const functionalStore = this.get('functionalStore');
     page = page || 1;
     const url = this.get('url');
     let endpoint = this.modifyEndpoint(url, page, search, find, id_in, page_size, sort, special_url);
     return PromiseMixin.xhr(endpoint).then((response) => {
       const garbage_collection = this.get('garbage_collection') || [];
       /* Remove all types of ex// ticket-list models before render of ticket-list grid */
+      /* Need to remove when functional store handles all grid */
       garbage_collection.forEach((type) => {
         run(() => {
           store.clear(type);
+          functionalStore.clear(type);
         });
       });
       return this.deserializeResponse(response);
     });
   },
   deserializeResponse(response) {
-    const { typeGrid: type, simpleStore: store, deserializer } = this.getProperties('typeGrid', 'simpleStore', 'deserializer');
-    const all = store.find(type);
-    deserializer.deserialize(response);
+    const { typeGrid: type, simpleStore, deserializer } = this.getProperties('typeGrid', 'simpleStore', 'deserializer');
+    const all = deserializer.deserialize(response);
     all.set('isLoaded', true);
     const count = response.count;
     all.set('count', count);
     run(() => {
-      store.push('grid-count', { id: 1, count: count });
+      simpleStore.push('grid-count', { id: 1, count: count });
     });
     return all;
   }

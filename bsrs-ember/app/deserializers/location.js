@@ -123,7 +123,7 @@ var LocationDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin
     if (id) {
       return this._deserializeSingle(response);
     } else {
-      this._deserializeList(response);
+      return this._deserializeList(response);
     }
   },
   _deserializeSingle(response) {
@@ -151,13 +151,16 @@ var LocationDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin
   },
   _deserializeList(response) {
     const store = this.get('simpleStore');
+    const results = [];
     response.results.forEach((model) => {
       model.location_level_fk = extract_location_level(model, store);
       const status_json = model.status;
       delete model.status;
       const location = store.push('location-list', model);
       this.setup_status(status_json, location);
+      results.push(location);
     });
+    return results;
   }
 });
 

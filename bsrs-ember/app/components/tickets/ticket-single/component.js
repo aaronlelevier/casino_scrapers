@@ -4,6 +4,8 @@ import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import { task } from 'ember-concurrency';
 
 var TicketSingleComponent = Ember.Component.extend(TabMixin, {
+  // override mixin
+  tagName: 'div',
   personRepo: inject('person'),
   locationRepo: inject('location'),
   activityRepository: inject('activity'),

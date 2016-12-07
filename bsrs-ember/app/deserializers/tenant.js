@@ -74,8 +74,11 @@ export default Ember.Object.extend(OptConf, ContactDeserializerMixin, {
   },
   _deserializeList(response) {
     const store = this.get('simpleStore');
+    const results = [];
     response.results.forEach((model) => {
-      store.push('tenant-list', model);
+      const tenant = store.push('tenant-list', model);
+      results.push(tenant);
     });
+    return results;
   }
 });

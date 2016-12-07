@@ -1,12 +1,21 @@
+import Ember from 'ember';
+const { run } = Ember;
 import Resolver from 'ember-resolver';
 import Store from 'ember-cli-simple-store/store';
 
 export default function(container, registry, keys) {
-  var resolver = Resolver.create({namespace: {modulePrefix: 'bsrs-ember'}});
+  const resolver = Resolver.create({namespace: {modulePrefix: 'bsrs-ember'}});
+  const store = resolver.resolve('service:functional-store');
+  registry.register('service:functional-store', store);
   registry.register('service:simpleStore', Store);
-  keys.forEach(function(key) {
-    var factory = resolver.resolve('bsrs-ember@' + key);
+  keys.forEach((key) => {
+    const factory = resolver.resolve('bsrs-ember@' + key);
     registry.register(key, factory);
+  });
+  const functionalStore = container.lookup('service:simpleStore');
+  run(() => {
+    // call clear so dont have leaky tests.
+    functionalStore.clear();
   });
   return container.lookup('service:simpleStore');
 }

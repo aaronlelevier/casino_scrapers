@@ -16,7 +16,7 @@ var CategoryDeserializer = Ember.Object.extend({
     if (id) {
       return this._deserializeSingle(response);
     } else {
-      this._deserializeList(response);
+      return this._deserializeList(response);
     }
   },
   _deserializeSingle(response) {
@@ -41,9 +41,12 @@ var CategoryDeserializer = Ember.Object.extend({
   },
   _deserializeList(response) {
     const store = this.get('simpleStore');
+    const results = [];
     response.results.forEach((model) => {
       const category = store.push('category-list', model);
+      results.push(category);
     });
+    return results;
   }
 });
 

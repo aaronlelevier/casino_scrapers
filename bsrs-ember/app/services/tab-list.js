@@ -23,15 +23,15 @@ export default Ember.Service.extend({
     /* Need to fix this */
     if (action === 'closeTab') {
       return closeTabRedirect ? transitionFunc(closeTabRedirect) : transitionFunc(redirectRoute).then(((route) => {
-        route.refresh();
+        // do we need to refresh on a cancel or close tab?
       }));
     } else if (action === 'save') {
-        return closeTabRedirect ? transitionFunc(closeTabRedirect) : transitionFunc(redirectRoute).then((route) => {
-          route.refresh();
-        });
+      return closeTabRedirect ? transitionFunc(closeTabRedirect) : transitionFunc(redirectRoute).then((route) => {
+        route.send('refresh');
+      });
     } else if (action === 'delete') {
       return transitionFunc(redirectRoute).then((route) => {
-        route.refresh();
+        route.send('refresh');
       });
     } else if (tabType === 'single') {
       if (action === 'delete' && confirmed) {
