@@ -1,6 +1,4 @@
-import copy
 import json
-from mock import patch
 import uuid
 from io import BytesIO
 
@@ -11,193 +9,21 @@ from django.test import TestCase
 from model_mommy import mommy
 from rest_framework.test import APITestCase, APITransactionTestCase
 
-from accounting.models import Currency
-from category.models import Category
 from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
 from contact.tests.factory import (create_contact, create_contacts, create_phone_number_type,
     create_email_type)
 from location.models import Location, LocationLevel
 from location.tests.factory import create_location
-from person import config as person_config
 from person.models import Person, Role, PersonStatus
-from person.serializers import PersonUpdateSerializer, RoleUpdateSerializer
+from person.serializers import PersonUpdateSerializer
 from person.tests.factory import (PASSWORD, create_single_person, create_role, create_roles,
     create_all_people, create_person_statuses)
-from person.tests.mixins import RoleSetupMixin
-from tenant.tests.factory import get_or_create_tenant
 from translation.models import Locale
 from translation.tests.factory import create_locale, create_locales
 from utils import create
 from utils.tests.test_helpers import create_default
 
-
-### ROLE ###
-
-class RoleListTests(RoleSetupMixin, APITestCase):
-
-    def test_list(self):
-        response = self.client.get('/api/admin/roles/')
-
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        role = data['results'][0]
-        self.assertEqual(role['id'], str(self.role.pk))
-        self.assertEqual(role['name'], self.role.name)
-        self.assertEqual(role['role_type'], self.role.role_type)
-        self.assertEqual(role['location_level'], str(self.location.location_level.id))
-
-    def test_search(self):
-        role = create_role()
-        self.assertEqual(Role.objects.count(), 2)
-
-        response = self.client.get('/api/admin/roles/?search={}'.format(role.name))
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 1)
-
-
-class RoleDetailTests(RoleSetupMixin, APITestCase):
-
-    def test_detail(self):
-        response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
-
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['id'], str(self.role.pk))
-        self.assertEqual(data['name'], self.role.name)
-        self.assertEqual(data['role_type'], self.role.role_type)
-        self.assertEqual(data['location_level'], str(self.location.location_level.id))
-        self.assertEqual(data['auth_amount'], "{:.4f}".format(self.role.auth_amount))
-        self.assertEqual(data['auth_currency'], None)
-        self.assertNotIn('dashboard_text', data)
-        self.assertIn(
-            data['categories'][0]['id'],
-            [str(c.id) for c in self.role.categories.all()]
-        )
-        self.assertIn('name', data['categories'][0])
-        self.assertNotIn('status', data['categories'][0])
-        self.assertNotIn('parent', data['categories'][0])
-
-    def test_detail__inherited(self):
-        self.role.dashboard_text = 'foo'
-        self.role.auth_currency = mommy.make(Currency, code="FOO")
-        self.role.save()
-        response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
-
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        # dashboard_text
-        self.assertEqual(data['inherited']['dashboard_text']['value'], self.role.dashboard_text)
-        self.assertEqual(data['inherited']['dashboard_text']['inherited_value'], self.role.tenant.dashboard_text)
-        self.assertEqual(data['inherited']['dashboard_text']['inherits_from'], 'tenant')
-        self.assertEqual(data['inherited']['dashboard_text']['inherits_from_id'], str(self.role.tenant.id))
-        # auth_currency
-        self.assertEqual(data['inherited']['auth_currency']['value'], str(self.role.auth_currency.id))
-        self.assertEqual(data['inherited']['auth_currency']['inherited_value'], str(self.role.tenant.default_currency.id))
-        self.assertEqual(data['inherited']['auth_currency']['inherits_from'], 'tenant')
-        self.assertEqual(data['inherited']['auth_currency']['inherits_from_id'], str(self.role.tenant.id))
-
-
-class RoleCreateTests(RoleSetupMixin, APITestCase):
-
-    def setUp(self):
-        super(RoleCreateTests, self).setUp()
-
-        currency = mommy.make(Currency, code='foo')
-        self.role_data = {
-            "id": str(uuid.uuid4()),
-            "name": "Admin",
-            "role_type": person_config.ROLE_TYPES[0],
-            "location_level": str(self.location.location_level.id),
-            "categories": self.role.categories_ids,
-            "auth_amount": 123,
-            "auth_currency": str(currency.id),
-            "dashboard_text": "foo"
-        }
-
-    def test_main(self):
-        response = self.client.post('/api/admin/roles/', self.role_data, format='json')
-
-        self.assertEqual(response.status_code, 201)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['id'], self.role_data['id'])
-        self.assertEqual(data['name'], self.role_data['name'])
-        self.assertEqual(data['role_type'], self.role_data['role_type'])
-        self.assertEqual(data['location_level'], self.role_data['location_level'])
-        self.assertEqual(data['auth_amount'], "{:.4f}".format(self.role_data['auth_amount']))
-        self.assertEqual(data['auth_currency'], self.role_data['auth_currency'])
-        self.assertEqual(data['dashboard_text'], self.role_data['dashboard_text'])
-        self.assertEqual(sorted(data['categories']), sorted(self.role_data['categories']))
-
-    def test_new_roles_tenant_set_to_logged_in_users_tenant(self):
-        response = self.client.post('/api/admin/roles/', self.role_data, format='json')
-
-        role = Role.objects.get(id=self.role_data['id'])
-        self.assertEqual(role.tenant, self.person.role.tenant)
-
-
-class RoleUpdateTests(RoleSetupMixin, APITestCase):
-
-    def setUp(self):
-        super(RoleUpdateTests, self).setUp()
-        self.data = RoleUpdateSerializer(self.role).data
-
-    def test_update(self):
-        category = mommy.make(Category)
-        role_data = self.data
-        role_data['name'] = 'new name here'
-        role_data['auth_currency'] = str(mommy.make(Currency, code='FOO').id)
-        role_data['dashboard_text'] = 'foo'
-        role_data['categories'].append(str(category.id))
-
-        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
-            role_data, format='json')
-
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['id'], str(self.role.id))
-        self.assertEqual(data['name'], role_data['name'])
-        self.assertEqual(data['role_type'], self.role.role_type)
-        self.assertEqual(data['location_level'], str(self.role.location_level.id))
-        self.assertEqual(data['auth_amount'], "{:.4f}".format(self.role.auth_amount))
-        self.assertEqual(data['auth_currency'], role_data['auth_currency'])
-        self.assertEqual(data['dashboard_text'], role_data['dashboard_text'])
-        self.assertIsInstance(data['categories'], list)
-
-    def test_update__location_level(self):
-        role_data = copy.copy(self.data)
-        role_data['location_level'] = str(mommy.make(LocationLevel).id)
-        self.assertNotEqual(
-            self.data['location_level'],
-            role_data['location_level']
-        )
-
-        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
-            role_data, format='json')
-
-        self.assertEqual(response.status_code, 200)
-        new_role_data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(
-            role_data['location_level'],
-            str(Role.objects.get(id=self.data['id']).location_level.id)
-        )
-
-
-class RoleRouteDataTests(RoleSetupMixin, APITestCase):
-
-    def test_settings_data(self):
-        response = self.client.get('/api/admin/roles/route-data/new/')
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data), 1)
-        self.assertEqual(
-            data['settings'],
-            {'dashboard_text': self.tenant.dashboard_text}
-        )
-
-
-### PERSON ###
 
 class PersonAccessTests(TestCase):
 

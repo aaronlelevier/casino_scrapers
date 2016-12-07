@@ -1,7 +1,7 @@
 from datetime import date
 
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser, Group
+from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.test import TestCase
@@ -135,6 +135,25 @@ class RoleTests(TestCase):
         self.role.categories.remove(category)
         self.role.save()
         self.assertEqual(self.role.categories.count(), 0)
+
+    def test_permissions(self):
+        perms = Permission.objects.filter(codename__in=['add_ticket', 'change_ticket'])
+        self.role.group.permissions.set([p for p in perms])
+        self.assertEqual(self.role.group.permissions.count(), 2)
+        role_perms = self.role.group.permissions.values_list('codename', flat=True)
+
+        ret = self.role.permissions
+
+        self.assertIsInstance(ret, dict)
+        self.assertEqual(
+            len([k for k,v in ret.items() if k in role_perms]),
+            2, '2 True perms')
+        # check bool values
+        for k,v in ret.items():
+            if k in role_perms:
+                self.assertTrue(v, "{}: {} != True".format(k, v))
+            else:
+                self.assertFalse(v, "{}: {} != False".format(k, v))
 
 
 class RolePasswordTests(TestCase):

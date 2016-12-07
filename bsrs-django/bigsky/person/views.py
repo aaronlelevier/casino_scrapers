@@ -30,12 +30,19 @@ class RoleViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
         """
         if self.action == 'retrieve':
             return ps.RoleDetailSerializer
-        elif self.action == 'create':
-            return ps.RoleCreateSerializer
-        elif self.action in ('update', 'partial_update'):
-            return ps.RoleUpdateSerializer
-        else:
+        elif self.action == 'list':
             return ps.RoleListSerializer
+        else:
+            return ps.RoleCreateUpdateSerializer
+
+    @list_route(methods=['get'], url_path=r"route-data/new")
+    def route_data_new(self, request):
+        tenant = request.user.role.tenant
+        return Response({
+            'settings': {
+                'dashboard_text': tenant.dashboard_text
+            }
+        })
 
     def create(self, request, *args, **kwargs):
         """Assign new Role's tenant to match the logged
@@ -47,15 +54,6 @@ class RoleViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
         role.save()
 
         return response
-
-    @list_route(methods=['get'], url_path=r"route-data/new")
-    def route_data_new(self, request):
-        tenant = request.user.role.tenant
-        return Response({
-            'settings': {
-                'dashboard_text': tenant.dashboard_text
-            }
-        })
 
 
 ### PERSON

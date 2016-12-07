@@ -7,7 +7,7 @@ from category.tests.factory import create_single_category
 from location.models import Location, LocationLevel
 from location.tests.factory import create_location
 from person.models import Person
-from person.serializers import RoleCreateSerializer, PersonUpdateSerializer
+from person.serializers import RoleCreateUpdateSerializer, PersonUpdateSerializer
 from person.tests.factory import PASSWORD, create_single_person, create_role
 
 
@@ -65,7 +65,7 @@ class RoleCategoryValidatorTests(APITestCase):
         self.child_category = create_single_category(parent=self.parent_category)
         # data
         self.role = create_role()
-        serializer = RoleCreateSerializer(self.role)
+        serializer = RoleCreateUpdateSerializer(self.role)
         self.data = serializer.data
         # Login
         self.person = create_single_person()
