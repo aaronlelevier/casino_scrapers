@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 var TicketActivityCreatorLink = Ember.Component.extend({
+  tagName: 'span',
   linkText: Ember.computed(function() {
     const activity = this.get('activity');
     if (activity.get('person')) {
@@ -8,8 +9,7 @@ var TicketActivityCreatorLink = Ember.Component.extend({
     } else if (activity.get('automation')) {
       return activity.automation.description;
     }
-  }),
-  classNames: ['activity-wrap']
+  })
 });
 
 export default TicketActivityCreatorLink;
