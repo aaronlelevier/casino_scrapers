@@ -283,7 +283,7 @@ class TicketTests(TestCase):
     def test_ordering(self):
         self.assertEqual(Ticket._meta.ordering, ('-created',))
 
-    @patch("ticket.models.tasks.process_ticket.delay")
+    @patch("ticket.models.tasks.process_ticket.apply_async")
     def test_save__process_ticket__on_fresh_create_only_called_once(self, mock_func):
         status_new = create_default(TicketStatus)
         location = create_location()
@@ -292,7 +292,7 @@ class TicketTests(TestCase):
 
         self.assertEqual(mock_func.call_count, 1)
 
-    @patch("ticket.models.tasks.process_ticket.delay")
+    @patch("ticket.models.tasks.process_ticket.apply_async")
     def test_save__process_ticket__new_status(self, mock_func):
         # This is the only tiime that wee wan't the "process_ticket"
         # function to be called
@@ -301,11 +301,11 @@ class TicketTests(TestCase):
         self.ticket.save()
 
         self.assertEqual(mock_func.call_count, 1)
-        self.assertEqual(mock_func.call_args[0][0], self.ticket.location.location_level.tenant.id)
-        self.assertEqual(mock_func.call_args[1]['ticket_id'], self.ticket.id)
-        self.assertEqual(mock_func.call_args[1]['event_key'], AutomationEvent.STATUS_NEW)
+        self.assertEqual(mock_func.call_args[0][0], (self.ticket.location.location_level.tenant.id,))
+        self.assertEqual(mock_func.call_args[0][1]['ticket_id'], self.ticket.id)
+        self.assertEqual(mock_func.call_args[0][1]['event_key'], AutomationEvent.STATUS_NEW)
 
-    @patch("ticket.models.tasks.process_ticket.delay")
+    @patch("ticket.models.tasks.process_ticket.apply_async")
     def test_save__process_ticket__not_new_status(self, mock_func):
         self.ticket.status = self.status_draft
 

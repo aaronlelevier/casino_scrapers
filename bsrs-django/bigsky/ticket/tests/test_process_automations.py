@@ -56,7 +56,7 @@ class TicketStatusNewTests(TicketSetupMixin, APITestCase):
             self.assertIn(person, ticket.cc.all())
             self.assertIn(person_two, ticket.cc.all())
 
-    @patch("ticket.models.tasks.process_ticket.delay")
+    @patch("ticket.models.tasks.process_ticket.apply_async")
     def test_category_filter__set_assignee(self, mock_func):
         with self.settings(CELERY_ALWAYS_EAGER=True):
             # automation

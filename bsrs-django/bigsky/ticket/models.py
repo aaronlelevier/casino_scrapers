@@ -188,8 +188,10 @@ class Ticket(BaseModel):
     def _process_ticket_if_new(self):
         if not self.deleted and self.status.name == TicketStatus.NEW:
             AutomationEvent = apps.get_model("automation", "automationevent")
-            tasks.process_ticket.delay(self.location.location_level.tenant.id,
-                                       ticket_id=self.id, event_key=AutomationEvent.STATUS_NEW)
+            tasks.process_ticket.apply_async(
+                (self.location.location_level.tenant.id,),
+                {'ticket_id': self.id, 'event_key': AutomationEvent.STATUS_NEW},
+                queue='bigsky')
 
     @property
     def category(self):
