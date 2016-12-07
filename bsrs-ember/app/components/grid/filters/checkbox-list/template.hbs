@@ -1,9 +1,8 @@
 {{#each filterModels as |filterModel|}}
-	<div class="checkbox">
-		<label>
-      {{t filterModel.name}}
-			<input type="checkbox" checked={{is-filter-checked option=filterModel.id field=field gridIdInParams=gridIdInParams}} onclick={{action "updateCheckbox" filterModel.id}} />
-			<span></span>
-		</label>
+	<div class="checkbox" onclick={{action "updateCheckbox" filterModel.id}}>
+    {{checkbox-component 
+      labelText=(t filterModel.name)
+      checked=(is-filter-checked option=filterModel.id field=field gridIdInParams=gridIdInParams)
+    }}
 	</div>
 {{/each}}

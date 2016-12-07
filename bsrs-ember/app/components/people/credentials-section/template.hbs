@@ -36,10 +36,12 @@
             id="password"
           }}
           <div class="checkbox">
-            <label>
-              <input type="checkbox" value={{model.password_one_time}} onclick={{action changeBool "password_one_time"}} checked={{model.password_one_time}} class="t-person-password_one_time" name="password_one_time">
-              <span class="t-person-password_one_time-label">{{t "admin.setting.password_one_time"}}</span>
-            </label>
+            {{checkbox-component 
+              checked=model.password_one_time 
+              inputClass="t-person-password_one_time" 
+              labelClass="t-person-password_one_time-label" 
+              checkboxText=(t "admin.setting.password_one_time") 
+            }}
           </div>
           <div><button class="btn btn-default btn-sm" {{action "changePassword"}}>{{fa-icon "ban"}} {{t "crud.cancel.button"}}</button></div>
           {{else}}

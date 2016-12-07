@@ -23,12 +23,6 @@ var PersonSingle = Ember.Component.extend(TabMixin, {
     save() {
       this.get('saveTask').perform();
     },
-    changeBool(key) {
-      // closure action to credentials section
-      const store = this.get('simpleStore');
-      let model = store.find('person', this.get('model.id'));
-      model.toggleProperty(key);
-    }
   }
 });
 

@@ -16,21 +16,20 @@
   position: absolute;
   left: -9999px;
 }
-[type="checkbox"]:not(:checked) + span,
+
+[type="checkbox"]:not(:checked) + span, 
 [type="checkbox"]:checked + span {
   position: relative;
   overflow: hidden;
-  padding-left: 30px;
+  padding-left: 19px;
   cursor: pointer;
   display: inline-block;
-  height: 20px;
-  line-height: 20px;
-
-	//prevent selecting checkbox if copying and pasting
-  -webkit-user-select: none; /* webkit (safari, chrome) browsers */
-  -moz-user-select: none; /* mozilla browsers */
-  -khtml-user-select: none; /* webkit (konqueror) browsers */
-  -ms-user-select: none; /* IE10+ */
+  height: 19px;
+  line-height: 19px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -ms-user-select: none;
 }
 
 /* checkbox aspect */
