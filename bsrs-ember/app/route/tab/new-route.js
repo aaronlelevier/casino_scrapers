@@ -20,32 +20,6 @@ var TabNewRoute = Ember.Route.extend({
     willTransition() {
       this.get('tabList').logLocation(this.router.currentPath);
     },
-    parentAction(tab){
-      let model = this.get('simpleStore').find(tab.get('module'), tab.get('id'));
-      if (model && model.get('isDirtyOrRelatedDirty')) {
-        this.trx.attemptedTabModel = tab;
-        this.trx.attemptedTransitionModel = model;
-        this.trx.attemptedAction = 'parentAction';
-      } else {
-        let temp = this.router.generate(this.routeName);
-        temp = temp.split('/').pop();
-        if(temp === tab.get('id') || tab.get('newModel')){
-          this.transitionTo(tab.get('redirectRoute'));
-          if (tab.get('newModel') && !tab.get('saveModel')) {
-            model.removeRecord();
-          }
-        }else if(this.routeName !== tab.get('redirectRoute')){
-          this.transitionTo(this.routeName);
-        }else if(typeof tab.get('redirectRoute') !== undefined){
-          this.transitionTo(tab.get('redirectRoute'));
-        }
-        this.get('tabList').closeTab(model.get('id'));
-      }
-    },
-    parentActionDelete(tab, model, repository) {
-      this.send('parentAction', tab);
-      repository.delete(model.get('id'));
-    }
   }
 });
 
