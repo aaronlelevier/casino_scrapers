@@ -125,9 +125,11 @@ class PersonSearchSerializer(serializers.ModelSerializer):
 
 class PersonTicketSerializer(serializers.ModelSerializer):
 
+    photo = AttachmentThumbnailSerializer(required=False)
+
     class Meta:
         model = Person
-        fields = ('id', 'first_name', 'middle_initial', 'last_name',)
+        fields = ('id', 'first_name', 'middle_initial', 'last_name', 'photo')
 
 
 class PersonTicketListSerializer(serializers.ModelSerializer):

@@ -181,6 +181,8 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
         self.assertEqual(assignee['first_name'], self.ticket.assignee.first_name)
         self.assertEqual(assignee['middle_initial'], self.ticket.assignee.middle_initial)
         self.assertEqual(assignee['last_name'], self.ticket.assignee.last_name)
+        self.assertEqual(assignee['photo']['id'], str(self.ticket.assignee.photo.id))
+        self.assertTrue(assignee['photo']['image_thumbnail'])
 
     def test_data_categories(self):
         response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
@@ -203,6 +205,8 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
         self.assertEqual(data_cc['first_name'], cc.first_name)
         self.assertEqual(data_cc['middle_initial'], cc.middle_initial)
         self.assertEqual(data_cc['last_name'], cc.last_name)
+        self.assertEqual(data_cc['photo']['id'], str(cc.photo.id))
+        self.assertTrue(data_cc['photo']['image_thumbnail'])
         self.assertNotIn('status', data_cc)
         self.assertNotIn('role', data_cc)
 
