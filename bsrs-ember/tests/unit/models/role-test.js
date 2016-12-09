@@ -24,7 +24,7 @@ module('unit: role test', {
   }
 });
 
-test('role is dirty or related is dirty when model has been updated', function(assert) {
+test('role is dirty or related is dirty when model has been updated', (assert) => {
   role = factory.getDefaults(RD.idOne, RD.roleTypeGeneral);
   role.name = RD.nameOne;
   role = store.push('role', role);
@@ -44,7 +44,7 @@ test('role is dirty or related is dirty when model has been updated', function(a
 });
 
 /*ROLE TO PEOPLE 1-2-Many*/
-test('role can be related to one or many people', function(assert) {
+test('role can be related to one or many people', (assert) => {
   role = factory.getDefaults(RD.idOne, RD.roleTypeGeneral);
   role.name = RD.nameOne;
   role.people = [];
@@ -60,7 +60,7 @@ test('role can be related to one or many people', function(assert) {
   assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('there is no leaky state when instantiating role (set)', function(assert) {
+test('there is no leaky state when instantiating role (set)', (assert) => {
   let role_two;
   role = factory.getDefaults(RD.idOne, RD.roleTypeGeneral);
   role.name = RD.nameOne;
@@ -78,7 +78,7 @@ test('there is no leaky state when instantiating role (set)', function(assert) {
 });
 
 /*ROLE TO LOCATION LEVEL 1-to-Many RELATIONSHIP*/
-test('related location level should return first location level or undefined', function(assert) {
+test('related location level should return first location level or undefined', (assert) => {
   role = factory.getDefaults(RD.idOne, RD.roleTypeGeneral);
   role.name = RD.nameOne;
   role = store.push('role', role);
@@ -91,14 +91,14 @@ test('related location level should return first location level or undefined', f
   assert.equal(role.get('location_level'), undefined);
 });
 
-test('related location level is not dirty when no location level present', function(assert) {
+test('related location level is not dirty when no location level present', (assert) => {
   store.push('location-level', {id: LLD.idOne, roles: [LLD.unusedId]});
   role = store.push('role', factory.getDefaults(RD.id));
   assert.ok(role.get('locationLevelIsNotDirty'));
   assert.equal(role.get('location_level'), undefined);
 });
 
-test('when role suddenly has location level assigned to it, it is shown as dirty', function(assert) {
+test('when role suddenly has location level assigned to it, it is shown as dirty', (assert) => {
   role = store.push('role', factory.getDefaults(RD.idOne));
   let location_level = store.push('location-level', {id: LLD.idOne, roles: undefined});
   assert.ok(role.get('isNotDirty'));
@@ -108,7 +108,7 @@ test('when role suddenly has location level assigned to it, it is shown as dirty
   assert.ok(role.get('isDirtyOrRelatedDirty'));
 });
 
-test('when role suddently has location level assigned to it starting with non empty array, it is shown as dirty', function(assert) {
+test('when role suddently has location level assigned to it starting with non empty array, it is shown as dirty', (assert) => {
   role = store.push('role', factory.getDefaults(RD.idOne));
   let location_level = store.push('location-level', {id: LLD.idOne, roles: [RD.unusedId]});
   assert.ok(role.get('isNotDirty'));
@@ -118,7 +118,7 @@ test('when role suddently has location level assigned to it starting with non em
   assert.ok(role.get('isDirtyOrRelatedDirty'));
 });
 
-test('rollback location level will reset the previously used location level when switching from valid location level to another', function(assert) {
+test('rollback location level will reset the previously used location level when switching from valid location level to another', (assert) => {
   role = factory.getDefaults(RD.idOne);
   role.location_level_fk = LLD.idOne;
   role = store.push('role', role);
@@ -151,7 +151,7 @@ test('rollback location level will reset the previously used location level when
   assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('rollback location level will reset the previously used location level when switching from valid location level to another location level', function(assert) {
+test('rollback location level will reset the previously used location level when switching from valid location level to another location level', (assert) => {
   role = factory.getDefaults(RD.idOne);
   role.location_level_fk = LLD.idOne;
   role = store.push('role', role);
@@ -184,7 +184,7 @@ test('rollback location level will reset the previously used location level when
 });
 
 /*ROLE TO CATEGORY M2M*/
-test('categories property only returns the single matching item even when multiple categories exist', function(assert) {
+test('categories property only returns the single matching item even when multiple categories exist', (assert) => {
   role = factory.getDefaults(RD.idOne);
   role.location_level_fk = LLD.idOne;
   role = store.push('role', role);
@@ -197,7 +197,7 @@ test('categories property only returns the single matching item even when multip
   assert.equal(categories.objectAt(0).get('id'), CD.idTwo);
 });
 
-test('categories property returns multiple matching items when multiple categories exist', function(assert) {
+test('categories property returns multiple matching items when multiple categories exist', (assert) => {
   store.push('category', {id: CD.idOne});
   store.push('category', {id: CD.idTwo});
   store.push('role-category', {id: ROLE_CD.idOne, role_pk: RD.idOne, category_pk: CD.idTwo});
@@ -211,7 +211,7 @@ test('categories property returns multiple matching items when multiple categori
   assert.equal(categories.objectAt(1).get('id'), CD.idTwo);
 });
 
-test('categories property will update when add category is invoked and add new m2m join model (starting w/ empty array)', function(assert) {
+test('categories property will update when add category is invoked and add new m2m join model (starting w/ empty array)', (assert) => {
   role = factory.getDefaults(RD.idOne);
   role.role_categories_fks = [];
   role = store.push('role', role);
@@ -226,7 +226,7 @@ test('categories property will update when add category is invoked and add new m
   assert.ok(role.get('isDirtyOrRelatedDirty'));
 });
 
-test('categories property will update when add category is invoked and add new m2m join model', function(assert) {
+test('categories property will update when add category is invoked and add new m2m join model', (assert) => {
   store.push('role-category', {id: ROLE_CD.idOne, category_pk: CD.idOne, role_pk: RD.idOne});
   role = store.push('role', {id: RD.idOne, role_categories_fks: [ROLE_CD.idOne]});
   store.push('category', {id: CD.idOne});
@@ -242,7 +242,7 @@ test('categories property will update when add category is invoked and add new m
   assert.ok(role.get('isDirtyOrRelatedDirty'));
 });
 
-test('categories property will update when the m2m array suddenly removes the category', function(assert) {
+test('categories property will update when the m2m array suddenly removes the category', (assert) => {
   store.push('role-category', {id: ROLE_CD.idOne, category_pk: CD.idOne, role_pk: RD.idOne});
   role = store.push('role', {id: RD.idOne, role_categories_fks: [ROLE_CD.idOne]});
   store.push('category', {id: CD.idOne});
@@ -253,7 +253,7 @@ test('categories property will update when the m2m array suddenly removes the ca
   assert.ok(role.get('isDirtyOrRelatedDirty'));
 });
 
-test('when category is suddently removed it shows as a dirty relationship (when it has multiple locations to begin with)', function(assert) {
+test('when category is suddently removed it shows as a dirty relationship (when it has multiple locations to begin with)', (assert) => {
   store.push('category', {id: CD.idOne});
   store.push('category', {id: CD.idTwo});
   store.push('role-category', {id: ROLE_CD.idOne, category_pk: CD.idOne, role_pk: RD.idOne});
@@ -268,7 +268,7 @@ test('when category is suddently removed it shows as a dirty relationship (when 
   assert.ok(role.get('isDirtyOrRelatedDirty'));
 });
 
-test('add_category will add back old join model after it was removed and dirty the model (multiple)', function(assert) {
+test('add_category will add back old join model after it was removed and dirty the model (multiple)', (assert) => {
   const role = store.push('role', {id: RD.idOne, role_categories_fks: [ROLE_CD.idOne, ROLE_CD.idTwo]});
   store.push('category', {id: CD.idTwo});
   const category_three = store.push('category', {id: CD.idThree});
@@ -282,7 +282,7 @@ test('add_category will add back old join model after it was removed and dirty t
   assert.ok(role.get('categoriesIsNotDirty'));
 });
 
-test('when categories is changed dirty tracking works as expected (removing)', function(assert) {
+test('when categories is changed dirty tracking works as expected (removing)', (assert) => {
   store.push('role-category', {id: ROLE_CD.idOne, role_pk: RD.idOne, category_pk: CD.idOne});
   store.push('category', {id: CD.idOne});
   role = store.push('role', {id: RD.idOne, role_categories_fks: [ROLE_CD.idOne]});
@@ -306,7 +306,7 @@ test('when categories is changed dirty tracking works as expected (removing)', f
   assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('when categories is changed dirty tracking works as expected (replacing)', function(assert) {
+test('when categories is changed dirty tracking works as expected (replacing)', (assert) => {
   store.push('role-category', {id: ROLE_CD.idOne, role_pk: RD.idOne, category_pk: CD.idOne});
   store.push('category', {id: CD.idOne});
   const category_two = {id: CD.idTwo};
@@ -337,7 +337,7 @@ test('when categories is changed dirty tracking works as expected (replacing)', 
   assert.equal(role.get('categories').objectAt(0).get('id'), CD.idOne);
 });
 
-test('rollback role will reset the previously used people (categories) when switching from valid categories array to nothing', function(assert) {
+test('rollback role will reset the previously used people (categories) when switching from valid categories array to nothing', (assert) => {
   store.push('category', {id: CD.idOne});
   store.push('category', {id: CD.idTwo});
   store.push('role-category', {id: ROLE_CD.idOne, category_pk: CD.idOne, role_pk: RD.idOne});
@@ -367,7 +367,7 @@ test('rollback role will reset the previously used people (categories) when swit
   assert.equal(role.get('categories').objectAt(1).get('id'), CD.idTwo);
 });
 
-test('rollback categories will reset the previous people (categories) when switching from one category to another and saving in between each step', function(assert) {
+test('rollback categories will reset the previous people (categories) when switching from one category to another and saving in between each step', (assert) => {
   store.push('category', {id: CD.idOne});
   store.push('category', {id: CD.idTwo});
   const unused = {id: CD.unusedId};
@@ -397,7 +397,7 @@ test('rollback categories will reset the previous people (categories) when switc
   assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('categories_ids computed returns a flat list of ids for each category', function(assert) {
+test('categories_ids computed returns a flat list of ids for each category', (assert) => {
   store.push('category', {id: CD.idOne});
   store.push('category', {id: CD.idTwo});
   store.push('role-category', {id: ROLE_CD.idOne, category_pk: CD.idOne, role_pk: RD.idOne});
@@ -410,7 +410,7 @@ test('categories_ids computed returns a flat list of ids for each category', fun
   assert.deepEqual(role.get('categories_ids'), [CD.idTwo]);
 });
 
-test('role_categories_ids computed returns a flat list of ids for each category', function(assert) {
+test('role_categories_ids computed returns a flat list of ids for each category', (assert) => {
   store.push('category', {id: CD.idOne});
   store.push('category', {id: CD.idTwo});
   store.push('role-category', {id: ROLE_CD.idOne, category_pk: CD.idOne, role_pk: RD.idOne});
@@ -423,7 +423,7 @@ test('role_categories_ids computed returns a flat list of ids for each category'
   assert.deepEqual(role.get('role_categories_ids'), [ROLE_CD.idTwo]);
 });
 
-test('serialize', function(assert) {
+test('serialize', (assert) => {
   store.push('location-level', {id: LLD.idOne, name: LLD.nameRegion, roles: [RD.idOne]});
   store.push('category', {id: CD.idOne});
   store.push('role-category', {id: ROLE_CD.idOne, category_pk: CD.idOne, role_pk: RD.idOne});
@@ -453,7 +453,7 @@ test('serialize', function(assert) {
   });
 });
 
-test('has default permissions to create, edit and view resources', function(assert) {
+test('has default permissions to create, edit and view resources', (assert) => {
   role = factory.getDefaults(RD.idOne, RD.roleTypeGeneral);
   role = store.push('role', Object.assign(role, { name: RD.nameOne }));
   eachPermission(function(resource, prefix) {
@@ -466,7 +466,7 @@ test('has default permissions to create, edit and view resources', function(asse
   });
 });
 
-test('can track dirty properties for permissions', function(assert) {
+test('can track dirty properties for permissions', (assert) => {
   role = factory.getDefaults(RD.idOne, RD.roleTypeGeneral);
   role = store.push('role', Object.assign(role, { name: RD.nameOne }));
   eachPermission(function(resource, prefix) {

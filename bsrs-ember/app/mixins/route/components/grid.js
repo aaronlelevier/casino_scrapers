@@ -117,8 +117,10 @@ var GridViewRoute = Ember.Route.extend({
     }
     set(controller, 'isLoading', undefined);
     
-    // set doc title
-    this.set('tabTitleCount', hash.model.get('length'));
+    // set doc title, but if error, no model
+    if (hash.model) {
+      this.set('tabTitleCount', hash.model.get('length'));
+    }
   },
   actions: {
     refresh() {

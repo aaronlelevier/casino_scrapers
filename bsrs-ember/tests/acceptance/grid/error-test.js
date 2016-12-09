@@ -41,5 +41,6 @@ test('typing a search will with a 400 or greater will show in context error', fu
   andThen(() => {
     assert.equal(currentURL(),TICKET_LIST_URL + '?search=5');
     assert.equal(find('.t-grid-data').length, 0);
+    assert.equal(document.title,  t('doctitle.ticket.index', { count: 10 }));
   });
 });
