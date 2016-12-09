@@ -40,10 +40,11 @@ var test = function() {
     args[_key] = arguments[_key];
   }
   var callback;
-  function wrapper() {
+  function wrapper(assert) {
     let argz = arguments;
+    let env = assert.test.testEnvironment;
     Ember.run(function() {
-      callback.apply(null, argz);
+      callback.apply(env, argz);
     });
   }
   callback = args.splice(1, 1, wrapper)[0];
