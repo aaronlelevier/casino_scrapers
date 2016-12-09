@@ -12,10 +12,5 @@ export default function(container, registry, keys) {
     const factory = resolver.resolve('bsrs-ember@' + key);
     registry.register(key, factory);
   });
-  const functionalStore = container.lookup('service:simpleStore');
-  run(() => {
-    // call clear so dont have leaky tests.
-    functionalStore.clear();
-  });
   return container.lookup('service:simpleStore');
 }
