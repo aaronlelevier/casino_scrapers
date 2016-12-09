@@ -1,5 +1,10 @@
+from django.contrib.auth.models import Group, Permission
+from django.contrib.contenttypes.models import ContentType
+from django.db import models
 from django.test import TestCase
-from django.contrib.auth.models import Group
+from django.utils.text import capfirst
+
+from collections import namedtuple
 
 from person import helpers
 from person.tests.factory import create_role, create_person
@@ -26,3 +31,60 @@ class HelperTests(TestCase):
         self.assertEqual(self.person.groups.count(), init_count)
         new_group = self.person.groups.first()
         self.assertNotEqual(orig_group, new_group)
+
+
+class PermissionInfoTests(TestCase):
+
+    def test_all_defaults(self):
+        raw_ret = {}
+        for m in helpers.PermissionInfo.MODELS:
+            for p in helpers.PermissionInfo.PERMS:
+                raw_ret["{}_{}".format(p, m)] = False
+
+        ret = helpers.PermissionInfo.ALL_DEFAULTS
+
+        self.assertIsInstance(ret, dict)
+        self.assertEqual(len(ret), 24,
+                         '6 models * 4 types = 24 possible permissions')
+        for k,v in ret.items():
+            self.assertFalse(v)
+            self.assertEqual(v, raw_ret[k])
+
+    def test_codenames(self):
+        for p in helpers.PermissionInfo.PERMS:
+            for m in helpers.PermissionInfo.MODELS:
+                self.assertIn('{}_{}'.format(p, m),
+                              helpers.PermissionInfo.CODENAMES)
+
+    def test_setUp(self):
+        perm_info = helpers.PermissionInfo()
+
+        self.assertEqual(
+            Permission.objects.filter(codename__startswith='view_').count(), 0)
+
+        perm_info.setUp()
+
+        ret = perm_info.all()
+        self.assertEqual(ret.count(), 24)
+        for p in helpers.PermissionInfo.PERMS:
+            for m in helpers.PermissionInfo.MODELS:
+                self.assertIsInstance(ret.get(codename="{}_{}".format(p,m)),
+                                      Permission)
+
+    def test_all(self):
+        perm_info = helpers.PermissionInfo()
+        perm_info.setUp()
+
+        ret = perm_info.all()
+
+        self.assertIsInstance(ret, models.query.QuerySet)
+        self.assertEqual(ret.count(), 24)
+        for r in ret:
+            self.assertIsInstance(r, Permission)
+            perm, model = r.codename.split('_')
+            # self.assertEqual(r.name, 'Can {} {}'.format(perm, model))
+            self.assertIn(perm, helpers.PermissionInfo.PERMS)
+            self.assertIn(model, helpers.PermissionInfo.MODELS)
+            # ContentType
+            content_type = ContentType.objects.get(model=model)
+            self.assertEqual(content_type.model, model)

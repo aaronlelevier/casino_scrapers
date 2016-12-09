@@ -1,3 +1,4 @@
+import copy
 from datetime import timedelta
 from itertools import chain
 import re
@@ -17,7 +18,7 @@ from django.utils import timezone
 from generic.models import Attachment
 from accounting.models import Currency
 from category.models import Category
-from contact.models import PhoneNumber, PhoneNumberType, Address, Email, EmailType
+from contact.models import PhoneNumber, Address, Email
 from location.models import LocationLevel, Location, LOCATION_COMPANY
 from person import config, helpers
 from tenant.models import Tenant
@@ -266,6 +267,12 @@ class Role(BaseModel):
             raise ValidationError("Role can't have related child categories: {}."
                                  .format(', '.join(child_categories)))
 
+    @property
+    def permissions(self):
+        role_perms = (self.group.permissions.filter(codename__in=helpers.PermissionInfo.CODENAMES)
+                                            .values_list('codename', flat=True))
+        return {p:True for p in role_perms}
+
 
 class ProxyRole(BaseModel):
 
@@ -379,7 +386,7 @@ class Person(BaseModel, AbstractUser):
         return [x[1] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
 
     # Keys
-    role = models.ForeignKey(Role)
+    role = models.ForeignKey(Role, related_name='people')
     status = models.ForeignKey(PersonStatus, blank=True, null=True)
     locations = models.ManyToManyField(
         Location, related_name='people', blank=True)

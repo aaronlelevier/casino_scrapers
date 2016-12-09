@@ -1,3 +1,7 @@
+import copy
+
+from django.contrib.auth.models import Permission
+
 from rest_framework import serializers
 
 from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer
@@ -5,6 +9,7 @@ from generic.serializers import AttachmentSerializer, AttachmentThumbnailSeriali
 from contact.serializers import (PhoneNumberSerializer, EmailSerializer, AddressSerializer,
     AddressUpdateSerializer)
 from location.serializers import LocationIdNameOnlySerializer, LocationStatusFKSerializer
+from person.helpers import PermissionInfo
 from person.models import Person, Role, PersonStatus
 from person.validators import RoleLocationValidator, RoleCategoryValidator
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
@@ -18,7 +23,7 @@ ROLE_LIST_FIELDS = ('id', 'name', 'role_type', 'location_level')
 ROLE_DETAIL_FIELDS = ROLE_LIST_FIELDS + ('auth_currency', 'auth_amount', 'categories',)
 
 ROLE_CREATE_UPDATE_FIELDS = ROLE_LIST_FIELDS + \
-    ('auth_currency', 'auth_amount', 'dashboard_text', 'categories',)
+    ('auth_currency', 'auth_amount', 'dashboard_text', 'categories', 'permissions',)
 
 
 class RoleListSerializer(BaseCreateSerializer):
@@ -28,20 +33,55 @@ class RoleListSerializer(BaseCreateSerializer):
         fields = ROLE_LIST_FIELDS
 
 
-class RoleCreateSerializer(BaseCreateSerializer):
+class RoleCreateUpdateSerializer(BaseCreateSerializer):
+
+    permissions = serializers.DictField(required=False)
 
     class Meta:
         model = Role
         validators = [RoleCategoryValidator()]
         fields = ROLE_CREATE_UPDATE_FIELDS
 
+    def create(self, validated_data):
+        perm_data = validated_data.pop('permissions', {})
 
-class RoleUpdateSerializer(BaseCreateSerializer):
+        instance = super(RoleCreateUpdateSerializer, self).create(validated_data)
 
-    class Meta:
-        model = Role
-        validators = [RoleCategoryValidator()]
-        fields = ROLE_CREATE_UPDATE_FIELDS
+        update_to_true_perms = [k for k,v in perm_data.items() if v]
+        self._add_permissions_to_update(instance, update_to_true_perms)
+        return instance
+
+    def update(self, instance, validated_data):
+        init_perms = copy.copy(instance.permissions)
+        post_perms = validated_data.pop('permissions', {})
+
+        if init_perms != post_perms:
+            self._add_permissions(instance, init_perms, post_perms)
+            self._remove_permissions(instance, init_perms, post_perms)
+
+        return super(RoleCreateUpdateSerializer, self).update(instance, validated_data)
+
+    def _add_permissions(self, instance, init_perms, post_perms):
+        update_to_true_perms = [k for k,v in post_perms.items()
+                                  if v and post_perms[k] != init_perms.get(k, False)]
+
+        self._add_permissions_to_update(instance, update_to_true_perms)
+
+    def _add_permissions_to_update(self, instance, update_to_true_perms):
+        if update_to_true_perms:
+            perms = self._permissions_to_update(update_to_true_perms)
+            instance.group.permissions.set([p for p in perms])
+
+    def _remove_permissions(self, instance, init_perms, post_perms):
+        update_to_false_perms = [k for k,v in post_perms.items()
+                                   if not v and post_perms[k] != init_perms[k]]
+
+        if update_to_false_perms:
+            perms = self._permissions_to_update(update_to_false_perms)
+            instance.group.permissions.remove(*[p for p in perms])
+
+    def _permissions_to_update(self, perms):
+        return Permission.objects.filter(codename__in=perms)
 
 
 class RoleDetailSerializer(BaseCreateSerializer):
@@ -54,7 +94,7 @@ class RoleDetailSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Role
-        fields = ROLE_DETAIL_FIELDS + ('inherited',)
+        fields = ROLE_DETAIL_FIELDS + ('inherited', 'permissions',)
 
     @staticmethod
     def eager_load(queryset):
