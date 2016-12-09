@@ -4,6 +4,7 @@ import os
 import time
 
 from django.conf import settings
+from django.contrib.auth.models import Permission
 from django.core.urlresolvers import reverse
 from django.test import TestCase, RequestFactory
 from django.utils import timezone
@@ -255,6 +256,26 @@ class BootstrappedDataTests(SetupMixin, TestCase):
         self.assertIn(str(role.id), [c["id"] for c in configuration])
         self.assertFalse([c["default"] for c in configuration if c["name"] == settings.DEFAULT_ROLE])
         
+    def test_roles__permissions(self):
+        mommy.make(Role)
+        perm = Permission.objects.get(codename='change_ticket')
+        self.person.role.group.permissions.add(perm)
+        self.response = self.client.get(reverse('index'))
+
+        configuration = json.loads(self.response.context['role_config'])
+
+        self.assertEqual(len(configuration), 2)
+        # only the logged in Person, self.person, should have a
+        # "permissions" object
+        if configuration[0]['id'] == str(self.person.role.id):
+            role_config, other_role_config = configuration
+        else:
+            other_role_config, role_config = configuration
+        self.assertNotIn('permissions', other_role_config)
+        self.assertEqual(
+            sorted(role_config['permissions']),
+            sorted(self.person.role.permissions))
+
     def test_role_types(self):
         configuration = json.loads(self.response.context['role_types_config'])
         self.assertTrue(len(configuration) > 0)

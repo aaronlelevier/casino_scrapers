@@ -180,13 +180,18 @@ class Role(BaseModel):
     proxy_dashboard_text = InheritedValueField('dashboard_text', [('tenant', 'dashboard_text')])
     proxy_auth_currency = InheritedValueField('auth_currency', [('tenant', 'default_currency')])
 
-    def to_dict(self):
-        return {
+    def to_dict(self, person=None):
+        ret = {
             "id": str(self.id),
             "name": self.name,
             "default": True if self.name == settings.DEFAULT_ROLE else False,
-            "location_level": str(self.location_level.id) if self.location_level else None
+            "location_level": str(self.location_level.id) if self.location_level else None,
         }
+
+        if isinstance(person, Person) and person.role == self:
+            ret["permissions"] = self.permissions
+
+        return ret
 
     def _update_defaults(self):
         if not self.group:

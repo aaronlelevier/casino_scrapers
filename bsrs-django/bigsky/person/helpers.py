@@ -1,3 +1,6 @@
+import json
+
+from django.apps import apps
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.utils.text import capfirst
@@ -13,6 +16,12 @@ def update_group(person, group):
         person.groups.remove(g)
     person.groups.add(group)
     return person
+
+
+def role_to_json_select_related(*args, **kwargs):
+    Role = apps.get_model("person", "role")
+    person = kwargs.get('person', None)
+    return json.dumps([m.to_dict(person) for m in Role.objects.all().select_related(*args)])
 
 
 class PermissionInfo(object):

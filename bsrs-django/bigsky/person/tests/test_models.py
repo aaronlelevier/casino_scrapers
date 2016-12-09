@@ -104,6 +104,14 @@ class RoleTests(TestCase):
         self.assertEqual(ret['name'], self.role.name)
         self.assertEqual(ret['default'], True if self.role.name == settings.DEFAULT_ROLE else False)
         self.assertEqual(ret['location_level'], str(self.role.location_level.id) if self.role.location_level else None)
+        self.assertNotIn('permissions', ret)
+
+    def test_to_dict__persons_role_matches_so_permissions_included(self):
+        person = create_single_person()
+
+        ret = person.role.to_dict(person)
+
+        self.assertIn('permissions', ret)
 
     def test_update_defaults(self):
         self.role.group = None
