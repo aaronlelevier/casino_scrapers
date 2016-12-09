@@ -180,18 +180,13 @@ class Role(BaseModel):
     proxy_dashboard_text = InheritedValueField('dashboard_text', [('tenant', 'dashboard_text')])
     proxy_auth_currency = InheritedValueField('auth_currency', [('tenant', 'default_currency')])
 
-    def to_dict(self, person=None):
-        ret = {
+    def to_dict(self):
+        return {
             "id": str(self.id),
             "name": self.name,
             "default": True if self.name == settings.DEFAULT_ROLE else False,
             "location_level": str(self.location_level.id) if self.location_level else None,
         }
-
-        if isinstance(person, Person) and person.role == self:
-            ret["permissions"] = self.permissions
-
-        return ret
 
     def _update_defaults(self):
         if not self.group:
@@ -483,6 +478,14 @@ class Person(BaseModel, AbstractUser):
             'inherited': self.inherited()
         }
 
+    def to_dict_with_permissions(self, locale):
+        """
+        For use with boostrapping "person_current" and their permissions.
+        """
+        ret = self.to_dict(locale)
+        ret['permissions'] = self.permissions
+        return ret
+
     def to_simple_dict(self):
         return {
             'id': str(self.id),
@@ -604,6 +607,10 @@ class Person(BaseModel, AbstractUser):
         Return a `Bool` if the Person has the Top Level Location.
         """
         return LOCATION_COMPANY in self.locations.values_list('name', flat=True)
+
+    @property
+    def permissions(self):
+        return [x for x in self.role.permissions.keys()]
 
 
 @receiver(post_save, sender=Person)

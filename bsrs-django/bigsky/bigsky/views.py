@@ -15,7 +15,6 @@ from contact.models import PhoneNumberType, AddressType, EmailType, State, Count
 from generic.models import SavedSearch
 from location.models import LocationLevel, LocationStatus
 from person.config import ROLE_TYPES
-from person.helpers import role_to_json_select_related
 from person.models import Role, PersonStatus
 from ticket.models import TicketStatus, TicketPriority
 from translation.models import Locale
@@ -51,7 +50,7 @@ class IndexView(TemplateView):
             'email_types_config': model_to_json(EmailType),
             'phone_number_types_config': model_to_json(PhoneNumberType),
             'address_types': model_to_json(AddressType),
-            'role_config': role_to_json_select_related('location_level', person=self.request.user),
+            'role_config': model_to_json_select_related(Role, 'location_level'),
             'role_types_config': json.dumps(ROLE_TYPES),
             'person_status_config': model_to_json(PersonStatus),
             'location_level_config': model_to_json_prefetch_related(LocationLevel, 'children', 'parents'),
@@ -59,7 +58,7 @@ class IndexView(TemplateView):
             'locales': model_to_json(Locale),
             'currencies': json.dumps({c.code: c.to_dict()
                                       for c in Currency.objects.all()}),
-            'person_current': json.dumps(self.request.user.to_dict(self.locale)),
+            'person_current': json.dumps(self.request.user.to_dict_with_permissions(self.locale)),
             'default_model_ordering': settings.default_model_ordering,
             'saved_search': json.dumps(
                 SavedSearch.objects.person_saved_searches(self.request.user)),

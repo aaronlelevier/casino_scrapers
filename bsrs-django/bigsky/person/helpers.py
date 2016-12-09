@@ -18,12 +18,6 @@ def update_group(person, group):
     return person
 
 
-def role_to_json_select_related(*args, **kwargs):
-    Role = apps.get_model("person", "role")
-    person = kwargs.get('person', None)
-    return json.dumps([m.to_dict(person) for m in Role.objects.all().select_related(*args)])
-
-
 class PermissionInfo(object):
 
     # models that have permissions

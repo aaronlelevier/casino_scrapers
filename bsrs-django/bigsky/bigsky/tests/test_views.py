@@ -242,9 +242,9 @@ class BootstrappedDataTests(SetupMixin, TestCase):
         configuration = json.loads(self.response.context['role_config'])
         self.assertTrue(len(configuration) > 0)
         # the model id shows in the context
-        self.assertIn(str(self.person.role.id), [c["id"] for c in configuration])
-        self.assertIn(str(self.person.role.name), [c["name"] for c in configuration])
-        self.assertIn(str(self.person.role.location_level.id), [c["location_level"] for c in configuration])
+        self.assertIn(str(self.person.role.id), [c['id'] for c in configuration])
+        self.assertIn(str(self.person.role.name), [c['name'] for c in configuration])
+        self.assertIn(str(self.person.role.location_level.id), [c['location_level'] for c in configuration])
         # role (non-default)
         role = Role.objects.first()
         role.location_level = None
@@ -252,29 +252,13 @@ class BootstrappedDataTests(SetupMixin, TestCase):
         role.save()
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['role_config'])
-        self.assertTrue(len(configuration) > 0)
-        self.assertIn(str(role.id), [c["id"] for c in configuration])
-        self.assertFalse([c["default"] for c in configuration if c["name"] == settings.DEFAULT_ROLE])
-        
-    def test_roles__permissions(self):
-        mommy.make(Role)
-        perm = Permission.objects.get(codename='change_ticket')
-        self.person.role.group.permissions.add(perm)
-        self.response = self.client.get(reverse('index'))
-
-        configuration = json.loads(self.response.context['role_config'])
-
-        self.assertEqual(len(configuration), 2)
-        # only the logged in Person, self.person, should have a
-        # "permissions" object
-        if configuration[0]['id'] == str(self.person.role.id):
-            role_config, other_role_config = configuration
-        else:
-            other_role_config, role_config = configuration
-        self.assertNotIn('permissions', other_role_config)
-        self.assertEqual(
-            sorted(role_config['permissions']),
-            sorted(self.person.role.permissions))
+        self.assertEqual(len(configuration), 1)
+        self.assertIsInstance(configuration[0], dict)
+        self.assertEqual(len(configuration[0]), 4)
+        self.assertEqual(configuration[0]['id'], str(role.id))
+        self.assertEqual(configuration[0]['name'], role.name)
+        self.assertFalse([c['default'] for c in configuration if c['name'] == settings.DEFAULT_ROLE])
+        self.assertIn('location_level', configuration[0])
 
     def test_role_types(self):
         configuration = json.loads(self.response.context['role_types_config'])
@@ -381,8 +365,8 @@ class BootstrappedDataTests(SetupMixin, TestCase):
         self.assertEqual(data['locations'][0]['location_level'], str(self.person.locations.first().location_level.id))
         self.assertEqual(data['locations'][0]['status_fk'], str(self.person.locations.first().status.id))
         self.assertEqual(data['locations'][0]['number'], self.person.locations.first().number)
-
         self.assertEqual(data['status_fk'], str(self.person.status.id))
+        self.assertEqual(sorted(data['permissions']), sorted(self.person.permissions))
 
     def test_default_model_ordering(self):
         # Note: this is a Dict Object generated off off URL's and the models,

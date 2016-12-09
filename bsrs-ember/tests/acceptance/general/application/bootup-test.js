@@ -16,8 +16,7 @@ import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currency';
 import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/utilities/urls';
-
-import { RESOURCES_WITH_PERMISSION } from 'bsrs-ember/utilities/constants';
+import { eachPermission } from 'bsrs-ember/utilities/permissions';
 
 const HOME_URL = '/';
 const PREFIX = config.APP.NAMESPACE;
@@ -229,12 +228,9 @@ test('person-currents role comes with a permissions object and the other roles d
   andThen(() => {
     let person_current = store.findOne('person');
     assert.equal(person_current.get('id'), PERSON_CURRENT.id);
-    let role = person_current.get('role');
-    RESOURCES_WITH_PERMISSION.forEach((resource) => {
-      assert.ok(role.get(`permissions_view_${resource}`));
-      assert.ok(role.get(`permissions_add_${resource}`));
-      assert.ok(role.get(`permissions_change_${resource}`));
-      assert.ok(role.get(`permissions_delete_${resource}`));
+    let perms = person_current.get('permissions');
+    eachPermission((resource, prefix) => {
+      assert.ok(perms.indexOf(`${prefix}_${resource}`) > -1);
     });
   });
 });

@@ -100,18 +100,11 @@ class RoleTests(TestCase):
     def test_to_dict(self):
         ret = self.role.to_dict()
 
+        self.assertEqual(len(ret), 4)
         self.assertEqual(ret['id'], str(self.role.id))
         self.assertEqual(ret['name'], self.role.name)
         self.assertEqual(ret['default'], True if self.role.name == settings.DEFAULT_ROLE else False)
         self.assertEqual(ret['location_level'], str(self.role.location_level.id) if self.role.location_level else None)
-        self.assertNotIn('permissions', ret)
-
-    def test_to_dict__persons_role_matches_so_permissions_included(self):
-        person = create_single_person()
-
-        ret = person.role.to_dict(person)
-
-        self.assertIn('permissions', ret)
 
     def test_update_defaults(self):
         self.role.group = None
@@ -707,6 +700,19 @@ class PersonTests(TestCase):
         # remove
         person.locations.remove(top_location)
         self.assertFalse(person.has_top_level_location)
+
+    def test_permissions(self):
+        perms = Permission.objects.filter(codename__in=['add_ticket', 'change_ticket'])
+        role = self.person.role
+        role.group.permissions.set([p for p in perms])
+        self.assertEqual(role.group.permissions.count(), 2)
+
+        ret = self.person.permissions
+
+        self.assertIsInstance(ret, list)
+        self.assertEqual(len(ret), 2)
+        self.assertIn('add_ticket', ret)
+        self.assertIn('change_ticket', ret)
 
 
 ### PASSWORD
