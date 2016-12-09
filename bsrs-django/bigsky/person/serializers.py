@@ -63,7 +63,7 @@ class RoleCreateUpdateSerializer(BaseCreateSerializer):
 
     def _add_permissions(self, instance, init_perms, post_perms):
         update_to_true_perms = [k for k,v in post_perms.items()
-                                  if v and post_perms[k] != init_perms[k]]
+                                  if v and post_perms[k] != init_perms.get(k, False)]
 
         self._add_permissions_to_update(instance, update_to_true_perms)
 
@@ -81,11 +81,7 @@ class RoleCreateUpdateSerializer(BaseCreateSerializer):
             instance.group.permissions.remove(*[p for p in perms])
 
     def _permissions_to_update(self, perms):
-        content_types = PermissionInfo().content_types()
-        return Permission.objects.filter(
-            codename__in=perms,
-            content_type__in=content_types
-        )
+        return Permission.objects.filter(codename__in=perms)
 
 
 class RoleDetailSerializer(BaseCreateSerializer):

@@ -37,7 +37,6 @@ wait
 ./manage.py dumpdata location --indent=2 > fixtures/location.json
 # other
 ./manage.py loaddata fixtures/third_party.json
-./manage.py loaddata fixtures/auth.json
 
 wait
 ./manage.py create_all_people
@@ -55,3 +54,6 @@ wait
 ./manage.py create_automations
 wait
 ./manage.py dumpdata automation --indent=2 > fixtures/automation.json
+
+wait
+./manage.py dumpdata auth --indent=2 > fixtures/auth.json

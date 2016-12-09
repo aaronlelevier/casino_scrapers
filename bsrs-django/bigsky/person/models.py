@@ -269,17 +269,9 @@ class Role(BaseModel):
 
     @property
     def permissions(self):
-        content_types = helpers.PermissionInfo().content_types()
-        role_perms = (self.group.permissions.filter(codename__in=helpers.PermissionInfo.CODENAMES,
-                                                    content_type__in=content_types)
+        role_perms = (self.group.permissions.filter(codename__in=helpers.PermissionInfo.CODENAMES)
                                             .values_list('codename', flat=True))
-        all_perms = helpers.PermissionInfo.ALL_DEFAULTS
-        combined = copy.copy(all_perms)
-
-        for rp in role_perms:
-            combined[rp] = True
-
-        return combined
+        return {p:True for p in role_perms}
 
 
 class ProxyRole(BaseModel):

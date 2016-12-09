@@ -145,15 +145,9 @@ class RoleTests(TestCase):
         ret = self.role.permissions
 
         self.assertIsInstance(ret, dict)
-        self.assertEqual(
-            len([k for k,v in ret.items() if k in role_perms]),
-            2, '2 True perms')
-        # check bool values
-        for k,v in ret.items():
-            if k in role_perms:
-                self.assertTrue(v, "{}: {} != True".format(k, v))
-            else:
-                self.assertFalse(v, "{}: {} != False".format(k, v))
+        self.assertEqual(len(ret), 2)
+        self.assertTrue(ret['add_ticket'])
+        self.assertTrue(ret['change_ticket'])
 
 
 class RolePasswordTests(TestCase):

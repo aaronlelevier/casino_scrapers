@@ -13,6 +13,7 @@ from location.models import (LocationLevel, Location, LocationStatus, LocationTy
     LOCATION_COMPANY, LOCATION_DISTRICT, LOCATION_REGION,)
 from location.tests.factory import (
     create_location, create_locations, create_location_level, create_location_levels)
+from person.helpers import PermissionInfo
 from person.models import Role, Person, PersonStatus
 from tenant.tests.factory import get_or_create_tenant
 from translation.tests.factory import create_locale, LOCALES
@@ -176,6 +177,14 @@ def update_admin(person):
     add_top_level_location(person)
     remove_any_categories(person)
     update_locale(person)
+    grant_all_permissions(person)
+
+
+def grant_all_permissions(person):
+    perm_info = PermissionInfo()
+    perm_info.setUp()
+    perms = perm_info.all()
+    person.role.group.permissions.set([p for p in perms])
 
 
 def update_locale(person):

@@ -1,3 +1,5 @@
+from mock import patch
+
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
@@ -10,6 +12,7 @@ from category.tests.factory import create_single_category, create_categories, RE
 from location.models import (Location, LocationLevel, LOCATION_COMPANY, LOCATION_DISTRICT,
     LOCATION_REGION)
 from location.tests.factory import create_location, create_locations, create_location_levels
+from person.helpers import PermissionInfo
 from person.models import Role, Person
 from person.tests import factory
 from tenant.models import Tenant
@@ -245,7 +248,8 @@ class UpdateAdminTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.client.session['_auth_user_id'], str(person.id))
 
-    def test_update_admin(self):
+    @patch("person.tests.factory.grant_all_permissions")
+    def test_update_admin(self, mock_func):
         top_level_location = Location.objects.create_top_level()
         top_level_location_level = LocationLevel.objects.create_top_level()
         create_locales()
@@ -261,6 +265,32 @@ class UpdateAdminTests(TestCase):
         self.assertIn(top_level_location.id, person_locations)
         self.assertEqual(person.role.location_level, top_level_location_level)
         self.assertFalse(person.role.categories.all())
+        self.assertTrue(mock_func.called)
+        self.assertEqual(mock_func.call_args[0][0], person)
+
+    def test_grant_all_permissions(self):
+        person = factory.create_single_person()
+        self.assertEqual(len(person.role.permissions), 0)
+
+        factory.grant_all_permissions(person)
+
+        self.assertEqual(len(person.role.permissions), 24)
+        self.assertEqual(
+            sorted(person.role.permissions.keys()),
+            sorted(PermissionInfo.ALL_DEFAULTS.keys()))
+
+    def test_update_locale(self):
+        default_locale = 'en'
+        mommy.make(Locale, locale=default_locale)
+        locale = mommy.make(Locale)
+        person = factory.create_single_person()
+        person.locale = locale
+        person.save()
+        self.assertNotEqual(person.locale.locale, default_locale)
+
+        factory.update_locale(person)
+
+        self.assertEqual(person.locale.locale, default_locale)
 
     def test_remove_any_categories(self):
         person = factory.create_single_person()

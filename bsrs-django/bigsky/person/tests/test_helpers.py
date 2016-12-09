@@ -2,6 +2,7 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.test import TestCase
+from django.utils.text import capfirst
 
 from collections import namedtuple
 
@@ -56,17 +57,19 @@ class PermissionInfoTests(TestCase):
                               helpers.PermissionInfo.CODENAMES)
 
     def test_setUp(self):
+        perm_info = helpers.PermissionInfo()
+
         self.assertEqual(
             Permission.objects.filter(codename__startswith='view_').count(), 0)
 
-        helpers.PermissionInfo().setUp()
+        perm_info.setUp()
 
-        post_perms = Permission.objects.filter(codename__startswith='view_')
-        self.assertEqual(post_perms.count(), 6)
-        for p in post_perms:
-            self.assertIn(
-                p.codename,
-                ['view_{}'.format(x) for x in helpers.PermissionInfo.MODELS])
+        ret = perm_info.all()
+        self.assertEqual(ret.count(), 24)
+        for p in helpers.PermissionInfo.PERMS:
+            for m in helpers.PermissionInfo.MODELS:
+                self.assertIsInstance(ret.get(codename="{}_{}".format(p,m)),
+                                      Permission)
 
     def test_all(self):
         perm_info = helpers.PermissionInfo()
@@ -79,20 +82,9 @@ class PermissionInfoTests(TestCase):
         for r in ret:
             self.assertIsInstance(r, Permission)
             perm, model = r.codename.split('_')
+            # self.assertEqual(r.name, 'Can {} {}'.format(perm, model))
             self.assertIn(perm, helpers.PermissionInfo.PERMS)
             self.assertIn(model, helpers.PermissionInfo.MODELS)
             # ContentType
             content_type = ContentType.objects.get(model=model)
             self.assertEqual(content_type.model, model)
-
-    def test_content_types(self):
-        ret = helpers.PermissionInfo().content_types()
-
-        self.assertEqual(ret.count(), 6)
-        for x in helpers.PermissionInfo.CONTENT_TYPE_FIELDS:
-            ModelFieldData = namedtuple('ModelFieldData', ['app_label', 'model'])
-
-            data = ModelFieldData._make(x)._asdict()
-            self.assertIsInstance(
-                ret.get(**data), ContentType,
-                '{app_label}.{model} not returned'.format(**data))

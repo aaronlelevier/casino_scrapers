@@ -82,7 +82,7 @@ class RoleDetailTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['inherited']['auth_currency']['inherits_from'], 'tenant')
         self.assertEqual(data['inherited']['auth_currency']['inherits_from_id'], str(self.role.tenant.id))
 
-    def test_permissions(self):
+    def test_permissions__only_return_true_perms(self):
         all_perms = PermissionInfo().ALL_DEFAULTS
         perms = Permission.objects.filter(codename__in=['add_ticket', 'change_ticket'])
         self.assertEqual(perms.count(), 2)
@@ -92,14 +92,7 @@ class RoleDetailTests(RoleSetupMixin, APITestCase):
 
         data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(data, dict)
-        self.assertEqual(len(data['permissions']), 24)
-        self.assertEqual(
-            sorted(data['permissions'].keys()),
-            sorted(PermissionInfo.ALL_DEFAULTS.keys())
-        )
-        for k,v in data['permissions'].items():
-            self.assertIsInstance(v, bool)
-        # 2 properties should be true from above
+        self.assertEqual(len(data['permissions']), 2)
         self.assertTrue(data['permissions'][perms[0].codename])
         self.assertTrue(data['permissions'][perms[1].codename])
 
