@@ -2,3 +2,15 @@
 	background-color: $dark;
 	// opacity: 0.3;
 }
+.ember-modal-dialog{
+	border-radius: $borderRadius;
+	padding: 1rem;
+	.modal-header{
+		border: none;
+	}
+	.modal-footer{
+		border: none;
+		padding: 1rem 0;
+		text-align: center;
+	}
+}

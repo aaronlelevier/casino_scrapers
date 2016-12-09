@@ -118,6 +118,15 @@ fieldset[disabled] .form-control,
     border-color: $darkGreen;
   }
 }
+.btn-danger{
+  background: $deleteColor;
+  border-color: $deleteColor;
+  &:hover,
+  &:focus{
+    background: $darkOrange;
+    border-color: $darkOrange;
+  }
+}
 .badge{
   background-color: $orange;
   font-size: 1.1rem;

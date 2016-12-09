@@ -16,7 +16,7 @@
       {{else if (is-equal action 'cancel')}}
         <button type="button" class="btn btn-primary t-modal-rollback-btn" {{action "rollback_model"}}>{{t 'crud.yes'}}</button>
       {{else if (is-equal action 'delete' 'deleteAttachment')}}
-        <button type="button" class="btn btn-primary t-modal-delete-btn" {{action "delete_model"}}>{{t 'crud.delete.button'}}</button>
+        <button type="button" class="btn btn-danger t-modal-delete-btn" {{action "delete_model"}}>{{t 'crud.delete.button'}}</button>
       {{/if}}
     </div>
   </div>
