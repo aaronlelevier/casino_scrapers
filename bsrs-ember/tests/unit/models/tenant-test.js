@@ -18,19 +18,21 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import DD from 'bsrs-ember/vendor/defaults/dtd';
 import TenantJoinCountriesD from 'bsrs-ember/vendor/defaults/tenant-join-country';
 
-var store, tenant, currency, inactive_currency;
+var tenant, currency, inactive_currency;
 
 moduleFor('model:tenant', 'Unit | Model | tenant', {
-  needs: ['validator:presence', 'validator:length', 'validator:has-many', 'validator:format', 'validator:unique-username', 'validator:address-street', 'validator:address-postal', 'validator:belongs-to'],
+  needs: ['model:tenant-join-country', 'model:dtd', 'model:person', 'model:country', 'model:currency', 'model:phonenumber', 'model:phone-number-type', 'model:email', 
+    'model:email-type', 'model:address', 'model:state', 'model:address-type', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 
+    'validator:presence', 'validator:length', 'validator:has-many', 'validator:format', 'validator:unique-username', 'validator:address-street', 'validator:address-postal', 'validator:belongs-to'],
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:tenant', 'model:tenant-join-country', 'model:dtd', 'model:person', 'model:country', 'model:currency', 'model:phonenumber', 'model:phone-number-type', 'model:email', 'model:email-type', 'model:address', 'model:state', 'model:address-type', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    this.store = module_registry(this.container, this.registry);
     run(() => {
-      tenant = store.push('tenant', {id: TD.idOne});
+      tenant = this.store.push('tenant', {id: TD.idOne});
     });
   }
 });
 
-test('dirty test | company_name', assert => {
+test('dirty test | company_name', function(assert) {
   assert.equal(tenant.get('isDirty'), false);
   tenant.set('company_name', 'wat');
   assert.equal(tenant.get('isDirty'), true);
@@ -38,7 +40,7 @@ test('dirty test | company_name', assert => {
   assert.equal(tenant.get('isDirty'), false);
 });
 
-test('dirty test | company_code', assert => {
+test('dirty test | company_code', function(assert) {
   assert.equal(tenant.get('isDirty'), false);
   tenant.set('company_code', 'wat');
   assert.equal(tenant.get('isDirty'), true);
@@ -46,7 +48,7 @@ test('dirty test | company_code', assert => {
   assert.equal(tenant.get('isDirty'), false);
 });
 
-test('dirty test | dashboard_text', assert => {
+test('dirty test | dashboard_text', function(assert) {
   assert.equal(tenant.get('isDirty'), false);
   tenant.set('dashboard_text', 'wat');
   assert.equal(tenant.get('isDirty'), true);
@@ -54,7 +56,7 @@ test('dirty test | dashboard_text', assert => {
   assert.equal(tenant.get('isDirty'), false);
 });
 
-test('dirty test | implementation_contact_initial', assert => {
+test('dirty test | implementation_contact_initial', function(assert) {
   assert.equal(tenant.get('isDirty'), false);
   tenant.set('implementation_contact_initial', 'wat');
   assert.equal(tenant.get('isDirty'), true);
@@ -62,7 +64,7 @@ test('dirty test | implementation_contact_initial', assert => {
   assert.equal(tenant.get('isDirty'), false);
 });
 
-test('dirty test | billing_contact', assert => {
+test('dirty test | billing_contact', function(assert) {
   assert.equal(tenant.get('isDirty'), false);
   tenant.set('billing_contact', 'wat');
   assert.equal(tenant.get('isDirty'), true);
@@ -70,7 +72,7 @@ test('dirty test | billing_contact', assert => {
   assert.equal(tenant.get('isDirty'), false);
 });
 
-test('dirty test | test_mode', assert => {
+test('dirty test | test_mode', function(assert) {
   assert.equal(tenant.get('isDirty'), false);
   tenant.set('test_mode', 'wat');
   assert.equal(tenant.get('isDirty'), true);
@@ -78,20 +80,20 @@ test('dirty test | test_mode', assert => {
   assert.equal(tenant.get('isDirty'), false);
 });
 
-test('serialize', assert => {
+test('serialize', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, default_currency_fk: CurrencyD.idOne, billing_phone_number_fk: PND.idOne, billing_email_fk: ED.idOne, implementation_email_fk: ED.idOne});
-    store.push('currency', {id: CurrencyD.idOne, tenants: [TD.idOne]});
-    store.push('tenant-join-country', {id: TenantJoinCountriesD.idOne, tenant_pk: TD.idOne, country_pk: CountriesD.idOne});
-    store.push('country', {id: CountriesD.idOne});
-    store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, tenants: [TD.idOne]});
-    store.push('phone-number-type', {id: PNTD.idOne, phonenumbers: [PND.idOne]});
-    store.push('email', {id: ED.idOne, email: ED.emailOne, tenants: [TD.idOne], tenants_implementation: [TD.idOne]});
-    store.push('email-type', {id: ETD.idOne, name: ED.workEmail, emails: [ED.idOne]});
-    store.push('address', {id: AD.idOne, address: AD.addressOne, city: AD.cityOne, postal_code: AD.zipOne, state_fk: SD.idOne, country_fk: CD.idOne, tenants: [TD.idOne]});
-    store.push('country', {id: CD.idOne, addresses: [AD.idOne]});
-    store.push('state', {id: SD.idOne, addresses: [AD.idOne]});
-    store.push('address-type', {id: ATD.idOne, addresses: [AD.idOne]});
+    tenant = this.store.push('tenant', {id: TD.idOne, company_name: TD.companyNameOne, default_currency_fk: CurrencyD.idOne, billing_phone_number_fk: PND.idOne, billing_email_fk: ED.idOne, implementation_email_fk: ED.idOne});
+    this.store.push('currency', {id: CurrencyD.idOne, tenants: [TD.idOne]});
+    this.store.push('tenant-join-country', {id: TenantJoinCountriesD.idOne, tenant_pk: TD.idOne, country_pk: CountriesD.idOne});
+    this.store.push('country', {id: CountriesD.idOne});
+    this.store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, tenants: [TD.idOne]});
+    this.store.push('phone-number-type', {id: PNTD.idOne, phonenumbers: [PND.idOne]});
+    this.store.push('email', {id: ED.idOne, email: ED.emailOne, tenants: [TD.idOne], tenants_implementation: [TD.idOne]});
+    this.store.push('email-type', {id: ETD.idOne, name: ED.workEmail, emails: [ED.idOne]});
+    this.store.push('address', {id: AD.idOne, address: AD.addressOne, city: AD.cityOne, postal_code: AD.zipOne, state_fk: SD.idOne, country_fk: CD.idOne, tenants: [TD.idOne]});
+    this.store.push('country', {id: CD.idOne, addresses: [AD.idOne]});
+    this.store.push('state', {id: SD.idOne, addresses: [AD.idOne]});
+    this.store.push('address-type', {id: ATD.idOne, addresses: [AD.idOne]});
   });
   let ret = tenant.serialize();
   assert.equal(ret.id, TD.idOne);
@@ -119,19 +121,19 @@ test('serialize', assert => {
 });
 
 /* CURRENCY */
-test('related currency should return one currency for a tenant', (assert) => {
+test('related currency should return one currency for a tenant', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, default_currency_fk: CurrencyD.idOne});
-    store.push('currency', {id: CurrencyD.idOne, tenants: [TD.idOne]});
+    tenant = this.store.push('tenant', {id: TD.idOne, default_currency_fk: CurrencyD.idOne});
+    this.store.push('currency', {id: CurrencyD.idOne, tenants: [TD.idOne]});
   });
   assert.equal(tenant.get('default_currency').get('id'), CurrencyD.idOne);
 });
 
-test('change_default_currency - will update the currencys currency and dirty the model', (assert) => {
+test('change_default_currency - will update the currencys currency and dirty the model', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, default_currency_fk: undefined});
-    store.push('currency', {id: CurrencyD.idOne, tenants: []});
-    inactive_currency = store.push('currency', {id: CurrencyD.idTwo, tenants: []});
+    tenant = this.store.push('tenant', {id: TD.idOne, default_currency_fk: undefined});
+    this.store.push('currency', {id: CurrencyD.idOne, tenants: []});
+    inactive_currency = this.store.push('currency', {id: CurrencyD.idTwo, tenants: []});
   });
   assert.equal(tenant.get('default_currency'), undefined);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
@@ -143,11 +145,11 @@ test('change_default_currency - will update the currencys currency and dirty the
   assert.ok(tenant.get('defaultCurrencyIsDirty'));
 });
 
-test('saveDefaultCurrency - currency - tenant will set default_currency_fk to current currency id', (assert) => {
+test('saveDefaultCurrency - currency - tenant will set default_currency_fk to current currency id', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, default_currency_fk: CurrencyD.idOne});
-    store.push('currency', {id: CurrencyD.idOne, tenants: [TD.idOne]});
-    inactive_currency = store.push('currency', {id: CurrencyD.idTwo, tenants: []});
+    tenant = this.store.push('tenant', {id: TD.idOne, default_currency_fk: CurrencyD.idOne});
+    this.store.push('currency', {id: CurrencyD.idOne, tenants: [TD.idOne]});
+    inactive_currency = this.store.push('currency', {id: CurrencyD.idTwo, tenants: []});
   });
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(tenant.get('default_currency_fk'), CurrencyD.idOne);
@@ -164,11 +166,11 @@ test('saveDefaultCurrency - currency - tenant will set default_currency_fk to cu
   assert.equal(tenant.get('default_currency.id'), CurrencyD.idTwo);
 });
 
-test('rollbackDefaultCurrency - currency - tenant will set currency to current default_currency_fk', (assert) => {
+test('rollbackDefaultCurrency - currency - tenant will set currency to current default_currency_fk', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, default_currency_fk: CurrencyD.idOne});
-    store.push('currency', {id: CurrencyD.idOne, tenants: [TD.idOne]});
-    inactive_currency = store.push('currency', {id: CurrencyD.idTwo, tenants: []});
+    tenant = this.store.push('tenant', {id: TD.idOne, default_currency_fk: CurrencyD.idOne});
+    this.store.push('currency', {id: CurrencyD.idOne, tenants: [TD.idOne]});
+    inactive_currency = this.store.push('currency', {id: CurrencyD.idTwo, tenants: []});
   });
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(tenant.get('default_currency_fk'), CurrencyD.idOne);
@@ -186,19 +188,19 @@ test('rollbackDefaultCurrency - currency - tenant will set currency to current d
 });
 
 /* billing_phone_number */
-test('related billing_phone_number should return one billing_phone_number for a tenant', (assert) => {
+test('related billing_phone_number should return one billing_phone_number for a tenant', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, billing_phone_number_fk: PND.idOne});
-    store.push('phonenumber', {id: PND.idOne, tenants: [TD.idOne]});
+    tenant = this.store.push('tenant', {id: TD.idOne, billing_phone_number_fk: PND.idOne});
+    this.store.push('phonenumber', {id: PND.idOne, tenants: [TD.idOne]});
   });
   assert.equal(tenant.get('billing_phone_number').get('id'), PND.idOne);
 });
 
-test('change_billing_phone_number - will update the tenants billing_phone_number and setting type will dirty the model', (assert) => {
+test('change_billing_phone_number - will update the tenants billing_phone_number and setting type will dirty the model', function(assert) {
   let related_phone;
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, billing_phone_number_fk: undefined});
-    store.push('phonenumber', {id: PND.idOne, tenants: []});
+    tenant = this.store.push('tenant', {id: TD.idOne, billing_phone_number_fk: undefined});
+    this.store.push('phonenumber', {id: PND.idOne, tenants: []});
   });
   assert.equal(tenant.get('billing_phone_number'), undefined);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
@@ -214,12 +216,12 @@ test('change_billing_phone_number - will update the tenants billing_phone_number
   assert.ok(tenant.get('billingPhoneNumberIsDirty'));
 });
 
-test('saveBillingPhoneNumber - billing_phone_number - tenant will set billing_phone_number_fk to current billing_phone_number id', (assert) => {
+test('saveBillingPhoneNumber - billing_phone_number - tenant will set billing_phone_number_fk to current billing_phone_number id', function(assert) {
   let other_billing_phone_number;
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, billing_phone_number_fk: PND.idOne});
-    store.push('phonenumber', {id: PND.idOne, tenants: [TD.idOne]});
-    other_billing_phone_number = store.push('phonenumber', {id: PND.idTwo, tenants: []});
+    tenant = this.store.push('tenant', {id: TD.idOne, billing_phone_number_fk: PND.idOne});
+    this.store.push('phonenumber', {id: PND.idOne, tenants: [TD.idOne]});
+    other_billing_phone_number = this.store.push('phonenumber', {id: PND.idTwo, tenants: []});
   });
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(tenant.get('billing_phone_number_fk'), PND.idOne);
@@ -238,12 +240,12 @@ test('saveBillingPhoneNumber - billing_phone_number - tenant will set billing_ph
   assert.equal(tenant.get('billing_phone_number.id'), PND.idTwo);
 });
 
-test('rollbackBillingPhoneNumber - billing_phone_number - tenant will set billing_phone_number to current billing_phone_number_fk', (assert) => {
+test('rollbackBillingPhoneNumber - billing_phone_number - tenant will set billing_phone_number to current billing_phone_number_fk', function(assert) {
   let other_billing_phone_number;
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, billing_phone_number_fk: PND.idOne});
-    store.push('phonenumber', {id: PND.idOne, tenants: [TD.idOne]});
-    other_billing_phone_number = store.push('phonenumber', {id: PND.idTwo, tenants: []});
+    tenant = this.store.push('tenant', {id: TD.idOne, billing_phone_number_fk: PND.idOne});
+    this.store.push('phonenumber', {id: PND.idOne, tenants: [TD.idOne]});
+    other_billing_phone_number = this.store.push('phonenumber', {id: PND.idTwo, tenants: []});
   });
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(tenant.get('billing_phone_number_fk'), PND.idOne);
@@ -263,20 +265,20 @@ test('rollbackBillingPhoneNumber - billing_phone_number - tenant will set billin
 });
 
 /* BILLING EMAIL */
-test('related billing email should return one email for a tenant', (assert) => {
+test('related billing email should return one email for a tenant', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, billing_email_fk: ED.idOne});
-    store.push('email', {id: ED.idOne, tenants: [TD.idOne]});
+    tenant = this.store.push('tenant', {id: TD.idOne, billing_email_fk: ED.idOne});
+    this.store.push('email', {id: ED.idOne, tenants: [TD.idOne]});
   });
   assert.equal(tenant.get('billing_email').get('id'), ED.idOne);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('change_billing_email - should update the tenants email and  setting the type or email should dirty the model', (assert) => {
+test('change_billing_email - should update the tenants email and  setting the type or email should dirty the model', function(assert) {
   let related_email;
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, billing_email_fk: undefined});
-    store.push('email', {id: ED.idOne, tenants: []});
+    tenant = this.store.push('tenant', {id: TD.idOne, billing_email_fk: undefined});
+    this.store.push('email', {id: ED.idOne, tenants: []});
   });
   assert.equal(tenant.get('billing_email'), undefined);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
@@ -292,12 +294,12 @@ test('change_billing_email - should update the tenants email and  setting the ty
   assert.ok(tenant.get('billingEmailIsDirty'));
 });
 
-test('saveBillingEmail - email - tenant will set email_fk to current email id', (assert) => {
+test('saveBillingEmail - email - tenant will set email_fk to current email id', function(assert) {
   let other_email;
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, billing_email_fk: ED.idOne});
-    store.push('email', {id: ED.idOne, tenants: [TD.idOne]});
-    other_email = store.push('email', {id: ED.idTwo, tenants: []});
+    tenant = this.store.push('tenant', {id: TD.idOne, billing_email_fk: ED.idOne});
+    this.store.push('email', {id: ED.idOne, tenants: [TD.idOne]});
+    other_email = this.store.push('email', {id: ED.idTwo, tenants: []});
   });
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(tenant.get('billing_email_fk'), ED.idOne);
@@ -317,12 +319,12 @@ test('saveBillingEmail - email - tenant will set email_fk to current email id', 
   assert.equal(tenant.get('billing_email.id'), ED.idTwo);
 });
 
-test('rollbackBillingEmail - email - tenant will set email to current email_fk', (assert) => {
+test('rollbackBillingEmail - email - tenant will set email to current email_fk', function(assert) {
   let other_email;
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, billing_email_fk: ED.idOne});
-    store.push('email', {id: ED.idOne, tenants: [TD.idOne]});
-    other_email = store.push('email', {id: ED.idTwo, tenants: []});
+    tenant = this.store.push('tenant', {id: TD.idOne, billing_email_fk: ED.idOne});
+    this.store.push('email', {id: ED.idOne, tenants: [TD.idOne]});
+    other_email = this.store.push('email', {id: ED.idTwo, tenants: []});
   });
   assert.equal(tenant.get('isNotDirtyOrRelatedNotDirty'), true);
   assert.equal(tenant.get('billingEmailIsDirty'), false);
@@ -350,20 +352,20 @@ test('rollbackBillingEmail - email - tenant will set email to current email_fk',
 });
 
 /* BILLING ADDRESS */
-test('related billing address should return one address for a tenant', (assert) => {
+test('related billing address should return one address for a tenant', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, billing_address_fk: AD.idOne});
-    store.push('address', {id: AD.idOne, tenants: [TD.idOne]});
+    tenant = this.store.push('tenant', {id: TD.idOne, billing_address_fk: AD.idOne});
+    this.store.push('address', {id: AD.idOne, tenants: [TD.idOne]});
   });
   assert.equal(tenant.get('billing_address').get('id'), AD.idOne);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('change_billing_address - will update the tenants address and setting the type should dirty the model', (assert) => {
+test('change_billing_address - will update the tenants address and setting the type should dirty the model', function(assert) {
   let related_address;
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, billing_address_fk: undefined});
-    store.push('address', {id: AD.idOne, tenants: []});
+    tenant = this.store.push('tenant', {id: TD.idOne, billing_address_fk: undefined});
+    this.store.push('address', {id: AD.idOne, tenants: []});
   });
   assert.equal(tenant.get('billing_address'), undefined);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
@@ -379,12 +381,12 @@ test('change_billing_address - will update the tenants address and setting the t
   assert.ok(tenant.get('billingAddressIsDirty'));
 });
 
-test('saveBillingAddress - address - tenant will set address_fk to current address id', (assert) => {
+test('saveBillingAddress - address - tenant will set address_fk to current address id', function(assert) {
   let other_address;
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, billing_address_fk: AD.idOne});
-    store.push('address', {id: AD.idOne, tenants: [TD.idOne]});
-    other_address = store.push('address', {id: AD.idTwo, tenants: []});
+    tenant = this.store.push('tenant', {id: TD.idOne, billing_address_fk: AD.idOne});
+    this.store.push('address', {id: AD.idOne, tenants: [TD.idOne]});
+    other_address = this.store.push('address', {id: AD.idTwo, tenants: []});
   });
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(tenant.get('billing_address_fk'), AD.idOne);
@@ -404,12 +406,12 @@ test('saveBillingAddress - address - tenant will set address_fk to current addre
   assert.equal(tenant.get('billing_address.id'), AD.idTwo);
 });
 
-test('rollbackBillingAddress - address - tenant will set address to current address_fk', (assert) => {
+test('rollbackBillingAddress - address - tenant will set address to current address_fk', function(assert) {
   let other_address;
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, billing_address_fk: AD.idOne});
-    store.push('address', {id: AD.idOne, tenants: [TD.idOne]});
-    other_address = store.push('address', {id: AD.idTwo, tenants: []});
+    tenant = this.store.push('tenant', {id: TD.idOne, billing_address_fk: AD.idOne});
+    this.store.push('address', {id: AD.idOne, tenants: [TD.idOne]});
+    other_address = this.store.push('address', {id: AD.idTwo, tenants: []});
   });
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(tenant.get('billing_address_fk'), AD.idOne);
@@ -431,20 +433,20 @@ test('rollbackBillingAddress - address - tenant will set address to current addr
 });
 
 /* IMPLEMENTATION EMAIL */
-test('related implementation email should return one email for a tenant', (assert) => {
+test('related implementation email should return one email for a tenant', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, implementation_email_fk: ED.idOne});
-    store.push('email', {id: ED.idOne, tenants_implementation: [TD.idOne]});
+    tenant = this.store.push('tenant', {id: TD.idOne, implementation_email_fk: ED.idOne});
+    this.store.push('email', {id: ED.idOne, tenants_implementation: [TD.idOne]});
   });
   assert.equal(tenant.get('implementation_email').get('id'), ED.idOne);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('change_implementation_email - should update the tenants_implementation email and dirty the model when type or email are set', (assert) => {
+test('change_implementation_email - should update the tenants_implementation email and dirty the model when type or email are set', function(assert) {
   let related_email;
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, implementation_email_fk: undefined});
-    store.push('email', {id: ED.idOne, tenants_implementation: []});
+    tenant = this.store.push('tenant', {id: TD.idOne, implementation_email_fk: undefined});
+    this.store.push('email', {id: ED.idOne, tenants_implementation: []});
   });
   assert.equal(tenant.get('implementation_email'), undefined);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
@@ -460,12 +462,12 @@ test('change_implementation_email - should update the tenants_implementation ema
   assert.ok(tenant.get('implementationEmailIsDirty'));
 });
 
-test('saveImplementationEmail - email - tenant will set email_fk to current email id', (assert) => {
+test('saveImplementationEmail - email - tenant will set email_fk to current email id', function(assert) {
   let other_email;
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, implementation_email_fk: ED.idOne});
-    store.push('email', {id: ED.idOne, tenants_implementation: [TD.idOne]});
-    other_email = store.push('email', {id: ED.idTwo, tenants_implementation: []});
+    tenant = this.store.push('tenant', {id: TD.idOne, implementation_email_fk: ED.idOne});
+    this.store.push('email', {id: ED.idOne, tenants_implementation: [TD.idOne]});
+    other_email = this.store.push('email', {id: ED.idTwo, tenants_implementation: []});
   });
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(tenant.get('implementation_email_fk'), ED.idOne);
@@ -485,12 +487,12 @@ test('saveImplementationEmail - email - tenant will set email_fk to current emai
   assert.equal(tenant.get('implementation_email.id'), ED.idTwo);
 });
 
-test('rollbackImplementationEmail - email - tenant will set email to current email_fk', (assert) => {
+test('rollbackImplementationEmail - email - tenant will set email to current email_fk', function(assert) {
   let other_email;
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, implementation_email_fk: ED.idOne});
-    store.push('email', {id: ED.idOne, tenants_implementation: [TD.idOne]});
-    other_email = store.push('email', {id: ED.idTwo, tenants_implementation: []});
+    tenant = this.store.push('tenant', {id: TD.idOne, implementation_email_fk: ED.idOne});
+    this.store.push('email', {id: ED.idOne, tenants_implementation: [TD.idOne]});
+    other_email = this.store.push('email', {id: ED.idTwo, tenants_implementation: []});
   });
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(tenant.get('implementation_email_fk'), ED.idOne);
@@ -511,18 +513,18 @@ test('rollbackImplementationEmail - email - tenant will set email to current ema
 });
 
 /* IMPLEMENTATION CONTACT */
-test('related implementation contact should return one contact for a tenant', (assert) => {
+test('related implementation contact should return one contact for a tenant', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, implementation_contact_fk: PD.idOne});
-    store.push('person', {id: PD.idOne, tenants_implementation_contact: [TD.idOne]});
+    tenant = this.store.push('tenant', {id: TD.idOne, implementation_contact_fk: PD.idOne});
+    this.store.push('person', {id: PD.idOne, tenants_implementation_contact: [TD.idOne]});
   });
   assert.equal(tenant.get('implementation_contact').get('id'), PD.idOne);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('change_implementation_contact changes the implementation_contact property on the tenant', (assert) => {
+test('change_implementation_contact changes the implementation_contact property on the tenant', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne});
+    tenant = this.store.push('tenant', {id: TD.idOne});
   });
   assert.equal(tenant.get('implementation_contact'), undefined);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
@@ -530,9 +532,9 @@ test('change_implementation_contact changes the implementation_contact property 
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
 });
 
-test('saveRelated - implementation_contact - saves the new contact, and the tenant is clean', (assert) => {
+test('saveRelated - implementation_contact - saves the new contact, and the tenant is clean', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne});
+    tenant = this.store.push('tenant', {id: TD.idOne});
   });
   assert.equal(tenant.get('implementation_contact'), undefined);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
@@ -542,9 +544,9 @@ test('saveRelated - implementation_contact - saves the new contact, and the tena
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('rollback - implementation_contact - rolls back any changes for the implementation_contact', (assert) => {
+test('rollback - implementation_contact - rolls back any changes for the implementation_contact', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne});
+    tenant = this.store.push('tenant', {id: TD.idOne});
   });
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(tenant.get('implementation_contact.id'), undefined);
@@ -557,18 +559,18 @@ test('rollback - implementation_contact - rolls back any changes for the impleme
 });
 
 /* DTD */
-test('related implementation contact should return one contact for a tenant', (assert) => {
+test('related implementation contact should return one contact for a tenant', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, dtd_start_fk: DD.idOne});
-    store.push('dtd', {id: DD.idOne, tenants_dtd_start: [TD.idOne]});
+    tenant = this.store.push('tenant', {id: TD.idOne, dtd_start_fk: DD.idOne});
+    this.store.push('dtd', {id: DD.idOne, tenants_dtd_start: [TD.idOne]});
   });
   assert.equal(tenant.get('dtd_start').get('id'), DD.idOne);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('change_dtd_start changes the dtd_start property on the tenant', (assert) => {
+test('change_dtd_start changes the dtd_start property on the tenant', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne});
+    tenant = this.store.push('tenant', {id: TD.idOne});
   });
   assert.equal(tenant.get('dtd_start'), undefined);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
@@ -576,9 +578,9 @@ test('change_dtd_start changes the dtd_start property on the tenant', (assert) =
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
 });
 
-test('saveRelated - dtd_start - saves the new contact, and the tenant is clean', (assert) => {
+test('saveRelated - dtd_start - saves the new contact, and the tenant is clean', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne});
+    tenant = this.store.push('tenant', {id: TD.idOne});
   });
   assert.equal(tenant.get('dtd_start'), undefined);
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
@@ -588,9 +590,9 @@ test('saveRelated - dtd_start - saves the new contact, and the tenant is clean',
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('rollback - dtd_start - rolls back any changes for the dtd_start', (assert) => {
+test('rollback - dtd_start - rolls back any changes for the dtd_start', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne});
+    tenant = this.store.push('tenant', {id: TD.idOne});
   });
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(tenant.get('dtd_start.id'), undefined);
@@ -603,12 +605,12 @@ test('rollback - dtd_start - rolls back any changes for the dtd_start', (assert)
 });
 
 /* COUNTRIES */
-test('countries property should return all associated countries. also confirm related and join model attr values', (assert) => {
+test('countries property should return all associated countries. also confirm related and join model attr values', function(assert) {
   let countries;
   run(() => {
-    store.push('tenant-join-country', {id: TenantJoinCountriesD.idOne, tenant_pk: TD.idOne, country_pk: CountriesD.idOne});
-    tenant = store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountriesD.idOne]});
-    store.push('country', {id: CountriesD.idOne});
+    this.store.push('tenant-join-country', {id: TenantJoinCountriesD.idOne, tenant_pk: TD.idOne, country_pk: CountriesD.idOne});
+    tenant = this.store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountriesD.idOne]});
+    this.store.push('country', {id: CountriesD.idOne});
     countries = tenant.get('countries');
   });
   assert.equal(countries.get('length'), 1);
@@ -617,29 +619,29 @@ test('countries property should return all associated countries. also confirm re
   assert.equal(countries.objectAt(0).get('id'), CountriesD.idOne);
 });
 
-test('countries property is not dirty when no countries present (undefined)', (assert) => {
+test('countries property is not dirty when no countries present (undefined)', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, tenant_countries_fks: undefined});
-    store.push('country', {id: CountriesD.id});
+    tenant = this.store.push('tenant', {id: TD.idOne, tenant_countries_fks: undefined});
+    this.store.push('country', {id: CountriesD.id});
   });
   assert.equal(tenant.get('countries').get('length'), 0);
   assert.ok(tenant.get('countriesIsNotDirty'));
 });
 
-test('countries property is not dirty when no countries present (empty array)', (assert) => {
+test('countries property is not dirty when no countries present (empty array)', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, tenant_countries_fks: []});
-    store.push('country', {id: CountriesD.id});
+    tenant = this.store.push('tenant', {id: TD.idOne, tenant_countries_fks: []});
+    this.store.push('country', {id: CountriesD.id});
   });
   assert.equal(tenant.get('countries').get('length'), 0);
   assert.ok(tenant.get('countriesIsNotDirty'));
 });
 
-test('remove_country - will remove join model and mark model as dirty', (assert) => {
+test('remove_country - will remove join model and mark model as dirty', function(assert) {
   run(() => {
-    store.push('tenant-join-country', {id: TenantJoinCountriesD.idOne, tenant_pk: TD.idOne, country_pk: CountriesD.idOne});
-    store.push('country', {id: CountriesD.idOne});
-    tenant = store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountriesD.idOne]});
+    this.store.push('tenant-join-country', {id: TenantJoinCountriesD.idOne, tenant_pk: TD.idOne, country_pk: CountriesD.idOne});
+    this.store.push('country', {id: CountriesD.idOne});
+    tenant = this.store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountriesD.idOne]});
   });
   assert.equal(tenant.get('countries').get('length'), 1);
   assert.equal(tenant.get('tenant_countries_ids').length, 1);
@@ -654,11 +656,11 @@ test('remove_country - will remove join model and mark model as dirty', (assert)
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
 });
 
-test('add_country - will create join model and mark model dirty', (assert) => {
+test('add_country - will create join model and mark model dirty', function(assert) {
   run(() => {
-    store.push('tenant-join-country', {id: TenantJoinCountriesD.idOne, tenant_pk: TD.idOne, country_pk: CountriesD.idOne});
-    store.push('country', {id: CountriesD.idOne});
-    tenant = store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountriesD.idOne]});
+    this.store.push('tenant-join-country', {id: TenantJoinCountriesD.idOne, tenant_pk: TD.idOne, country_pk: CountriesD.idOne});
+    this.store.push('country', {id: CountriesD.idOne});
+    tenant = this.store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountriesD.idOne]});
   });
   assert.equal(tenant.get('countries').get('length'), 1);
   assert.equal(tenant.get('tenant_countries_ids').length, 1);
@@ -677,14 +679,14 @@ test('add_country - will create join model and mark model dirty', (assert) => {
   assert.ok(tenant.get('isDirtyOrRelatedDirty'));
 });
 
-test('saveCountries - countries - will reset the previous countries with multiple tenants', (assert) => {
+test('saveCountries - countries - will reset the previous countries with multiple tenants', function(assert) {
   let countries_unused = {id: CountriesD.unusedId};
   run(() => {
-    store.push('country', {id: CountriesD.idOne});
-    store.push('country', {id: CountriesD.idTwo});
-    store.push('tenant-join-country', {id: TenantJoinCountriesD.idOne, tenant_pk: TD.idOne, country_pk: CountriesD.idOne});
-    store.push('tenant-join-country', {id: TenantJoinCountriesD.idTwo, tenant_pk: TD.idOne, country_pk: CountriesD.idTwo});
-    tenant = store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountriesD.idOne, TenantJoinCountriesD.idTwo]});
+    this.store.push('country', {id: CountriesD.idOne});
+    this.store.push('country', {id: CountriesD.idTwo});
+    this.store.push('tenant-join-country', {id: TenantJoinCountriesD.idOne, tenant_pk: TD.idOne, country_pk: CountriesD.idOne});
+    this.store.push('tenant-join-country', {id: TenantJoinCountriesD.idTwo, tenant_pk: TD.idOne, country_pk: CountriesD.idTwo});
+    tenant = this.store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountriesD.idOne, TenantJoinCountriesD.idTwo]});
   });
   assert.equal(tenant.get('countries').get('length'), 2);
   tenant.remove_country(CountriesD.idOne);
@@ -707,14 +709,14 @@ test('saveCountries - countries - will reset the previous countries with multipl
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('rollbackCountries - countries - multiple tenants with the same countries will rollbackCountries correctly', (assert) => {
+test('rollbackCountries - countries - multiple tenants with the same countries will rollbackCountries correctly', function(assert) {
   let tenant_two;
   run(() => {
-    store.push('tenant-join-country', {id: TenantJoinCountriesD.idOne, tenant_pk: TD.idOne, country_pk: CountriesD.idOne});
-    store.push('tenant-join-country', {id: TenantJoinCountriesD.idTwo, tenant_pk: TD.idTwo, country_pk: CountriesD.idOne});
-    store.push('country', {id: CountriesD.idOne});
-    tenant = store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountriesD.idOne]});
-    tenant_two = store.push('tenant', {id: TD.idTwo, tenant_countries_fks: [TenantJoinCountriesD.idTwo]});
+    this.store.push('tenant-join-country', {id: TenantJoinCountriesD.idOne, tenant_pk: TD.idOne, country_pk: CountriesD.idOne});
+    this.store.push('tenant-join-country', {id: TenantJoinCountriesD.idTwo, tenant_pk: TD.idTwo, country_pk: CountriesD.idOne});
+    this.store.push('country', {id: CountriesD.idOne});
+    tenant = this.store.push('tenant', {id: TD.idOne, tenant_countries_fks: [TenantJoinCountriesD.idOne]});
+    tenant_two = this.store.push('tenant', {id: TD.idTwo, tenant_countries_fks: [TenantJoinCountriesD.idTwo]});
   });
   assert.equal(tenant.get('countries').get('length'), 1);
   assert.equal(tenant_two.get('countries').get('length'), 1);
@@ -754,10 +756,10 @@ test('rollbackCountries - countries - multiple tenants with the same countries w
 
 /* Over Arching Test of saveRelated / rollBack */
 
-test('saveRelated currency - change currency and save', assert => {
+test('saveRelated currency - change currency and save', function(assert) {
   // currency
   run(() => {
-    inactive_currency = store.push('currency', {id: CurrencyD.idTwo, tenants: []});
+    inactive_currency = this.store.push('currency', {id: CurrencyD.idTwo, tenants: []});
   });
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   tenant.change_default_currency({id: inactive_currency.get('id')});
@@ -766,11 +768,11 @@ test('saveRelated currency - change currency and save', assert => {
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('saveRelated countries - change countries and save', assert => {
+test('saveRelated countries - change countries and save', function(assert) {
   // countries
   assert.equal(tenant.get('countries').get('length'), 0);
   run(() => {
-    store.push('country', {id: CountriesD.idOne});
+    this.store.push('country', {id: CountriesD.idOne});
   });
   tenant.add_country({id: CountriesD.idOne});
   assert.equal(tenant.get('countries').get('length'), 1);
@@ -779,7 +781,7 @@ test('saveRelated countries - change countries and save', assert => {
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('saveRelated implemention email - change email and save', assert => {
+test('saveRelated implemention email - change email and save', function(assert) {
   // implementation email
   tenant.change_implementation_email({id: ED.idOne});
   let email = tenant.get('implementation_email');
@@ -792,7 +794,7 @@ test('saveRelated implemention email - change email and save', assert => {
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('saveRelated billing email - change email and save', assert => {
+test('saveRelated billing email - change email and save', function(assert) {
   // implementation email
   tenant.change_billing_email({id: ED.idOne});
   let email = tenant.get('billing_email');
@@ -805,7 +807,7 @@ test('saveRelated billing email - change email and save', assert => {
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('saveRelated billing phone - change phone and save', assert => {
+test('saveRelated billing phone - change phone and save', function(assert) {
   // implementation email
   tenant.change_billing_phone_number({id: PND.idOne});
   let phone = tenant.get('billing_phone_number');
@@ -818,7 +820,7 @@ test('saveRelated billing phone - change phone and save', assert => {
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('saveRelated billing address - change address and save', assert => {
+test('saveRelated billing address - change address and save', function(assert) {
   // implementation email
   tenant.change_billing_address({id: AD.idOne});
   let address = tenant.get('billing_address');
@@ -831,12 +833,12 @@ test('saveRelated billing address - change address and save', assert => {
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('rollback - currency and countries', assert => {
+test('rollback - currency and countries', function(assert) {
   // currency
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, default_currency_fk: CurrencyD.idOne});
-    currency = store.push('currency', {id: CurrencyD.idOne, tenants: [TD.idOne]});
-    inactive_currency = store.push('currency', {id: CurrencyD.idTwo, tenants: []});
+    tenant = this.store.push('tenant', {id: TD.idOne, default_currency_fk: CurrencyD.idOne});
+    currency = this.store.push('currency', {id: CurrencyD.idOne, tenants: [TD.idOne]});
+    inactive_currency = this.store.push('currency', {id: CurrencyD.idTwo, tenants: []});
   });
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   tenant.change_default_currency({id: inactive_currency.get('id')});
@@ -848,7 +850,7 @@ test('rollback - currency and countries', assert => {
   // countries
   assert.equal(tenant.get('countries').get('length'), 0);
   run(() => {
-    store.push('country', {id: CountriesD.idOne});
+    this.store.push('country', {id: CountriesD.idOne});
   });
   tenant.add_country({id: CountriesD.idOne});
   assert.equal(tenant.get('countries').get('length'), 1);
@@ -858,9 +860,9 @@ test('rollback - currency and countries', assert => {
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('rollback - related contact models', assert => {
+test('rollback - related contact models', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne});
+    tenant = this.store.push('tenant', {id: TD.idOne});
   });
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
   // implementation email
@@ -893,10 +895,10 @@ test('rollback - related contact models', assert => {
   assert.ok(tenant.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('tenant validations', assert => {
+test('tenant validations', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne, billing_email_fk: ED.idOne, implementation_email_fk: ED.idOne, default_currency_fk: CurrencyD.idOne});
-    store.push('email', {id: ED.idOne, tenants: [TD.idOne], tenants_implementation: [TD.idOne]});
+    tenant = this.store.push('tenant', {id: TD.idOne, billing_email_fk: ED.idOne, implementation_email_fk: ED.idOne, default_currency_fk: CurrencyD.idOne});
+    this.store.push('email', {id: ED.idOne, tenants: [TD.idOne], tenants_implementation: [TD.idOne]});
   });
   const attrs = tenant.get('validations').get('attrs');
   assert.ok(attrs.get('company_name'));
@@ -915,9 +917,9 @@ test('tenant validations', assert => {
   assert.deepEqual(attrs.get('implementation_contact_initial').get('messages'), ['errors.tenant.implementation_contact_initial']);
 });
 
-test('correctly has billing email msgs based on state', assert => {
+test('correctly has billing email msgs based on state', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne});
+    tenant = this.store.push('tenant', {id: TD.idOne});
   });
   const attrs = tenant.get('validations').get('attrs');
   tenant.change_billing_email({id: ED.idOne});
@@ -926,9 +928,9 @@ test('correctly has billing email msgs based on state', assert => {
   assert.deepEqual(attrs.get('billing_email.messages'), []);
 });
 
-test('correctly has implementation email msgs based on state', assert => {
+test('correctly has implementation email msgs based on state', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne});
+    tenant = this.store.push('tenant', {id: TD.idOne});
   });
   const attrs = tenant.get('validations').get('attrs');
   tenant.change_implementation_email({id: ED.idOne});
@@ -937,9 +939,9 @@ test('correctly has implementation email msgs based on state', assert => {
   assert.deepEqual(attrs.get('implementation_email.messages'), []);
 });
 
-test('correctly has billing phone_number msgs based on state', assert => {
+test('correctly has billing phone_number msgs based on state', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne});
+    tenant = this.store.push('tenant', {id: TD.idOne});
   });
   const attrs = tenant.get('validations').get('attrs');
   tenant.change_billing_phone_number({id: PND.idOne});
@@ -948,9 +950,9 @@ test('correctly has billing phone_number msgs based on state', assert => {
   assert.deepEqual(attrs.get('billing_phone_number.messages'), []);
 });
 
-test('correctly has billing address msgs based on state', assert => {
+test('correctly has billing address msgs based on state', function(assert) {
   run(() => {
-    tenant = store.push('tenant', {id: TD.idOne});
+    tenant = this.store.push('tenant', {id: TD.idOne});
   });
   const attrs = tenant.get('validations').get('attrs');
   tenant.change_billing_address({id: AD.idOne});

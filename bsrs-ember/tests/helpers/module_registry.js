@@ -3,7 +3,7 @@ const { run } = Ember;
 import Resolver from 'ember-resolver';
 import Store from 'ember-cli-simple-store/store';
 
-export default function(container, registry, keys) {
+export default function(container, registry, keys = []) {
   const resolver = Resolver.create({namespace: {modulePrefix: 'bsrs-ember'}});
   const store = resolver.resolve('service:functional-store');
   registry.register('service:functional-store', store);

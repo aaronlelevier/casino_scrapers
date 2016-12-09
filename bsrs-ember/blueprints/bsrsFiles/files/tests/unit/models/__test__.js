@@ -11,9 +11,10 @@ import <%= thirdJoinModelTitle %>D from 'bsrs-ember/vendor/defaults/<%= thirdJoi
 var store, <%= camelizedModuleName %>, inactive_<%= secondPropertySnake %>;
 
 moduleFor('model:<%= camelizedModuleName %>', 'Unit | Model | <%= camelizedModuleName %>', {
-  needs: ['validator:presence', 'validator:length', 'validator:format', 'validator:unique-username'],
+  needs: ['model:<%= thirdJoinModel %>', 'model:<%= thirdAssociatedModel %>', 'model:<%= secondModel %>', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 
+    'service:i18n', 'validator:presence', 'validator:length', 'validator:format', 'validator:unique-username'],
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:<%= dasherizedModuleName %>', 'model:<%= thirdJoinModel %>', 'model:<%= thirdAssociatedModel %>', 'model:<%= secondModel %>', 'model:person-current', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+    store = module_registry(this.container, this.registry);
     run(() => {
       <%= camelizedModuleName %> = store.push('<%= dasherizedModuleName %>', {id: <%= FirstCharacterModuleName %>D.idOne});
     });
