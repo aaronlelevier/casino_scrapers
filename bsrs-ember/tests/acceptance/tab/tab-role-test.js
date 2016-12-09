@@ -19,6 +19,7 @@ import BASEURLS, { PREFIX, ROLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const NEW_URL = ROLE_LIST_URL + '/new/1';
+const NEW_URL_2 = ROLE_LIST_URL + '/new/2';
 const DETAIL_URL = ROLE_LIST_URL + '/' + RD.idGridOne;
 const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
 const NEW_ROUTE = 'admin.roles.index.new';
@@ -372,7 +373,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
   });
   click('.t-add-new');
   andThen(() => {
-    assert.equal(currentURL(), NEW_URL);
+    assert.equal(currentURL(), NEW_URL_2);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
   });

@@ -22,7 +22,6 @@ var GeneralPage = PageObject.create({
   clickAdmin: clickable('.t-nav-admin'),
   errorText: text('.t-error-message'),
   clickLaunchDTTicket: clickable('.t-launch-dt-ticket'),
-  clickHomeModalShow: clickable('.t-home-modal-show'),
   isDirty: hasClass('dirty', 'i', {scope: '.t-tab-close'}),
 
   gridItemZeroClick: clickable('.t-grid-data:eq(0)'),

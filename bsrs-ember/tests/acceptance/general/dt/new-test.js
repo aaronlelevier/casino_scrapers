@@ -58,26 +58,6 @@ moduleForAcceptance('Acceptance | general dt new', {
   },
 });
 
-// Bring back when we have the draft ticket grid on the dashboard.
-
-// test('go to /dashboard, click button to get to /dt/new', assert => {
-//   xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: SD.dashboard_text}});
-//   xhr(`${PREFIX}/tickets/?status__name=ticket.status.draft`,'GET', null, {}, 200, TF.list(TD.statusSevenId, TD.statusSevenKey));
-//   visit(DASHBOARD_URL);
-//   andThen(() => {
-//     assert.equal(currentURL(), DASHBOARD_URL);
-//   });
-//   generalPage.clickHomeModalShow();
-//   andThen(() => {
-//     assert.ok(Ember.$('.ember-modal-dialog'));
-//   });
-//   generalPage.clickLaunchDTTicket();
-//   andThen(() => {
-//     assert.throws(Ember.$('.ember-modal-dialog'));
-//     assert.equal(currentURL(), DT_NEW_URL);
-//   });
-// });
-
 /* jshint ignore:start */
 
 // test('POST then PATCH - to demonstrate starting the DT and maintaining traversing the DT Tree and updating the same Ticket', async assert => {

@@ -1,0 +1,12 @@
+{{#if isOpen}}
+  <ul class="new-module-list" aria-hidden="true" tabindex="-1">
+    <li>{{t "home.label.create"}}</li>
+    <li data-test-id="new-ticket"><span {{action "linkToNew" "main.tickets.index.new" "ticket"}}> {{fa-icon "sticky-note"}}{{t "ticket.one"}}</span> </li>
+    <li data-test-id="new-person"><span {{action "linkToNew" "admin.people.new" "person"}}> {{fa-icon "user"}}{{t "admin.person.one"}}</span> </li>
+    <li data-test-id="new-role"><span {{action "linkToNew" "admin.roles.index.new" "role"}}> {{fa-icon "users"}}{{t "admin.role.one"}}</span> </li>
+    <li data-test-id="new-location"><span {{action "linkToNew" "admin.locations.new" "location"}}> {{fa-icon "building"}}{{t "admin.location.one"}}</span> </li>
+    <li data-test-id="new-location-level"><span {{action "linkToNew" "admin.location-levels.new" "location-level"}}> {{fa-icon "sitemap"}}{{t "admin.locationlevel.one"}}</span> </li>
+    <li data-test-id="new-category"><span {{action "linkToNew" "admin.categories.new" "category"}}> {{fa-icon "list"}}{{t "admin.category.one"}}</span> </li>
+    <li data-test-id="new-tenant"><span {{action "linkToNew" "admin.tenants.new" "tenant"}}> {{fa-icon "star"}}{{t "tenant.one"}}</span> </li>
+  </ul>
+{{/if}}

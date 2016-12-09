@@ -1,6 +1,5 @@
 <article class="main">
 {{people/person-list
-  count=count
   model=model
   page=page
   sort=sort
@@ -29,5 +28,6 @@
   exportGrid=(route-action "exportGrid" find search sort)
   updateGridFilterParams=(route-action "updateGridFilterParams")
   infinityIsLoading=infinityIsLoading
+  linkToNew=(route-action "linkToNew")
 }}
 </article>

@@ -4,19 +4,31 @@ import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance'
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
-import BASEURLS from 'bsrs-ember/utilities/urls';
 import TD from 'bsrs-ember/vendor/defaults/tenant';
 import TicketD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
+import PF from 'bsrs-ember/vendor/people_fixtures';
+import RF from 'bsrs-ember/vendor/role_fixtures';
+import LF from 'bsrs-ember/vendor/location_fixtures';
+import CF from 'bsrs-ember/vendor/category_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
+import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, LOCATIONS_URL, LOCATION_LIST_URL, LOCATION_LEVELS_URL, LOCATION_LEVEL_LIST_URL, PEOPLE_URL, PEOPLE_LIST_URL, 
+  ROLES_URL, ROLE_LIST_URL, CATEGORY_LIST_URL, CATEGORIES_URL, TENANT_LIST_URL } from 'bsrs-ember/utilities/urls';
 
 var application, store;
 
 const PREFIX = config.APP.NAMESPACE;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
+const TICKET_NEW_URL = TICKET_LIST_URL + '/new/1';
+const LOCATION_NEW_URL = BASEURLS.base_locations_url + '/new/1';
+const LOCATION_LEVEL_NEW_URL = BASEURLS.base_location_levels_url + '/new/1';
+const PEOPLE_NEW_URL = BASEURLS.base_people_url + '/new/1';
+const ROLE_NEW_URL = BASEURLS.base_roles_url + '/new/1';
+const CATEGORIES_NEW_URL = BASEURLS.base_categories_url + '/new/1';
+const TENANT_NEW_URL = BASEURLS.BASE_TENANT_URL + '/new/1';
 const BASE_URL = BASEURLS.base_tickets_url;
-const TICKET_URL = `${BASE_URL}`;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
 moduleForAcceptance('Acceptance | general dashboard', {
@@ -24,6 +36,66 @@ moduleForAcceptance('Acceptance | general dashboard', {
     store = this.application.__container__.lookup('service:simpleStore');
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
   },
+});
+
+test('can click through dashboard links', assert => {
+  visit(DASHBOARD_URL);
+  click('[data-test-id="link-to-new-ticket"]');
+  xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
+  andThen(() => {
+    assert.equal(currentURL(), TICKET_NEW_URL);
+  });
+
+  visit(DASHBOARD_URL);
+  triggerEvent('[data-test-id="new-link-list"]', 'mouseenter');
+  // xhr(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, PF.list());
+  click('[data-test-id="new-person"] > span');
+  andThen(() => {
+    assert.equal(currentURL(), PEOPLE_NEW_URL);
+  });
+
+  visit(DASHBOARD_URL);
+  triggerEvent('[data-test-id="new-link-list"]', 'mouseenter');
+  const setting_endpoint = `${PREFIX}${BASEURLS.base_roles_url}/route-data/new/`;
+  xhr(setting_endpoint, 'GET', null, {}, 200, roleNewData);
+  xhr(`${ROLES_URL}?page=1`, 'GET', null, {}, 200, RF.list());
+  click('[data-test-id="new-role"] > span');
+  andThen(() => {
+    assert.equal(currentURL(), ROLE_NEW_URL);
+  });
+
+  visit(DASHBOARD_URL);
+  triggerEvent('[data-test-id="new-link-list"]', 'mouseenter');
+  // xhr(`${LOCATIONS_URL}?page=1`, 'GET', null, {}, 200, LF.list());
+  click('[data-test-id="new-location"] > span');
+  andThen(() => {
+    assert.equal(currentURL(), LOCATION_NEW_URL);
+  });
+
+  visit(DASHBOARD_URL);
+  triggerEvent('[data-test-id="new-link-list"]', 'mouseenter');
+  // xhr(`${LOCATION_LEVELS_URL}?page=1`, 'GET', null, {}, 200, LF.list());
+  click('[data-test-id="new-location-level"] > span');
+  andThen(() => {
+    assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
+  });
+
+  visit(DASHBOARD_URL);
+  triggerEvent('[data-test-id="new-link-list"]', 'mouseenter');
+  // xhr(`${CATEGORIES_URL}?page=1`, 'GET', null, {}, 200, LF.list());
+  click('[data-test-id="new-category"] > span');
+  andThen(() => {
+    assert.equal(currentURL(), CATEGORIES_NEW_URL);
+  });
+
+  visit(DASHBOARD_URL);
+  triggerEvent('[data-test-id="new-link-list"]', 'mouseenter');
+  // xhr(`${TENANT_URL}?page=1`, 'GET', null, {}, 200, LF.list());
+  click('[data-test-id="new-tenant"] > span');
+  andThen(() => {
+    assert.equal(currentURL(), TENANT_NEW_URL);
+  });
+
 });
 
 test('welcome h1 header and dashboard_text from settings', assert => {

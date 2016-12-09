@@ -2,7 +2,12 @@
   <header class="main">
     {{nav-bar}}
   </header>
-  {{tab-list tabs=tabs closeTabMaster=(action "closeTabMaster")}}
+  {{tab-list 
+    tabs=tabs 
+    linkToNew=linkToNew 
+    linkToNew=linkToNew
+    closeTabMaster=(action "closeTabMaster")
+  }}
   {{tray-main}}
   <section class="wrap">
     {{outlet}}

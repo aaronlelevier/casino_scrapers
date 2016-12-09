@@ -1,0 +1,61 @@
+#home-menu-component {
+  div.dashboard-add-new {
+    position: absolute;
+    z-index: 1;
+    margin: 1px 0.1rem 0;
+    min-width: 25rem;
+    ul.new-module-list {
+      list-style-type: none;
+      border: $borderStyle;
+      border-radius: $borderRadiusBottom;
+      border-width: 0 1px 1px;
+      background: $lightGray;
+      padding: 1rem;
+      margin: 0;
+      box-shadow: 0 2px 2px $gray;
+      &:focus {
+        @extend %remove-focus-outline;
+      }
+      li {
+        padding: 0;
+        line-height: 1.5rem;
+        font-size: 1.3rem;
+        border-radius: $borderRadius;
+        i {
+          vertical-align: baseline;
+          color: $medGray;
+          padding-right: 0.9rem;
+          width: 2.5rem;
+          text-align: center;
+          font-size: 1.5rem;
+        }
+        span {
+          cursor: pointer;
+          color: $darkGray;
+          text-decoration: none;
+          display: block;
+          width: 100%;
+          height: 100%;
+          padding: 1rem;
+          &:focus {
+            @extend %remove-focus-outline;
+          }
+        }
+        &:first-child {
+          color: $medGray;
+          font-size: 1.7rem;
+          padding: 1rem;
+          margin-bottom: 1rem;
+          border: $borderStyle;
+          border-width: 0 0 1px;
+        }
+        &:hover:not(:first-child) {
+          background: $light;
+          i {
+            color: $hoverColor;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,6 +1,5 @@
 <article class="main full">
   {{component (if FlexiLayout.isMobile 'tickets/ticket-list-mobile' 'tickets/ticket-list')
-    count=count
     model=model
     error=error
     page=page
@@ -30,6 +29,7 @@
     updateGridFilterParams=(route-action "updateGridFilterParams")
     infinityIsLoading=(if FlexiLayout.isMobile infinityIsLoading)
     isLoading=isLoading
+    linkToNew=(route-action "linkToNew")
   }}
 </article>
 

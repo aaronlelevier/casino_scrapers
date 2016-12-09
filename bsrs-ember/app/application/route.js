@@ -231,6 +231,13 @@ let ApplicationRoute = Route.extend({
     postLogin(credentials) {
       return this.get('djangoLogin').postLogin(credentials)
       .then( () => this.send('hideLogin') );
+    },
+    linkToNew(url='main.tickets.index.new', type='ticket') {
+      var count_array = this.get('simpleStore').find(type).toArray();
+      var count = count_array.filter((m) => {
+        return m.get('new') === true;
+      }).get('length');
+      return this.transitionTo(url, count + 1);
     }
   }
 });

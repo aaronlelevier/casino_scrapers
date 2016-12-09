@@ -7,10 +7,6 @@ nav.tabs{
   height: $tabHeight;
   overflow: hidden;
   z-index: 1;
-  // ul{
-  //   margin-left: 0px;
-  //   margin-right: -100px;
-  //   overflow: hidden;
   div.tab {
     width: $tabWidth;
     height: $tabHeight;
@@ -23,96 +19,84 @@ nav.tabs{
     border-radius: $borderRadiusTop;
     position: relative;
     transition: width .25s ease-in-out;
-    // span.tab-title { // will overflow tabs when screen gets smaller. Need to figure out something else w/ flexbox
-    //   @include truncate;
-    // }
   }
-    // li{
-    //   height: $tabHeight;
-    //   line-height: $tabHeight;
-    //   background: $light;
-    //   border: $borderStyle;
-    //   padding: 0;
-    //   float: left;
-    //   font-size: 1.2rem;
-    //   width: $tabWidth;
-    //   margin: 0 3px 0 0;
-    //   border-radius: $borderRadiusTop;
-    //   position: relative;
-    //
-    //   transition: width .25s ease-in-out;
-    //
-      a{
-        height: $tabHeightMinus2;
-        line-height: $tabHeightMinus2;
-        background: $light;
-        padding: 0 18px 0 10px;
-        display: block;
-        color: $darkGray;
-        text-overflow: ellipsis;
-        overflow: hidden;
-        &:hover,
-        &:focus{
-          text-decoration: none;
-          cursor: pointer;
-        }
-        &.active{
-          height: $tabHeightMinus1;
-          background: $lightGray;
-          border-bottom-color: $lightGray;
-        }
-        &.active{
-          &:hover{
-            cursor: default;
-          }
-        }
-      }
-
-      .close-wrap{
-        .close-icon{
-          height: 12px;
-          width: 12px;
-          position: absolute;
-          top: 3px;
-          right: 3px;
-          color: $medGray;
-          padding: 0;
-          &:hover{
-            color: $dark;
-            cursor: pointer;
-            text-decoration: none;
-          }
-          i{
-            display: block;
-            &.dirty{
-              color: $lightGreen;
-              &:hover{
-                color: $darkGreen;
-              }
-            }
-          }
-
-        }
-      }
-    // }//li
-
-    .new {
-      flex-basis: content;
-      max-width: 36px;
-      text-align: center;
-      color: $darkGray;
-      align-self: center;
+  a{
+    height: $tabHeightMinus2;
+    line-height: $tabHeightMinus2;
+    background: $light;
+    padding: 0 18px 0 10px;
+    display: block;
+    color: $darkGray;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    &:hover,
+    &:focus{
+      text-decoration: none;
+      cursor: pointer;
+    }
+    &.active{
+      height: $tabHeightMinus1;
+      background: $lightGray;
+      border-bottom-color: $lightGray;
+    }
+    &.active{
       &:hover{
+        cursor: default;
+      }
+    }
+  }
+
+  .close-wrap {
+    .close-icon{
+      height: 12px;
+      width: 12px;
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      color: $medGray;
+      padding: 0;
+      &:hover {
+        color: $dark;
         cursor: pointer;
-        background: $activeColor;
-        border-color: $activeColor;
-        color: $white;
+        text-decoration: none;
       }
-      &:active{
-        background: $activeColor;
-        border-color: $activeColor;
-        color: $white;
+      i{
+        display: block;
+        &.dirty {
+          color: $lightGreen;
+          &:hover {
+            color: $darkGreen;
+          }
+        }
       }
-    }//li.new
-  // }//ul
+
+    }
+  }
+
+  .new {
+    max-width: 36px;
+    text-align: center;
+    &:hover{
+      cursor: pointer;
+    }
+    button {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: $light;
+      border: none;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    &.active{
+      border-bottom: none;
+      box-shadow: 0 2px 2px $gray;
+      button{
+        background: $white;
+        color: $hoverColor;
+      }
+    }
+  }//li.new
 }//nav.tabs

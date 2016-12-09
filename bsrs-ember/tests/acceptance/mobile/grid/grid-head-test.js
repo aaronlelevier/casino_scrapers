@@ -20,7 +20,7 @@ import generalPage, { mobileSearch } from 'bsrs-ember/tests/pages/general-mobile
 import random from 'bsrs-ember/models/random';
 import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, PEOPLE_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
-var store, list_xhr;
+var store, functionalStore, list_xhr;
 
 const PREFIX = config.APP.NAMESPACE;
 const DETAIL_2_URL = `${TICKET_LIST_URL}/${TD.idGridTwo}`;
@@ -33,6 +33,7 @@ const FILTERSET_COMPONENT_INPUT = '.t-mobile-save-filterset-component__input';
 moduleForAcceptance('Acceptance | general grid-head mobile', {
   beforeEach() {
     store = this.application.__container__.lookup('service:simpleStore');
+    functionalStore = this.application.__container__.lookup('service:functional-store');
     list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
     setWidth('mobile');
     random.uuid = function() { return UUID.value; };
@@ -58,7 +59,7 @@ test('search presents results on slideUp pane w/o pushing into store', async ass
   xhr(PREFIX + TICKET_LIST_URL + '/?search=subb2','GET',null,{},200,TF.searched('subb2', 'request'));
   await ticketPage.visit();
   assert.equal(currentURL(), TICKET_LIST_URL);
-  assert.equal(store.find('ticket-list').get('length'), 10);
+  assert.equal(functionalStore.find('ticket-list').length, 10);
   await generalPage.clickSearchIcon();
   assert.equal(find(mobileSearch).attr('placeholder'), t('ticket.search'));
   assert.equal(find(mobileSearch).attr('type'), 'search');
@@ -66,14 +67,14 @@ test('search presents results on slideUp pane w/o pushing into store', async ass
   await generalPage.mobileSearch('ape');
   await triggerEvent(mobileSearch, 'keyup', LETTER_A);
   assert.equal(currentURL(), TICKET_LIST_URL);
-  assert.equal(store.find('ticket-list').get('length'), 10);
+  assert.equal(functionalStore.find('ticket-list').length, 10);
   assert.equal(find('.t-grid-search-data').length, 9);
   assert.equal(find('.t-mobile-search-result__title:eq(0)').text().trim(), 'Repair');
   assert.equal(find('.t-mobile-search-result__meta:eq(0)').text().trim(), TD.locationTwo);
   await generalPage.mobileSearch('subb2');
   await triggerEvent(mobileSearch, 'keyup', LETTER_S);
   assert.equal(currentURL(), TICKET_LIST_URL);
-  assert.equal(store.find('ticket-list').get('length'), 10); //store length is same b/c search does not touch store
+  assert.equal(functionalStore.find('ticket-list').length, 10);
   assert.equal(find('.t-grid-search-data').length, 1);
   assert.equal(find('.t-mobile-search-result__title:eq(0)').text().trim(), 'Repair • Plumbing • Toilet Leak');
   assert.equal(find('.t-mobile-search-result__meta:eq(0)').text().trim(), LD.baseStoreName);

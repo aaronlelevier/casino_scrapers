@@ -1,4 +1,10 @@
-{{application-layout tabs=tabs closeTabMaster="closeTabMaster" on-dismiss=(action 'dismiss_errors')}}
+{{application-layout 
+  tabs=tabs 
+  closeTabMaster="closeTabMaster" 
+  on-dismiss=(action 'dismiss_errors')
+  linkToNew=(route-action "linkToNew")
+  linkToNew=(route-action "linkToNew")
+}}
 
 {{#if modalIsShowing}}
 {{#modal-dialog translucentOverlay=true}}
@@ -37,3 +43,6 @@
     doLogin=(route-action 'postLogin')
   }}
 {{/if}}
+
+<div id="home-menu-component">
+</div>

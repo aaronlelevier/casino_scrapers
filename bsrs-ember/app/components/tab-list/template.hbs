@@ -25,17 +25,19 @@
         }}
       {{/if}}
     {{/each}}
-    <div class="new tab" {{action "homeModalShowing"}}>
-      {{!--
-      {{#if homeModalShowing}}
-        {{#modal-dialog translucentOverlay=true close="homeModalShowing"}}
-        <span {{action "homeModalShowing"}}>{{#link-to "dt.new" tagName="button" class="btn btn-success t-launch-dt-ticket" action="homeModalShowing"}}{{t "dt.ticket.launch"}}{{/link-to}}</span>
-        {{/modal-dialog}}
-      {{/if}}
-      --}}
-      {{#link-to "main.tickets.index.new" tagName="span" class="t-home-modal-show"}}
-        {{fa-icon "plus"}}
-      {{/link-to}}
+    <div onmouseleave={{action "toggleNewModuleList"}} onmouseenter={{action "toggleNewModuleList"}} class="new tab {{if isOpen "active"}}" data-test-id="new-link-list">
+      <button {{action "linkToNew"}} data-test-id="link-to-new-ticket"> {{fa-icon "plus"}} </button>
+      {{#ember-wormhole to="home-menu-component"}}
+        {{dashboard-add-new
+          linkToNew=linkToNew
+          linkToNew=linkToNew
+          isOpen=isOpen
+          keepMeOpen=(action "keepMeOpen")
+          closeTask=closeTask
+          top=top
+          left=left
+        }}
+      {{/ember-wormhole}}
     </div>
   </box>
 </nav>

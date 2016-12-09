@@ -5,7 +5,7 @@
   {{#if exportGrid}}
     <button class="btn btn-default btn-sm flex-item--auto" data-test-id="grid-export-btn" {{action "exportGrid"}}>{{fa-icon "cloud-download"}} {{t 'grid.export'}}</button>
   {{/if}}
-  {{#link-to add_model_url count tagName='button' class="t-add-new btn btn-default btn-sm flex-item--auto"}}
+  <button {{action "linkToNew" add_model_url}} class="t-add-new btn btn-default btn-sm flex-item--auto">
     {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
-  {{/link-to}}
+  </button>
 </div>

@@ -18,6 +18,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { PREFIX, TICKET_LIST_URL, ROLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
 const NEW_URL = TICKET_LIST_URL + '/new/1';
+const NEW_URL2 = TICKET_LIST_URL + '/new/2';
 const DETAIL_URL = TICKET_LIST_URL + '/' + TD.idOne;
 const NEW_ROUTE = 'main.tickets.index.new';
 const INDEX_ROUTE = 'main.tickets.index';
@@ -467,7 +468,7 @@ test('(NEW URL) a dirty new tab and clicking on new model button should not push
   generalPage.clickTickets();
   click('.t-add-new');
   andThen(() => {
-    assert.equal(currentURL(), NEW_URL);
+    assert.equal(currentURL(), NEW_URL2);
     let tabs = store.find('tab');
     assert.equal(tabs.get('length'), 1);
   });

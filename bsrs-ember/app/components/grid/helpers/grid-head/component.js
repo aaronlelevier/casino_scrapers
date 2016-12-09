@@ -18,6 +18,9 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
   slideInUp: true,
 
   actions: {
+    linkToNew(add_model_url) {
+      this.get('linkToNew')(add_model_url);
+    },
     toggleSaveFilterSetModal() {
       this.toggleProperty('savingFilter');
     },

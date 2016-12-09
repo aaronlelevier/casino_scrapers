@@ -61,7 +61,6 @@ var GridViewRoute = Ember.Route.extend({
     let page = parseInt(query.page, 10) || 1;
     let requested = this.get('pagination').requested(name, page);
     const search = query.search;
-    const count = repository.findCount();
     set_filter_model_attrs(this.filterModel, query.find);
     return new Ember.RSVP.Promise((resolve, reject) => {
       let queryMethod, args, callback;
@@ -86,7 +85,7 @@ var GridViewRoute = Ember.Route.extend({
         if (typeof callback === 'function') {
           callback.call(this, model);
         }
-        resolve({ count, model, requested, filtersets, routeName, search, repository });
+        resolve({ model, requested, filtersets, routeName, search, repository });
       })
       .catch((xhr) => {
         let msg;
@@ -155,6 +154,10 @@ var GridViewRoute = Ember.Route.extend({
         const gridFilterParams = get(this, 'gridFilterParams');
         set(gridFilterParams, column.field, val);
       }
+    },
+    linkToNew(url) {
+      const count = this.get('repository').findCount(); 
+      this.transitionTo(url, count);
     }
   }
 });
