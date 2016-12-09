@@ -17,6 +17,8 @@ import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/utilities/urls';
 
+import { RESOURCES_WITH_PERMISSION } from 'bsrs-ember/utilities/constants';
+
 const HOME_URL = '/';
 const PREFIX = config.APP.NAMESPACE;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
@@ -219,5 +221,20 @@ test('on boot we should fetch and load the saved filterset configuration', funct
     assert.equal(filtersets.get('length'), 7);
     assert.equal(filtersets.objectAt(0).get('endpoint_name'), 'main.tickets.index');
     assert.deepEqual(filtersets.objectAt(0).get('endpoint_uri'), '?sort=assignee.fullname');
+  });
+});
+
+test('person-currents role comes with a permissions object and the other roles dont', assert => {
+  visit(HOME_URL);
+  andThen(() => {
+    let person_current = store.findOne('person');
+    assert.equal(person_current.get('id'), PERSON_CURRENT.id);
+    let role = person_current.get('role');
+    RESOURCES_WITH_PERMISSION.forEach((resource) => {
+      assert.ok(role.get(`permissions_view_${resource}`));
+      assert.ok(role.get(`permissions_add_${resource}`));
+      assert.ok(role.get(`permissions_change_${resource}`));
+      assert.ok(role.get(`permissions_delete_${resource}`));
+    });
   });
 });
