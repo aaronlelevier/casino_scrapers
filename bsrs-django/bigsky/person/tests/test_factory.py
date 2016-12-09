@@ -233,6 +233,14 @@ class CreateSinglePersonTests(TestCase):
                 role.name if '-' not in role.name else role.name.split('-')[0]
             )
 
+    def test_photo(self):
+        person = factory.create_single_person()
+        self.assertTrue(person.photo.id)
+        self.assertTrue(person.photo.image_thumbnail)
+        self.assertTrue(person.photo.image_medium)
+        self.assertTrue(person.photo.image_full)
+        self.assertTrue(person.photo.filename)
+
 
 class CreatePersonTests(TestCase):
 
