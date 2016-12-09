@@ -19,6 +19,7 @@ from tenant.tests.factory import get_or_create_tenant
 from translation.tests.factory import create_locale, LOCALES
 from translation.models import Locale
 from utils import create
+from utils.fake_data import person_names
 from utils.helpers import generate_uuid
 
 
@@ -102,25 +103,34 @@ def create_single_person(name=None, role=None, location=None, status=None, local
     if not all(args_required_together) and any(args_required_together):
         raise ValidationError("These arguments must all be passed together")
 
-    name = name or random.choice(create.LOREM_IPSUM_WORDS.split())
+    if name:
+        if isinstance(name, tuple):
+            first_name, middle_initial, last_name = name
+        else:
+            first_name = name
+            middle_initial = name[:1]
+            last_name = name
+    else:
+        first_name, middle_initial, last_name = random.choice(person_names.ALL)
+
     role = role or create_role()
     status = status or create_person_status(random.choice(PERSON_STATUSES))
     location = location or create_location(location_level=role.location_level)
     locale = locale or Locale.objects.first() or create_locale(random.choice(LOCALES))
 
-    # incr = Person.objects.count()
     id = generate_uuid(Person)
 
     try:
-        person = Person.objects.get(username=name)
+        person = Person.objects.get(username=first_name)
     except Person.DoesNotExist:
         person = Person.objects.create_user(
             id=id,
-            username=name,
+            username=first_name,
             password=PASSWORD,
-            first_name=name,
-            last_name=name,
-            title=name,
+            first_name=first_name,
+            middle_initial=middle_initial,
+            last_name=last_name,
+            title=role.name if '-' not in role.name else role.name.split('-')[0],
             role=role,
             status=status,
             locale=locale,
@@ -223,12 +233,8 @@ def create_all_people():
     create_roles()
 
     # other Persons for Grid View
-    names = sorted(create.LOREM_IPSUM_WORDS.split())
+    names = sorted(person_names.ALL)
     for name in names:
-        kwargs = {}
-        for ea in ['username', 'first_name', 'last_name', 'title']:
-            kwargs[ea] = name
-
         location = Location.objects.order_by("?")[0]
         status = PersonStatus.objects.order_by("?")[0]
         role = Role.objects.filter(location_level=location.location_level).order_by("?")[0]

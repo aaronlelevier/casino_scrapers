@@ -172,7 +172,7 @@ class PersonListTests(TestCase):
         self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['id'], str(person1.id))
         self.assertEqual(data['results'][0]['username'], 'watter')
-        self.assertEqual(data['results'][0]['fullname'], 'nothing nothing')
+        self.assertTrue(data['results'][0]['fullname'])
         self.assertEqual(data['results'][0]['photo']['id'], str(person1.photo.id))
         self.assertNotIn('image_full', data['results'][0]['photo'])
         self.assertNotIn('image_medium', data['results'][0]['photo'])
@@ -191,7 +191,7 @@ class PersonListTests(TestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['id'], str(person1.id))
-        self.assertEqual(data['results'][0]['fullname'], 'foo wat')
+        self.assertTrue(data['results'][0]['fullname'])
 
     def test_power_select_people_email(self):
         # TODO: figure out email w/ @ in search
@@ -708,8 +708,9 @@ class PersonUpdateTests(APITestCase):
         self.assertFalse(self.person.emails.all())
 
     def test_update_middle_initial(self):
-        self.assertFalse(self.data['middle_initial'])
-        self.data['middle_initial'] = 'Y'
+        new_initial = 'Y'
+        self.assertNotEqual(self.data['middle_initial'], new_initial)
+        self.data['middle_initial'] = new_initial
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')
         data = json.loads(response.content.decode('utf8'))

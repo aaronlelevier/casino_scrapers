@@ -199,6 +199,40 @@ class CreateSinglePersonTests(TestCase):
         with self.assertRaises(ValidationError):
             factory.create_single_person(location=location)
 
+    def test_name_generation(self):
+        # no name arg
+        person = factory.create_single_person()
+        self.assertTrue(person.username)
+        self.assertTrue(person.first_name)
+        self.assertTrue(person.middle_initial)
+        self.assertTrue(person.last_name)
+        # 'name' as string arg
+        name = 'foo'
+        person = factory.create_single_person(name=name)
+        self.assertEqual(person.username, name)
+        self.assertEqual(person.first_name, name)
+        self.assertEqual(person.middle_initial, name[:1])
+        self.assertEqual(person.last_name, name)
+        # name as tuple
+        name = ('a', 'b', 'c')
+        first_name, middle_initial, last_name = name
+        person = factory.create_single_person(name=name)
+        self.assertEqual(person.username, first_name)
+        self.assertEqual(person.first_name, first_name)
+        self.assertEqual(person.middle_initial, middle_initial)
+        self.assertEqual(person.last_name, last_name)
+
+    def test_title(self):
+        roles = factory.create_roles()
+        for role in roles:
+            location = create_location(role.location_level)
+            person = factory.create_single_person(
+                role=role, location=location)
+            self.assertEqual(
+                person.title,
+                role.name if '-' not in role.name else role.name.split('-')[0]
+            )
+
 
 class CreatePersonTests(TestCase):
 
@@ -327,7 +361,7 @@ class CreateAllPeopleTests(TestCase):
         self.assertEqual(Location.objects.count(), 7)
         # people
         people = Person.objects.all()
-        self.assertEqual(people.count(), 187)
+        self.assertEqual(people.count(), 200)
         self.assertTrue(people[0].employee_id)
         # Roles
         self.assertEqual(Role.objects.count(), 5)
@@ -337,6 +371,9 @@ class CreateAllPeopleTests(TestCase):
         # Locations
         post_location_count = Location.objects.count()
         self.assertEqual(init_location_count, post_location_count)
+        # admin person got setup
+        admin = Person.objects.get(username='admin')
+        self.assertTrue(admin.is_superuser)
 
         x = False
         for person in Person.objects.all():
