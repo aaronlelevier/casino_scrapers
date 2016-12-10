@@ -20,122 +20,115 @@ import BASEURLS from 'bsrs-ember/utilities/urls';
 const HOME_URL = '/';
 const PREFIX = config.APP.NAMESPACE;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
-
-var store, run = Ember.run;
+const { run } = Ember;
 
 moduleForAcceptance('Acceptance | general bootup test', {
   beforeEach() {
-
-    store = this.application.__container__.lookup('service:simpleStore');
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
-  },
-  afterEach() {
-    store = null;
-
   }
 });
 
-test('on boot we should fetch and load the email configuration', assert => {
+test('on boot we should fetch and load the email configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    assert.equal(store.find('email-type').get('length'), 2);
-    assert.equal(store.find('email-type').objectAt(0).get('id'), ED.workId);
-    assert.equal(store.find('email-type').objectAt(0).get('name'), ED.workEmail);
-    assert.equal(store.find('email-type').objectAt(1).get('id'), ED.personalId);
-    assert.equal(store.find('email-type').objectAt(1).get('name'), ED.personalEmail);
+    assert.equal(this.store.find('email-type').get('length'), 2);
+    assert.equal(this.store.find('email-type').objectAt(0).get('id'), ED.workId);
+    assert.equal(this.store.find('email-type').objectAt(0).get('name'), ED.workEmail);
+    assert.equal(this.store.find('email-type').objectAt(1).get('id'), ED.personalId);
+    assert.equal(this.store.find('email-type').objectAt(1).get('name'), ED.personalEmail);
   });
 });
 
-test('on boot we should fetch and load the phone number configuration', assert => {
+test('on boot we should fetch and load the phone number configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    assert.equal(store.find('phone-number-type').get('length'), 2);
-    assert.equal(store.find('phone-number-type').objectAt(0).get('id'), PND.officeId);
-    assert.equal(store.find('phone-number-type').objectAt(0).get('name'), PND.officeName);
-    assert.equal(store.find('phone-number-type').objectAt(1).get('id'), PND.mobileId);
-    assert.equal(store.find('phone-number-type').objectAt(1).get('name'), PND.mobileName);
+    assert.equal(this.store.find('phone-number-type').get('length'), 2);
+    assert.equal(this.store.find('phone-number-type').objectAt(0).get('id'), PND.officeId);
+    assert.equal(this.store.find('phone-number-type').objectAt(0).get('name'), PND.officeName);
+    assert.equal(this.store.find('phone-number-type').objectAt(1).get('id'), PND.mobileId);
+    assert.equal(this.store.find('phone-number-type').objectAt(1).get('name'), PND.mobileName);
   });
 });
 
-test('on boot we should fetch and load the address configuration', assert => {
+test('on boot we should fetch and load the address configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    assert.equal(store.find('address-type').get('length'), 2);
-    assert.equal(store.find('address-type').objectAt(0).get('id'), ATD.officeId);
-    assert.equal(store.find('address-type').objectAt(0).get('name'), ATD.officeName);
-    assert.equal(store.find('address-type').objectAt(1).get('id'), ATD.shippingId);
-    assert.equal(store.find('address-type').objectAt(1).get('name'), ATD.shippingName);
+    assert.equal(this.store.find('address-type').get('length'), 2);
+    assert.equal(this.store.find('address-type').objectAt(0).get('id'), ATD.officeId);
+    assert.equal(this.store.find('address-type').objectAt(0).get('name'), ATD.officeName);
+    assert.equal(this.store.find('address-type').objectAt(1).get('id'), ATD.shippingId);
+    assert.equal(this.store.find('address-type').objectAt(1).get('name'), ATD.shippingName);
   });
 });
 
-test('on boot we should fetch and load the person status configuration', assert => {
+test('on boot we should fetch and load the person status configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    assert.equal(store.find('status').get('length'), 3);
-    assert.equal(store.find('status').objectAt(0).get('id'), STATUS_DEFAULTS.activeId);
-    assert.equal(store.find('status').objectAt(0).get('name'), STATUS_DEFAULTS.activeName);
-    assert.equal(store.find('status').objectAt(1).get('id'), STATUS_DEFAULTS.inactiveId);
-    assert.equal(store.find('status').objectAt(1).get('name'), STATUS_DEFAULTS.inactiveName);
-    assert.equal(store.find('status').objectAt(2).get('id'), STATUS_DEFAULTS.expiredId);
-    assert.equal(store.find('status').objectAt(2).get('name'), STATUS_DEFAULTS.expiredName);
+    assert.equal(this.store.find('status').get('length'), 3);
+    assert.equal(this.store.find('status').objectAt(0).get('id'), STATUS_DEFAULTS.activeId);
+    assert.equal(this.store.find('status').objectAt(0).get('name'), STATUS_DEFAULTS.activeName);
+    assert.equal(this.store.find('status').objectAt(1).get('id'), STATUS_DEFAULTS.inactiveId);
+    assert.equal(this.store.find('status').objectAt(1).get('name'), STATUS_DEFAULTS.inactiveName);
+    assert.equal(this.store.find('status').objectAt(2).get('id'), STATUS_DEFAULTS.expiredId);
+    assert.equal(this.store.find('status').objectAt(2).get('name'), STATUS_DEFAULTS.expiredName);
   });
 });
 
-test('on boot we should fetch and load the store status configuration', assert => {
+test('on boot we should fetch and load the this.store status configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    assert.equal(store.find('location-status').get('length'), 3);
-    assert.equal(store.find('location-status').objectAt(0).get('id'), STORE_STATUS_DEFAULTS.openId);
-    assert.equal(store.find('location-status').objectAt(0).get('name'), STORE_STATUS_DEFAULTS.openName);
-    assert.equal(store.find('location-status').objectAt(1).get('id'), STORE_STATUS_DEFAULTS.closedId);
-    assert.equal(store.find('location-status').objectAt(1).get('name'), STORE_STATUS_DEFAULTS.closedName);
-    assert.equal(store.find('location-status').objectAt(2).get('id'), STORE_STATUS_DEFAULTS.futureId);
-    assert.equal(store.find('location-status').objectAt(2).get('name'), STORE_STATUS_DEFAULTS.futureName);
+    assert.equal(this.store.find('location-status').get('length'), 3);
+    assert.equal(this.store.find('location-status').objectAt(0).get('id'), STORE_STATUS_DEFAULTS.openId);
+    assert.equal(this.store.find('location-status').objectAt(0).get('name'), STORE_STATUS_DEFAULTS.openName);
+    assert.equal(this.store.find('location-status').objectAt(1).get('id'), STORE_STATUS_DEFAULTS.closedId);
+    assert.equal(this.store.find('location-status').objectAt(1).get('name'), STORE_STATUS_DEFAULTS.closedName);
+    assert.equal(this.store.find('location-status').objectAt(2).get('id'), STORE_STATUS_DEFAULTS.futureId);
+    assert.equal(this.store.find('location-status').objectAt(2).get('name'), STORE_STATUS_DEFAULTS.futureName);
   });
 });
 
-test('on boot we should fetch and load the ticket status configuration', assert => {
+test('on boot we should fetch and load the ticket status configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    assert.equal(store.find('ticket-status').get('length'), 8);
-    assert.equal(store.find('ticket-status').objectAt(0).get('id'), LD.statusOneId);
-    assert.equal(store.find('ticket-status').objectAt(0).get('name'), LD.statusOneKey);
-    assert.equal(store.find('ticket-status').objectAt(1).get('id'), LD.statusTwoId);
-    assert.equal(store.find('ticket-status').objectAt(1).get('name'), LD.statusTwoKey);
-    assert.equal(store.find('ticket-status').objectAt(2).get('id'), LD.statusThreeId);
-    assert.equal(store.find('ticket-status').objectAt(2).get('name'), LD.statusThreeKey);
-    assert.equal(store.find('ticket-status').objectAt(3).get('id'), LD.statusFourId);
-    assert.equal(store.find('ticket-status').objectAt(3).get('name'), LD.statusFourKey);
-    assert.equal(store.find('ticket-status').objectAt(4).get('id'), LD.statusFiveId);
-    assert.equal(store.find('ticket-status').objectAt(4).get('name'), LD.statusFiveKey);
-    assert.equal(store.find('ticket-status').objectAt(5).get('id'), LD.statusSixId);
-    assert.equal(store.find('ticket-status').objectAt(5).get('name'), LD.statusSixKey);
-    assert.equal(store.find('ticket-status').objectAt(6).get('id'), LD.statusSevenId);
-    assert.equal(store.find('ticket-status').objectAt(6).get('name'), LD.statusSevenKey);
-    assert.equal(store.find('ticket-status').objectAt(7).get('id'), LD.statusEightId);
-    assert.equal(store.find('ticket-status').objectAt(7).get('name'), LD.statusEightKey);
+    assert.equal(this.store.find('ticket-status').get('length'), 8);
+    assert.equal(this.store.find('ticket-status').objectAt(0).get('id'), LD.statusOneId);
+    assert.equal(this.store.find('ticket-status').objectAt(0).get('name'), LD.statusOneKey);
+    assert.equal(this.store.find('ticket-status').objectAt(1).get('id'), LD.statusTwoId);
+    assert.equal(this.store.find('ticket-status').objectAt(1).get('name'), LD.statusTwoKey);
+    assert.equal(this.store.find('ticket-status').objectAt(2).get('id'), LD.statusThreeId);
+    assert.equal(this.store.find('ticket-status').objectAt(2).get('name'), LD.statusThreeKey);
+    assert.equal(this.store.find('ticket-status').objectAt(3).get('id'), LD.statusFourId);
+    assert.equal(this.store.find('ticket-status').objectAt(3).get('name'), LD.statusFourKey);
+    assert.equal(this.store.find('ticket-status').objectAt(4).get('id'), LD.statusFiveId);
+    assert.equal(this.store.find('ticket-status').objectAt(4).get('name'), LD.statusFiveKey);
+    assert.equal(this.store.find('ticket-status').objectAt(5).get('id'), LD.statusSixId);
+    assert.equal(this.store.find('ticket-status').objectAt(5).get('name'), LD.statusSixKey);
+    assert.equal(this.store.find('ticket-status').objectAt(6).get('id'), LD.statusSevenId);
+    assert.equal(this.store.find('ticket-status').objectAt(6).get('name'), LD.statusSevenKey);
+    assert.equal(this.store.find('ticket-status').objectAt(7).get('id'), LD.statusEightId);
+    assert.equal(this.store.find('ticket-status').objectAt(7).get('name'), LD.statusEightKey);
   });
 });
 
-test('on boot we should fetch and load the ticket priority configuration', assert => {
+test('on boot we should fetch and load the ticket priority configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    assert.equal(store.find('ticket-priority').get('length'), 4);
-    assert.equal(store.find('ticket-priority').objectAt(0).get('id'), LD.priorityOneId);
-    assert.equal(store.find('ticket-priority').objectAt(0).get('name'), LD.priorityOneKey);
-    assert.equal(store.find('ticket-priority').objectAt(1).get('id'), LD.priorityTwoId);
-    assert.equal(store.find('ticket-priority').objectAt(1).get('name'), LD.priorityTwoKey);
-    assert.equal(store.find('ticket-priority').objectAt(2).get('id'), LD.priorityThreeId);
-    assert.equal(store.find('ticket-priority').objectAt(2).get('name'), LD.priorityThreeKey);
-    assert.equal(store.find('ticket-priority').objectAt(3).get('id'), LD.priorityFourId);
-    assert.equal(store.find('ticket-priority').objectAt(3).get('name'), LD.priorityFourKey);
+    assert.equal(this.store.find('ticket-priority').get('length'), 4);
+    assert.equal(this.store.find('ticket-priority').objectAt(0).get('id'), LD.priorityOneId);
+    assert.equal(this.store.find('ticket-priority').objectAt(0).get('name'), LD.priorityOneKey);
+    assert.equal(this.store.find('ticket-priority').objectAt(1).get('id'), LD.priorityTwoId);
+    assert.equal(this.store.find('ticket-priority').objectAt(1).get('name'), LD.priorityTwoKey);
+    assert.equal(this.store.find('ticket-priority').objectAt(2).get('id'), LD.priorityThreeId);
+    assert.equal(this.store.find('ticket-priority').objectAt(2).get('name'), LD.priorityThreeKey);
+    assert.equal(this.store.find('ticket-priority').objectAt(3).get('id'), LD.priorityFourId);
+    assert.equal(this.store.find('ticket-priority').objectAt(3).get('name'), LD.priorityFourKey);
   });
 });
 
-test('on boot we should fetch and load the currency configuration', assert => {
+test('on boot we should fetch and load the currency configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    var currency_models = store.find('currency');
+    var currency_models = this.store.find('currency');
     assert.equal(currency_models.get('length'), 4);
     assert.equal(currency_models.objectAt(0).get('id'), CURRENCY_DEFAULTS.id);
     assert.equal(currency_models.objectAt(0).get('symbol'), CURRENCY_DEFAULTS.symbol);
@@ -148,11 +141,10 @@ test('on boot we should fetch and load the currency configuration', assert => {
   });
 });
 
-test('on boot we should fetch and load the role configuration', assert => {
+test('on boot we should fetch and load the role configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    var role_models = store.find('role');
-    store.find('category');
+    var role_models = this.store.find('role');
     assert.equal(role_models.get('length'), 6);
     assert.equal(role_models.objectAt(0).get('id'), RD.idOne);
     assert.equal(role_models.objectAt(0).get('name'), RD.nameOne);
@@ -166,33 +158,33 @@ test('on boot we should fetch and load the role configuration', assert => {
   });
 });
 
-test('on boot we should fetch and load the role types configuration', assert => {
+test('on boot we should fetch and load the role types configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    var role_types_models = store.find('role-type');
+    var role_types_models = this.store.find('role-type');
     assert.equal(role_types_models.get('length'), 2);
     assert.ok(role_types_models.objectAt(0).get('id') > 0);
     assert.equal(role_types_models.objectAt(0).get('name'), RD.t_roleTypeGeneral);
   });
 });
 
-test('on boot we should fetch and load the location level configuration', assert => {
-  run(function() {
-    store.clear('location-level');
+test('on boot we should fetch and load the location level configuration', function(assert) {
+  run(() => {
+    this.store.clear('location-level');
   });
   visit(HOME_URL);
   andThen(() => {
-    var location_level_models = store.find('location-level');
+    var location_level_models = this.store.find('location-level');
     assert.equal(location_level_models.get('length'), 8);
     assert.equal(location_level_models.objectAt(0).get('id'), LLD.idOne);
     assert.equal(location_level_models.objectAt(0).get('name'), LLD.nameCompany);
   });
 });
 
-test('locale', assert => {
+test('locale', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    var locale = store.findOne('locale');
+    var locale = this.store.findOne('locale');
     assert.equal(locale.get('id'), LOCALE_DEFAULTS.idOne);
     assert.equal(locale.get('name'), LOCALE_DEFAULTS.nameOneKey);
     assert.equal(locale.get('locale'), LOCALE_DEFAULTS.localeOne);
@@ -203,27 +195,27 @@ test('locale', assert => {
   });
 });
 
-test('on boot we should fetch and load the person-current, logged in Person, configuration', assert => {
+test('on boot we should fetch and load the person-current, logged in Person, configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    var person_current = store.findOne('person');
+    var person_current = this.store.findOne('person');
     assert.equal(person_current.get('id'), PERSON_CURRENT.id);
     assert.equal(person_current.get('first_name'), PERSON_CURRENT.first_name);
     assert.equal(person_current.get('last_name'), PERSON_CURRENT.last_name);
     assert.equal(person_current.get('username'), PERSON_CURRENT.username);
     assert.equal(person_current.get('title'), PERSON_CURRENT.title);
     assert.equal(person_current.get('status.id'), PERSON_CURRENT.status);
-    assert.equal(person_current.get('role.id'), store.find('person', PERSON_CURRENT.id).get('role').get('id'));
+    assert.equal(person_current.get('role.id'), this.store.find('person', PERSON_CURRENT.id).get('role').get('id'));
     assert.equal(person_current.get('locale.id'), PERSON_CURRENT.locale);
     assert.equal(person_current.get('timezone'), PERSON_CURRENT.timezone);
     assert.deepEqual(person_current.get('inherited'), PERSON_CURRENT.inherited);
   });
 });
 
-test('on boot we should fetch and load the saved filterset configuration', assert => {
+test('on boot we should fetch and load the saved filterset configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    var filtersets = store.find('filterset');
+    var filtersets = this.store.find('filterset');
     assert.equal(filtersets.get('length'), 7);
     assert.equal(filtersets.objectAt(0).get('endpoint_name'), 'main.tickets.index');
     assert.deepEqual(filtersets.objectAt(0).get('endpoint_uri'), '?sort=assignee.fullname');
