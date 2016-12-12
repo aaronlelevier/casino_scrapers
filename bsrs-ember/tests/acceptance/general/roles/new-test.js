@@ -334,8 +334,8 @@ test('setting permissions and save', (assert) => {
     assert.equal(role.get('isDirtyOrRelatedDirty'), true);
     assert.equal(find('[data-test-id="permission-view-ticket"]').is(':checked'), false);
   });
-  let payload = RF.put({id: UUID.value, auth_amount: 0});
-  payload.permissions.view_ticket = false;
+  const new_permissions = Object.assign({}, RD.permissions, { view_ticket: false });
+  let payload = RF.put({id: UUID.value, auth_amount: 0, permissions: new_permissions});
   delete payload.dashboard_text;
   delete payload.auth_currency;
   xhr(url, 'POST', JSON.stringify(payload), {}, 201, {});
