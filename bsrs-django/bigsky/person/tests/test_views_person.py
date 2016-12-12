@@ -874,3 +874,56 @@ class PasswordTests(APITestCase):
         self.client.logout()
         self.client.login(username=self.person2.username, password=new_password)
         self.assertIn('_auth_user_id', self.client.session)
+
+
+class SessionViewTests(APITestCase):
+
+    def setUp(self):
+        self.person = create_single_person()
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_get(self):
+        response = self.client.get('/api/session/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['id'], str(self.person.id))
+        self.assertEqual(data['first_name'], self.person.first_name)
+        self.assertEqual(data['middle_initial'], self.person.middle_initial)
+        self.assertEqual(data['last_name'], self.person.last_name)
+        self.assertEqual(data['username'], self.person.username)
+        self.assertEqual(data['title'], self.person.title)
+        self.assertEqual(data['employee_id'], self.person.employee_id)
+        self.assertEqual(data['locale'], str(self.person.locale.id))
+        self.assertEqual(data['role'], str(self.person.role.id))
+        self.assertEqual(data['tenant'], str(self.person.role.tenant.id))
+        self.assertIn('inherited', data)
+        self.assertEqual(data['locations'][0]['id'], str(self.person.locations.first().id))
+        self.assertEqual(data['locations'][0]['number'], self.person.locations.first().number)
+        self.assertEqual(data['locations'][0]['location_level'], str(self.person.locations.first().location_level.id))
+        self.assertEqual(data['locations'][0]['status_fk'], str(self.person.locations.first().status.id))
+        self.assertEqual(data['locations'][0]['number'], self.person.locations.first().number)
+        self.assertEqual(data['status_fk'], str(self.person.status.id))
+        self.assertEqual(sorted(data['permissions']), sorted(self.person.permissions))
+
+    def test_must_be_authenticated(self):
+        self.client.logout()
+        response = self.client.get('/api/session/')
+        self.assertEqual(response.status_code, 403)
+
+    def test_locale(self):
+        self.person.locale = None
+        self.person.save()
+        self.assertIsNone(self.person.locale)
+        mommy.make(Locale, locale='es')
+
+        response = self.client.get(
+            '/api/session/', HTTP_ACCEPT_LANGUAGE='es;q=0.8')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Locale.objects.get(id=data['locale']).locale, 'es')

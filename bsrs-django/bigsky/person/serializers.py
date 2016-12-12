@@ -9,7 +9,6 @@ from generic.serializers import AttachmentSerializer, AttachmentThumbnailSeriali
 from contact.serializers import (PhoneNumberSerializer, EmailSerializer, AddressSerializer,
     AddressUpdateSerializer)
 from location.serializers import LocationIdNameOnlySerializer, LocationStatusFKSerializer
-from person.helpers import PermissionInfo
 from person.models import Person, Role, PersonStatus
 from person.validators import RoleLocationValidator, RoleCategoryValidator
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,

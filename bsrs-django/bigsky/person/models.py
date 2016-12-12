@@ -1,4 +1,3 @@
-import copy
 from datetime import timedelta
 from itertools import chain
 import re
@@ -559,8 +558,6 @@ class Person(BaseModel, AbstractUser):
     def _update_defaults(self):
         if not self.status:
             self.status = PersonStatus.objects.default()
-        if not self.locale:
-            self.locale = Locale.objects.system_default()
         if not self.password_expire_date:
             self.password_expire_date = self._password_expire_date
 

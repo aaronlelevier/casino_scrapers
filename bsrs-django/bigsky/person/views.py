@@ -8,6 +8,7 @@ from rest_framework import permissions, status
 from rest_framework.decorators import list_route
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from person import serializers as ps
 from person.models import Person, Role, PersonAndRole
@@ -187,3 +188,12 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
             person.role.run_password_validators(password)
         except DjangoValidationError as e:
             raise ValidationError(e)
+
+
+class SessionView(APIView):
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        locale = request.META.get('HTTP_ACCEPT_LANGUAGE', None)
+        return Response(self.request.user.to_dict_with_permissions(locale))

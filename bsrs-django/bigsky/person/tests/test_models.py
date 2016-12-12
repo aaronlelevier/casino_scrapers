@@ -490,7 +490,7 @@ class PersonTests(TestCase):
         self.person._update_defaults()
 
         self.assertEqual(self.person.status, self.person_default_status)
-        self.assertEqual(self.person.locale, Locale.objects.system_default())
+        self.assertIsNone(self.person.locale)
         self.assertIsNotNone(self.person.password_expire_date)
         self.assertEqual(self.person.fullname, self.person.get_full_name())
 
@@ -662,6 +662,16 @@ class PersonTests(TestCase):
         self.assertEqual(dict_person['locations'][0]['location_level'], str(self.person.locations.first().location_level.id))
         self.assertEqual(dict_person['locations'][0]['number'], self.person.locations.first().number)
         self.assertEqual(dict_person['locations'][0]['name'], self.person.locations.first().name)
+
+    def test_to_dict_locale(self):
+        locale, _ = Locale.objects.get_or_create(locale='es')
+        self.person.locale = None
+        self.person.save()
+        self.assertIsNone(self.person.locale)
+
+        ret = self.person.to_dict('es;q=0.8')
+
+        self.assertEqual(ret['locale'], str(locale.id))
 
     def test_all_locations_and_children(self):
         """

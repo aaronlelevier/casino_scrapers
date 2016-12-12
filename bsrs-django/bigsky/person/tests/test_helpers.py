@@ -2,9 +2,6 @@ from django.contrib.auth.models import Group, Permission
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.test import TestCase
-from django.utils.text import capfirst
-
-from collections import namedtuple
 
 from person import helpers
 from person.tests.factory import create_role, create_person

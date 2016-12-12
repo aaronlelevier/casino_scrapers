@@ -52,14 +52,6 @@ class IndexTests(SetupMixin, TestCase):
         response = self.client.get(reverse('index'))
         self.assertEqual(response.status_code, 200)
 
-    def test_logged_in_no_locale(self):
-        Person.objects.filter(id=str(self.person.id)).update(locale=None)
-        self.client.login(username=self.person.username, password=PASSWORD)
-        response = self.client.get(reverse('index'), HTTP_ACCEPT_LANGUAGE='es;q=0.8')
-        data = json.loads(response.context['person_current'])
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(Locale.objects.get(id=data['locale']).locale, 'es')
-
     def test_logged_out_redirect(self):
         response = self.client.get(reverse('index'))
         self.assertRedirects(response, reverse('login')+'?next='+reverse('index'))
@@ -345,28 +337,6 @@ class BootstrappedDataTests(SetupMixin, TestCase):
         # default check
         self.assertEqual(currency.code, 'USD')
         self.assertTrue(usd['default'])
-
-    def test_person_current(self):
-        Currency.objects.default()
-        data = json.loads(self.response.context['person_current'])
-        self.assertEqual(data['id'], str(self.person.id))
-        self.assertEqual(data['first_name'], self.person.first_name)
-        self.assertEqual(data['middle_initial'], self.person.middle_initial)
-        self.assertEqual(data['last_name'], self.person.last_name)
-        self.assertEqual(data['username'], self.person.username)
-        self.assertEqual(data['title'], self.person.title)
-        self.assertEqual(data['employee_id'], self.person.employee_id)
-        self.assertEqual(data['locale'], str(self.person.locale.id))
-        self.assertEqual(data['role'], str(self.person.role.id))
-        self.assertEqual(data['tenant'], str(self.person.role.tenant.id))
-        self.assertIn('inherited', data)
-        self.assertEqual(data['locations'][0]['id'], str(self.person.locations.first().id))
-        self.assertEqual(data['locations'][0]['number'], self.person.locations.first().number)
-        self.assertEqual(data['locations'][0]['location_level'], str(self.person.locations.first().location_level.id))
-        self.assertEqual(data['locations'][0]['status_fk'], str(self.person.locations.first().status.id))
-        self.assertEqual(data['locations'][0]['number'], self.person.locations.first().number)
-        self.assertEqual(data['status_fk'], str(self.person.status.id))
-        self.assertEqual(sorted(data['permissions']), sorted(self.person.permissions))
 
     def test_default_model_ordering(self):
         # Note: this is a Dict Object generated off off URL's and the models,
