@@ -220,7 +220,7 @@ test('clicking select for categories will fire off xhr request for all parent ca
     assert.equal(page.categoriesSelected, 1);
   });
   let category_children_endpoint = PREFIX + '/admin/categories/parents/';
-  xhr(category_children_endpoint, 'GET', null, {}, 200, CF.top_level_role());
+  xhr(category_children_endpoint, 'GET', null, {}, 200, CF.top_level());
   page.categoryClickDropdown();
   andThen(() => {
     assert.equal(page.categoryOptionLength, 2);
@@ -262,7 +262,7 @@ test('starting with multiple categories, can remove all categories (while not po
     assert.equal(page.categoriesSelected, 0);
   });
   let category_endpoint = PREFIX + '/admin/categories/parents/';
-  xhr(category_endpoint, 'GET', null, {}, 200, CF.top_level_role());
+  xhr(category_endpoint, 'GET', null, {}, 200, CF.top_level());
   page.categoryClickDropdown();
   andThen(() => {
     let role = store.find('role', RD.idOne);

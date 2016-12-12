@@ -14,23 +14,16 @@ CATEGORY_FIELDS = ('id', 'name', 'description', 'label',
 
 # Leaf Node
 
-class CategoryChildrenSerializer(BaseCreateSerializer):
+class CategoryIDNameSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Category
         fields = ('id', 'name', 'level',)
 
 
-class CategoryIDNameOnlySerializer(serializers.ModelSerializer):
-    # DTD and Person Current
-    class Meta:
-        model = Category
-        fields = ('id', 'name',)
+class CategoryChildrenSerializer(BaseCreateSerializer):
 
-
-class CategoryIDNameSerializer(BaseCreateSerializer):
-
-    children = CategoryChildrenSerializer(many=True, read_only=True)
+    children = CategoryIDNameSerializer(many=True, read_only=True)
     parent_id = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), source='parent')
 
     class Meta:
@@ -72,8 +65,8 @@ class CategoryAutomationFilterSerializer(serializers.ModelSerializer):
 
 class CategoryDetailSerializer(BaseCreateSerializer):
 
-    parent = CategoryIDNameSerializer(read_only=True)
-    children = CategoryChildrenSerializer(many=True, read_only=True)
+    parent = CategoryChildrenSerializer(read_only=True)
+    children = CategoryIDNameSerializer(many=True, read_only=True)
 
     class Meta:
         model = Category

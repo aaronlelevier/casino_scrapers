@@ -5,7 +5,7 @@ from model_mommy import mommy
 from rest_framework.test import APITestCase
 
 from dtd.models import TreeData, DTD_START_ID
-from dtd.serializers import TreeDataDetailSerializer
+from dtd.serializers import TreeDataDetailSerializer, TreeDataCreateUpdateSerializer
 from dtd.tests.factory import create_tree_data
 from dtd.tests.mixins import TreeDataTestSetUpMixin
 from ticket.models import Ticket
@@ -56,7 +56,7 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.destination.id))
         self.assertEqual(data['key'], self.destination.key)
-        self.assertEqual(data.keys(), TreeDataDetailSerializer(self.destination).data.keys())
+        self.assertEqual(data.keys(), TreeDataCreateUpdateSerializer(self.destination).data.keys())
 
     def test_patch__ticket_updated_and_dtd_response_returned(self):
         """

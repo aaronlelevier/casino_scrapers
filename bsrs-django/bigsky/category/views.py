@@ -46,7 +46,7 @@ class CategoryViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet
         if parent is for category power select in ticket view
         """
         if 'parent' in self.request.query_params:
-            return cs.CategoryIDNameSerializer
+            return cs.CategoryChildrenSerializer
         elif self.action == 'list':
             return cs.CategoryListSerializer
         elif self.action == 'retrieve':
@@ -78,10 +78,10 @@ class CategoryViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet
         return Response(serializer.data)
 
     @list_route(methods=['GET'])
-    @paginate_queryset_as_response(cs.CategoryIDNameSerializer)
+    @paginate_queryset_as_response(cs.CategoryChildrenSerializer)
     def parents(self, request):
         """
-        For ticket top level category open power select
+        For ticket top level category open power select and role ccategory power select
         """
         return Category.objects.filter(parent__isnull=True)
 

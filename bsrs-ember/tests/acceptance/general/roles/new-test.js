@@ -83,7 +83,7 @@ test('visiting role/new', (assert) => {
   fillIn('.t-settings-dashboard_text', RD.dashboard_textTwo);
   selectChoose('.t-role-role-type', RD.roleTypeGeneral);
   selectChoose('.t-location-level-select', LLD.nameCompany);
-  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
+  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
   page.categoryClickDropdown();
   page.categoryClickOptionOneEq();
   fillIn('.t-amount', CURRENCY_DEFAULTS.authAmountOne);
@@ -193,7 +193,7 @@ test('when user enters new form and doesnt enter data, the record is correctly r
 /*ROLE TO CATEGORY M2M*/
 test('clicking power select for parent categories will fire off xhr request for all parent categories', (assert) => {
   page.visitNew();
-  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
+  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
   page.categoryClickDropdown();
   andThen(() => {
     assert.equal(page.categoryOptionLength, 2);
@@ -227,7 +227,7 @@ test('adding and removing removing a category in power select for categories wil
   andThen(() => {
     patchRandom(counter);
   });
-  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
+  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
   page.categoryClickDropdown();
   andThen(() => {
     assert.equal(page.categoryOptionLength, 2);
@@ -266,7 +266,7 @@ test('adding and removing removing a category in power select for categories wil
 
 test('can add multiple categories', (assert) => {
   page.visitNew();
-  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
+  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
   page.categoryClickDropdown();
   andThen(() => {
     let role = store.find('role', UUID.value);
@@ -303,7 +303,7 @@ test('adding a new role should allow for another new role to be created after th
   generalPage.new();
   page.nameFill(RD.nameOne);
   selectChoose(LLEVEL_SELECT, LLD.nameCompany);
-  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
+  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
   page.categoryClickDropdown();
   page.categoryClickOptionOneEq();
   ajax(url, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
@@ -322,7 +322,7 @@ test('adding a new role should allow for another new role to be created after th
 
 test('setting permissions and save', (assert) => {
   page.visitNew();
-  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level_role());
+  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
   page.categoryClickDropdown();
   page.categoryClickOptionOneEq();
   page.nameFill(RD.nameOne);

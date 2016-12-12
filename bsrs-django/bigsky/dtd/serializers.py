@@ -3,7 +3,7 @@ import copy
 from rest_framework import serializers
 
 from category.models import Category
-from category.serializers import CategoryIDNameOnlySerializer
+from category.serializers import CategoryIDNameSerializer
 from dtd.models import TreeField, TreeOption, TreeLink, TreeData
 from dtd.validators import UniqueDtdFieldValidator
 from generic.models import Attachment
@@ -48,7 +48,7 @@ class TreeDataListSerializer(BaseCreateSerializer):
 
 class TreeLinkDetailSerializer(BaseCreateSerializer):
 
-    categories = CategoryIDNameOnlySerializer(many=True, required=False)
+    categories = CategoryIDNameSerializer(many=True, required=False)
     destination = TreeDataListSerializer(required=False)
     priority_fk = serializers.PrimaryKeyRelatedField(queryset=TicketPriority.objects.all(), source='priority')
     status_fk = serializers.PrimaryKeyRelatedField(queryset=TicketStatus.objects.all(), source='status')

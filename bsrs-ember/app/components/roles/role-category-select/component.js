@@ -19,6 +19,7 @@ var RoleCategorySelect = Ember.Component.extend({
             const new_category_ids = new_categories.mapBy('id');
             new_categories.forEach((cat) => {
                 if (!old_category_ids.includes(cat.id)) {
+                    delete cat.children;
                     role.add_category(cat);
                 }
             });
