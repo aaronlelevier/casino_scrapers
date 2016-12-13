@@ -32,11 +32,8 @@ const DJANGO_DTD_NEW_URL = `${DJANGO_DTD_URL}${UUID.value}/`;
 const DTD_ERROR_URL = BASEURLS.dtd_error_url;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
-let store;
-
 moduleForAcceptance('Acceptance | general dtd-new', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     xhr(`${DJANGO_DTD_URL}?page=1`, 'GET', null, {}, 201, DTDF.list());
     random.uuid = function() { return UUID.value; };
   },
@@ -44,13 +41,13 @@ moduleForAcceptance('Acceptance | general dtd-new', {
 
 /* jshint ignore:start */
 
-test('visiting /dtd/new', async assert => {
+test('visiting /dtd/new', async function(assert) {
   await page.visit();
   assert.equal(currentURL(), DTD_URL);
   await click('.t-add-new');
   assert.equal(currentURL(), DTD_NEW_URL);
-  assert.equal(store.find('dtd').get('length'), 1);
-  const dtd = store.find('dtd', UUID.value);
+  assert.equal(this.store.find('dtd').get('length'), 1);
+  const dtd = this.store.find('dtd', UUID.value);
   assert.ok(dtd.get('new'));
   assert.notOk(dtd.get('key'));
   assert.notOk(dtd.get('description'));
@@ -98,7 +95,7 @@ test('visiting /dtd/new', async assert => {
   assert.ok(link.get('priorityIsNotDirty'));
 });
 
-test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
+test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', function(assert) {
   page.visitNew();
   page.keyFillIn(DTD.keyOne);
   generalPage.cancel();
@@ -122,7 +119,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from this.store', function(assert) {
   page.visitNew();
   page.keyFillIn(DTD.keyOne);
   generalPage.cancel();
@@ -134,7 +131,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
       assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
       assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
-      let dtds = store.find('dtd');
+      let dtds = this.store.find('dtd');
       assert.equal(dtds.get('length'), 1);
     });
   });
@@ -143,20 +140,20 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     waitFor(assert, () => {
       assert.equal(currentURL(), DTD_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));
-      let dtds = store.find('dtd');
+      let dtds = this.store.find('dtd');
       assert.equal(dtds.get('length'), 0);
       assert.equal(find('tr.t-grid-data').length, 10);
     });
   });
 });
 
-test('when user enters new form and doesnt enter data, the record is correctly removed from the store', async assert => {
+test('when user enters new form and doesnt enter data, the record is correctly removed from the this.store', async function(assert) {
   await page.visitNew();
   await generalPage.cancel();
-  assert.equal(store.find('dtd').get('length'), 0);
+  assert.equal(this.store.find('dtd').get('length'), 0);
 });
 
-test('adding a new dtd should allow for another new dtd to be created after the first is persisted', async assert => {
+test('adding a new dtd should allow for another new dtd to be created after the first is persisted', async function(assert) {
   await visit(DTD_URL);
   await click('.t-add-new');
   page.keyFillIn(DTD.keyOne);
@@ -189,7 +186,7 @@ test('adding a new dtd should allow for another new dtd to be created after the 
   assert.equal(currentURL(), DTD_NEW_URL);
 });
 
-skip('400 error redirects to dtd-error route', async assert => {
+skip('400 error redirects to dtd-error route', async function(assert) {
   await page.visit();
   await click('.t-add-new');
   page.keyFillIn(DTD.keyOne);

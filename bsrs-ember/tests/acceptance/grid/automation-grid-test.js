@@ -22,11 +22,10 @@ const API_DETAIL_URL = `${AUTOMATION_URL}${AD.idOne}/`;
 
 const NUMBER_FOUR = {keyCode: 52};
 
-let application, store, listXhr;
+let application, listXhr;
 
 moduleForAcceptance('Acceptance | automation grid test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     const listData = AF.list();
     listXhr = xhr(`${AUTOMATION_URL}?page=1`, 'GET', null, {}, 200, listData);
   }
@@ -34,7 +33,7 @@ moduleForAcceptance('Acceptance | automation grid test', {
 
 /* jshint ignore:start */
 
-test('template translation tags as variables', async (assert) => {
+test('template translation tags as variables', async function(assert) {
   await visit(AUTOMATION_LIST_URL);
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
   assert.equal(generalPage.gridTitle, t('admin.automation.other'));
@@ -44,7 +43,7 @@ test('template translation tags as variables', async (assert) => {
   assert.equal(page.descriptionSortText, t('admin.automation.description'));
 });
 
-test(`initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr`, async (assert) => {
+test(`initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr`, async function(assert) {
   await visit(AUTOMATION_LIST_URL);
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
   assert.equal(document.title,  t('doctitle.automation.index', { count: 10 }));
@@ -54,12 +53,12 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
   pagination(assert);
 });
 
-test('clicking page 2 will load in another set of data as well as clicking page 1 after that reloads the original set of data (both require an additional xhr)', async (assert) => {
+test('clicking page 2 will load in another set of data as well as clicking page 1 after that reloads the original set of data (both require an additional xhr)', async function(assert) {
   var page_two = `${AUTOMATION_URL}?page=2`;
   xhr(page_two ,'GET',null,{},200,AF.list());
   await visit(AUTOMATION_LIST_URL);
   await click('.t-page:eq(1) a');
-  const automations = store.find('automation-list');
+  const automations = this.store.find('automation-list');
   assert.equal(automations.get('length'), 10);
   assert.equal(currentURL(), AUTOMATION_LIST_URL + '?page=2');
   assert.equal(find('.t-grid-data').length, PAGE_SIZE);
@@ -78,7 +77,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
   pagination(assert);
 });
 
-test('clicking first,last,next and previous will request page 1 and 2 correctly', async (assert) => {
+test('clicking first,last,next and previous will request page 1 and 2 correctly', async function(assert) {
   var page_two = `${AUTOMATION_URL}?page=2`;
   xhr(page_two ,'GET',null,{},200,AF.list_two());
   await visit(AUTOMATION_LIST_URL);
@@ -123,7 +122,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
   isNotDisabledElement('.t-last');
 });
 
-test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', async (assert) => {
+test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', async function(assert) {
   await visit(AUTOMATION_LIST_URL);
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
   random.uuid = function() { return UUID.value; };
@@ -138,7 +137,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
 
 // description search/sort
 
-test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', async (assert) => {
+test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', async function(assert) {
   await visit(AUTOMATION_LIST_URL);
   assert.equal(find('.t-grid-data:eq(0) .t-automation-description').text().trim(), AD.descriptionGridOne);
   const searchText = '4';
@@ -156,7 +155,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
   assert.equal(find('.t-grid-data:eq(0) .t-automation-description').text().trim(), AD.descriptionGridOne);
 });
 
-test('multiple sort options appear in the query string as expected', async (assert) => {
+test('multiple sort options appear in the query string as expected', async function(assert) {
   await visit(AUTOMATION_LIST_URL);
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
   assert.equal(find('.t-grid-data').length, PAGE_SIZE);
@@ -175,7 +174,7 @@ test('multiple sort options appear in the query string as expected', async (asse
   assert.equal(find('.t-grid-data:eq(0) .t-automation-description').text().trim(), AD.descriptionGridOneReverse);
 });
 
-test('export csv button shows in grid header', async (assert) => {
+test('export csv button shows in grid header', async function(assert) {
   await visit(AUTOMATION_LIST_URL);
   assert.equal(find('[data-test-id="grid-export-btn"]').length, 1);
   assert.equal(find('[data-test-id="grid-export-btn"]').text().trim(), t('grid.export'));

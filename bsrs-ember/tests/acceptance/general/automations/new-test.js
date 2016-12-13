@@ -23,11 +23,10 @@ const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
 const NEW_URL = `${BASE_URL}/new/1`;
 
-var store, listXhr;
+var listXhr;
 
 moduleForAcceptance('Acceptance | general automation new test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     const listData = AF.list();
     listXhr = xhr(`${AUTOMATION_URL}?page=1`, 'GET', null, {}, 200, listData);
     random.uuid = function() { return UUID.value; };
@@ -36,7 +35,7 @@ moduleForAcceptance('Acceptance | general automation new test', {
 
 /* jshint ignore:start */
 
-test('visit new URL and create a new record', async assert => {
+test('visit new URL and create a new record', async function(assert) {
   await visit(NEW_URL);
   assert.equal(currentURL(), NEW_URL);
   assert.equal(document.title,  t('doctitle.automation.new'));
@@ -90,7 +89,7 @@ test('visit new URL and create a new record', async assert => {
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
-test('when user creates an automation they should see an empty action', async assert => {
+test('when user creates an automation they should see an empty action', async function(assert) {
   clearxhr(listXhr);
   await visit(NEW_URL);
   assert.equal(currentURL(), NEW_URL);
@@ -101,7 +100,7 @@ test('when user creates an automation they should see an empty action', async as
   assert.equal(Ember.$('.t-automation-action-assignee-select').length, 1);
 });
 
-test('when user can visit new automation with, which stats with an empty action widget, and can cancel hit with no modal', async assert => {
+test('when user can visit new automation with, which stats with an empty action widget, and can cancel hit with no modal', async function(assert) {
   await visit(NEW_URL);
   assert.equal(Ember.$('.t-automation-action-type-select .ember-power-select-placeholder').length, 1);
   await generalPage.cancel();
@@ -115,7 +114,7 @@ test('when user can visit new automation with, which stats with an empty action 
 
 // cancel modal tests
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', async assert => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', async function(assert) {
   clearxhr(listXhr);
   await visit(NEW_URL);
   await page.descriptionFill(AD.descriptionTwo);
@@ -137,7 +136,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', function(assert) {
   visit(NEW_URL);
   page.descriptionFill(AD.descriptionTwo);
   generalPage.cancel();
@@ -155,14 +154,14 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('clicking cancel button with no edits will take from detail view to list view', async assert => {
+test('clicking cancel button with no edits will take from detail view to list view', async function(assert) {
   await visit(NEW_URL);
   assert.equal(currentURL(), NEW_URL);
   await generalPage.cancel();
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
-test('validation - at least one event is required, each action must have a type', async assert => {
+test('validation - at least one event is required, each action must have a type', async function(assert) {
   clearxhr(listXhr);
   await visit(NEW_URL);
   assert.equal(currentURL(), NEW_URL);
@@ -188,7 +187,7 @@ test('validation - at least one event is required, each action must have a type'
   assert.equal(Ember.$('.t-automation-event-select').length, 1);
 });
 
-test('validation - if type is priority, a ticket priority must be selected', async assert => {
+test('validation - if type is priority, a ticket priority must be selected', async function(assert) {
   clearxhr(listXhr);
   await visit(NEW_URL);
   assert.equal(currentURL(), NEW_URL);

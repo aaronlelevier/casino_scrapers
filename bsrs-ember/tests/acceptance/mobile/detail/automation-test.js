@@ -15,7 +15,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import pageDrawer from 'bsrs-ember/tests/pages/nav-drawer';
 import BASEURLS, { AUTOMATION_URL, AUTOMATION_LIST_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
-var store, listXhr;
+var listXhr;
 
 const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
 const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
@@ -25,7 +25,6 @@ const automation_PUT_URL = `${AUTOMATION_URL}${AD.idOne}/`;
 moduleForAcceptance('Acceptance | general mobile automation detail test', {
   beforeEach() {
     setWidth('mobile');
-    store = this.application.__container__.lookup('service:simpleStore');
     listXhr = xhr(`${AUTOMATION_URL}?page=1`, 'GET', null, {}, 200, AF.list());
     xhr(`${AUTOMATION_URL}${AD.idOne}/`, 'GET', null, {}, 200, AF.detail(AD.idOne));
   },
@@ -33,7 +32,7 @@ moduleForAcceptance('Acceptance | general mobile automation detail test', {
 
 /* jshint ignore:start */
 
-test('can click from admin to automation grid to detail', async assert => {
+test('can click from admin to automation grid to detail', async function(assert) {
   await generalPage.visitAdmin();
   assert.equal(currentURL(), BASEURLS.base_admin_url);
   await pageDrawer.clickDrawer();
@@ -44,7 +43,7 @@ test('can click from admin to automation grid to detail', async assert => {
   assert.equal(currentURL(), GRID_DETAIL_URL);
 });
 
-test('can click through component sections and save to redirect to index', async assert => {
+test('can click through component sections and save to redirect to index', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   await generalMobilePage.footerItemTwoClick();
@@ -57,7 +56,7 @@ test('can click through component sections and save to redirect to index', async
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
-test('visit mobile detail and update all fields', async assert => {
+test('visit mobile detail and update all fields', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(automationPage.descriptionValue, AD.descriptionOne);
@@ -69,7 +68,7 @@ test('visit mobile detail and update all fields', async assert => {
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
-test('if the automation does not have at least one filter, it is invalid and cannot save', async assert => {
+test('if the automation does not have at least one filter, it is invalid and cannot save', async function(assert) {
   clearxhr(listXhr);
   await page.visitDetail();
   automationPage.descriptionFill('');
@@ -78,7 +77,7 @@ test('if the automation does not have at least one filter, it is invalid and can
   assert.equal(currentURL(), DETAIL_URL);
 });
 
-test('show the filter count on the detail section', async assert => {
+test('show the filter count on the detail section', async function(assert) {
   clearxhr(listXhr);
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
@@ -86,7 +85,7 @@ test('show the filter count on the detail section', async assert => {
 });
 
 // NOTE: Delete button not available
-// test('visit detail and delete record', async assert => {
+// test('visit detail and delete record', async function(assert) {
 //   await page.visitDetail();
 //   assert.equal(currentURL(), DETAIL_URL);
 //   xhr(`${AUTOMATION_URL}${AD.idOne}/`, 'DELETE', null, {}, 204, {});

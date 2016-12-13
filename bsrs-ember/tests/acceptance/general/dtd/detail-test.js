@@ -35,11 +35,10 @@ const BACKSPACE = {keyCode: 8};
 const DTD_ERROR_URL = BASEURLS.dtd_error_url;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
-let store, endpoint, list_xhr, detail_xhr, detail_data;
+let endpoint, list_xhr, detail_xhr, detail_data;
 
 moduleForAcceptance('Acceptance | general dtd detail', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = `${PREFIX}${BASE_URL}/`;
     list_xhr = xhr(`${endpoint}?page=1`, 'GET', null, {}, 200, DTDF.list());
     detail_data = DTDF.detail(DTD.idOne);
@@ -47,7 +46,7 @@ moduleForAcceptance('Acceptance | general dtd detail', {
   },
 });
 
-test('decision tree definition displays data and does not update nor transitions if not dirty model', (assert) => {
+test('decision tree definition displays data and does not update nor transitions if not dirty model', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -66,10 +65,10 @@ test('decision tree definition displays data and does not update nor transitions
   });
 });
 
-test('dtd payload change priority only', (assert) => {
+test('dtd payload change priority only', function(assert) {
   page.visitDetail();
   andThen(() => {
-    const dtd = store.find('dtd', DTD.idOne);
+    const dtd = this.store.find('dtd', DTD.idOne);
     assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(dtd.get('linksIsNotDirty'));
     const link = dtd.get('links').objectAt(0);
@@ -81,7 +80,7 @@ test('dtd payload change priority only', (assert) => {
   .priorityClickOptionTwo();
   andThen(() => {
     assert.equal(ticketPage.priorityInput.split(' ')[0], TP.priorityTwo);
-    const dtd = store.find('dtd', DTD.idOne);
+    const dtd = this.store.find('dtd', DTD.idOne);
     assert.ok(dtd.get('isDirtyOrRelatedDirty'));
     assert.ok(dtd.get('linksIsDirty'));
     const link = dtd.get('links').objectAt(0);
@@ -96,7 +95,7 @@ test('dtd payload change priority only', (assert) => {
 });
 
 // TODO: Comment out to see if state-country branch will pass
-// test('dtd payload to update all fields', (assert) => {
+// test('dtd payload to update all fields', function(assert) {
 //   page.visitDetail();
 //   andThen(() => {
 //     assert.ok(find('.t-dtd-link-action_button').prop('checked'));
@@ -143,7 +142,7 @@ test('dtd payload change priority only', (assert) => {
 //   });
 // });
 
-test('add a new field and update', (assert) => {
+test('add a new field and update', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -193,7 +192,7 @@ test('add a new field and update', (assert) => {
   });
 });
 
-test('dtd can clear out link priority', (assert) => {
+test('dtd can clear out link priority', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -210,7 +209,7 @@ test('dtd can clear out link priority', (assert) => {
   });
 });
 
-test('dtd can clear out link status', (assert) => {
+test('dtd can clear out link status', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -227,7 +226,7 @@ test('dtd can clear out link status', (assert) => {
   });
 });
 
-test('click modal cancel (dtd)', (assert) => {
+test('click modal cancel (dtd)', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.ok(find('.t-dtd-link-action_button').prop('checked'));
@@ -259,7 +258,7 @@ test('click modal cancel (dtd)', (assert) => {
   });
 });
 
-test('click modal rollback (dtd)', (assert) => {
+test('click modal rollback (dtd)', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.ok(find('.t-dtd-link-action_button').prop('checked'));
@@ -291,7 +290,7 @@ test('click modal rollback (dtd)', (assert) => {
   });
 });
 
-test('clicking cancel button will stay on detail view', (assert) => {
+test('clicking cancel button will stay on detail view', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(),DETAIL_URL);
@@ -302,7 +301,7 @@ test('clicking cancel button will stay on detail view', (assert) => {
   });
 });
 
-test('altering the page size will not push in models over top of dirty ones', assert => {
+test('altering the page size will not push in models over top of dirty ones', function(assert) {
   page.visitDetail();
   page.descriptionFillIn(DTD.descriptionTwo);
   andThen(() => {
@@ -321,7 +320,7 @@ test('altering the page size will not push in models over top of dirty ones', as
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', function(assert) {
   page.visitDetail();
   ticketPage.priorityClickDropdown();
   ticketPage.priorityClickOptionTwo();
@@ -346,7 +345,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 /* jshint ignore:start */
-test('add field, cancel, no modal', async assert => {
+test('add field, cancel, no modal', async function(assert) {
   await page.visitDetail();
   assert.equal(page.fieldLabelCount, 1);
   await page.addFieldBtn();
@@ -356,7 +355,7 @@ test('add field, cancel, no modal', async assert => {
   assert.equal(page.fieldLabelCount, 1);
 });
 
-test('add link, remove, cancel', async assert => {
+test('add link, remove, cancel', async function(assert) {
   await page.visitDetail();
   assert.equal(page.linkTextLength, 1);
   await page.addLinkBtn();
@@ -366,7 +365,7 @@ test('add link, remove, cancel', async assert => {
   assert.equal(page.linkTextLength, 1);
 });
 
-test('remove existing, cancel, modal - should be prompted when removing existing because has data', assert => {
+test('remove existing, cancel, modal - should be prompted when removing existing because has data', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(page.fieldLabelCount, 1);
@@ -398,7 +397,7 @@ test('remove existing, cancel, modal - should be prompted when removing existing
   });
 });
 
-test('when click delete, modal displays and when click ok, dtd is deleted and removed from store', async assert => {
+test('when click delete, modal displays and when click ok, dtd is deleted and removed from this.store', async function(assert) {
   await visit(DETAIL_URL);
   await generalPage.delete();
   andThen(() => {
@@ -415,13 +414,13 @@ test('when click delete, modal displays and when click ok, dtd is deleted and re
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), DTD_URL);
-      assert.equal(store.find('dtd', DTD.idOne).get('length'), undefined);
+      assert.equal(this.store.find('dtd', DTD.idOne).get('length'), undefined);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
 
-test('deep linking with an xhr with a 404 status code will show up in the error component (dtd)', async assert => {
+test('deep linking with an xhr with a 404 status code will show up in the error component (dtd)', async function(assert) {
   errorSetup();
   clearxhr(detail_xhr);
   const exception = `This record does not exist.`;
@@ -434,7 +433,7 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
 });
 
 // TODO: Teke a look at test. right now it not valid.j
-// test('click add-link, and fill in', async assert => {
+// test('click add-link, and fill in', async function(assert) {
 //   random.uuid = function() { return UUID.value; };
 //   await page.visitDetail();
 //   assert.ok(find('.t-dtd-link-action_button').prop('checked'));
@@ -456,7 +455,7 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
 // });
 
 /*  */
-test('categories selector is wired up and working', async assert => {
+test('categories selector is wired up and working', async function(assert) {
   await page.visitDetail();
   const top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
   xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
@@ -475,19 +474,19 @@ test('categories selector is wired up and working', async assert => {
   assert.equal(currentURL(), DETAIL_URL);
 });
 
-test('categories are in order based on text', async assert => {
+test('categories are in order based on text', async function(assert) {
   await page.visitDetail();
   assert.equal(ticketPage.categoryOneInput.split(/\s/)[0], CD.nameOne);
   assert.equal(ticketPage.categoryTwoInput.split(/\s/)[0], CD.nameRepairChild);
   assert.equal(`${ticketPage.categoryThreeInput.split(/\s/)[0]} ${ticketPage.categoryThreeInput.split(/\s/)[1]}`, CD.namePlumbingChild);
 });
 
-test('power select options are rendered immediately when enter detail route and can save different top level category', async assert => {
+test('power select options are rendered immediately when enter detail route and can save different top level category', async function(assert) {
   await page.visitDetail();
   let components = ticketPage.powerSelectComponents;
   assert.equal(components, 3);
-  let dtd = store.find('dtd', DTD.idOne);
-  let link = store.find('link', dtd.get('links').objectAt(0).get('id'));
+  let dtd = this.store.find('dtd', DTD.idOne);
+  let link = this.store.find('link', dtd.get('links').objectAt(0).get('id'));
   assert.equal(link.get('top_level_category').get('id'), CD.idOne);
   assert.equal(link.get('categories').get('length'), 3);
   let top_level_data = CF.top_level();
@@ -531,17 +530,17 @@ test('power select options are rendered immediately when enter detail route and 
   assert.equal(currentURL(), DETAIL_URL);
 });
 
-test('selecting a top level category will alter the url and can cancel/discard changes and return to index', async assert => {
+test('selecting a top level category will alter the url and can cancel/discard changes and return to index', async function(assert) {
   await page.visitDetail();
-  let dtd = store.find('dtd', DTD.idOne);
-  let link = store.find('link', dtd.get('links').objectAt(0).get('id'));
+  let dtd = this.store.find('dtd', DTD.idOne);
+  let link = this.store.find('link', dtd.get('links').objectAt(0).get('id'));
   //override electrical to have children
   run(() => {
-    store.push('category-children', {id: CCD.idOne, category_pk: CD.idTwo, child_pk: CD.idChild});
-    let cat = store.push('category', {id: CD.idTwo, name: CD.nameTwo, category_children_fks: [CCD.idOne], parent_id: CD.idOne, level: 1});
+    this.store.push('category-children', {id: CCD.idOne, category_pk: CD.idTwo, child_pk: CD.idChild});
+    let cat = this.store.push('category', {id: CD.idTwo, name: CD.nameTwo, category_children_fks: [CCD.idOne], parent_id: CD.idOne, level: 1});
     cat.save();
   });
-  assert.equal(store.find('category').get('length'), 4);
+  assert.equal(this.store.find('category').get('length'), 4);
   assert.equal(link.get('categories').get('length'), 3);
   assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
   assert.ok(link.get('categoriesIsNotDirty'));
@@ -552,7 +551,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
   const top_level_xhr = xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
   await ticketPage.categoryOneClickDropdown();
   await ticketPage.categoryOneClickOptionOne();
-  assert.equal(store.find('link').get('length'), 1);
+  assert.equal(this.store.find('link').get('length'), 1);
   assert.equal(link.get('categories').get('length'), 3);
   assert.equal(link.get('sorted_categories').get('length'), 3);
   assert.equal(link.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
@@ -566,7 +565,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
   ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id:CD.idChild}], CD.idOne, 1));
   await ticketPage.categoryTwoClickDropdown();
   await ticketPage.categoryTwoClickOptionElectrical();
-  assert.equal(store.find('category').get('length'), 5);
+  assert.equal(this.store.find('category').get('length'), 5);
   assert.equal(link.get('categories').get('length'), 2);
   assert.equal(link.get('sorted_categories').get('length'), 2);
   assert.equal(link.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
@@ -595,9 +594,9 @@ test('selecting a top level category will alter the url and can cancel/discard c
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));
-      assert.equal(store.find('category').get('length'), 5);
-      let dtd = store.find('dtd', DTD.idOne);
-      let link = store.find('link', dtd.get('links').objectAt(0).get('id'));
+      assert.equal(this.store.find('category').get('length'), 5);
+      let dtd = this.store.find('dtd', DTD.idOne);
+      let link = this.store.find('link', dtd.get('links').objectAt(0).get('id'));
       assert.equal(link.get('categories').get('length'), 3);
       assert.equal(link.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
       assert.equal(link.get('sorted_categories').objectAt(1).get('children').get('length'), 1);
@@ -628,14 +627,14 @@ test('selecting a top level category will alter the url and can cancel/discard c
   });
 });
 
-test('changing tree and reverting tree should not show as dirty', async assert => {
+test('changing tree and reverting tree should not show as dirty', async function(assert) {
   await page.visitDetail();
-  let dtd = store.find('dtd', DTD.idOne);
-  let link = store.find('link', dtd.get('links').objectAt(0).get('id'));
+  let dtd = this.store.find('dtd', DTD.idOne);
+  let link = this.store.find('link', dtd.get('links').objectAt(0).get('id'));
   //override electrical to have children
   run(() => {
-    store.push('category-children', {id: CCD.idOne, category_pk: CD.idTwo, child_pk: CD.idChild});
-    let cat = store.push('category', {id: CD.idTwo, name: CD.nameTwo, category_children_fks: [CCD.idOne], parent_id: CD.idOne, level: 1});
+    this.store.push('category-children', {id: CCD.idOne, category_pk: CD.idTwo, child_pk: CD.idChild});
+    let cat = this.store.push('category', {id: CD.idTwo, name: CD.nameTwo, category_children_fks: [CCD.idOne], parent_id: CD.idOne, level: 1});
     cat.save();
   });
   assert.ok(link.get('isNotDirtyOrRelatedNotDirty'));
@@ -671,12 +670,12 @@ test('changing tree and reverting tree should not show as dirty', async assert =
   assert.ok(link.get('categoriesIsNotDirty'));
 });
 
-test('selecting and removing a top level category will remove children categories already selected', async assert => {
+test('selecting and removing a top level category will remove children categories already selected', async function(assert) {
   await page.visitDetail();
-  let dtd = store.find('dtd', DTD.idOne);
-  let link = store.find('link', dtd.get('links').objectAt(0).get('id'));
+  let dtd = this.store.find('dtd', DTD.idOne);
+  let link = this.store.find('link', dtd.get('links').objectAt(0).get('id'));
   let components = ticketPage.powerSelectComponents;
-  assert.equal(store.find('category').get('length'), 4);
+  assert.equal(this.store.find('category').get('length'), 4);
   //change top level
   let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
   const top_level_xhr = xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
@@ -688,10 +687,10 @@ test('selecting and removing a top level category will remove children categorie
   assert.equal(components, 1);
 });
 
-test('when selecting a new parent category it should remove previously selected child category but if select same, it wont clear tree', async assert => {
+test('when selecting a new parent category it should remove previously selected child category but if select same, it wont clear tree', async function(assert) {
   await page.visitDetail();
-  let dtd = store.find('dtd', DTD.idOne);
-  let link = store.find('link', dtd.get('links').objectAt(0).get('id'));
+  let dtd = this.store.find('dtd', DTD.idOne);
+  let link = this.store.find('link', dtd.get('links').objectAt(0).get('id'));
   ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [{id: CD.idChild}], CD.idOne, 1));
   await ticketPage.categoryTwoClickDropdown();
   await ticketPage.categoryTwoClickOptionPlumbing();
@@ -728,30 +727,30 @@ test('when selecting a new parent category it should remove previously selected 
   assert.equal(currentURL(), DETAIL_URL);
 });
 
-test('can clear out top level category', async assert => {
+test('can clear out top level category', async function(assert) {
   await page.visitDetail();
-  let dtd = store.find('dtd', DTD.idOne);
-  let link = store.find('link', dtd.get('links').objectAt(0).get('id'));
+  let dtd = this.store.find('dtd', DTD.idOne);
+  let link = this.store.find('link', dtd.get('links').objectAt(0).get('id'));
   await page.removeTopLevelCategory();
   let components = ticketPage.powerSelectComponents;
   assert.equal(components, 1);
   assert.equal(link.get('categories.length'), 0);
 });
 
-test('can clear out middle category', async assert => {
+test('can clear out middle category', async function(assert) {
   await page.visitDetail();
-  let dtd = store.find('dtd', DTD.idOne);
-  let link = store.find('link', dtd.get('links').objectAt(0).get('id'));
+  let dtd = this.store.find('dtd', DTD.idOne);
+  let link = this.store.find('link', dtd.get('links').objectAt(0).get('id'));
   await page.removeMiddleCategory();
   let components = ticketPage.powerSelectComponents;
   assert.equal(components, 2);
   assert.equal(link.get('categories.length'), 1);
 });
 
-test('can clear out leaf category', async assert => {
+test('can clear out leaf category', async function(assert) {
   await page.visitDetail();
-  let dtd = store.find('dtd', DTD.idOne);
-  let link = store.find('link', dtd.get('links').objectAt(0).get('id'));
+  let dtd = this.store.find('dtd', DTD.idOne);
+  let link = this.store.find('link', dtd.get('links').objectAt(0).get('id'));
   await page.removeLeafCategory();
   let components = ticketPage.powerSelectComponents;
   assert.equal(components, 3);
@@ -759,7 +758,7 @@ test('can clear out leaf category', async assert => {
 });
 /*END  */
 
-test('sending a put request with a 400 error will redirect you to the dtd-error page', async assert => {
+test('sending a put request with a 400 error will redirect you to the dtd-error page', async function(assert) {
   await page.visitDetail();
   await ticketPage.priorityClickDropdown()
   .priorityClickOptionTwo();
@@ -772,14 +771,14 @@ test('sending a put request with a 400 error will redirect you to the dtd-error 
   assert.equal(find('.t-error-message').text(), 'WAT');
 });
 
-test('clicking on a link will not err out since action return false from dtd controller', async assert => {
+test('clicking on a link will not err out since action return false from dtd controller', async function(assert) {
   await page.visitDetail();
   click('.t-dtd-preview-btn:eq(0)');
   assert.ok(page.previewButtonOn);
 });
 
 /* OTHER */
-test('textarea autoresize working for the request field', async assert => {
+test('textarea autoresize working for the request field', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   let o_height = find('.t-dtd-single-description').innerHeight();

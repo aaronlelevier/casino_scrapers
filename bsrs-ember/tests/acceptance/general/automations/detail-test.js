@@ -34,11 +34,10 @@ const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
 const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
 const API_DETAIL_URL = `${AUTOMATION_URL}${AD.idOne}/`;
 
-var store, detailXhr, listXhr;
+var detailXhr, listXhr;
 
 moduleForAcceptance('Acceptance | general automation detail test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     const listData = AF.list();
     listXhr = xhr(`${AUTOMATION_URL}?page=1`, 'GET', null, {}, 200, listData);
     const detailData = AF.detail();
@@ -49,7 +48,7 @@ moduleForAcceptance('Acceptance | general automation detail test', {
 
 /* jshint ignore:start */
 
-test('by clicking record in list view, User is sent to detail view', async assert => {
+test('by clicking record in list view, User is sent to detail view', async function(assert) {
   await page.visit();
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
   await generalPage.gridItemZeroClick();
@@ -58,7 +57,7 @@ test('by clicking record in list view, User is sent to detail view', async asser
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
-test('detail and update all fields', async assert => {
+test('detail and update all fields', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(document.title,  t('doctitle.automation.single', { description: "foobar"}));
@@ -73,7 +72,7 @@ test('detail and update all fields', async assert => {
   // description
   await page.descriptionFill(AD.descriptionTwo);
   assert.equal(page.descriptionValue, AD.descriptionTwo);
-  const automation = store.find('automation', AD.idOne);
+  const automation = this.store.find('automation', AD.idOne);
   assert.equal(automation.get('description'), AD.descriptionTwo);
   // events
   xhr(AUTOMATION_EVENTS_URL, 'GET', null, {}, 200, AF.event_search_power_select());
@@ -112,7 +111,7 @@ test('detail and update all fields', async assert => {
   // });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', async (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', async function(assert) {
   clearxhr(listXhr);
   await page.visitDetail();
   await page.descriptionFill(AD.descriptionTwo);
@@ -134,25 +133,25 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('when user adds a filter and hits cancel they are prompted with a modal', async (assert) => {
+test('when user adds a filter and hits cancel they are prompted with a modal', async function(assert) {
   clearxhr(listXhr);
   await page.visitDetail();
   // a filter is added here, but it's empty, so the automation is still considered
   // clean, and can cancel w/o getting the modal prompt.
-  assert.equal(store.find('automation', AD.idOne).get('pf').get('length'), 1);
+  assert.equal(this.store.find('automation', AD.idOne).get('pf').get('length'), 1);
   await page.addFilter();
-  assert.equal(store.find('automation', AD.idOne).get('pf').get('length'), 2);
+  assert.equal(this.store.find('automation', AD.idOne).get('pf').get('length'), 2);
   await generalPage.cancel();
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.equal(store.find('automation', AD.idOne).get('pf').get('length'), 2);
+      assert.equal(this.store.find('automation', AD.idOne).get('pf').get('length'), 2);
       assert.ok(generalPage.modalIsVisible);
     });
   });
 });
 
-test('when user adds a filter and selects an available filter they are prompted with a modal', async (assert) => {
+test('when user adds a filter and selects an available filter they are prompted with a modal', async function(assert) {
   clearxhr(listXhr);
   await page.visitDetail();
   await page.addFilter();
@@ -168,11 +167,11 @@ test('when user adds a filter and selects an available filter they are prompted 
   });
 });
 
-test('add an empty filter and do a PUT, and the empty filter isnt sent and is silently ignored', async assert => {
+test('add an empty filter and do a PUT, and the empty filter isnt sent and is silently ignored', async function(assert) {
   await page.visitDetail();
-  assert.equal(store.find('automation', AD.idOne).get('pf').get('length'), 1);
+  assert.equal(this.store.find('automation', AD.idOne).get('pf').get('length'), 1);
   await page.addFilter();
-  assert.equal(store.find('automation', AD.idOne).get('pf').get('length'), 2);
+  assert.equal(this.store.find('automation', AD.idOne).get('pf').get('length'), 2);
   let payload = AF.put({
     filters: [{
       id: PFD.idOne,
@@ -185,12 +184,12 @@ test('add an empty filter and do a PUT, and the empty filter isnt sent and is si
   // xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
   // generalPage.save();
   // andThen(() => {
-  //   assert.equal(store.find('automation', AD.idOne).get('pf').get('length'), 1);
+  //   assert.equal(this.store.find('automation', AD.idOne).get('pf').get('length'), 1);
   //   assert.equal(currentURL(), AUTOMATION_LIST_URL);
   // });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', async (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', async function(assert) {
   await page.visitDetail();
   await page.descriptionFill(AD.descriptionTwo);
   await generalPage.cancel();
@@ -204,13 +203,13 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), AUTOMATION_LIST_URL);
-      var automation = store.find('automation', AD.idOne);
+      var automation = this.store.find('automation', AD.idOne);
       assert.equal(automation.get('description'), AD.descriptionOne);
     });
   });
 });
 
-test('when click delete, modal displays and when click ok, automation is deleted and removed from store', async assert => {
+test('when click delete, modal displays and when click ok, automation is deleted and removed from this.store', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   await generalPage.delete();
@@ -228,13 +227,13 @@ test('when click delete, modal displays and when click ok, automation is deleted
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), AUTOMATION_LIST_URL);
-      assert.equal(store.find('automation', AD.idOne).get('length'), undefined);
+      assert.equal(this.store.find('automation', AD.idOne).get('length'), undefined);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
 
-test('when click delete, and click no modal disappears', async assert => {
+test('when click delete, and click no modal disappears', async function(assert) {
   clearxhr(listXhr);
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
@@ -259,7 +258,7 @@ test('when click delete, and click no modal disappears', async assert => {
 
 // PF m2m relationship
 
-test('changing from one dynamic location available filter to another changes the location_level query param', async assert => {
+test('changing from one dynamic location available filter to another changes the location_level query param', async function(assert) {
   clearxhr(listXhr);
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
@@ -282,7 +281,7 @@ test('changing from one dynamic location available filter to another changes the
 });
 
 // TODO; may need to come back and refacotr test
-test('remove filter and save - should stay on page because an automation must have at least one filter and criteria unless auto-assign', async assert => {
+test('remove filter and save - should stay on page because an automation must have at least one filter and criteria unless auto-assign', async function(assert) {
   clearxhr(listXhr);
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
@@ -294,7 +293,7 @@ test('remove filter and save - should stay on page because an automation must ha
   assert.equal(find('.t-save-btn').attr('disabled'), undefined);
 });
 
-test('add filter, add criteria, remove filter, cancel', async assert => {
+test('add filter, add criteria, remove filter, cancel', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   xhr(`${AUTOMATION_AVAILABLE_FILTERS_URL}`, 'GET', null, {}, 200, AF.list_pfilters());
@@ -313,7 +312,7 @@ test('add filter, add criteria, remove filter, cancel', async assert => {
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
-test('select category filter and update automation', async assert => {
+test('select category filter and update automation', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
@@ -343,7 +342,7 @@ test('select category filter and update automation', async assert => {
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
-test('select state filter and update automation', async assert => {
+test('select state filter and update automation', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
@@ -373,7 +372,7 @@ test('select state filter and update automation', async assert => {
     assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
-test('select country filter and update automation', async assert => {
+test('select country filter and update automation', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
@@ -405,7 +404,7 @@ test('select country filter and update automation', async assert => {
 
 // Action m2m relationship
 
-test('add and delete an action', async assert => {
+test('add and delete an action', async function(assert) {
   // the 'assignee-select' is the first dynamic power-select on the page
   // and should only be cleared out of the final delete click, that will
   // insted of removing the last 'action' widget, clears int
@@ -428,7 +427,7 @@ test('add and delete an action', async assert => {
   assert.equal(page.actionTypeSelectedOne, t('power.select.select'));
 });
 
-test('select ticket assginee filter and update automation', async assert => {
+test('select ticket assginee filter and update automation', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
@@ -459,7 +458,7 @@ test('select ticket assginee filter and update automation', async assert => {
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
-test('visit detail and update an actions assignee', async assert => {
+test('visit detail and update an actions assignee', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   // action type
@@ -497,7 +496,7 @@ test('visit detail and update an actions assignee', async assert => {
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
-test('get an action priority and update it to a new priority', async assert => {
+test('get an action priority and update it to a new priority', async function(assert) {
   clearxhr(detailXhr);
   const json = AF.detail();
   json.actions[0]['type'] = { id: AATD.idTwo, key: AATD.keyTwo };
@@ -525,7 +524,7 @@ test('get an action priority and update it to a new priority', async assert => {
   await assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
-test('select priority filter and update automation', async assert => {
+test('select priority filter and update automation', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
@@ -549,7 +548,7 @@ test('select priority filter and update automation', async assert => {
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
-test('get an action status and update it to a new status', async assert => {
+test('get an action status and update it to a new status', async function(assert) {
   clearxhr(detailXhr);
   const json = AF.detail();
   json.actions[0]['type'] = { id: AATD.idThree, key: AATD.keyThree };
@@ -575,7 +574,7 @@ test('get an action status and update it to a new status', async assert => {
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
-test('select status filter and update automation', async assert => {
+test('select status filter and update automation', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
@@ -599,7 +598,7 @@ test('select status filter and update automation', async assert => {
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
-test('select ticketcc filter and update automation', async assert => {
+test('select ticketcc filter and update automation', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
@@ -633,7 +632,7 @@ test('select ticketcc filter and update automation', async assert => {
 });
 
 // Ticket request
-test('get an action ticket request and update it to a new ticket request', async assert => {
+test('get an action ticket request and update it to a new ticket request', async function(assert) {
   clearxhr(detailXhr);
   const json = AF.detail();
   json.actions[0]['type'] = { id: AATD.idSix, key: AATD.keySix };
@@ -663,7 +662,7 @@ test('get an action ticket request and update it to a new ticket request', async
   // });
 });
 
-test('select ticket request filter and update automation', async assert => {
+test('select ticket request filter and update automation', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(page.actionTypeSelectedOne, AATD.keyOneTrans);

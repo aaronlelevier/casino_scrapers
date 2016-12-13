@@ -37,7 +37,7 @@ moduleForAcceptance('Acceptance | general dtd list test', {
   },
 });
 
-test('visiting /dtds', (assert) => {
+test('visiting /dtds', function(assert) {
   clearxhr(detail_xhr);
   page.visit();
   andThen(() => {
@@ -45,7 +45,7 @@ test('visiting /dtds', (assert) => {
   });
 });
 
-test('admin to dtds list to detail && preview', (assert) => {
+test('admin to dtds list to detail && preview', function(assert) {
   xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
   generalPage.visitDashboard();
   andThen(() => {
@@ -84,7 +84,7 @@ test('admin to dtds list to detail && preview', (assert) => {
   });
 });
 
-test('search grid', (assert) => {
+test('search grid', function(assert) {
   page.visit();
   andThen(() => {
     assert.equal(currentURL(), DTD_URL);
@@ -113,7 +113,7 @@ test('search grid', (assert) => {
   });
 });
 
-test('detail && preview are bound and can save', (assert) => {
+test('detail && preview are bound and can save', function(assert) {
   xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
   generalPage.visitDashboard();
   andThen(() => {
@@ -139,7 +139,7 @@ test('detail && preview are bound and can save', (assert) => {
   });
 });
 
-test('toggle decision tree preview', (assert) => {
+test('toggle decision tree preview', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
@@ -210,7 +210,7 @@ test('toggle decision tree preview', (assert) => {
   });
 });
 
-test('persist pane selection when preview is off', (assert) => {
+test('persist pane selection when preview is off', function(assert) {
   page.visit();
   page.clickPreviewToggle();
   click('.t-grid-data:eq(0)');
@@ -221,7 +221,7 @@ test('persist pane selection when preview is off', (assert) => {
   });
 });
 
-test('persist pane selection when detail is off', (assert) => {
+test('persist pane selection when detail is off', function(assert) {
   page.visit();
   page.clickDetailToggle();
   click('.t-grid-data:eq(0)');
@@ -232,7 +232,7 @@ test('persist pane selection when detail is off', (assert) => {
   });
 });
 
-test('persist pane selection when detail and preview are off', (assert) => {
+test('persist pane selection when detail and preview are off', function(assert) {
   page.visit();
   page.clickPreviewToggle();
   page.clickDetailToggle();
@@ -244,7 +244,7 @@ test('persist pane selection when detail and preview are off', (assert) => {
   });
 });
 
-test('click all three previews and make sure the list stays on', (assert) => {
+test('click all three previews and make sure the list stays on', function(assert) {
   page.visit();
   page.clickPreviewToggle();
   page.clickDetailToggle();
@@ -257,7 +257,7 @@ test('click all three previews and make sure the list stays on', (assert) => {
   });
 });
 
-test('navigating to list route shows 3 panes and message in dtd pane', (assert) => {
+test('navigating to list route shows 3 panes and message in dtd pane', function(assert) {
   page.visit();
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
@@ -272,7 +272,7 @@ test('navigating to list route shows 3 panes and message in dtd pane', (assert) 
   });
 });
 
-test('clicking close on tab from detail will redirect to admin', (assert) => {
+test('clicking close on tab from detail will redirect to admin', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);

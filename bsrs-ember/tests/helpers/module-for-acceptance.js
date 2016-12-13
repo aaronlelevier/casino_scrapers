@@ -10,6 +10,7 @@ export default function(name, options = {}) {
   module(name, {
     beforeEach() {
       this.application = startApp({ error: options.error });
+      this.store = this.application.__container__.lookup('service:simpleStore');
 
       if (options.beforeEach) {
         return options.beforeEach.apply(this, arguments);
@@ -24,6 +25,7 @@ export default function(name, options = {}) {
       }).testDoneCallback();
       Ember.$.fauxjax.clear();
       uuidReset();
+      delete this.store;
       let afterEach = options.afterEach && options.afterEach.apply(this, arguments);
       return Promise.resolve(afterEach).then(() => destroyApp(this.application));
     }
