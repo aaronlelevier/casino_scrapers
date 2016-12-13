@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from category import serializers as cs
 from category.models import Category
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
+from utils.permissions import CrudPermissions
 from utils.views import BaseModelViewSet, paginate_queryset_as_response
 
 
@@ -35,7 +36,7 @@ class CategoryViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet
 
     '''
     model = Category
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, CrudPermissions)
     queryset = Category.objects.all()
     filter_fields = [f.name for f in model._meta.get_fields()]
     eager_load_actions = ['retrieve']

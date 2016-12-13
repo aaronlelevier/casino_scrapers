@@ -9,11 +9,13 @@ from location.tests.factory import create_location
 from person.models import Person
 from person.serializers import RoleCreateUpdateSerializer, PersonUpdateSerializer
 from person.tests.factory import PASSWORD, create_single_person, create_role
+from utils.tests.mixins import MockPermissionsAllowAnyMixin
 
 
-class RoleLocationValidatorTests(APITestCase):
+class RoleLocationValidatorTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(RoleLocationValidatorTests, self).setUp()
         self.role = create_role()
         self.location = create_location(location_level=self.role.location_level)
         self.person = create_single_person()
@@ -24,6 +26,7 @@ class RoleLocationValidatorTests(APITestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(RoleLocationValidatorTests, self).tearDown()
         self.client.logout()
 
     def test_location_level_not_equal_init_role(self):
@@ -58,9 +61,10 @@ class RoleLocationValidatorTests(APITestCase):
         )
 
 
-class RoleCategoryValidatorTests(APITestCase):
+class RoleCategoryValidatorTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(RoleCategoryValidatorTests, self).setUp()
         self.parent_category = create_single_category()
         self.child_category = create_single_category(parent=self.parent_category)
         # data
@@ -72,6 +76,7 @@ class RoleCategoryValidatorTests(APITestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(RoleCategoryValidatorTests, self).tearDown()
         self.client.logout()
 
     def test_validation__create(self):

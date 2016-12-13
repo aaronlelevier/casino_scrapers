@@ -2,6 +2,7 @@ from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 
 from collections import namedtuple
+from itertools import product
 
 from utils import classproperty
 
@@ -32,21 +33,15 @@ class PermissionInfo(object):
 
     @classproperty
     def CODENAMES(cls):
-        codenames = []
-        for p in cls.PERMS:
-            for m in cls.MODELS:
-                codenames.append('{}_{}'.format(p, m))
-        return codenames
+        return list(cls.names())
 
     @classproperty
     def ALL_DEFAULTS(cls):
-        ret = {}
+        return dict.fromkeys(cls.names(), False)
 
-        for p in cls.PERMS:
-            for m in cls.MODELS:
-                ret["{}_{}".format(p, m)] = False
-
-        return ret
+    @classmethod
+    def names(cls):
+        yield from ('_'.join(x) for x in product(cls.PERMS, cls.MODELS))
 
     def setUp(self):
         """

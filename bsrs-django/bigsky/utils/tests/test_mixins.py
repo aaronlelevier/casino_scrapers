@@ -13,6 +13,7 @@ from location.tests.factory import create_location
 from person.models import Person, Role
 from person.tests.factory import create_single_person, create_role, create_roles, PASSWORD
 from utils import create
+from utils.tests.mixins import MockPermissionsAllowAnyMixin
 
 
 class CheckIdCreateMixinTests(APITestCase):
@@ -35,14 +36,16 @@ class CheckIdCreateMixinTests(APITestCase):
         self.assertEqual(response.status_code, 400)
 
 
-class DestroyModelMixinTests(APITestCase):
+class DestroyModelMixinTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(DestroyModelMixinTests, self).setUp()
         self.person = create_single_person()
         self.person2 = create_single_person()
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(DestroyModelMixinTests, self).tearDown()
         self.client.logout()
 
     def test_delete(self):
@@ -70,9 +73,10 @@ class DestroyModelMixinTests(APITestCase):
             Person.objects_all.get(id=self.person2.id)
 
 
-class OrderingQuerySetMixinTests(APITestCase):
+class OrderingQuerySetMixinTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(OrderingQuerySetMixinTests, self).setUp()
         # Role
         self.role = create_role()
         # Person Records w/ specific Username
@@ -86,6 +90,7 @@ class OrderingQuerySetMixinTests(APITestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(OrderingQuerySetMixinTests, self).tearDown()
         self.client.logout()
 
     @staticmethod
@@ -163,9 +168,10 @@ class OrderingQuerySetMixinTests(APITestCase):
         self.assertEqual(str(raw_qs_first.id), data['results'][0]['id'])
 
 
-class RelatedOrderingTests(APITestCase):
+class RelatedOrderingTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(RelatedOrderingTests, self).setUp()
         # Role
         self.store = mommy.make(LocationLevel, name='store')
         self.department = mommy.make(LocationLevel, name='department')
@@ -190,6 +196,7 @@ class RelatedOrderingTests(APITestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(RelatedOrderingTests, self).tearDown()
         self.client.logout()
 
     def test_list(self):
@@ -268,9 +275,10 @@ class RelatedOrderingTests(APITestCase):
         self.assertEqual(str(self.role_admin.id), data['results'][0]['role'])
 
 
-class FilterRelatedMixinMixin(APITestCase):
+class FilterRelatedMixinMixin(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(FilterRelatedMixinMixin, self).setUp()
         self.person = create_single_person()
         self.role = self.person.role
 
@@ -284,6 +292,7 @@ class FilterRelatedMixinMixin(APITestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(FilterRelatedMixinMixin, self).tearDown()
         self.client.logout()
 
     # FIELDS

@@ -176,7 +176,8 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
         'oauth2_provider.ext.rest_framework.OAuth2Authentication',
-    )
+    ),
+    'EXCEPTION_HANDLER': 'utils.permissions.exception_handler',
 }
 
 CORS_ALLOW_CREDENTIALS = True

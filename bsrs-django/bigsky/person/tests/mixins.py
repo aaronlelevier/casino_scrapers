@@ -4,11 +4,13 @@ from accounting.models import Currency
 from category.models import Category
 from person.serializers import RoleListSerializer
 from person.tests.factory import PASSWORD, create_single_person, get_or_create_tenant
+from utils.tests.mixins import MockPermissionsAllowAnyMixin
 
 
-class RoleSetupMixin(object):
+class RoleSetupMixin(MockPermissionsAllowAnyMixin):
 
     def setUp(self):
+        super(RoleSetupMixin, self).setUp()
         self.tenant = get_or_create_tenant()
         self.person = create_single_person()
         self.location = self.person.locations.first()
@@ -25,4 +27,5 @@ class RoleSetupMixin(object):
         self.data = serializer.data
 
     def tearDown(self):
+        super(RoleSetupMixin, self).tearDown()
         self.client.logout()

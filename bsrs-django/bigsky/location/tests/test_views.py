@@ -16,13 +16,15 @@ LOCATION_COMPANY, LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE,)
 from location.serializers import LocationUpdateSerializer
 from person.tests.factory import create_person, create_single_person, create_role, PASSWORD
 from utils import create
+from utils.tests.mixins import MockPermissionsAllowAnyMixin
 
 
 ### LOCATION LEVEL
 
-class LocationLevelTests(APITestCase):
+class LocationLevelTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(LocationLevelTests, self).setUp()
         create_location_levels()
         self.region = LocationLevel.objects.get(name=LOCATION_REGION)
         self.district = LocationLevel.objects.get(name=LOCATION_DISTRICT)
@@ -32,6 +34,7 @@ class LocationLevelTests(APITestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(LocationLevelTests, self).tearDown()
         self.client.logout()
 
     ### LIST
@@ -229,9 +232,10 @@ class LocationLevelTests(APITestCase):
 
 ### LOCATION
 
-class LocationListTests(APITestCase):
+class LocationListTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(LocationListTests, self).setUp()
         create_locations()
         self.location = Location.objects.get(name='ca')
         self.location_status = mommy.make(LocationStatus)
@@ -246,6 +250,7 @@ class LocationListTests(APITestCase):
         self.data_location = self.data['results'][0]
 
     def tearDown(self):
+        super(LocationListTests, self).tearDown()
         self.client.logout()
 
     def test_response(self):
@@ -398,9 +403,10 @@ class LocationListTests(APITestCase):
         self.assertEqual(len(data['results']), settings.PAGE_SIZE)
 
 
-class LocationDetailTests(APITestCase):
+class LocationDetailTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(LocationDetailTests, self).setUp()
         create_locations()
         self.location = Location.objects.get(name='ca')
         self.location_level = self.location.location_level
@@ -418,6 +424,7 @@ class LocationDetailTests(APITestCase):
         self.data = json.loads(self.response.content.decode('utf8'))
 
     def tearDown(self):
+        super(LocationDetailTests, self).tearDown()
         self.client.logout()
 
     def test_setup(self):
@@ -490,9 +497,10 @@ class LocationDetailTests(APITestCase):
         self.assertTrue(self.data['phone_numbers'][0]['type'])
 
 
-class LocationCreateTests(APITestCase):
+class LocationCreateTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(LocationCreateTests, self).setUp()
         create_locations()
         self.location = Location.objects.get(name='ca')
         self.san_diego = Location.objects.get(name=SAN_DIEGO)
@@ -508,6 +516,7 @@ class LocationCreateTests(APITestCase):
         self.data = serializer.data
 
     def tearDown(self):
+        super(LocationCreateTests, self).tearDown()
         self.client.logout()
 
     def test_create(self):
@@ -554,9 +563,10 @@ class LocationCreateTests(APITestCase):
         self.assertEqual(response.status_code, 201)
 
 
-class LocationUpdateTests(APITestCase):
+class LocationUpdateTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(LocationUpdateTests, self).setUp()
         create_locations()
         self.location = Location.objects.get(name='ca')
         # Login
@@ -567,6 +577,7 @@ class LocationUpdateTests(APITestCase):
         self.data = serializer.data
 
     def tearDown(self):
+        super(LocationUpdateTests, self).tearDown()
         self.client.logout()
 
     def test_update_response(self):
@@ -669,9 +680,10 @@ class LocationUpdateTests(APITestCase):
         self.assertTrue(location2.phone_numbers.all())
 
 
-class LocationDeleteTests(APITestCase):
+class LocationDeleteTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(LocationDeleteTests, self).setUp()
         create_locations()
         self.region_location = Location.objects.get(name='east')
         self.district_location = Location.objects.get(name='ca')
@@ -681,6 +693,7 @@ class LocationDeleteTests(APITestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(LocationDeleteTests, self).tearDown()
         self.client.logout()
 
     def test_delete(self):
@@ -727,15 +740,17 @@ class LocationDeleteTests(APITestCase):
         self.assertFalse(Location.objects_all.filter(id=self.district_location.id).exists())
 
 
-class LocationOrderingTests(APITestCase):
+class LocationOrderingTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(LocationOrderingTests, self).setUp()
         # Login
         self.person = create_person()
         self.person.locations.all().delete()
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(LocationOrderingTests, self).tearDown()
         self.client.logout()
 
     def test_case_insensitive(self):
@@ -785,9 +800,10 @@ class LocationOrderingTests(APITestCase):
         self.assertEqual(data["results"][1]["name"], "a")
 
 
-class LocationSearchTests(APITestCase):
+class LocationSearchTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(LocationSearchTests, self).setUp()
         create_locations()
         self.location = Location.objects.get(name='ca')
         self.location_level = self.location.location_level
@@ -796,6 +812,7 @@ class LocationSearchTests(APITestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(LocationSearchTests, self).tearDown()
         self.client.logout()
 
     def test_search_name(self):

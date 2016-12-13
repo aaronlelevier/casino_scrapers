@@ -6,15 +6,18 @@ from rest_framework.test import APITestCase
 from category.serializers import CategoryUpdateSerializer
 from category.tests.factory import create_single_category
 from person.tests.factory import PASSWORD, create_single_person
+from utils.tests.mixins import MockPermissionsAllowAnyMixin
 
 
-class CategoryParentAndNameValidatorTests(APITestCase):
+class CategoryParentAndNameValidatorTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(CategoryParentAndNameValidatorTests, self).setUp()
         self.person = create_single_person()
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(CategoryParentAndNameValidatorTests, self).tearDown()
         self.client.logout()
 
     def test_unique_top_level(self):

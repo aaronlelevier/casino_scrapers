@@ -1,3 +1,5 @@
+from unittest.mock import MagicMock
+
 from model_mommy import mommy
 
 from category.models import Category, CategoryStatus
@@ -6,14 +8,30 @@ from location.models import LocationStatus, LocationType
 from location.tests.factory import create_location
 from person.tests.factory import PASSWORD, DistrictManager
 from ticket.models import Ticket
+from ticket.permissions import TicketActivityPermissions
 from ticket.tests.factory_related import (create_ticket_priorities, create_ticket_statuses)
 from ticket.tests.factory import create_ticket
 from utils.tests.test_helpers import create_default
+from utils.tests.mixins import MockPermissionsAllowAnyMixin
 
 
-class TicketSetupNoLoginMixin(object):
+
+class MockTicketActivityPermissionsMixin(object):
+    """
+    Mixin to allow for ignoring permissions in TicketActivity view tests.
+    """
+    def setUp(self):
+        self.has_permission = TicketActivityPermissions.has_permission
+        TicketActivityPermissions.has_permission = MagicMock(return_value=True)
+
+    def tearDown(self):
+        TicketActivityPermissions.has_permission = self.has_permission
+
+
+class TicketSetupNoLoginMixin(MockPermissionsAllowAnyMixin):
 
     def setUp(self):
+        super(TicketSetupNoLoginMixin, self).setUp()
         # Categories
         self.categories = create_categories()
         self.category = Category.objects.first()
@@ -41,6 +59,7 @@ class TicketSetupMixin(TicketSetupNoLoginMixin):
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(TicketSetupMixin, self).tearDown()
         self.client.logout()
 
 

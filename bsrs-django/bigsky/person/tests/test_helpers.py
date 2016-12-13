@@ -32,6 +32,12 @@ class HelperTests(TestCase):
 
 class PermissionInfoTests(TestCase):
 
+    def test_codenames(self):
+        for p in helpers.PermissionInfo.PERMS:
+            for m in helpers.PermissionInfo.MODELS:
+                self.assertIn('{}_{}'.format(p, m),
+                              helpers.PermissionInfo.CODENAMES)
+
     def test_all_defaults(self):
         raw_ret = {}
         for m in helpers.PermissionInfo.MODELS:
@@ -46,12 +52,6 @@ class PermissionInfoTests(TestCase):
         for k,v in ret.items():
             self.assertFalse(v)
             self.assertEqual(v, raw_ret[k])
-
-    def test_codenames(self):
-        for p in helpers.PermissionInfo.PERMS:
-            for m in helpers.PermissionInfo.MODELS:
-                self.assertIn('{}_{}'.format(p, m),
-                              helpers.PermissionInfo.CODENAMES)
 
     def test_setUp(self):
         perm_info = helpers.PermissionInfo()
