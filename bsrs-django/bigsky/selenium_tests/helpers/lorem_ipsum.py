@@ -1,5 +1,5 @@
 LOREM_IPSUM_WORDS = u'''\
-aaron a ac accumsan ad adipiscing aenean aliquam aliquet amet ante aptent arcu at
+Aaron Abby ac accumsan ad adipiscing aenean aliquam aliquet amet ante aptent arcu at
 auctor augue bibendum blandit class commodo condimentum congue consectetuer
 consequat conubia convallis cras cubilia cum curabitur curae cursus dapibus
 diam dictum dictumst dignissim dis dolor donec dui duis egestas eget eleifend
@@ -16,5 +16,5 @@ ridiculus risus rutrum sagittis sapien scelerisque sed sem semper senectus sit
 sociis sociosqu sodales sollicitudin suscipit suspendisse taciti tellus tempor
 tempus tincidunt torquent tortor tristique turpis ullamcorper ultrices
 ultricies urna ut varius vehicula vel velit venenatis vestibulum vitae vivamus
-viverra volutpat vulputate'''
+viverra volutpat Vincent'''
 
