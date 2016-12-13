@@ -74,7 +74,7 @@ class RoleCreateUpdateSerializer(BaseCreateSerializer):
 
     def _remove_permissions(self, instance, init_perms, post_perms):
         update_to_false_perms = [k for k,v in post_perms.items()
-                                   if not v and post_perms[k] != init_perms[k]]
+                                   if not v and post_perms[k] != init_perms.get(k, False)]
 
         if update_to_false_perms:
             perms = self._permissions_to_update(update_to_false_perms)
