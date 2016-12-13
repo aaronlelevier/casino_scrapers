@@ -19,11 +19,10 @@ const PEOPLE_INDEX_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + PD.id;
 const PERSON_CURRENT_URL = BASE_URL + '/' + PCD.id;
 
-var store, list_xhr;
+var list_xhr;
 
 moduleForAcceptance('Acceptance | general person current test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     var people_list_data = PF.list();
     var current_person_data = PF.detail(PCD.id);
     var locale_data_es = translations.generate('es');
@@ -34,12 +33,12 @@ moduleForAcceptance('Acceptance | general person current test', {
   },
 });
 
-test('when changing the locale for the current user, the language is updated on the site', (assert) => {
+test('when changing the locale for the current user, the language is updated on the site', function(assert) {
   clearxhr(list_xhr);
   visit(PERSON_CURRENT_URL);
   andThen(() => {
     assert.equal(currentURL(), PERSON_CURRENT_URL);
-    var person = store.find('person', PCD.id);
+    var person = this.store.find('person', PCD.id);
     assert.equal(person.get('id'), PCD.id);
     assert.equal(find('.t-person-first-name').val(), PD.first_name);
     assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
@@ -50,11 +49,11 @@ test('when changing the locale for the current user, the language is updated on 
   });
 });
 
-test('when rolling back the locale the current locale is also changed back', (assert) => {
+test('when rolling back the locale the current locale is also changed back', function(assert) {
   visit(PERSON_CURRENT_URL);
   andThen(() => {
     assert.equal(currentURL(), PERSON_CURRENT_URL);
-    var person = store.find('person', PCD.id);
+    var person = this.store.find('person', PCD.id);
     assert.equal(person.get('id'), PCD.id);
     assert.equal(find('.t-person-first-name').val(), PD.first_name);
     assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
@@ -78,7 +77,7 @@ test('when rolling back the locale the current locale is also changed back', (as
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_INDEX_URL);
-      var person = store.find('person', PCD.id);
+      var person = this.store.find('person', PCD.id);
       assert.equal(person.get('locale').get('locale'), PD.locale);
       assert.equal(find('.t-grid-title').text(), "People");
       assert.throws(Ember.$('.ember-modal-dialog'));

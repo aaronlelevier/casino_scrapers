@@ -29,15 +29,14 @@ const LOCATION = '.t-category-locations-select .ember-basic-dropdown-trigger';
 const LOCATION_DROCDOWN = '.t-category-locations-select-dropdown > .ember-power-select-options';
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-var application, store, category, ticket;
+var application, category, ticket;
 
 moduleForAcceptance('Acceptance | general ticket and category test', {
     beforeEach() {
-        store = this.application.__container__.lookup('service:simpleStore');
     }
 });
 
-test('clicking between category detail and ticket detail will not dirty the active category model', (assert) => {
+test('clicking between category detail and ticket detail will not dirty the active category model', function(assert) {
     ajax(TICKET_ACTIVITIES_URL, 'GET', null, {}, 200, TA_FIXTURES.empty());
     ajax(`${PREFIX}${BASEURLS.base_tickets_url}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail());
     ajax(TICKET_LIST,'GET', null, {}, 200, TF.list());
@@ -46,19 +45,19 @@ test('clicking between category detail and ticket detail will not dirty the acti
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionOne();
     andThen(() => {
-        category = store.find('category', CD.idOne);
+        category = this.store.find('category', CD.idOne);
         assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
     });
     ajax(`${PREFIX}${CATEGORY_DETAIL_URL}/`, 'GET', null, {}, 200, CF.detail(CD.idOne));
     visit(CATEGORY_DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_DETAIL_URL);
-        category = store.find('category', CD.idOne);
+        category = this.store.find('category', CD.idOne);
         assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
 
-test('clicking between category list and ticket detail allow to select new categories', (assert) => {
+test('clicking between category list and ticket detail allow to select new categories', function(assert) {
     ajax(CATEGORY_LIST + '?page=1', 'GET', null, {}, 200, CF.list());
     visit(CATEGORY_LIST_URL);
     ajax(TICKET_LIST,'GET', null, {}, 200, TF.list());
@@ -70,12 +69,12 @@ test('clicking between category list and ticket detail allow to select new categ
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionOne();
     andThen(() => {
-        // category = store.find('category', CD.idOne);
+        // category = this.store.find('category', CD.idOne);
         // assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
     });
     andThen(() => {
         assert.equal(currentURL(), TICKET_DETAIL_URL);
-        // category = store.find('category', CD.idOne);
+        // category = this.store.find('category', CD.idOne);
         // assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
     });
 });

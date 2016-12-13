@@ -22,12 +22,10 @@ const INDEX_ROUTE = 'admin.locations.index';
 const DETAIL_ROUTE = 'admin.locations.location';
 const DOC_TYPE = 'location';
 
-let application, store, list_xhr, location_detail_data, endpoint, detail_xhr;
+let application, list_xhr, location_detail_data, endpoint, detail_xhr;
 
 moduleForAcceptance('Acceptance | tab location test', {
   beforeEach() {
-
-    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_LOCATION_URL + '/';
     location_detail_data = LF.detail(LD.idOne);
     detail_xhr = xhr(endpoint + LD.idOne + '/', 'GET', null, {}, 200, location_detail_data);
@@ -36,12 +34,12 @@ moduleForAcceptance('Acceptance | tab location test', {
   }
 });
 
-test('(NEW URL) deep linking the new location url should push a tab into the tab store with correct properties', (assert) => {
+test('(NEW URL) deep linking the new location url should push a tab into the tab store with correct properties', function(assert) {
   clearxhr(detail_xhr);
   visit(NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 1);
     let tab = tabs.objectAt(0);
     assert.equal(find('.t-tab-title:eq(0)').text(), 'New Location');
@@ -52,13 +50,13 @@ test('(NEW URL) deep linking the new location url should push a tab into the tab
   });
 });
 
-test('deep linking the location detail url should push a tab into the tab store with correct properties', (assert) => {
+test('deep linking the location detail url should push a tab into the tab store with correct properties', function(assert) {
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 1);
-    let tab = store.find('tab', LD.idOne);
+    let tab = this.store.find('tab', LD.idOne);
     assert.equal(find('.t-tab-title:eq(0)').text(), LD.baseStoreName);
     assert.equal(tab.get('module'), DOC_TYPE);
     assert.equal(tab.get('routeName'), DETAIL_ROUTE);
@@ -67,21 +65,21 @@ test('deep linking the location detail url should push a tab into the tab store 
   });
 });
 
-test('visiting the location detail url from the list url should push a tab into the tab store', (assert) => {
+test('visiting the location detail url from the list url should push a tab into the tab store', function(assert) {
   let location_list_data = LF.list();
   list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
   visit(LOCATION_URL);
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
   click('.t-grid-data:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 1);
-    let tab = store.find('tab', LD.idOne);
+    let tab = this.store.find('tab', LD.idOne);
     assert.equal(find('.t-tab-title:eq(0)').text(), LD.baseStoreName);
     assert.equal(tab.get('module'), DOC_TYPE);
     assert.equal(tab.get('routeName'), DETAIL_ROUTE);
@@ -90,21 +88,21 @@ test('visiting the location detail url from the list url should push a tab into 
   });
 });
 
-test('clicking on a tab that is not dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+test('clicking on a tab that is not dirty from the list url should take you to the detail url and not fire off an xhr request', function(assert) {
   let location_list_data = LF.list();
   list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
   visit(LOCATION_URL);
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
   click('.t-grid-data:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    let location = store.find('location', LD.idOne);
+    let location = this.store.find('location', LD.idOne);
     assert.equal(location.get('isDirtyOrRelatedDirty'), false);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), LD.baseStoreName);
   });
@@ -114,18 +112,18 @@ test('clicking on a tab that is not dirty from the list url should take you to t
   });
   click('.t-tab:eq(0)');
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location = this.store.find('location', LD.idOne);
     assert.equal(location.get('isDirtyOrRelatedDirty'), false);
     assert.equal(currentURL(), DETAIL_URL);
   });
 });
 
-test('(NEW URL) clicking on a tab that is not dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+test('(NEW URL) clicking on a tab that is not dirty from the list url should take you to the detail url and not fire off an xhr request', function(assert) {
   clearxhr(detail_xhr);
   visit(NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), 'New Location');
   });
@@ -141,13 +139,13 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
   });
 });
 
-test('(NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+test('(NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', function(assert) {
   random.uuid = function() { return UUID.value; };
   clearxhr(detail_xhr);
   visit(NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), 'New Location');
   });
@@ -157,36 +155,36 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
   visit(LOCATION_URL);
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
-    let location = store.find('location', UUID.value);
+    let location = this.store.find('location', UUID.value);
     assert.equal(location.get('name'), LD.storeName);
     assert.equal(location.get('isDirtyOrRelatedDirty'), true);
   });
   click('.t-tab:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
-    let location = store.find('location', UUID.value);
+    let location = this.store.find('location', UUID.value);
     assert.equal(location.get('name'), LD.storeName);
     assert.equal(location.get('isDirtyOrRelatedDirty'), true);
   });
 });
 
-test('clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+test('clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', function(assert) {
   let location_list_data = LF.list();
   list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
   visit(LOCATION_URL);
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
   click('.t-grid-data:eq(0)');
   fillIn('.t-location-name', LD.storeName);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    let location = store.find('location', LD.idOne);
+    let location = this.store.find('location', LD.idOne);
     assert.equal(location.get('name'), LD.storeName);
     assert.equal(location.get('isDirtyOrRelatedDirty'), true);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), LD.storeName);
   });
@@ -196,30 +194,30 @@ test('clicking on a tab that is dirty from the list url should take you to the d
   });
   click('.t-tab:eq(0)');
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location = this.store.find('location', LD.idOne);
     assert.equal(location.get('name'), LD.storeName);
     assert.equal(location.get('isDirtyOrRelatedDirty'), true);
     assert.equal(currentURL(), DETAIL_URL);
   });
 });
 
-test('clicking on a tab that is dirty from the role url (or any non related page) should take you to the detail url and not fire off an xhr request', (assert) => {
+test('clicking on a tab that is dirty from the role url (or any non related page) should take you to the detail url and not fire off an xhr request', function(assert) {
   let location_list_data = LF.list();
   list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
   visit(LOCATION_URL);
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
   click('.t-grid-data:eq(0)');
   fillIn('.t-location-name', LD.storeName);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    let location = store.find('location', LD.idOne);
+    let location = this.store.find('location', LD.idOne);
     assert.equal(location.get('name'), LD.storeName);
     assert.equal(location.get('isDirtyOrRelatedDirty'), true);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), LD.storeName);
   });
@@ -233,26 +231,26 @@ test('clicking on a tab that is dirty from the role url (or any non related page
   });
   click('.t-tab:eq(0)');
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location = this.store.find('location', LD.idOne);
     assert.equal(location.get('name'), LD.storeName);
     assert.equal(location.get('isDirtyOrRelatedDirty'), true);
     assert.equal(currentURL(), DETAIL_URL);
   });
 });
 
-test('clicking on a tab that is not dirty from the role url (or any non related page) should take you to the detail url and fire off an xhr request', (assert) => {
+test('clicking on a tab that is not dirty from the role url (or any non related page) should take you to the detail url and fire off an xhr request', function(assert) {
   xhr(endpoint + '?page=1','GET',null,{},200,LF.list());
   visit(LOCATION_URL);
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
   click('.t-grid-data:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    let location = store.find('location', LD.idOne);
-    let tabs = store.find('tab');
+    let location = this.store.find('location', LD.idOne);
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), LD.baseStoreName);
   });
@@ -264,18 +262,18 @@ test('clicking on a tab that is not dirty from the role url (or any non related 
   });
   click('.t-tab:eq(0)');
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location = this.store.find('location', LD.idOne);
     assert.equal(location.get('isDirtyOrRelatedDirty'), false);
     assert.equal(currentURL(), DETAIL_URL);
   });
 });
 
-test('a dirty model should add the dirty class to the tab close icon', (assert) => {
+test('a dirty model should add the dirty class to the tab close icon', function(assert) {
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.dirty').length, 0);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), LD.baseStoreName);
   });
@@ -285,13 +283,13 @@ test('a dirty model should add the dirty class to the tab close icon', (assert) 
   });
 });
 
-test('closing a document should close it\'s related tab', (assert) => {
+test('closing a document should close it\'s related tab', function(assert) {
   let location_list_data = LF.list();
   list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), LD.baseStoreName);
     click('.t-cancel-btn:eq(0)');
@@ -301,14 +299,14 @@ test('closing a document should close it\'s related tab', (assert) => {
   });
 });
 
-test('opening a new tab, navigating away and closing the tab should remove the tab', (assert) => {
+test('opening a new tab, navigating away and closing the tab should remove the tab', function(assert) {
   clearxhr(detail_xhr);
   let location_list_data = LF.list();
   list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
   visit(NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), 'New Location');
     visit(LOCATION_URL);
@@ -316,18 +314,18 @@ test('opening a new tab, navigating away and closing the tab should remove the t
   click('.t-tab-close:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
 });
 
-test('opening a tab, navigating away and closing the tab should remove the tab', (assert) => {
+test('opening a tab, navigating away and closing the tab should remove the tab', function(assert) {
   let location_list_data = LF.list();
   list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), LD.baseStoreName);
     visit(LOCATION_URL);
@@ -335,18 +333,18 @@ test('opening a tab, navigating away and closing the tab should remove the tab',
   click('.t-tab-close:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 0);
   });
 });
 
-test('opening a tab, making the model dirty, navigating away and closing the tab should display the confirm dialog', (assert) => {
+test('opening a tab, making the model dirty, navigating away and closing the tab should display the confirm dialog', function(assert) {
   let location_list_data = LF.list();
   list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), LD.baseStoreName);
   });
@@ -369,12 +367,12 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
   });
 });
 
-test('(NEW URL) clicking on the new link with a new tab of the same type open will redirect to open tab', (assert) => {
+test('(NEW URL) clicking on the new link with a new tab of the same type open will redirect to open tab', function(assert) {
   clearxhr(detail_xhr);
   visit(NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 1);
     assert.equal(find('.t-tab-title:eq(0)').text(), 'New Location');
   });
@@ -388,7 +386,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), NEW_URL_2);
-    let tabs = store.find('tab');
+    let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 2);
   });
 });

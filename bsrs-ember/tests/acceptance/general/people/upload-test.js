@@ -21,29 +21,27 @@ const DETAIL_TWO_URL = BASE_URL + '/' + PD.idTwo;
 const PEOPLE_PUT_URL = PREFIX + DETAIL_URL + '/';
 const ATTACHMENT_DELETE_URL = ATTACHMENTS_URL + UUID.value + '/';
 
-let store;
 
 moduleForAcceptance('Acceptance | general person file upload test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     random.uuid = function() { return UUID.value; };
   },
 });
 
-test('upload will post form data and on save append the attachment', (assert) => {
-  let model = store.find('person', PD.idOne);
+test('upload will post form data and on save append the attachment', function(assert) {
+  let model = this.store.find('person', PD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(store.find('attachment').get('length'), 1);
+    assert.equal(this.store.find('attachment').get('length'), 1);
   });
   ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {id: UUID.value, image_full: 'wat.jpg', image_medium: 'wat.jpg', image_thumbnail: 'wat.jpg'});
   uploadFile('image-drop', 'handleFileDrop', image, model, 'method');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(store.find('attachment').get('length'), 2);
+    assert.equal(this.store.find('attachment').get('length'), 2);
     assert.equal(model.get('photo').get('id'), UUID.value);
     assert.equal(model.get('photo').get('image_full'), 'wat.jpg');
     assert.equal(model.get('isDirty'), false);
@@ -56,7 +54,7 @@ test('upload will post form data and on save append the attachment', (assert) =>
   ajax(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, PF.list());
   generalPage.save();
   andThen(() => {
-    model = store.find('person', PD.idOne);
+    model = this.store.find('person', PD.idOne);
     assert.equal(currentURL(), PEOPLE_LIST_URL);
     assert.equal(model.get('photo').get('id'), UUID.value);
     assert.equal(model.get('isDirty'), false);
@@ -64,20 +62,20 @@ test('upload will post form data and on save append the attachment', (assert) =>
   });
 });
 
-test('uploading a file, then rolling back should throw out any previously associated attachments', (assert) => {
-  let model = store.find('person', PD.idOne);
+test('uploading a file, then rolling back should throw out any previously associated attachments', function(assert) {
+  let model = this.store.find('person', PD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(store.find('attachment').get('length'), 1);
+    assert.equal(this.store.find('attachment').get('length'), 1);
     assert.equal(find('.dirty').length, 0);
   });
   ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {id: UUID.value});
   uploadFile('image-drop', 'handleFileDrop', image, model, 'method');
   andThen(() => {
-    assert.equal(store.find('attachment').get('length'), 2);
+    assert.equal(this.store.find('attachment').get('length'), 2);
     assert.equal(model.get('photo').get('id'), UUID.value);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isDirtyOrRelatedDirty'));
@@ -104,17 +102,17 @@ test('uploading a file, then rolling back should throw out any previously associ
   });
 });
 
-test('previously attached files do not show up after file upload', (assert) => {
+test('previously attached files do not show up after file upload', function(assert) {
   let detail_with_attachment = PF.detail(PD.idOne);
   detail_with_attachment.photo = {id: UUID.value, image_full: 'wat.jpg'};
-  let model = store.find('person', PD.idOne);
+  let model = this.store.find('person', PD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
   page.visitDetail();
   andThen(() => {
-    model = store.find('person', PD.idOne);
+    model = this.store.find('person', PD.idOne);
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(store.find('attachment').get('length'), 1);
+    assert.equal(this.store.find('attachment').get('length'), 1);
     assert.equal(model.get('photo').get('id'), UUID.value);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
@@ -123,29 +121,29 @@ test('previously attached files do not show up after file upload', (assert) => {
   uploadFile('image-drop', 'handleFileDrop', image, model, 'method');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    model = store.find('person', PD.idOne);
-    assert.equal(store.find('attachment').get('length'), 2);
+    model = this.store.find('person', PD.idOne);
+    assert.equal(this.store.find('attachment').get('length'), 2);
     assert.equal(model.get('photo').get('id'), 2);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isDirtyOrRelatedDirty'));
   });
 });
 
-skip('delete attachment is successful when the user confirms yes (before the file is associated with a person)', (assert) => {
-  let model = store.find('person', PD.idOne);
+skip('delete attachment is successful when the user confirms yes (before the file is associated with a person)', function(assert) {
+  let model = this.store.find('person', PD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(store.find('attachment').get('length'), 0);
+    assert.equal(this.store.find('attachment').get('length'), 0);
   });
   ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('people/detail-section', 'upload', image, model);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    model = store.find('person', PD.idOne);
-    assert.equal(store.find('attachment').get('length'), 1);
+    model = this.store.find('person', PD.idOne);
+    assert.equal(this.store.find('attachment').get('length'), 1);
     assert.equal(model.get('photo').get('id'), UUID.value);
   });
   ajax(ATTACHMENT_DELETE_URL, 'DELETE', null, {}, 204, {});
@@ -160,54 +158,54 @@ skip('delete attachment is successful when the user confirms yes (before the fil
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
-      model = store.find('person', PD.idOne);
-      assert.equal(store.find('attachment').get('length'), 0);
+      model = this.store.find('person', PD.idOne);
+      assert.equal(this.store.find('attachment').get('length'), 0);
       assert.equal(model.get('photo').get('length'), 0);
     });
   });
 });
 
-skip('delete attachment is aborted when the user confirms no (before the file is associated with a person)', (assert) => {
+skip('delete attachment is aborted when the user confirms no (before the file is associated with a person)', function(assert) {
   let original = window.confirm;
   window.confirm = function() {
     return false;
   };
-  let model = store.find('person', PD.idOne);
+  let model = this.store.find('person', PD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(store.find('attachment').get('length'), 0);
+    assert.equal(this.store.find('attachment').get('length'), 0);
   });
   ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
   uploadFile('people/detail-section', 'upload', image, model);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    model = store.find('person', PD.idOne);
-    assert.equal(store.find('attachment').get('length'), 1);
+    model = this.store.find('person', PD.idOne);
+    assert.equal(this.store.find('attachment').get('length'), 1);
     assert.equal(model.get('photo').get('id'), UUID.value);
   });
   click('.t-remove-attachment');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    model = store.find('person', PD.idOne);
-    assert.equal(store.find('attachment').get('length'), 1);
+    model = this.store.find('person', PD.idOne);
+    assert.equal(this.store.find('attachment').get('length'), 1);
     assert.equal(model.get('photo').get('id'), UUID.value);
   });
 });
 
-skip('rolling back should only remove files not yet associated with a given person', (assert) => {
+skip('rolling back should only remove files not yet associated with a given person', function(assert) {
   let detail_with_attachment = PF.detail(PD.idOne);
   detail_with_attachment.attachments = [PD.attachmentOneId];
-  let model = store.find('person', PD.idOne);
+  let model = this.store.find('person', PD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
   page.visitDetail();
   andThen(() => {
-    model = store.find('person', PD.idOne);
+    model = this.store.find('person', PD.idOne);
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(store.find('attachment').get('length'), 1);
+    assert.equal(this.store.find('attachment').get('length'), 1);
     assert.equal(model.get('photo').get('id'), UUID.value);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
@@ -216,8 +214,8 @@ skip('rolling back should only remove files not yet associated with a given pers
   uploadFile('people/detail-section', 'upload', image, model);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    model = store.find('person', PD.idOne);
-    assert.equal(store.find('attachment').get('length'), 2);
+    model = this.store.find('person', PD.idOne);
+    assert.equal(this.store.find('attachment').get('length'), 2);
     assert.equal(model.get('photo').get('length'), 2);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isDirtyOrRelatedDirty'));
@@ -235,7 +233,7 @@ skip('rolling back should only remove files not yet associated with a given pers
   click('.t-modal-rollback-btn');
   andThen(() => {
     assert.equal(model.get('photo').get('id'), UUID.value);
-    assert.equal(store.find('attachment').get('length'), 1);
+    assert.equal(this.store.find('attachment').get('length'), 1);
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
   });

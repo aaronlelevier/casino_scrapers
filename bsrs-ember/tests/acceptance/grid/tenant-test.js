@@ -22,11 +22,10 @@ const API_DETAIL_URL = `${TENANT_URL}${TD.idOne}/`;
 
 const NUMBER_FOUR = {keyCode: 52};
 
-let application, store, listXhr;
+let application, listXhr;
 
 moduleForAcceptance('Acceptance | tenant grid test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     const listData = TF.list();
     listXhr = xhr(`${TENANT_URL}?page=1`, 'GET', null, {}, 200, listData);
   }
@@ -70,7 +69,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
   visit(TENANT_LIST_URL);
   click('.t-page:eq(1) a');
   andThen(() => {
-    const tenants = store.find('tenant-list');
+    const tenants = this.store.find('tenant-list');
     assert.equal(tenants.get('length'), 10);
     assert.equal(currentURL(), TENANT_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
@@ -86,7 +85,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
   });
   click('.t-page:eq(0) a');
   andThen(() => {
-    const tenants = store.find('tenant-list');
+    const tenants = this.store.find('tenant-list');
     assert.equal(tenants.get('length'), 10);
     assert.equal(currentURL(),TENANT_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);

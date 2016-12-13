@@ -20,7 +20,7 @@ import generalPage, { mobileSearch } from 'bsrs-ember/tests/pages/general-mobile
 import random from 'bsrs-ember/models/random';
 import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, PEOPLE_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 
-var store, functionalStore, list_xhr;
+var functionalStore, list_xhr;
 
 const PREFIX = config.APP.NAMESPACE;
 const DETAIL_2_URL = `${TICKET_LIST_URL}/${TD.idGridTwo}`;
@@ -32,7 +32,6 @@ const FILTERSET_COMPONENT_INPUT = '.t-mobile-save-filterset-component__input';
 
 moduleForAcceptance('Acceptance | general grid-head mobile', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     functionalStore = this.application.__container__.lookup('service:functional-store');
     list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
     setWidth('mobile');
@@ -42,7 +41,7 @@ moduleForAcceptance('Acceptance | general grid-head mobile', {
 
 /* jshint ignore:start */
 
-test('clicking on filter icon will show filters and cancel will close it out', async assert => {
+test('clicking on filter icon will show filters and cancel will close it out', async function(assert) {
   await ticketPage.visit();
   await click('.t-mobile-filter');
   assert.equal(currentURL(), TICKET_LIST_URL);
@@ -54,7 +53,7 @@ test('clicking on filter icon will show filters and cancel will close it out', a
   assert.throws(find('.t-mobile-filters'));
 });
 
-test('search presents results on slideUp pane w/o pushing into store', async assert => {
+test('search presents results on slideUp pane w/o pushing into store', async function(assert) {
   xhr(PREFIX + TICKET_LIST_URL + '/?search=ape','GET',null,{},200,TF.searched('ape', 'request'));
   xhr(PREFIX + TICKET_LIST_URL + '/?search=subb2','GET',null,{},200,TF.searched('subb2', 'request'));
   await ticketPage.visit();
@@ -85,7 +84,7 @@ test('search presents results on slideUp pane w/o pushing into store', async ass
   //TODO: asserts that are on single page
 });
 
-// test('savefilterset will fire off xhr', async assert => {
+// test('savefilterset will fire off xhr', async function(assert) {
 //   random.uuid = function() { return UUID.value; };
 //   xhr(PREFIX + TICKET_LIST_URL + '/?page=1&request__icontains=ape19', 'GET', null, {}, 200, TF.searched('ape19', 'request'));
 //   await ticketPage.visit();
@@ -113,7 +112,7 @@ test('search presents results on slideUp pane w/o pushing into store', async ass
 //   assert.equal(find('.t-filterset-wrap > hbox > div').length, 6);
 // });
 
-test('savefilterset input will close if have filters and decide not to fill it in', async assert => {
+test('savefilterset input will close if have filters and decide not to fill it in', async function(assert) {
   random.uuid = function() { return UUID.value; };
   xhr(PREFIX + TICKET_LIST_URL + '/?page=1&request__icontains=ape19', 'GET', null, {}, 200, TF.searched('ape19', 'request'));
   await ticketPage.visit();
@@ -127,7 +126,7 @@ test('savefilterset input will close if have filters and decide not to fill it i
   assert.equal(find(FILTERSET_COMPONENT).length, 0);
 });
 
-test('clicking on filter twice will keep results in grid', async assert => {
+test('clicking on filter twice will keep results in grid', async function(assert) {
   await ticketPage.visit();
   await generalPage.clickFilterOpen();
   await generalPage.submitFilterSort();

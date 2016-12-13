@@ -32,11 +32,10 @@ const SORT_LOCATION_DIR = '.t-sort-location-name-dir';
 const SORT_ASSIGNEE_DIR = '.t-sort-assignee-fullname-dir';
 const FILTER_PRIORITY = '.t-filter-priority-translated-name';
 
-var application, store, endpoint, list_xhr, functionalStore;
+var application, endpoint, list_xhr, functionalStore;
 
 moduleForAcceptance('Acceptance | ticket grid test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     functionalStore = this.application.__container__.lookup('service:functional-store');
     endpoint = PREFIX + BASE_URL + '/?page=1';
     list_xhr = xhr(endpoint, 'GET', null, {}, 200, TF.list());
@@ -487,7 +486,7 @@ test('picking a different number of pages will alter the query string and xhr', 
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    const grid_count = store.find('grid-count', 1);
+    const grid_count = this.store.find('grid-count', 1);
     assert.equal(grid_count.get('count'), updated_pg_size-1);
     assert.equal(find('.t-page-size option:selected').text(), `${PAGE_SIZE} per page`);
     var pagination = find('.t-pages');
@@ -583,7 +582,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 //   andThen(() => {
 //     let html = find(section);
 //     assert.equal(html.find(navigation).length, 1);
-//     let filterset = store.find('filterset', UUID.value);
+//     let filterset = this.store.find('filterset', UUID.value);
 //     assert.equal(filterset.get('name'), name);
 //     assert.equal(filterset.get('endpoint_name'), routePath);
 //     assert.equal(filterset.get('endpoint_uri'), query);
@@ -597,9 +596,9 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
   let navigation = '.t-filterset-wrap div';
   let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
   visit(TICKET_LIST_URL);
-  clearAll(store, 'filterset');
+  clearAll(this.store, 'filterset');
   andThen(() => {
-    store.push('filterset', {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query});
+    this.store.push('filterset', {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query});
   });
   andThen(() => {
     let section = find('.t-grid-wrap');

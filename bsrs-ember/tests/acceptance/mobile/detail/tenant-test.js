@@ -16,7 +16,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import pageDrawer from 'bsrs-ember/tests/pages/nav-drawer';
 import BASEURLS, { TENANT_URL, TENANT_LIST_URL, CURRENCIES_URL } from 'bsrs-ember/utilities/urls';
 
-var store, list_xhr;
+var list_xhr;
 
 const BASE_URL = BASEURLS.BASE_TENANT_URL;
 const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
@@ -26,7 +26,6 @@ const Currency = '.t-tenant-currency-select';
 moduleForAcceptance('Acceptance | general mobile tenant detail test', {
   beforeEach() {
     setWidth('mobile');
-    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${TENANT_URL}?page=1`, 'GET', null, {}, 200, TF.list());
     xhr(`${TENANT_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   },
@@ -34,7 +33,7 @@ moduleForAcceptance('Acceptance | general mobile tenant detail test', {
 
 /* jshint ignore:start */
 
-test('can click from admin to tenant grid to detail', async assert => {
+test('can click from admin to tenant grid to detail', async function(assert) {
   await generalPage.visitAdmin();
   assert.equal(currentURL(), BASEURLS.base_admin_url);
   await pageDrawer.clickDrawer();
@@ -46,7 +45,7 @@ test('can click from admin to tenant grid to detail', async assert => {
   assert.equal(currentURL(), DETAIL_URL);
 });
 
-test('can click through component sections and save to redirect to index', async assert => {
+test('can click through component sections and save to redirect to index', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   await generalMobilePage.footerItemTwoClick();
@@ -59,7 +58,7 @@ test('can click through component sections and save to redirect to index', async
   assert.equal(currentURL(), TENANT_LIST_URL);
 });
 
-test('visit mobile detail and update all fields', async assert => {
+test('visit mobile detail and update all fields', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(tenantPage.companyNameValue, TD.companyNameOne);
@@ -75,7 +74,7 @@ test('visit mobile detail and update all fields', async assert => {
   assert.equal(currentURL(), TENANT_LIST_URL);
 });
 
-test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async assert => {
+test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async function(assert) {
   clearxhr(list_xhr);
   await page.visitDetail();
   await tenantPage.companyNameFill(TD.companyNameTwo);
@@ -101,7 +100,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   });
 });
 
-test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit rollback', async assert => {
+test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit rollback', async function(assert) {
   await page.visitDetail();
   await tenantPage.companyNameFill(TD.companyNameTwo);
   assert.equal(tenantPage.companyNameValue, TD.companyNameTwo);
@@ -120,7 +119,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), TENANT_LIST_URL);
-      const tenant = store.find('tenant', TD.idOne);
+      const tenant = this.store.find('tenant', TD.idOne);
       assert.notEqual(tenant.get('company_name'), 'wat');
       assert.throws(Ember.$('.ember-modal-dialog'));
     });

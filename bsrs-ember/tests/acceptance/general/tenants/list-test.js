@@ -13,17 +13,15 @@ const BASE_URL = BASEURLS.BASE_TENANT_URL;
 const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
 const API_DETAIL_URL = `${TENANT_URL}${TD.idOne}/`;
 
-let store;
 
 moduleForAcceptance('Acceptance | general tenant list test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     const listData = TF.list();
     xhr(`${TENANT_URL}?page=1`, 'GET', null, {}, 200, listData);
   },
 });
 
-test('can click tenants from the Dashboard to grid  and then to detail', assert => {
+test('can click tenants from the Dashboard to grid  and then to detail', function(assert) {
   visit(BASEURLS.base_admin_url);
   andThen(() => {
     assert.equal(currentURL(), BASEURLS.base_admin_url);

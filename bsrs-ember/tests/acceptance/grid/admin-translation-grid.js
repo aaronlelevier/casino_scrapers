@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { test } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
@@ -20,11 +21,10 @@ const NUMBER_ONE = {keyCode: 49};
 const NUMBER_FOUR = {keyCode: 52};
 const BACKSPACE = {keyCode: 8};
 
-var application, store, endpoint, list_xhr, run = Ember.run;
+var application, endpoint, list_xhr;
 
 moduleForAcceptance('Acceptance | general admin translation grid list', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';
     list_xhr = xhr(endpoint ,"GET",null,{},200,ATF.list());
   }
@@ -466,7 +466,7 @@ test('save filterset will fire off xhr and add item to the sidebar navigation', 
   andThen(() => {
     let html = find(section);
     assert.equal(html.find(navigation).length, 1);
-    let filterset = store.find('filterset', UUID.value);
+    let filterset = this.store.find('filterset', UUID.value);
     assert.equal(filterset.get('name'), name);
     assert.equal(filterset.get('endpoint_name'), routePath);
     assert.equal(filterset.get('endpoint_uri'), query);
@@ -480,10 +480,10 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
   let navigation = '.t-filterset-wrap li';
   let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
   visit(I18N_LIST_URL);
-  clearAll(store, 'filterset');
+  clearAll(this.store, 'filterset');
   andThen(() => {
     run(function() {
-      store.push('filterset', {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query});
+      this.store.push('filterset', {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query});
     });
   });
   andThen(() => {

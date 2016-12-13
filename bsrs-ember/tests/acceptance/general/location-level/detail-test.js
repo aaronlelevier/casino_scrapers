@@ -21,11 +21,10 @@ const LOCATION_LEVEL = '.t-location-level-children-select .ember-basic-dropdown-
 const LOCATION_LEVEL_DROPDOWN = options;
 const LOCATION_LEVEL_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-var store, endpoint_detail, list_xhr, detail_xhr, location_level_district_detail_data;
+var endpoint_detail, list_xhr, detail_xhr, location_level_district_detail_data;
 
 moduleForAcceptance('Acceptance | general detail-test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     let location_list_data = LLF.list();
     let location_detail_data = LLF.detail();
     location_level_district_detail_data = LLF.detail_district();
@@ -35,7 +34,7 @@ moduleForAcceptance('Acceptance | general detail-test', {
   },
 });
 
-test('clicking on a location levels name will redirect them to the detail view', (assert) => {
+test('clicking on a location levels name will redirect them to the detail view', function(assert) {
   page.visit();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
@@ -48,13 +47,13 @@ test('clicking on a location levels name will redirect them to the detail view',
   });
 });
 
-test('visiting admin/location-level', (assert) => {
+test('visiting admin/location-level', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(document.title,  t('doctitle.location_level.single', { name: 'Company' }));
-    let location = store.find('location-level').objectAt(0);
+    let location  = this.store.find('location-level').objectAt(0);
     assert.ok(location.get('isNotDirty'));
     assert.equal(find('.t-location-level-name').val(), LLD.nameCompany);
   });
@@ -64,7 +63,7 @@ test('visiting admin/location-level', (assert) => {
   fillIn('.t-location-level-name', LLD.nameAnother);
   page.childrenClickDropdown();
   andThen(() => {
-    let location_level = store.find('location-level', LLD.idOne);
+    let location_level  = this.store.find('location-level', LLD.idOne);
     assert.equal(location_level.get('children_fks').length, 7);
     assert.equal(location_level.get('children').get('length'), 7);
     assert.equal(page.childrenOptionLength, 7);
@@ -76,27 +75,27 @@ test('visiting admin/location-level', (assert) => {
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
-    let location_level = store.find('location-level', LLD.idOne);
+    let location_level  = this.store.find('location-level', LLD.idOne);
     assert.equal(location_level.get('name'), LLD.nameAnother);
     assert.ok(location_level.get('isNotDirty'));
   });
 });
 
-test('a location level child can be selected and persisted', (assert) => {
+test('a location level child can be selected and persisted', function(assert) {
   clearxhr(list_xhr);
   clearxhr(detail_xhr);
   xhr(PREFIX + DISTRICT_DETAIL_URL + '/', 'GET', null, {}, 200, location_level_district_detail_data);
   visit(DISTRICT_DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DISTRICT_DETAIL_URL);
-    let location_level = store.find('location-level', LLD.idDistrict);
+    let location_level  = this.store.find('location-level', LLD.idDistrict);
     assert.equal(location_level.get('children_fks').length, 2);
     assert.equal(location_level.get('children').get('length'), 2);
   });
   page.childrenClickDropdown();
   page.childrenClickOptionRegion();
   andThen(() => {
-    let location_level = store.find('location-level', LLD.idDistrict);
+    let location_level  = this.store.find('location-level', LLD.idDistrict);
     assert.equal(location_level.get('children_fks').length, 3);
     assert.equal(location_level.get('children').get('length'), 3);
     assert.ok(location_level.get('isDirty'));
@@ -109,12 +108,12 @@ test('a location level child can be selected and persisted', (assert) => {
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
-    let location_level = store.find('location-level', LLD.idDistrict);
+    let location_level  = this.store.find('location-level', LLD.idDistrict);
     assert.ok(location_level.get('isNotDirty'));
   });
 });
 
-test('when editing the location level name to invalid, it checks for validation', (assert) => {
+test('when editing the location level name to invalid, it checks for validation', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
@@ -132,7 +131,7 @@ test('when editing the location level name to invalid, it checks for validation'
   });
 });
 
-test('clicking cancel button will take from detail view to list view', (assert) => {
+test('clicking cancel button will take from detail view to list view', function(assert) {
   page.visit();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
@@ -147,7 +146,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   fillIn('.t-location-level-name', LLD.nameRegion);
@@ -172,18 +171,18 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(page.childrenSelectedCount, 7);
-    const ll = store.find('location-level', LLD.idOne);
+    const ll  = this.store.find('location-level', LLD.idOne);
     assert.ok(ll.get('isNotDirtyOrRelatedNotDirty'));
   });
   fillIn('.t-location-level-name', LLD.nameRegion);
   page.childrenOneRemove();
   andThen(() => {
     assert.equal(page.childrenSelectedCount, 6);
-    const ll = store.find('location-level', LLD.idOne);
+    const ll  = this.store.find('location-level', LLD.idOne);
     assert.ok(ll.get('isDirtyOrRelatedDirty'));
   });
   generalPage.cancel();
@@ -202,7 +201,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_LEVEL_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));
-      let location_level = store.find('location-level', LLD.idOne);
+      let location_level  = this.store.find('location-level', LLD.idOne);
       assert.equal(location_level.get('name'), LLD.nameCompany);
       assert.equal(location_level.get('children_fks').length, 7);
     });
@@ -210,7 +209,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 /* jshint ignore:start */
-test('when click delete, modal displays and when click ok, location-level is deleted and removed from store', async assert => {
+test('when click delete, modal displays and when click ok, location-level is deleted and removed from store', async function(assert) {
   await page.visitDetail();
   await generalPage.delete();
   andThen(() => {
@@ -227,7 +226,7 @@ test('when click delete, modal displays and when click ok, location-level is del
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_LEVEL_URL);
-      assert.equal(store.find('location-level', LLD.idOne).get('length'), undefined);
+      assert.equal( this.store.find('location-level', LLD.idOne).get('length'), undefined);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
@@ -235,10 +234,10 @@ test('when click delete, modal displays and when click ok, location-level is del
 /* jshint ignore:end */
 
 /* Children */
-test('can remove and add back children', (assert) => {
+test('can remove and add back children', function(assert) {
   page.visitDetail();
   andThen(() => {
-    const model = store.find('location-level', LLD.idOne);
+    const model  = this.store.find('location-level', LLD.idOne);
     assert.equal(model.get('children_fks').length, 7);
   });
   //reclicking removes
@@ -247,7 +246,7 @@ test('can remove and add back children', (assert) => {
   page.childrenClickDropdown();
   page.childrenClickOptionLossPreventionDistrict();
   andThen(() => {
-    const model = store.find('location-level', LLD.idOne);
+    const model  = this.store.find('location-level', LLD.idOne);
     assert.equal(model.get('children_fks').length, 5);
   });
   page.childrenClickDropdown();
@@ -255,13 +254,13 @@ test('can remove and add back children', (assert) => {
   page.childrenClickDropdown();
   page.childrenClickOptionLossPreventionDistrict();
   andThen(() => {
-    const model = store.find('location-level', LLD.idOne);
+    const model  = this.store.find('location-level', LLD.idOne);
     assert.equal(model.get('children_fks').length, 7);
   });
   //click x button
   page.childrenOneRemove();
   andThen(() => {
-    const model = store.find('location-level', LLD.idOne);
+    const model  = this.store.find('location-level', LLD.idOne);
     assert.equal(model.get('children_fks').length, 6);
   });
   page.childrenClickDropdown();
@@ -275,7 +274,7 @@ test('can remove and add back children', (assert) => {
   });
 });
 
-test('deep linking with an xhr with a 404 status code will show up in the error component (llevel)', (assert) => {
+test('deep linking with an xhr with a 404 status code will show up in the error component (llevel)', function(assert) {
   errorSetup();
   clearxhr(detail_xhr);
   clearxhr(list_xhr);

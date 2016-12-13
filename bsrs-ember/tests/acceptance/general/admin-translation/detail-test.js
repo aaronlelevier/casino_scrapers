@@ -18,7 +18,6 @@ var endpoint, translation_list_data, translation_detail_data, list_xhr;
 
 moduleForAcceptance('Acceptance | general translation detail test', {
   beforeEach() {
-    this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/';
     translation_list_data = TF.list();
     translation_detail_data = TF.get();

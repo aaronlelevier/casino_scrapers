@@ -17,11 +17,10 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_tickets_url;
 const NUMBER_FIVE = {keyCode: 53};
 
-let application, store, endpoint, list_xhr;
+let application, endpoint, list_xhr;
 
 moduleForAcceptance('Acceptance | error grid test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';
     list_xhr = xhr(endpoint, 'GET', null, {}, 200, TF.list());
   },

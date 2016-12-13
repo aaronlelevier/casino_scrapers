@@ -24,7 +24,7 @@ import pageDrawer from 'bsrs-ember/tests/pages/nav-drawer';
 import BASEURLS, { PEOPLE_URL, PEOPLE_LIST_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 import { ROLE_SELECT, LOCATION_SELECT, STATUS_SELECT } from 'bsrs-ember/tests/helpers/const-names';
 
-var store, list_xhr, detail_payload;
+var list_xhr, detail_payload;
 
 const BASE_URL = BASEURLS.base_people_url;
 const DETAIL_URL = `${BASE_URL}/${PD.idOne}`;
@@ -33,7 +33,6 @@ const PEOPLE_PUT_URL = `${PEOPLE_URL}${PD.idOne}/`;
 moduleForAcceptance('Acceptance | general mobile people detail test', {
   beforeEach() {
     setWidth('mobile');
-    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, PF.list());
     detail_payload = PF.detail(PD.idOne);
     xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, detail_payload);
@@ -42,7 +41,7 @@ moduleForAcceptance('Acceptance | general mobile people detail test', {
 
 /* jshint ignore:start */
 
-test('can click from admin to people grid to detail', async assert => {
+test('can click from admin to people grid to detail', async function(assert) {
   await generalPage.visitAdmin();
   assert.equal(currentURL(), BASEURLS.base_admin_url);
   await pageDrawer.clickDrawer();
@@ -53,10 +52,10 @@ test('can click from admin to people grid to detail', async assert => {
   assert.equal(currentURL(), DETAIL_URL);
 });
 
-test('can update fields and save', async assert => {
+test('can update fields and save', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
-  const person = store.find('person', PD.idOne);
+  const person = this.store.find('person', PD.idOne);
   assert.equal(find('.t-detail-title').text(), person.get('fullname'));
   xhr(`${LOCATIONS_URL}location__icontains=ABC1234/?location_level=${LLD.idOne}`, 'GET', null, {}, 200, LF.list_power_select());
   await selectSearch(LOCATION_SELECT, 'ABC1234');
@@ -88,7 +87,7 @@ test('can update fields and save', async assert => {
   assert.equal(currentURL(), PEOPLE_LIST_URL);
 });
 
-test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async assert => {
+test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async function(assert) {
   clearxhr(list_xhr);
   await page.visitDetail();
   await click('.t-mobile-footer-item:eq(0)');
@@ -115,7 +114,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   });
 });
 
-test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit rollback', async assert => {
+test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit rollback', async function(assert) {
   await page.visitDetail();
   await click('.t-mobile-footer-item:eq(0)');
   await peoplePage.firstNameFill('wat');
@@ -135,14 +134,14 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_LIST_URL);
-      const person = store.find('person', PD.idOne);
+      const person = this.store.find('person', PD.idOne);
       assert.notEqual(find('.t-person-first-name').val(), 'wat');
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
 
-test('can click through component sections and save to redirect to index', async assert => {
+test('can click through component sections and save to redirect to index', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   await generalMobilePage.footerItemTwoClick();

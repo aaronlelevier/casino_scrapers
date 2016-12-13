@@ -26,11 +26,10 @@ const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
 const API_DETAIL_URL = `${TENANT_URL}${TD.idOne}/`;
 const CURRENCY = '.t-currency-select';
 
-var store, detailXhr, listXhr;
+var  detailXhr, listXhr;
 
 moduleForAcceptance('Acceptance | general tenant detail test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     const listData = TF.list();
     listXhr = xhr(`${TENANT_URL}?page=1`, 'GET', null, {}, 200, listData);
     const detailData = TF.detail();
@@ -38,7 +37,7 @@ moduleForAcceptance('Acceptance | general tenant detail test', {
   },
 });
 
-test('by clicking record in list view, User is sent to detail view', assert => {
+test('by clicking record in list view, User is sent to detail view', function(assert) {
   page.visit();
   andThen(() => {
     assert.equal(currentURL(), TENANT_LIST_URL);
@@ -49,7 +48,7 @@ test('by clicking record in list view, User is sent to detail view', assert => {
   });
 });
 
-test('visit detail and update all fields', assert => {
+test('visit detail and update all fields', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -118,7 +117,7 @@ test('visit detail and update all fields', assert => {
 
 // cancel modal tests
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', function(assert) {
   clearxhr(listXhr);
   page.visitDetail();
   page.companyNameFill(TD.companyNameTwo);
@@ -140,7 +139,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', function(assert) {
   page.visitDetail();
   page.companyNameFill(TD.companyNameTwo);
   generalPage.cancel();
@@ -154,13 +153,13 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), TENANT_LIST_URL);
-      var tenant = store.find('tenant', TD.idOne);
+      var tenant = this.store.find('tenant', TD.idOne);
       assert.equal(tenant.get('company_name'), TD.companyNameOne);
     });
   });
 });
 
-test('clicking cancel button with no edits will take from detail view to list view', (assert) => {
+test('clicking cancel button with no edits will take from detail view to list view', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -173,7 +172,7 @@ test('clicking cancel button with no edits will take from detail view to list vi
 
 // delete modal tests
 
-test('when click delete, modal displays and when click ok, tenant is deleted and removed from store', assert => {
+test('when click delete, modal displays and when click ok, tenant is deleted and removed from this.store', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -193,13 +192,13 @@ test('when click delete, modal displays and when click ok, tenant is deleted and
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), TENANT_LIST_URL);
-      assert.equal(store.find('tenant', TD.idOne).get('length'), undefined);
+      assert.equal(this.store.find('tenant', TD.idOne).get('length'), undefined);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
 
-test('when click delete, and click no modal disappears', assert => {
+test('when click delete, and click no modal disappears', function(assert) {
   clearxhr(listXhr);
   page.visitDetail();
   andThen(() => {
@@ -226,7 +225,7 @@ test('when click delete, and click no modal disappears', assert => {
 
 // modal tests: end
 
-test('deep linking with an xhr with a 404 status code will show up in the error component (currency)', (assert) => {
+test('deep linking with an xhr with a 404 status code will show up in the error component (currency)', function(assert) {
   errorSetup();
   clearxhr(detailXhr);
   clearxhr(listXhr);
@@ -240,7 +239,7 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
   errorTearDown();
 });
 
-test('validations work', assert => {
+test('validations work', function(assert) {
   clearxhr(listXhr);
   page.visitDetail();
   page.companyNameFill('');

@@ -42,11 +42,10 @@ const BASE_LOCATION_URL = BASEURLS.base_locations_url;
 const DETAIL_URL = `${BASE_PEOPLE_URL}/${PD.idOne}`;
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-var store, list_xhr, people_detail_data, detail_xhr, url, translations, role_route_data_endpoint;
+var list_xhr, people_detail_data, detail_xhr, url, translations, role_route_data_endpoint;
 
 moduleForAcceptance('Acceptance | general person detail test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     var people_list_data = PF.list();
     people_detail_data = PF.detail(PD.idOne);
     list_xhr = xhr(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, people_list_data);
@@ -57,7 +56,7 @@ moduleForAcceptance('Acceptance | general person detail test', {
   },
 });
 
-test('clicking a persons name will redirect to the given detail view', (assert) => {
+test('clicking a persons name will redirect to the given detail view', function(assert) {
   page.visitPeople();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_LIST_URL);
@@ -70,7 +69,7 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
   });
 });
 
-test('username backend validation', (assert) => {
+test('username backend validation', function(assert) {
   clearxhr(list_xhr);
   clearxhr(detail_xhr);
   let data = PF.detail(PD.idOne);
@@ -89,11 +88,11 @@ test('username backend validation', (assert) => {
 });
 
 // can change locale to inactive for person and save (power select)
-test('when you deep link to the person detail view you get bound attrs', (assert) => {
+test('when you deep link to the person detail view you get bound attrs', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    var person = store.find('person', PD.idOne);
+    var person = this.store.find('person', PD.idOne);
     assert.equal(document.title, t('doctitle.people.single', { name: 'Mel1 Gibson1' }));
     assert.ok(person.get('isNotDirty'));
     assert.equal(person.get('auth_amount'), undefined);
@@ -134,7 +133,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     $('.t-amount').focusout();
   });
   andThen(() => {
-    var person = store.find('person', PD.idOne);
+    var person = this.store.find('person', PD.idOne);
     assert.ok(person.get('isDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     assert.ok(person.get('emailsIsNotDirty'));
@@ -155,14 +154,14 @@ test('when you deep link to the person detail view you get bound attrs', (assert
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_LIST_URL);
-    var person = store.find('person', PD.idOne);
+    var person = this.store.find('person', PD.idOne);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(person.get('emailsIsNotDirty'));
   });
 });
 
-test('when changing password to invalid, it checks for validation', (assert) => {
+test('when changing password to invalid, it checks for validation', function(assert) {
   page.visitDetail();
   page.clickChangePassword();
   fillIn('.t-person-password', PD.password);
@@ -172,13 +171,13 @@ test('when changing password to invalid, it checks for validation', (assert) => 
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
   generalPage.save();
   andThen(() => {
-    let person = store.find('person', PD.idOne);
+    let person = this.store.find('person', PD.idOne);
     assert.equal(person.get('password'), '');
     assert.equal(currentURL(), PEOPLE_LIST_URL);
   });
 });
 
-test('payload does not include password if blank or undefined', (assert) => {
+test('payload does not include password if blank or undefined', function(assert) {
   page.visitDetail();
   const username_response = {'count':0,'next':null,'previous':null,'results': []};
   xhr(`${PEOPLE_URL}?username=${PD.sorted_username}`, 'GET', null, {}, 200, username_response);
@@ -188,14 +187,14 @@ test('payload does not include password if blank or undefined', (assert) => {
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
   generalPage.save();
   andThen(() => {
-    let person = store.find('person', PD.idOne);
+    let person = this.store.find('person', PD.idOne);
     assert.equal(person.get('password'), '');
     assert.equal(currentURL(), PEOPLE_LIST_URL);
   });
 });
 
 /* OTHER */
-test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   const username_response = {'count':1,'next':null,'previous':null,'results': [{'id': PD.idOne}]};
@@ -219,7 +218,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', function(assert) {
   page.visitDetail();
   const username_response = {'count':1,'next':null,'previous':null,'results': [{'id': PD.idone}]};
   xhr(`${PEOPLE_URL}?username=${PD_PUT.username}`, 'get', null, {}, 200, username_response);
@@ -235,13 +234,13 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_LIST_URL);
-      var person = store.find('person', PD.idOne);
+      var person = this.store.find('person', PD.idOne);
       assert.equal(person.get('username'), PD.username);
     });
   });
 });
 
-test('currency helper displays inherited auth_amount, and can click link-to to go to roles inherited value', (assert) => {
+test('currency helper displays inherited auth_amount, and can click link-to to go to roles inherited value', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
@@ -259,19 +258,19 @@ test('currency helper displays inherited auth_amount, and can click link-to to g
   });
 });
 
-test('can change currency by clicking it and selecting another currency', assert => {
+test('can change currency by clicking it and selecting another currency', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(inputCurrencyPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
-    let person = store.find('person', PD.id);
+    let person = this.store.find('person', PD.id);
     assert.equal(person.get('inherited').auth_currency.inherited_value, CURRENCY_DEFAULTS.id);
     assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.code);
   });
   selectChoose('.t-currency-code-select', CURRENCY_DEFAULTS.codeCAD);
   andThen(() => {
     assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.codeCAD);
-    let person = store.find('person', PD.id);
+    let person = this.store.find('person', PD.id);
     assert.equal(person.get('auth_currency'), CURRENCY_DEFAULTS.idCAD);
   });
   var payload = PF.put({id: PD.id, auth_currency: CURRENCY_DEFAULTS.idCAD});
@@ -283,7 +282,7 @@ test('can change currency by clicking it and selecting another currency', assert
 });
 
 /* jshint ignore:start */
-test('when click delete, modal displays and when click ok, person is deleted and removed from store', async assert => {
+test('when click delete, modal displays and when click ok, person is deleted and removed from this.store', async function(assert) {
   await page.visitDetail();
   await generalPage.delete();
   andThen(() => {
@@ -300,20 +299,20 @@ test('when click delete, modal displays and when click ok, person is deleted and
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_LIST_URL);
-      assert.equal(store.find('person', PD.idOne).get('length'), undefined);
+      assert.equal(this.store.find('person', PD.idOne).get('length'), undefined);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
 
-test('when click delete, and click no modal disappears', async assert => {
+test('when click delete, and click no modal disappears', async function(assert) {
   clearxhr(list_xhr);
   await page.visitDetail();
   await generalPage.delete();
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.equal(store.find('person').get('length'), 2);
+      assert.equal(this.store.find('person').get('length'), 2);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.delete.title'));
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.delete.confirm', {module: 'person'}));
@@ -324,7 +323,7 @@ test('when click delete, and click no modal disappears', async assert => {
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
-      assert.equal(store.find('person').get('length'), 2);
+      assert.equal(this.store.find('person').get('length'), 2);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
@@ -334,7 +333,7 @@ test('when click delete, and click no modal disappears', async assert => {
 
 /* PHONE NUMBER AND EMAILS*/
 
-test('newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
+test('newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
@@ -361,11 +360,11 @@ test('newly added phone numbers without a valid number are ignored and removed w
   generalPage.cancel();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_LIST_URL);
-    assert.equal(store.find('phonenumber').get('length'), 3);
+    assert.equal(this.store.find('phonenumber').get('length'), 3);
   });
 });
 
-test('newly added emails without a valid email are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
+test('newly added emails without a valid email are ignored and removed when user navigates away (no rollback prompt)', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
@@ -392,11 +391,11 @@ test('newly added emails without a valid email are ignored and removed when user
   generalPage.cancel();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_LIST_URL);
-    assert.equal(store.find('email').get('length'), 3);
+    assert.equal(this.store.find('email').get('length'), 3);
   });
 });
 
-test('invalid phone numbers prevent save and must click delete to navigate away', (assert) => {
+test('invalid phone numbers prevent save and must click delete to navigate away', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   generalPage.clickAddPhoneNumber();
@@ -427,7 +426,7 @@ test('invalid phone numbers prevent save and must click delete to navigate away'
   });
 });
 
-test('invalid emails prevent save and must click delete to navigate away', (assert) => {
+test('invalid emails prevent save and must click delete to navigate away', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   generalPage.clickAddEmail();
@@ -458,7 +457,7 @@ test('invalid emails prevent save and must click delete to navigate away', (asse
   });
 });
 
-test('when you change a related email numbers type it will be persisted correctly', (assert) => {
+test('when you change a related email numbers type it will be persisted correctly', function(assert) {
   page.visitDetail();
   selectChoose('.t-email-type-select', ETD.workName);
   var emails = EF.put({id: ED.idOne, type: ETD.workId});
@@ -470,7 +469,7 @@ test('when you change a related email numbers type it will be persisted correctl
   });
 });
 
-test('when you change a related phone numbers type it will be persisted correctly', (assert) => {
+test('when you change a related phone numbers type it will be persisted correctly', function(assert) {
   page.visitDetail();
   selectChoose('.t-phone-number-type-select', PNTD.mobileNameValue);
   var phone_numbers = PNF.put({id: PND.idOne, type: PNTD.mobileId});
@@ -482,7 +481,7 @@ test('when you change a related phone numbers type it will be persisted correctl
   });
 });
 
-test('when user changes an attribute on email and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+test('when user changes an attribute on email and clicks cancel we prompt them with a modal and the related model gets rolled back', function(assert) {
   page.visitDetail();
   selectChoose('.t-email-type-select:eq(0)', ETD.workName);
   generalPage.cancel();
@@ -496,13 +495,13 @@ test('when user changes an attribute on email and clicks cancel we prompt them w
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_LIST_URL);
-      const person = store.find('person', PD.idOne);
+      const person = this.store.find('person', PD.idOne);
       assert.equal(person.get('emails').objectAt(0).get('email_type').get('id'), ETD.personalId);
     });
   });
 });
 
-test('when user changes an attribute on phonenumber and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+test('when user changes an attribute on phonenumber and clicks cancel we prompt them with a modal and the related model gets rolled back', function(assert) {
   page.visitDetail();
   selectChoose('.t-phone-number-type-select:eq(0)', PNTD.mobileNameValue);
   generalPage.cancel();
@@ -516,13 +515,13 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_LIST_URL);
-      const person = store.find('person', PD.idOne);
+      const person = this.store.find('person', PD.idOne);
       assert.equal(person.get('phonenumbers').objectAt(0).get('phone_number_type').get('id'), PNTD.officeId);
     });
   });
 });
 
-test('when user removes an email clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+test('when user removes an email clicks cancel we prompt them with a modal and the related model gets rolled back', function(assert) {
   page.visitDetail();
   click('.t-del-email-btn:eq(0)');
   generalPage.cancel();
@@ -530,7 +529,7 @@ test('when user removes an email clicks cancel we prompt them with a modal and t
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
-      const person = store.find('person', PD.idOne);
+      const person = this.store.find('person', PD.idOne);
       assert.equal(person.get('emails').get('length'), 1);
     });
   });
@@ -538,13 +537,13 @@ test('when user removes an email clicks cancel we prompt them with a modal and t
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_LIST_URL);
-      const person = store.find('person', PD.idOne);
+      const person = this.store.find('person', PD.idOne);
       assert.equal(person.get('emails').get('length'), 2);
     });
   });
 });
 
-test('when user removes a phone number clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+test('when user removes a phone number clicks cancel we prompt them with a modal and the related model gets rolled back', function(assert) {
   page.visitDetail();
   click('.t-del-phone-number-btn:eq(0)');
   generalPage.cancel();
@@ -552,7 +551,7 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
-      const person = store.find('person', PD.idOne);
+      const person = this.store.find('person', PD.idOne);
       assert.equal(person.get('phonenumbers').get('length'), 1);
     });
   });
@@ -560,17 +559,17 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_LIST_URL);
-      const person = store.find('person', PD.idOne);
+      const person = this.store.find('person', PD.idOne);
       assert.equal(person.get('phonenumbers').get('length'), 2);
     });
   });
 });
 
-test('when you deep link to the person detail view you can remove a new phone number', (assert) => {
+test('when you deep link to the person detail view you can remove a new phone number', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    var person = store.find('person', PD.idOne);
+    var person = this.store.find('person', PD.idOne);
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(find('.t-input-multi-phone').find('input').length, 2);
   });
@@ -581,7 +580,7 @@ test('when you deep link to the person detail view you can remove a new phone nu
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-input-multi-phone').find('input').length, 0);
-    var person = store.find('person', PD.idOne);
+    var person = this.store.find('person', PD.idOne);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
   });
   var response = PF.detail(PD.idOne);
@@ -591,31 +590,31 @@ test('when you deep link to the person detail view you can remove a new phone nu
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_LIST_URL);
-    var person = store.find('person', PD.idOne);
+    var person = this.store.find('person', PD.idOne);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   });
 });
 
-test('when you deep link to the person detail view you can add and remove a new phone number', (assert) => {
+test('when you deep link to the person detail view you can add and remove a new phone number', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    var person = store.find('person', PD.idOne);
+    var person = this.store.find('person', PD.idOne);
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(find('.t-input-multi-phone').find('input').length, 2);
   });
   click('.t-add-phone-number-btn:eq(0)');
   click('.t-del-phone-number-btn:eq(2)');
   andThen(() => {
-    var person = store.find('person', PD.idOne);
+    var person = this.store.find('person', PD.idOne);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   });
 });
 
-// test('when you deep link to the person detail view you can change the phone number type and add a new phone number', (assert) => {
+// test('when you deep link to the person detail view you can change the phone number type and add a new phone number', function(assert) {
 //   random.uuid = function() { return UUID.value; };
 //   page.visitDetail();
 //   fillIn('.t-input-multi-phone select:eq(0)', PNTD.mobileId);
@@ -632,7 +631,7 @@ test('when you deep link to the person detail view you can add and remove a new 
 //   generalPage.save();
 //   andThen(() => {
 //     assert.equal(currentURL(), PEOPLE_LIST_URL);
-//     var person = store.find('person', PD.idOne);
+//     var person = this.store.find('person', PD.idOne);
 //     assert.ok(person.get('isNotDirty'));
 //     assert.equal(person.get('phone_numbers').objectAt(0).get('type'), PNTD.mobileId);
 //     assert.equal(person.get('phone_numbers').objectAt(2).get('type'), PNTD.officeId);
@@ -640,7 +639,7 @@ test('when you deep link to the person detail view you can add and remove a new 
 //   });
 // });
 
-test('clicking cancel button will take from detail view to list view', (assert) => {
+test('clicking cancel button will take from detail view to list view', function(assert) {
   page.visitPeople();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_LIST_URL);
@@ -648,7 +647,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
   click('.t-grid-data:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    const person = store.find('person', PD.idOne);
+    const person = this.store.find('person', PD.idOne);
     assert.equal(person.get('role.id'), RD.idOne);
     assert.equal(person.get('role_fk'), RD.idOne);
     assert.ok(person.get('roleIsNotDirty'));
@@ -660,10 +659,10 @@ test('clicking cancel button will take from detail view to list view', (assert) 
 });
 
 /* ROLE */
-test('when you change a related role it will be persisted correctly', (assert) => {
+test('when you change a related role it will be persisted correctly', function(assert) {
   page.visitDetail();
   andThen(() => {
-    let person = store.find('person', PD.idOne);
+    let person = this.store.find('person', PD.idOne);
     assert.equal(person.get('role_fk'), RD.idOne);
     assert.equal(person.get('locations').get('length'), 1);
     assert.equal(person.get('locations').objectAt(0).get('id'), LD.idOne);
@@ -688,11 +687,11 @@ test('when you change a related role it will be persisted correctly', (assert) =
   });
 });
 
-test('when you deep link to the person detail view you can alter the role and rolling back will reset it', (assert) => {
+test('when you deep link to the person detail view you can alter the role and rolling back will reset it', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    var person = store.find('person', PD.idOne);
+    var person = this.store.find('person', PD.idOne);
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(page.roleInput, RD.nameOne);
     assert.equal(person.get('role.id'), RD.idOne);
@@ -705,7 +704,7 @@ test('when you deep link to the person detail view you can alter the role and ro
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
     assert.equal(page.roleInput, RD.nameTwo);
-    var person = store.find('person', PD.idOne);
+    var person = this.store.find('person', PD.idOne);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     assert.equal(person.get('role.id'), RD.idTwo);
   });
@@ -720,20 +719,20 @@ test('when you deep link to the person detail view you can alter the role and ro
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_LIST_URL);
-      var person = store.find('person', PD.idOne);
+      var person = this.store.find('person', PD.idOne);
       assert.equal(person.get('role.id'), RD.idOne);
-      var actual_role = store.find('role', RD.idOne);
+      var actual_role = this.store.find('role', RD.idOne);
       assert.ok(actual_role.get('isNotDirty'));
       assert.ok(person.get('isNotDirty'));
       assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-      var previous_role = store.find('role', RD.idTwo);
+      var previous_role = this.store.find('role', RD.idTwo);
       assert.ok(Ember.$.inArray(person.get('id'), previous_role.get('people')) === -1);
       assert.ok(previous_role.get('isNotDirty'));
     });
   });
 });
 
-test('when you deep link to the person detail view you can alter the role and change it back without dirtying the person model', (assert) => {
+test('when you deep link to the person detail view you can alter the role and change it back without dirtying the person model', function(assert) {
   page.visitDetail();
   andThen(() => {
     clearxhr(detail_xhr);
@@ -742,7 +741,7 @@ test('when you deep link to the person detail view you can alter the role and ch
     people_detail_data_two.role = RD.idTwo;
     let first_role_change = xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
     assert.equal(currentURL(), DETAIL_URL);
-    var person = store.find('person', PD.idOne);
+    var person = this.store.find('person', PD.idOne);
     andThen(() => {
       assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
       assert.equal(page.roleInput, RD.nameOne);
@@ -752,7 +751,7 @@ test('when you deep link to the person detail view you can alter the role and ch
     andThen(() => {
       assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
       assert.equal(page.roleInput, RD.nameTwo);
-      var person = store.find('person', PD.idOne);
+      var person = this.store.find('person', PD.idOne);
       assert.ok(person.get('isDirtyOrRelatedDirty'));
       assert.equal(person.get('role.id'), RD.idTwo);
     });
@@ -768,7 +767,7 @@ test('when you deep link to the person detail view you can alter the role and ch
       andThen(() => {
         assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idOne);
         assert.equal(page.roleInput, RD.nameOne);
-        var person = store.find('person', PD.idOne);
+        var person = this.store.find('person', PD.idOne);
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         assert.equal(person.get('role.id'), RD.idOne);
       });
@@ -782,7 +781,7 @@ test('when you deep link to the person detail view you can alter the role and ch
 
 
 
-test('when you change a related role it will change the related locations as well', (assert) => {
+test('when you change a related role it will change the related locations as well', function(assert) {
   clearxhr(list_xhr);
   let people_list_data_mod = PF.list();
   people_list_data_mod.results[0].role = RD.idTwo;
@@ -793,7 +792,7 @@ test('when you change a related role it will change the related locations as wel
   let payload = PF.put({id: PD.id, role: role.id, locations: []});
   xhr(url,'PUT',JSON.stringify(payload),{},200, {});
   andThen(() => {
-    let person = store.find('person', PD.idOne);
+    let person = this.store.find('person', PD.idOne);
     assert.equal(person.get('locationsIsDirty'), false);
     assert.deepEqual(person.get('locations').get('length'), 1);
   });
@@ -802,7 +801,7 @@ test('when you change a related role it will change the related locations as wel
   xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
   selectChoose(PERSON_ROLE_SELECT, RD.nameTwo);
   andThen(() => {
-    let person = store.find('person', PD.idOne);
+    let person = this.store.find('person', PD.idOne);
     assert.equal(person.get('locationsIsDirty'), false);
     assert.equal(person.get('isDirtyOrRelatedDirty'), true);
     assert.equal(person.get('role.id'), RD.idTwo);
@@ -811,12 +810,12 @@ test('when you change a related role it will change the related locations as wel
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_LIST_URL);
-    let person = store.find('person', PD.idOne);
+    let person = this.store.find('person', PD.idOne);
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
   });
 });
 
-test('when you change a related role it will change the related locations as well with no search criteria that was cleared out by user', (assert) => {
+test('when you change a related role it will change the related locations as well with no search criteria that was cleared out by user', function(assert) {
   clearxhr(list_xhr);
   let people_list_data_mod = PF.list();
   people_list_data_mod.results[0].role = RD.idTwo;
@@ -827,7 +826,7 @@ test('when you change a related role it will change the related locations as wel
     xhr(locations_endpoint, 'GET', null, {}, 200, LF.list_power_select());
     selectSearch(PERSON_LOCATION_SELECT, 'a');
     andThen(() => {
-      let person = store.find('person', PD.idOne);
+      let person = this.store.find('person', PD.idOne);
       assert.equal(person.get('locationsIsDirty'), false);
       assert.equal(person.get('locations').get('length'), 1);
     });
@@ -841,7 +840,7 @@ test('when you change a related role it will change the related locations as wel
     xhr(PEOPLE_URL + PD.idOne + '/', 'GET', null, {}, 200, people_detail_data_two);
     selectChoose(PERSON_ROLE_SELECT, RD.nameTwo);
     andThen(() => {
-      let person = store.find('person', PD.idOne);
+      let person = this.store.find('person', PD.idOne);
       assert.equal(person.get('role.id'), RD.idTwo);
     });
     const url = PREFIX + DETAIL_URL + '/';
@@ -851,7 +850,7 @@ test('when you change a related role it will change the related locations as wel
     generalPage.save();
     andThen(() => {
       assert.equal(currentURL(), PEOPLE_LIST_URL);
-      let person = store.find('person', PD.idOne);
+      let person = this.store.find('person', PD.idOne);
       assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
       assert.equal(person.get('locations').get('length'), 0);
     });
@@ -859,10 +858,10 @@ test('when you change a related role it will change the related locations as wel
 });
 
 /*PERSON TO LOCATION ONE TO MANY*/
-test('deep link to person and clicking in the person-locations-select component will fire off xhr to get locations with one location to start with', (assert) => {
+test('deep link to person and clicking in the person-locations-select component will fire off xhr to get locations with one location to start with', function(assert) {
   page.visitDetail();
   andThen(() => {
-    let person = store.find('person', PD.idOne);
+    let person = this.store.find('person', PD.idOne);
     assert.equal(person.get('locations').get('length'), 1);
     assert.equal(page.locationOneSelected.indexOf(LD.storeName), 2);
   });
@@ -870,7 +869,7 @@ test('deep link to person and clicking in the person-locations-select component 
   selectSearch(PERSON_LOCATION_SELECT, 'ABC1234');
   selectChoose(PERSON_LOCATION_SELECT, `${LD.baseStoreName}4`);
   andThen(() => {
-    let person = store.find('person', PD.idOne);
+    let person = this.store.find('person', PD.idOne);
     assert.equal(person.get('locations').get('length'), 2);
     assert.equal(page.locationOneSelected.indexOf(LD.storeName), 2);
     assert.equal(page.locationTwoSelected.indexOf(LD.storeNameFive), 2);
@@ -885,12 +884,12 @@ test('deep link to person and clicking in the person-locations-select component 
   });
 });
 
-test('can remove and add back same location', (assert) => {
+test('can remove and add back same location', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   page.locationOneRemove();
   andThen(() => {
-    let person = store.find('person', PD.idOne);
+    let person = this.store.find('person', PD.idOne);
     assert.equal(person.get('locations').get('length'), 0);
     assert.equal(find('.t-save-btn').attr('disabled'), undefined);
   });
@@ -901,7 +900,7 @@ test('can remove and add back same location', (assert) => {
   selectSearch(PERSON_LOCATION_SELECT, 'a');
   selectChoose(PERSON_LOCATION_SELECT, LD.storeName);
   andThen(() => {
-    let person = store.find('person', PD.idOne);
+    let person = this.store.find('person', PD.idOne);
     assert.equal(person.get('locations').get('length'), 1);
     assert.equal(page.locationOneSelected.indexOf(LD.storeName), 2);
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -910,12 +909,12 @@ test('can remove and add back same location', (assert) => {
   });
 });
 
-test('starting with multiple locations, can remove all locations (while not populating options) and add back', (assert) => {
+test('starting with multiple locations, can remove all locations (while not populating options) and add back', function(assert) {
   people_detail_data.locations = [...people_detail_data.locations, LF.get_fk(LD.idTwo)];
   people_detail_data.locations[1].name = LD.storeNameTwo;
   page.visitDetail();
   andThen(() => {
-    let person = store.find('person', PD.idOne);
+    let person = this.store.find('person', PD.idOne);
     assert.equal(person.get('locations').get('length'), 2);
     assert.equal(page.locationOneSelected.indexOf(LD.storeName), 2);
     assert.equal(page.locationTwoSelected.indexOf(LD.storeNameTwo), 2);
@@ -923,7 +922,7 @@ test('starting with multiple locations, can remove all locations (while not popu
   page.locationOneRemove();
   page.locationOneRemove();
   andThen(() => {
-    let person = store.find('person', PD.idOne);
+    let person = this.store.find('person', PD.idOne);
     assert.equal(person.get('locations').get('length'), 0);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
   });
@@ -933,7 +932,7 @@ test('starting with multiple locations, can remove all locations (while not popu
   selectSearch(PERSON_LOCATION_SELECT, 'a');
   selectChoose(PERSON_LOCATION_SELECT, LD.storeNameOne);
   andThen(() => {
-    let person = store.find('person', PD.idOne);
+    let person = this.store.find('person', PD.idOne);
     assert.equal(person.get('locations').get('length'), 1);
     assert.equal(page.locationOneSelected.indexOf(LD.storeNameOne), 2);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -947,7 +946,7 @@ test('starting with multiple locations, can remove all locations (while not popu
   });
 });
 
-test('when you deep link to the person detail view you can alter the locations and rolling back will reset it', (assert) => {
+test('when you deep link to the person detail view you can alter the locations and rolling back will reset it', function(assert) {
   clearxhr(detail_xhr);
   page.visitDetail();
   people_detail_data = PF.detail(PD.idOne);
@@ -963,11 +962,11 @@ test('when you deep link to the person detail view you can alter the locations a
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
       assert.ok(generalPage.modalIsVisible);
-      let person = store.find('person', PD.idOne);
+      let person = this.store.find('person', PD.idOne);
       assert.equal(person.get('locations').get('length'), 1);
       assert.ok(person.get('isNotDirty'));
       assert.ok(person.get('isDirtyOrRelatedDirty'));
-      var previous_location_m2m = store.find('person-location', {person_pk: PD.id});
+      var previous_location_m2m = this.store.find('person-location', {person_pk: PD.id});
       assert.deepEqual(person.get('person_locations_fks'), []);
       assert.equal(previous_location_m2m.get('length'), 1);
     });
@@ -976,11 +975,11 @@ test('when you deep link to the person detail view you can alter the locations a
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_LIST_URL);
-      let person = store.find('person', PD.idOne);
+      let person = this.store.find('person', PD.idOne);
       assert.equal(person.get('locations').get('length'), 0);
       assert.ok(person.get('isNotDirty'));
       assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-      var previous_location_m2m = store.find('person-location', {person_pk: PD.id});
+      var previous_location_m2m = this.store.find('person-location', {person_pk: PD.id});
       assert.deepEqual(person.get('person_locations_fks'), []);
       assert.equal(previous_location_m2m.get('length'), 1);
       assert.ok(previous_location_m2m.objectAt(0).get('removed'), true);
@@ -989,14 +988,14 @@ test('when you deep link to the person detail view you can alter the locations a
 });
 
 /* STATUS */
-test('can change status to inactive for person and save (power select)', (assert) => {
+test('can change status to inactive for person and save (power select)', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(page.statusInput, t(SD.activeName));
   });
   selectChoose(PERSON_STATUS_SELECT, SD.inactiveNameTranslated);
   andThen(() => {
-    const person = store.find('person', PD.idOne);
+    const person = this.store.find('person', PD.idOne);
     assert.equal(person.get('status_fk'), SD.activeId);
     assert.equal(person.get('status.id'), SD.inactiveId);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -1012,14 +1011,14 @@ test('can change status to inactive for person and save (power select)', (assert
 });
 
 /* LOCALE */
-test('can change locale to inactive for person and save (power select)', (assert) => {
+test('can change locale to inactive for person and save (power select)', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(page.localeInput, PD.localeFull);
   });
   selectChoose(LOCALE_SELECT, PD.localeTwo);
   andThen(() => {
-    const person = store.find('person', PD.idOne);
+    const person = this.store.find('person', PD.idOne);
     assert.equal(person.get('locale_fk'), LOCALED.idOne);
     assert.equal(person.get('locale.id'), LOCALED.idTwo);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -1034,12 +1033,12 @@ test('can change locale to inactive for person and save (power select)', (assert
   });
 });
 
-test('when changing the locale for a user (not current user), the language is not updated on the site', (assert) => {
+test('when changing the locale for a user (not current user), the language is not updated on the site', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    var person = store.find('person', PD.idOne);
+    var person = this.store.find('person', PD.idOne);
     assert.ok(person.get('id') !== PERSON_CURRENT_DEFAULTS.id);
     assert.equal(find('.t-person-first-name').val(), PD.first_name);
     assert.equal(page.localeInput, PD.localeFull);
@@ -1051,7 +1050,7 @@ test('when changing the locale for a user (not current user), the language is no
   });
 });
 
-test('settings values, placeholers, and inherited froms', assert => {
+test('settings values, placeholers, and inherited froms', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
@@ -1071,7 +1070,7 @@ test('settings values, placeholers, and inherited froms', assert => {
 
 /* jshint ignore:start */
 
-// test('deep linking with an xhr with a 404 status code will show up in the error component (ticket)', async assert => {
+// test('deep linking with an xhr with a 404 status code will show up in the error component (ticket)', async function(assert) {
 //   let originalLoggerError = Ember.Logger.error;
 //   let originalTestAdapterException = Ember.Test.adapter.exception;
 //   Ember.Logger.error = function() {};
@@ -1090,7 +1089,7 @@ test('settings values, placeholers, and inherited froms', assert => {
 
 /* jshint ignore:end */
 
-test('update password_one_time', assert => {
+test('update password_one_time', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
@@ -1108,7 +1107,7 @@ test('update password_one_time', assert => {
   });
 });
 
-test('update password_one_time', assert => {
+test('update password_one_time', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -1122,7 +1121,7 @@ test('update password_one_time', assert => {
       assert.ok(page.passwordOneTimeChecked());
     });
   });
-  let person = store.find('person', {id: PD.id});
+  let person = this.store.find('person', {id: PD.id});
   let payload = PF.put({id: PD.id});
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();

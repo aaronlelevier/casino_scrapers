@@ -19,11 +19,10 @@ const LOCATION_LEVEL_URL = BASE_URL + '/index';
 const LOCATION_LEVEL_NEW_URL = BASE_URL + '/new/1';
 const DETAIL_URL = BASE_URL + '/' + LLD.idOne;
 
-let application, store, payload, list_xhr;
+let application, payload, list_xhr;
 
 moduleForAcceptance('Acceptance | general location-level-new', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${LOCATION_LEVELS_URL}?page=1`, 'GET', null, {}, 200, LOCATION_LEVEL_FIXTURES.empty());
     payload = {
       id: UUID.value,
@@ -37,7 +36,7 @@ moduleForAcceptance('Acceptance | general location-level-new', {
   }
 });
 
-test('visiting /location-level/new', (assert) => {
+test('visiting /location-level/new', function(assert) {
   let response = Ember.$.extend(true, {}, payload);
   xhr(LOCATION_LEVELS_URL, 'POST', JSON.stringify(payload), {}, 201, response);
   page.visit();
@@ -61,8 +60,8 @@ test('visiting /location-level/new', (assert) => {
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
     assert.equal(document.title,  t('doctitle.location_level.new'));
-    assert.equal(store.find('location-level').get('length'), 9);
-    let location_level = store.find('location-level', UUID.value);
+    assert.equal( this.store.find('location-level').get('length'), 9);
+    let location_level  = this.store.find('location-level', UUID.value);
     assert.equal(location_level.get('children_fks').length, 8);
     assert.ok(location_level.get('new'));
   });
@@ -70,15 +69,15 @@ test('visiting /location-level/new', (assert) => {
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
-    assert.equal(store.find('location-level').get('length'), 9);
-    let location_level = store.find('location-level', UUID.value);
+    assert.equal( this.store.find('location-level').get('length'), 9);
+    let location_level  = this.store.find('location-level', UUID.value);
     assert.equal(location_level.get('new'), undefined);
     assert.equal(location_level.get('name'), LLD.nameAnother);
     assert.ok(location_level.get('isNotDirty'));
   });
 });
 
-test('when editing the location level name to invalid, it checks for validation', (assert) => {
+test('when editing the location level name to invalid, it checks for validation', function(assert) {
   clearxhr(list_xhr);
   page.visitNew();
   andThen(() => {
@@ -96,7 +95,7 @@ test('when editing the location level name to invalid, it checks for validation'
   });
 });
 
-test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
+test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', function(assert) {
   clearxhr(list_xhr);
   visit(LOCATION_LEVEL_NEW_URL);
   fillIn('.t-location-level-name', LLD.nameCompany);
@@ -121,7 +120,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', function(assert) {
   visit(LOCATION_LEVEL_NEW_URL);
   fillIn('.t-location-level-name', LLD.nameCompany);
   generalPage.cancel();
@@ -133,7 +132,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
       assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
       assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
-      let location_level = store.find('location-level', {id: UUID.value});
+      let location_level  = this.store.find('location-level', {id: UUID.value});
       assert.equal(location_level.get('length'), 1);
     });
   });
@@ -142,21 +141,21 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_LEVEL_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));
-      let location_level = store.find('location-level', {id: UUID.value});
+      let location_level  = this.store.find('location-level', {id: UUID.value});
       assert.equal(location_level.get('length'), 0);
     });
   });
 });
 
-test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
+test('when user enters new form and doesnt enter data, the record is correctly removed from the store', function(assert) {
   visit(LOCATION_LEVEL_NEW_URL);
   generalPage.cancel();
   andThen(() => {
-    assert.equal(store.find('location-level').get('length'), 8);
+    assert.equal( this.store.find('location-level').get('length'), 8);
   });
 });
 
-test('adding a new location-level should allow for another new location-level to be created after the first is persisted', (assert) => {
+test('adding a new location-level should allow for another new location-level to be created after the first is persisted', function(assert) {
   let location_level_count;
   uuidReset();
   payload.id = 'abc123';
@@ -170,12 +169,12 @@ test('adding a new location-level should allow for another new location-level to
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
-    location_level_count = store.find('location-level').get('length');
+    location_level_count  = this.store.find('location-level').get('length');
   });
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
-    assert.equal(store.find('location-level').get('length'), location_level_count + 1);
+    assert.equal( this.store.find('location-level').get('length'), location_level_count + 1);
     assert.equal(find('.t-location-level-name').val(), '');
   });
 });

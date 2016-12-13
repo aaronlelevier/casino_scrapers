@@ -21,15 +21,14 @@ const TOP_LEVEL_CATEGORIES_URL = `${PREFIX}/admin/categories/parents/`;
 const TICKET_ACTIVITIES_ONE_URL = `${PREFIX}/tickets/${TD.idOne}/activity/`;
 const TICKET_ACTIVITIES_TWO_URL = `${PREFIX}/tickets/${idTwo}/activity/`;
 
-var application, store, ticket_one, ticket_two;
+var application, ticket_one, ticket_two;
 
 moduleForAcceptance('Acceptance | general ticket and ticket test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
   },
 });
 
-test('rolling back should have no effect on another open tickets dirty status', (assert) => {
+test('rolling back should have no effect on another open tickets dirty status', function(assert) {
   ajax(`${PREFIX}${BASEURLS.base_tickets_url}/?page=1`, 'GET', null, {}, 200, TF.list());
   visit(TICKET_LIST_URL);
   andThen(() => {
@@ -40,13 +39,13 @@ test('rolling back should have no effect on another open tickets dirty status', 
   click('.t-grid-data:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), TICKET_ONE_DETAIL_URL);
-    ticket_one = store.find('ticket', TD.idOne);
+    ticket_one = this.store.find('ticket', TD.idOne);
     assert.equal(ticket_one.get('isDirtyOrRelatedDirty'), false);
   });
   visit(TICKET_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
-    ticket_one = store.find('ticket', TD.idOne);
+    ticket_one = this.store.find('ticket', TD.idOne);
     assert.equal(ticket_one.get('isDirtyOrRelatedDirty'), false);
     assert.equal(ticket_one.get('locationIsDirty'), false);
     assert.equal(ticket_one.get('location_fk'), LD.idOne);
@@ -56,27 +55,27 @@ test('rolling back should have no effect on another open tickets dirty status', 
   click('.t-grid-data:eq(1)');
   andThen(() => {
     assert.equal(currentURL(), TICKET_TWO_DETAIL_URL);
-    ticket_one = store.find('ticket', TD.idOne);
+    ticket_one = this.store.find('ticket', TD.idOne);
     assert.equal(ticket_one.get('isDirtyOrRelatedDirty'), false);
     assert.equal(ticket_one.get('locationIsDirty'), false);
-    ticket_two = store.find('ticket', idTwo);
+    ticket_two = this.store.find('ticket', idTwo);
     assert.equal(ticket_two.get('isDirtyOrRelatedDirty'), false);
   });
   page.requestFillIn('something random');
   andThen(() => {
     assert.equal(currentURL(), TICKET_TWO_DETAIL_URL);
-    ticket_one = store.find('ticket', TD.idOne);
+    ticket_one = this.store.find('ticket', TD.idOne);
     assert.equal(ticket_one.get('isDirtyOrRelatedDirty'), false);
-    ticket_two = store.find('ticket', idTwo);
+    ticket_two = this.store.find('ticket', idTwo);
     assert.equal(ticket_two.get('isDirtyOrRelatedDirty'), true);
   });
   click('.t-cancel-btn');
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), TICKET_TWO_DETAIL_URL);
-      ticket_one = store.find('ticket', TD.idOne);
+      ticket_one = this.store.find('ticket', TD.idOne);
       assert.equal(ticket_one.get('isDirtyOrRelatedDirty'), false);
-      ticket_two = store.find('ticket', idTwo);
+      ticket_two = this.store.find('ticket', idTwo);
       assert.equal(ticket_two.get('isDirtyOrRelatedDirty'), true);
       assert.ok(Ember.$('.ember-modal-dialog'));
       assert.equal(Ember.$('.t-modal-title').text().trim(), t('crud.discard_changes'));
@@ -89,9 +88,9 @@ test('rolling back should have no effect on another open tickets dirty status', 
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), TICKET_LIST_URL);
-      ticket_one = store.find('ticket', TD.idOne);
+      ticket_one = this.store.find('ticket', TD.idOne);
       assert.equal(ticket_one.get('isDirtyOrRelatedDirty'), false);
-      ticket_two = store.find('ticket', idTwo);
+      ticket_two = this.store.find('ticket', idTwo);
       assert.equal(ticket_two.get('isDirtyOrRelatedDirty'), false);
     });
   });

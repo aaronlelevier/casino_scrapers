@@ -15,7 +15,7 @@ import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { TENANT_URL, TENANT_LIST_URL, CURRENCIES_URL } from 'bsrs-ember/utilities/urls';
 
-var store, list_xhr;
+var list_xhr;
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -27,29 +27,28 @@ const Currency = '.t-tenant-currency-select';
 moduleForAcceptance('Acceptance | general grid tenant mobile test', {
   beforeEach() {
     setWidth('mobile');
-    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${TENANT_URL}?page=1`, 'GET', null, {}, 200, TF.list());
   },
 });
 
 /* jshint ignore:start */
 
-test('only renders grid items from server and not other tenant objects already in store', async assert => {
+test('only renders grid items from server and not other tenant objects already in store', async function(assert) {
   /* MOBILE doesn't clear out grid items on every route call to allow for infinite scrolling. If other tenant in store, this will fail */
   xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
   await visit(DASHBOARD_URL);
   assert.equal(currentURL(), DASHBOARD_URL);
-  assert.equal(store.find('tenant-list').get('length'), 0);
+  assert.equal(this.store.find('tenant-list').get('length'), 0);
   clearxhr(list_xhr);
   xhr(`${TENANT_URL}?page=1`, 'GET', null, {}, 200, TF.list_two());
   await visit(TENANT_LIST_URL);
   assert.equal(currentURL(), TENANT_LIST_URL);
-  assert.equal(store.find('tenant-list').get('length'), 9);
+  assert.equal(this.store.find('tenant-list').get('length'), 9);
 });
 
-test('visiting mobile tenant grid show correct layout', async assert => {
+test('visiting mobile tenant grid show correct layout', async function(assert) {
   await tenantPage.visit();
-  const tenant = store.findOne('tenant-list');
+  const tenant = this.store.findOne('tenant-list');
   assert.equal(currentURL(), TENANT_LIST_URL);
   assert.equal(find('.t-mobile-grid-title').text().trim(), `19 ${t('tenant.other')}`);
   assert.equal(find('.t-grid-data').length, PAGE_SIZE);
@@ -58,7 +57,7 @@ test('visiting mobile tenant grid show correct layout', async assert => {
   assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').hasClass('t-tenant-company_name'));
 });
 
-test('tenant company_name filter will filter down results and reset page to 1', async assert => {
+test('tenant company_name filter will filter down results and reset page to 1', async function(assert) {
   xhr(`${TENANT_URL}?page=1&company_name__icontains=${TD.companyNameLastPage2Grid}`, 'GET', null, {}, 200, TF.searched(TD.companyNameLastPage2Grid, 'company_name'));
   clearxhr(list_xhr);
   xhr(`${TENANT_URL}?page=2`, 'GET', null, {}, 200, TF.list());
@@ -74,7 +73,7 @@ test('tenant company_name filter will filter down results and reset page to 1', 
   assert.equal(find('.t-grid-data:eq(0) > div:eq(0)').text().trim(), TD.companyNameLastPage2Grid);
 });
 
-test('tenant company_code filter will filter down results and reset page to 1', async assert => {
+test('tenant company_code filter will filter down results and reset page to 1', async function(assert) {
   xhr(`${TENANT_URL}?page=1&company_code__icontains=${TD.companyCodeLastPage2Grid}`, 'GET', null, {}, 200, TF.searched(TD.companyCodeLastPage2Grid, 'company_code'));
   clearxhr(list_xhr);
   xhr(`${TENANT_URL}?page=2`, 'GET', null, {}, 200, TF.list());
@@ -90,7 +89,7 @@ test('tenant company_code filter will filter down results and reset page to 1', 
   assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.companyCodeLastPage2Grid);
 });
 
-test('filtering on multiple parameters', async assert => {
+test('filtering on multiple parameters', async function(assert) {
   xhr(`${TENANT_URL}?page=1&company_name__icontains=${TD.companyNameLastPage2Grid}&company_code__icontains=${TD.companyCodeLastPage2Grid}`, 'GET', null, {}, 200, TF.searched(TD.companyNameLastPage2Grid, 'company_name'));
   await tenantPage.visit();
   await generalMobilePage.clickFilterOpen();

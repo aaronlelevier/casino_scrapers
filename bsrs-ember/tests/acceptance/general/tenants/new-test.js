@@ -29,18 +29,17 @@ const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_TENANT_URL;
 const NEW_URL = `${BASE_URL}/new/1`;
 
-var store, listXhr;
+var listXhr;
 
 moduleForAcceptance('Acceptance | general tenant new test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     const listData = TF.list();
     listXhr = xhr(`${TENANT_URL}?page=1`, 'GET', null, {}, 200, listData);
     random.uuid = function() { return UUID.value; };
   },
 });
 
-test('visit new URL and create a new record', assert => {
+test('visit new URL and create a new record', function(assert) {
   andThen(() => {
     patchIncrement(0);
   });
@@ -142,7 +141,7 @@ test('visit new URL and create a new record', assert => {
 
   andThen(() => {
     assert.equal(currentURL(), TENANT_LIST_URL);
-    const tenant = store.find('tenant', 5);
+    const tenant = this.store.find('tenant', 5);
     assert.equal(tenant.get('new'), undefined);
     assert.equal(tenant.get('new_pk'), undefined);
   });
@@ -150,7 +149,7 @@ test('visit new URL and create a new record', assert => {
 
 // cancel modal tests
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', function(assert) {
   clearxhr(listXhr);
   visit(NEW_URL);
   page.companyNameFill(TD.companyNameTwo);
@@ -172,7 +171,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', function(assert) {
   visit(NEW_URL);
   page.companyNameFill(TD.companyNameTwo);
   generalPage.cancel();
@@ -190,7 +189,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('clicking cancel button with no edits will take from detail view to list view', (assert) => {
+test('clicking cancel button with no edits will take from detail view to list view', function(assert) {
   visit(NEW_URL);
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);

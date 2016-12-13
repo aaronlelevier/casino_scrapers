@@ -42,11 +42,10 @@ const PARENTS = '.t-location-parent-select';
 const PARENTS_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
 const PARENTS_MULTIPLE_OPTION = `.t-location-parent-select > .ember-power-select-trigger > .ember-power-select-multiple-options`;
 
-let store, payload, list_xhr;
+let payload, list_xhr;
 
 moduleForAcceptance('Acceptance | general location-new', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${LOCATIONS_URL}?page=1`, "GET", null, {}, 201, LOCATION_FIXTURES.list());
     payload = {
       id: UUID.value,
@@ -67,13 +66,13 @@ moduleForAcceptance('Acceptance | general location-new', {
   }
 });
 
-test('visiting /location/new', (assert) => {
+test('visiting /location/new', function(assert) {
   page.visit();
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), LOCATION_NEW_URL);
     assert.equal(document.title,  t('doctitle.location.new'));
-    const location = store.find('location', UUID.value);
+    const location = this.store.find('location', UUID.value);
     assert.ok(location.get('new'));
     assert.notOk(location.get('name'));
     assert.notOk(location.get('number'));
@@ -90,7 +89,7 @@ test('visiting /location/new', (assert) => {
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
-    let location = store.find('location', UUID.value);
+    let location = this.store.find('location', UUID.value);
     assert.equal(location.get('new'), undefined);
     assert.equal(location.get('name'), LD.storeName);
     assert.equal(location.get('number'), LD.storeNumber);
@@ -100,7 +99,7 @@ test('visiting /location/new', (assert) => {
   });
 });
 
-test('validation works and when hit save, we do same post', (assert) => {
+test('validation works and when hit save, we do same post', function(assert) {
   page.visit();
   click('.t-add-new');
   andThen(() => {
@@ -130,7 +129,7 @@ test('validation works and when hit save, we do same post', (assert) => {
   });
 });
 
-test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
+test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', function(assert) {
   clearxhr(list_xhr);
   page.visitNew();
   fillIn('.t-location-name', LD.storeName);
@@ -155,7 +154,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', function(assert) {
   page.visitNew();
   fillIn('.t-location-name', LD.storeName);
   generalPage.cancel();
@@ -168,7 +167,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
       assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
       assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
-      let locations = store.find('location');
+      let locations = this.store.find('location');
       initLocationCount = locations.get('length');
     });
   });
@@ -177,22 +176,22 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));
-      let locations = store.find('location');
+      let locations = this.store.find('location');
       assert.equal(locations.get('length'), initLocationCount-1);
       assert.equal(find('tr.t-grid-data').length, 10);
     });
   });
 });
 
-test('when user enters new form and doesnt enter data, only has boostrapped location(s)', (assert) => {
+test('when user enters new form and doesnt enter data, only has boostrapped location(s)', function(assert) {
   page.visitNew();
   generalPage.cancel();
   andThen(() => {
-    assert.equal(store.find('location').get('length'), 1);
+    assert.equal(this.store.find('location').get('length'), 1);
   });
 });
 
-test('adding a new location should allow for another new location to be created after the first is persisted', (assert) => {
+test('adding a new location should allow for another new location to be created after the first is persisted', function(assert) {
   let location_count;
   uuidReset();
   payload.id = 'abc123';
@@ -207,17 +206,17 @@ test('adding a new location should allow for another new location to be created 
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
-    location_count = store.find('location').get('length');
+    location_count = this.store.find('location').get('length');
   });
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), LOCATION_NEW_URL);
-    assert.equal(store.find('location').get('length'), location_count + 1);
+    assert.equal(this.store.find('location').get('length'), location_count + 1);
     assert.equal(find('.t-location-name').val(), '');
   });
 });
 
-test('when you change a related phone numbers type it will be persisted correctly', (assert) => {
+test('when you change a related phone numbers type it will be persisted correctly', function(assert) {
   page.visitNew();
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
@@ -237,7 +236,7 @@ test('when you change a related phone numbers type it will be persisted correctl
   });
 });
 
-test('when you change a related emails type it will be persisted correctly', (assert) => {
+test('when you change a related emails type it will be persisted correctly', function(assert) {
   page.visitNew();
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
@@ -256,7 +255,7 @@ test('when you change a related emails type it will be persisted correctly', (as
   });
 });
 
-test('when you change a related address type it will be persisted correctly', (assert) => {
+test('when you change a related address type it will be persisted correctly', function(assert) {
   page.visitNew();
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
@@ -305,7 +304,7 @@ test('when you change a related address type it will be persisted correctly', (a
 });
 
 /*LOCATION TO CHILDREN M2M*/
-test('clicking and typing into power select for location will fire off xhr request for all children locations', (assert) => {
+test('clicking and typing into power select for location will fire off xhr request for all children locations', function(assert) {
   page.visitNew();
   // changing llevel will update the extra_params that go into the xhr for children
   selectChoose('.t-location-level-select', LLD.nameFacilityManagement);
@@ -316,7 +315,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   selectSearch(CHILDREN, 'a');
   selectChoose(CHILDREN, LD.apple);
   andThen(() => {
-    let location = store.find('location', UUID.value);
+    let location = this.store.find('location', UUID.value);
     assert.equal(location.get('children').get('length'), 1);
     assert.equal(location.get('children').objectAt(0).get('name'), LD.apple);
     assert.equal(page.childrenSelected.indexOf(LD.apple), 2);
@@ -334,7 +333,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   selectSearch(CHILDREN, 'BooNdocks');
   selectChoose(CHILDREN, LD.boondocks);
   andThen(() => {
-    let location = store.find('location', UUID.value);
+    let location = this.store.find('location', UUID.value);
     assert.equal(location.get('children').get('length'), 2);
     assert.equal(location.get('children').objectAt(0).get('name'), LD.apple);
     assert.equal(location.get('children').objectAt(1).get('name'), LD.boondocks);
@@ -345,12 +344,12 @@ test('clicking and typing into power select for location will fire off xhr reque
   clearxhr(list_xhr);
 });
 
-test('can add and remove all children (while not populating options) and add back', (assert) => {
+test('can add and remove all children (while not populating options) and add back', function(assert) {
   page.visitNew();
   selectChoose('.t-location-level-select', LLD.nameCompany);
   selectChoose('.t-location-status-select', LDS.openNameTranslated);
   andThen(() => {
-    let location = store.find('location',UUID.value);
+    let location = this.store.find('location',UUID.value);
     assert.equal(location.get('children').get('length'), 0);
     assert.equal(location.get('location_children_fks').length, 0);
   });
@@ -368,13 +367,13 @@ test('can add and remove all children (while not populating options) and add bac
   selectChoose(CHILDREN, LD.boondocks);
   page.childrenTwoRemove();
   andThen(() => {
-    let location = store.find('location',UUID.value);
+    let location = this.store.find('location',UUID.value);
     assert.equal(location.get('children').get('length'), 1);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
   page.childrenOneRemove();
   andThen(() => {
-    let location = store.find('location',UUID.value);
+    let location = this.store.find('location',UUID.value);
     assert.equal(location.get('children').get('length'), 0);
   });
   selectSearch(CHILDREN, 'a');
@@ -390,7 +389,7 @@ test('can add and remove all children (while not populating options) and add bac
   });
 });
 
-test('clicking and typing into power select for location will not filter if spacebar pressed', (assert) => {
+test('clicking and typing into power select for location will not filter if spacebar pressed', function(assert) {
   clearxhr(list_xhr);
   page.visitNew();
   selectChoose('.t-location-level-select', LLD.nameCompany);
@@ -403,13 +402,13 @@ test('clicking and typing into power select for location will not filter if spac
 });
 
 /*PARENTS*/
-test('clicking and typing into power select for location will fire off xhr request for all location (parents)', (assert) => {
+test('clicking and typing into power select for location will fire off xhr request for all location (parents)', function(assert) {
   page.visitNew();
   // changing llevel will update the extra_params that go into the xhr for parents
   selectChoose('.t-location-level-select', LLD.nameFacilityManagement);
   selectChoose('.t-location-status-select', LDS.openNameTranslated);
   andThen(() => {
-    let location = store.find('location',UUID.value);
+    let location = this.store.find('location',UUID.value);
     assert.equal(location.get('parents').get('length'), 0);
   });
   let location_endpoint = `${LOCATIONS_URL}get-level-parents/${LLD.idFacility}/${UUID.value}/location__icontains=a/`;
@@ -423,7 +422,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   });
   page.parentsClickApple();
   andThen(() => {
-    let location = store.find('location',UUID.value);
+    let location = this.store.find('location',UUID.value);
     assert.equal(location.get('parents').get('length'), 1);
     assert.equal(location.get('parents').objectAt(0).get('name'), LD.apple);
     assert.equal(page.parentsSelected.indexOf(LD.apple), 2);
@@ -443,14 +442,14 @@ test('clicking and typing into power select for location will fire off xhr reque
     assert.equal(page.parentsSelected.indexOf(LD.apple), 2);
     assert.equal(page.parentsOptionLength, 1);
     assert.equal(find(`${PARENTS_DROPDOWN} > li:eq(0)`).text().trim(), LD.boondocks);
-    let location = store.find('location',UUID.value);
+    let location = this.store.find('location',UUID.value);
     assert.equal(location.get('parents').get('length'), 1);
     assert.equal(location.get('parents').objectAt(0).get('name'), LD.apple);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
   page.parentsClickOptionOne();
   andThen(() => {
-    let location = store.find('location',UUID.value);
+    let location = this.store.find('location',UUID.value);
     assert.equal(location.get('parents').get('length'), 2);
     assert.equal(location.get('parents').objectAt(0).get('name'), LD.apple);
     assert.equal(location.get('parents').objectAt(1).get('name'), LD.boondocks);
@@ -463,12 +462,12 @@ test('clicking and typing into power select for location will fire off xhr reque
   clearxhr(list_xhr);
 });
 
-test('starting with multiple parents, can remove all parents (while not populating options) and add back', (assert) => {
+test('starting with multiple parents, can remove all parents (while not populating options) and add back', function(assert) {
   page.visitNew();
   selectChoose('.t-location-level-select', LLD.nameCompany);
   selectChoose('.t-location-status-select', LDS.openNameTranslated);
   andThen(() => {
-    let location = store.find('location',UUID.value);
+    let location = this.store.find('location',UUID.value);
     assert.equal(location.get('parents').get('length'), 0);
     assert.equal(location.get('location_parents_fks').length, 0);
   });
@@ -491,14 +490,14 @@ test('starting with multiple parents, can remove all parents (while not populati
   page.parentsClickOptionOne();
   page.parentsTwoRemove();
   andThen(() => {
-    let location = store.find('location',UUID.value);
+    let location = this.store.find('location',UUID.value);
     assert.equal(location.get('parents').get('length'), 1);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
     assert.equal(page.parentsSelected.indexOf(LD.apple), 2);
   });
   page.parentsOneRemove();
   andThen(() => {
-    let location = store.find('location',UUID.value);
+    let location = this.store.find('location',UUID.value);
     assert.equal(location.get('parents').get('length'), 0);
   });
   selectSearch(PARENTS, 'a');
@@ -514,7 +513,7 @@ test('starting with multiple parents, can remove all parents (while not populati
   });
 });
 
-test('clicking and typing into power select for location will not filter if spacebar pressed', (assert) => {
+test('clicking and typing into power select for location will not filter if spacebar pressed', function(assert) {
   clearxhr(list_xhr);
   page.visitNew();
   selectChoose('.t-location-level-select', LLD.nameCompany);

@@ -15,7 +15,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { LOCATIONS_URL, LOCATION_LIST_URL } from 'bsrs-ember/utilities/urls';
 import { LLEVEL_SELECT, LOCATION_STATUS_SELECT, LOCATION_PARENTS_SELECT, LOCATION_CHILDREN_SELECT } from 'bsrs-ember/tests/helpers/const-names';
 
-var store, list_xhr;
+var list_xhr;
 
 const BASE_URL = BASEURLS.base_locations_url;
 const DETAIL_URL = `${BASE_URL}/${LD.idOne}`;
@@ -25,7 +25,6 @@ moduleForAcceptance('Acceptance | general mobile location detail test', {
   beforeEach() {
     /* SETUP */
     setWidth('mobile');
-    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${LOCATIONS_URL}?page=1`, 'GET', null, {}, 200, LF.list());
     xhr(`${LOCATIONS_URL}${LD.idOne}/`, 'GET', null, {}, 200, LF.detail());
   },
@@ -33,7 +32,7 @@ moduleForAcceptance('Acceptance | general mobile location detail test', {
 
 /* jshint ignore:start */
 
-test('can click to detail, show activities, and go back to list', async assert => {
+test('can click to detail, show activities, and go back to list', async function(assert) {
   await page.visit();
   assert.equal(currentURL(), LOCATION_LIST_URL);
   await click('.t-grid-data:eq(0)');
@@ -42,7 +41,7 @@ test('can click to detail, show activities, and go back to list', async assert =
   assert.equal(currentURL(), LOCATION_LIST_URL);
 });
 
-test('can click through component sections and save to redirect to index', async assert => {
+test('can click through component sections and save to redirect to index', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   await generalMobilePage.footerItemThreeClick();
@@ -58,7 +57,7 @@ test('can click through component sections and save to redirect to index', async
 });
 
 
-test('can update all fields and save', async assert => {
+test('can update all fields and save', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
   await page.nameFillIn(LD.storeNameTwo);
@@ -82,7 +81,7 @@ test('can update all fields and save', async assert => {
   assert.equal(currentURL(), LOCATION_LIST_URL);
 });
 
-test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async assert => {
+test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', async function(assert) {
   clearxhr(list_xhr);
   await page.visitDetail();
   await page.nameFillIn('wat');
@@ -108,7 +107,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
   });
 });
 
-test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit rollback', async assert => {
+test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit rollback', async function(assert) {
   await page.visitDetail();
   await page.nameFillIn('wat');
   assert.equal(find('.t-location-name').val(), 'wat');

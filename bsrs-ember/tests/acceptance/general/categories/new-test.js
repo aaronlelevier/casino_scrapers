@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import { test } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
@@ -25,7 +26,7 @@ const CATEGORY = '.t-category-children-select .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-let store, payload, list_xhr, children_xhr, run = Ember.run;
+let  payload, list_xhr, children_xhr;
 
 moduleForAcceptance('Acceptance | general category new test', {
   beforeEach() {
@@ -40,12 +41,11 @@ moduleForAcceptance('Acceptance | general category new test', {
       children: []
     };
 
-    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(CATEGORIES_URL + '?page=1', 'GET', null, {}, 200, CF.empty());
     let category_children_endpoint = `${CATEGORIES_URL}category__icontains=a/`;
     children_xhr = xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list_power_select());
-    run(function() {
-      store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
+    run(() => {
+      this.store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
     });
     random.uuid = function() { return UUID.value; };
   },
@@ -56,7 +56,7 @@ moduleForAcceptance('Acceptance | general category new test', {
   }
 });
 
-test('visiting /category/new', (assert) => {
+test('visiting /category/new', function(assert) {
   clearxhr(children_xhr);
   let response = Ember.$.extend(true, {}, payload);
   xhr(CATEGORIES_URL, 'POST', JSON.stringify(payload), {}, 201, response);
@@ -65,7 +65,7 @@ test('visiting /category/new', (assert) => {
   andThen(() => {
     assert.equal(currentURL(), CATEGORY_NEW_URL);
     assert.equal(document.title,  t('doctitle.category.new'));
-    let category = store.find('category', UUID.value);
+    let category = this.store.find('category', UUID.value);
     assert.ok(category.get('new'));
     assert.equal(find('.t-new-category-name').text(), 'New Category');
   });
@@ -82,7 +82,7 @@ test('visiting /category/new', (assert) => {
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), CATEGORIES_INDEX_URL);
-    let category = store.find('category', UUID.value);
+    let category = this.store.find('category', UUID.value);
     assert.equal(category.get('new'), undefined);
     assert.equal(category.get('name'), CD.nameOne);
     assert.equal(category.get('description'), CD.descriptionMaintenance);
@@ -94,7 +94,7 @@ test('visiting /category/new', (assert) => {
   });
 });
 
-test('when editing the category name to invalid, it checks for validation', (assert) => {
+test('when editing the category name to invalid, it checks for validation', function(assert) {
   clearxhr(children_xhr);
   page.visitNew();
   page.nameFill('');
@@ -128,7 +128,7 @@ test('when editing the category name to invalid, it checks for validation', (ass
   });
 });
 
-test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
+test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', function(assert) {
   clearxhr(children_xhr);
   clearxhr(list_xhr);
   page.visitNew();
@@ -154,7 +154,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', function(assert) {
   clearxhr(children_xhr);
   page.visitNew();
   fillIn('.t-category-description', CD.nameOne);
@@ -167,7 +167,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
       assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
       assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
-      let category = store.find('category', {id: UUID.value});
+      let category = this.store.find('category', {id: UUID.value});
       assert.equal(category.get('length'), 1);
     });
   });
@@ -176,41 +176,41 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     waitFor(assert, () => {
       assert.equal(currentURL(), CATEGORIES_INDEX_URL);
       assert.throws(Ember.$('.ember-modal-dialog'));
-      let category = store.find('category', {id: UUID.value});
+      let category = this.store.find('category', {id: UUID.value});
       assert.equal(category.get('length'), 0);
       assert.equal(find('tr.t-category-data').length, 0);
     });
   });
 });
 
-test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
+test('when user enters new form and doesnt enter data, the record is correctly removed from the store', function(assert) {
   let categories;
   clearxhr(children_xhr);
   page.visit();
   andThen(() => {
-    categories = store.find('category').get('length');
+    categories = this.store.find('category').get('length');
   });
   click('.t-add-new');
   andThen(() => {
-    assert.equal(store.find('category').get('length'), categories+1);
+    assert.equal(this.store.find('category').get('length'), categories+1);
 
   });
   generalPage.cancel();
   andThen(() => {
     assert.throws(Ember.$('.ember-modal-dialog'));
-    assert.equal(store.find('category').get('length'), categories);
+    assert.equal(this.store.find('category').get('length'), categories);
   });
 });
 
 /* CATEGORY TO CHILDREN */
-test('clicking and typing into power select for categories children will fire off xhr request for all categories', (assert) => {
+test('clicking and typing into power select for categories children will fire off xhr request for all categories', function(assert) {
   let payload_new = Ember.$.extend(true, {}, payload);
   payload_new.children = [CD.idGridOne];
   let response = Ember.$.extend(true, {}, payload_new);
   xhr(CATEGORIES_URL, 'POST', JSON.stringify(payload_new), {}, 201, response);
   page.visitNew();
   andThen(() => {
-    let category = store.find('category', UUID.value);
+    let category = this.store.find('category', UUID.value);
     assert.equal(category.get('children').get('length'), 0);
     assert.equal(find('div.item').length, 0);
     assert.equal(find('div.option').length, 0);
@@ -227,7 +227,7 @@ test('clicking and typing into power select for categories children will fire of
   selectSearch('.t-category-children-select', 'a');
   page.categoryClickOptionOneEq();
   andThen(() => {
-    let category = store.find('category', UUID.value);
+    let category = this.store.find('category', UUID.value);
     assert.equal(category.get('children').get('length'), 1);
     assert.equal(category.get('children').get('length'), 1);
   });
@@ -237,13 +237,13 @@ test('clicking and typing into power select for categories children will fire of
   });
 });
 
-test('clicking and typing into power select for categories children will not filter if spacebar pressed', (assert) => {
+test('clicking and typing into power select for categories children will not filter if spacebar pressed', function(assert) {
   clearxhr(children_xhr);
   let response = Ember.$.extend(true, {}, payload);
   xhr(CATEGORIES_URL, 'POST', JSON.stringify(payload), {}, 201, response);
   page.visitNew();
   andThen(() => {
-    let category = store.find('category', UUID.value);
+    let category = this.store.find('category', UUID.value);
     assert.equal(category.get('children').get('length'), 0);
     assert.equal(find('div.item').length, 0);
     assert.equal(find('div.option').length, 0);
@@ -253,7 +253,7 @@ test('clicking and typing into power select for categories children will not fil
     assert.equal(page.categoryOptionLength, 1);
   });
   andThen(() => {
-    let category = store.find('category', UUID.value);
+    let category = this.store.find('category', UUID.value);
     assert.equal(category.get('children').get('length'), 0);
   });
   fillIn('.t-category-name', CD.nameOne);
@@ -271,12 +271,12 @@ test('clicking and typing into power select for categories children will not fil
   });
 });
 
-test('you can add and remove child from category', (assert) => {
+test('you can add and remove child from category', function(assert) {
   let response = Ember.$.extend(true, {}, payload);
   xhr(CATEGORIES_URL, 'POST', JSON.stringify(payload), {}, 201, response);
   page.visitNew();
   andThen(() => {
-    let category = store.find('category', UUID.value);
+    let category = this.store.find('category', UUID.value);
     assert.equal(category.get('children').get('length'), 0);
     assert.equal(find('div.item').length, 0);
     assert.equal(find('div.option').length, 0);
@@ -293,19 +293,19 @@ test('you can add and remove child from category', (assert) => {
   selectSearch('.t-category-children-select', 'a');
   andThen(() => {
     assert.equal(page.categoryOptionLength, 10);
-    const category = store.find('category', UUID.value);
+    const category = this.store.find('category', UUID.value);
     assert.equal(category.get('children').get('length'), 0);
     assert.equal(category.get('children').get('length'), 0);
   });
   page.categoryClickOptionOneEq();
   andThen(() => {
-    const category = store.find('category', UUID.value);
+    const category = this.store.find('category', UUID.value);
     assert.equal(category.get('children').get('length'), 1);
     assert.equal(category.get('children').get('length'), 1);
   });
   page.categoryOneRemove();
   andThen(() => {
-    const category = store.find('category', UUID.value);
+    const category = this.store.find('category', UUID.value);
     assert.equal(category.get('children').get('length'), 0);
     assert.equal(category.get('children').get('length'), 0);
   });
@@ -315,7 +315,7 @@ test('you can add and remove child from category', (assert) => {
   });
 });
 
-test('adding a new category should allow for another new category to be created after the first is persisted', (assert) => {
+test('adding a new category should allow for another new category to be created after the first is persisted', function(assert) {
   clearxhr(children_xhr);
   let category_count;
   uuidReset();
@@ -336,12 +336,12 @@ test('adding a new category should allow for another new category to be created 
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), CATEGORIES_INDEX_URL);
-    category_count = store.find('category').get('length');
+    category_count = this.store.find('category').get('length');
   });
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), CATEGORY_NEW_URL);
-    assert.equal(store.find('category').get('length'), category_count + 1);
+    assert.equal(this.store.find('category').get('length'), category_count + 1);
     assert.equal(find('.t-category-name').val(), '');
   });
 });

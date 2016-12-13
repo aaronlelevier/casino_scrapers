@@ -23,19 +23,17 @@ const TICKET_PUT_URL = PREFIX + DETAIL_URL + '/';
 const ATTACHMENT_DELETE_URL = ATTACHMENTS_URL + UUID.value + '/';
 const PROGRESS_BAR = '.progress-bar';
 
-let store;
 
 moduleForAcceptance('Acceptance | general ticket file upload test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
     xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
     random.uuid = function() { return UUID.value; };
   },
 });
 
-test('upload will post form data, show progress and on save append the attachment', (assert) => {
-  let model = store.find('ticket', TD.idOne);
+test('upload will post form data, show progress and on save append the attachment', function(assert) {
+  let model = this.store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   page.visitDetail();
@@ -57,7 +55,7 @@ test('upload will post form data, show progress and on save append the attachmen
   ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_attachment), {}, 200, TF.detail(TD.idOne));
   generalPage.save();
   andThen(() => {
-    model = store.find('ticket', TD.idOne);
+    model = this.store.find('ticket', TD.idOne);
     assert.ok(urlContains(currentURL(), TICKET_LIST_URL));
     assert.equal(model.get('attachments').get('length'), 1);
     assert.equal(model.get('isDirty'), false);
@@ -65,8 +63,8 @@ test('upload will post form data, show progress and on save append the attachmen
   });
 });
 
-test('uploading a file, then rolling back should throw out any previously associated attachments', (assert) => {
-  let model = store.find('ticket', TD.idOne);
+test('uploading a file, then rolling back should throw out any previously associated attachments', function(assert) {
+  let model = this.store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   page.visitDetail();
@@ -104,15 +102,15 @@ test('uploading a file, then rolling back should throw out any previously associ
   });
 });
 
-test('previously attached files do not show up after file upload', (assert) => {
+test('previously attached files do not show up after file upload', function(assert) {
   let detail_with_attachment = TF.detail(TD.idOne);
   detail_with_attachment.attachments = [TD.attachmentOneId];
-  let model = store.find('ticket', TD.idOne);
+  let model = this.store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
   page.visitDetail();
   andThen(() => {
-    model = store.find('ticket', TD.idOne);
+    model = this.store.find('ticket', TD.idOne);
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(PROGRESS_BAR).length, 0);
     assert.equal(model.get('attachments').get('length'), 1);
@@ -123,7 +121,7 @@ test('previously attached files do not show up after file upload', (assert) => {
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    model = store.find('ticket', TD.idOne);
+    model = this.store.find('ticket', TD.idOne);
     assert.equal(find(PROGRESS_BAR).length, 1);
     assert.ok(find(PROGRESS_BAR).is(':visible'));
     assert.equal(find(PROGRESS_BAR).attr('style'), 'width: 100%;');
@@ -133,8 +131,8 @@ test('previously attached files do not show up after file upload', (assert) => {
   });
 });
 
-test('delete attachment is successful when the user confirms yes (before the file is associated with a ticket)', (assert) => {
-  let model = store.find('ticket', TD.idOne);
+test('delete attachment is successful when the user confirms yes (before the file is associated with a ticket)', function(assert) {
+  let model = this.store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   page.visitDetail();
@@ -146,7 +144,7 @@ test('delete attachment is successful when the user confirms yes (before the fil
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    model = store.find('ticket', TD.idOne);
+    model = this.store.find('ticket', TD.idOne);
     assert.equal(find(PROGRESS_BAR).length, 1);
     assert.equal(model.get('attachments').get('length'), 1);
   });
@@ -162,19 +160,19 @@ test('delete attachment is successful when the user confirms yes (before the fil
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), DETAIL_URL);
-      model = store.find('ticket', TD.idOne);
+      model = this.store.find('ticket', TD.idOne);
       assert.equal(find(PROGRESS_BAR).length, 0);
       assert.equal(model.get('attachments').get('length'), 0);
     });
   });
 });
 
-test('delete attachment is aborted when the user confirms no (before the file is associated with a ticket)', (assert) => {
+test('delete attachment is aborted when the user confirms no (before the file is associated with a ticket)', function(assert) {
   let original = window.confirm;
   window.confirm = function() {
     return false;
   };
-  let model = store.find('ticket', TD.idOne);
+  let model = this.store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   page.visitDetail();
@@ -186,21 +184,21 @@ test('delete attachment is aborted when the user confirms no (before the file is
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    model = store.find('ticket', TD.idOne);
+    model = this.store.find('ticket', TD.idOne);
     assert.equal(find(PROGRESS_BAR).length, 1);
     assert.equal(model.get('attachments').get('length'), 1);
   });
   click('.t-remove-attachment');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    model = store.find('ticket', TD.idOne);
+    model = this.store.find('ticket', TD.idOne);
     assert.equal(find(PROGRESS_BAR).length, 1);
     assert.equal(model.get('attachments').get('length'), 1);
   });
 });
 
-test('user cannot see progress bar for uploaded attachment that is associated with a ticket (after save)', (assert) => {
-  let model = store.find('ticket', TD.idOne);
+test('user cannot see progress bar for uploaded attachment that is associated with a ticket (after save)', function(assert) {
+  let model = this.store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   page.visitDetail();
@@ -212,7 +210,7 @@ test('user cannot see progress bar for uploaded attachment that is associated wi
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    model = store.find('ticket', TD.idOne);
+    model = this.store.find('ticket', TD.idOne);
     assert.equal(find(PROGRESS_BAR).length, 1);
     assert.equal(model.get('attachments').get('length'), 1);
     assert.equal(find('.t-remove-attachment').length, 1);
@@ -220,7 +218,7 @@ test('user cannot see progress bar for uploaded attachment that is associated wi
   ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_attachment), {}, 200, TF.detail(TD.idOne));
   generalPage.save();
   andThen(() => {
-    model = store.find('ticket', TD.idOne);
+    model = this.store.find('ticket', TD.idOne);
     assert.ok(urlContains(currentURL(), TICKET_LIST_URL));
     assert.equal(model.get('attachments').get('length'), 1);
     assert.equal(model.get('isDirty'), false);
@@ -236,8 +234,8 @@ test('user cannot see progress bar for uploaded attachment that is associated wi
   });
 });
 
-test('file upload supports multiple attachments', (assert) => {
-  let model = store.find('ticket', TD.idOne);
+test('file upload supports multiple attachments', function(assert) {
+  let model = this.store.find('ticket', TD.idOne);
   let one = {name: 'one.png', type: 'image/png', size: 234000};
   let two = {name: 'two.png', type: 'image/png', size: 124000};
   ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
@@ -261,7 +259,7 @@ test('file upload supports multiple attachments', (assert) => {
   ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_attachments), {}, 200, TF.detail(TD.idOne));
   generalPage.save();
   andThen(() => {
-    model = store.find('ticket', TD.idOne);
+    model = this.store.find('ticket', TD.idOne);
     assert.ok(urlContains(currentURL(), TICKET_LIST_URL));
     assert.equal(model.get('attachments').get('length'), 2);
     assert.equal(model.get('isDirty'), false);
@@ -269,15 +267,15 @@ test('file upload supports multiple attachments', (assert) => {
   });
 });
 
-test('rolling back should only remove files not yet associated with a given ticket', (assert) => {
+test('rolling back should only remove files not yet associated with a given ticket', function(assert) {
   let detail_with_attachment = TF.detail(TD.idOne);
   detail_with_attachment.attachments = [TD.attachmentOneId];
-  let model = store.find('ticket', TD.idOne);
+  let model = this.store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
   page.visitDetail();
   andThen(() => {
-    model = store.find('ticket', TD.idOne);
+    model = this.store.find('ticket', TD.idOne);
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(PROGRESS_BAR).length, 0);
     assert.equal(model.get('attachments').get('length'), 1);
@@ -288,7 +286,7 @@ test('rolling back should only remove files not yet associated with a given tick
   uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, model);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    model = store.find('ticket', TD.idOne);
+    model = this.store.find('ticket', TD.idOne);
     assert.equal(find(PROGRESS_BAR).length, 1);
     assert.ok(find(PROGRESS_BAR).is(':visible'));
     assert.equal(find(PROGRESS_BAR).attr('style'), 'width: 100%;');
@@ -313,20 +311,20 @@ test('rolling back should only remove files not yet associated with a given tick
   });
 });
 
-test('when multiple tabs are open only attachments associated with the rollback are removed', (assert) => {
+test('when multiple tabs are open only attachments associated with the rollback are removed', function(assert) {
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(store.find('ticket', TD.idOne).get('attachments').get('length'), 0);
+    assert.equal( this.store.find('ticket', TD.idOne).get('attachments').get('length'), 0);
   });
   patchRandomAsync(0);
   ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
-  uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, store.find('ticket', TD.idOne));
+  uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, this.store.find('ticket', TD.idOne));
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(store.find('ticket', TD.idOne).get('attachments').get('length'), 1);
+    assert.equal( this.store.find('ticket', TD.idOne).get('attachments').get('length'), 1);
   });
   page.visit();
   andThen(() => {
@@ -337,13 +335,13 @@ test('when multiple tabs are open only attachments associated with the rollback 
   visit(DETAIL_TWO_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_TWO_URL);
-    assert.equal(store.find('ticket', TD.idTwo).get('attachments').get('length'), 0);
+    assert.equal( this.store.find('ticket', TD.idTwo).get('attachments').get('length'), 0);
   });
   ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 201, {});
-  uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, store.find('ticket', TD.idTwo));
+  uploadFile('tickets/ticket-comments-and-file-upload', 'upload', image, this.store.find('ticket', TD.idTwo));
   andThen(() => {
     assert.equal(currentURL(), DETAIL_TWO_URL);
-    assert.equal(store.find('ticket', TD.idTwo).get('attachments').get('length'), 1);
+    assert.equal( this.store.find('ticket', TD.idTwo).get('attachments').get('length'), 1);
   });
   page.visit();
   andThen(() => {
@@ -364,16 +362,16 @@ test('when multiple tabs are open only attachments associated with the rollback 
   click('.t-modal-rollback-btn');
   andThen(() => {
       // TODO: fix once figure out delete
-      assert.equal(store.find('ticket', TD.idOne).get('attachments').get('length'), 0);
-      // assert.equal(store.find('ticket', TD.idOne).get('isDirtyOrRelatedDirty'), false);
-      // assert.equal(store.find('ticket', TD.idOne).get('attachmentsIsDirty'), false);
-      assert.equal(store.find('ticket', TD.idTwo).get('attachments').get('length'), 1);
+      assert.equal( this.store.find('ticket', TD.idOne).get('attachments').get('length'), 0);
+      // assert.equal( this.store.find('ticket', TD.idOne).get('isDirtyOrRelatedDirty'), false);
+      // assert.equal( this.store.find('ticket', TD.idOne).get('attachmentsIsDirty'), false);
+      assert.equal( this.store.find('ticket', TD.idTwo).get('attachments').get('length'), 1);
   });
 });
 
 // TODO: see if drag and drop should be supported across all file uploads
 skip('bad gateway when saving an attachment (502)', function(assert) {
-  let model = store.find('ticket', TD.idOne);
+  let model = this.store.find('ticket', TD.idOne);
   let image = {name: 'foo.png', type: 'image/png', size: 234000};
   ajax(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
   ajax(ATTACHMENTS_URL, 'POST', new FormData(), {}, 502, 'Server Error');

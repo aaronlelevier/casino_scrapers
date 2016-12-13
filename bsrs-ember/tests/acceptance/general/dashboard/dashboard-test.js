@@ -17,7 +17,7 @@ import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
 import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, LOCATIONS_URL, LOCATION_LIST_URL, LOCATION_LEVELS_URL, LOCATION_LEVEL_LIST_URL, PEOPLE_URL, PEOPLE_LIST_URL, 
   ROLES_URL, ROLE_LIST_URL, CATEGORY_LIST_URL, CATEGORIES_URL, TENANT_LIST_URL } from 'bsrs-ember/utilities/urls';
 
-var application, store;
+var application;
 
 const PREFIX = config.APP.NAMESPACE;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
@@ -33,12 +33,11 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 
 moduleForAcceptance('Acceptance | general dashboard', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TD.dashboard_text}});
   },
 });
 
-test('can click through dashboard links', assert => {
+test('can click through dashboard links', function(assert) {
   visit(DASHBOARD_URL);
   click('[data-test-id="link-to-new-ticket"]');
   xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
@@ -98,7 +97,7 @@ test('can click through dashboard links', assert => {
 
 });
 
-test('welcome h1 header and dashboard_text from settings', assert => {
+test('welcome h1 header and dashboard_text from settings', function(assert) {
   visit(DASHBOARD_URL);
   andThen(() => {
     assert.equal(document.title,  t('doctitle.dashboard.index'));
@@ -111,7 +110,7 @@ test('welcome h1 header and dashboard_text from settings', assert => {
   });
 });
 
-test('clicking in progress tickets will send off xhr for person currents tickets as an assignee', assert => {
+test('clicking in progress tickets will send off xhr for person currents tickets as an assignee', function(assert) {
   visit(DASHBOARD_URL);
   var page_one = PREFIX + BASE_URL + `/?page=1&status=${TicketD.statusThreeId}&assignee=${PD.idDonald}`;
   xhr(page_one ,"GET",null,{},200,TF.list());
@@ -123,7 +122,7 @@ test('clicking in progress tickets will send off xhr for person currents tickets
   });
 });
 
-test('clicking new tickets will send off xhr for person currents tickets as an assignee', assert => {
+test('clicking new tickets will send off xhr for person currents tickets as an assignee', function(assert) {
   visit(DASHBOARD_URL);
   var page_one = PREFIX + BASE_URL + `/?page=1&status=${TicketD.statusOneId}&assignee=${PD.idDonald}`;
   xhr(page_one ,"GET",null,{},200,TF.list());
@@ -135,7 +134,7 @@ test('clicking new tickets will send off xhr for person currents tickets as an a
   });
 });
 
-test('clicking draft tickets will send off xhr for person currents tickets as an assignee', assert => {
+test('clicking draft tickets will send off xhr for person currents tickets as an assignee', function(assert) {
   visit(DASHBOARD_URL);
   var page_one = PREFIX + BASE_URL + `/?page=1&status=${TicketD.statusSevenId}&assignee=${PD.idDonald}`;
   xhr(page_one ,"GET",null,{},200,TF.list());
@@ -147,7 +146,7 @@ test('clicking draft tickets will send off xhr for person currents tickets as an
   });
 });
 
-test('the site logo on top left is clickable and redirects to the dashboard', assert => {
+test('the site logo on top left is clickable and redirects to the dashboard', function(assert) {
   visit(DASHBOARD_URL);
   andThen(() => {
     assert.equal(currentURL(), DASHBOARD_URL);

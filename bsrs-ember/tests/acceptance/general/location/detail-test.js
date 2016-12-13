@@ -37,7 +37,7 @@ const LOCATION_URL = `${BASE_URL}/index`;
 const DETAIL_URL = `${BASE_URL}/${LD.idOne}`;
 const LOCATION_PUT_URL = PREFIX + DETAIL_URL + '/';
 
-let store, list_xhr, url;
+let list_xhr, url;
 
 const CHILDREN = '.t-location-children-select';
 const CHILDREN_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
@@ -46,7 +46,6 @@ const PARENTS_MULTIPLE_OPTION = `.t-location-parent-select .ember-power-select-t
 
 moduleForAcceptance('Acceptance | general location detail-test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     let location_list_data = LF.list();
     let location_detail_data = LF.detail();
     list_xhr = xhr(`${LOCATIONS_URL}?page=1`, 'GET', null, {}, 200, location_list_data);
@@ -55,7 +54,7 @@ moduleForAcceptance('Acceptance | general location detail-test', {
   },
 });
 
-test('clicking on a locations name will redirect them to the detail view', (assert) => {
+test('clicking on a locations name will redirect them to the detail view', function(assert) {
   page.visit();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
@@ -68,13 +67,13 @@ test('clicking on a locations name will redirect them to the detail view', (asse
   });
 });
 
-test('visiting admin/location', (assert) => {
+test('visiting admin/location', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(document.title,  t('doctitle.location.single', { name: 'ABC123' }));
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.ok(location.get('isNotDirty'));
     assert.equal(location.get('location_level').get('id'), LLD.idOne);
     assert.equal(find('.t-location-name').val(), LD.baseStoreName);
@@ -107,14 +106,14 @@ test('visiting admin/location', (assert) => {
   });
   fillIn('.t-location-name', LD.storeNameTwo);
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.ok(location.get('isDirty'));
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
   page.statusClickDropdown();
   andThen(() => {
     assert.equal(page.statusOptionLength, 3);
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('status_fk'), LDS.openId);
     assert.equal(location.get('status.id'), LDS.openId);
     assert.ok(location.get('isDirty'));
@@ -124,7 +123,7 @@ test('visiting admin/location', (assert) => {
   selectChoose('.t-location-status-select', LDS.closedNameTranslated);
   andThen(() => {
     assert.equal(page.statusOptionLength, 0);
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('status_fk'), LDS.openId);
     assert.equal(location.get('status.id'), LDS.closedId);
     assert.ok(location.get('isDirty'));
@@ -140,12 +139,12 @@ test('visiting admin/location', (assert) => {
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.ok(location.get('isNotDirty'));
   });
 });
 
-test('clicking cancel button will take from detail view to list view', (assert) => {
+test('clicking cancel button will take from detail view to list view', function(assert) {
   page.visit();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
@@ -156,12 +155,12 @@ test('clicking cancel button will take from detail view to list view', (assert) 
   });
   generalPage.cancel();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(currentURL(), LOCATION_URL);
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   fillIn('.t-location-name', LD.storeNameTwo);
@@ -188,7 +187,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', function(assert) {
   page.visitDetail();
   fillIn('.t-location-name', LD.storeNameTwo);
   selectChoose('.t-location-level-select', LLD.nameRegion);
@@ -206,14 +205,14 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
-      let location = store.find('location', LD.idOne);
+      let location  = this.store.find('location', LD.idOne);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
 
 /* jshint ignore:start */
-test('when click delete, modal displays and when click ok, location is deleted and removed from store', async assert => {
+test('when click delete, modal displays and when click ok, location is deleted and removed from store', async function(assert) {
   await page.visitDetail();
   await generalPage.delete();
   andThen(() => {
@@ -230,19 +229,19 @@ test('when click delete, modal displays and when click ok, location is deleted a
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
-      assert.equal(store.find('location', LD.idOne).get('length'), undefined);
+      assert.equal( this.store.find('location', LD.idOne).get('length'), undefined);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
 /* jshint ignore:end */
 
-test('changing location level will update related location level locations array and clear out parent and children power selects', (assert) => {
+test('changing location level will update related location level locations array and clear out parent and children power selects', function(assert) {
   page.visitDetail();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
-    let location_level = store.find('location-level', LLD.idOne);
-    let location_level_two = store.find('location-level', LLD.idThree);
+    let location  = this.store.find('location', LD.idOne);
+    let location_level  = this.store.find('location-level', LLD.idOne);
+    let location_level_two  = this.store.find('location-level', LLD.idThree);
     assert.deepEqual(location_level_two.get('locations'), []);
     assert.equal(location.get('location_level_fk'), LLD.idOne);
     assert.deepEqual(location_level.get('locations'), [LD.idZero, LD.idOne, LD.idTwo, LD.idThree, LD.idParent, LD.idParentTwo]);
@@ -251,9 +250,9 @@ test('changing location level will update related location level locations array
   });
   selectChoose('.t-location-level-select', LLD.nameLossPreventionRegion);
   andThen(() => {
-    let location_level_two = store.find('location-level', LLD.idLossRegion);
-    let location_level = store.find('location-level', LLD.idOne);
-    let location = store.find('location', LD.idOne);
+    let location_level_two  = this.store.find('location-level', LLD.idLossRegion);
+    let location_level  = this.store.find('location-level', LLD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('location_level_fk'), LLD.idOne);
     assert.deepEqual(location_level_two.get('locations'), [LD.idOne]);
     assert.deepEqual(location_level.get('locations'), [LD.idZero, LD.idTwo, LD.idThree, LD.idParent, LD.idParentTwo]);
@@ -275,7 +274,7 @@ test('changing location level will update related location level locations array
 
 /* PHONE NUMBER AND ADDRESS AND EMAILS*/
 
-test('newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
+test('newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
@@ -301,11 +300,11 @@ test('newly added phone numbers without a valid number are ignored and removed w
   generalPage.cancel();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
-    assert.equal(store.find('phonenumber').get('length'), 3);
+    assert.equal( this.store.find('phonenumber').get('length'), 3);
   });
 });
 
-test('newly added emails without a valid email are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
+test('newly added emails without a valid email are ignored and removed when user navigates away (no rollback prompt)', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
@@ -332,11 +331,11 @@ test('newly added emails without a valid email are ignored and removed when user
   generalPage.cancel();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
-    assert.equal(store.find('email').get('length'), 3);
+    assert.equal( this.store.find('email').get('length'), 3);
   });
 });
 
-test('newly added addresses without a valid address or postal_code are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
+test('newly added addresses without a valid address or postal_code are ignored and removed when user navigates away (no rollback prompt)', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
@@ -384,11 +383,11 @@ test('newly added addresses without a valid address or postal_code are ignored a
   generalPage.cancel();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
-    assert.equal(store.find('address').get('length'), 3);
+    assert.equal( this.store.find('address').get('length'), 3);
   });
 });
 
-test('invalid phone numbers prevent save and must click delete to navigate away', (assert) => {
+test('invalid phone numbers prevent save and must click delete to navigate away', function(assert) {
   page.visitDetail();
   generalPage.clickAddPhoneNumber();
   andThen(() => {
@@ -412,7 +411,7 @@ test('invalid phone numbers prevent save and must click delete to navigate away'
   generalPage.cancel();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
-    const location = store.find('location', LD.idOne);
+    const location  = this.store.find('location', LD.idOne);
     const fks = location.get('location_phonenumbers_fks');
     const ids = location.get('location_phonenumbers_ids');
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
@@ -420,7 +419,7 @@ test('invalid phone numbers prevent save and must click delete to navigate away'
   });
 });
 
-test('invalid emails prevent save and must click delete to navigate away', (assert) => {
+test('invalid emails prevent save and must click delete to navigate away', function(assert) {
   page.visitDetail();
   page.clickAddEmail();
   andThen(() => {
@@ -444,7 +443,7 @@ test('invalid emails prevent save and must click delete to navigate away', (asse
   generalPage.cancel();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
-    const location = store.find('location', LD.idOne);
+    const location  = this.store.find('location', LD.idOne);
     const fks = location.get('location_emails_fks');
     const ids = location.get('location_emails_ids');
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
@@ -452,7 +451,7 @@ test('invalid emails prevent save and must click delete to navigate away', (asse
   });
 });
 
-test('invalid addresss prevent save and must click delete to navigate away', (assert) => {
+test('invalid addresss prevent save and must click delete to navigate away', function(assert) {
   page.visitDetail();
   page.clickAddAddress();
   andThen(() => {
@@ -469,7 +468,7 @@ test('invalid addresss prevent save and must click delete to navigate away', (as
   generalPage.cancel();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
-    const location = store.find('location', LD.idOne);
+    const location  = this.store.find('location', LD.idOne);
     const fks = location.get('location_addresss_fks');
     const ids = location.get('location_addresss_ids');
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
@@ -477,7 +476,7 @@ test('invalid addresss prevent save and must click delete to navigate away', (as
   });
 });
 
-test('when you change a related phone numbers type it will be persisted correctly', (assert) => {
+test('when you change a related phone numbers type it will be persisted correctly', function(assert) {
   page.visitDetail();
   selectChoose('.t-phone-number-type-select', PNTD.mobileNameValue);
   const phone_numbers = PNF.put({id: PND.idOne, type: PNTD.mobileId});
@@ -489,7 +488,7 @@ test('when you change a related phone numbers type it will be persisted correctl
   });
 });
 
-test('when you change a related emails type it will be persisted correctly', (assert) => {
+test('when you change a related emails type it will be persisted correctly', function(assert) {
   page.visitDetail();
   selectChoose('.t-email-type-select', ETD.workName);
   const emails = EF.put({id: ED.idOne, type: ETD.workId});
@@ -501,7 +500,7 @@ test('when you change a related emails type it will be persisted correctly', (as
   });
 });
 
-test('when you change a related address type it will be persisted correctly', (assert) => {
+test('when you change a related address type it will be persisted correctly', function(assert) {
   page.visitDetail();
   selectChoose('.t-address-type-select:eq(0)', ATD.shippingNameText);
   const addresses = AF.put({id: AD.idOne, type: ATD.shippingId});
@@ -513,7 +512,7 @@ test('when you change a related address type it will be persisted correctly', (a
   });
 });
 
-test('when user changes an attribute on phonenumber and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+test('when user changes an attribute on phonenumber and clicks cancel we prompt them with a modal and the related model gets rolled back', function(assert) {
   page.visitDetail();
   selectChoose('.t-phone-number-type-select', PNTD.mobileNameValue);
   generalPage.cancel();
@@ -527,14 +526,14 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
-      var location = store.find('location', LD.idOne);
-      var phone_number = store.find('phonenumber', PND.idOne);
+      var location  = this.store.find('location', LD.idOne);
+      var phone_number  = this.store.find('phonenumber', PND.idOne);
       assert.equal(phone_number.get('phone_number_type.id'), PNTD.officeId);
     });
   });
 });
 
-test('when user changes an attribute on email and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+test('when user changes an attribute on email and clicks cancel we prompt them with a modal and the related model gets rolled back', function(assert) {
   page.visitDetail();
   selectChoose('.t-email-type-select', ETD.workName);
   generalPage.cancel();
@@ -548,13 +547,13 @@ test('when user changes an attribute on email and clicks cancel we prompt them w
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
-      var email = store.find('email', ED.idOne);
+      var email  = this.store.find('email', ED.idOne);
       assert.equal(email.get('email_type.id'), ETD.personalId);
     });
   });
 });
 
-test('when user changes an attribute on address and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+test('when user changes an attribute on address and clicks cancel we prompt them with a modal and the related model gets rolled back', function(assert) {
   page.visitDetail();
   selectChoose('.t-address-type-select:eq(0)', ATD.shippingNameText);
   andThen(() => {
@@ -571,12 +570,12 @@ test('when user changes an attribute on address and clicks cancel we prompt them
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
-      assert.equal(store.find('location', LD.idOne).get('addresses').objectAt(0).get('address_type.id'), ATD.officeId);
+      assert.equal( this.store.find('location', LD.idOne).get('addresses').objectAt(0).get('address_type.id'), ATD.officeId);
     });
   });
 });
 
-test('when user removes a phone number clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+test('when user removes a phone number clicks cancel we prompt them with a modal and the related model gets rolled back', function(assert) {
   page.visitDetail();
   click('.t-del-phone-number-btn:eq(0)');
   generalPage.cancel();
@@ -590,14 +589,14 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
-      var location = store.find('location', LD.idOne);
-      var phone_number = store.find('phonenumber', PND.idOne);
+      var location  = this.store.find('location', LD.idOne);
+      var phone_number  = this.store.find('phonenumber', PND.idOne);
       assert.equal(phone_number.get('phone_number_type.id'), PNTD.officeId);
     });
   });
 });
 
-test('when user removes a email clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+test('when user removes a email clicks cancel we prompt them with a modal and the related model gets rolled back', function(assert) {
   page.visitDetail();
   click('.t-del-email-btn:eq(0)');
   generalPage.cancel();
@@ -611,16 +610,16 @@ test('when user removes a email clicks cancel we prompt them with a modal and th
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
-      var email = store.find('email', ED.idOne);
+      var email  = this.store.find('email', ED.idOne);
       assert.equal(email.get('email_type.id'), ETD.personalId);
     });
   });
 });
 
-test('when user removes an address clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+test('when user removes an address clicks cancel we prompt them with a modal and the related model gets rolled back', function(assert) {
   page.visitDetail();
   andThen(() => {
-    assert.equal(store.find('location', LD.idOne).get('addresses').get('length'), 2);
+    assert.equal( this.store.find('location', LD.idOne).get('addresses').get('length'), 2);
   });
   click('.t-del-address-btn:eq(0)');
   generalPage.cancel();
@@ -634,17 +633,17 @@ test('when user removes an address clicks cancel we prompt them with a modal and
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), LOCATION_URL);
-      assert.equal(store.find('location', LD.idOne).get('addresses').get('length'), 2);
+      assert.equal( this.store.find('location', LD.idOne).get('addresses').get('length'), 2);
     });
   });
 });
 
-test('when you deep link to the location detail view you can remove a new phone number', (assert) => {
+test('when you deep link to the location detail view you can remove a new phone number', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    var location = store.find('location', LD.idOne);
+    var location  = this.store.find('location', LD.idOne);
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(find('.t-input-multi-phone').find('input').length, 2);
   });
@@ -652,16 +651,16 @@ test('when you deep link to the location detail view you can remove a new phone 
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-input-multi-phone').find('input').length, 1);
-    var location = store.find('location', LD.idOne);
+    var location  = this.store.find('location', LD.idOne);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
 });
 
-test('when you deep link to the location detail view you can remove a new email', (assert) => {
+test('when you deep link to the location detail view you can remove a new email', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    var location = store.find('location', LD.idOne);
+    var location  = this.store.find('location', LD.idOne);
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(find('.t-input-multi-email').find('input').length, 2);
   });
@@ -669,7 +668,7 @@ test('when you deep link to the location detail view you can remove a new email'
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-input-multi-email').find('input').length, 1);
-    var location = store.find('location', LD.idOne);
+    var location  = this.store.find('location', LD.idOne);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
   var email = EF.put();
@@ -679,17 +678,17 @@ test('when you deep link to the location detail view you can remove a new email'
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(),LOCATION_URL);
-    var location = store.find('location', LD.idOne);
+    var location  = this.store.find('location', LD.idOne);
     assert.ok(location.get('isNotDirty'));
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
   });
 });
 
-test('when you deep link to the location detail view you can remove a new address', (assert) => {
+test('when you deep link to the location detail view you can remove a new address', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    var location = store.find('location', LD.idOne);
+    var location  = this.store.find('location', LD.idOne);
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(find('.t-input-multi-address').find('input').length, 6);
   });
@@ -697,7 +696,7 @@ test('when you deep link to the location detail view you can remove a new addres
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find('.t-input-multi-address').find('input').length, 3);
-    var location = store.find('location', LD.idOne);
+    var location  = this.store.find('location', LD.idOne);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
   var addresses = AF.put();
@@ -707,13 +706,13 @@ test('when you deep link to the location detail view you can remove a new addres
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(),LOCATION_URL);
-    var location = store.find('location', LD.idOne);
+    var location  = this.store.find('location', LD.idOne);
     assert.ok(location.get('isNotDirty'));
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
   });
 });
 
-test('when you deep link to the location detail view you can change the phone number type and add a new phone number', (assert) => {
+test('when you deep link to the location detail view you can change the phone number type and add a new phone number', function(assert) {
   random.uuid = function() { return UUID.value; };
   page.visitDetail();
   andThen(() => {
@@ -736,7 +735,7 @@ test('when you deep link to the location detail view you can change the phone nu
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(),LOCATION_URL);
-    var location = store.find('location', LD.idOne);
+    var location  = this.store.find('location', LD.idOne);
     assert.ok(location.get('isNotDirty'));
     assert.equal(location.get('phonenumbers').objectAt(0).get('phone_number_type.id'), PNTD.officeId);
     assert.equal(location.get('phonenumbers').objectAt(1).get('phone_number_type.id'), PNTD.mobileId);
@@ -745,7 +744,7 @@ test('when you deep link to the location detail view you can change the phone nu
   });
 });
 
-test('when you deep link to the location detail view you can change the email type and add a new email', (assert) => {
+test('when you deep link to the location detail view you can change the email type and add a new email', function(assert) {
   random.uuid = function() { return UUID.value; };
   page.visitDetail();
   andThen(() => {
@@ -769,7 +768,7 @@ test('when you deep link to the location detail view you can change the email ty
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(),LOCATION_URL);
-    var location = store.find('location', LD.idOne);
+    var location  = this.store.find('location', LD.idOne);
     assert.ok(location.get('isNotDirty'));
     assert.equal(location.get('emails').objectAt(0).get('email_type.id'), ETD.personalId);
     assert.equal(location.get('emails').objectAt(1).get('email_type.id'), ETD.workId);
@@ -778,7 +777,7 @@ test('when you deep link to the location detail view you can change the email ty
   });
 });
 
-test('when you deep link to the location detail view you can change the address type and can add new address with default type', (assert) => {
+test('when you deep link to the location detail view you can change the address type and can add new address with default type', function(assert) {
   random.uuid = function() { return UUID.value; };
   page.visitDetail();
   andThen(() => {
@@ -819,7 +818,7 @@ test('when you deep link to the location detail view you can change the address 
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(),LOCATION_URL);
-    var location = store.find('location', LD.idOne);
+    var location  = this.store.find('location', LD.idOne);
     assert.ok(location.get('isNotDirty'));
     assert.equal(location.get('addresses').objectAt(2).get('address_type').get('id'), ATD.officeId);
     assert.ok(location.get('addresses').objectAt(0).get('isNotDirtyOrRelatedNotDirty'));
@@ -827,10 +826,10 @@ test('when you deep link to the location detail view you can change the address 
 });
 
 /*LOCATION TO CHILDREN M2M*/
-test('clicking and typing into power select for location will fire off xhr request for all locations children', (assert) => {
+test('clicking and typing into power select for location will fire off xhr request for all locations children', function(assert) {
   page.visitDetail();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('children').get('length'), 2);
     assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
     assert.equal(page.childrenSelected.indexOf(LD.storeNameTwo), 2);
@@ -841,7 +840,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   selectSearch(CHILDREN, 'a');
   selectChoose(CHILDREN, LD.apple);
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('children').get('length'), 3);
     assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
     assert.equal(location.get('children').objectAt(1).get('name'), LD.storeNameThree);
@@ -858,7 +857,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   });
   selectSearch(CHILDREN, 'a');
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('children').get('length'), 3);
     assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
     assert.equal(location.get('children').objectAt(1).get('name'), LD.storeNameThree);
@@ -875,7 +874,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   selectSearch(CHILDREN, 'BooNdocks');
   selectChoose(CHILDREN, LD.boondocks);
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('children').get('length'), 4);
     assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
     assert.equal(location.get('children').objectAt(1).get('name'), LD.storeNameThree);
@@ -896,17 +895,17 @@ test('clicking and typing into power select for location will fire off xhr reque
   });
 });
 
-test('can remove and add back same children and save empty children', (assert) => {
+test('can remove and add back same children and save empty children', function(assert) {
   page.visitDetail();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('children').get('length'), 2);
     assert.ok(location.get('childrenIsNotDirty'));
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
   });
   page.childrenOneRemove();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('children').get('length'), 1);
     assert.ok(location.get('childrenIsDirty'));
     assert.ok(location.get('isDirtyOrRelatedDirty'));
@@ -917,7 +916,7 @@ test('can remove and add back same children and save empty children', (assert) =
   selectSearch(CHILDREN, 'a');
   selectChoose(CHILDREN, LD.baseStoreName);
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('location_children_fks').length, 2);
     assert.equal(location.get('children').get('length'), 2);
     assert.ok(location.get('childrenIsDirty'));
@@ -925,7 +924,7 @@ test('can remove and add back same children and save empty children', (assert) =
   });
   page.childrenTwoRemove();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('children').get('length'), 1);
     assert.ok(location.get('childrenIsDirty'));
     assert.ok(location.get('isDirtyOrRelatedDirty'));
@@ -936,7 +935,7 @@ test('can remove and add back same children and save empty children', (assert) =
   selectChoose(CHILDREN, LD.storeNameTwo);
   page.nameFillIn(LD.storeNameTwo);
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('location_children_fks').length, 2);
     assert.equal(location.get('children').get('length'), 2);
     assert.ok(location.get('childrenIsNotDirty'));
@@ -950,10 +949,10 @@ test('can remove and add back same children and save empty children', (assert) =
   });
 });
 
-test('starting with multiple children, can remove all children (while not populating options) and add back', (assert) => {
+test('starting with multiple children, can remove all children (while not populating options) and add back', function(assert) {
   page.visitDetail();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('children').get('length'), 2);
     assert.equal(location.get('location_children_fks').length, 2);
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
@@ -961,14 +960,14 @@ test('starting with multiple children, can remove all children (while not popula
   });
   page.childrenTwoRemove();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('children').get('length'), 1);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
     assert.equal(page.childrenSelected.indexOf(LD.storeNameTwo), 2);
   });
   page.childrenOneRemove();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('children').get('length'), 0);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
@@ -977,7 +976,7 @@ test('starting with multiple children, can remove all children (while not popula
   selectSearch(CHILDREN, 'd');
   selectChoose(CHILDREN, LD.storeNameTwo);
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('children').get('length'), 1);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
     assert.equal(page.childrenSelected.indexOf(LD.storeNameTwo), 2);
@@ -990,7 +989,7 @@ test('starting with multiple children, can remove all children (while not popula
   selectChoose(CHILDREN, LD.storeNameThree);
   page.nameFillIn(LD.storeNameTwo);
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('children').get('length'), 2);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
     assert.equal(page.childrenSelected.indexOf(LD.storeNameTwo), 2);
@@ -1004,10 +1003,10 @@ test('starting with multiple children, can remove all children (while not popula
 });
 
 /*PARENTS*/
-test('clicking and typing into power select for location will fire off xhr request for all location parents', (assert) => {
+test('clicking and typing into power select for location will fire off xhr request for all location parents', function(assert) {
   page.visitDetail();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('parents').get('length'), 2);
     assert.equal(location.get('parents').objectAt(0).get('name'), LD.storeNameParent);
     assert.equal(page.parentsSelected.indexOf(LD.storeNameParent), 2);
@@ -1018,7 +1017,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   selectSearch(PARENTS, 'a');
   selectChoose(PARENTS, LD.apple);
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('parents').get('length'), 3);
     assert.equal(location.get('parents').objectAt(0).get('name'), LD.storeNameParent);
     assert.equal(location.get('parents').objectAt(1).get('name'), LD.storeNameParentTwo);
@@ -1030,7 +1029,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   });
   selectSearch(PARENTS, 'a');
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('parents').get('length'), 3);
     assert.equal(location.get('parents').objectAt(0).get('name'), LD.storeNameParent);
     assert.equal(location.get('parents').objectAt(1).get('name'), LD.storeNameParentTwo);
@@ -1047,7 +1046,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   selectSearch(PARENTS, 'BooNdocks');
   selectChoose(PARENTS, LD.boondocks);
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('parents').get('length'), 4);
     assert.equal(location.get('parents').objectAt(0).get('name'), LD.storeNameParent);
     assert.equal(location.get('parents').objectAt(1).get('name'), LD.storeNameParentTwo);
@@ -1068,17 +1067,17 @@ test('clicking and typing into power select for location will fire off xhr reque
   });
 });
 
-test('can remove and add back same parents and save empty parents', (assert) => {
+test('can remove and add back same parents and save empty parents', function(assert) {
   page.visitDetail();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('parents').get('length'), 2);
     assert.ok(location.get('parentsIsNotDirty'));
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
   });
   page.parentsTwoRemove();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('parents').get('length'), 1);
     assert.ok(location.get('parentsIsDirty'));
     assert.ok(location.get('isDirtyOrRelatedDirty'));
@@ -1089,7 +1088,7 @@ test('can remove and add back same parents and save empty parents', (assert) => 
   selectSearch(PARENTS, 'a');
   andThen(() => {
     assert.equal(page.parentsOptionLength, 3);
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('location_parents_fks').length, 2);
     assert.equal(location.get('parents').get('length'), 1);
     assert.ok(location.get('parentsIsDirty'));
@@ -1097,7 +1096,7 @@ test('can remove and add back same parents and save empty parents', (assert) => 
   });
   page.parentsClickOptionStoreNameOne();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('location_parents_fks').length, 2);
     assert.equal(location.get('parents').get('length'), 2);
     assert.ok(location.get('parentsIsDirty'));
@@ -1105,7 +1104,7 @@ test('can remove and add back same parents and save empty parents', (assert) => 
   });
   page.parentsTwoRemove();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('parents').get('length'), 1);
     assert.ok(location.get('parentsIsDirty'));
     assert.ok(location.get('isDirtyOrRelatedDirty'));
@@ -1118,7 +1117,7 @@ test('can remove and add back same parents and save empty parents', (assert) => 
   page.parentsClickOptionStoreNameTwo();
   page.nameFillIn(LD.storeNameTwo);
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('location_parents_fks').length, 2);
     assert.equal(location.get('parents').get('length'), 2);
     assert.ok(location.get('parentsIsNotDirty'));
@@ -1132,10 +1131,10 @@ test('can remove and add back same parents and save empty parents', (assert) => 
   });
 });
 
-test('starting with multiple parents, can remove all parents (while not populating options) and add back', (assert) => {
+test('starting with multiple parents, can remove all parents (while not populating options) and add back', function(assert) {
   page.visitDetail();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('parents').get('length'), 2);
     assert.equal(location.get('location_parents_fks').length, 2);
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
@@ -1143,14 +1142,14 @@ test('starting with multiple parents, can remove all parents (while not populati
   });
   page.parentsTwoRemove();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('parents').get('length'), 1);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
     assert.equal(page.parentsSelected.indexOf(LD.storeNameParent), 2);
   });
   page.parentsOneRemove();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('parents').get('length'), 0);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
   });
@@ -1161,7 +1160,7 @@ test('starting with multiple parents, can remove all parents (while not populati
   selectSearch(PARENTS, 'p');
   page.parentsClickOptionStoreNameTwo();
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('parents').get('length'), 1);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
     assert.equal(page.parentsSelected.indexOf(LD.storeNameParentTwo), 2);
@@ -1170,7 +1169,7 @@ test('starting with multiple parents, can remove all parents (while not populati
   page.parentsClickOptionStoreNameFirst();
   page.nameFillIn(LD.storeNameTwo);
   andThen(() => {
-    let location = store.find('location', LD.idOne);
+    let location  = this.store.find('location', LD.idOne);
     assert.equal(location.get('parents').get('length'), 2);
     assert.ok(location.get('isDirtyOrRelatedDirty'));
     assert.equal(page.parentsSelected.indexOf(LD.storeNameParent), 2);
@@ -1183,7 +1182,7 @@ test('starting with multiple parents, can remove all parents (while not populati
   });
 });
 
-test('clicking and typing into power select for location will not filter if spacebar pressed', (assert) => {
+test('clicking and typing into power select for location will not filter if spacebar pressed', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   page.parentsClickDropdown();
@@ -1195,7 +1194,7 @@ test('clicking and typing into power select for location will not filter if spac
   });
 });
 
-test('fill out phonenumber and save', assert => {
+test('fill out phonenumber and save', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -1223,7 +1222,7 @@ test('fill out phonenumber and save', assert => {
   });
 });
 
-test('fill out email and save', assert => {
+test('fill out email and save', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -1251,7 +1250,7 @@ test('fill out email and save', assert => {
   });
 });
 
-test('fill out an address including Country and State', assert => {
+test('fill out an address including Country and State', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);

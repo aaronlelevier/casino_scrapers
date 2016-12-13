@@ -28,18 +28,17 @@ const CATEGORY = '.t-category-children-select .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-let store, detail_xhr, list_xhr, detail_data;
+let detail_xhr, list_xhr, detail_data;
 
 moduleForAcceptance('Acceptance | general category detail test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     detail_data = CF.detail(CD.idOne);
     list_xhr = xhr(CATEGORIES_URL + '?page=1', 'GET', null, {}, 200, CF.list());
     detail_xhr = xhr(CATEGORIES_URL + CD.idOne + '/', 'GET', null, {}, 200, detail_data);
   },
 });
 
-test('clicking a categories name will redirect to the given detail view', (assert) => {
+test('clicking a categories name will redirect to the given detail view', function(assert) {
   clearxhr(detail_xhr);
   page.visit();
   andThen(() => {
@@ -55,13 +54,13 @@ test('clicking a categories name will redirect to the given detail view', (asser
   });
 });
 
-test('when you deep link to the category detail view you get bound attrs', (assert) => {
+test('when you deep link to the category detail view you get bound attrs', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(document.title,  t('doctitle.category.single', { name: 'Repair' }));
-    let category = store.find('category', CD.idOne);
+    let category = this.store.find('category', CD.idOne);
     assert.ok(category.get('isNotDirty'), 'is not dirty');
     assert.equal(page.nameInput, CD.nameOne);
     assert.equal(page.descriptionInput, CD.descriptionRepair);
@@ -89,7 +88,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
   });
   page.costCodeFill(CD.costCodeTwo);
   andThen(() => {
-    let category = store.find('category', CD.idOne);
+    let category = this.store.find('category', CD.idOne);
     assert.ok(category.get('isDirty'), 'is dirty after fill in');
   });
   let list = CF.list();
@@ -105,7 +104,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), CATEGORIES_INDEX_URL);
-    const category = store.find('category', CD.idOne);
+    const category = this.store.find('category', CD.idOne);
     assert.equal(category.get('name'), CD.nameTwo);
     assert.equal(category.get('description'), CD.descriptionMaintenance);
     assert.equal(category.get('label'), CD.labelTwo);
@@ -115,10 +114,10 @@ test('when you deep link to the category detail view you get bound attrs', (asse
   });
 });
 
-test('when you click cancel, you are redirected to the category list view', (assert) => {
+test('when you click cancel, you are redirected to the category list view', function(assert) {
   page.visitDetail();
   andThen(() => {
-    const category = store.find('category', CD.idOne);
+    const category = this.store.find('category', CD.idOne);
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
   });
   generalPage.cancel();
@@ -127,7 +126,7 @@ test('when you click cancel, you are redirected to the category list view', (ass
   });
 });
 
-test('when editing the category name to invalid, it checks for validation', (assert) => {
+test('when editing the category name to invalid, it checks for validation', function(assert) {
   page.visitDetail();
   page.nameFill('');
   triggerEvent('.t-category-name', 'keyup', {keyCode: 32});
@@ -154,7 +153,7 @@ test('when editing the category name to invalid, it checks for validation', (ass
   });
 });
 
-test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', (assert) => {
+test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   page.nameFill(CD.nameTwo);
@@ -180,7 +179,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
 });
 
 /* jshint ignore:start */
-test('when click delete, modal displays and when click ok, category is deleted and removed from store', async assert => {
+test('when click delete, modal displays and when click ok, category is deleted and removed from store', async function(assert) {
   await page.visitDetail();
   await generalPage.delete();
   andThen(() => {
@@ -197,14 +196,14 @@ test('when click delete, modal displays and when click ok, category is deleted a
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), CATEGORIES_INDEX_URL, 'at index url');
-      assert.equal(store.find('category', CD.idOne).get('length'), undefined, 'category removed from store');
+      assert.equal(this.store.find('category', CD.idOne).get('length'), undefined, 'category removed from store');
       // assert.throws(Ember.$('.ember-modal-dialog'), 'should not be there');
     });
   });
 });
 /* jshint ignore:end */
 
-test('cost_amount - is not required', (assert) => {
+test('cost_amount - is not required', function(assert) {
   page.visitDetail();
   page.nameFill(CD.nameOne);
   page.descriptionFill(CD.descriptionMaintenance);
@@ -214,7 +213,7 @@ test('cost_amount - is not required', (assert) => {
     Ember.$('.t-amount').focusout();
   });
   andThen(() => {
-    const category = store.find('category', CD.idOne);
+    const category = this.store.find('category', CD.idOne);
     assert.equal(category.get('cost_amount'), '', 'cost amount is blank');
   });
   page.costCodeFill(CD.costCodeOne);
@@ -229,11 +228,11 @@ test('cost_amount - is not required', (assert) => {
     assert.equal(currentURL(), CATEGORIES_INDEX_URL);
   });
 });
-test('clicking and typing into power select for categories children will fire off xhr request for all categories', (assert) => {
+test('clicking and typing into power select for categories children will fire off xhr request for all categories', function(assert) {
 /* CATEGORY TO CHILDREN */
   page.visitDetail();
   andThen(() => {
-    let category = store.find('category', CD.idOne);
+    let category = this.store.find('category', CD.idOne);
     assert.deepEqual(category.get('children').objectAt(0).get('id'), CD.idChild);
     assert.equal(category.get('children').get('length'), 1);
   });
@@ -245,7 +244,7 @@ test('clicking and typing into power select for categories children will fire of
   });
   page.categoryClickOptionOneEq();
   andThen(() => {
-    let category = store.find('category', CD.idOne);
+    let category = this.store.find('category', CD.idOne);
     assert.equal(category.get('children').get('length'), 2);
     assert.equal(page.categoriesSelected, 2);
   });
@@ -254,7 +253,7 @@ test('clicking and typing into power select for categories children will fire of
   andThen(() => {
     assert.equal(page.categoryOptionLength, 1);
     assert.equal(find(`${CATEGORY_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
-    let category = store.find('category', CD.idOne);
+    let category = this.store.find('category', CD.idOne);
     assert.ok(category.get('isDirtyOrRelatedDirty'), 'isDirtyOrRelatedDirty after changing children');
   });
   let url = PREFIX + DETAIL_URL + '/';
@@ -267,16 +266,16 @@ test('clicking and typing into power select for categories children will fire of
   });
 });
 
-test('when you deep link to the category detail can remove child from category and add same one back', (assert) => {
+test('when you deep link to the category detail can remove child from category and add same one back', function(assert) {
   page.visitDetail();
   andThen(() => {
-    let category = store.find('category', CD.idOne);
+    let category = this.store.find('category', CD.idOne);
     assert.equal(category.get('children').get('length'), 1);
     assert.equal(page.categoriesSelected, 1);
   });
   page.categoryOneRemove();
   andThen(() => {
-    let category = store.find('category', CD.idOne);
+    let category = this.store.find('category', CD.idOne);
     assert.equal(category.get('children').get('length'), 0);
     assert.equal(page.categoriesSelected, 0);
   });
@@ -294,12 +293,12 @@ test('when you deep link to the category detail can remove child from category a
   });
 });
 
-// test('starting with multiple categories, can remove all categories (while not populating options) and add back', (assert) => {
+// test('starting with multiple categories, can remove all categories (while not populating options) and add back', function(assert) {
 //     detail_data.children = [...detail_data.children, CF.get(CD.idThree)];
 //     detail_data.children[1].name = CD.nameThree;
 //     page.visitDetail();
 //     andThen(() => {
-//         let category = store.find('category', CD.idOne);
+//         let category = this.store.find('category', CD.idOne);
 //         assert.equal(category.get('children').get('length'), 2);
 //         assert.equal(page.categorySelected().indexOf(CD.nameTwo), 2);
 //         assert.equal(page.categoryTwoSelected().indexOf(CD.nameThree), 2);
@@ -307,7 +306,7 @@ test('when you deep link to the category detail can remove child from category a
 //     page.categoryOneRemove();
 //     page.categoryOneRemove();
 //     andThen(() => {
-//         let category = store.find('category', CD.idOne);
+//         let category = this.store.find('category', CD.idOne);
 //         assert.equal(category.get('children').get('length'), 0);
 //         assert.ok(category.get('isDirtyOrRelatedDirty'));
 //     });
@@ -320,7 +319,7 @@ test('when you deep link to the category detail can remove child from category a
 //     // fillIn(CATEGORY_SEARCH, 'e');
 //     // page.categoryClickOptionTwoEq();
 //     // andThen(() => {
-//     //     let category = store.find('category', CD.idOne);
+//     //     let category = this.store.find('category', CD.idOne);
 //     //     assert.equal(category.get('children').get('length'), 1);
 //     //     assert.equal(page.categorySelected().indexOf(`${CD.nameTwo}`), 2);
 //     //     assert.ok(category.get('isDirtyOrRelatedDirty'));
@@ -329,7 +328,7 @@ test('when you deep link to the category detail can remove child from category a
 //     // fillIn(CATEGORY_SEARCH, 'e');
 //     // page.categoryClickOptionOneEq();
 //     // andThen(() => {
-//     //     let category = store.find('category', CD.idOne);
+//     //     let category = this.store.find('category', CD.idOne);
 //     //     assert.equal(category.get('children').get('length'), 2);
 //     //     //TODO: implement attrs for category
 //     //     // assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
@@ -343,7 +342,7 @@ test('when you deep link to the category detail can remove child from category a
 //     // });
 // });
 
-test('clicking and typing into power select for categories children will not filter if spacebar pressed', (assert) => {
+test('clicking and typing into power select for categories children will not filter if spacebar pressed', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   page.categoryClickDropdown();
@@ -351,14 +350,14 @@ test('clicking and typing into power select for categories children will not fil
   andThen(() => {
     assert.equal(page.categoryOptionLength, 1);
     assert.equal(find(CATEGORY_DROPDOWN).text().trim(), GLOBALMSG.power_search);
-    let category = store.find('category', CD.idOne);
+    let category = this.store.find('category', CD.idOne);
     assert.equal(category.get('children').get('length'), 1);
     assert.equal(page.categoryOptionLength, 1);
   });
 });
 /* END CATEGORY CHILDREN */
 
-test('clicking cancel button will take from detail view to list view', (assert) => {
+test('clicking cancel button will take from detail view to list view', function(assert) {
   clearxhr(detail_xhr);
   page.visit();
   andThen(() => {
@@ -376,7 +375,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', function(assert) {
   clearxhr(list_xhr);
   page.visitDetail();
   page.nameFill(CD.nameTwo);
@@ -398,7 +397,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', function(assert) {
   page.visitDetail();
   page.nameFill(CD.nameTwo);
   page.subLabelFill(CD.subCatLabelOne);
@@ -413,14 +412,14 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), CATEGORIES_INDEX_URL);
-      let category = store.find('category', CD.idOne);
+      let category = this.store.find('category', CD.idOne);
       assert.equal(category.get('name'), CD.nameOne);
       assert.equal(category.get('subcategory_label'), CD.subCatLabelOne);
     });
   });
 });
 
-test('deep linking with an xhr with a 404 status code will show up in the error component (categories)', (assert) => {
+test('deep linking with an xhr with a 404 status code will show up in the error component (categories)', function(assert) {
   errorSetup();
   clearxhr(detail_xhr);
   clearxhr(list_xhr);

@@ -16,21 +16,20 @@ const NAVBAR = '.t-navbar-items';
 moduleForAcceptance('Acceptance | general mobile dashboard test', {
   beforeEach() {
     setWidth('mobile');
-    store = this.application.__container__.lookup('service:simpleStore');
     dashboard_xhr = xhr(`${DASHBOARD_URL}`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
   },
 });
 
 /* jshint ignore:start */
 
-test('dashboard renders with welcome text and no sidebar', async assert => {
+test('dashboard renders with welcome text and no sidebar', async function(assert) {
   await generalPage.visitDashboard();
   assert.equal(find('.t-dashboard-text').text().trim(), 'Welcome');
   assert.equal(find('.t-dashboard-text h1').prop('tagName'), 'H1');
   assert.equal(find('.t-side-menu').length, 0);
 });
 
-test('visiting dashboard can click on tray and show base modules', async assert => {
+test('visiting dashboard can click on tray and show base modules', async function(assert) {
   await generalPage.visitDashboard();
   assert.notOk(find('.t-bs-mobile').hasClass('mobile-tray-open'));
   await pageDrawer.clickDrawer();
@@ -48,7 +47,7 @@ test('visiting dashboard can click on tray and show base modules', async assert 
   assert.notOk(find('.t-bs-mobile').hasClass('mobile-tray-open'));
 });
 
-test('visiting admin-mobile', async assert => {
+test('visiting admin-mobile', async function(assert) {
   await generalPage.visitDashboard();
   assert.notOk(find('.t-bs-mobile').hasClass('mobile-tray-open'));
   await pageDrawer.clickDrawer();

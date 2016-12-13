@@ -23,12 +23,10 @@ const PEOPLE_URL = `${BASE_PEOPLE_URL}/index`;
 const BASE_CATEGORY_URL = BASEURLS.base_categories_url;
 const CATEGORY_URL = `${BASE_CATEGORY_URL}/index`;
 
-var application, store, location_endpoint, location_list_xhr, ticket_endpoint, ticket_list_xhr, people_endpoint, people_list_xhr, category_endpoint, category_list_xhr;
+var application, location_endpoint, location_list_xhr, ticket_endpoint, ticket_list_xhr, people_endpoint, people_list_xhr, category_endpoint, category_list_xhr;
 
 moduleForAcceptance('Acceptance | location multiple grid test', {
     beforeEach() {
-        
-        store = this.application.__container__.lookup('service:simpleStore');
         location_endpoint = `${PREFIX}${BASE_LOCATION_URL}/?page=1`;
         location_list_xhr = xhr(location_endpoint, 'GET', null, {}, 200, LF.list());
         // ticket_endpoint = `${PREFIX}${BASE_TICKET_URL}/?page=1`;
@@ -48,12 +46,12 @@ test('navigating between location and people and locations and category will not
         // assert.equal(currentURL(), LOCATION_URL);
         // assert.equal(find('.t-grid-title').text(), 'Locations');
         // assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        // const locations = store.find('location');
+        // const locations = this.store.find('location');
         // assert.equal(locations.get('length'), 10);
         // locations.forEach((location) => {
         //     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
         // });
-        // const persons = store.find('person');
+        // const persons = this.store.find('person');
         // assert.equal(persons.get('length'), 1);
         // persons.forEach((person) => {
         //     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -66,12 +64,12 @@ test('navigating between location and people and locations and category will not
         // assert.equal(currentURL(), `${LOCATION_URL}?page=2`);
         // assert.equal(find('.t-grid-title').text(), 'Locations');
         // assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        // const locations = store.find('location');
+        // const locations = this.store.find('location');
         // assert.equal(locations.get('length'), 9);
         // locations.forEach((location) => {
         //     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
         // });
-        // const persons = store.find('person');
+        // const persons = this.store.find('person');
         // assert.equal(persons.get('length'), 1);
         // persons.forEach((person) => {
         //     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -82,12 +80,12 @@ test('navigating between location and people and locations and category will not
         // assert.equal(currentURL(), PEOPLE_URL);
         // assert.equal(find('.t-grid-title').text(), 'People');
         // assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        // const locations = store.find('location');
+        // const locations = this.store.find('location');
         // assert.equal(locations.get('length'), 9);
         // locations.forEach((location) => {
         //     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
         // });
-        // const persons = store.find('person');
+        // const persons = this.store.find('person');
         // assert.equal(persons.get('length'), 11);
         // persons.forEach((person) => {
         //     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -99,12 +97,12 @@ test('navigating between location and people and locations and category will not
     // andThen(() => {
         // assert.equal(currentURL(), PEOPLE_URL + '?page=2');
         // assert.equal(find('.t-grid-data').length, PAGE_SIZE-2);
-        // const locations = store.find('location');
+        // const locations = this.store.find('location');
         // assert.equal(locations.get('length'), 9);
         // locations.forEach((location) => {
         //     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
         // });
-        // const persons = store.find('person');
+        // const persons = this.store.find('person');
         // assert.equal(persons.get('length'), 9);
         // persons.forEach((person) => {
         //     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -115,18 +113,18 @@ test('navigating between location and people and locations and category will not
         // assert.equal(currentURL(), TICKET_URL);
         // assert.equal(find('.t-grid-title').text(), 'Tickets');
         // assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        // const locations = store.find('location');
+        // const locations = this.store.find('location');
         // // assert.equal(locations.get('length'), 10);
         // // locations.forEach((location) => {
         // //     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
         // //     assert.ok(location.get('statusIsNotDirty'));
         // // });
-        // const persons = store.find('person');
+        // const persons = this.store.find('person');
         // assert.equal(persons.get('length'), 10);
         // persons.forEach((person) => {
         //     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         // });
-        // const tickets = store.find('ticket');
+        // const tickets = this.store.find('ticket');
         // assert.equal(tickets.get('length'), 10);
         // tickets.forEach((ticket) => {
         //     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -138,17 +136,17 @@ test('navigating between location and people and locations and category will not
     // andThen(() => {
         // assert.equal(currentURL(), TICKET_URL + '?page=2');
         // assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        // // const locations = store.find('location');
+        // // const locations = this.store.find('location');
         // // assert.equal(locations.get('length'), 1);
         // // locations.forEach((location) => {
         // //     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
         // // });
-        // const persons = store.find('person');
+        // const persons = this.store.find('person');
         // assert.equal(persons.get('length'), 11);
         // persons.forEach((person) => {
         //     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         // });
-        // const tickets = store.find('ticket');
+        // const tickets = this.store.find('ticket');
         // assert.equal(tickets.get('length'), 9);
         // tickets.forEach((ticket) => {
         //     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));

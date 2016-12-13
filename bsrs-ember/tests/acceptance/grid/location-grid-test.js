@@ -26,17 +26,16 @@ const BACKSPACE = {keyCode: 8};
 const SORT_STATUS_DIR = '.t-sort-status-translated-name-dir';
 const SORT_LLEVEL_DIR = '.t-sort-location-level-name-dir';
 
-var application, store, endpoint, list_xhr;
+var application, endpoint, list_xhr;
 
 moduleForAcceptance('Acceptance | location grid list', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
     endpoint = PREFIX + BASE_URL + '/?page=1';
     list_xhr = xhr(endpoint ,"GET",null,{},200,LF.list());
   },
 });
 
-test(`initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr with correct th widths`, (assert) => {
+test(`initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr with correct th widths`, function(assert) {
   visit(LOCATION_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LIST_URL);
@@ -60,7 +59,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
   visit(LOCATION_LIST_URL);
   click('.t-page:eq(1) a');
   andThen(() => {
-    const locations = store.find('location-list');
+    const locations = this.store.find('location-list');
     assert.equal(locations.get('length'), 9);
     assert.equal(currentURL(), LOCATION_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
@@ -69,7 +68,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
   });
   click('.t-page:eq(0) a');
   andThen(() => {
-    const locations = store.find('location-list');
+    const locations = this.store.find('location-list');
     assert.equal(locations.get('length'), 10);
     assert.equal(currentURL(),LOCATION_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
@@ -562,7 +561,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 //     andThen(() => {
 //         let html = find(section);
 //         assert.equal(html.find(navigation).length, 1);
-//         let filterset = store.find('filterset', UUID.value);
+//         let filterset = this.store.find('filterset', UUID.value);
 //         assert.equal(filterset.get('name'), name);
 //         assert.equal(filterset.get('endpoint_name'), routePath);
 //         assert.equal(filterset.get('endpoint_uri'), query);
@@ -576,9 +575,9 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
   let navigation = '.t-filterset-wrap div';
   let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
   visit(LOCATION_LIST_URL);
-  clearAll(store, 'filterset');
+  clearAll(this.store, 'filterset');
   andThen(() => {
-    store.push('filterset', {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query});
+    this.store.push('filterset', {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query});
   });
   andThen(() => {
     let section = find('.t-grid-wrap');
@@ -706,7 +705,7 @@ test('location level name is a functional related filter', function(assert) {
   });
 });
 
-test('export csv button shows in grid header', (assert) => {
+test('export csv button shows in grid header', function(assert) {
   visit(LOCATION_LIST_URL);
   andThen(() => {
     assert.equal(find('[data-test-id="grid-export-btn"]').length, 1);

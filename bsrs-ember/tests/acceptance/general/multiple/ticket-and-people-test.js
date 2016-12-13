@@ -21,20 +21,19 @@ const PEOPLE_DONALD_DETAIL_URL = `${BASEURLS.base_people_url}/${PD.idDonald}`;
 const TICKET_ACTIVITIES_URL = `${TICKETS_URL}${TD.idOne}/activity/`;
 const LOCATION = '.t-person-locations-select .ember-basic-dropdown-trigger';
 
-var application, store, person, ticket;
+var application, person, ticket;
 
 moduleForAcceptance('Acceptance | general ticket and people test', {
   beforeEach() {
-    store = this.application.__container__.lookup('service:simpleStore');
   },
 });
 
-test('clicking between person detail and ticket detail will not dirty the active person model', (assert) => {
+test('clicking between person detail and ticket detail will not dirty the active person model', function(assert) {
   ajax(`${PREFIX}${PEOPLE_DETAIL_URL}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
   visit(PEOPLE_DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_DETAIL_URL);
-    person = store.find('person', PD.idOne);
+    person = this.store.find('person', PD.idOne);
     assert.ok(person.get('localeIsNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(person.get('person_locations_fks').length, 1);
@@ -44,7 +43,7 @@ test('clicking between person detail and ticket detail will not dirty the active
   ticketPage.visit();
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
-    person = store.find('person', PD.idOne);
+    person = this.store.find('person', PD.idOne);
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(person.get('person_locations_fks').length, 1);
     assert.equal(person.get('locations.length'), 1);
@@ -55,42 +54,42 @@ test('clicking between person detail and ticket detail will not dirty the active
   click('.t-grid-data:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), TICKET_DETAIL_URL);
-    ticket = store.find('ticket', TD.idOne);
+    ticket = this.store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    person = store.find('person', PD.idOne);
+    person = this.store.find('person', PD.idOne);
     assert.ok(person.get('statusIsNotDirty'));
     assert.ok(person.get('roleIsNotDirty'));
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(person.get('person_locations_fks').length, 1);
     assert.equal(person.get('locations.length'), 1);
-    const location = store.find('location', LD.idOne);
+    const location = this.store.find('location', LD.idOne);
     assert.equal(location.get('id'), LD.idOne);
   });
   click('.t-tab:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_DETAIL_URL);
-    person = store.find('person', PD.idOne);
+    person = this.store.find('person', PD.idOne);
     assert.equal(person.get('isDirtyOrRelatedDirty'), false);
     assert.ok(person.get('roleIsNotDirty'));
     assert.ok(person.get('statusIsNotDirty'));
     assert.ok(person.get('locationsIsNotDirty'));
     assert.equal(person.get('person_locations_fks').length, 1);
     assert.equal(person.get('locations.length'), 1);
-    ticket = store.find('ticket', TD.idOne);
+    ticket = this.store.find('ticket', TD.idOne);
     assert.equal(ticket.get('isDirtyOrRelatedDirty'), false);
   });
   click('.t-tab:eq(1)');
   andThen(() => {
     assert.equal(currentURL(), TICKET_DETAIL_URL);
-    person = store.find('person', PD.idOne);
+    person = this.store.find('person', PD.idOne);
     assert.equal(person.get('isDirtyOrRelatedDirty'), false);
-    ticket = store.find('ticket', TD.idOne);
+    ticket = this.store.find('ticket', TD.idOne);
     assert.equal(ticket.get('isDirtyOrRelatedDirty'), false);
   });
 });
 
-test('filter tickets by their location matching the logged in Persons location', (assert) => {
+test('filter tickets by their location matching the logged in Persons location', function(assert) {
   // Tickets - are all viewable
   ajax(`${PREFIX}${TICKET_LIST_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
   ticketPage.visit();
@@ -105,13 +104,13 @@ test('filter tickets by their location matching the logged in Persons location',
   visit(PEOPLE_DONALD_DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_DONALD_DETAIL_URL);
-    const person = store.find('person', PD.idDonald);
+    const person = this.store.find('person', PD.idDonald);
     assert.equal(person.get('locations').get('length'), 1);
   });
   click('.t-tab:eq(0)');
   click(`${LOCATION}:eq(0) .ember-power-select-multiple-remove-btn`);
   andThen(() => {
-    const person = store.find('person', PD.idDonald);
+    const person = this.store.find('person', PD.idDonald);
     assert.equal(person.get('locations').get('length'), 0);
   });
   // remove contacts
@@ -143,7 +142,7 @@ test('filter tickets by their location matching the logged in Persons location',
   });
 });
 
-test('adding a new cc and navigating to the people url wont dirty the person model', (assert) => {
+test('adding a new cc and navigating to the people url wont dirty the person model', function(assert) {
   ajax(`${PREFIX}${TICKET_LIST_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
   ticketPage.visit();
   ajax(`${PREFIX}${TICKET_DETAIL_URL}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
@@ -155,7 +154,7 @@ test('adding a new cc and navigating to the people url wont dirty the person mod
   selectChoose('.t-ticket-cc-select', PD.fullname);
   andThen(() => {
     assert.equal(currentURL(), TICKET_DETAIL_URL);
-    ticket = store.find('ticket', TD.idOne);
+    ticket = this.store.find('ticket', TD.idOne);
     assert.equal(ticket.get('ccIsDirty'), true);
   });
   generalPage.clickAdmin();

@@ -16,7 +16,7 @@ import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { PEOPLE_URL, PEOPLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
-var store, list_xhr;
+var list_xhr;
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -27,29 +27,28 @@ const DETAIL_URL = `${BASE_URL}/index/${PD.idOne}`;
 moduleForAcceptance('Acceptance | general grid people mobile test', {
   beforeEach() {
     setWidth('mobile');
-    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, PF.list());
   },
 });
 
 /* jshint ignore:start */
 
-test('only renders grid items from server and not other person objects already in store', async assert => {
+test('only renders grid items from server and not other person objects already in store', async function(assert) {
   /* MOBILE doesn't clear out grid items on every route call to allow for infinite scrolling. If other people in store, this will fail */
   xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
   await visit(DASHBOARD_URL);
   assert.equal(currentURL(), DASHBOARD_URL);
-  assert.equal(store.find('person-list').get('length'), 0);
+  assert.equal(this.store.find('person-list').get('length'), 0);
   clearxhr(list_xhr);
   xhr(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, PF.list_two());
   await visit(PEOPLE_LIST_URL);
   assert.equal(currentURL(), PEOPLE_LIST_URL);
-  assert.equal(store.find('person-list').get('length'), 8);
+  assert.equal(this.store.find('person-list').get('length'), 8);
 });
 
-test('visiting mobile person grid show correct layout', async assert => {
+test('visiting mobile person grid show correct layout', async function(assert) {
   await personPage.visit();
-  const person = store.findOne('person-list');
+  const person = this.store.findOne('person-list');
   assert.equal(currentURL(), PEOPLE_LIST_URL);
   assert.equal(find('.t-mobile-grid-title').text().trim(), '18 People');
   assert.equal(find('.t-grid-data').length, PAGE_SIZE);
@@ -60,7 +59,7 @@ test('visiting mobile person grid show correct layout', async assert => {
   assert.equal(find('.t-grid-data:eq(0) > div:eq(3)').text().trim(), RD.nameOne);
 });
 
-test('person username filter will filter down results and reset page to 1', async assert => {
+test('person username filter will filter down results and reset page to 1', async function(assert) {
   xhr(`${PEOPLE_URL}?page=1&username__icontains=7`, 'GET', null, {}, 200, PF.searched('7', 'username'));
   clearxhr(list_xhr);
   xhr(`${PEOPLE_URL}?page=2`, 'GET', null, {}, 200, PF.list());
@@ -75,7 +74,7 @@ test('person username filter will filter down results and reset page to 1', asyn
   assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), PD.usernameLastPage2Grid);
 });
 
-test('person fullname filter will filter down results and reset page to 1', async assert => {
+test('person fullname filter will filter down results and reset page to 1', async function(assert) {
   xhr(`${PEOPLE_URL}?page=1&fullname__icontains=7`, 'GET', null, {}, 200, PF.searched('7', 'fullname'));
   clearxhr(list_xhr);
   xhr(`${PEOPLE_URL}?page=2`, 'GET', null, {}, 200, PF.list());
@@ -90,7 +89,7 @@ test('person fullname filter will filter down results and reset page to 1', asyn
   assert.equal(find('.t-grid-data:eq(0) > div:eq(0)').text().trim(), PD.fullnameLastPage2Grid);
 });
 
-test('person title filter will filter down results and reset page to 1', async assert => {
+test('person title filter will filter down results and reset page to 1', async function(assert) {
   xhr(`${PEOPLE_URL}?page=1&title__icontains=7`, 'GET', null, {}, 200, PF.searched('7', 'title'));
   clearxhr(list_xhr);
   xhr(`${PEOPLE_URL}?page=2`, 'GET', null, {}, 200, PF.list());
@@ -105,10 +104,10 @@ test('person title filter will filter down results and reset page to 1', async a
   assert.equal(find('.t-grid-data:eq(0) > div:eq(2)').text().trim(), PD.titleLastPage2Grid);
 });
 
-test('filtering on status will sort when filter is clicked', async assert => {
+test('filtering on status will sort when filter is clicked', async function(assert) {
   xhr(`${PEOPLE_URL}?page=1&status__id__in=${SD.activeId}`, 'GET', null, {}, 200, PF.searched_related(SD.activeId, 'status'));
   await personPage.visit();
-  assert.equal(store.find('person-list').get('length'), 10);
+  assert.equal(this.store.find('person-list').get('length'), 10);
   await generalMobilePage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 0);
   await page.clickFilterStatus();
@@ -121,7 +120,7 @@ test('filtering on status will sort when filter is clicked', async assert => {
   assert.equal(page.statusThreeIsChecked(), false);
   assert.equal(page.statusFourIsChecked(), false);
   await generalMobilePage.submitFilterSort();
-  assert.equal(store.find('person-list').get('length'), 10);
+  assert.equal(this.store.find('person-list').get('length'), 10);
   assert.equal(find('.t-grid-data:eq(0) > .t-person-status-translated_name span').text().trim(), t('admin.person.status.active'));
   await generalMobilePage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 1);
@@ -134,10 +133,10 @@ test('filtering on status will sort when filter is clicked', async assert => {
   await generalMobilePage.submitFilterSort();
 });
 
-test('filtering on role will sort when filter is clicked', async assert => {
+test('filtering on role will sort when filter is clicked', async function(assert) {
   xhr(`${PEOPLE_URL}?page=1&role__id__in=${RD.idOne}`, 'GET', null, {}, 200, PF.searched_related(RD.idOne, 'role'));
   await personPage.visit();
-  assert.equal(store.find('person-list').get('length'), 10);
+  assert.equal(this.store.find('person-list').get('length'), 10);
   await generalMobilePage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 0);
   await page.clickFilterRole();
@@ -150,7 +149,7 @@ test('filtering on role will sort when filter is clicked', async assert => {
   assert.equal(page.roleThreeIsChecked(), false);
   assert.equal(page.roleFourIsChecked(), false);
   await generalMobilePage.submitFilterSort();
-  assert.equal(store.find('person-list').get('length'), 10);
+  assert.equal(this.store.find('person-list').get('length'), 10);
   assert.equal(find('.t-grid-data:eq(0) > .t-person-role-name').text().trim(), RD.nameOne);
   await generalMobilePage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 1);

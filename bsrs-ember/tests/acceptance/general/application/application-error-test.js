@@ -13,7 +13,6 @@ let originalLoggerError, originalTestAdapterException;
 moduleForAcceptance('Acceptance | general application error test', {
   error: 500,
   beforeEach() {
-    // store = this.application.__container__.lookup('service:simpleStore');
     errorSetup();
   },
   afterEach() {

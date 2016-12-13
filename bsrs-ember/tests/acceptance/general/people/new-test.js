@@ -26,7 +26,7 @@ const PEOPLE_INDEX_URL = BASE_PEOPLE_URL + '/index';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + UUID.value;
 const NEW_URL = BASE_PEOPLE_URL + '/new/1';
 
-var store, payload, detail_xhr, list_xhr, people_detail_data, detailEndpoint, username_search;
+var payload, detail_xhr, list_xhr, people_detail_data, detailEndpoint, username_search;
 
 moduleForAcceptance('Acceptance | general person new test', {
   beforeEach() {
@@ -41,7 +41,6 @@ moduleForAcceptance('Acceptance | general person new test', {
       status: SD.activeId,
       locale: LD.idOne
     };
-    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(PEOPLE_URL + '?page=1','GET',null,{},200,PF.empty());
     detailEndpoint = PEOPLE_URL;
     people_detail_data = {id: UUID.value, username: PD.username, role: RD.idOne, phone_numbers:[], addresses: [], locations: [], status_fk: SD.activeId, locale: PD.locale_id};
@@ -54,7 +53,7 @@ moduleForAcceptance('Acceptance | general person new test', {
   }
 });
 
-test('username backend validation', (assert) => {
+test('username backend validation', function(assert) {
   clearxhr(username_search);
   clearxhr(list_xhr);
   visit(NEW_URL);
@@ -69,7 +68,7 @@ test('username backend validation', (assert) => {
   });
 });
 
-test('clicking save reveals validation messages', (assert) => {
+test('clicking save reveals validation messages', function(assert) {
   clearxhr(list_xhr);
   visit(NEW_URL);
   page.usernameFillIn(PD.username);
@@ -124,16 +123,16 @@ test('clicking save reveals validation messages', (assert) => {
   });
 });
 
-test('visiting /people/new and creating a new person', (assert) => {
+test('visiting /people/new and creating a new person', function(assert) {
   var response = Ember.$.extend(true, {}, payload);
   page.visitPeople();
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
-    assert.equal(store.find('person').get('length'), 2);
-    assert.equal(store.find('locale').get('length'), 2);
+    assert.equal(this.store.find('person').get('length'), 2);
+    assert.equal(this.store.find('locale').get('length'), 2);
     assert.equal(page.roleInput, RD.nameOne);
-    var person = store.find('person', UUID.value);
+    var person = this.store.find('person', UUID.value);
     assert.equal(person.get('id'), UUID.value);
     assert.ok(person.get('new'));
   });
@@ -147,9 +146,9 @@ test('visiting /people/new and creating a new person', (assert) => {
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(store.find('person').get('length'), 2);
-    assert.equal(store.find('locale').get('length'), 2);
-    var person = store.find('person').objectAt(1);
+    assert.equal(this.store.find('person').get('length'), 2);
+    assert.equal(this.store.find('locale').get('length'), 2);
+    var person = this.store.find('person').objectAt(1);
     assert.equal(person.get('id'), UUID.value);
     assert.equal(person.get('new'), undefined);
     assert.equal(person.get('new_pk'), undefined);
@@ -163,7 +162,7 @@ test('visiting /people/new and creating a new person', (assert) => {
   });
 });
 
-test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
+test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', function(assert) {
   clearxhr(list_xhr);
   visit(NEW_URL);
   fillIn('.t-person-username', PD.username);
@@ -188,10 +187,10 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from this.store', function(assert) {
   visit(NEW_URL);
   andThen(() => {
-    const person = store.find('person', UUID.value);
+    const person = this.store.find('person', UUID.value);
     assert.equal(person.get('id'), UUID.value);
     assert.equal(person.get('status_fk'), undefined);
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -205,7 +204,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
       assert.equal(Ember.$('.t-modal-body').text().trim(), t('crud.discard_changes_confirm'));
       assert.equal(Ember.$('.t-modal-rollback-btn').text().trim(), t('crud.yes'));
       assert.equal(Ember.$('.t-modal-cancel-btn').text().trim(), t('crud.no'));
-      var person = store.find('person', UUID.value);
+      var person = this.store.find('person', UUID.value);
       assert.equal(person.get('id'), UUID.value);
     });
   });
@@ -213,28 +212,28 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   andThen(() => {
     waitFor(assert, () => {
       assert.equal(currentURL(), PEOPLE_INDEX_URL);
-      var person = store.find('person', UUID.value);
+      var person = this.store.find('person', UUID.value);
       // assert.equal(person.get('length'), 0);
       assert.throws(Ember.$('.ember-modal-dialog'));
     });
   });
 });
 
-test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
+test('when user enters new form and doesnt enter data, the record is correctly removed from the this.store', function(assert) {
   clearxhr(username_search);
   visit(NEW_URL);
   generalPage.cancel();
   andThen(() => {
-    assert.equal(store.find('person').get('length'), 1);
+    assert.equal(this.store.find('person').get('length'), 1);
   });
 });
 
-test('can change default role and locale', (assert) => {
+test('can change default role and locale', function(assert) {
   clearxhr(list_xhr);
   visit(NEW_URL);
   selectChoose('.t-person-role-select', RD.nameTwo);
   andThen(() => {
-    const person = store.find('person', UUID.value);
+    const person = this.store.find('person', UUID.value);
     assert.equal(person.get('role').get('id'), RD.idTwo);
     assert.ok(person.get('roleIsDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -268,7 +267,7 @@ test('can change default role and locale', (assert) => {
   });
 });
 
-test('adding a new person should allow for another new person to be created after the first is persisted', (assert) => {
+test('adding a new person should allow for another new person to be created after the first is persisted', function(assert) {
   let person_count;
   uuidReset();
   payload.id = 'abc123';
@@ -285,7 +284,7 @@ test('adding a new person should allow for another new person to be created afte
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/abc123`);
-    person_count = store.find('person').get('length');
+    person_count = this.store.find('person').get('length');
   });
   selectChoose('.t-status-select', SD.inactiveNameTranslated);
   const multi_new_put_payload = {
@@ -306,12 +305,12 @@ test('adding a new person should allow for another new person to be created afte
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_INDEX_URL);
-    assert.equal(store.find('person').get('length'), person_count);
+    assert.equal(this.store.find('person').get('length'), person_count);
   });
   click('.t-add-new');
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
-    assert.equal(store.find('person').get('length'), person_count + 1);
+    assert.equal(this.store.find('person').get('length'), person_count + 1);
     assert.equal(find('.t-person-username').val(), '');
   });
 });
