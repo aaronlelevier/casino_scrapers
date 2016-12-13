@@ -23,6 +23,7 @@ export const EXPORT_DATA_URL = `${PREFIX}/export-data/`;
 export const LOCATIONS_URL = `${PREFIX}/admin/locations/`;
 export const LOCATION_LEVELS_URL = `${PREFIX}/admin/location-levels/`;
 export const PEOPLE_URL = `${PREFIX}/admin/people/`;
+export const SESSION_URL = `${PREFIX}/session/`;
 export const ROLES_URL = `${PREFIX}/admin/roles/`;
 export const SETTING_URL = `${PREFIX}/admin/settings/`;
 export const STATE_URL = `${PREFIX}/states/`;

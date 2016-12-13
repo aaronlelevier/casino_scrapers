@@ -47,7 +47,7 @@ if (typeof window === 'undefined') {
     var person_defaults = require('./person');
     var role_defaults = require('./role');
     var location_defaults = require('./location');
-    var location_level_defaults = require('./location_level');
+    var location_level_defaults = require('./location-level');
     var constants = require('./constants');
     module.exports = new BSRS_PERSON_CURRENT_DEFAULTS_OBJECT(person_defaults, role_defaults, location_defaults, location_level_defaults, constants).defaults();
 } else {
