@@ -109,21 +109,20 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
             list_name = "t-automation-description",
             list_data = "t-grid-data"
         )
-        # Create
+        '''
+        NEW
+        '''
         page.find_new_link().click()
-        # description
         description = rand_chars() 
-
         automation = InputHelper(description=description)
         self._fill_in(automation)
-
-        # event
+        # EVENT
         event_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-event-select ')]/div")
         event_dropdown.click()
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
         time.sleep(1)
         self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
-        # pf
+        # PF
         add_filter_btn = self.driver.find_element_by_class_name("t-add-pf-btn")
         add_filter_btn.click()
         filter_type_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-pf-select ')]/div")
@@ -131,7 +130,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
         time.sleep(1)
         self.driver.find_element_by_xpath("//*[@aria-current='true']").click()
-        # criteria
+        # CRITERIA
         criteria_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-location-select ')]/div")
         criteria_dropdown.click()
         criteria_input = self.wait_for_xhr_request("ember-power-select-trigger-multiple-input")
@@ -147,7 +146,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         time.sleep(1)
         self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]//li[3]").click()
 
-        # action - assignee
+        # ACTION - ASSIGNEE
         assignee_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-action-assignee-select ')]/div")
         assignee_dropdown.click()
         assignee_input = self.wait_for_xhr_request("ember-power-select-search-input")
@@ -172,9 +171,9 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         selected_assignee = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-action-assignee-select ')]/div/span")
         selected_assignee.text == assignee_name
 
-
-        # FINISHED WITH NEW
-
+        '''
+        UPDATE
+        '''
         # ACTION - PRIORITY-TYPE
         action_type_dropdown = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-automation-action-type-select ')]/div")
         action_type_dropdown.click()
@@ -217,8 +216,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.gen_elem_page.click_save_btn()
 
         # Find in list
-        automation = page.find_list_data()
-        list_view = page.find_list_name()
+        page.find_list_data()
         new_automation = page.click_name_in_list_pages(description)
         try:
             new_automation.click()
@@ -241,8 +239,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.gen_elem_page.click_save_btn()
 
         # Find in list
-        automation = page.find_list_data()
-        list_view = page.find_list_name()
+        page.find_list_data()
         new_automation = page.click_name_in_list_pages(description)
         try:
             new_automation.click()
@@ -273,8 +270,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.gen_elem_page.click_save_btn()
 
         # Find in list
-        automation = page.find_list_data()
-        list_view = page.find_list_name()
+        page.find_list_data()
         new_automation = page.click_name_in_list_pages(description)
         try:
             new_automation.click()
@@ -311,8 +307,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.gen_elem_page.click_save_btn()
 
         # Find in list
-        automation = page.find_list_data()
-        list_view = page.find_list_name()
+        page.find_list_data()
         new_automation = page.click_name_in_list_pages(description)
         try:
             new_automation.click()
@@ -350,8 +345,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.gen_elem_page.click_save_btn()
 
         # Find in list
-        automation = page.find_list_data()
-        list_view = page.find_list_name()
+        page.find_list_data()
         new_automation = page.click_name_in_list_pages(description)
         try:
             new_automation.click()
@@ -425,28 +419,28 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # save
         self.gen_elem_page.click_save_btn()
 
-        # # Find in list
-        # automation = page.find_list_data()
-        # list_view = page.find_list_name()
-        # page.click_name_in_list(description, list_view)
+        # Find in list
+        page.find_list_data()
+        new_automation = page.click_name_in_list_pages(description)
+        try:
+            new_automation.click()
+        except AttributeError as e:
+            raise e("new automation not found")
 
-        # Delete
-        # TODO: When you come into the update action it should have existing action
-        # TODO: Delete dropdown isn't working
-        # automation_input = self.wait_for_xhr_request("t-automation-description")
-        # self.gen_elem_page.click_dropdown_delete()
-        # self.wait_for_xhr_request("t-delete-btn").click()
-        # self.wait_for_xhr_request("t-modal-delete-btn").click()
-        #
-        # # check removed from list
-        # page.find_list_data()
-        #     # self.driver.refresh()
-        #     # page.find_list_data()
-        # list_view = page.find_list_name()
-        # self.assertNotIn(
-        #     description,
-        #     [r.text for r in list_view]
-        # )
+        '''
+        DELETE
+        '''
+        page.find_wait_and_assert_elem("t-automation-description", description)
+        self.gen_elem_page.click_dropdown_delete()
+        self.gen_elem_page.click_delete_btn()
+        time.sleep(0.5)
+        self.gen_elem_page.click_delete_yes()
+        page.find_list_data()
+        list_view = page.find_list_name()
+        self.assertNotIn(
+            description,
+            [r.text for r in list_view]
+        )
 
     def test_role(self):
         '''
