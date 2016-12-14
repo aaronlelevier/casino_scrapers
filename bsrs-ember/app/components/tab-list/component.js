@@ -26,6 +26,7 @@ var TabList = Ember.Component.extend({
    * @method setIsOpen
    * concurrency task that will restart if hover out
    * set isOpen to false if move mouse outside of left, right or top bounds of + sign
+   * .new class name is on + button
    */
   setIsOpen: task(function * (e) {
     let { top, left } = document.getElementById(`${this.get('elementId')}`).getElementsByClassName('new')[0].getBoundingClientRect();
@@ -43,11 +44,17 @@ var TabList = Ember.Component.extend({
   /**
    * @method reposition
    * get top, left and height to calculate position of dropdown
+   * 250 is the min width of the child dashboard-add-new component.  May need a class to add instead of hard-coding it
    */
   reposition() {
-    let { top, left, _width, height } = document.getElementById(`${this.get('elementId')}`).getElementsByClassName('new')[0].getBoundingClientRect();
-    set(this, 'left', `${left -1}px`);
-    set(this, 'top', `${top + height - 1}px`);
+    let { width: bodyWidth } = document.body.getBoundingClientRect();
+    let { top, left, width, height } = document.getElementById(`${this.get('elementId')}`).getElementsByClassName('new')[0].getBoundingClientRect();
+    if (left > (bodyWidth - 125)) {
+      set(this, 'left', `${left - 251 + width }px`);
+    } else {
+      set(this, 'left', `${left - 1}px`);
+      set(this, 'top', `${top + height - 1}px`);
+    }
   },
   actions: {
     linkToNew() {
