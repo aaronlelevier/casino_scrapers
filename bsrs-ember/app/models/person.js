@@ -93,10 +93,6 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMi
   status_repo: injectRepo('status'),
   locale_repo: injectRepo('locale'),
   username: attr(''),
-  usernameIsDirty() {
-    // TODO: NOTES: why do this?
-    return this.get('_dirty')['username'];
-  },
   password: attr(''),
   first_name: attr(''),
   middle_initial: attr(''),
@@ -111,19 +107,15 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMi
   status_fk: undefined,
   photo_fk: undefined,
   changingPassword: false,
-  //models are leaf nodes and should be given a set of data and encapsulate and work on that data
-  //tightly coupled.  Ideally, route would get services or hand off to another service to collect them all
-  //and hands all information.  Person owns locale, so how do you rollback locale
   personCurrent: Ember.inject.service('person-current'),
   translationsFetcher: Ember.inject.service('translations-fetcher'),
   i18n: Ember.inject.service(),
   changeLocale(){
-    const personCurrent = this.get('personCurrent');
-    const personCurrentId = personCurrent.get('model.id');
-    if(personCurrentId === this.get('id')){
+    const personCurrentId = this.get('personCurrent').get('model.id');
+    if (personCurrentId === this.get('id')) {
       config.i18n.currentLocale = this.get('locale').get('locale');
-      return this.get('translationsFetcher').fetch().then(function(){
-        this.get('i18n').set('locale', config.i18n.currentLocale);
+      return this.get('translationsFetcher').fetch().then(() => {
+        this.get('i18n').set('locale', config.i18n.currentLocale); 
       }.bind(this));
     }
   },
