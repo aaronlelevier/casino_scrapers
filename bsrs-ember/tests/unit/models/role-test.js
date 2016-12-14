@@ -506,7 +506,7 @@ test('serialize', function(assert) {
   assert.equal(serialize.dashboard_text, role.get('dashboard_text'));
 
   assert.ok(typeof serialize.permissions === 'object', 'permissions is an object');
-  assert.equal(serialize.permissions, role.get('permissions'), 'permissions are grouped in an object');
+  assert.deepEqual(serialize.permissions, role.permissions(), 'permissions are grouped in an object');
   eachPermission(function(resource, prefix) {
     let key = `${prefix}_${resource}`;
     let prop = `permissions_${key}`;

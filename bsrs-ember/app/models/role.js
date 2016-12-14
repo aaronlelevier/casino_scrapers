@@ -57,16 +57,14 @@ let RoleModel = Model.extend(OptConf, Validations, Permissions, {
     return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('categoriesIsDirty');
   }).readOnly(),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty').readOnly(),
-  permissions: Ember.computed({
-    get() {
-      let props = {};
-      let perms = eachPermission((resource, prefix) => {
-        let key = `permissions_${prefix}_${resource}`;
-        props[`${prefix}_${resource}`] = this.get(key);
-      });
-      return props;
-    }
-  }),
+  permissions() {
+    let props = {};
+    let perms = eachPermission((resource, prefix) => {
+      let key = `permissions_${prefix}_${resource}`;
+      props[`${prefix}_${resource}`] = this.get(key);
+    });
+    return props;
+  },
   serialize() {
     const location_level = this.get('location_level');
     let location_level_id;
@@ -82,7 +80,7 @@ let RoleModel = Model.extend(OptConf, Validations, Permissions, {
       auth_amount: this.get('auth_amount') ? this.get('auth_amount') : 0.0000,
       auth_currency: this.get('auth_currency'),
       dashboard_text: this.get('dashboard_text'),
-      permissions: this.get('permissions')
+      permissions: this.permissions()
     };
   },
   removeRecord() {
