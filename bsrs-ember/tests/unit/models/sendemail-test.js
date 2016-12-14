@@ -3,10 +3,12 @@ const { run } = Ember;
 import { moduleFor, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import SED from 'bsrs-ember/vendor/defaults/sendemail';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import SEJRD from 'bsrs-ember/vendor/defaults/generic-join-recipients';
 
-var store, sendEmail;
+const PD = PERSON_DEFAULTS.defaults();
+
+let store, sendEmail;
 
 moduleFor('model:sendemail', 'Unit | Model | sendEmail', {
   needs: ['validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many'],

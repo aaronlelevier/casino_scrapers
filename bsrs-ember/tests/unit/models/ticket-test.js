@@ -4,7 +4,7 @@ import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import TPD from 'bsrs-ember/vendor/defaults/ticket-join-person';
@@ -14,7 +14,9 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 
-var store, ticket, link;
+const PD = PERSON_DEFAULTS.defaults();
+
+let store, ticket, link;
 
 module('unit: ticket test', {
   beforeEach() {

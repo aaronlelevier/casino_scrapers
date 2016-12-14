@@ -11,7 +11,7 @@ import AD from 'bsrs-ember/vendor/defaults/automation';
 import AATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import ED from 'bsrs-ember/vendor/defaults/automation-event';
 import AF from 'bsrs-ember/vendor/automation_fixtures';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
@@ -22,6 +22,7 @@ import BASEURLS, { AUTOMATION_URL, AUTOMATION_LIST_URL, AUTOMATION_EVENTS_URL, A
 const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
 const NEW_URL = `${BASE_URL}/new/1`;
+const PD = PERSON_DEFAULTS.defaults();
 
 var listXhr;
 

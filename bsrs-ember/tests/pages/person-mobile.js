@@ -1,8 +1,9 @@
 import Ember from 'ember';
 import { create, visitable, clickable } from 'ember-cli-page-object';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import BASEURLS from 'bsrs-ember/utilities/urls';
 
+const PD = PERSON_DEFAULTS.defaults();
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const PEOPLE_INDEX_URL = `${BASE_PEOPLE_URL}/index`;
 const DETAIL_URL = `${BASE_PEOPLE_URL}/${PD.idOne}`;

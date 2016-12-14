@@ -15,6 +15,8 @@ import urlContains from './url-contains';
 import setWidth from './set-width';
 import uuidReset from './uuid-reset';
 import registerPowerSelectHelpers from '../../tests/helpers/ember-power-select';
+import { SESSION_URL } from 'bsrs-ember/utilities/urls';
+import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
 
 registerPowerSelectHelpers();
 
@@ -175,16 +177,26 @@ export default function startApp(attrs={}) {
   // let attributes = Ember.merge({}, config.APP);
   // attributes = Ember.merge(attributes, attrs);
 
-  // Mock english translations
-  var request = { url: '/api/translations/?locale=en&timezone=America/Los_Angeles' , method: 'GET' };
-  var response = translations.generate('en');
+  // Mock person current session
   Ember.$.fauxjax.new({
-    request: request,
+    request: { url: SESSION_URL, method: 'GET' },
     response: {
       status: attrs.error || 200,
-      content: response
+      content: PERSON_CURRENT.defaults()
     }
   });
+  if (!attrs.error) {
+    // Mock english translations
+    var request = { url: '/api/translations/?locale=en&timezone=America/Los_Angeles' , method: 'GET' };
+    var response = translations.generate('en');
+    Ember.$.fauxjax.new({
+      request: request,
+      response: {
+        status: 200,
+        content: response
+      }
+    });
+  }
 
   Ember.run(() => {
     application = Application.create(attributes);

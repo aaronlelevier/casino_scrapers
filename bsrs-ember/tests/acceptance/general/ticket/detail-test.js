@@ -9,8 +9,8 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
 import {ticket_payload, ticket_payload_with_comment, ticket_payload_detail_with_assignee, ticket_payload_detail, ticket_payload_detail_one_category} from 'bsrs-ember/tests/helpers/payloads/ticket';
-import PD from 'bsrs-ember/vendor/defaults/person';
-import PEOPLE_CURRENT_DEFAULTS from 'bsrs-ember/vendor/defaults/person-current';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
+//import PEOPLE_CURRENT_DEFAULTS from 'bsrs-ember/vendor/defaults/person-current';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
@@ -35,6 +35,7 @@ import { TICKET_ASSIGNEE, PS_SEARCH } from 'bsrs-ember/tests/helpers/const-names
 const PREFIX = config.APP.NAMESPACE;
 const DETAIL_URL = `${TICKET_LIST_URL}/${TD.idOne}`;
 const TICKET_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
+const PD = PERSON_DEFAULTS.defaults();
 
 let list_xhr, detail_xhr, top_level_xhr, detail_data, activity_one;
 
@@ -124,7 +125,7 @@ test('if ticket status is not draft/new, assignee is reqd', async function(asser
   await selectChoose('.t-ticket-status-select', t('ticket.status.complete'));
   assert.equal(ticket.get('isDirtyOrRelatedDirty'), true);
   assert.equal(find('.t-save-btn').attr('disabled'), 'disabled'); // invalid b/c need to select assignee
-  ajax(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
+  xhr(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
   await selectSearch(TICKET_ASSIGNEE, 'b');
   await selectChoose(TICKET_ASSIGNEE, PD.fullnameBoy2);
   assert.equal(find('.t-save-btn').attr('disabled'), undefined);
@@ -204,10 +205,10 @@ test('when click delete, and click no modal disappears', async function(assert) 
 test('visiting detail should set the category even when it has no children', async function(assert) {
   clearxhr(detail_xhr);
   clearxhr(activity_one);
-  ajax(`/api/tickets/${TD.idTwo}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
+  xhr(`/api/tickets/${TD.idTwo}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
   let solo_data = TF.detail(TD.idTwo);
   solo_data.categories = [{id: CD.idSolo, name: CD.nameSolo, children: []}];
-  ajax(TICKETS_URL + TD.idTwo + '/', 'GET', null, {}, 200, solo_data);
+  xhr(TICKETS_URL + TD.idTwo + '/', 'GET', null, {}, 200, solo_data);
   await visit(TICKET_LIST_URL + '/' + TD.idTwo);
   assert.equal(currentURL(), TICKET_LIST_URL + '/' + TD.idTwo);
   let components = page.powerSelectComponents;
@@ -359,7 +360,7 @@ test('starting with multiple cc, can remove all ccs (while not populating option
     assert.equal(page.ccsSelected, 0);
   });
   let PEOPLE_TICKETS_URL = `${PEOPLE_URL}person__icontains=Mel/`;
-  ajax(PEOPLE_TICKETS_URL, 'GET', null, {}, 200, PF.get_for_power_select());
+  xhr(PEOPLE_TICKETS_URL, 'GET', null, {}, 200, PF.get_for_power_select());
   selectSearch('.t-ticket-cc-select', 'Mel');
   selectChoose('.t-ticket-cc-select', PD.nameMel);
   andThen(() => {
@@ -369,7 +370,7 @@ test('starting with multiple cc, can remove all ccs (while not populating option
     assert.equal(page.ccsSelected, 1);
   });
   let payload = TF.put({id: TD.idOne, cc: [PD.idOne]});
-  ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
+  xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.ok(urlContains(currentURL(), TICKET_LIST_URL));
@@ -416,13 +417,13 @@ test('power select options are rendered immediately when enter detail route and 
     assert.equal(page.categoryOneOptionLength, 2);
   });
   page.categoryOneClickDropdown();
-  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get(CD.idTwo, CD.nameTwo));
+  xhr(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get(CD.idTwo, CD.nameTwo));
   page.categoryTwoClickDropdown();
   andThen(() => {
     assert.equal(page.categoryTwoInput, CD.nameRepairChild);
   });
   page.categoryTwoClickDropdown();
-  ajax(`${CATEGORIES_URL}?parent=${CD.idPlumbing}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild));
+  xhr(`${CATEGORIES_URL}?parent=${CD.idPlumbing}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild));
   page.categoryThreeClickDropdown();
   andThen(() => {
     assert.equal(page.categoryThreeInput, CD.namePlumbingChild);
@@ -447,7 +448,7 @@ test('power select options are rendered immediately when enter detail route and 
   });
   page.categoryOneClickDropdown();
   const security = CF.get_list(CD.idLossPreventionChild, CD.nameLossPreventionChild, [], CD.idThree, 1);
-  ajax(`${CATEGORIES_URL}?parent=${CD.idThree}&page_size=1000`, 'GET', null, {}, 200, security);
+  xhr(`${CATEGORIES_URL}?parent=${CD.idThree}&page_size=1000`, 'GET', null, {}, 200, security);
   page.categoryTwoClickDropdown();
   andThen(() => {
     assert.equal(page.categoryTwoOptionLength, 1);
@@ -498,7 +499,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
     assert.equal(components, 3);
   });
   //select electrical from second level
-  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id:CD.idChild}], CD.idOne, 1));
+  xhr(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idTwo, CD.nameTwo, [{id:CD.idChild}], CD.idOne, 1));
   page.categoryTwoClickDropdown();
   page.categoryTwoClickOptionElectrical();
   andThen(() => {
@@ -514,7 +515,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
     assert.equal(components, 3);
   });
   const payload = CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2);
-  ajax(`${CATEGORIES_URL}?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, payload);
+  xhr(`${CATEGORIES_URL}?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, payload);
   page.categoryThreeClickDropdown();
   page.categoryThreeClickOptionOne();
   generalPage.cancel();
@@ -597,7 +598,7 @@ test('changing tree and reverting tree should not show as dirty', function(asser
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     assert.ok(ticket.get('categoriesIsDirty'));
   });
-  ajax(`${CATEGORIES_URL}?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+  xhr(`${CATEGORIES_URL}?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
   page.categoryThreeClickDropdown();
   page.categoryThreeClickOptionOne();
   andThen(() => {
@@ -613,7 +614,7 @@ test('changing tree and reverting tree should not show as dirty', function(asser
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     assert.ok(ticket.get('categoriesIsDirty'));
   });
-  ajax(`${CATEGORIES_URL}?parent=${CD.idPlumbing}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbingChild, CD.namePlumbingChild, [], CD.idPlumbing, 2));
+  xhr(`${CATEGORIES_URL}?parent=${CD.idPlumbing}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbingChild, CD.namePlumbingChild, [], CD.idPlumbing, 2));
   page.categoryThreeClickDropdown();
   //reset tree back to original
   page.categoryThreeClickOptionToilet();
@@ -681,7 +682,7 @@ test('when selecting a new parent category it should remove previously selected 
   });
   page.categoryOneClickDropdown();
   page.categoryOneClickOptionOne();
-  ajax(`${CATEGORIES_URL}?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
+  xhr(`${CATEGORIES_URL}?parent=${CD.idTwo}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idChild, CD.nameElectricalChild, [], CD.idTwo, 2));
   page.categoryTwoClickDropdown();
   page.categoryTwoClickOptionOne();
   page.categoryThreeClickDropdown();
@@ -707,7 +708,7 @@ test('location component shows location for ticket and will fire off xhr to fetc
     assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
   });
   // <check category tree>
-  ajax(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [CD.idPlumbingChild], CD.idOne, 1));
+  xhr(`${CATEGORIES_URL}?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [CD.idPlumbingChild], CD.idOne, 1));
   page.categoryOneClickDropdown();
   andThen(() => {
     assert.equal(page.categoryOneInput, CD.nameOne);
@@ -721,7 +722,7 @@ test('location component shows location for ticket and will fire off xhr to fetc
     assert.equal(page.categoryTwoInput, CD.nameRepairChild);
     // assert.equal(page.categoryTwoOptionLength, 1);//fetch data will change this to 2 once implemented
   });
-  ajax(`${CATEGORIES_URL}?parent=${CD.idPlumbing}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbingChild, CD.namePlumbingChild, [], CD.idPlumbing, 2));
+  xhr(`${CATEGORIES_URL}?parent=${CD.idPlumbing}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbingChild, CD.namePlumbingChild, [], CD.idPlumbing, 2));
   page.categoryTwoClickDropdown();
   page.categoryThreeClickDropdown();
   andThen(() => {
@@ -907,7 +908,7 @@ test('clicking update will not transition away from ticket detail and bring in l
   assert.equal(find('.t-ticket-comment').attr('placeholder'), 'Enter a comment');
   page.commentFillIn(TD.commentOne);
   let response = TF.detail(TD.idOne);
-  ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_comment), {}, 200, response);
+  xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_comment), {}, 200, response);
   let json = TA_FIXTURES.assignee_only();
   //Prevent setting read only properties
   const d = new Date();

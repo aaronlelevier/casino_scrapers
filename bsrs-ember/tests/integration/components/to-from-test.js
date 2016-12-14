@@ -8,10 +8,11 @@ import translations from 'bsrs-ember/vendor/translation_fixtures';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import TAD from 'bsrs-ember/vendor/defaults/ticket_activity';
 import AD from 'bsrs-ember/vendor/defaults/automation';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import moment from 'moment';
 
-var store, trans, activityAutomation, activityPerson, created, timestamp;
+let store, trans, activityAutomation, activityPerson, created, timestamp;
+const PD = PERSON_DEFAULTS.defaults();
 
 moduleForComponent('to-from', 'Integration | Component | to-from', {
   integration: true,

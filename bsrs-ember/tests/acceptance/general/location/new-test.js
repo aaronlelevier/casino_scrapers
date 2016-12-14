@@ -311,7 +311,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   selectChoose('.t-location-status-select', LDS.openNameTranslated);
   let location_endpoint = `${LOCATIONS_URL}get-level-children/${LLD.idFacility}/${UUID.value}/location__icontains=a/`;
   let response = {'results': [LF.get_no_related(LD.unusedId, LD.apple)]};
-  ajax(location_endpoint, 'GET', null, {}, 201, response);
+  xhr(location_endpoint, 'GET', null, {}, 201, response);
   selectSearch(CHILDREN, 'a');
   selectChoose(CHILDREN, LD.apple);
   andThen(() => {
@@ -355,7 +355,7 @@ test('can add and remove all children (while not populating options) and add bac
   });
   let location_endpoint = `${LOCATIONS_URL}get-level-children/${LLD.idOne}/${UUID.value}/location__icontains=a/`;
   let response = {'results': [LF.get_no_related(LD.unusedId, LD.apple)]};
-  ajax(location_endpoint, 'GET', null, {}, 201, response);
+  xhr(location_endpoint, 'GET', null, {}, 201, response);
   selectSearch(CHILDREN, 'a');
   selectChoose(CHILDREN, LD.apple);
   //search specific children
@@ -382,7 +382,7 @@ test('can add and remove all children (while not populating options) and add bac
   selectChoose(CHILDREN, LD.boondocks);
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
-  ajax(LOCATIONS_URL, 'POST', JSON.stringify(children_payload), {}, 201, {});
+  xhr(LOCATIONS_URL, 'POST', JSON.stringify(children_payload), {}, 201, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
@@ -413,7 +413,7 @@ test('clicking and typing into power select for location will fire off xhr reque
   });
   let location_endpoint = `${LOCATIONS_URL}get-level-parents/${LLD.idFacility}/${UUID.value}/location__icontains=a/`;
   let response = {'results': [LF.get_no_related(LD.unusedId, LD.apple)]};
-  ajax(location_endpoint, 'GET', null, {}, 201, response);
+  xhr(location_endpoint, 'GET', null, {}, 201, response);
   selectSearch(PARENTS, 'a');
   andThen(() => {
     assert.equal(currentURL(), LOCATION_NEW_URL);
@@ -473,7 +473,7 @@ test('starting with multiple parents, can remove all parents (while not populati
   });
   let location_endpoint = `${LOCATIONS_URL}get-level-parents/${LLD.idOne}/${UUID.value}/location__icontains=a/`;
   let response = { 'results': [LF.get_no_related(LD.unusedId, LD.apple)] };
-  ajax(location_endpoint, 'GET', null, {}, 201, response);
+  xhr(location_endpoint, 'GET', null, {}, 201, response);
   selectSearch(PARENTS, 'a');
   andThen(() => {
     assert.equal(currentURL(), LOCATION_NEW_URL);
@@ -506,7 +506,7 @@ test('starting with multiple parents, can remove all parents (while not populati
   page.parentsClickOptionOne();
   fillIn('.t-location-name', LD.storeName);
   fillIn('.t-location-number', LD.storeNumber);
-  ajax(LOCATIONS_URL, 'POST', JSON.stringify(parents_payload), {}, 201, {});
+  xhr(LOCATIONS_URL, 'POST', JSON.stringify(parents_payload), {}, 201, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);

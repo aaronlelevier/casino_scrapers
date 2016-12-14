@@ -10,7 +10,7 @@ import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
@@ -31,6 +31,7 @@ const CC = '.t-ticket-cc-select';
 const LOCATION = '.t-ticket-location-select';
 const TICKET_PUT_URL = `${TICKETS_URL}${TD.idOne}/`;
 const ACTIVITY_ITEMS = '.t-activity-list-item';
+const PD = PERSON_DEFAULTS.defaults();
 
 moduleForAcceptance('Acceptance | general mobile ticket detail test', {
   beforeEach() {
@@ -38,7 +39,7 @@ moduleForAcceptance('Acceptance | general mobile ticket detail test', {
     setWidth('mobile');
     list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
     xhr(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
-    activity = xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
+    activity = ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
   },
 });
 
@@ -85,7 +86,7 @@ test('can update all fields and save', async function(assert) {
   assert.equal(find('.t-mobile-ticket-activity-section').length, 1);
   await click('.t-mobile-footer-item:eq(1)');
   assert.equal(find('.t-mobile-ticket-detail-section').length, 1);
-  ajax(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
+  xhr(`${PEOPLE_URL}person__icontains=b/`, 'GET', null, {}, 200, PF.search_power_select());
   await page.requestFillIn('my request');
   selectSearch(ASSIGNEE, 'b');
   selectChoose(ASSIGNEE, PD.fullnameBoy);

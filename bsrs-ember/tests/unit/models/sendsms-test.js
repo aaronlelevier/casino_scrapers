@@ -3,10 +3,12 @@ const { run } = Ember;
 import { moduleFor, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import SMSD from 'bsrs-ember/vendor/defaults/sendsms';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import SMSJRD from 'bsrs-ember/vendor/defaults/generic-join-recipients';
 
-var store, sendSms;
+const PD = PERSON_DEFAULTS.defaults();
+
+let store, sendSms;
 
 moduleFor('model:sendsms', 'Unit | Model | sendSms', {
   needs: ['validator:presence', 'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many'],

@@ -7,12 +7,13 @@ import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import translations from "bsrs-ember/vendor/translation_fixtures";
 import { clickTrigger, nativeMouseUp } from 'bsrs-ember/tests/helpers/ember-power-select';
 import repository from 'bsrs-ember/tests/helpers/repository';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import LD from 'bsrs-ember/vendor/defaults/locale';
 import page from 'bsrs-ember/tests/pages/person';
 import general from 'bsrs-ember/tests/pages/general';
 
 var store, run = Ember.run, locale_repo, trans;
+const PD = PERSON_DEFAULTS.defaults();
 
 moduleForComponent('person-new', 'integration: person-new test', {
   integration: true,

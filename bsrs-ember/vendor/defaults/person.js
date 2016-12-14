@@ -119,10 +119,11 @@ if (typeof window === 'undefined') {
   var status_defaults = require('./status');
   var currency_defaults = require('./currency');
   var locale_defaults = require('./locale');
-  module.exports = new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults, locale_defaults).defaults();
+  module.exports['default'] = new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults, locale_defaults);
 }
 else {
-  define('bsrs-ember/vendor/defaults/person', ['exports',
+  define('bsrs-ember/vendor/defaults/person', [
+      'exports',
       'bsrs-ember/vendor/defaults/role',
       'bsrs-ember/vendor/defaults/status',
       'bsrs-ember/vendor/defaults/currency',
@@ -130,6 +131,7 @@ else {
     ],
     function(exports, role_defaults, status_defaults, currency_defaults, locale_defaults) {
       'use strict';
-      return new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults, locale_defaults).defaults();
+      var person = new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults, locale_defaults);
+      exports.default = person;
     });
 }

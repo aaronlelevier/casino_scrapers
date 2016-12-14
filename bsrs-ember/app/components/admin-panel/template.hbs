@@ -1,28 +1,44 @@
-<h3>{{fa-icon "cogs" classNames="menuIcon"}}{{t "admin.setting" count="2"}}</h3>
-<section>
-  {{#link-to "admin.tenants.index" class="t-nav-tenants"}}{{t "admin.general.other" count="2"}}{{/link-to}}
-  {{#link-to "admin.automations" class="t-nav-admin-automation-profiles"}}{{t "admin.automation" count="2"}}{{/link-to}}
-  {{#link-to "admin.approvals"}}{{t "admin.approval" count="2"}}{{/link-to}}
-  {{#link-to "admin.templates"}}{{t "admin.template" count="2"}}{{/link-to}}
-  {{#link-to "admin.translations"}}{{t "admin.translation" count="2"}}{{/link-to}}
-  {{#link-to "dtds" class="t-nav-admin-dtd"}}{{t "admin.dtd" count="2"}}{{/link-to}}
-</section>
-<h3>{{fa-icon "users" classNames="menuIcon"}}{{t "admin.person.other"}}</h3>
-<section>
-  {{#link-to "admin.roles" class="t-nav-admin-role"}}{{t "admin.role" count="2"}}{{/link-to}}
-  {{#link-to "admin.people" class="t-nav-admin-people"}}{{t "admin.person" count="2"}}{{/link-to}}
-</section>
-<h3>{{fa-icon "building" classNames="menuIcon"}}{{t "admin.location" count="2"}}</h3>
-<section>
-  {{#link-to "admin.location-levels" class="t-nav-admin-location-level"}}{{t "admin.locationlevel" count="2"}}{{/link-to}}
-  {{#link-to "admin.locations" class="t-nav-admin-location"}}{{t "admin.location" count="2"}}{{/link-to}}
-</section>
-<h3>{{fa-icon "list" classNames="menuIcon"}}{{t "admin.category" count="2"}}</h3>
-<section>
-  {{#link-to "admin.categories" class="t-nav-admin-category"}}{{t "admin.category" count="2"}}{{/link-to}}
-</section>
-<h3>{{fa-icon "wrench" classNames="menuIcon"}}{{t "admin.contractor" count="2"}}</h3>
-<section>
-  {{#link-to "admin.contractors"}}{{t "admin.company" count="2"}}{{/link-to}}
-  {{#link-to "admin.contractor-assignments"}}{{t "admin.contractor-assignment" count="2"}}{{/link-to}}
-</section>
+{{#permissions-wrapper permissions=permissions as |hash|}}
+  <h3>{{fa-icon "cogs" classNames="menuIcon"}}{{t "admin.setting" count="2"}}</h3>
+  <section>
+    {{#link-to "admin.tenants.index" class="t-nav-tenants"}}{{t "admin.general.other" count="2"}}{{/link-to}}
+    {{#link-to "admin.automations" class="t-nav-admin-automation-profiles"}}{{t "admin.automation" count="2"}}{{/link-to}}
+    {{#link-to "admin.approvals"}}{{t "admin.approval" count="2"}}{{/link-to}}
+    {{#link-to "admin.templates"}}{{t "admin.template" count="2"}}{{/link-to}}
+    {{#link-to "admin.translations"}}{{t "admin.translation" count="2"}}{{/link-to}}
+    {{#link-to "dtds" class="t-nav-admin-dtd"}}{{t "admin.dtd" count="2"}}{{/link-to}}
+  </section>
+  {{#if (or hash.view_role hash.view_person)}}
+    <h3 data-test-id="admin-panel-person-header">{{fa-icon "users" classNames="menuIcon"}}{{t "admin.person.other"}}</h3>
+    <section>
+      {{#if hash.view_role}}
+        {{#link-to "admin.roles" class="t-nav-admin-role"}}{{t "admin.role" count="2"}}{{/link-to}}
+      {{/if}}
+      {{#if hash.view_person}}
+        {{#link-to "admin.people" class="t-nav-admin-people"}}{{t "admin.person" count="2"}}{{/link-to}}
+      {{/if}}
+    </section>
+  {{/if}}
+  {{#if (or hash.view_locationlevel hash.view_location)}}
+    <h3 data-test-id="admin-panel-location-header">{{fa-icon "building" classNames="menuIcon"}}{{t "admin.location" count="2"}}</h3>
+    <section>
+      {{#if hash.view_locationlevel}}
+        {{#link-to "admin.location-levels" class="t-nav-admin-location-level"}}{{t "admin.locationlevel" count="2"}}{{/link-to}}
+      {{/if}}
+      {{#if hash.view_location}}
+        {{#link-to "admin.locations" class="t-nav-admin-location"}}{{t "admin.location" count="2"}}{{/link-to}}
+      {{/if}}
+    </section>
+  {{/if}}
+  {{#if hash.view_category}}
+    <h3 data-test-id="admin-panel-category-header">{{fa-icon "list" classNames="menuIcon"}}{{t "admin.category" count="2"}}</h3>
+    <section>
+      {{#link-to "admin.categories" class="t-nav-admin-category"}}{{t "admin.category" count="2"}}{{/link-to}}
+    </section>
+  {{/if}}
+  <h3>{{fa-icon "wrench" classNames="menuIcon"}}{{t "admin.contractor" count="2"}}</h3>
+  <section>
+    {{#link-to "admin.contractors"}}{{t "admin.company" count="2"}}{{/link-to}}
+    {{#link-to "admin.contractor-assignments"}}{{t "admin.contractor-assignment" count="2"}}{{/link-to}}
+  </section>
+{{/permissions-wrapper}}

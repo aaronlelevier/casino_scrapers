@@ -6,7 +6,7 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
 import { waitFor } from 'bsrs-ember/tests/helpers/utilities';
 import PF from 'bsrs-ember/vendor/people_fixtures';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
@@ -24,11 +24,12 @@ import pageDrawer from 'bsrs-ember/tests/pages/nav-drawer';
 import BASEURLS, { PEOPLE_URL, PEOPLE_LIST_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 import { ROLE_SELECT, LOCATION_SELECT, STATUS_SELECT } from 'bsrs-ember/tests/helpers/const-names';
 
-var list_xhr, detail_payload;
-
+const PD = PERSON_DEFAULTS.defaults();
 const BASE_URL = BASEURLS.base_people_url;
 const DETAIL_URL = `${BASE_URL}/${PD.idOne}`;
 const PEOPLE_PUT_URL = `${PEOPLE_URL}${PD.idOne}/`;
+
+let list_xhr, detail_payload;
 
 moduleForAcceptance('Acceptance | general mobile people detail test', {
   beforeEach() {

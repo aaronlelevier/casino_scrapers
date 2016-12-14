@@ -1,0 +1,23 @@
+{{yield (hash
+
+  view_role=(has-permission permissions=permissions verb="view" resource="role")
+  view_person=(has-permission permissions=permissions verb="view" resource="person")
+  view_locationlevel=(has-permission permissions=permissions verb="view" resource="locationlevel")
+  view_location=(has-permission permissions=permissions verb="view" resource="location")
+  view_category=(has-permission permissions=permissions verb="view" resource="category")
+
+  add_role=(has-permission permissions=permissions verb="add" resource="role")
+  add_person=(has-permission permissions=permissions verb="add" resource="person")
+  add_locationlevel=(has-permission permissions=permissions verb="add" resource="locationlevel")
+  add_location=(has-permission permissions=permissions verb="add" resource="location")
+  add_category=(has-permission permissions=permissions verb="add" resource="category")
+  add_ticket=(has-permission permissions=permissions verb="add" resource="ticket")
+
+  delete_role=(has-permission permissions=permissions verb="delete" resource="role")
+  delete_person=(has-permission permissions=permissions verb="delete" resource="person")
+  delete_locationlevel=(has-permission permissions=permissions verb="delete" resource="locationlevel")
+  delete_location=(has-permission permissions=permissions verb="delete" resource="location")
+  delete_category=(has-permission permissions=permissions verb="delete" resource="category")
+  delete_ticket=(has-permission permissions=permissions verb="delete" resource="ticket")
+
+)}}

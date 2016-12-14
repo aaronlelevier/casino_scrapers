@@ -1,11 +1,17 @@
 <div class="pull-right btn-group btn-group-sm grid-head-btns">
+
   {{#if hasActiveFilterSet}}
     <button class="t-show-save-filterset-modal btn btn-default btn-sm flex-item--auto" {{action "toggleSaveFilterSetModal"}}>{{fa-icon "check-circle"}} {{t 'grid.save_filter'}}</button>
   {{/if}}
+
   {{#if exportGrid}}
     <button class="btn btn-default btn-sm flex-item--auto" data-test-id="grid-export-btn" {{action "exportGrid"}}>{{fa-icon "cloud-download"}} {{t 'grid.export'}}</button>
   {{/if}}
-  <button {{action "linkToNew" add_model_url}} class="t-add-new btn btn-default btn-sm flex-item--auto">
-    {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
-  </button>
+
+  {{#if (has-permission permissions=permissions verb="add" resource=noun)}}
+    <button {{action "linkToNew" add_model_url}} class="t-add-new btn btn-default btn-sm flex-item--auto">
+      {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
+    </button>
+  {{/if}}
+
 </div>

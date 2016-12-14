@@ -7,8 +7,11 @@
     linkToNew=linkToNew 
     linkToNew=linkToNew
     closeTabMaster=(action "closeTabMaster")
+    permissions=permissions
   }}
-  {{tray-main}}
+  {{tray-main
+    permissions=permissions
+  }}
   <section class="wrap">
     {{outlet}}
   </section>

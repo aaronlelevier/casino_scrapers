@@ -8,7 +8,7 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import PF from 'bsrs-ember/vendor/people_fixtures';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import RF from 'bsrs-ember/vendor/role_fixtures';
@@ -26,6 +26,7 @@ const DETAIL_ROUTE = 'main.tickets.index.ticket';
 const DOC_TYPE = 'ticket';
 const TAB_TITLE = '.t-tab-title:eq(0)';
 const ACTIVITY_ITEMS = '.t-activity-list-item';
+const PD = PERSON_DEFAULTS.defaults();
 
 let application, list_xhr, ticket_detail_data, endpoint, detail_xhr, activity_one;
 
@@ -250,8 +251,8 @@ test('clicking on a new model from the grid view will not dirty the original tab
   const id = 'bf2b9c85-f6bd-4345-9834-c5d51de53d02';
   const data = TF.detail(id);
   data.cc = [PF.get_no_related(PD.idTwo)];
-  ajax(endpoint + id + '/', 'GET', null, {}, 200, data);
-  ajax(`/api/tickets/${id}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
+  xhr(endpoint + id + '/', 'GET', null, {}, 200, data);
+  xhr(`/api/tickets/${id}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
   click('.t-grid-data:eq(1)');
   andThen(() => {
     let ticket = this.store.find('ticket', TD.idOne);

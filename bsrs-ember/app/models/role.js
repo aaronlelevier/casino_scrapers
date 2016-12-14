@@ -10,6 +10,7 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/role';
 import { RESOURCES_WITH_PERMISSION, PERMISSION_PREFIXES } from 'bsrs-ember/utilities/constants';
 import { eachPermission } from 'bsrs-ember/utilities/permissions';
 import { validator, buildValidations } from 'ember-cp-validations';
+
 const Validations = buildValidations({
   name: validator('presence', {
     presence: true,

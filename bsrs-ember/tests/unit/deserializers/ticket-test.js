@@ -8,7 +8,7 @@ import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 import PERSON_LD from 'bsrs-ember/vendor/defaults/person-location';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import RD from 'bsrs-ember/vendor/defaults/role';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
@@ -16,6 +16,8 @@ import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import TicketDeserializer from 'bsrs-ember/deserializers/ticket';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+
+const PD = PERSON_DEFAULTS.defaults();
 
 let store, subject, uuid, ticket_priority, ticket_status, ticket, functionalStore;
 

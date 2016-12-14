@@ -15,10 +15,12 @@ import AD from 'bsrs-ember/vendor/defaults/address';
 import SD from 'bsrs-ember/vendor/defaults/state';
 import CD from 'bsrs-ember/vendor/defaults/country';
 import ATD from 'bsrs-ember/vendor/defaults/address-type';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import DD from 'bsrs-ember/vendor/defaults/dtd';
 
-var store, tenant, deserializer;
+const PD = PERSON_DEFAULTS.defaults();
+
+let store, tenant, deserializer;
 
 module('unit: tenant deserializer test', {
   beforeEach() {

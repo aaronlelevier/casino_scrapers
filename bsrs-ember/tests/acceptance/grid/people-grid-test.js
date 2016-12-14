@@ -4,7 +4,7 @@ import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance'
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PF from 'bsrs-ember/vendor/people_fixtures';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import config from 'bsrs-ember/config/environment';
@@ -13,8 +13,8 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
-import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
 
+const PD = PERSON_DEFAULTS.defaults();
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_people_url;
@@ -25,7 +25,7 @@ const NUMBER_EIGHT = {keyCode: 56};
 const BACKSPACE = {keyCode: 8};
 const SORT_STATUS_DIR = '.t-sort-status-translated-name-dir';
 
-var endpoint, list_xhr;
+let endpoint, list_xhr;
 
 moduleForAcceptance('Acceptance | people grid list', {
   beforeEach() {
@@ -51,7 +51,7 @@ test('initial load should only show first 10 records ordered by fullname with co
 
 test('clicking page 2 will load in another set of data as well as clicking page 1 after that reloads the original set of data (both require an additional xhr)', function(assert) {
   visit(PEOPLE_LIST_URL);
-  var page_two = PREFIX + BASE_URL + '/?page=2';
+  let page_two = PREFIX + BASE_URL + '/?page=2';
   xhr(page_two ,"GET",null,{},200,PF.list_two());
   click('.t-page:eq(1) a');
   andThen(() => {
@@ -74,7 +74,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
 });
 
 test('clicking first,last,next and previous will request page 1 and 2 correctly', function(assert) {
-  var page_two = PREFIX + BASE_URL + '/?page=2';
+  let page_two = PREFIX + BASE_URL + '/?page=2';
   xhr(page_two ,"GET",null,{},200,PF.list_two());
   visit(PEOPLE_LIST_URL);
   andThen(() => {
@@ -124,11 +124,11 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
 });
 
 test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', function(assert) {
-  var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=title,username';
+  let sort_two = PREFIX + BASE_URL + '/?page=1&ordering=title,username';
   xhr(sort_two ,"GET",null,{},200,PF.sorted_page_one('title,username'));
-  var page_two = PREFIX + BASE_URL + '/?page=2&ordering=username';
+  let page_two = PREFIX + BASE_URL + '/?page=2&ordering=username';
   xhr(page_two ,"GET",null,{},200,PF.sorted_page_two('username'));
-  var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
+  let sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
   xhr(sort_one ,"GET",null,{},200,PF.sorted_page_one('username'));
   visit(PEOPLE_LIST_URL);
   click('.t-sort-username-dir');
@@ -152,15 +152,15 @@ test('clicking header will sort by given property and reset page to 1 (also requ
 });
 
 test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
-  var search_two = PREFIX + BASE_URL + '/?page=1&ordering=title&search=8%20m';
+  let search_two = PREFIX + BASE_URL + '/?page=1&ordering=title&search=8%20m';
   xhr(search_two ,"GET",null,{},200,PF.searched('8 m', 'title'));
-  var page_two = PREFIX + BASE_URL + '/?page=2&ordering=title';
+  let page_two = PREFIX + BASE_URL + '/?page=2&ordering=title';
   xhr(page_two ,"GET",null,{},200,PF.searched('', 'title', 2));
-  var page_one = PREFIX + BASE_URL + '/?page=1&ordering=title';
+  let page_one = PREFIX + BASE_URL + '/?page=1&ordering=title';
   xhr(page_one ,"GET",null,{},200,PF.searched('', 'title'));
-  var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=title&search=8';
+  let sort_one = PREFIX + BASE_URL + '/?page=1&ordering=title&search=8';
   xhr(sort_one ,"GET",null,{},200,PF.searched('8', 'title'));
-  var search_one = PREFIX + BASE_URL + '/?page=1&search=8';
+  let search_one = PREFIX + BASE_URL + '/?page=1&search=8';
   xhr(search_one ,"GET",null,{},200,PF.searched('8', 'id'));
   visit(PEOPLE_LIST_URL);
   fillIn('.t-grid-search-input', '8');
@@ -207,13 +207,13 @@ test('typing a search will reset page to 1 and require an additional xhr and res
 });
 
 test('multiple sort options appear in the query string as expected', function(assert) {
-  var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=-fullname,title,username';
+  let sort_four = PREFIX + BASE_URL + '/?page=1&ordering=-fullname,title,username';
   xhr(sort_four ,"GET",null,{},200,PF.sorted('fullname,title,username'));
-  var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=fullname,title,username';
+  let sort_three = PREFIX + BASE_URL + '/?page=1&ordering=fullname,title,username';
   xhr(sort_three ,"GET",null,{},200,PF.sorted('fullname,title,username'));
-  var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=title,username';
+  let sort_two = PREFIX + BASE_URL + '/?page=1&ordering=title,username';
   xhr(sort_two ,"GET",null,{},200,PF.sorted('title,username'));
-  var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
+  let sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
   xhr(sort_one ,"GET",null,{},200,PF.sorted('username'));
   visit(PEOPLE_LIST_URL);
   click('.t-sort-username-dir');
@@ -243,13 +243,13 @@ test('multiple sort options appear in the query string as expected', function(as
 });
 
 test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', function(assert) {
-  var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=title';
+  let sort_four = PREFIX + BASE_URL + '/?page=1&ordering=title';
   xhr(sort_four ,"GET",null,{},200,PF.sorted('username,title'));
-  var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-username,title';
+  let sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-username,title';
   xhr(sort_three ,"GET",null,{},200,PF.sorted('-username,title'));
-  var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=title,username';
+  let sort_two = PREFIX + BASE_URL + '/?page=1&ordering=title,username';
   xhr(sort_two ,"GET",null,{},200,PF.sorted('title,username'));
-  var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
+  let sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
   xhr(sort_one ,"GET",null,{},200,PF.sorted('username'));
   visit(PEOPLE_LIST_URL);
   andThen(() => {
@@ -349,7 +349,7 @@ test('full text search will filter down the result set and query django accordin
 });
 
 test('loading screen shown before any xhr and hidden after', function(assert) {
-  var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
+  let sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
   xhr(sort_one ,"GET",null,{},200,PF.sorted('username'));
   visitSync(PEOPLE_LIST_URL);
   Ember.run.later(function() {
@@ -491,7 +491,7 @@ test('picking a different number of pages will alter the query string and xhr', 
     assert.equal(currentURL(), PEOPLE_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-page-size option:selected').text(), `${PAGE_SIZE} per page`);
-    var pagination = find('.t-pages');
+    let pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 2);
     assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
     assert.equal(pagination.find('.t-page:eq(1) a').text().trim(), '2');
@@ -502,7 +502,7 @@ test('picking a different number of pages will alter the query string and xhr', 
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-2);
-    var pagination = find('.t-pages');
+    let pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 2);
     assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
     assert.equal(pagination.find('.t-page:eq(1) a').text().trim(), '2');
@@ -514,7 +514,7 @@ test('picking a different number of pages will alter the query string and xhr', 
     assert.equal(currentURL(),PEOPLE_LIST_URL + `?page_size=${updated_pg_size}`);
     assert.equal(find('.t-grid-data').length, updated_pg_size-2);
     assert.equal(find('.t-page-size option:selected').text(), `${updated_pg_size} per page`);
-    var pagination = find('.t-pages');
+    let pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 1);
     assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
     assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
@@ -524,7 +524,7 @@ test('picking a different number of pages will alter the query string and xhr', 
     assert.equal(currentURL(),PEOPLE_LIST_URL + `?page_size=${PAGE_SIZE}`);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-page-size option:selected').text(), `${PAGE_SIZE} per page`);
-    var pagination = find('.t-pages');
+    let pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 2);
     assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
     assert.equal(pagination.find('.t-page:eq(1) a').text().trim(), '2');
@@ -543,7 +543,7 @@ test(`starting with a page size greater than ${PAGE_SIZE} will set the selected`
     assert.equal(currentURL(),PEOPLE_LIST_URL + `?page_size=${updated_size}`);
     assert.equal(find('.t-grid-data').length, updated_size-2);
     assert.equal(find('.t-page-size option:selected').text(), `${updated_size} per page`);
-    var pagination = find('.t-pages');
+    let pagination = find('.t-pages');
     assert.equal(pagination.find('.t-page').length, 1);
     assert.equal(pagination.find('.t-page:eq(0) a').text().trim(), '1');
     assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
@@ -551,7 +551,7 @@ test(`starting with a page size greater than ${PAGE_SIZE} will set the selected`
 });
 
 test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
-  var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
+  let sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
   xhr(sort_one ,'GET',null,{},200,PF.sorted('username'));
   visit(PEOPLE_LIST_URL);
   click('.t-sort-username-dir');
@@ -567,7 +567,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 
 // test('save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
 //     random.uuid = function() { return UUID.value; };
-//     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
+//     let sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
 //     xhr(sort_one ,'GET',null,{},200,PF.sorted('username'));
 //     let name = 'foobar';
 //     let routePath = 'admin.people.index';
@@ -615,7 +615,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
 });
 
 test('save filterset button only available when a dynamic filter is present', function(assert) {
-  var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
+  let sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
   xhr(sort_one ,'GET',null,{},200,PF.sorted('username'));
   visit(PEOPLE_LIST_URL);
   andThen(() => {
@@ -628,11 +628,11 @@ test('save filterset button only available when a dynamic filter is present', fu
 });
 
 test('typing a search will search on related', function(assert) {
-  var page_one = PREFIX + BASE_URL + '/?page=1&ordering=title';
+  let page_one = PREFIX + BASE_URL + '/?page=1&ordering=title';
   xhr(page_one ,"GET",null,{},200,PF.searched_related(RD.idTwo, 'role'));
-  var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=title&search=manager';
+  let sort_one = PREFIX + BASE_URL + '/?page=1&ordering=title&search=manager';
   xhr(sort_one ,"GET",null,{},200,PF.searched_related(RD.idTwo, 'role'));
-  var search_one = PREFIX + BASE_URL + '/?page=1&search=manager';
+  let search_one = PREFIX + BASE_URL + '/?page=1&search=manager';
   xhr(search_one ,"GET",null,{},200,PF.searched_related(RD.idTwo, 'role'));
   visit(PEOPLE_LIST_URL);
   andThen(() => {

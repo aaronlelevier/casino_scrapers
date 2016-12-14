@@ -3,7 +3,7 @@ const { run } = Ember;
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
@@ -12,7 +12,7 @@ import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import { clickTrigger, triggerKeydown, nativeMouseUp, nativeMouseDown, typeInSearch } from 'bsrs-ember/tests/helpers/ember-power-select';
 import waitFor from 'ember-test-helpers/wait';
 
-
+const PD = PERSON_DEFAULTS.defaults();
 let store, trans, person_repo, ticket, person;
 
 moduleForComponent('db-fetch-select', 'Integration | Component | db fetch person select', {

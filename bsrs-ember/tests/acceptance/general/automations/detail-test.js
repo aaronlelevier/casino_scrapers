@@ -13,7 +13,7 @@ import AATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import AF from 'bsrs-ember/vendor/automation_fixtures';
 import ED from 'bsrs-ember/vendor/defaults/automation-event';
 import PF from 'bsrs-ember/vendor/people_fixtures';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import CountryF from 'bsrs-ember/vendor/country_fixtures';
@@ -33,7 +33,7 @@ const { run } = Ember;
 const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
 const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
 const API_DETAIL_URL = `${AUTOMATION_URL}${AD.idOne}/`;
-
+const PD = PERSON_DEFAULTS.defaults();
 var detailXhr, listXhr;
 
 moduleForAcceptance('Acceptance | general automation detail test', {

@@ -1,7 +1,9 @@
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import Person from 'bsrs-ember/models/person';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+
+const PD = PERSON_DEFAULTS.defaults();
 
 let store, person;
 

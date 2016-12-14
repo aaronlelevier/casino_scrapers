@@ -6,7 +6,7 @@ var BSRS_automation_FACTORY = (function() {
     this.action = action;
     this.actionType = actionType;
     this.ticket = ticket;
-    this.person = person;
+    this.person = person['default'].defaults();
     this.priority = priority;
     this.status = status;
     this.sendemail = sendemail;
@@ -194,12 +194,24 @@ if (typeof window === 'undefined') {
   module.exports = new BSRS_automation_FACTORY(automation, event, pfilter, action, actionType, ticket, person, priority, status, sendemail, sendsms, config);
 }
 else {
-  define('bsrs-ember/vendor/automation_fixtures',
-    ['exports', 'bsrs-ember/vendor/defaults/automation', 'bsrs-ember/vendor/defaults/automation-event', 'bsrs-ember/vendor/defaults/pfilter', 'bsrs-ember/vendor/defaults/automation-action', 'bsrs-ember/vendor/defaults/automation-action-type', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/defaults/ticket-priority', 'bsrs-ember/vendor/defaults/ticket-status', 'bsrs-ember/vendor/defaults/sendemail', 'bsrs-ember/vendor/defaults/sendsms', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
-    function(exports, automation, event, pfilter, action, actionType, ticket, person, priority, status, sendemail, sendsms, mixin, config) {
-      'use strict';
-      Object.assign(BSRS_automation_FACTORY.prototype, mixin.prototype);
-      return new BSRS_automation_FACTORY(automation, event, pfilter, action, actionType, ticket, person, priority, status, sendemail, sendsms, config);
-    }
-  );
+  define('bsrs-ember/vendor/automation_fixtures', [
+    'exports',
+    'bsrs-ember/vendor/defaults/automation',
+    'bsrs-ember/vendor/defaults/automation-event',
+    'bsrs-ember/vendor/defaults/pfilter',
+    'bsrs-ember/vendor/defaults/automation-action',
+    'bsrs-ember/vendor/defaults/automation-action-type',
+    'bsrs-ember/vendor/defaults/ticket',
+    'bsrs-ember/vendor/defaults/person',
+    'bsrs-ember/vendor/defaults/ticket-priority',
+    'bsrs-ember/vendor/defaults/ticket-status',
+    'bsrs-ember/vendor/defaults/sendemail',
+    'bsrs-ember/vendor/defaults/sendsms',
+    'bsrs-ember/vendor/mixin',
+    'bsrs-ember/config/environment'
+  ], function(exports, automation, event, pfilter, action, actionType, ticket, person, priority, status, sendemail, sendsms, mixin, config) {
+    'use strict';
+    Object.assign(BSRS_automation_FACTORY.prototype, mixin.prototype);
+    return new BSRS_automation_FACTORY(automation, event, pfilter, action, actionType, ticket, person, priority, status, sendemail, sendsms, config);
+  });
 }

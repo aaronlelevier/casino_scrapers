@@ -2,7 +2,7 @@ import Ember from 'ember';
 import PageObject from 'bsrs-ember/tests/page-object';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/utilities/urls';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import SD from 'bsrs-ember/vendor/defaults/status';
@@ -12,6 +12,7 @@ let { visitable, text, clickable, count, fillable, value, hasClass } = PageObjec
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
+const PD = PERSON_DEFAULTS.defaults();
 const PEOPLE_URL = `${BASE_PEOPLE_URL}/index`;
 const DETAIL_URL = `${BASE_PEOPLE_URL}/${PD.idOne}`;
 const STATUS = '.t-status-select .ember-basic-dropdown-trigger';

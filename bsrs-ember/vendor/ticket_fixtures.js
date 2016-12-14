@@ -1,7 +1,7 @@
 var BSRS_TICKET_FACTORY = (function() {
   var factory = function(ticket, people_defaults, people_fixtures, location_fixtures, category_fixtures, category_defaults, dtd_defaults, field_defaults, option_defaults, config) {
     this.ticket = ticket;
-    this.people_defaults = people_defaults.default || people_defaults;
+    this.people_defaults = people_defaults['default'].defaults();
     this.people_fixtures = people_fixtures.default || people_fixtures;
     this.location_fixtures = location_fixtures.default || location_fixtures;
     this.category_fixtures = category_fixtures.default || category_fixtures;

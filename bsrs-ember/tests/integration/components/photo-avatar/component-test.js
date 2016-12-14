@@ -1,9 +1,10 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 
 let store, person;
+const PD = PERSON_DEFAULTS.defaults();
 
 moduleForComponent('photo-avatar', 'Integration | Component | photo avatar', {
   integration: true,

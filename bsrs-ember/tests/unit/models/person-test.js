@@ -3,7 +3,7 @@ const { run } = Ember;
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LOCALED from 'bsrs-ember/vendor/defaults/locale';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import ED from 'bsrs-ember/vendor/defaults/email';
@@ -16,7 +16,9 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import PERSON_LD from 'bsrs-ember/vendor/defaults/person-location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 
-var store, person, role;
+const PD = PERSON_DEFAULTS.defaults();
+
+let store, person, role;
 
 module('unit: model | person test', {
   beforeEach() {

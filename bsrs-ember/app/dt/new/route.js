@@ -1,8 +1,7 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 
-
-var DTNewRoute = Ember.Route.extend({
+let DTNewRoute = Ember.Route.extend({
   locationRepo: inject('location'),
   ticketRepository: inject('ticket'),
   personCurrent: Ember.inject.service(),
@@ -13,7 +12,9 @@ var DTNewRoute = Ember.Route.extend({
     let ticket;
     let defaultLocation = person.get('locations').objectAt(0);
     if (disabled) {
-      ticket = this.get('ticketRepository').create(new_pk, {location_fk: defaultLocation.get('id')});
+      ticket = this.get('ticketRepository').create(new_pk, {
+        location_fk: defaultLocation.get('id')
+      });
       ticket.change_location({id: defaultLocation.get('id')});
     } else {
       ticket = this.get('ticketRepository').create(new_pk);

@@ -11,7 +11,7 @@ import waitFor from 'ember-test-helpers/wait';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PLD from 'bsrs-ember/vendor/defaults/person-location';
 
 let store, person, run = Ember.run, location_repo;
@@ -19,6 +19,7 @@ let store, person, run = Ember.run, location_repo;
 const PowerSelect = '.ember-power-select-trigger > .ember-power-select-multiple-options';
 const DROPDOWN = '.ember-power-select-dropdown';
 const OPTION = 'li.ember-power-select-option';
+const PD = PERSON_DEFAULTS.defaults();
 
 moduleForComponent('person-locations-select', 'integration: person-locations-select test', {
     integration: true,

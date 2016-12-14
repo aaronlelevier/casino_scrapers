@@ -97,6 +97,7 @@ if (typeof window === 'undefined') {
 } else {
   define('bsrs-ember/vendor/defaults/ticket', ['exports'], function (exports) {
     'use strict';
+    //exports.default = new BSRS_TICKET_DEFAULTS_OBJECT().defaults();
     return new BSRS_TICKET_DEFAULTS_OBJECT().defaults();
   });
 }

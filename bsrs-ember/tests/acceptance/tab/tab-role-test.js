@@ -9,7 +9,7 @@ import config from 'bsrs-ember/config/environment';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import PF from 'bsrs-ember/vendor/people_fixtures';
-import PD from 'bsrs-ember/vendor/defaults/person';
+//import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import random from 'bsrs-ember/models/random';
 import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
@@ -26,6 +26,7 @@ const NEW_ROUTE = 'admin.roles.index.new';
 const INDEX_ROUTE = 'admin.roles.index';
 const DETAIL_ROUTE = 'admin.roles.index.role';
 const DOC_TYPE = 'role';
+//const PD = PERSON_DEFAULTS.defaults();
 
 let application, store, list_xhr, role_detail_data, endpoint, detail_xhr, run = Ember.run;
 

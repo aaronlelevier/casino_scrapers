@@ -6,7 +6,7 @@ import { xhr } from 'bsrs-ember/tests/helpers/xhr';
 import { waitFor } from 'bsrs-ember/tests/helpers/utilities';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import RD from 'bsrs-ember/vendor/defaults/role';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
@@ -24,6 +24,7 @@ var store, list_xhr;
 
 const DETAIL_URL = `${ROLE_LIST_URL}/${RD.idOne}`;
 const ROLE_PUT_URL = `${ROLES_URL}${RD.idOne}/`;
+const PD = PERSON_DEFAULTS.defaults();
 
 moduleForAcceptance('Acceptance | general mobile role detail test', {
   beforeEach() {

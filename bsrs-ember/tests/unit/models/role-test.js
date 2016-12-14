@@ -7,9 +7,11 @@ import ROLE_CD from 'bsrs-ember/vendor/defaults/role-category';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currency';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import { RESOURCES_WITH_PERMISSION, PERMISSION_PREFIXES } from 'bsrs-ember/utilities/constants';
 import { eachPermission } from 'bsrs-ember/utilities/permissions';
+
+const PD = PERSON_DEFAULTS.defaults();
 
 let role;
 

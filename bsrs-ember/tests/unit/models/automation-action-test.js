@@ -6,7 +6,7 @@ import AD from 'bsrs-ember/vendor/defaults/automation';
 import AAD from 'bsrs-ember/vendor/defaults/automation-action';
 import ATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import AJAD from 'bsrs-ember/vendor/defaults/automation-join-action';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import TPD from 'bsrs-ember/vendor/defaults/ticket-priority';
 import TSD from 'bsrs-ember/vendor/defaults/ticket-status';
 import SED from 'bsrs-ember/vendor/defaults/sendemail';
@@ -16,7 +16,9 @@ import SEDJRD from 'bsrs-ember/vendor/defaults/generic-join-recipients';
 
 import page from 'bsrs-ember/tests/pages/automation';
 
-var store, action, actionType, type, assignee, priority, sendEmail, sendsms, ticketcc;
+const PD = PERSON_DEFAULTS.defaults();
+
+let store, action, actionType, type, assignee, priority, sendEmail, sendsms, ticketcc;
 
 moduleFor('model:automation-action', 'Unit | Model |  automation-action', {
   beforeEach() {

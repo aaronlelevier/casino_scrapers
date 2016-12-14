@@ -6,7 +6,7 @@ import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
 import AD from 'bsrs-ember/vendor/defaults/automation';
 import AF from 'bsrs-ember/vendor/automation_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import config from 'bsrs-ember/config/environment';
 import page from 'bsrs-ember/tests/pages/automation-mobile';
 import automationPage from 'bsrs-ember/tests/pages/automation';
@@ -21,6 +21,7 @@ const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
 const DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
 const GRID_DETAIL_URL = `${BASE_URL}/${AD.idOne}`;
 const automation_PUT_URL = `${AUTOMATION_URL}${AD.idOne}/`;
+const PD = PERSON_DEFAULTS.defaults();
 
 moduleForAcceptance('Acceptance | general mobile automation detail test', {
   beforeEach() {

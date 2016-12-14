@@ -9,10 +9,11 @@ export default Ember.Service.extend({
     return store.findOne('person-current');
   }).volatile(),
 
-  permissions: Ember.computed(function() {
-    let person = this.get('model');
-    return person.get('permissions');
-  }).volatile(),
+  timezone: null,
+
+  permissions: Ember.computed('model.permissions.[]', function() {
+    return this.get('model').get('permissions');
+  }),
 
   fetch() {
     return new Ember.RSVP.Promise((resolve, reject) => {

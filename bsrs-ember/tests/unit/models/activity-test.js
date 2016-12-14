@@ -2,11 +2,13 @@ import Ember from 'ember';
 import { test, module } from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import TAD from 'bsrs-ember/vendor/defaults/ticket_activity';
 
-var store, activity, run = Ember.run;
+const PD = PERSON_DEFAULTS.defaults();
+
+let store, activity, run = Ember.run;
 
 module('unit: activity test', {
   beforeEach() {

@@ -15,7 +15,7 @@ import CF from 'bsrs-ember/vendor/category_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TAD from 'bsrs-ember/vendor/defaults/ticket_activity';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import AD from 'bsrs-ember/vendor/defaults/automation';
 import AF from 'bsrs-ember/vendor/automation_fixtures';
 import GD from 'bsrs-ember/vendor/defaults/general';
@@ -31,6 +31,7 @@ const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const DETAIL_URL = `${TICKET_LIST_URL}/${TD.idOne}`;
 const TICKET_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
 const ACTIVITY_ITEMS = '.t-activity-list-item';
+const PD = PERSON_DEFAULTS.defaults();
 
 let endpoint, list_xhr, detail_xhr;
 
@@ -41,19 +42,19 @@ moduleForAcceptance('Acceptance | general ticket activity test', {
     // });
     endpoint = `${PREFIX}${TICKET_LIST_URL}/`;
     const detail_data = TF.detail(TD.idOne);
-    detail_xhr = ajax(endpoint + TD.idOne + '/', 'GET', null, {}, 200, detail_data);
+    detail_xhr = xhr(endpoint + TD.idOne + '/', 'GET', null, {}, 200, detail_data);
     xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
   },
 });
 
 test('can deep link to the person who created the activity', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
   });
-  ajax(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail());
+  xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail());
   click('.t-link');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idOne}`);
@@ -64,13 +65,13 @@ test('can deep link to the person who created the activity', function(assert) {
 
 //TODO: this is the line where chrome fails when running full test suite
 test('can deep link to new assignee', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
   });
-  ajax(`${PEOPLE_URL}${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
+  xhr(`${PEOPLE_URL}${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
   click('.t-to-from-new');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idBoy}`);
@@ -78,13 +79,13 @@ test('can deep link to new assignee', function(assert) {
 });
 
 test('can deep link to old assignee', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
   });
-  ajax(`${PEOPLE_URL}${PD.idSearch}/`, 'GET', null, {}, 200, PF.detail(PD.idSearch));
+  xhr(`${PEOPLE_URL}${PD.idSearch}/`, 'GET', null, {}, 200, PF.detail(PD.idSearch));
   click('.t-to-from-old');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idSearch}`);
@@ -92,13 +93,13 @@ test('can deep link to old assignee', function(assert) {
 });
 
 test('deep links to the person who created the record (to-from)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
   });
-  ajax(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
+  xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
   click('.t-link');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idOne}`);
@@ -106,13 +107,13 @@ test('deep links to the person who created the record (to-from)', function(asser
 });
 
 test('deep links to the automation that created the record (to-from)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.automation_assignee_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.automation_assignee_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
   });
-  ajax(`${AUTOMATION_URL}${AD.idOne}/`, 'GET', null, {}, 200, AF.detail(AD.idOne));
+  xhr(`${AUTOMATION_URL}${AD.idOne}/`, 'GET', null, {}, 200, AF.detail(AD.idOne));
   click('.t-link');
   andThen(() => {
     assert.equal(currentURL(), `${BASEURLS.BASE_AUTOMATION_URL}/${AD.idOne}`);
@@ -122,13 +123,13 @@ test('deep links to the automation that created the record (to-from)', function(
 // "categories-activity"
 
 test('deep links to the automation that created the record (categories-activity)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.categories_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.categories_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
   });
-  ajax(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
+  xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
   click('.t-link');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idOne}`);
@@ -136,13 +137,13 @@ test('deep links to the automation that created the record (categories-activity)
 });
 
 test('deep links to the automation that created the record (categories-activity)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.automation_categories_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.automation_categories_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
   });
-  ajax(`${AUTOMATION_URL}${AD.idOne}/`, 'GET', null, {}, 200, AF.detail(AD.idOne));
+  xhr(`${AUTOMATION_URL}${AD.idOne}/`, 'GET', null, {}, 200, AF.detail(AD.idOne));
   click('.t-link');
   andThen(() => {
     assert.equal(currentURL(), `${BASEURLS.BASE_AUTOMATION_URL}/${AD.idOne}`);
@@ -152,13 +153,13 @@ test('deep links to the automation that created the record (categories-activity)
 // "cc-add-remove" : start
 
 test('deep links to the automation that created the record (cc-add-remove)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
   });
-  ajax(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
+  xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
   click('.t-link');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idOne}`);
@@ -166,13 +167,13 @@ test('deep links to the automation that created the record (cc-add-remove)', fun
 });
 
 test('deep links to the automation that created the record (cc-add-remove)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.automation_cc_add_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.automation_cc_add_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
   });
-  ajax(`${AUTOMATION_URL}${AD.idOne}/`, 'GET', null, {}, 200, AF.detail(AD.idOne));
+  xhr(`${AUTOMATION_URL}${AD.idOne}/`, 'GET', null, {}, 200, AF.detail(AD.idOne));
   click('.t-link');
   andThen(() => {
     assert.equal(currentURL(), `${BASEURLS.BASE_AUTOMATION_URL}/${AD.idOne}`);
@@ -182,7 +183,7 @@ test('deep links to the automation that created the record (cc-add-remove)', fun
 // "cc-add-remove" : end
 
 test('ticket detail shows the activity list including event data (assignee)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -193,7 +194,7 @@ test('ticket detail shows the activity list including event data (assignee)', fu
 });
 
 test('ticket detail does not show the activity list without a matching ticket for the activity (assignee)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only(TD.idTwo));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only(TD.idTwo));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -202,7 +203,7 @@ test('ticket detail does not show the activity list without a matching ticket fo
 });
 
 test('ticket detail shows the activity list including event data (create)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.created_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.created_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -212,7 +213,7 @@ test('ticket detail shows the activity list including event data (create)', func
 });
 
 test('ticket detail does not show the activity list without a matching ticket for the activity (create)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.created_only(TD.idTwo));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.created_only(TD.idTwo));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -221,7 +222,7 @@ test('ticket detail does not show the activity list without a matching ticket fo
 });
 
 test('ticket detail counts are not shown unless they are greater than 0', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.created_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.created_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -231,7 +232,7 @@ test('ticket detail counts are not shown unless they are greater than 0', functi
 });
 
 test('ticket detail shows the activity list including event data (status)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.status_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.status_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -244,7 +245,7 @@ test('ticket detail shows the activity list including event data (status)', func
 });
 
 test('ticket detail does not show the activity list without a matching ticket for the activity (status)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.status_only(TD.idTwo));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.status_only(TD.idTwo));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -253,7 +254,7 @@ test('ticket detail does not show the activity list without a matching ticket fo
 });
 
 test('ticket detail shows the activity list including event data (priority)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.priority_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.priority_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -266,7 +267,7 @@ test('ticket detail shows the activity list including event data (priority)', fu
 });
 
 test('ticket detail shows the activity list including event data (category)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.categories_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.categories_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -276,7 +277,7 @@ test('ticket detail shows the activity list including event data (category)', fu
 });
 
 test('ticket detail shows the activity list including event data (multiple categories for to / from)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.categories_multiple_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.categories_multiple_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -286,7 +287,7 @@ test('ticket detail shows the activity list including event data (multiple categ
 });
 
 test('ticket detail shows the activity list including event data (category multiple)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.categories_only(TD.idOne, 2));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.categories_only(TD.idOne, 2));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -297,7 +298,7 @@ test('ticket detail shows the activity list including event data (category multi
 });
 
 test('ticket detail does not show the activity list without a matching ticket for the activity (priority)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.priority_only(TD.idTwo));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.priority_only(TD.idTwo));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -307,7 +308,7 @@ test('ticket detail does not show the activity list without a matching ticket fo
 
 //CC
 test('ticket detail shows the activity list including event data (cc_add)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(1));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(1));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -317,7 +318,7 @@ test('ticket detail shows the activity list including event data (cc_add)', func
 });
 
 test('ticket detail shows the activity list including event data (multiple cc_add)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(2));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(2));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -327,14 +328,14 @@ test('ticket detail shows the activity list including event data (multiple cc_ad
 });
 
 test('can deep link to cc added (cc_add)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(1));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(1));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
     assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} added ${PD.fullnameBoy} to CC 15 days ago`);
   });
-  ajax(`${PEOPLE_URL}${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
+  xhr(`${PEOPLE_URL}${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
   click('.t-ticket-cc-add-remove:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idBoy}`);
@@ -342,20 +343,20 @@ test('can deep link to cc added (cc_add)', function(assert) {
 });
 
 test('can deep link to cc added (multiple cc_add)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(2));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(2));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
     assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} added ${PD.fullnameBoy} ${PD.fullnameBoy} to CC 15 days ago`);
   });
-  ajax(`${PEOPLE_URL}${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
+  xhr(`${PEOPLE_URL}${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
   click('.t-ticket-cc-add-remove:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idBoy}`);
   });
   page.visitDetail();
-  ajax(`${PEOPLE_URL}${PD.idSearch}/`, 'GET', null, {}, 200, PF.detail(PD.idSearch));
+  xhr(`${PEOPLE_URL}${PD.idSearch}/`, 'GET', null, {}, 200, PF.detail(PD.idSearch));
   click('.t-ticket-cc-add-remove:eq(1)');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idSearch}`);
@@ -363,7 +364,7 @@ test('can deep link to cc added (multiple cc_add)', function(assert) {
 });
 
 test('ticket detail does not show the activity list without a matching ticket for the activity (cc_remove)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(2, TD.idTwo));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(2, TD.idTwo));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -372,7 +373,7 @@ test('ticket detail does not show the activity list without a matching ticket fo
 });
 
 test('ticket detail shows the activity list including event data (cc_remove)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(1));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(1));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -382,7 +383,7 @@ test('ticket detail shows the activity list including event data (cc_remove)', f
 });
 
 test('ticket detail does not show the activity list without a matching ticket for the activity (cc_remove)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(2, TD.idTwo));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(2, TD.idTwo));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -391,14 +392,14 @@ test('ticket detail does not show the activity list without a matching ticket fo
 });
 
 test('can deep link to cc removed (cc_remove)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(1));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(1));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
     assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} removed ${PD.fullnameBoy} from CC 20 days ago`);
   });
-  ajax(`${PEOPLE_URL}${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
+  xhr(`${PEOPLE_URL}${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
   click('.t-ticket-cc-add-remove:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idBoy}`);
@@ -406,20 +407,20 @@ test('can deep link to cc removed (cc_remove)', function(assert) {
 });
 
 test('can deep link to cc removed (multiple cc_remove)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(2));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(2));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
     assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} removed ${PD.fullnameBoy} ${PD.fullnameBoy} from CC 20 days ago`);
   });
-  ajax(`${PEOPLE_URL}${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
+  xhr(`${PEOPLE_URL}${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
   click('.t-ticket-cc-add-remove:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idBoy}`);
   });
   page.visitDetail();
-  ajax(`${PEOPLE_URL}${PD.idSearch}/`, 'GET', null, {}, 200, PF.detail(PD.idSearch));
+  xhr(`${PEOPLE_URL}${PD.idSearch}/`, 'GET', null, {}, 200, PF.detail(PD.idSearch));
   click('.t-ticket-cc-add-remove:eq(1)');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idSearch}`);
@@ -428,7 +429,7 @@ test('can deep link to cc removed (multiple cc_remove)', function(assert) {
 
 //ATTACHMENT
 test('ticket detail does not show the activity list without a matching ticket for the activity (attachment_add)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(2, TD.idTwo));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(2, TD.idTwo));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -437,7 +438,7 @@ test('ticket detail does not show the activity list without a matching ticket fo
 });
 
 test('ticket detail shows the activity list including event data (attachment_add)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(1));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(1));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -447,7 +448,7 @@ test('ticket detail shows the activity list including event data (attachment_add
 });
 
 test('ticket detail shows the activity list including event data (multiple attachment_add)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(2));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(2));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -459,7 +460,7 @@ test('ticket detail shows the activity list including event data (multiple attac
   });
 });
 test('ticket detail shows the activity list including file attachment icons (multiple attachment_add)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(5));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(5));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -485,7 +486,7 @@ test('ticket detail shows the activity list including file attachment icons (mul
 });
 
 test('ticket detail does not show the activity list without a matching ticket for the activity (attachment_remove)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(2, TD.idTwo));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(2, TD.idTwo));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -494,7 +495,7 @@ test('ticket detail does not show the activity list without a matching ticket fo
 });
 
 test('ticket detail shows the activity list including event data (attachment_remove)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(1));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(1));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -504,7 +505,7 @@ test('ticket detail shows the activity list including event data (attachment_rem
 });
 
 test('ticket detail shows the activity list including event data (multiple attachment_remove)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(2));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(2));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -515,7 +516,7 @@ test('ticket detail shows the activity list including event data (multiple attac
 
 //COMMENT
 test('ticket detail shows the activity comment', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.comment_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.comment_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -526,7 +527,7 @@ test('ticket detail shows the activity comment', function(assert) {
 });
 
 test('ticket detail shows the activity comment with break', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.comment_only(TD.idOne, 1, TD.commentOneWithBreak));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.comment_only(TD.idOne, 1, TD.commentOneWithBreak));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -536,7 +537,7 @@ test('ticket detail shows the activity comment with break', function(assert) {
 });
 
 test('ticket detail shows the activity comment (multiple activities with comments)', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.comment_only(TD.idOne, 2));
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.comment_only(TD.idOne, 2));
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -547,7 +548,7 @@ test('ticket detail shows the activity comment (multiple activities with comment
 });
 
 test('activities are sorted descending based on created at', function(assert) {
-  ajax(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.status_only());
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.status_only());
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);

@@ -14,11 +14,13 @@ import AD from 'bsrs-ember/vendor/defaults/address';
 import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import CD from 'bsrs-ember/vendor/defaults/country';
 import SD from 'bsrs-ember/vendor/defaults/state';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import DD from 'bsrs-ember/vendor/defaults/dtd';
 import TenantJoinCountriesD from 'bsrs-ember/vendor/defaults/tenant-join-country';
 
-var tenant, currency, inactive_currency;
+const PD = PERSON_DEFAULTS.defaults();
+
+let tenant, currency, inactive_currency;
 
 moduleFor('model:tenant', 'Unit | Model | tenant', {
   needs: ['model:tenant-join-country', 'model:dtd', 'model:person', 'model:country', 'model:currency', 'model:phonenumber', 'model:phone-number-type', 'model:email', 

@@ -8,13 +8,14 @@ import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import page from 'bsrs-ember/tests/pages/automation';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import AAD from 'bsrs-ember/vendor/defaults/automation-action';
 import ATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import waitFor from 'ember-test-helpers/wait';
 import { clickTrigger, triggerKeydown, nativeMouseUp, nativeMouseDown, typeInSearch } from 'bsrs-ember/tests/helpers/ember-power-select';
 
 let store, trans, action, person_repo;
+const PD = PERSON_DEFAULTS.defaults();
 
 moduleForComponent('tickets/ticket-request-select-action', 'Integration | Component | tickets/ticket request select action', {
   integration: true,

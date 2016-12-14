@@ -1,11 +1,13 @@
 <div class="btn-group btn-group-sm pull-right center-block t-crud-buttons">
   {{! saveText - optional variable for detail template to provide different text for save btn }}
-  {{button-generic 
-    save="save" 
-    saveText=saveText 
-    type="save" 
-    btnDisabled=(or btnDisabled model.validations.isInvalid model.isNotDirtyOrRelatedNotDirty)
-  }}
+  {{#if (has-permission permissions=permissions verb="change" resource=noun)}}
+    {{button-generic 
+      save="save" 
+      saveText=saveText 
+      type="save" 
+      btnDisabled=(or btnDisabled model.validations.isInvalid model.isNotDirtyOrRelatedNotDirty)
+    }}
+  {{/if}}
   {{button-generic cancel="cancel" type="cancel"}}
   <button type="button" class="btn btn-default dropdown-toggle t-dropdown-delete" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     <span class="caret"></span>
@@ -13,10 +15,12 @@
   <ul class="dropdown-menu bs-dropdown-menu">
     <li><a href="#" class="t-duplicate-btn">{{fa-icon "files-o"}} {{t "crud.duplicate.button"}}</a></li>
     <li><a href="#" class="t-print-btn">{{fa-icon "print"}} {{t "crud.print.button"}}</a></li>
+    
     {{#unless model.new}}
-      {{#unless noDeleteBtn}}
+      {{#if (has-permission permissions=permissions verb="delete" resource=noun)}}
         <li>{{delete-button delete="delete"}}</li>
-      {{/unless}}
+      {{/if}}
     {{/unless}}
+
   </ul>
 </div>

@@ -4,7 +4,7 @@ var BSRS_ADDRESS_FACTORY = (function() {
     this.addressType = addressType;
     this.country = country;
     this.state = state;
-    this.person = people;
+    this.person = people['default'].defaults();
   };
   factory.prototype.get = function() {
     return [{

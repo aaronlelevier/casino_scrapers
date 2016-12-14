@@ -2,7 +2,7 @@ var BSRS_PHONE_NUMBER_FACTORY = (function() {
   var factory = function(phone_number, people, phonenumber_type) {
     this.phonenumber_type = phonenumber_type;
     this.phone_number = phone_number;
-    this.person = people;
+    this.person = people['default'].defaults();
   };
   factory.prototype.get = function() {
     return [{

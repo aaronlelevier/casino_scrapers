@@ -1,6 +1,6 @@
 var BSRS_PERSON_CURRENT_DEFAULTS_OBJECT = (function() {
     var factory = function(person_defaults, role_defaults, location_defaults, location_level_defaults, constants) {
-        this.person_defaults = person_defaults;
+        this.person_defaults = person_defaults['default'].defaults();
         this.role_defaults = role_defaults;
         this.location_defaults = location_defaults;
         this.location_level_defaults = location_level_defaults;
@@ -37,7 +37,12 @@ var BSRS_PERSON_CURRENT_DEFAULTS_OBJECT = (function() {
                 location_level_fk: this.location_level_defaults.idOne
             }],
             permissions: permissions,
-            inherited: this.person_defaults.inherited
+            inherited: this.person_defaults.inherited,
+            has_multi_locations: true,
+            //  this.location_defaults
+            locations: [
+                {"id": "a7b84195-6086-44b3-9d0c-1e71d69546be", "name": "Andys Pianos", "number": "1", "location_level": "85c18266-dfca-4499-9cff-7c5c6970af7e", "status_fk": "aca00958-987d-4576-aa4c-2093dc7d40f4"}
+            ]
         };
     };
     return factory;
@@ -49,7 +54,7 @@ if (typeof window === 'undefined') {
     var location_defaults = require('./location');
     var location_level_defaults = require('./location-level');
     var constants = require('./constants');
-    module.exports = new BSRS_PERSON_CURRENT_DEFAULTS_OBJECT(person_defaults, role_defaults, location_defaults, location_level_defaults, constants).defaults();
+    module.exports = new BSRS_PERSON_CURRENT_DEFAULTS_OBJECT(person_defaults, role_defaults, location_defaults, location_level_defaults, constants);
 } else {
     define('bsrs-ember/vendor/defaults/person-current', [
         'exports',
@@ -61,6 +66,7 @@ if (typeof window === 'undefined') {
     ],
     function (exports, person_defaults, role_defaults, location_defaults, location_level_defaults, constants) {
         'use strict';
-        return new BSRS_PERSON_CURRENT_DEFAULTS_OBJECT(person_defaults, role_defaults, location_defaults, location_level_defaults, constants).defaults();
+        let person = new BSRS_PERSON_CURRENT_DEFAULTS_OBJECT(person_defaults, role_defaults, location_defaults, location_level_defaults, constants);
+        exports.default = person;
     });
 }

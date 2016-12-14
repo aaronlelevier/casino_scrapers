@@ -92,8 +92,10 @@ let ApplicationRoute = Route.extend({
       let current_locale = store.find('locale', person.locale);
       config.i18n.currentLocale = current_locale.get('locale');
       if (!person.timezone) {
-        person.timezone = this.get('moment').get('timeZone');
+        person.timezone = zone;
       }
+      // Person service needs timezone for translations request
+      this.get('personCurrent').set('timezone', zone);
       // Set current user
       store.push('person-current', person);
       // Push 'logged in' Person to store

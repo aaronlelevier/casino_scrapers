@@ -129,7 +129,7 @@ test('on boot we should fetch and load the ticket priority configuration', funct
 test('on boot we should fetch and load the currency configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    var currency_models = this.store.find('currency');
+    let currency_models = this.store.find('currency');
     assert.equal(currency_models.get('length'), 4);
     assert.equal(currency_models.objectAt(0).get('id'), CURRENCY_DEFAULTS.id);
     assert.equal(currency_models.objectAt(0).get('symbol'), CURRENCY_DEFAULTS.symbol);
@@ -145,7 +145,7 @@ test('on boot we should fetch and load the currency configuration', function(ass
 test('on boot we should fetch and load the role configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    var role_models = this.store.find('role');
+    let role_models = this.store.find('role');
     assert.equal(role_models.get('length'), 6);
     assert.equal(role_models.objectAt(0).get('id'), RD.idOne);
     assert.equal(role_models.objectAt(0).get('name'), RD.nameOne);
@@ -162,7 +162,7 @@ test('on boot we should fetch and load the role configuration', function(assert)
 test('on boot we should fetch and load the role types configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    var role_types_models = this.store.find('role-type');
+    let role_types_models = this.store.find('role-type');
     assert.equal(role_types_models.get('length'), 2);
     assert.ok(role_types_models.objectAt(0).get('id') > 0);
     assert.equal(role_types_models.objectAt(0).get('name'), RD.t_roleTypeGeneral);
@@ -175,7 +175,7 @@ test('on boot we should fetch and load the location level configuration', functi
   });
   visit(HOME_URL);
   andThen(() => {
-    var location_level_models = this.store.find('location-level');
+    let location_level_models = this.store.find('location-level');
     assert.equal(location_level_models.get('length'), 8);
     assert.equal(location_level_models.objectAt(0).get('id'), LLD.idOne);
     assert.equal(location_level_models.objectAt(0).get('name'), LLD.nameCompany);
@@ -185,7 +185,7 @@ test('on boot we should fetch and load the location level configuration', functi
 test('locale', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    var locale = this.store.findOne('locale');
+    let locale = this.store.findOne('locale');
     assert.equal(locale.get('id'), LOCALE_DEFAULTS.idOne);
     assert.equal(locale.get('name'), LOCALE_DEFAULTS.nameOneKey);
     assert.equal(locale.get('locale'), LOCALE_DEFAULTS.localeOne);
@@ -199,35 +199,36 @@ test('locale', function(assert) {
 test('on boot we should fetch and load the person-current, logged in Person, configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    var person_current = this.store.findOne('person');
-    assert.equal(person_current.get('id'), PERSON_CURRENT.id);
-    assert.equal(person_current.get('first_name'), PERSON_CURRENT.first_name);
-    assert.equal(person_current.get('last_name'), PERSON_CURRENT.last_name);
-    assert.equal(person_current.get('username'), PERSON_CURRENT.username);
-    assert.equal(person_current.get('title'), PERSON_CURRENT.title);
-    assert.equal(person_current.get('status.id'), PERSON_CURRENT.status);
-    assert.equal(person_current.get('role.id'), this.store.find('person', PERSON_CURRENT.id).get('role').get('id'));
-    assert.equal(person_current.get('locale.id'), PERSON_CURRENT.locale);
-    assert.equal(person_current.get('timezone'), PERSON_CURRENT.timezone);
-    assert.deepEqual(person_current.get('inherited'), PERSON_CURRENT.inherited);
+    let expected = PERSON_CURRENT.defaults();
+    let person_current = this.store.findOne('person');
+    assert.equal(person_current.get('id'), expected.id);
+    assert.equal(person_current.get('first_name'), expected.first_name);
+    assert.equal(person_current.get('last_name'), expected.last_name);
+    assert.equal(person_current.get('username'), expected.username);
+    assert.equal(person_current.get('title'), expected.title);
+    assert.equal(person_current.get('status.id'), expected.status);
+    assert.equal(person_current.get('role.id'), this.store.find('person', expected.id).get('role').get('id'));
+    assert.equal(person_current.get('locale.id'), expected.locale);
+    assert.equal(person_current.get('timezone'), expected.timezone);
+    assert.deepEqual(person_current.get('inherited'), expected.inherited);
   });
 });
 
 test('on boot we should fetch and load the saved filterset configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    var filtersets = this.store.find('filterset');
+    let filtersets = this.store.find('filterset');
     assert.equal(filtersets.get('length'), 7);
     assert.equal(filtersets.objectAt(0).get('endpoint_name'), 'main.tickets.index');
     assert.deepEqual(filtersets.objectAt(0).get('endpoint_uri'), '?sort=assignee.fullname');
   });
 });
 
-test('person-currents role comes with a permissions object and the other roles dont', assert => {
+test('person-currents role comes with a permissions object and the other roles dont', function(assert) {
   visit(HOME_URL);
   andThen(() => {
-    let person_current = store.findOne('person');
-    assert.equal(person_current.get('id'), PERSON_CURRENT.id);
+    let person_current = this.store.findOne('person');
+    assert.equal(person_current.get('id'), PERSON_CURRENT.defaults().id);
     let perms = person_current.get('permissions');
     eachPermission((resource, prefix) => {
       assert.ok(perms.indexOf(`${prefix}_${resource}`) > -1);

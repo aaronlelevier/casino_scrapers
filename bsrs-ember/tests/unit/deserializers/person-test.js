@@ -2,7 +2,7 @@ import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import PND from 'bsrs-ember/vendor/defaults/phone-number';
 import PNTD from 'bsrs-ember/vendor/defaults/phone-number-type';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import PF from 'bsrs-ember/vendor/people_fixtures';
@@ -22,7 +22,9 @@ import LocationDeserializer from 'bsrs-ember/deserializers/location';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-var store, subject, uuid, location_deserializer, location_level_deserializer, status, locale, person, role, run = Ember.run;
+const PD = PERSON_DEFAULTS.defaults();
+
+let store, subject, uuid, location_deserializer, location_level_deserializer, status, locale, person, role, run = Ember.run;
 
 module('unit: person deserializer test', {
   beforeEach() {

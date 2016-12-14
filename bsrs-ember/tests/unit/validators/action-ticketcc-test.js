@@ -3,10 +3,12 @@ const { run } = Ember;
 import { moduleFor, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import AAD from 'bsrs-ember/vendor/defaults/automation-action';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import ATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 
-var store;
+const PD = PERSON_DEFAULTS.defaults();
+
+let store;
 
 moduleFor('validator:action-ticketcc', 'Unit | Validator | action-ticketcc', {
   needs: ['validator:messages'],

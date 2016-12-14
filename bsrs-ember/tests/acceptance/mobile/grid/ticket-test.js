@@ -6,7 +6,7 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
@@ -26,6 +26,7 @@ const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 const DETAIL_URL = `${TICKET_LIST_URL}/${TD.idOne}`;
+const PD = PERSON_DEFAULTS.defaults();
 
 moduleForAcceptance('Acceptance | general grid ticket mobile test', {
   beforeEach() {
