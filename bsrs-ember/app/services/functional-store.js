@@ -1,6 +1,5 @@
 import Ember from 'ember';
 const { get, inject } = Ember;
-import getOwner from 'ember-getowner-polyfill';
 
 /**
  * example data structure
@@ -22,7 +21,7 @@ import getOwner from 'ember-getowner-polyfill';
 
 
 function factoryForType(type, store) {
-  return getOwner(store)._lookupFactory('model:' + type);
+  return Ember.getOwner(store)._lookupFactory('model:' + type);
 }
 
 function persistData(type, obj, functionalStore) {

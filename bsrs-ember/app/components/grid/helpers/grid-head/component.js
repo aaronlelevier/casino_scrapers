@@ -1,11 +1,11 @@
 import Ember from 'ember';
-const { run } = Ember;
+const { run, inject } = Ember;
 import config from 'bsrs-ember/config/environment';
 import UpdateFind from 'bsrs-ember/mixins/update-find';
 import SaveFiltersetMixin from 'bsrs-ember/mixins/components/grid/save-filterset';
 
 export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
-  simpleStore: Ember.inject.service(),
+  simpleStore: inject.service(),
   init() {
     this._super(...arguments);
     this.filtersetName = '';
