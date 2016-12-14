@@ -79,6 +79,10 @@ class TreeDataAttachmentToRepresentationMixin(object):
         return data
 
 
+TREE_DATA_FIELDS = ('id', 'key', 'description', 'note', 'note_type',
+                    'attachments', 'fields', 'prompt', 'link_type',
+                    'links',)
+
 class TreeDataDetailSerializer(TreeDataAttachmentToRepresentationMixin, BaseCreateSerializer):
 
     attachments = AttachmentSerializer(many=True, required=False)
@@ -87,9 +91,7 @@ class TreeDataDetailSerializer(TreeDataAttachmentToRepresentationMixin, BaseCrea
 
     class Meta:
         model = TreeData
-        fields = ('id', 'key', 'description', 'note', 'note_type',
-                  'attachments', 'fields', 'prompt', 'link_type',
-                  'links',)
+        fields = TREE_DATA_FIELDS
 
 
 class TreeDataCreateUpdateSerializer(TreeDataAttachmentToRepresentationMixin, BaseCreateSerializer):
@@ -104,9 +106,7 @@ class TreeDataCreateUpdateSerializer(TreeDataAttachmentToRepresentationMixin, Ba
         validators = [
             UniqueDtdFieldValidator()
         ]
-        fields = ('id', 'key', 'description', 'note', 'note_type',
-                  'attachments', 'fields', 'prompt', 'link_type',
-                  'links',)
+        fields = TREE_DATA_FIELDS
 
     def create(self, validated_data):
         return self.process_all(validated_data=validated_data)
