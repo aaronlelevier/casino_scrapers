@@ -19,7 +19,9 @@ DEV_SC_BASE_URL = "https://dev1login.servicechannel.com"
 DEV_SC_TOKEN_URL = DEV_SC_BASE_URL+"/oauth/token"
 # api
 DEV_SC_API_URL = "https://dev1api.servicechannel.com:443"
-DEV_SC_SUBSCRIBER_POST_URL = DEV_SC_API_URL+"/subscribers"
+DEV_SC_SUBSCRIBERS_URL = DEV_SC_API_URL+"/subscribers"
+DEV_SC_LOCATIONS_URL = DEV_SC_API_URL+"/locations"
+
 
 # SANDBOX2 (SB2)
 SANDBOX_SC_USER_ID = os.environ['SANDBOX_SC_USER_ID']
@@ -31,7 +33,7 @@ SANDBOX_SC_BASE_URL = "https://sb2login.servicechannel.com"
 SANDBOX_SC_TOKEN_URL = SANDBOX_SC_BASE_URL+"/oauth/token"
 # api
 SANDBOX_SC_API_URL = "https://sb2api.servicechannel.com:443"
-SANDBOX_SC_SUBSCRIBER_POST_URL = SANDBOX_SC_API_URL+"/subscribers"
+SANDBOX_SC_SUBSCRIBERS_URL = SANDBOX_SC_API_URL+"/subscribers"
 
 
 def request_token():

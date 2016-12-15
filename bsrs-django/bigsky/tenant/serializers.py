@@ -11,7 +11,7 @@ from contact.serializers import (
 from dtd.serializers import TreeDataListSerializer
 from person.serializers_leaf import PersonSimpleSerializer
 from tenant.models import Tenant
-from tenant.oauth import BsOAuthSession, DEV_SC_SUBSCRIBER_POST_URL
+from tenant.oauth import BsOAuthSession, DEV_SC_SUBSCRIBERS_URL
 from utils import create
 from utils.serializers import BaseCreateSerializer
 
@@ -99,7 +99,7 @@ class TenantCreateSerializer(TenantContactsMixin, BaseCreateSerializer):
         session = BsOAuthSession()
         tries = 3
         for i in range(tries):
-            sc_response = session.post(DEV_SC_SUBSCRIBER_POST_URL, data=instance.sc_post_data)
+            sc_response = session.post(DEV_SC_SUBSCRIBERS_URL, data=instance.sc_post_data)
 
             if sc_response.status_code == 201:
                 data = json.loads(sc_response.content.decode('utf8'))

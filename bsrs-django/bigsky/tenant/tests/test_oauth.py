@@ -15,8 +15,8 @@ from requests_oauthlib import OAuth2Session
 
 from person.tests.factory import create_single_person, PASSWORD
 from tenant import oauth
-from tenant.tests.factory import SC_SUBSCRIBER_POST_DATA
-from utils.create import _generate_chars
+from tenant.tests.factory import SC_SUBSCRIBER_POST_DATA, SC_LOCATION_POST_DATA
+from utils.create import _generate_chars, _generate_int
 from utils.tests.helpers import empty_str_if_none
 
 
@@ -39,7 +39,7 @@ class BsOAuthSessionDev1Tests(TestCase):
     def setUp(self):
         self.session = oauth.BsOAuthSession()
         self.token = self.session.token
-        self.subscriber_post_url = oauth.DEV_SC_SUBSCRIBER_POST_URL
+        self.subscriber_post_url = oauth.DEV_SC_SUBSCRIBERS_URL
 
     @patch("tenant.oauth.BsOAuthSession.fetch_token")
     def test_session_init__fetch_token(self, mock_func):
@@ -93,7 +93,7 @@ class BsOAuthSessionDev1Tests(TestCase):
         self.session.get(self.subscriber_post_url)
         self.assertTrue(mock_func.called)
 
-    def test_sc_crud(self):
+    def test_sc_crud__subscriber(self):
         """All live CRUD to SC is currently in this test. Maybe it makes
         sense to break it out into separate tests, but need to do the initial
         POST before can check GET/PUT"""
@@ -143,6 +143,53 @@ class BsOAuthSessionDev1Tests(TestCase):
         # state
         self.assertEqual(data['State'], new_state)
 
+    def test_sc_crud__location(self):
+        # Subscriber POST
+        SC_SUBSCRIBER_POST_DATA['Name'] = _generate_chars()
+
+        response = self.session.post(self.subscriber_post_url, data=SC_SUBSCRIBER_POST_DATA)
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 201)
+        subscriber_id = data['id']
+
+        # Location POST
+        store_id = _generate_int()
+        SC_LOCATION_POST_DATA["StoreId"] = store_id
+
+        response = self.session.post(
+            "{}?impersonateUserInfo[username]={}"
+            .format(oauth.DEV_SC_LOCATIONS_URL, SC_SUBSCRIBER_POST_DATA['Email']),
+            data=SC_LOCATION_POST_DATA)
+
+        self.assertEqual(response.status_code, 201,
+                         "Error: %s" % data)
+        location_id = json.loads(response.content.decode('utf8'))
+        self.assertIsInstance(location_id, int)
+
+        # Location GET
+        response = self.session.get(
+            "{}/{}".format(oauth.DEV_SC_LOCATIONS_URL, location_id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        for k,v in SC_LOCATION_POST_DATA.items():
+            # only test truthy values b/c falsy values, because
+            # empty strings and 0's will be converted to `None`
+            if data[k]:
+                self.assertEqual(data[k], v,
+                                 '{}: {} != {}'.format(k, data[k], v))
+
+        # Location PUT
+        new_city = 'Los Angeles'
+        SC_LOCATION_POST_DATA['City'] = new_city
+
+        response = self.session.put(
+            "{}/{}".format(oauth.DEV_SC_LOCATIONS_URL, location_id),
+            data=SC_LOCATION_POST_DATA)
+
+        self.assertEqual(response.status_code, 200)
+
 
 class BsOAuthSessionSandbox2Tests(TestCase):
     # Only testing fetching of a token from Sandbox2. The endpoint methods
@@ -154,7 +201,7 @@ class BsOAuthSessionSandbox2Tests(TestCase):
             client_secret=oauth.SANDBOX_SC_CLIENT_SECRET, username=oauth.SANDBOX_SC_USER_ID,
             password=oauth.SANDBOX_SC_USER_PASSWORD)
         self.token = self.session.fetch_token()
-        self.subscriber_post_url = oauth.SANDBOX_SC_SUBSCRIBER_POST_URL
+        self.subscriber_post_url = oauth.SANDBOX_SC_SUBSCRIBERS_URL
 
     def test_client(self):
         self.assertIsInstance(self.session.client, LegacyApplicationClient)
