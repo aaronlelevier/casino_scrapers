@@ -191,7 +191,7 @@ class Ticket(BaseModel):
             tasks.process_ticket.apply_async(
                 (self.location.location_level.tenant.id,),
                 {'ticket_id': self.id, 'event_key': AutomationEvent.STATUS_NEW},
-                queue='bigsky')
+                queue=settings.CELERY_DEFAULT_QUEUE)
 
     @property
     def category(self):

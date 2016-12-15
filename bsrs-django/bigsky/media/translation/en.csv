@@ -5,12 +5,12 @@ en,activity.one,Activity,Activity,,"'activity.one':'Activity',",Activity,Activit
 en,activity.tabs.all_updates,All Updates,All Updates,,"'activity.tabs.all_updates':'All Updates',",All Updates,All Updates
 en,activity.tabs.comments,Comments,Comments,,"'activity.tabs.comments':'Comments',",Comments,Comments
 en,activity.tabs.status_updates,Status Updates,Status Updates,,"'activity.tabs.status_updates':'Status Updates',",Status Updates,Status Updates
-en,activity.ticket.assignee,changed the {{type}} from %s{{from}} $to %s{{to}} %s{{timestamp}},changed the {{type}} from %s{{from}} $to %s{{to}} %s{{timestamp}},,"'activity.ticket.assignee':'changed the {{type}} from %s{{from}} $to %s{{to}} %s{{timestamp}}',",changed the {{type_var_ from %s{{from_var_ $to %s{{to_var_ %s{{timestamp_var_,changed the _type_var_ from %s_from_var_ $to %s_to_var_ %s_timestamp_var_
+en,activity.ticket.assignee,changed the {{type}} from %s{{from}} %sto %s{{to}} %s{{timestamp}},changed the {{type}} from %s{{from}} %sto %s{{to}} %s{{timestamp}},,"'activity.ticket.assignee':'changed the {{type}} from %s{{from}} %sto %s{{to}} %s{{timestamp}}',",changed the {{type_var_ from %s{{from_var_ %sto %s{{to_var_ %s{{timestamp_var_,changed the _type_var_ from %s_from_var_ %sto %s_to_var_ %s_timestamp_var_
 en,activity.ticket.attachment_add.one,uploaded %s{{count}} file %s{{timestamp}} %s{{added}},uploaded %s{{count}} file %s{{timestamp}} %s{{added}},,"'activity.ticket.attachment_add.one':'uploaded %s{{count}} file %s{{timestamp}} %s{{added}}',",uploaded %s{{count_var_ file %s{{timestamp_var_ %s{{added_var_,uploaded %s_count_var_ file %s_timestamp_var_ %s_added_var_
 en,activity.ticket.attachment_add.other,uploaded %s{{count}} files %s{{timestamp}} %s{{added}},uploaded %s{{count}} files %s{{timestamp}} %s{{added}},,"'activity.ticket.attachment_add.other':'uploaded %s{{count}} files %s{{timestamp}} %s{{added}}',",uploaded %s{{count_var_ files %s{{timestamp_var_ %s{{added_var_,uploaded %s_count_var_ files %s_timestamp_var_ %s_added_var_
 en,activity.ticket.attachment_remove.one,removed %s{{count}} file %s{{timestamp}} %s{{removed}},removed %s{{count}} file %s{{timestamp}} %s{{removed}},,"'activity.ticket.attachment_remove.one':'removed %s{{count}} file %s{{timestamp}} %s{{removed}}',",removed %s{{count_var_ file %s{{timestamp_var_ %s{{removed_var_,removed %s_count_var_ file %s_timestamp_var_ %s_removed_var_
 en,activity.ticket.attachment_remove.other,removed %s{{count}} files %s{{timestamp}} %s{{removed}},removed %s{{count}} files %s{{timestamp}} %s{{removed}},,"'activity.ticket.attachment_remove.other':'removed %s{{count}} files %s{{timestamp}} %s{{removed}}',",removed %s{{count_var_ files %s{{timestamp_var_ %s{{removed_var_,removed %s_count_var_ files %s_timestamp_var_ %s_removed_var_
-en,activity.ticket.categories,changed the category from %s{{from}} $to %s{{to}} %s{{timestamp}},changed the category from %s{{from}} $to %s{{to}} %s{{timestamp}},,"'activity.ticket.categories':'changed the category from %s{{from}} $to %s{{to}} %s{{timestamp}}',",changed the category from %s{{from_var_ $to %s{{to_var_ %s{{timestamp_var_,changed the category from %s_from_var_ $to %s_to_var_ %s_timestamp_var_
+en,activity.ticket.categories,changed the category from %s{{from}} %sto %s{{to}} %s{{timestamp}},changed the category from %s{{from}} %sto %s{{to}} %s{{timestamp}},,"'activity.ticket.categories':'changed the category from %s{{from}} %sto %s{{to}} %s{{timestamp}}',",changed the category from %s{{from_var_ %sto %s{{to_var_ %s{{timestamp_var_,changed the category from %s_from_var_ %sto %s_to_var_ %s_timestamp_var_
 en,activity.ticket.cc_add,added %s{{added}} %sto CC %s{{timestamp}},added %s{{added}} %sto CC %s{{timestamp}},,"'activity.ticket.cc_add':'added %s{{added}} %sto CC %s{{timestamp}}',",added %s{{added_var_ %sto CC %s{{timestamp_var_,added %s_added_var_ %sto CC %s_timestamp_var_
 en,activity.ticket.cc_remove,removed %s{{removed}} %sfrom CC %s{{timestamp}},removed %s{{removed}} %sfrom CC %s{{timestamp}},,"'activity.ticket.cc_remove':'removed %s{{removed}} %sfrom CC %s{{timestamp}}',",removed %s{{removed_var_ %sfrom CC %s{{timestamp_var_,removed %s_removed_var_ %sfrom CC %s_timestamp_var_
 en,activity.ticket.comment,commented %s{{timestamp}} %s{{comment}},commented %s{{timestamp}} %s{{comment}},,"'activity.ticket.comment':'commented %s{{timestamp}} %s{{comment}}',",commented %s{{timestamp_var_ %s{{comment_var_,commented %s_timestamp_var_ %s_comment_var_
@@ -519,6 +519,10 @@ en,modules.workOrders.titleShort,Work Orders,Work Orders,,"'modules.workOrders.t
 en,notices.offline,Your network connection is offline.,Your network connection is offline.,,"'notices.offline':'Your network connection is offline.',",Your network connection is offline.,Your network connection is offline.
 en,notices.online,Your network connection is online.,Your network connection is online.,,"'notices.online':'Your network connection is online.',",Your network connection is online.,Your network connection is online.
 en,power.select.select,Click to select,Click to select,,"'power.select.select':'Click to select',",Click to select,Click to select
+en,role.label.permission.create,Create,Create,,"'role.label.permission.create':'Create',",Create,Create
+en,role.label.permission.view,View,View,,"'role.label.permission.view':'View',",View,View
+en,role.label.permission.edit,Edit,Edit,,"'role.label.permission.edit':'Edit',",Edit,Edit
+en,role.label.permission.delete,Delete,Delete,,"'role.label.permission.delete':'Delete',",Delete,Delete
 en,selects.loading,Loading,Loading,,"'selects.loading':'Loading',",Loading,Loading
 en,selects.noMatchesMessage,No Matches,No Matches,,"'selects.noMatchesMessage':'No Matches',",No Matches,No Matches
 en,selects.searchMessage,Type to search,Type to search,,"'selects.searchMessage':'Type to search',",Type to search,Type to search
@@ -586,3 +590,10 @@ en,ticket.status.unsatisfactory_completion,Unsatisfactory,Unsatisfactory,,"'tick
 en,upload.progress,Progress,Progress,,"'upload.progress':'Progress',",Progress,Progress
 en,validation.invalid,Invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid,Invalid
 en,validation.valid,Valid,Valid,,"'validation.valid':'Valid',",Valid,Valid
+en,admin.role.label.permissions,Permissions,Permissions,,"'admin.role.label.permissions':'Permissions',",Permissions,Permissions
+en,role.label.permission.ticket,Ticket,Ticket,,"'role.label.permission.ticket':'Ticket',",Ticket,Ticket
+en,role.label.permission.role,Role,Role,,"'role.label.permission.role':'Role',",Role,Role
+en,role.label.permission.person,Person,Person,,"'role.label.permission.person':'Person',",Person,Person
+en,role.label.permission.category,Category,Category,,"'role.label.permission.category':'Category',",Category,Category
+en,role.label.permission.location,Location,Location,,"'role.label.permission.location':'Location',",Location,Location
+en,role.label.permission.locationlevel,Location Level,Location Level,,"'role.label.permission.locationlevel':'Location Level',",Location Level,Location Level

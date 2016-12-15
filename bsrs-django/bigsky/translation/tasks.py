@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from celery import shared_task
 
 from translation.models import Translation
@@ -20,5 +22,5 @@ def import_all_csv():
 
 @shared_task
 def update_translations():
-    gspread_get_all_csv.apply_async(queue='default')
-    import_all_csv.apply_async(queue='default')
+    gspread_get_all_csv.apply_async(queue=settings.CELERY_DEFAULT_QUEUE)
+    import_all_csv.apply_async(queue=settings.CELERY_DEFAULT_QUEUE)

@@ -262,9 +262,12 @@ LOGGING_INFO_FILE = os.path.join(LOGGING_DIR, 'info.log')
 LOGGING_REQUEST_FILE = os.path.join(LOGGING_DIR, 'request.log')
 
 ### CELERY ###
+# standard
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+# custom
+CELERY_DEFAULT_QUEUE = 'bigsky'
 
 # LOGGING = {
 #     'version': 1,
