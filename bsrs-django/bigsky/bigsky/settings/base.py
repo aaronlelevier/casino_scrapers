@@ -254,6 +254,9 @@ EMAIL_HOST_USER = 'bigsky.sc.test@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ['DEV_SC_USER_PASSWORD']
 EMAIL_PORT = 587
 
+### PHONE NUMBERS
+DEFAULT_PHONE_NUMBER = '8587155000'
+
 # TODO: Logging needs to be moved to a directory with the right permissions
 # that we can write to. If it's logging w/i the project, the directory
 # wont have the write permissions

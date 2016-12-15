@@ -258,3 +258,18 @@ def create_automations():
             automation.description = pf.source.field
 
         automation.save()
+
+
+def upate_automation_names_for_fixtures():
+    for automation in Automation.objects.all():
+        action = automation.actions.first()
+        action_name = action.type.key
+
+        automation_filter = automation.filters.first()
+        if automation_filter and automation_filter.source.key:
+            filter_name = automation_filter.source.key
+        else:
+            filter_name = 'None'
+
+        automation.description = "Filter: {} --- Action: {}".format(filter_name, action_name)
+        automation.save()

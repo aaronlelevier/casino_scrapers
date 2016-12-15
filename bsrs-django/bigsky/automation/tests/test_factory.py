@@ -368,3 +368,26 @@ class AutomationTests(TestCase):
         key = 'admin.placeholder.country_filter_select'
         x = Automation.objects.get(filters__source__key=key)
         self.assertEqual(x.description, key)
+
+    def test_upate_automation_names_for_fixtures(self):
+        action = factory.create_automation_action_assignee()
+        automation = action.automation
+        automation.description = 'foo'
+        automation.save()
+        # filter_name
+        automation_filter = automation.filters.first()
+        if automation_filter:
+            filter_name = automation_filter.source.key
+        else:
+            filter_name = 'None'
+        # action_name
+        action_name = action.type.key
+        # pre-test
+        self.assertNotEqual(automation.description, action_name)
+
+        factory.upate_automation_names_for_fixtures()
+
+        self.assertEqual(
+            Automation.objects.get(id=automation.id).description,
+            "Filter: {} --- Action: {}".format(filter_name, action_name)
+        )

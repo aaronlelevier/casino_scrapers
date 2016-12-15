@@ -318,6 +318,22 @@ class UpdateAdminTests(TestCase):
             sorted(person.role.permissions.keys()),
             sorted(PermissionInfo.ALL_DEFAULTS.keys()))
 
+    def test_add_ph_and_email(self):
+        person = factory.create_single_person()
+        self.assertEqual(person.emails.count(), 0)
+        self.assertEqual(person.phone_numbers.count(), 0)
+
+        factory.add_ph_and_email(person)
+
+        # email
+        self.assertEqual(person.emails.count(), 1)
+        email = person.emails.first()
+        self.assertEqual(email.email, settings.EMAIL_HOST_USER)
+        # ph
+        self.assertEqual(person.phone_numbers.count(), 1)
+        ph = person.phone_numbers.first()
+        self.assertEqual(ph.number, settings.DEFAULT_PHONE_NUMBER)
+
     def test_update_locale(self):
         default_locale = 'en'
         mommy.make(Locale, locale=default_locale)
