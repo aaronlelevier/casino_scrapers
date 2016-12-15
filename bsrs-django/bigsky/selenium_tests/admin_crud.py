@@ -869,7 +869,9 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
     def test_tenant_update(self):
         tenant_link = self.nav_page.find_tenant_link()
         tenant_link.click()
-        # Create Person Page Object
+        '''
+        UPDATE
+        '''
         tenant_page = ModelContactPage(
             driver = self.driver,
             new_link = "t-add-new",
@@ -912,10 +914,11 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
             list_data = "t-grid-data"
         )
 
-        ### CREATE
+        '''
+        NEW
+        '''
         tenant_page.find_new_link().click()
 
-        # fill in all fields
         company_name_text = "company_name_"+rand_num()
         company_name = self.driver.find_element_by_class_name('t-tenant-company_name')
         company_name.send_keys(company_name_text)
@@ -1009,17 +1012,30 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         billing_phone = self.driver.find_element_by_class_name("t-phonenumber-number")
         billing_phone.send_keys("649-975-8223")
 
-        # save
         self.gen_elem_page.click_save_btn()
-        # Find in list
         tenant = tenant_page.find_list_data()
         list_view = tenant_page.find_list_name()
         tenant_page.click_name_in_list(company_name_text, list_view)
-        time.sleep(2)
+        time.sleep(1)
 
         # ensure scid is present
         scid = self.driver.find_element_by_css_selector('[data-test-id="tenant-scid"]')
         assert len(scid.get_attribute("value")) == 10
+
+        '''
+        DELETE
+        '''
+        # page.find_wait_and_assert_elem("t-automation-description", description)
+        self.gen_elem_page.click_dropdown_delete()
+        self.gen_elem_page.click_delete_btn()
+        time.sleep(0.5)
+        self.gen_elem_page.click_delete_yes()
+        tenant_page.find_list_data()
+        list_view = tenant_page.find_list_name()
+        self.assertNotIn(
+            company_name_text,
+            [r.text for r in list_view]
+        )
 
 
 if __name__ == "__main__":
