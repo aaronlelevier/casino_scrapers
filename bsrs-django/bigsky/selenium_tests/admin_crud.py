@@ -834,15 +834,18 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
 
         # b/c first save won't work if the 'password' is still attached to the person.
         self.gen_elem_page.click_save_btn()
+        time.sleep(0.5)
         person_page.find_list_data()
         self.driver.refresh()
         person_page.find_list_data()
+        self.wait_for_xhr_request("t-grid-search-input").send_keys(username)
+        time.sleep(0.5)
         new_person = person_page.click_name_in_list_pages(username, new_model=None)
         try:
             new_person.click()
         except AttributeError as e:
             raise e("new person not found")
-        time.sleep(1)
+        time.sleep(0.5)
         person_page.find_wait_and_assert_elem("t-person-username", username)
         person_page.find_and_assert_elems(username=username, first_name=first_name,
             middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
@@ -853,18 +856,19 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # assert self.driver.find_element_by_class_name("t-locale-select-trigger").text == "ja - ja"
         person_page.find_and_assert_elems(username=username, first_name=first_name,
             middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
-        # ### DELETE
-        # person_page.find_wait_and_assert_elem("t-person-username", username)
-        # self.gen_elem_page.click_dropdown_delete()
-        # self.gen_elem_page.click_delete_btn()
-        # self.driver.refresh()
-        # person = self.driver_wait.find_elements_by_class_name(person_page.list_data) #person_page.find_list_data(just_refreshed=True)
-        # person_page.find_list_name()
 
-    #     # # TODO:
-    #     # This is failing because a Grid View page # allows you to go to that page,
-    #     # but there are no records on that page
-    #     # person_page.assert_name_not_in_list(username, new_person=None)
+        '''
+        DELETE
+        '''
+        # page.find_wait_and_assert_elem("t-automation-description", description)
+        self.gen_elem_page.click_dropdown_delete()
+        self.gen_elem_page.click_delete_btn()
+        time.sleep(0.5)
+        self.gen_elem_page.click_delete_yes()
+        self.wait_for_xhr_request("t-grid-search-input").send_keys('')
+        time.sleep(1)
+        self.assertTrue(self.driver.find_element_by_class_name('no-results'))
+
 
     def test_tenant_update(self):
         tenant_link = self.nav_page.find_tenant_link()
