@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
-from contact.models import Email, PhoneNumber
+from contact import tasks as contact_tasks
 from person.models import Person
 from tenant.models import Tenant
 from ticket.models import TicketPriority, TicketStatus, TicketActivity, TicketActivityType
@@ -127,7 +127,7 @@ class AutomationManager(BaseManager):
             if match:
                 self.process_actions(automation, ticket, event)
 
-        ticket.save(process_automations=False)
+        ticket.save()
 
     def process_actions(self, automation, ticket, event):
         for action in automation.actions.all():
@@ -152,9 +152,11 @@ class AutomationManager(BaseManager):
                 kwargs = {'from': init_status, 'to': new_status}
                 self._log_from_to_activity(TicketActivityType.STATUS, ticket, automation, **kwargs)
             elif key == AutomationActionType.SEND_EMAIL:
-                Email.objects.process_send_email(ticket, action, event)
+                contact_tasks.process_send_email.apply_async(
+                    (ticket.id, action.id, event), queue=settings.CELERY_DEFAULT_QUEUE)
             elif key == AutomationActionType.SEND_SMS:
-                PhoneNumber.objects.process_send_sms(ticket, action, event)
+                contact_tasks.process_send_sms.apply_async(
+                    (ticket.id, action.id, event), queue=settings.CELERY_DEFAULT_QUEUE)
             elif key == AutomationActionType.TICKET_REQUEST:
                 request = action.content['request']
                 ticket.request = '{}\n{}'.format(ticket.request, request)

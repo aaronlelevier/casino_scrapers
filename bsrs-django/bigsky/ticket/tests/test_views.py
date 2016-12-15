@@ -16,7 +16,7 @@ from generic.tests.factory import create_file_attachment
 from person.tests.factory import PASSWORD, create_single_person, DistrictManager
 from ticket.models import Ticket, TicketStatus, TicketActivity, TicketActivityType
 from ticket.permissions import TicketActivityPermissions
-from ticket.serializers import TicketCreateSerializer
+from ticket.serializers import TicketCreateUpdateSerializer
 from ticket.tests.factory import (create_ticket, create_ticket_activity,
     create_ticket_activity_type, create_ticket_activity_types,)
 from ticket.tests.factory_related import create_ticket_priority, create_ticket_status
@@ -217,7 +217,7 @@ class TicketUpdateTests(TicketSetupMixin, APITestCase):
     def setUp(self):
         super(TicketUpdateTests, self).setUp()
         # serializer data
-        serializer = TicketCreateSerializer(self.ticket)
+        serializer = TicketCreateUpdateSerializer(self.ticket)
         self.data = serializer.data
 
     def test_no_change(self):
@@ -275,7 +275,7 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
     def setUp(self):
         super(TicketCreateTests, self).setUp()
         # serializer data
-        serializer = TicketCreateSerializer(self.ticket)
+        serializer = TicketCreateUpdateSerializer(self.ticket)
         self.data = serializer.data
 
     def test_data(self):
@@ -284,7 +284,8 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
             'id': str(uuid.uuid4()),
             'request': 'plumbing',
             'dt_path': [{'foo': 'bar'}],
-            'completion_date': now()
+            'completion_date': now(),
+            'status': str(create_ticket_status(TicketStatus.IN_PROGRESS).id)
         })
 
         response = self.client.post('/api/tickets/', self.data, format='json')
@@ -802,7 +803,7 @@ class TicketAndTicketActivityTests(MockPermissionsAllowAnyMixin, APITestCase):
 
         create_ticket_activity_types()
         # Data
-        serializer = TicketCreateSerializer(self.ticket)
+        serializer = TicketCreateUpdateSerializer(self.ticket)
         self.data = serializer.data
         self.categories = Category.objects.all()
         # Login
@@ -819,7 +820,8 @@ class TicketAndTicketActivityTests(MockPermissionsAllowAnyMixin, APITestCase):
         self.data.update({
             'id': str(uuid.uuid4()),
             'request': 'plumbing',
-            'location': str(location.id)
+            'location': str(location.id),
+            'status': str(create_ticket_status(TicketStatus.IN_PROGRESS).id)
         })
 
         response = self.client.post('/api/tickets/', self.data, format='json')
@@ -964,7 +966,7 @@ class TicketAndTicketActivityTests(MockPermissionsAllowAnyMixin, APITestCase):
         [self.ticket.categories.remove(c) for c in self.ticket.categories.all()[:self.ticket.categories.count()-1]]
         new_category = Category.objects.exclude(id=self.ticket.categories.first().id).first()
         # repopulate `self.data`
-        serializer = TicketCreateSerializer(self.ticket)
+        serializer = TicketCreateUpdateSerializer(self.ticket)
         self.data = serializer.data
         # test setup correctly
         self.assertEqual(len(self.data['categories']), 1)

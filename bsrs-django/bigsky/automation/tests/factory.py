@@ -225,7 +225,7 @@ def create_automation_filters():
 
 def create_automation(description=None, tenant=None, with_actions=True, with_filters=True):
     kwargs = {
-        'description': description or random_lorem(1),
+        'description': description or random_lorem(),
         'tenant': tenant or get_or_create_tenant()
     }
 

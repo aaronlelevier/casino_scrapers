@@ -1,6 +1,5 @@
 import uuid
 
-from django.apps import apps
 from django.db import models
 from django.db.models import F, Q, Max
 from django.conf import settings
@@ -8,7 +7,6 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
 
-from automation import tasks
 from category.models import Category
 from generic.models import Attachment
 from location.models import Location
@@ -179,19 +177,6 @@ class Ticket(BaseModel):
 
     class Meta:
         ordering = ('-created',)
-
-    def save(self, process_automations=True, *args, **kwargs):
-        super(Ticket, self).save(*args, **kwargs)
-        if process_automations:
-            self._process_ticket_if_new()
-
-    def _process_ticket_if_new(self):
-        if not self.deleted and self.status.name == TicketStatus.NEW:
-            AutomationEvent = apps.get_model("automation", "automationevent")
-            tasks.process_ticket.apply_async(
-                (self.location.location_level.tenant.id,),
-                {'ticket_id': self.id, 'event_key': AutomationEvent.STATUS_NEW},
-                queue=settings.CELERY_DEFAULT_QUEUE)
 
     @property
     def category(self):

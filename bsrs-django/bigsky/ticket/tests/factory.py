@@ -104,7 +104,12 @@ def _create_ticket(request=None, assignee=None, add_attachment=False):
     people = Person.objects.all()
 
     request = request or _generate_chars()
-    assignee = assignee or random.choice(people)
+
+    try:
+        assignee = assignee or random.choice(people)
+    except IndexError:
+        # will occur if assignee=None, and now Person records in DB
+        assignee = create_single_person()
 
     status = random.choice(create_ticket_statuses())
     priority = random.choice(create_ticket_priorities())

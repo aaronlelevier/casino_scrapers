@@ -314,7 +314,7 @@ class AutomationTests(TestCase):
     def test_create_automation(self):
         automation = factory.create_automation()
         self.assertIsInstance(automation, Automation)
-        self.assertIn(automation.description, LOREM_IPSUM_WORDS.split())
+        self.assertTrue(automation.description)
         self.assertIsInstance(automation.tenant, Tenant)
         # events
         self.assertEqual(automation.events.count(), 1)

@@ -76,6 +76,15 @@ class CreateTicketTests(TestCase):
     def test_assignee(self):
         self.assertIsInstance(self.ticket.assignee, Person)
 
+    def test_assignee__create_person_if_none(self):
+        Person.objects.all().delete()
+        self.assertEqual(Person.objects.count(), 0)
+
+        ticket = factory.create_ticket()
+
+        self.assertEqual(Person.objects.count(), 1)
+        self.assertEqual(ticket.assignee, Person.objects.first())
+
     def test_cc(self):
         self.assertIsInstance(self.ticket.cc.all()[0], Person)
 

@@ -264,7 +264,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.assertEqual(mock_func.call_args[1]['from'], init_status)
         self.assertEqual(mock_func.call_args[1]['to'], ticket_status)
 
-    @patch("contact.models.EmailManager.process_send_email")
+    @patch("contact.tasks.process_send_email.apply_async")
     def test_process_actions__send_email(self, mock_func):
         clear_related(self.automation, 'actions')
         action = create_automation_action_send_email(self.automation)
@@ -275,11 +275,12 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
         Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
 
-        self.assertEqual(mock_func.call_args[0][0], self.ticket)
-        self.assertEqual(mock_func.call_args[0][1], action)
-        self.assertEqual(mock_func.call_args[0][2], self.event.key)
+        self.assertEqual(mock_func.call_args[0][0][0], self.ticket.id)
+        self.assertEqual(mock_func.call_args[0][0][1], action.id)
+        self.assertEqual(mock_func.call_args[0][0][2], self.event.key)
+        self.assertEqual(mock_func.call_args[1]['queue'], 'bigsky')
 
-    @patch("contact.models.PhoneNumberManager.process_send_sms")
+    @patch("contact.tasks.process_send_sms.apply_async")
     def test_process_actions__send_sms(self, mock_func):
         clear_related(self.automation, 'actions')
         action = create_automation_action_send_sms(self.automation)
@@ -290,9 +291,10 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
         Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
 
-        self.assertEqual(mock_func.call_args[0][0], self.ticket)
-        self.assertEqual(mock_func.call_args[0][1], action)
-        self.assertEqual(mock_func.call_args[0][2], self.event.key)
+        self.assertEqual(mock_func.call_args[0][0][0], self.ticket.id)
+        self.assertEqual(mock_func.call_args[0][0][1], action.id)
+        self.assertEqual(mock_func.call_args[0][0][2], self.event.key)
+        self.assertEqual(mock_func.call_args[1]['queue'], 'bigsky')
 
     def test_process_actions__ticket_request(self):
         init_ticket_request = self.ticket.request

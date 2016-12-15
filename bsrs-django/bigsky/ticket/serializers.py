@@ -1,3 +1,5 @@
+from django.apps import apps
+
 from rest_framework import serializers
 
 from automation.serializers import AutomationIdDescriptionSerializer
@@ -32,7 +34,7 @@ class TicketStatusSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-class TicketCreateSerializer(BaseCreateSerializer):
+class TicketCreateUpdateSerializer(BaseCreateSerializer):
 
     attachments = serializers.PrimaryKeyRelatedField(
         queryset=Attachment.objects.all(), many=True, required=False)
@@ -43,7 +45,31 @@ class TicketCreateSerializer(BaseCreateSerializer):
 
     def create(self, validated_data):
         validated_data.pop('attachments', None)
-        return super(TicketCreateSerializer, self).create(validated_data)
+        instance = super(TicketCreateUpdateSerializer, self).create(validated_data)
+
+        if instance.status.name == TicketStatus.NEW:
+            self._process_ticket(instance)
+
+        return instance
+
+    def update(self, instance, validated_data):
+        init_status = instance.status.name
+        instance = super(TicketCreateUpdateSerializer, self).update(instance, validated_data)
+
+        if init_status != instance.status.name and instance.status.name == TicketStatus.NEW:
+            self._process_ticket(instance)
+
+        return instance
+
+    def _process_ticket(self, instance):
+        if instance.status.name == TicketStatus.NEW:
+            Automation = apps.get_model("automation", "automation")
+            AutomationEvent = apps.get_model("automation", "automationevent")
+
+            tenant_id = instance.location.location_level.tenant.id
+
+            Automation.objects.process_ticket(tenant_id, ticket=instance,
+                                              event=AutomationEvent.STATUS_NEW)
 
 
 class TicketListSerializer(serializers.ModelSerializer):
