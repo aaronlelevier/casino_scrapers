@@ -15,7 +15,7 @@ from contact.serializers import EmailSerializer, AddressSerializer, PhoneNumberS
 from contact.tests.factory import create_address
 from dtd.models import TreeData, DTD_START_KEY
 from person.tests.factory import PASSWORD, create_single_person
-from tenant.oauth import BsOAuthSession, DEV_SC_SUBSCRIBER_POST_URL
+from tenant.oauth import BsOAuthSession, DEV_SC_SUBSCRIBERS_URL
 from tenant.models import Tenant
 from tenant.serializers import TenantCreateSerializer, TenantUpdateSerializer
 
@@ -257,7 +257,7 @@ class TenantCreateEmailAndRemoteCallsTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(response.status_code, 201, data)
         tenant = Tenant.objects.get(id=data['id'])
         # mocks
-        self.assertEqual(mock_post.call_args[0][0], DEV_SC_SUBSCRIBER_POST_URL)
+        self.assertEqual(mock_post.call_args[0][0], DEV_SC_SUBSCRIBERS_URL)
         session = BsOAuthSession()
         self.assertEqual(mock_post.call_args_list[0][1]['data'], tenant.sc_post_data)
 

@@ -75,6 +75,11 @@ def _generate_ph():
     return ''.join([str(random.randrange(0, 10)) for x in range(10)])
 
 
+# copy method to new name for readablity in some tests that
+# need int's and not ph's
+_generate_int = _generate_ph
+
+
 def _generate_chars(length=10):
     return ''.join([str(random.choice(string.ascii_letters)) for x in range(length)])
 
