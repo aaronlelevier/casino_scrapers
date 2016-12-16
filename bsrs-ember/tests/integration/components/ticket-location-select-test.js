@@ -25,9 +25,9 @@ moduleForComponent('ticket-location-select', 'integration: ticket-location-selec
     store = module_registry(this.container, this.registry, ['model:ticket', 'model:location']);
     run(function() {
       ticket = store.push('ticket', {id: TD.idOne, location_fk: LD.idOne});
-      location_one = store.push('location', {id: LD.idOne, name: LD.storeName});
-      location_two = store.push('location', {id: LD.idTwo, name: LD.storeNameTwo});
-      store.push('location', {id: LD.unusedId, name: LD.storeNameThree});
+      location_one = store.push('related-location', {id: LD.idOne, name: LD.storeName});
+      location_two = store.push('related-location', {id: LD.idTwo, name: LD.storeNameTwo});
+      store.push('related-location', {id: LD.unusedId, name: LD.storeNameThree});
     });
     location_repo = repository.initialize(this.container, this.registry, 'location');
     location_repo.findTicket = function() {

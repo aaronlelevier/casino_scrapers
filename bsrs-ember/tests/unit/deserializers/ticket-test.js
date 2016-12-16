@@ -26,12 +26,12 @@ module('unit: ticket deserializer test', {
       'model:status', 'model:location', 'model:location-list','model:person-location', 'model:person', 'model:category', 
       'model:uuid', 'model:location-level', 'model:attachment', 'model:location-status', 'service:person-current','service:translations-fetcher',
       'service:i18n', 'model:locale', 'model:role', 'model:general-status-list', 'model:ticket-priority-list', 'model:category-list', 'model:category-children', 
-      'model:generic-join-attachment', 'model:related-person', 'validator:presence', 'validator:length', 'validator:ticket-status', 'validator:ticket-categories']);
+      'model:generic-join-attachment', 'model:related-person', 'model:related-location', 'validator:presence', 'validator:length', 'validator:ticket-status', 'validator:ticket-categories']);
     uuid = this.container.lookup('model:uuid');
     functionalStore = this.container.lookup('service:functional-store');
     subject = TicketDeserializer.create({simpleStore: store, functionalStore: functionalStore, uuid: uuid});
     run(() => {
-      store.push('location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
+      store.push('related-location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
       ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne]});
       ticket_status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: [TD.idOne]});
       store.push('ticket-status', {id: TD.statusSevenId, name: TD.statusSeven, tickets: []});
@@ -161,7 +161,7 @@ test('ticket location will be deserialized into its own store when deserialize d
   let location;
   ticket.set('location_fk', LD.idOne);
   ticket.save();
-  location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
+  location = store.push('related-location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
   let json = TF.generate(TD.idOne);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   run(() => {
@@ -177,7 +177,7 @@ test('ticket location will be deserialized into its own store when deserialize d
   run(() => {
     subject.deserialize(json, TD.idOne);
   });
-  let location = store.findOne('location');
+  let location = store.findOne('related-location');
   assert.deepEqual(location.get('tickets'), [TD.idOne]);
   ticket = store.find('ticket', TD.idOne);
   assert.ok(ticket.get('isNotDirty'));
@@ -188,7 +188,7 @@ test('ticket location will be deserialized into its own store when deserialize d
   let location;
   ticket.set('location_fk', LD.idOne);
   ticket.save();
-  location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
+  location = store.push('related-location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
   let json = TF.generate(TD.idOne);
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   run(() => {
@@ -203,7 +203,7 @@ test('ticket location will be updated when server returns different location (de
   let location;
   ticket.set('location_fk', LD.idOne);
   ticket.save();
-  location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
+  location = store.push('related-location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
   let json = TF.generate(TD.idOne);
   json.location = {id: LD.idTwo, name: LD.storeNameTwo, location_level: LLD.idOne};
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -214,7 +214,6 @@ test('ticket location will be updated when server returns different location (de
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(ticket.get('location_fk'), LD.idTwo);
   assert.equal(ticket.get('location.id'), LD.idTwo);
-  assert.equal(ticket.get('location.location_level.id'), LLD.idOne);
 });
 
 test('ticket priority will be deserialized into its own store when deserialize detail is invoked (when ticket did not exist before)', (assert) => {

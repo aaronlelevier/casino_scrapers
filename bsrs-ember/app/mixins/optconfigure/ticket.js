@@ -35,7 +35,8 @@ export default Ember.Mixin.create({
     },
     location: {
       collection: 'tickets',
-      owner: 'location',
+      owner: 'related-location',
+      override_property_getter: 'location',
     },
     cc: {
       associated_model: 'related-person',
