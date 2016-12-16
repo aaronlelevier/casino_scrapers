@@ -17,7 +17,7 @@
   left: -9999px;
 }
 
-[type="checkbox"]:not(:checked) + span, 
+[type="checkbox"]:not(:checked) + span,
 [type="checkbox"]:checked + span {
   position: relative;
   overflow: hidden;
@@ -26,6 +26,7 @@
   display: inline-block;
   height: 19px;
   line-height: 19px;
+  background: $white;
   -webkit-user-select: none;
   -moz-user-select: none;
   -khtml-user-select: none;

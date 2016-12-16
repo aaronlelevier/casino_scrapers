@@ -1,50 +1,47 @@
-<div class="checkbox-permission-items">
-
-  <label class="flex-item--auto" data-test-id={{concat  "t-permission-view-" permissionItem}}>
-  </label>
-
-  <label class="checkbox-permission-items--right" data-test-id="t-permission-view-create">
+<div class="permission-row--header">
+  <div class="flex-item--auto" data-test-id={{concat  "t-permission-view-" permissionItem}}></div>
+  <div class="permission-cell--checkbox" data-test-id="t-permission-view-create">
     {{t "role.label.permission.create"}}
-  </label>
-  <label class="checkbox-permission-items--right" data-test-id="t-permission-view-view">
+  </div>
+  <div class="permission-cell--checkbox" data-test-id="t-permission-view-view">
     {{t "role.label.permission.view"}}
-  </label>
-  <label class="checkbox-permission-items--right" data-test-id="t-permission-view-edit">
+  </div>
+  <div class="permission-cell--checkbox" data-test-id="t-permission-view-edit">
     {{t "role.label.permission.edit"}}
-  </label>
-  <label class="checkbox-permission-items--right" data-test-id="t-permission-view-delete">
+  </div>
+  <div class="permission-cell--checkbox" data-test-id="t-permission-view-delete">
     {{t "role.label.permission.delete"}}
-  </label>
+  </div>
 </div>
 
 {{#each permissionsList as |permissionItem|}}
-	<div class="checkbox-permission-items">
-    <label class="flex-item--auto" data-test-id={{concat  "t-permission-view-" permissionItem}}>
+	<div class="permission-row">
+    <div class="permission-cell flex-item--auto" data-test-id={{concat  "t-permission-view-" permissionItem}}>
       {{t (concat "role.label.permission." permissionItem) }}
-		</label>
-
+		</div>
+    <div class="permission-cell--checkbox">
     {{checkbox-component
-     labelClass="checkbox-permission-items--right" 
      dataTestId=(concat "permission-view-" permissionItem)
      checked=(get model (get-permission permissionItem "view"))
     }}
-
+    </div>
+    <div class="permission-cell--checkbox">
     {{checkbox-component
-     labelClass="checkbox-permission-items--right" 
      dataTestId=(concat "permission-add-" permissionItem)
      checked=(get model (get-permission permissionItem "add"))
     }}
-
+    </div>
+    <div class="permission-cell--checkbox">
     {{checkbox-component
-     labelClass="checkbox-permission-items--right" 
      dataTestId=(concat "permission-change-" permissionItem)
      checked=(get model (get-permission permissionItem "change"))
     }}
-    
+    </div>
+    <div class="permission-cell--checkbox">
     {{checkbox-component
-     labelClass="checkbox-permission-items--right" 
      dataTestId=(concat "permission-delete-" permissionItem)
      checked=(get model (get-permission permissionItem "delete"))
     }}
+    </div>
 	</div>
 {{/each}}

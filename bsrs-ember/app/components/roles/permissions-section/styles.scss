@@ -1,17 +1,25 @@
 & {
-  .checkbox-permission-items {
+  .permission-row,
+  .permission-row--header {
     display: flex;
-    padding-bottom: 1rem;
-    justify-content: flex-start;
+    padding: 1rem;
   }
-  .checkbox-label {
-    text-align: left;
+  .permission-row:nth-child(odd) {
+    background: $lightGray;
   }
-  .checkbox-permission-items--right {
-    // width is only b/c label is not translated.  Should be min width
-    width: 50px;
-    margin: 0 2rem;
-    display: flex;
-    justify-content: center;
+  .permission-row--header {
+    border: $borderStyle;
+    border-width: 0 0 1px;
+  }
+  .permission-cell,
+  .permission-cell--checkbox {
+    line-height: 2rem;
+    height: 2rem;
+    @extend %label;
+    @include truncate;
+  }
+  .permission-cell--checkbox {
+    width: 11%;
+    text-align: center;
   }
 }

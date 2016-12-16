@@ -1,9 +1,6 @@
 & {
 	label{
-		font-weight: normal;
-		font-size: 0.9em;
-		color: $darkGray;
-		margin: 0;
+		@extend %label;
 		@include truncate;
 	}
 	.mobile-form-group {

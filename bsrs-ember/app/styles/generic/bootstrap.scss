@@ -191,3 +191,10 @@ fieldset[disabled] .form-control,
   background-color: $lightGray;
   border-color: $gray;
 }
+
+.table-striped > tbody > tr:nth-of-type(odd){
+  background: $lightGray;
+}
+.table-hover > tbody > tr:hover{
+  background: $light;
+}

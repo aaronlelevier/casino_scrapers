@@ -2,6 +2,8 @@
   <div class="row">
     <h2 class="col-md-12">{{t "admin.role.label.settings"}}</h2>
   </div>
+</section>
+<section>
   <div class="row">
     <div class="col-md-12">
       {{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
@@ -32,9 +34,13 @@
       {{/form-group}}
     </div>
   </div>
+</section>
+<section class="card-title">
   <div class="row">
     <h2 class="col-md-12">{{t "admin.role.label.permissions"}}</h2>
   </div>
+</section>
+<section>
   <div class="row">
     <div class="col-md-12">
       {{roles/permissions-section model=model}}
