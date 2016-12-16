@@ -6,7 +6,7 @@
     "created": "2016-05-03T15:04:24.652Z",
     "modified": "2016-05-03T15:04:24.652Z",
     "deleted": null,
-    "name": "ticket.status.unsatisfactory_completion"
+    "name": "ticket.status.unsatisfactory"
   }
 },
 {
@@ -106,7 +106,7 @@
     "created": "2016-05-03T15:04:24.649Z",
     "modified": "2016-05-03T15:04:24.649Z",
     "deleted": null,
-    "name": "ticket.status.problem_solved"
+    "name": "ticket.status.solved"
   }
 },
 {

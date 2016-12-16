@@ -191,33 +191,6 @@ class BsOAuthSessionDev1Tests(TestCase):
         self.assertEqual(response.status_code, 200)
 
 
-class BsOAuthSessionSandbox2Tests(TestCase):
-    # Only testing fetching of a token from Sandbox2. The endpoint methods
-    # for Subscriber are different. No POST method.
-
-    def setUp(self):
-        self.session = oauth.BsOAuthSession(
-            token_url=oauth.SANDBOX_SC_TOKEN_URL, client_id=oauth.SANDBOX_SC_CLIENT_ID,
-            client_secret=oauth.SANDBOX_SC_CLIENT_SECRET, username=oauth.SANDBOX_SC_USER_ID,
-            password=oauth.SANDBOX_SC_USER_PASSWORD)
-        self.token = self.session.fetch_token()
-        self.subscriber_post_url = oauth.SANDBOX_SC_SUBSCRIBERS_URL
-
-    def test_client(self):
-        self.assertIsInstance(self.session.client, LegacyApplicationClient)
-
-    def test_oauth(self):
-        self.assertIsInstance(self.session.oauth, OAuth2Session)
-
-    def test_fetch_token(self):
-        self.assertEqual(self.token['token_type'], 'bearer')
-        self.assertEqual(self.token['expires_in'], 600)
-        self.assertIn('access_token', self.token)
-        self.assertIn('refresh_token', self.token)
-        self.assertIn('scope', self.token)
-        self.assertEqual(self.token, self.session.token)
-
-
 class BsOauthApplicationTests(TestCase):
 
     def setUp(self):

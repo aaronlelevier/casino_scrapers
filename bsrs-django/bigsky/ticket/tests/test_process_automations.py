@@ -23,35 +23,27 @@ class TicketProcessAutomationsSetupMixin(TicketSetupMixin):
     def setUp(self):
         super(TicketProcessAutomationsSetupMixin, self).setUp()
         # serializer data
+        self.new_status = create_default(TicketStatus)
         serializer = TicketCreateUpdateSerializer(self.ticket)
         self.data = serializer.data
         self.data.update({
             'id': str(uuid.uuid4()),
-            'status': create_default(TicketStatus).id
+            'status': str(self.new_status.id)
         })
 
 
 class TicketCreateTests(TicketProcessAutomationsSetupMixin, APITestCase):
 
-    @patch("ticket.serializers.TicketCreateUpdateSerializer._process_ticket")
-    def test_process__if_status_not_new(self, mock_func):
-        status, _ = TicketStatus.objects.get_or_create(name=TicketStatus.IN_PROGRESS)
-        self.data['status'] = str(status.id)
-
-        response = self.client.post('/api/tickets/', self.data, format='json')
-
-        self.assertFalse(mock_func.called)
-
-    @patch("ticket.serializers.TicketCreateUpdateSerializer._process_ticket")
+    @patch("ticket.models.Ticket.process_ticket_automations")
     def test_process__if_status_new(self, mock_func):
         response = self.client.post('/api/tickets/', self.data, format='json')
 
-        self.assertIsInstance(mock_func.call_args[0][0], Ticket)
+        self.assertEqual(mock_func.call_args[0][0], self.new_status.name)
 
 
 class TicketUpdateTests(TicketProcessAutomationsSetupMixin, APITestCase):
 
-    @patch("ticket.serializers.TicketCreateUpdateSerializer._process_ticket")
+    @patch("ticket.models.Ticket.process_ticket_automations")
     def test_process__if_status_already_new(self, mock_func):
         ticket = create_standard_ticket()
         data = TicketCreateUpdateSerializer(ticket).data
@@ -60,7 +52,7 @@ class TicketUpdateTests(TicketProcessAutomationsSetupMixin, APITestCase):
 
         self.assertFalse(mock_func.called)
 
-    @patch("ticket.serializers.TicketCreateUpdateSerializer._process_ticket")
+    @patch("ticket.models.Ticket.process_ticket_automations")
     def test_process__if_status_changes_to_new(self, mock_func):
         ticket = create_ticket()
         status, _ = TicketStatus.objects.get_or_create(name=TicketStatus.IN_PROGRESS)
@@ -73,8 +65,7 @@ class TicketUpdateTests(TicketProcessAutomationsSetupMixin, APITestCase):
 
         response = self.client.put('/api/tickets/{}/'.format(ticket.id), data, format='json')
 
-        self.assertTrue(mock_func.called)
-        self.assertEqual(mock_func.call_args[0][0], ticket)
+        self.assertEqual(mock_func.call_args[0][0], self.new_status.name)
 
 
 class TicketProcessAutomationsEndToEndTests(TicketProcessAutomationsSetupMixin, APITestCase):

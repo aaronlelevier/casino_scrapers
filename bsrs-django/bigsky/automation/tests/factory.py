@@ -116,13 +116,13 @@ def create_automation_actions():
 # AutomationFilterTypes
 
 def create_automation_filter_type_priority():
-    obj, _ = AutomationFilterType.objects.get_or_create(key='admin.placeholder.priority_filter_select',
+    obj, _ = AutomationFilterType.objects.get_or_create(key=AutomationFilterType.PRIORITY,
                                                    field='priority')
     return obj
 
 
 def create_automation_filter_type_categories():
-    obj, _ = AutomationFilterType.objects.get_or_create(key='admin.placeholder.category_filter_select',
+    obj, _ = AutomationFilterType.objects.get_or_create(key=AutomationFilterType.CATEGORY,
                                                    field='categories')
     return obj
 
@@ -134,12 +134,12 @@ def create_automation_filter_type_location():
 
 
 def create_automation_filter_type_state():
-    obj, _ = AutomationFilterType.objects.get_or_create(key='admin.placeholder.state_filter_select',
+    obj, _ = AutomationFilterType.objects.get_or_create(key=AutomationFilterType.STATE,
                                                    field='state')
     return obj
 
 def create_automation_filter_type_country():
-    obj, _ = AutomationFilterType.objects.get_or_create(key='admin.placeholder.country_filter_select',
+    obj, _ = AutomationFilterType.objects.get_or_create(key=AutomationFilterType.COUNTRY,
                                                    field='country')
     return obj
 
@@ -182,11 +182,16 @@ def create_ticket_categories_mid_level_filter(automation=None):
         automation=automation, source=source, criteria=[str(child_category.id)])
 
 
-def create_ticket_location_filter(automation=None):
+def create_ticket_location_filter(automation=None, location=None):
     if not automation:
         automation = create_automation(with_filters=False)
-    location = create_top_level_location()
-    location_level = location.location_level
+
+    if location:
+        location_level = location.location_level
+    else:
+        location = create_top_level_location()
+        location_level = location.location_level
+
     source = create_automation_filter_type_location()
     return AutomationFilter.objects.create(
         automation=automation, source=source, criteria=[str(location.id)],

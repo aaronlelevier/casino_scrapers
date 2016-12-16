@@ -150,31 +150,26 @@ class PhoneNumberManager(EmailAndSmsMixin, BaseManager):
         A generic method that sends an sms.
         """
         # if statement, so we're not sending SMS during a unittest run
-        if settings.DEBUG:
-            return True
+        try:
+            twilio_account_sid = settings.TWILIO_ACCOUNT_SID
+            twilio_auth_token = settings.TWILIO_AUTH_TOKEN
+
+            client = TwilioRestClient(twilio_account_sid, twilio_auth_token)
+
+            body = "Ph:{}; Body:{}...".format(ph.number, body[:50])
+            to = settings.TWILIO_NUMBER_TO
+            twilio_number = settings.TWILIO_NUMBER_FROM
+
+            msg = client.messages.create(
+                body=body,
+                to=to,
+                from_=twilio_number
+            )
+        except TwilioRestException:
+            # TODO: add logging - twilio error
+            pass
         else:
-            try:
-                twilio_account_sid = os.environ['TWILIO_ACCOUNT_SID']
-                twilio_auth_token = os.environ['TWILIO_AUTH_TOKEN']
-
-                client = TwilioRestClient(twilio_account_sid, twilio_auth_token)
-
-                body = "Ph:{}; Body:{}...".format(ph.number, body[:50])
-                to = os.environ['TWILIO_NUMBER_TO']
-                twilio_number = os.environ['TWILIO_NUMBER_FROM']
-
-                msg = client.messages.create(
-                    body=body,
-                    to=to,
-                    from_=twilio_number
-                )
-                print(msg.sid)
-            except KeyError:
-                # TODO: add logging - environment variables not configured
-                pass
-            except TwilioRestException:
-                # TODO: add logging - twilio error
-                pass
+            return msg.sid
 
 
 class PhoneNumber(BaseContactModel):

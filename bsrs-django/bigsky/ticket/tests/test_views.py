@@ -7,6 +7,9 @@ from django.utils.timezone import now
 
 from rest_framework.test import APITestCase
 
+from automation.models import AutomationEvent
+from automation.tests.factory import (
+    create_automation, create_automation_action_assignee, create_automation_event)
 from category.models import Category
 from category.tests.factory import create_categories, create_single_category
 from location.models import Location
@@ -17,8 +20,8 @@ from person.tests.factory import PASSWORD, create_single_person, DistrictManager
 from ticket.models import Ticket, TicketStatus, TicketActivity, TicketActivityType
 from ticket.permissions import TicketActivityPermissions
 from ticket.serializers import TicketCreateUpdateSerializer
-from ticket.tests.factory import (create_ticket, create_ticket_activity,
-    create_ticket_activity_type, create_ticket_activity_types,)
+from ticket.tests.factory import (create_ticket, create_standard_ticket,
+    create_ticket_activity, create_ticket_activity_type, create_ticket_activity_types,)
 from ticket.tests.factory_related import create_ticket_priority, create_ticket_status
 from ticket.tests.mixins import (TicketSetupNoLoginMixin, TicketSetupMixin,
     MockTicketActivityPermissionsMixin)
@@ -799,7 +802,7 @@ class TicketAndTicketActivityTests(MockPermissionsAllowAnyMixin, APITestCase):
 
         self.dm = DistrictManager()
         self.person = self.dm.person
-        self.ticket = create_ticket(assignee=self.person)
+        self.ticket = create_standard_ticket(assignee=self.person)
 
         create_ticket_activity_types()
         # Data
@@ -849,6 +852,50 @@ class TicketAndTicketActivityTests(MockPermissionsAllowAnyMixin, APITestCase):
         self.assertEqual(activity.type.name, name)
         self.assertTrue(TicketActivity.objects.filter(content__from=str(self.ticket.assignee.id)).exists())
         self.assertTrue(TicketActivity.objects.filter(content__to=str(new_assingee.id)).exists())
+
+    def test_assignee__user_changes_assignee_so_automation_shouldnt_run(self):
+        # automation
+        automation = create_automation('a')
+        clear_related(automation, 'filters')
+        clear_related(automation, 'actions')
+        clear_related(automation, 'events')
+        automation_action = create_automation_action_assignee(automation)
+        automation.events.add(
+            create_automation_event(key=AutomationEvent.STATUS_IN_PROGRESS))
+        self.assertTrue(automation.is_match(self.ticket))
+        new_assingee = automation_action.content['assignee']
+        self.assertNotEqual(self.data['assignee'], new_assingee)
+        # status
+        init_status = str(self.ticket.status.id)
+        status_in_progress = str(create_ticket_status(TicketStatus.IN_PROGRESS).id)
+        self.assertNotEqual(self.ticket.status.id, status_in_progress)
+        self.data.update({
+            'status': status_in_progress
+        })
+        # pre-test
+        self.assertEqual(TicketActivity.objects.count(), 0)
+
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(TicketActivity.objects.count(), 2)
+        # TicketActivity - assignee (automation generated)
+        self.assertEqual(data['assignee'], new_assingee)
+        activity = TicketActivity.objects.get(
+            type__name=TicketActivityType.ASSIGNEE)
+        self.assertEqual(activity.automation, automation)
+        self.assertIsNone(activity.person)
+        self.assertEqual(activity.content['from'], str(self.ticket.assignee.id))
+        self.assertEqual(activity.content['to'], new_assingee)
+        # TicketActivity - status (user generated)
+        self.assertEqual(data['status'], status_in_progress)
+        activity = TicketActivity.objects.get(
+            type__name=TicketActivityType.STATUS)
+        self.assertIsNone(activity.automation)
+        self.assertEqual(activity.person, self.person)
+        self.assertEqual(activity.content['from'], init_status)
+        self.assertEqual(activity.content['to'], status_in_progress)
 
     def test_cc_add(self):
         name = 'cc_add'
@@ -922,7 +969,7 @@ class TicketAndTicketActivityTests(MockPermissionsAllowAnyMixin, APITestCase):
     def test_status(self):
         name = 'status'
         self.assertEqual(TicketActivity.objects.count(), 0)
-        new_status = create_ticket_status('my-new-status')
+        new_status = create_ticket_status(TicketStatus.UNSATISFACTORY)
         self.assertNotEqual(self.data['status'], str(new_status.id))
         self.data['status'] = str(new_status.id)
 
@@ -963,7 +1010,7 @@ class TicketAndTicketActivityTests(MockPermissionsAllowAnyMixin, APITestCase):
         name = 'categories'
         self.assertEqual(TicketActivity.objects.count(), 0)
         # Only one Category on the Ticket
-        [self.ticket.categories.remove(c) for c in self.ticket.categories.all()[:self.ticket.categories.count()-1]]
+        self.ticket.categories.add(Category.objects.first())
         new_category = Category.objects.exclude(id=self.ticket.categories.first().id).first()
         # repopulate `self.data`
         serializer = TicketCreateUpdateSerializer(self.ticket)

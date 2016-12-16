@@ -5,7 +5,6 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from automation.models import AutomationEvent
 from automation.tests.factory import create_automation
 from category.tests.factory import create_categories, create_single_category
 from generic.tests.factory import create_file_attachment
@@ -45,6 +44,12 @@ class TicketStatusTests(TestCase):
         self.assertEqual(ret['id'], str(status.id))
         self.assertEqual(ret['name'], status.name)
         self.assertFalse(ret['default'])
+
+    def test_automation_event(self):
+        for status in TicketStatus.objects.all():
+            self.assertEqual(status.automation_event,
+                             TicketStatus.status_event_map[status.name],
+                             '%s not found' % status.automation_event)
 
 
 class TicketPriorityTests(TestCase):

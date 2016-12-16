@@ -7,13 +7,13 @@ from django_fsm import FSMKeyField, FSMFieldMixin, transition
 class WorkRequestStatusEnum(object):
     DRAFT = 'draft'
     DENIED = 'denied'
-    PROBLEM_SOLVED = 'problem_solved'
+    SOLVED = 'problem_solved'
     COMPLETE = 'complete'
     DEFERRED = 'deferred'
     NEW = 'new'
     ASSIGNED = 'assigned'
     IN_PROGRESS = 'in_progress'
-    UNSATISFACTORY_COMPLETION = 'unsatisfactory_completion'
+    UNSATISFACTORY = 'unsatisfactory_completion'
     REQUESTED = 'requested'
     APPROVED = 'approved'
 

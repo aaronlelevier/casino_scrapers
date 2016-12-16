@@ -1,5 +1,6 @@
 import uuid
 
+from django.apps import apps
 from django.db import models
 from django.db.models import F, Q, Max
 from django.conf import settings
@@ -16,36 +17,59 @@ from utils.models import (BaseModel, BaseQuerySet, BaseManager, BaseNameModel,
     DefaultToDictMixin)
 
 
-class TicketStatus(DefaultToDictMixin, BaseNameModel):
-    NEW = 'ticket.status.new'
-    DEFERRED = 'ticket.status.deferred'
-    IN_PROGRESS = 'ticket.status.in_progress'
-    COMPLETE = 'ticket.status.complete'
-    DENIED = 'ticket.status.denied'
-    PROBLEM_SOLVED = 'ticket.status.problem_solved'
-    DRAFT = 'ticket.status.draft'
-    UNSATISFACTORY_COMPLETION = 'ticket.status.unsatisfactory_completion'
+class TicketStatus(DefaultToDictMixin, BaseModel):
     CANCELLED = 'ticket.status.cancelled'
+    COMPLETE = 'ticket.status.complete'
+    DEFERRED = 'ticket.status.deferred'
+    DENIED = 'ticket.status.denied'
+    DRAFT = 'ticket.status.draft'
+    IN_PROGRESS = 'ticket.status.in_progress'
+    NEW = 'ticket.status.new'
     PENDING = 'ticket.status.pending'
+    SOLVED = 'ticket.status.solved'
+    UNSATISFACTORY = 'ticket.status.unsatisfactory'
 
     ALL = [
-        NEW,
-        DEFERRED,
-        IN_PROGRESS,
-        COMPLETE,
-        DENIED,
-        PROBLEM_SOLVED,
-        DRAFT,
-        UNSATISFACTORY_COMPLETION,
         CANCELLED,
+        COMPLETE,
+        DEFERRED,
+        DENIED,
+        DRAFT,
+        IN_PROGRESS,
+        NEW,
         PENDING,
+        SOLVED,
+        UNSATISFACTORY
     ]
 
     default = NEW
     DEFAULT = NEW
 
+    name = models.CharField(max_length=100, choices=((x,x) for x in ALL),
+                            default=NEW)
+
     class Meta:
         verbose_name_plural = "Ticket statuses"
+
+    @property
+    def automation_event(self):
+        return self.__class__.status_event_map[self.name]
+
+    @classproperty
+    def status_event_map(cls):
+        AutomationEvent = apps.get_model("automation", "automationevent")
+        return {
+            cls.CANCELLED: AutomationEvent.STATUS_CANCELLED,
+            cls.COMPLETE: AutomationEvent.STATUS_COMPLETE,
+            cls.DEFERRED: AutomationEvent.STATUS_DEFERRED,
+            cls.DENIED: AutomationEvent.STATUS_DENIED,
+            cls.DRAFT: AutomationEvent.STATUS_DRAFT,
+            cls.IN_PROGRESS: AutomationEvent.STATUS_IN_PROGRESS,
+            cls.NEW: AutomationEvent.STATUS_NEW,
+            cls.PENDING: AutomationEvent.STATUS_PENDING,
+            cls.SOLVED: AutomationEvent.STATUS_SOLVED,
+            cls.UNSATISFACTORY: AutomationEvent.STATUS_UNSATISFACTORY
+        }
 
 
 class TicketPriority(DefaultToDictMixin, BaseNameModel):
@@ -187,6 +211,16 @@ class Ticket(BaseModel):
         categories = (self.categories.prefetch_related('categories')
                                      .values('level', 'name'))
         return " - ".join(x['name'] for x in sorted(categories, key=lambda k: k['level']))
+
+    def process_ticket_automations(self, new_status):
+        Automation = apps.get_model("automation", "automation")
+        AutomationEvent = apps.get_model("automation", "automationevent")
+
+        tenant_id = self.location.location_level.tenant.id
+        event = TicketStatus.status_event_map[new_status]
+
+        Automation.objects.process_ticket(tenant_id, ticket=self,
+                                          event=event)
 
 
 class TicketActivityType(BaseModel):

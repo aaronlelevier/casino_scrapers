@@ -273,6 +273,14 @@ CELERY_RESULT_SERIALIZER = 'json'
 # custom
 CELERY_DEFAULT_QUEUE = 'bigsky'
 
+
+# Twilio account with Aaron's Ph #
+TWILIO_ACCOUNT_SID='AC5e0258fb4b1ecc8269a244a3de641067'
+TWILIO_AUTH_TOKEN='5e10e4862ee9bc8fc1c3d569cf36ab5c'
+TWILIO_NUMBER_FROM='+12405756610'
+TWILIO_NUMBER_TO='+17754194000'
+
+
 # LOGGING = {
 #     'version': 1,
 #     'disable_existing_loggers': False,

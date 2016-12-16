@@ -2,15 +2,16 @@ from django.conf import settings
 from django.contrib.auth.models import ContentType
 from django.test import TestCase
 
-from category.models import Category
-from category.tests.factory import create_repair_category
-from contact.tests.factory import create_contact_state, create_contact_country
-from location.tests.factory import create_top_level_location
-from person.models import Role, Person
 from automation.models import (
     AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationActionType, AutomationAction)
 from automation.tests import factory
+from category.models import Category
+from category.tests.factory import create_repair_category
+from contact.tests.factory import create_contact_state, create_contact_country
+from location.models import LOCATION_REGION
+from location.tests.factory import create_top_level_location, create_location, create_location_level
+from person.models import Role, Person
 from tenant.models import Tenant
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority, TicketStatus
@@ -164,7 +165,7 @@ class AutomationFilterTypeTests(TestCase):
         # indempotent
         self.assertEqual(ret, ret_two)
         # attrs
-        self.assertEqual(ret.key, 'admin.placeholder.priority_filter_select')
+        self.assertEqual(ret.key, AutomationFilterType.PRIORITY)
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'priority')
         self.assertEqual(ret.lookups, {})
@@ -175,7 +176,7 @@ class AutomationFilterTypeTests(TestCase):
         # indempotent
         self.assertEqual(ret, ret_two)
         # attrs
-        self.assertEqual(ret.key, 'admin.placeholder.category_filter_select')
+        self.assertEqual(ret.key, AutomationFilterType.CATEGORY)
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'categories')
         self.assertEqual(ret.lookups, {})
@@ -197,7 +198,7 @@ class AutomationFilterTypeTests(TestCase):
         # indempotent
         self.assertEqual(ret, ret_two)
         # attrs
-        self.assertEqual(ret.key, 'admin.placeholder.state_filter_select')
+        self.assertEqual(ret.key, AutomationFilterType.STATE)
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'state')
         self.assertEqual(ret.lookups, {})
@@ -208,7 +209,7 @@ class AutomationFilterTypeTests(TestCase):
         # indempotent
         self.assertEqual(ret, ret_two)
         # attrs
-        self.assertEqual(ret.key, 'admin.placeholder.country_filter_select')
+        self.assertEqual(ret.key, AutomationFilterType.COUNTRY)
         self.assertEqual(ret.context, settings.DEFAULT_PROFILE_FILTER_CONTEXT)
         self.assertEqual(ret.field, 'country')
         self.assertEqual(ret.lookups, {})
@@ -281,6 +282,24 @@ class PriorityFilterTests(TestCase):
         self.assertEqual(pf.lookups, {'filters': 'location_level', 'id': str(location_level.id), 'name': location_level.name})
         self.assertEqual(pf.criteria, [str(location.id)])
 
+    def test_create_ticket_location_filter__with_automation_arg(self):
+        location = create_top_level_location()
+        location_level = location.location_level
+        automation = factory.create_automation()
+
+        pf = factory.create_ticket_location_filter(automation)
+
+        self.assertEqual(pf.automation, automation)
+
+    def test_create_ticket_location_filter__with_location_arg(self):
+        location_level = create_location_level(LOCATION_REGION)
+        location = create_location(location_level)
+
+        pf = factory.create_ticket_location_filter(location=location)
+
+        self.assertEqual(pf.criteria, [str(location.id)])
+        self.assertEqual(pf.lookups, {'filters': 'location_level', 'id': str(location_level.id), 'name': location_level.name})
+
     def test_create_ticket_location_state_filter(self):
         state = create_contact_state()
         source = factory.create_automation_filter_type_state()
@@ -349,7 +368,7 @@ class AutomationTests(TestCase):
         # Automations w/ static AutomationFilter.source
         self.assertEqual(Automation.objects.exclude(filters__lookups__filters='location_level').count(), 4)
         # priority
-        key = 'admin.placeholder.priority_filter_select'
+        key = AutomationFilterType.PRIORITY
         x = Automation.objects.get(filters__source__key=key)
         self.assertEqual(x.description, key)
         # location
@@ -357,15 +376,15 @@ class AutomationTests(TestCase):
         self.assertIsInstance(x, Automation)
         self.assertEqual(x.description, 'location')
         # category
-        key = 'admin.placeholder.category_filter_select'
+        key = AutomationFilterType.CATEGORY
         x = Automation.objects.get(filters__source__key=key)
         self.assertEqual(x.description, key)
         # state
-        key = 'admin.placeholder.state_filter_select'
+        key = AutomationFilterType.STATE
         x = Automation.objects.get(filters__source__key=key)
         self.assertEqual(x.description, key)
         # country
-        key = 'admin.placeholder.country_filter_select'
+        key = AutomationFilterType.COUNTRY
         x = Automation.objects.get(filters__source__key=key)
         self.assertEqual(x.description, key)
 
