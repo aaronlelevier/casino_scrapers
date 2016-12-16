@@ -227,6 +227,7 @@ class AutomationCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
             else:
                 pf.criteria = f.get('criteria', [])
                 pf.lookups = f.get('lookups', {})
+                pf.source = f.get('source')
                 pf.save()
             finally:
                 filter_ids.update([pf.id])

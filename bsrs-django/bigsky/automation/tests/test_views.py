@@ -5,6 +5,7 @@ from model_mommy import mommy
 from rest_framework.test import APITestCase
 
 from category.models import Category
+from category.tests.factory import create_single_category
 from contact.models import State, Country
 from location.models import LocationLevel
 from location.tests.factory import (create_location_levels, create_top_level_location,
@@ -19,7 +20,8 @@ from automation.tests.factory import (
     create_ticket_location_state_filter, create_ticket_location_country_filter, create_automation_events,
     create_automation_event_two, create_automation_action_types, create_automation_action_priority,
     create_automation_action_type, create_automation_action_status, create_automation_action_send_email,
-    create_automation_action_send_sms, create_automation_action_request, create_automation_action_cc)
+    create_automation_action_send_sms, create_automation_action_request, create_automation_action_cc,
+    create_automation_filter_type_categories)
 from automation.tests.mixins import ViewTestSetupMixin
 from ticket.models import TicketPriority, TicketStatus
 from utils.create import _generate_chars
@@ -559,14 +561,15 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(self.automation.filters.filter(source__field='location', lookups={'id': str(location_level_two.id)}).count(), 1)
 
     def test_update__nested_update(self):
-        priority_two = mommy.make(TicketPriority)
-        criteria_two = [str(priority_two.id)]
+        category_af = create_automation_filter_type_categories() 
+        category = create_single_category()
+        criteria_two = [str(category.id)]
         automation_filter = self.automation.filters.first()
-        self.assertEqual(self.automation.filters.first().source, self.priority_af)
+        self.assertNotEqual(self.automation.filters.first().source, category_af)
         self.assertNotEqual(self.automation.filters.first().criteria, criteria_two)
         self.data['filters'] = [{
             'id': str(automation_filter.id),
-            'source': str(automation_filter.source.id),
+            'source': str(category_af.id),
             'criteria': criteria_two
         }]
 
@@ -577,7 +580,7 @@ class AutomationUpdateTests(ViewTestSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(data['filters']), 1)
         self.assertEqual(self.automation.filters.first(), automation_filter)
-        self.assertEqual(self.automation.filters.first().source, self.priority_af)
+        self.assertEqual(self.automation.filters.first().source, category_af)
         self.assertEqual(self.automation.filters.first().criteria, criteria_two)
 
     def test_update__nested_update__dynamic(self):
