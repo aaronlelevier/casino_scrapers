@@ -32,9 +32,9 @@ module.exports = function(defaults) {
     minifyJS: {
       enabled: false
     },
-    'ember-cli-bootstrap-sassy': {
-      'js': false
-    }
+    // 'ember-cli-bootstrap-sassy': {
+    //   'js': false
+    // }
   });
   app.import('vendor/defaults/uuid.js');
   app.import('vendor/defaults/global-message.js');
