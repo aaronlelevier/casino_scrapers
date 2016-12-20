@@ -1,10 +1,11 @@
-<div id={{concat "category-validation" index}} class="input-group">
+<div id={{concat "category-validation" index}} class="input-group {{if readonly 'readonly'}}">
   <span class="input-group-addon t-model-category-label">{{label}}</span>
   {{#power-select
     selected=categories_selected
     options=options
     class=(concat "category-select input-group-select t-model-category-select " invalid)
     tagName="div"
+    disabled=disabled
     onchange=(action "selected")
     onopen=(action "handleOpen" category.id)
     onblur=(action "blurOut")

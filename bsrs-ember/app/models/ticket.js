@@ -44,7 +44,7 @@ const Validations = buildValidations({
 
 const { run, set, get } = Ember;
 
-var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Validations, {
+let TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Validations, {
   init() {
     this._super(...arguments);
     set(this, 'requestValues', []); //store array of values to be sent in dt post or put request field
@@ -59,6 +59,8 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     many_to_many.bind(this)('attachment', 'generic', {plural: true});
     many_to_many.bind(this)('category', 'model', {plural:true, add_func:false});
   },
+  personCurrent: Ember.inject.service('person-current'),
+  isReadOnly: Ember.computed.alias('personCurrent.isReadOnlyTicket'),
   simpleStore: Ember.inject.service(),
   //TODO: test this.  Plan on using for delete modal
   displayName: 'modules.tickets.titleShort',
@@ -171,7 +173,7 @@ var TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     this.saveAttachments();
     this.saveCategories();
     this.saveLocation();
-  },
+  }
 });
 
 export default TicketModel;

@@ -11,7 +11,10 @@ moduleForComponent('parent-model-category-select', 'Unit | Component | parent mo
     needs: ['validator:presence'],
     unit: true,
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:person', 'model:ticket', 'model:category', 'model:model-category', 'model:category-children', 'model:uuid', 'service:eventbus', 'service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:person',
+            'model:ticket', 'model:category', 'model:model-category',
+            'model:category-children', 'model:uuid', 'service:eventbus',
+            'service:i18n', 'service:person-current']);
     }
 });
 

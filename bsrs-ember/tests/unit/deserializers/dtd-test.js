@@ -17,7 +17,13 @@ var store, subject, dtd, run = Ember.run;
 
 module('unit: dtd deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-list', 'model:dtd-link', 'model:link', 'model:dtd-field', 'model:field', 'model:option', 'model:field-option', 'model:link-priority-list', 'model:ticket-priority', 'model:ticket-status', 'model:category', 'model:category-children', 'model:model-category', 'model:attachment', 'model:generic-join-attachment', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:dtd',
+      'model:dtd-list', 'model:dtd-link', 'model:link', 'model:dtd-field',
+      'model:field', 'model:option', 'model:field-option',
+      'model:link-priority-list', 'model:ticket-priority', 'model:ticket-status',
+      'model:category', 'model:category-children', 'model:model-category',
+      'model:attachment', 'model:generic-join-attachment', 'service:i18n',
+      'service:person-current']);
     subject = DTDDeserializer.create({simpleStore: store});
     run(() => {
       store.push('ticket-priority', {id: TP.priorityOneId, name: TP.priorityOne});

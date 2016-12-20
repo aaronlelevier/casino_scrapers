@@ -6,13 +6,16 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CCD from 'bsrs-ember/vendor/defaults/category-children';
 
-var store;
-
 moduleForComponent('model-category-select', 'Unit | Component | model category select', {
-  needs: ['model:person', 'model:ticket', 'model:category', 'model:model-category', 'model:category-children', 'model:uuid', 'service:i18n', 'validator:presence'],
+  needs: ['model:person', 'model:ticket', 'model:category', 'model:model-category',
+    'model:category-children', 'model:uuid', 'service:i18n', 'validator:presence',
+    'service:person-current'],
   unit: true,
   beforeEach() {
-    store = module_registry(this.container, this.registry, []);
+    this.store = module_registry(this.container, this.registry, []);
+  },
+  afterEach() {
+    delete this.store;
   }
 });
 
@@ -20,21 +23,21 @@ moduleForComponent('model-category-select', 'Unit | Component | model category s
 test('categories_selected will always return the correct category object based on index', function(assert) {
   let ticket, category_rando, category_top_level, category_two, category_one;
   run(() => {
-    ticket = store.push('ticket', {id: TD.idOne});
+    ticket = this.store.push('ticket', {id: TD.idOne});
     //rando child
-    store.push('category', {id: CD.idLossPreventionChild, name: CD.nameLossPreventionChild, parent_id: CD.idWatChild, level: 3});
+    this.store.push('category', {id: CD.idLossPreventionChild, name: CD.nameLossPreventionChild, parent_id: CD.idWatChild, level: 3});
     //new 2nd level
-    category_rando = store.push('category', {id: CD.idWatChild, name: CD.nameWatChild, parent_id: CD.unusedId, level: 1});
-    store.push('category-children', {id: CD.idOne, category_pk: CD.idWatChild, children_pk: CD.idLossPreventionChild});
+    category_rando = this.store.push('category', {id: CD.idWatChild, name: CD.nameWatChild, parent_id: CD.unusedId, level: 1});
+    this.store.push('category-children', {id: CD.idOne, category_pk: CD.idWatChild, children_pk: CD.idLossPreventionChild});
     //top level
-    category_top_level = store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: undefined, level: 0});
-    store.push('category-children', {id: CCD.idTwo, category_pk: CD.unusedId, children_pk: CD.idTwo});
-    store.push('category-children', {id: CCD.idThree, category_pk: CD.unusedId, children_pk: CD.idWatChild});
+    category_top_level = this.store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: undefined, level: 0});
+    this.store.push('category-children', {id: CCD.idTwo, category_pk: CD.unusedId, children_pk: CD.idTwo});
+    this.store.push('category-children', {id: CCD.idThree, category_pk: CD.unusedId, children_pk: CD.idWatChild});
     //second level
-    category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId, level: 1});
-    store.push('category-children', {id: 4, category_pk: CD.idTwo, children_pk: CD.idOne});
+    category_two = this.store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId, level: 1});
+    this.store.push('category-children', {id: 4, category_pk: CD.idTwo, children_pk: CD.idOne});
     //third level
-    category_one = store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo, level: 2});
+    category_one = this.store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo, level: 2});
   });
   let subject_one = this.subject({ticket: ticket, index: undefined});
   // TODO: these are not creating separate instances

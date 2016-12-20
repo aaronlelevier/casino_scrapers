@@ -10,7 +10,8 @@ var original_xhr, expected_endpoint;
 
 module('unit: grid repository test', {
   beforeEach(assert) {
-    module_registry(this.container, this.registry, ['model:ticket', 'model:grid-count']);
+    module_registry(this.container, this.registry, ['model:ticket', 
+      'model:grid-count', 'service:person-current']);
     original_xhr = PromiseMixin.xhr;
     PromiseMixin.xhr = function(endpoint) {
       assert.equal(endpoint, expected_endpoint);

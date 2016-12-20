@@ -20,10 +20,13 @@ let store, ticket, link;
 
 module('unit: ticket test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:category', 'model:ticket-status', 
-      'model:ticket-priority', 'model:ticket-join-person', 'model:model-category', 'model:uuid', 
-      'service:person-current', 'service:translations-fetcher', 'service:i18n', 'model:attachment', 'model:status', 'model:role', 
-      'model:location-level', 'model:dtd', 'model:link', 'model:generic-join-attachment', 'model:related-person', 'model:related-location']);
+    store = module_registry(this.container, this.registry, ['model:ticket', 
+      'model:category', 'model:ticket-status', 'model:ticket-priority',
+      'model:ticket-join-person', 'model:model-category', 'model:uuid', 
+      'service:person-current', 'service:translations-fetcher', 'service:i18n',
+      'model:attachment', 'model:status', 'model:role', 'model:location-level',
+      'model:dtd', 'model:link', 'model:generic-join-attachment', 
+      'model:related-person', 'model:related-location']);
     run(() => {
       store.push('status', {id: SD.activeId, name: SD.activeName});
       store.push('role', {id: RD.idOne, name: RD.nameOne, location_level_fk: LLD.idOne});

@@ -26,7 +26,8 @@ moduleForComponent('ticket-cc-power-select', 'integration: ticket-cc-power-selec
     trans = this.container.lookup('service:i18n');
     loadTranslations(trans, translations.generate('en'));
     translation.initialize(this);
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:ticket-join-person']);
+    store = module_registry(this.container, this.registry, ['model:ticket',
+      'model:person', 'model:ticket-join-person', 'service:person-current']);
     run(function() {
       m2m = store.push('ticket-join-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
       m2m_two = store.push('ticket-join-person', {id: TPD.idTwo, ticket_pk: TD.idOne, person_pk: PD.idTwo});

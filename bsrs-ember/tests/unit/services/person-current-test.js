@@ -3,7 +3,7 @@ const { run } = Ember;
 import { moduleFor, test } from 'ember-qunit';
 import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
 import { eachPermission } from 'bsrs-ember/utilities/permissions';
-
+import { RESOURCES_WITH_PERMISSION } from 'bsrs-ember/utilities/constants';
 
 
 moduleFor('service:person-current', 'Unit | Service | person current', {
@@ -65,4 +65,19 @@ test('permissions list will return a different permissions list if the model und
   assert.equal(service.get('model').get('id'), 'zyx321');
   assert.equal(person_current.get('permissions').length, 0, 'updated person-current has no permissions');
   assert.equal(service.get('permissions').length, 0, 'permissions is removed from person current service');
+});
+
+test('has computed rights from the permissions list', function(assert) {
+  let permissions = PERSON_CURRENT.defaults().permissions;
+  let service = this.subject();
+  eachPermission((resource, verb) => {
+    let prop = `can_${verb}_${resource}`.camelize();
+    let right = service.get(prop);
+    assert.ok(typeof right === 'boolean', `${prop}:${right} is computed`);
+  });
+  RESOURCES_WITH_PERMISSION.forEach((resource) => {
+    let prop = `is_read_only_${resource}`.camelize();
+    let right = service.get(prop);
+    assert.ok(typeof right === 'boolean', `${prop}:${right} is computed`);
+  });
 });

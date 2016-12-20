@@ -6,7 +6,7 @@ import { ValidationComponentInit, ValidationComponentPieces } from 'bsrs-ember/m
 
 const DEBOUNCE_MS = config.APP.POWER_SELECT_DEBOUNCE;
 
-var DBFetch = Ember.Component.extend(ValidationComponentInit, ValidationComponentPieces, {
+let DBFetch = Ember.Component.extend(ValidationComponentInit, ValidationComponentPieces, {
   searchRepo: task(function * (search) {
     if (Ember.isBlank(search)) { return []; }
     yield timeout(DEBOUNCE_MS);

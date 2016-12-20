@@ -4,7 +4,7 @@ import inject from 'bsrs-ember/utilities/inject';
 let DTNewRoute = Ember.Route.extend({
   locationRepo: inject('location'),
   ticketRepository: inject('ticket'),
-  personCurrent: Ember.inject.service(),
+  personCurrent: Ember.inject.service('person-current'),
   model(params) {
     const new_pk = parseInt(params.new_id, 10);
     let person = this.get('personCurrent').get('model').get('person');

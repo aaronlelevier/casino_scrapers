@@ -85,7 +85,7 @@ test('clicking save will reveal all validation msgs', function(assert) {
   });
 });
 
-test('filling in location level on location new template will set diabled to false for children and parents', function(assert) {
+test('filling in location level on location new template will set disabled to false for children and parents', function(assert) {
   run(() => {
     this.model = store.push('location', {id: UUID.value, new: true});
     store.push('location-level', LLF.generate(LLD.idOne));

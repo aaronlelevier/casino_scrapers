@@ -13,7 +13,9 @@ var store, priority, status, dtd, link;
 
 module('unit: link test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:link', 'model:dtd', 'model:model-category', 'model:category', 'model:ticket-priority', 'model:ticket-status', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:link',
+      'model:dtd', 'model:model-category', 'model:category', 'model:ticket-priority',
+      'model:ticket-status', 'service:i18n']);
     run(() => {
       priority = store.push('ticket-priority', {id: TP.priorityOneId, name: TP.priorityOne});
       store.push('ticket-priority', {id: TP.priorityTwoId, name: TP.priorityTwo});

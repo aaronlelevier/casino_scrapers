@@ -9,7 +9,8 @@ let store, tab1;
 
 module('unit: tab', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:tab', 'model:ticket']);
+    store = module_registry(this.container, this.registry, ['model:tab',
+      'model:ticket', 'service:person-current']);
   }
 });
 

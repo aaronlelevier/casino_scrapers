@@ -11,7 +11,9 @@ var store, ticket, ticket_detail;
 
 module('unit: ticket list test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-list', 'model:general-status-list', 'model:ticket-priority-list', 'model:location', 'model:category-list']);
+    store = module_registry(this.container, this.registry, ['model:ticket',
+      'model:ticket-list', 'model:general-status-list', 'model:ticket-priority-list',
+      'model:location', 'model:category-list', 'service:person-current']);
     run(() => {
       ticket_detail = store.push('ticket', {id: TD.idOne, number: 'scoo'});
       ticket = store.push('ticket-list', {id: TD.idOne, location_fk: LD.idOne, category_ids: [CD.idOne, CD.idTwo]});

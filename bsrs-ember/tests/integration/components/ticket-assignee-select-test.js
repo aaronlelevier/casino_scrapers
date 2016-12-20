@@ -20,7 +20,8 @@ let store, ticket, person_one, person_two, person_three, run = Ember.run, person
 moduleForComponent('ticket-assignee-select', 'integration: ticket-assignee-select test', {
   integration: true,
   setup() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:person']);
+    store = module_registry(this.container, this.registry, ['model:ticket',
+      'model:person', 'service:person-current']);
     run(function() {
       ticket = store.push('ticket', {id: TD.idOne, assignee_fk: PD.idOne});
       person_one = store.push('related-person', {id: PD.idOne, first_name: PD.nameOne, last_name: PD.lastNameOne, username: PD.usernameOne, title: PD.titleOne});

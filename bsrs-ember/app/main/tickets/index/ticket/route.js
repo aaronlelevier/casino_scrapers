@@ -3,7 +3,7 @@ import inject from 'bsrs-ember/utilities/inject';
 import TabRoute from 'bsrs-ember/route/tab/route';
 import FindById from 'bsrs-ember/mixins/route/findById';
 
-var TicketSingleRoute = TabRoute.extend(FindById, {
+let TicketSingleRoute = TabRoute.extend(FindById, {
   i18n: Ember.inject.service(),
   title() {
     return this.get('i18n').t('doctitle.ticket.single', { number: this.get('ticketNumber') });
@@ -29,7 +29,6 @@ var TicketSingleRoute = TabRoute.extend(FindById, {
     let ticket = repository.fetch(pk);
     const otherXhrs = [this.get('activityRepository').find('ticket', 'tickets', pk, ticket)];
 
-
     return this.findByIdScenario(ticket, pk, { repository:repository }, false, otherXhrs);
   },
   setupController: function(controller, hash) {
@@ -50,7 +49,7 @@ var TicketSingleRoute = TabRoute.extend(FindById, {
 
     // set doctitle
     this.set('ticketNumber', hash.model.get('number'));
-  },
+  }
 });
 
 export default TicketSingleRoute;

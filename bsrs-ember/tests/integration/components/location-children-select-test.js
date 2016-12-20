@@ -50,7 +50,7 @@ test('should render a selectbox when with options selected (initial state of chi
     });
     this.set('model', locationz);
     this.repository = location_repo;
-    this.render(hbs`{{db-fetch-multi-select model=model isDisabled=isDisabled multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-location-child-select" displayName="name" add_func="add_child" remove_func="remove_child" repository=repository searchMethod="findLocationChildren" extra_params=extra_params}}`);
+    this.render(hbs`{{db-fetch-multi-select model=model disabled=disabled multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-location-child-select" displayName="name" add_func="add_child" remove_func="remove_child" repository=repository searchMethod="findLocationChildren" extra_params=extra_params}}`);
     clickTrigger();
     assert.equal(this.$(DROPDOWN).length, 1);
     assert.equal(this.$('.ember-power-select-options > li').length, 1);
@@ -61,7 +61,7 @@ test('should render a selectbox when with options selected (initial state of chi
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
     this.set('model', locationz);
     this.repository = location_repo;
-    this.render(hbs`{{db-fetch-multi-select model=model isDisabled=isDisabled multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-location-child-select" displayName="name" add_func="add_child" remove_func="remove_child" repository=repository searchMethod="findLocationChildren" extra_params=extra_params}}`);
+    this.render(hbs`{{db-fetch-multi-select model=model disabled=disabled multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-location-child-select" displayName="name" add_func="add_child" remove_func="remove_child" repository=repository searchMethod="findLocationChildren" extra_params=extra_params}}`);
     assert.equal(locationz.get('children').get('length'), 2);
     clickTrigger();
     run(() => { typeInSearch('a'); });

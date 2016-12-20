@@ -4,6 +4,8 @@
   ticket_category_options=category.children
   allowClear=allowClear
   categoryRepo=categoryRepo
+  disabled=disabled
+  readonly=readonly
 }}
 
 {{#each model.sorted_categories as |category index|}}
@@ -14,6 +16,8 @@
       category=category
       ticket_category_options=category.children
       allowClear=allowClear
+      disabled=disabled
+      readonly=readonly
     }}
   {{/if}}
 {{/each}}

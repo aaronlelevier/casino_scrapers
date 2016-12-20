@@ -28,7 +28,17 @@ let store, automation, deserializer, pfilter, pfilter_unused;
 
 module('unit: automation deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-action', 'model:automation-action-type', 'model:automation-join-action', 'model:automation-event', 'model:automation-join-event', 'model:automation-list', 'model:person', 'model:related-person', 'model:automation-join-pfilter', 'model:pfilter', 'model:sendemail', 'model:generic-join-recipients', 'model:sendsms', 'model:generic-join-recipients', 'model:criteria', 'model:pfilter-join-criteria', 'model:ticket-priority', 'model:ticket-status', 'model:action-join-person', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'validator:presence', 'validator:length', 'validator:has-many', 'model:uuid']);
+    store = module_registry(this.container, this.registry, ['model:automation',
+      'model:automation-action', 'model:automation-action-type',
+      'model:automation-join-action', 'model:automation-event',
+      'model:automation-join-event', 'model:automation-list', 'model:person',
+      'model:related-person', 'model:automation-join-pfilter', 'model:pfilter',
+      'model:sendemail', 'model:generic-join-recipients', 'model:sendsms',
+      'model:generic-join-recipients', 'model:criteria',
+      'model:pfilter-join-criteria', 'model:ticket-priority', 'model:ticket-status',
+      'model:action-join-person', 'service:person-current',
+      'service:translations-fetcher', 'service:i18n', 'validator:presence',
+      'validator:length', 'validator:has-many', 'model:uuid']);
     const uuid = this.container.lookup('model:uuid');
     deserializer = automationDeserializer.create({ simpleStore: store, uuid: uuid });
     run(() => {

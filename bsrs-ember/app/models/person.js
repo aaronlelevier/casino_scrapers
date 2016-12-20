@@ -74,7 +74,7 @@ const Validations = buildValidations({
   emails: validator('has-many'),
 });
 
-var Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMixin, LocaleMixin, {
+let Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMixin, LocaleMixin, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('status', 'person', {bootstrapped:true});
@@ -256,7 +256,7 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMi
       return num.serialize();
     });
 
-    var payload = {
+    let payload = {
       id: this.get('id'),
       username: this.get('username'),
       first_name: this.get('first_name'),

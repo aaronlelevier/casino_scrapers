@@ -25,6 +25,8 @@
                 {{parent-model-category-select
                   model=model
                   valuePath="categories"
+                  disabled=model.isReadOnly
+                  readonly=model.isReadOnly
                 }}
               </div>
               <div class="col-md-12 request-wrap">
@@ -37,6 +39,7 @@
                     className="t-ticket-request-single ticket-request"
                     textarea=true
                     class="t-ticket-request-validator"
+                    readonly=model.isReadOnly
                   }}
                 </div>
               </div>
@@ -60,7 +63,7 @@
   <menu class="t-side-menu">
     <section>
       <div class="col-md-12">
-        {{#form-group title="ticket.label.location-name" for="location"}}
+        {{#form-group title="ticket.label.location-name" for="location" readonly=model.isReadOnly}}
         {{db-fetch-select
           model=model
           selectedAttr=model.location
@@ -71,11 +74,12 @@
           searchMethod="findTicket"
           valuePath="location"
           errorClass="error t-ticket-location-error"
+          disabled=model.isReadOnly
         }}
         {{/form-group}}
       </div>
       <div class="col-md-12">
-        {{#form-group title="ticket.label.assignee-fullname" for="assignee"}}
+        {{#form-group title="ticket.label.assignee-fullname" for="assignee" readonly=model.isReadOnly}}
           {{db-fetch-select
             model=model
             selectedAttr=model.assignee
@@ -86,11 +90,12 @@
             searchMethod="findPeople"
             valuePath="assignee"
             componentArg="photo-avatar"
+            disabled=model.isReadOnly
           }}
         {{/form-group}}
       </div>
       <div class="col-md-12">
-        {{#form-group title="ticket.label.cc" for="cc"}}
+        {{#form-group title="ticket.label.cc" for="cc" readonly=model.isReadOnly}}
         {{db-fetch-multi-select 
           model=model 
           multiAttr="cc" 
@@ -103,28 +108,31 @@
           repository=personRepo 
           searchMethod="findPeople"
           componentArg="photo-avatar"
+          disabled=model.isReadOnly
         }}
         {{/form-group}}
       </div>
       <div class="col-md-12">
-        {{#form-group title="ticket.label.status-name" for="status"}}
+        {{#form-group title="ticket.label.status-name" for="status" readonly=model.isReadOnly}}
           {{power-select-foreign-key
             model=model
             componentArg="tickets/ticket-status-tag"
             selected=model.status
             change_method="change_status"
             relatedModelName="ticket-status"
+            disabled=model.isReadOnly
           }}
         {{/form-group}}
       </div>
       <div class="col-md-12">
-        {{#form-group title="ticket.label.priority-name" for="priority"}}
+        {{#form-group title="ticket.label.priority-name" for="priority" readonly=model.isReadOnly}}
           {{power-select-foreign-key
             model=model
             componentArg="tickets/ticket-priority-tag"
             selected=model.priority
             change_method="change_priority"
             relatedModelName="ticket-priority"
+            disabled=model.isReadOnly
           }}
         {{/form-group}}
       </div>

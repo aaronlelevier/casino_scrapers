@@ -50,7 +50,7 @@ test('should render a selectbox when with options selected (initial state)', fun
   });
   this.set('model', locationz);
   this.repository = location_repo;
-  this.render(hbs`{{db-fetch-multi-select model=model isDisabled=isDisabled multiAttr="parents" multiAttrIds="parents_ids" selectedAttr=model.parents className="t-location-parent-select" displayName="name" add_func="add_parent" remove_func="remove_parent" repository=repository searchMethod="findLocationParents" extra_params=extra_params}}`);
+  this.render(hbs`{{db-fetch-multi-select model=model disabled=isDisabled multiAttr="parents" multiAttrIds="parents_ids" selectedAttr=model.parents className="t-location-parent-select" displayName="name" add_func="add_parent" remove_func="remove_parent" repository=repository searchMethod="findLocationParents" extra_params=extra_params}}`);
   clickTrigger();
   assert.equal(this.$(DROPDOWN).length, 1);
   assert.equal(this.$('.ember-power-select-options > li').length, 1);
@@ -61,7 +61,7 @@ test('should render a selectbox when with options selected (initial state)', fun
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
   this.set('model', locationz);
   this.repository = location_repo;
-  this.render(hbs`{{db-fetch-multi-select model=model isDisabled=isDisabled multiAttr="parents" multiAttrIds="parents_ids" selectedAttr=model.parents className="t-location-parent-select" displayName="name" add_func="add_parent" remove_func="remove_parent" repository=repository searchMethod="findLocationParents" extra_params=extra_params}}`);
+  this.render(hbs`{{db-fetch-multi-select model=model disabled=isDisabled multiAttr="parents" multiAttrIds="parents_ids" selectedAttr=model.parents className="t-location-parent-select" displayName="name" add_func="add_parent" remove_func="remove_parent" repository=repository searchMethod="findLocationParents" extra_params=extra_params}}`);
   assert.equal(locationz.get('parents').get('length'), 2);
   clickTrigger();
   run(() => { typeInSearch('a'); });

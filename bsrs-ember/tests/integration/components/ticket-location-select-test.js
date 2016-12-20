@@ -22,7 +22,8 @@ moduleForComponent('ticket-location-select', 'integration: ticket-location-selec
     trans = this.container.lookup('service:i18n');
     loadTranslations(trans, translations.generate('en'));
     translation.initialize(this);
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:location']);
+    store = module_registry(this.container, this.registry, ['model:ticket',
+      'model:location', 'service:person-current']);
     run(function() {
       ticket = store.push('ticket', {id: TD.idOne, location_fk: LD.idOne});
       location_one = store.push('related-location', {id: LD.idOne, name: LD.storeName});

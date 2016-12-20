@@ -5,7 +5,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
-//import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
+import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
@@ -13,15 +13,17 @@ import { clickTrigger, nativeMouseUp } from 'bsrs-ember/tests/helpers/ember-powe
 import wait from 'ember-test-helpers/wait';
 
 let store, ticket, trans;
-//const PD = PERSON_DEFAULTS.defaults();
 
 moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
   integration: true,
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status', 'model:model-category', 'service:device/layout']);
+    store = module_registry(this.container, this.registry, ['model:ticket',
+      'model:ticket-status', 'model:model-category', 'service:device/layout',
+      'service:person-current']);
     translation.initialize(this);
     trans = this.container.lookup('service:i18n');
     run(() => {
+      store.push('person-current', PERSON_CURRENT.defaults());
       store.push('model-category', {id: TICKET_CD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
       store.push('model-category', {id: TICKET_CD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
       store.push('model-category', {id: TICKET_CD.idThree, model_pk: TD.idOne, category_pk: CD.unusedId});
@@ -119,4 +121,24 @@ test('click priority dropdown an choose priority from dropdown', function(assert
   nativeMouseUp(`.ember-power-select-option:contains(${TD.priorityOneKey})`);
   assert.equal(Ember.$('[data-test-id="priority-tag"]').text().trim(), TD.priorityOneKey);
   assert.equal(Ember.$('[data-test-id="priority-tag"]').length, 1);
+});
+
+test('permissions to "read only" show disabled input and select boxes', function(assert) {
+  let person = PERSON_CURRENT.defaults();
+  person.permissions = person.permissions.filter((perm) => { return perm !== 'change_ticket'; });
+  run(() => {
+    store.push('person-current', person);
+  });
+  this.set('model', ticket);
+  this.set('activities', []);
+  this.render(hbs`{{tickets/ticket-single model=model activities=activities}}`);
+  let $component = this.$('.t-ticket-status-select'); // actual component
+  assert.equal($component.length, 1);
+  let readonlyInput = this.$('textarea[readonly]');
+  assert.equal(readonlyInput.length, 1, 'readonly textarea shown');
+  let readonlyInputVal = readonlyInput.val();
+  let readonlySelectGroups = this.$('.readonly .ember-power-select-trigger');
+  assert.equal(readonlySelectGroups.length, 6, '6 select groups have a readonly class');
+  let powerSelectTrigger = this.$('[aria-disabled]');
+  assert.equal(powerSelectTrigger.length, 6, '6 selects are disabled');
 });

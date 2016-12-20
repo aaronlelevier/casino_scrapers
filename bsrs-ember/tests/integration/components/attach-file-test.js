@@ -10,7 +10,8 @@ let store;
 moduleForComponent('tickets/ticket-comments-and-file-upload', 'integration: upload file progress test', {
   integration: true,
   setup() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:attachment']);
+    store = module_registry(this.container, this.registry, ['model:ticket',
+      'model:attachment', 'service:person-current']);
   }
 });
 

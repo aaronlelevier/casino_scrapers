@@ -18,6 +18,7 @@ const TIMEOUT = config.APP.VALIDATION_TIMEOUT_INTERVAL;
 export default Ember.Component.extend(ValidationComponentPieces, ValidationComponentInit, {
   type: 'text',
   tageName: '',
+  readonly: false,
   setFocusedOut: task(function * () {
     yield timeout(TIMEOUT);
     if (this.get('isInvalid')) {
@@ -29,6 +30,9 @@ export default Ember.Component.extend(ValidationComponentPieces, ValidationCompo
   }).restartable(),
   actions: {
     focusedOut() {
+      if (this.get('readonly')) {
+        return false; // input|textarea[readonly] still allows events, not editing
+      }
       if (this.get('isInvalid')) { 
         this.set('showMessage', false);
         this.set('invalidClass', true); 
@@ -36,6 +40,9 @@ export default Ember.Component.extend(ValidationComponentPieces, ValidationCompo
       }
     },
     keyedUp() {
+      if (this.get('readonly')) {
+        return false; // input|textarea[readonly] still allows events, not editing
+      }
       if (this.get('isInvalid')) {
         this.get('setFocusedOut').perform();
         this.set('focused', true); 

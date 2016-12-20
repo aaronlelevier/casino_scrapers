@@ -10,4 +10,10 @@ input[type="text"]:disabled {
 		border: none;
 		box-shadow: none;
 	}
+}
+input[readonly],
+input[readonly].form-control,
+textarea[readonly],
+textarea[readonly].form-control {
+	background-color: transparent;
 }//input

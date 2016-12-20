@@ -20,7 +20,8 @@ const PD = PERSON_DEFAULTS.defaults();
 moduleForComponent('power-select-location', 'integration: power-select-location', {
   integration: true,
   setup() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:location', 'model:person', 'model:person-location']);
+    store = module_registry(this.container, this.registry, ['model:ticket',
+      'model:location', 'model:person', 'model:person-location', 'service:person-current']);
     run(() => {
       ticket = store.push('ticket', {id: TD.idOne});
       person = store.push('person', {id: PD.idOne, has_multi_locations: true});

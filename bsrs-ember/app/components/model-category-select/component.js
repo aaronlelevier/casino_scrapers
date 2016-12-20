@@ -22,6 +22,8 @@ var TicketCategories = Ember.Component.extend({
       }
     }
   }),
+  disabled: false,
+  readonly: false,
   options: Ember.computed('ticket_category_options.[]', function() {
     let options = this.get('ticket_category_options');
     if (options && options.get('length') > 0) {

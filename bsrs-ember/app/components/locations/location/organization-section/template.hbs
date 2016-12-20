@@ -10,7 +10,7 @@
         {{#form-group title="admin.location.label.parents-name" for="location_parents" optional="true"}}
         {{db-fetch-multi-select
           model=model
-          isDisabled=isDisabled
+          disabled=disabled
           multiAttr="parents"
           multiAttrIds="parents_ids"
           selectedAttr=model.parents
@@ -37,7 +37,7 @@
         {{#form-group title="admin.location.label.children-name" for="location_children" optional="true"}}
         {{db-fetch-multi-select
           model=model
-          isDisabled=isDisabled
+          disabled=disabled
           multiAttr="children"
           multiAttrIds="children_ids"
           selectedAttr=model.children

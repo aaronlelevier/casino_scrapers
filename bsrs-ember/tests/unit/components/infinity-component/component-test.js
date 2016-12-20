@@ -2,7 +2,7 @@ import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 
 moduleForComponent('infinity-component', 'Unit | Component | infinity component', {
-  needs: ['model:ticket'],
+  needs: ['model:ticket', 'service:person-current'],
   unit: true
 });
 

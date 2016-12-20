@@ -13,7 +13,14 @@ let store, activity, run = Ember.run;
 
 module('unit: activity test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:activity', 'model:activity/cc-add', 'model:activity/automation', 'model:activity/send-email', 'model:activity/cc-remove', 'model:activity/send-sms', 'model:activity/assignee', 'model:activity/person', 'model:ticket', 'model:ticket-status', 'model:ticket-priority', 'model:activity/category-to', 'model:activity/category-from', 'model:activity/attachment-add', 'model:activity/attachment-remove']);
+    store = module_registry(this.container, this.registry, ['model:activity',
+      'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity/assignee',
+      'model:activity/person', 'model:ticket', 'model:ticket-status',
+      'model:ticket-priority', 'model:activity/category-to', 'model:activity/category-from',
+      'model:activity/attachment-add', 'model:activity/attachment-remove',
+      'model:activity/automation', 'model:activity/send-email', 'model:activity/send-sms',
+      'service:person-current']
+    );
   }
 });
 

@@ -26,10 +26,17 @@ const PD = PERSON_DEFAULTS.defaults();
 let automation, event, action, actionType, pfilter, pf;
 
 moduleFor('model:automation', 'Unit | Model | automation', {
-  needs: ['model:automation-event', 'model:automation-join-event', 'model:automation-join-pfilter', 'model:generic-join-recipients' , 'model:automation-action', 
-    'model:automation-action-type', 'model:automation-join-action', 'model:pfilter', 'model:criteria', 'model:pfilter-join-criteria', 'model:person', 'model:related-person', 'model:person-current', 
-    'model:ticket-priority', 'model:sendsms', 'service:i18n', 'validator:presence', 'validator:length', 'validator:format', 'validator:has-many', 'validator:belongs-to', 
-    'validator:automation-action-type','validator:action-ticket-request', 'validator:action-ticketcc', 'validator:action-assignee'],
+  needs: ['model:automation-event', 'model:automation-join-event',
+    'model:automation-join-pfilter', 'model:generic-join-recipients',
+    'model:automation-action', 'model:automation-action-type',
+    'model:automation-join-action', 'model:pfilter', 'model:criteria',
+    'model:pfilter-join-criteria', 'model:person', 'model:related-person',
+    'model:person-current', 'model:ticket-priority', 'model:sendsms',
+    'service:i18n', 'service:person-current', 'validator:presence',
+    'validator:length', 'validator:format', 'validator:has-many',
+    'validator:belongs-to', 'validator:automation-action-type',
+    'validator:action-ticket-request', 'validator:action-ticketcc',
+    'validator:action-assignee'],
   beforeEach() {
     this.store = module_registry(this.container, this.registry);
     run(() => {

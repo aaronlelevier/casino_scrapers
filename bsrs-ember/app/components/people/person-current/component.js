@@ -8,7 +8,7 @@ export default Ember.Component.extend({
   simpleStore: Ember.inject.service(),
   tagName: 'li',
   classNames: ['dropdown current-user t-current-user'],
-  personCurrent: Ember.inject.service(),
+  personCurrent: Ember.inject.service('person-current'),
   instance: Ember.computed(function(){
     return this.get('personCurrent').get('model');
   }).volatile(),

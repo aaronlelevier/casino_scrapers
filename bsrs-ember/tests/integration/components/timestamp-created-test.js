@@ -7,13 +7,14 @@ import translations from 'bsrs-ember/vendor/translation_fixtures';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 
-var ticket, store, trans;
+let ticket, store, trans;
 
 moduleForComponent('timestamp-created test', 'Integration | Component | timestamp created', {
     integration: true,
     setup() {
         translation.initialize(this);
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:person']);
+        store = module_registry(this.container, this.registry, ['model:ticket',
+            'model:person', 'service:person-current']);
         // timemachine.config({
         //     dateString: 'December 25, 2015 13:12:59'
         // });

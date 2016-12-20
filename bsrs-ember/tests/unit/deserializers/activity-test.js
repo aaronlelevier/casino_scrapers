@@ -13,10 +13,13 @@ const PD = PERSON_DEFAULTS.defaults();
 
 module('unit: activity deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:uuid', 'model:ticket-status', 'model:ticket-priority', 
-          'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity', 'model:activity/assignee', 'model:activity/person', 
-          'model:activity/category-to', 'model:activity/category-from', 'model:activity/attachment-add','model:activity/attachment-remove',
-          'model:activity/send-sms', 'model:activity/send-email', 'model:activity/automation']);
+        store = module_registry(this.container, this.registry, ['model:uuid',
+            'model:ticket-status', 'model:ticket-priority', 'model:activity/cc-add',
+            'model:activity/cc-remove', 'model:activity', 'model:activity/assignee',
+            'model:activity/person', 'model:activity/category-to', 'model:activity/category-from',
+            'model:activity/attachment-add','model:activity/attachment-remove',
+            'model:activity/automation', 'model:activity/send-sms', 'model:activity/send-email',
+            'service:person-current']);
         uuid = this.container.lookup('model:uuid');
         subject = ActivityDeserializer.create({simpleStore:store, uuid:uuid});
     }

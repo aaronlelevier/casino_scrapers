@@ -9,7 +9,9 @@ var store, ticket, ticketRepo, uuid;
 
 module('unit: ticket repo test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status', 'model:ticket-priority', 'model:uuid', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:ticket',
+      'model:ticket-status', 'model:ticket-priority', 'model:uuid',
+      'service:i18n', 'service:person-current']);
     uuid = this.container.lookup('model:uuid');
     run(() => {
         store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey, default: true});

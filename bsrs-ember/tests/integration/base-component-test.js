@@ -22,7 +22,7 @@ moduleForComponent('base-component', 'integration: base-component test', {
   integration: true,
   beforeEach() {
     this.store = module_registry(this.container, this.registry, ['model:ticket', 
-      'model:ticket-status', 'model:model-category']);
+      'model:ticket-status', 'model:model-category', 'service:person-current']);
     translation.initialize(this);
     this.container.lookup('service:i18n');
     run(() => {

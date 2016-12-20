@@ -23,7 +23,9 @@ moduleForComponent('activity-list', 'integration: activity-list', {
   integration: true,
   setup() {
     translation.initialize(this);
-    store = module_registry(this.container, this.registry, ['model:ticket-status', 'model:ticket-priority', 'model:activity/cc-add', 'model:activity', 'model:activity/assignee', 'model:activity/person']);
+    store = module_registry(this.container, this.registry, ['model:ticket-status',
+      'model:ticket-priority', 'model:activity/cc-add', 'model:activity',
+      'model:activity/assignee', 'model:activity/person', 'service:person-current']);
     // timemachine.config({
     //     dateString: 'December 25, 2015 13:12:59'
     // });

@@ -18,7 +18,11 @@ var store, dtd, dtd_2, link, priority, status, field;
 
 module('unit: dtd test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:dtd', 'model:dtd-link', 'model:link', 'model:ticket-priority', 'model:ticket-status', 'model:field', 'model:dtd-field', 'model:option', 'model:field-option', 'model:attachment', 'model:category', 'model:model-category', 'model:generic-join-attachment', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:dtd',
+      'model:dtd-link', 'model:link', 'model:ticket-priority', 'model:ticket-status',
+      'model:field', 'model:dtd-field', 'model:option', 'model:field-option',
+      'model:attachment', 'model:category', 'model:model-category',
+      'model:generic-join-attachment', 'service:i18n', 'service:person-current']);
     run(() => {
       dtd = store.push('dtd', {id: DTD.idOne, dtd_links_fks: [DTDL.idOne]});
       dtd_2 = store.push('dtd', {id: DTD.idTwo, destination_links: [LINK.idOne]});

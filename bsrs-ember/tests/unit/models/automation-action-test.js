@@ -22,7 +22,15 @@ let store, action, actionType, type, assignee, priority, sendEmail, sendsms, tic
 
 moduleFor('model:automation-action', 'Unit | Model |  automation-action', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:automation-action', 'model:automation-action-type', 'model:generic-join-recipients', 'model:generic-join-recipients', 'model:person', 'model:related-person', 'model:ticket-priority', 'model:ticket-status', 'model:sendemail', 'model:sendsms', 'service:person-current', 'service:translations-fetcher','model:action-join-person', 'service:i18n', 'validator:presence','validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many', 'validator:automation-action-type', 'validator:belongs-to', 'validator:action-ticket-request', 'validator:action-ticketcc', 'validator:action-assignee']);
+    store = module_registry(this.container, this.registry, ['model:automation-action',
+      'model:automation-action-type', 'model:generic-join-recipients',
+      'model:generic-join-recipients', 'model:person', 'model:related-person',
+      'model:ticket-priority', 'model:ticket-status', 'model:sendemail',
+      'model:sendsms', 'service:person-current', 'service:translations-fetcher',
+      'model:action-join-person', 'service:i18n', 'validator:presence',
+      'validator:unique-username', 'validator:length', 'validator:format',
+      'validator:has-many', 'validator:automation-action-type', 'validator:belongs-to',
+      'validator:action-ticket-request', 'validator:action-ticketcc', 'validator:action-assignee']);
   }
 });
 

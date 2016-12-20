@@ -10,7 +10,9 @@ var ticket, dtd, store, tab, tab_single;
 moduleFor('service:tab-list', 'Unit | Service | tab list', {
   needs: ['validator:presence', 'validator:length', 'validator:ticket-status', 'validator:has-many', 'validator:ticket-categories'],
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:tab', 'model:dtd', 'model:dtd-list', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:ticket',
+      'model:tab', 'model:dtd', 'model:dtd-list', 'service:i18n', 
+      'service:person-current']);
     ticket = store.push('ticket', {id: TD.idOne});
     dtd = store.push('dtd', {id: DTD.idOne});
     tab = store.push('tab', {id: TD.idOne, module: 'ticket', tabType: 'multiple', redirectRoute: 'main.tickets.index'});

@@ -4,14 +4,14 @@ import set_filter_model_attrs from 'bsrs-ember/utilities/filter-model-attrs';
 import inject from 'bsrs-ember/utilities/inject';
 import { ClientError } from 'bsrs-ember/utilities/errors';
 
-var nameRoute = function(route) {
+let nameRoute = function(route) {
   return route.get('constructor.ClassMixin.ownerConstructor').toString();
 };
 
-var GridViewRoute = Ember.Route.extend({
+let GridViewRoute = Ember.Route.extend({
   device: Ember.inject.service('device/layout'),
   pagination: Ember.inject.service(),
-  personCurrent: Ember.inject.service(),
+  personCurrent: Ember.inject.service('person-current'),
   filtersetRepository: inject('filterset'),
   init() {
     /* MOBILE PROPERTIES - objects are needed to hold values until filter action is instantiated. No instant updating in mobile like we have in desktop */

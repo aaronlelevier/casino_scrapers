@@ -8,9 +8,10 @@
     id=(if (gt count -1) (concat valuePath count) valuePath)
     focus-out=(action "focusedOut")
     key-up=(action "keyedUp")
+    readonly=readonly
   }}
-  {{show-validation-message 
-    model=model 
+  {{show-validation-message
+    model=model
     valuePath=valuePath
     showMessage=showMessage
     count=count
@@ -24,9 +25,10 @@
     id=(if (gt count -1) (concat valuePath count) valuePath)
     focus-out=(action "focusedOut")
     key-up=(action "keyedUp")
+    readonly=readonly
   }}
-  {{show-validation-message 
-    model=model 
+  {{show-validation-message
+    model=model
     valuePath=valuePath
     showMessage=showMessage
     count=count

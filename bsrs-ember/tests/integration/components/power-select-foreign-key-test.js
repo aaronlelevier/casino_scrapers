@@ -15,7 +15,8 @@ const DROPDOWN = '.ember-power-select-dropdown';
 moduleForComponent('power-select-foreign-key', 'integration: power-select-foreign-key test', {
   integration: true,
   setup() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-priority']);
+    store = module_registry(this.container, this.registry, ['model:ticket',
+      'model:ticket-priority', 'service:person-current']);
     run(function() {
       ticket = store.push('ticket', {id: TD.idOne, priority_fk: TD.priorityOneId});
       priority_one = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOneKey});

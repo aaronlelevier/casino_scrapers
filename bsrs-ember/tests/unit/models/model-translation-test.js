@@ -4,11 +4,13 @@ import LDS from 'bsrs-ember/vendor/defaults/location-status';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import CD from 'bsrs-ember/vendor/defaults/category';
 
-var store;
+let store;
 
 module('unit: model translation test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:category', 'model:ticket-priority', 'model:ticket-status', 'model:location-status', 'service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:category',
+            'model:ticket-priority', 'model:ticket-status', 'model:location-status',
+            'service:i18n']);
     }
 });
 
