@@ -315,9 +315,9 @@ class PersonManagerTests(TestCase):
         self.assertEqual(ret[0].role_name, self.person.role.name)
 
     def test_get_sms_recipients(self):
-        person_one = create_single_person()
-        person_two = create_single_person()
-        person_three = create_single_person()
+        person_one = create_single_person('a')
+        person_two = create_single_person('b')
+        person_three = create_single_person('c')
         # person 1 - valid - same tenant, has ph
         phone_type = create_phone_number_type(PhoneNumberType.OFFICE)
         create_contact(PhoneNumber, person_one, phone_type)

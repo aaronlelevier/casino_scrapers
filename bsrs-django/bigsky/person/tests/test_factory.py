@@ -228,10 +228,7 @@ class CreateSinglePersonTests(TestCase):
             location = create_location(role.location_level)
             person = factory.create_single_person(
                 role=role, location=location)
-            self.assertEqual(
-                person.title,
-                role.name if '-' not in role.name else role.name.split('-')[0]
-            )
+            self.assertNotEqual(person.username, person.title)
 
     def test_photo(self):
         person = factory.create_single_person()

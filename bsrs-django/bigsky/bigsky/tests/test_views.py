@@ -247,6 +247,7 @@ class BootstrappedDataTests(SetupMixin, TestCase):
         # role (non-default)
         role = Role.objects.first()
         role.location_level = None
+        role.categories.clear() # so don't have categories, location level conflicts
         role.save()
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['role_config'])
@@ -265,6 +266,7 @@ class BootstrappedDataTests(SetupMixin, TestCase):
         [r.delete() for r in Role.objects.all()]
         role = create_role()
         role.location_level = None
+        role.categories.clear() # so don't have categories, location level conflicts
         role.save()
         self.assertIsNone(role.location_level)
         self.assertNotEqual(role.name, settings.DEFAULT_ROLE)
