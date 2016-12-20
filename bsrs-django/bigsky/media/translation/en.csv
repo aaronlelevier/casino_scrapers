@@ -161,6 +161,7 @@ en,admin.invoice.new,New,New,,"'admin.invoice.new':'New',",New,New
 en,admin.invoice.select_assign.all,All,All,,"'admin.invoice.select_assign.all':'All',",All,All
 en,admin.invoice.select_assign.managers,Managers,Managers,,"'admin.invoice.select_assign.managers':'Managers',",Managers,Managers
 en,admin.locale.en,English,English,,"'admin.locale.en':'English',",English,English
+en,admin.locale.default,Default: Browser Settings,Default: Browser Settings,,"'admin.locale.default':'Default: Browser Settings',",Default: Browser Settings,Default: Browser Settings
 en,admin.locale.english,English,English,,"'admin.locale.english':'English',",English,English
 en,admin.locale.es,Spanish,Spanish,,"'admin.locale.es':'Spanish',",Spanish,Spanish
 en,admin.locale.fr,French,French,,"'admin.locale.fr':'French',",French,French
@@ -272,6 +273,7 @@ en,admin.role.label.general,General,General,,"'admin.role.label.general':'Genera
 en,admin.role.label.location_level,Location Level,Location Level,,"'admin.role.label.location_level':'Location Level',",Location Level,Location Level
 en,admin.role.label.name,Role Name,Role Name,,"'admin.role.label.name':'Role Name',",Role Name,Role Name
 en,admin.role.label.number_users,# of People,# of People,,"'admin.role.label.number_users':'# of People',",# of People,# of People
+en,admin.role.label.permissions,Permissions,Permissions,,"'admin.role.label.permissions':'Permissions',",Permissions,Permissions
 en,admin.role.label.role_type,Role Type,Role Type,,"'admin.role.label.role_type':'Role Type',",Role Type,Role Type
 en,admin.role.label.settings,Settings,Settings,,"'admin.role.label.settings':'Settings',",Settings,Settings
 en,admin.role.new,New Role,New Role,,"'admin.role.new':'New Role',",New Role,New Role
@@ -360,9 +362,11 @@ en,automation.event.ticket_status_cancelled,Ticket: Status Cancelled,Ticket: Sta
 en,automation.event.ticket_status_complete,Ticket: Status Complete,Ticket: Status Complete,,"'automation.event.ticket_status_complete':'Ticket: Status Complete',",Work,Work
 en,automation.event.ticket_status_deferred,Ticket: Status Deferred,Ticket: Status Deferred,,"'automation.event.ticket_status_deferred':'Ticket: Status Deferred',",Work,Work
 en,automation.event.ticket_status_denied,Ticket: Status Denied,Ticket: Status Denied,,"'automation.event.ticket_status_denied':'Ticket: Status Denied',",Work,Work
+en,automation.event.ticket_status_draft,Ticket: Status Draft,Ticket: Status Draft,,"'automation.event.ticket_status_draft':'Ticket: Status Draft',",Work,Work
 en,automation.event.ticket_status_in_progress,Ticket: Status In Progress,Ticket: Status In Progress,,"'automation.event.ticket_status_in_progress':'Ticket: Status In Progress',",Work,Work
 en,automation.event.ticket_status_new,Ticket: Status New,Ticket: Status New,,"'automation.event.ticket_status_new':'Ticket: Status New',",Work,Work
 en,automation.event.ticket_status_pending,Ticket: Status Pending,Ticket: Status Pending,,"'automation.event.ticket_status_pending':'Ticket: Status Pending',",Work,Work
+en,automation.event.ticket_status_solved,Ticket: Status Solved,Ticket: Status Solved,,"'automation.event.ticket_status_solved':'Ticket: Status Solved',",Work,Work
 en,automation.event.ticket_status_unsatisfactory,Ticket: Status Unsatisfactory,Ticket: Status Unsatisfactory,,"'automation.event.ticket_status_unsatisfactory':'Ticket: Status Unsatisfactory',",Work,Work
 en,button.add,New {{model}},New {{model}},,"'button.add':'New {{model}}',",New {{model_var_,New _model_var_
 en,button.upload,Attach file,Attach file,,"'button.upload':'Attach file',",Attach file,Attach file
@@ -396,33 +400,33 @@ en,crud.update.button,Update,Update,,"'crud.update.button':'Update',",Update,Upd
 en,crud.yes,Yes,Yes,,"'crud.yes':'Yes',",Yes,Yes
 en,dashboard.welcome,Welcome,Welcome,,"'dashboard.welcome':'Welcome',",Welcome,Welcome
 en,doctitle.admin.index,Admin,Admin,,"'doctitle.admin.index':'Admin',",Admin,Admin
-en,doctitle.automation.single,{{description}},{{description}},,"'doctitle.automation.single':'{{description}}',",{{description_var_,_description_var_
 en,doctitle.automation.index,{{count}} Automations,{{count}} Automations,,"'doctitle.automation.index':'{{count}} Automations',",{{count_var_ Automations,_count_var_ Automations
 en,doctitle.automation.new,New Automation,New Automation,,"'doctitle.automation.new':'New Automation',",New Automation,New Automation
+en,doctitle.automation.single,{{description}},{{description}},,"'doctitle.automation.single':'{{description}}',",{{description_var_,_description_var_
 en,doctitle.calendar.index,Calendar,Calendar,,"'doctitle.calendar.index':'Calendar',",Calendar,Calendar
-en,doctitle.category.single,{{name}},{{name}},,"'doctitle.category.single':'{{name}}',",{{name_var_,_name_var_
 en,doctitle.category.index,{{count}} Categories,{{count}} Categories,,"'doctitle.category.index':'{{count}} Categories',",{{count_var_ Categories,_count_var_ Categories
 en,doctitle.category.new,New Category,New Category,,"'doctitle.category.new':'New Category',",New Category,New Category
+en,doctitle.category.single,{{name}},{{name}},,"'doctitle.category.single':'{{name}}',",{{name_var_,_name_var_
 en,doctitle.dashboard.index,Dashboard,Dashboard,,"'doctitle.dashboard.index':'Dashboard',",Dashboard,Dashboard
-en,doctitle.location.single,{{name}},{{name}},,"'doctitle.location.single':'{{name}}',",{{name_var_,_name_var_
-en,doctitle.location.index,{{count}} Locations,{{count}} Locations,,"'doctitle.location.index':'{{count}} Locations',",{{count_var_ Locations,_count_var_ Locations
-en,doctitle.location.new,New Location,New Location,,"'doctitle.location.new':'New Location',",New Location,New Location
-en,doctitle.location_level.single,{{name}},{{name}},,"'doctitle.location_level.single':'{{name}}',",{{name_var_,_name_var_
 en,doctitle.location_level.index,{{count}} Locations Levels,{{count}} Locations Levels,,"'doctitle.location_level.index':'{{count}} Locations Levels',",{{count_var_ Locations Levels,_count_var_ Locations Levels
 en,doctitle.location_level.new,New Location Level,New Location Level,,"'doctitle.location_level.new':'New Location Level',",New Location Level,New Location Level
-en,doctitle.people.single,{{name}},{{name}},,"'doctitle.people.single':'{{name}}',",{{name_var_,_name_var_
+en,doctitle.location_level.single,{{name}},{{name}},,"'doctitle.location_level.single':'{{name}}',",{{name_var_,_name_var_
+en,doctitle.location.index,{{count}} Locations,{{count}} Locations,,"'doctitle.location.index':'{{count}} Locations',",{{count_var_ Locations,_count_var_ Locations
+en,doctitle.location.new,New Location,New Location,,"'doctitle.location.new':'New Location',",New Location,New Location
+en,doctitle.location.single,{{name}},{{name}},,"'doctitle.location.single':'{{name}}',",{{name_var_,_name_var_
 en,doctitle.people.index,{{count}} People,{{count}} People,,"'doctitle.people.index':'{{count}} People',",{{count_var_ People,_count_var_ People
 en,doctitle.people.new,New Person,New Person,,"'doctitle.people.new':'New Person',",New Person,New Person
+en,doctitle.people.single,{{name}},{{name}},,"'doctitle.people.single':'{{name}}',",{{name_var_,_name_var_
 en,doctitle.report.index,Reports,Reports,,"'doctitle.report.index':'Reports',",Reports,Reports
-en,doctitle.role.single,{{name}},{{name}},,"'doctitle.role.single':'{{name}}',",{{name_var_,_name_var_
 en,doctitle.role.index,{{count}} Roles,{{count}} Roles,,"'doctitle.role.index':'{{count}} Roles',",{{count_var_ Roles,_count_var_ Roles
 en,doctitle.role.new,New Role,New Role,,"'doctitle.role.new':'New Role',",New Role,New Role
-en,doctitle.ticket.single,Ticket #{{number}},Ticket #{{number}},,"'doctitle.ticket.single':'Ticket #{{number}}',",Ticket #{{number_var_,Ticket #_number_var_
-en,doctitle.ticket.index,{{count}} Tickets,{{count}} Tickets,,"'doctitle.ticket.index':'{{count}} Tickets',",{{count_var_ Tickets,_count_var_ Tickets
-en,doctitle.ticket.new,New Ticket,New Ticket,,"'doctitle.ticket.new':'New Ticket',",New Ticket,New Ticket
-en,doctitle.tenant.single,{{companyName}},{{companyName}},,"'doctitle.tenant.single':'{{companyName}}',",{{companyName_var_,_companyName_var_
+en,doctitle.role.single,{{name}},{{name}},,"'doctitle.role.single':'{{name}}',",{{name_var_,_name_var_
 en,doctitle.tenant.index,{{count}} Tenants,{{count}} Tenants,,"'doctitle.tenant.index':'{{count}} Tenants',",{{count_var_ Tenants,_count_var_ Tenants
 en,doctitle.tenant.new,New Tenant,New Tenant,,"'doctitle.tenant.new':'New Tenant',",New Tenant,New Tenant
+en,doctitle.tenant.single,{{companyName}},{{companyName}},,"'doctitle.tenant.single':'{{companyName}}',",{{companyName_var_,_companyName_var_
+en,doctitle.ticket.index,{{count}} Tickets,{{count}} Tickets,,"'doctitle.ticket.index':'{{count}} Tickets',",{{count_var_ Tickets,_count_var_ Tickets
+en,doctitle.ticket.new,New Ticket,New Ticket,,"'doctitle.ticket.new':'New Ticket',",New Ticket,New Ticket
+en,doctitle.ticket.single,Ticket #{{number}},Ticket #{{number}},,"'doctitle.ticket.single':'Ticket #{{number}}',",Ticket #{{number_var_,Ticket #_number_var_
 en,dt.link.submit,Submit,Submit,,"'dt.link.submit':'Submit',",Submit,Submit
 en,dt.new,New,New,,"'dt.new':'New',",New,New
 en,dt.placeholder_submit,Leave blank if Submit,Leave blank if Submit,,"'dt.placeholder_submit':'Leave blank if Submit',",Leave blank if Submit,Leave blank if Submit
@@ -482,9 +486,9 @@ en,errors.tenant.implementation_contact,Implementation Contact must be provided,
 en,errors.tenant.implementation_contact_initial,Implementation contact required,Implementation contact required,,"'errors.tenant.implementation_contact_initial':'Implementation contact required',",Implementation contact required,Implementation contact required
 en,errors.ticket.assignee,Assignee must be provided,Assignee must be provided,,"'errors.ticket.assignee':'Assignee must be provided',",Assignee must be provided,Assignee must be provided
 en,errors.ticket.category.top,Category Required,Category Required,,"'errors.ticket.category.top':'Category Required',",Category Required,Category Required
-en,errors.ticket.categoryTrade,Trade Category Required,Trade Category Required,,"'errors.ticket.categoryTrade':'Trade Category Required',",Trade Category Required,Trade Category Required
 en,errors.ticket.categoryIssue,Issue Category Required,Issue Category Required,,"'errors.ticket.categoryIssue':'Issue Category Required',",Issue Category Required,Issue Category Required
 en,errors.ticket.categorySub-Issue,Sub Issue Category Required,Sub Issue Category Required,,"'errors.ticket.categorySub-Issue':'Sub Issue Category Required',",Sub Issue Category Required,Sub Issue Category Required
+en,errors.ticket.categoryTrade,Trade Category Required,Trade Category Required,,"'errors.ticket.categoryTrade':'Trade Category Required',",Trade Category Required,Trade Category Required
 en,errors.ticket.location,Location must be provided,Location must be provided,,"'errors.ticket.location':'Location must be provided',",Location must be provided,Location must be provided
 en,errors.ticket.priority,Priority must be provided,Priority must be provided,,"'errors.ticket.priority':'Priority must be provided',",Priority must be provided,Priority must be provided
 en,errors.ticket.request,Request must be provided,Request must be provided,,"'errors.ticket.request':'Request must be provided',",Request must be provided,Request must be provided
@@ -502,6 +506,7 @@ en,grid.no_results,No Results,No Results,,"'grid.no_results':'No Results',",No R
 en,grid.per_page,{{size}} per page,{{size}} per page,,"'grid.per_page':'{{size}} per page',",{{size_var_ per page,_size_var_ per page
 en,grid.reset_all_options,Reset All Options,Reset All Options,,"'grid.reset_all_options':'Reset All Options',",Reset All Options,Reset All Options
 en,grid.save_filter,Save Filter,Save Filter,,"'grid.save_filter':'Save Filter',",Save Filter,Save Filter
+en,home.label.create,Create,Create,,"'home.label.create':'Create',",Create,Create
 en,menu.home,Home,Home,,"'menu.home':'Home',",Home,Home
 en,mobile.label.detail,Details,Details,,"'mobile.label.detail':'Details',",Details,Details
 en,modules.assets.titleShort,Assets,Assets,,"'modules.assets.titleShort':'Assets',",Assets,Assets
@@ -519,10 +524,16 @@ en,modules.workOrders.titleShort,Work Orders,Work Orders,,"'modules.workOrders.t
 en,notices.offline,Your network connection is offline.,Your network connection is offline.,,"'notices.offline':'Your network connection is offline.',",Your network connection is offline.,Your network connection is offline.
 en,notices.online,Your network connection is online.,Your network connection is online.,,"'notices.online':'Your network connection is online.',",Your network connection is online.,Your network connection is online.
 en,power.select.select,Click to select,Click to select,,"'power.select.select':'Click to select',",Click to select,Click to select
+en,role.label.permission.category,Category,Category,,"'role.label.permission.category':'Category',",Category,Category
 en,role.label.permission.create,Create,Create,,"'role.label.permission.create':'Create',",Create,Create
-en,role.label.permission.view,View,View,,"'role.label.permission.view':'View',",View,View
-en,role.label.permission.edit,Edit,Edit,,"'role.label.permission.edit':'Edit',",Edit,Edit
 en,role.label.permission.delete,Delete,Delete,,"'role.label.permission.delete':'Delete',",Delete,Delete
+en,role.label.permission.edit,Edit,Edit,,"'role.label.permission.edit':'Edit',",Edit,Edit
+en,role.label.permission.location,Location,Location,,"'role.label.permission.location':'Location',",Location,Location
+en,role.label.permission.locationlevel,Location Level,Location Level,,"'role.label.permission.locationlevel':'Location Level',",Location Level,Location Level
+en,role.label.permission.person,Person,Person,,"'role.label.permission.person':'Person',",Person,Person
+en,role.label.permission.role,Role,Role,,"'role.label.permission.role':'Role',",Role,Role
+en,role.label.permission.ticket,Ticket,Ticket,,"'role.label.permission.ticket':'Ticket',",Ticket,Ticket
+en,role.label.permission.view,View,View,,"'role.label.permission.view':'View',",View,View
 en,selects.loading,Loading,Loading,,"'selects.loading':'Loading',",Loading,Loading
 en,selects.noMatchesMessage,No Matches,No Matches,,"'selects.noMatchesMessage':'No Matches',",No Matches,No Matches
 en,selects.searchMessage,Type to search,Type to search,,"'selects.searchMessage':'Type to search',",Type to search,Type to search
@@ -577,7 +588,6 @@ en,ticket.section.details,Details,Details,,"'ticket.section.details':'Details',"
 en,ticket.section.location,Location,Location,,"'ticket.section.location':'Location',",Location,Location
 en,ticket.section.request,Request,Request,,"'ticket.section.request':'Request',",Request,Request
 en,ticket.status.cancelled,Cancelled,Cancelled,,"'ticket.status.cancelled':'Cancelled',",Cancelled,Cancelled
-en,ticket.status.closed,Closed,Closed,,"'ticket.status.closed':'Closed',",Closed,Closed
 en,ticket.status.complete,Complete,Complete,,"'ticket.status.complete':'Complete',",Complete,Complete
 en,ticket.status.deferred,Deferred,Deferred,,"'ticket.status.deferred':'Deferred',",Deferred,Deferred
 en,ticket.status.denied,Denied,Denied,,"'ticket.status.denied':'Denied',",Denied,Denied
@@ -585,15 +595,8 @@ en,ticket.status.draft,Draft,Draft,,"'ticket.status.draft':'Draft',",Draft,Draft
 en,ticket.status.in_progress,In Progress,In Progress,,"'ticket.status.in_progress':'In Progress',",In Progress,In Progress
 en,ticket.status.new,New,New,,"'ticket.status.new':'New',",New,New
 en,ticket.status.pending,Pending,Pending,,"'ticket.status.pending':'Pending',",Pending,Pending
-en,ticket.status.solved,Problem solved,Problem solved,,"'ticket.status.solved':'Problem solved',",Problem solved,Problem solved
+en,ticket.status.solved,Solved,Solved,,"'ticket.status.solved':'Solved',",Solved,Solved
 en,ticket.status.unsatisfactory,Unsatisfactory,Unsatisfactory,,"'ticket.status.unsatisfactory':'Unsatisfactory',",Unsatisfactory,Unsatisfactory
 en,upload.progress,Progress,Progress,,"'upload.progress':'Progress',",Progress,Progress
 en,validation.invalid,Invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid,Invalid
 en,validation.valid,Valid,Valid,,"'validation.valid':'Valid',",Valid,Valid
-en,admin.role.label.permissions,Permissions,Permissions,,"'admin.role.label.permissions':'Permissions',",Permissions,Permissions
-en,role.label.permission.ticket,Ticket,Ticket,,"'role.label.permission.ticket':'Ticket',",Ticket,Ticket
-en,role.label.permission.role,Role,Role,,"'role.label.permission.role':'Role',",Role,Role
-en,role.label.permission.person,Person,Person,,"'role.label.permission.person':'Person',",Person,Person
-en,role.label.permission.category,Category,Category,,"'role.label.permission.category':'Category',",Category,Category
-en,role.label.permission.location,Location,Location,,"'role.label.permission.location':'Location',",Location,Location
-en,role.label.permission.locationlevel,Location Level,Location Level,,"'role.label.permission.locationlevel':'Location Level',",Location Level,Location Level
