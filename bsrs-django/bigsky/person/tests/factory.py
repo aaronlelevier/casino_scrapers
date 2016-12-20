@@ -52,7 +52,7 @@ def create_role(name=None, location_level=None, category=None):
     Single Role needed to create Person with Login privileges.
     """
     name = name or create._generate_chars()
-    category = category or create_single_category(create._generate_chars())
+    category = category or create_single_category()
 
     # system default models needed
     currency = Currency.objects.default()
