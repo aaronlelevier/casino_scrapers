@@ -48,7 +48,7 @@ test('if model is invalid save button should be visiable and disables', function
 
 test('if model is clean save button is disabled', function(assert) {
   run(() => {
-    store.push('location', { id: LD.idOne, tickets: [TD.idOne]});
+    store.push('related-location', { id: LD.idOne, tickets: [TD.idOne]});
     store.push('ticket-status', { id: TSD.idOne, name: TD.statusOneKey, tickets: [TD.idOne]});
     store.push('ticket-priority', {id: TPD.idOne, tickets: [TD.idOne]});
     store.push('person', {id: PD.idOne, tickets: [TD.idOne]});
