@@ -3,13 +3,14 @@ const { run } = Ember;
 import { moduleForComponent, test } from 'ember-qunit';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import PERSON_LD from 'bsrs-ember/vendor/defaults/person-location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 
-var store, location_repo;
+let store, location_repo;
+const PD = PERSON_DEFAULTS.defaults();
 
 moduleForComponent('people/person-single', 'Unit | Component | people/person single', {
     needs: ['validator:presence', 'validator:has-many'],

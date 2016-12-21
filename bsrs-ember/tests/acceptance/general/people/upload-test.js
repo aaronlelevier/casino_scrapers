@@ -7,20 +7,20 @@ import {xhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
 import PF from 'bsrs-ember/vendor/people_fixtures';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/person';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { PEOPLE_URL, PEOPLE_LIST_URL, ATTACHMENTS_URL } from 'bsrs-ember/utilities/urls';
 
+const PD = PERSON_DEFAULTS.defaults();
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_people_url;
 const DETAIL_URL = BASE_URL + '/' + PD.idOne;
 const DETAIL_TWO_URL = BASE_URL + '/' + PD.idTwo;
 const PEOPLE_PUT_URL = PREFIX + DETAIL_URL + '/';
 const ATTACHMENT_DELETE_URL = ATTACHMENTS_URL + UUID.value + '/';
-
 
 moduleForAcceptance('Acceptance | general person file upload test', {
   beforeEach() {
@@ -48,7 +48,7 @@ test('upload will post form data and on save append the attachment', function(as
     assert.ok(model.get('isDirtyOrRelatedDirty'));
     assert.equal(find('.image-drop').attr('style'), 'background-image: url(wat.jpg);');
   });
-  var payload = PF.put({id: PD.idOne, photo: UUID.value});
+  let payload = PF.put({id: PD.idOne, photo: UUID.value});
   delete payload.auth_currency; // need to figure out why need to do this
   ajax(PEOPLE_PUT_URL, 'PUT', payload, {}, 200, PF.detail(PD.idOne));
   ajax(`${PEOPLE_URL}?page=1`, 'GET', null, {}, 200, PF.list());

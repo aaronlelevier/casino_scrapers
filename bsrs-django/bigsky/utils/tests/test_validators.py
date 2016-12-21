@@ -10,11 +10,13 @@ from utils.validators import (
     regex_check_contains, contains_digit, contains_upper_char,
     contains_lower_char, contains_special_char, contains_no_whitespaces,
     valid_email, valid_phone)
+from utils.tests.mixins import MockPermissionsAllowAnyMixin
 
 
-class UniqueForActiveValidatorTests(APITestCase):
+class UniqueForActiveValidatorTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(UniqueForActiveValidatorTests, self).setUp()
         create_locations()
         self.location = Location.objects.get(name='ca')
         # Login
@@ -23,6 +25,10 @@ class UniqueForActiveValidatorTests(APITestCase):
         # Data
         serializer = LocationUpdateSerializer(self.location)
         self.data = serializer.data
+
+    def tearDown(self):
+        super(UniqueForActiveValidatorTests, self).tearDown()
+        self.client.logout()
 
     def test_update_unique_for_active_active(self):
         self.assertTrue(self.data['number'])

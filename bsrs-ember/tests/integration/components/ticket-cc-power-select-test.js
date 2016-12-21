@@ -9,7 +9,7 @@ import repository from 'bsrs-ember/tests/helpers/repository';
 import { typeInSearch, clickTrigger } from '../../helpers/ember-power-select';
 import waitFor from 'ember-test-helpers/wait';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TPD from 'bsrs-ember/vendor/defaults/ticket-join-person';
 
@@ -18,6 +18,7 @@ const PowerSelect = '.ember-power-select-trigger > .ember-power-select-multiple-
 const DROPDOWN = '.ember-power-select-dropdown';
 const COMPONENT = '.t-ticket-cc-select';
 const OPTION = 'li.ember-power-select-option';
+const PD = PERSON_DEFAULTS.defaults();
 
 moduleForComponent('ticket-cc-power-select', 'integration: ticket-cc-power-select test', {
   integration: true,

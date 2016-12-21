@@ -11,11 +11,13 @@ from category.serializers import CategoryUpdateSerializer
 from category.tests.factory import create_single_category, create_categories
 from person.tests.factory import PASSWORD, create_person
 from utils import create
+from utils.tests.mixins import MockPermissionsAllowAnyMixin
 
 
-class CategoryViewTestSetupMixin(object):
+class CategoryViewTestSetupMixin(MockPermissionsAllowAnyMixin):
 
     def setUp(self):
+        super(CategoryViewTestSetupMixin, self).setUp()
         self.password = PASSWORD
         self.person = create_person()
         # Categories
@@ -29,6 +31,7 @@ class CategoryViewTestSetupMixin(object):
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(CategoryViewTestSetupMixin, self).tearDown()
         self.client.logout()
 
 
@@ -427,14 +430,16 @@ class CategorySubRouteSearchTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertEqual(data['results'][0]['cost_code'], str('760521'))
 
 
-class CategorySubRouteAutomationFilterTests(APITestCase):
+class CategorySubRouteAutomationFilterTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(CategorySubRouteAutomationFilterTests, self).setUp()
         self.password = PASSWORD
         self.person = create_person()
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(CategorySubRouteAutomationFilterTests, self).tearDown()
         self.client.logout()
 
     def test_data(self):

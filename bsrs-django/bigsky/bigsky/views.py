@@ -32,8 +32,6 @@ class IndexView(TemplateView):
 
     @never_cache
     def dispatch(self, request, *args, **kwargs):
-        self.locale = request.META.get('HTTP_ACCEPT_LANGUAGE', None)
-
         if not request.user.is_authenticated():
             return HttpResponseRedirect(reverse('login'))
         else:
@@ -58,7 +56,6 @@ class IndexView(TemplateView):
             'locales': model_to_json(Locale),
             'currencies': json.dumps({c.code: c.to_dict()
                                       for c in Currency.objects.all()}),
-            'person_current': json.dumps(self.request.user.to_dict(self.locale)),
             'default_model_ordering': settings.default_model_ordering,
             'saved_search': json.dumps(
                 SavedSearch.objects.person_saved_searches(self.request.user)),

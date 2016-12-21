@@ -1,4 +1,3 @@
-import copy
 from datetime import timedelta
 from itertools import chain
 import re
@@ -185,7 +184,7 @@ class Role(BaseModel):
             "id": str(self.id),
             "name": self.name,
             "default": True if self.name == settings.DEFAULT_ROLE else False,
-            "location_level": str(self.location_level.id) if self.location_level else None
+            "location_level": str(self.location_level.id) if self.location_level else None,
         }
 
     def _update_defaults(self):
@@ -478,6 +477,14 @@ class Person(BaseModel, AbstractUser):
             'inherited': self.inherited()
         }
 
+    def to_dict_with_permissions(self, locale):
+        """
+        For use with boostrapping "person_current" and their permissions.
+        """
+        ret = self.to_dict(locale)
+        ret['permissions'] = self.permissions
+        return ret
+
     def to_simple_dict(self):
         return {
             'id': str(self.id),
@@ -551,8 +558,6 @@ class Person(BaseModel, AbstractUser):
     def _update_defaults(self):
         if not self.status:
             self.status = PersonStatus.objects.default()
-        if not self.locale:
-            self.locale = Locale.objects.system_default()
         if not self.password_expire_date:
             self.password_expire_date = self._password_expire_date
 
@@ -599,6 +604,10 @@ class Person(BaseModel, AbstractUser):
         Return a `Bool` if the Person has the Top Level Location.
         """
         return LOCATION_COMPANY in self.locations.values_list('name', flat=True)
+
+    @property
+    def permissions(self):
+        return [x for x in self.role.permissions.keys()]
 
 
 @receiver(post_save, sender=Person)

@@ -5,7 +5,7 @@ import { test } from 'qunit';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PF from 'bsrs-ember/vendor/people_fixtures';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import TENANT_DEFAULTS from 'bsrs-ember/vendor/defaults/tenant';
@@ -16,13 +16,15 @@ import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { PEOPLE_URL, PEOPLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
-var list_xhr;
 
+const PD = PERSON_DEFAULTS.defaults();
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_people_url;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 const DETAIL_URL = `${BASE_URL}/index/${PD.idOne}`;
+
+let list_xhr;
 
 moduleForAcceptance('Acceptance | general grid people mobile test', {
   beforeEach() {

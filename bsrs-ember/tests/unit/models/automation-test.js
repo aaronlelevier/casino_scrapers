@@ -12,7 +12,7 @@ import AAD from 'bsrs-ember/vendor/defaults/automation-action';
 import ATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import AATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import PJCD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import SMSD from 'bsrs-ember/vendor/defaults/sendsms';
 import PFD from 'bsrs-ember/vendor/defaults/pfilter';
 import LD from 'bsrs-ember/vendor/defaults/location';
@@ -21,7 +21,9 @@ import SMSJRD from 'bsrs-ember/vendor/defaults/generic-join-recipients';
 import TPD from 'bsrs-ember/vendor/defaults/ticket-priority';
 import AutomationModel from 'bsrs-ember/models/automation';
 
-var automation, event, action, actionType, pfilter, pf;
+const PD = PERSON_DEFAULTS.defaults();
+
+let automation, event, action, actionType, pfilter, pf;
 
 moduleFor('model:automation', 'Unit | Model | automation', {
   needs: ['model:automation-event', 'model:automation-join-event', 'model:automation-join-pfilter', 'model:generic-join-recipients' , 'model:automation-action', 

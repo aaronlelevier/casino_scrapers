@@ -9,7 +9,7 @@ import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
-import PD from 'bsrs-ember/vendor/defaults/person';
+//import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
@@ -29,6 +29,7 @@ const LETTER_A = {keyCode: 65};
 const LETTER_S = {keyCode: 83};
 const FILTERSET_COMPONENT = '.t-mobile-save-filterset-component';
 const FILTERSET_COMPONENT_INPUT = '.t-mobile-save-filterset-component__input';
+//const PD = PERSON_DEFAULTS.defaults();
 
 moduleForAcceptance('Acceptance | general grid-head mobile', {
   beforeEach() {

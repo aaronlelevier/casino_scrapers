@@ -10,12 +10,14 @@ import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import SED from 'bsrs-ember/vendor/defaults/sendemail';
 import AAD from 'bsrs-ember/vendor/defaults/automation-action';
 import SEJRD from 'bsrs-ember/vendor/defaults/generic-join-recipients';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import page from 'bsrs-ember/tests/pages/automation';
 import { clickTrigger, triggerKeydown, nativeMouseUp, nativeMouseDown, typeInSearch } from 'bsrs-ember/tests/helpers/ember-power-select';
 import waitFor from 'ember-test-helpers/wait';
 
-var store, trans, action, automation_repo;
+const PD = PERSON_DEFAULTS.defaults();
+
+let store, trans, action, automation_repo;
 
 moduleForComponent('automations/sendemail-action', 'Integration | Component | automations/sendemail action', {
   integration: true,

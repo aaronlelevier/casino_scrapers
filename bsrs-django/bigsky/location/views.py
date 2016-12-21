@@ -10,6 +10,7 @@ from rest_framework.exceptions import MethodNotAllowed
 from location.models import Location, LocationLevel, LocationStatus, LocationType
 from location import serializers as ls
 from utils.mixins import SearchMultiMixin
+from utils.permissions import CrudPermissions
 from utils.views import BaseModelViewSet, paginate_queryset_as_response
 
 
@@ -53,7 +54,7 @@ class LocationLevelViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseMode
        LocationLevel ID: `{pk}`
     '''
     model = LocationLevel
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, CrudPermissions)
     queryset = LocationLevel.objects.all()
 
     def get_serializer_class(self):
@@ -143,7 +144,7 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
 
     '''
     model = Location
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, CrudPermissions)
     queryset = Location.objects.all()
     filter_fields = [f.name for f in model._meta.get_fields()]
 

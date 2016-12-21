@@ -8,10 +8,12 @@ from rest_framework import permissions, status
 from rest_framework.decorators import list_route
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from person import serializers as ps
 from person.models import Person, Role, PersonAndRole
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
+from utils.permissions import CrudPermissions
 from utils.views import BaseModelViewSet, paginate_queryset_as_response
 
 
@@ -21,7 +23,7 @@ class RoleViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
     """
     model = Role
     queryset = Role.objects.all()
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, CrudPermissions)
     eager_load_actions = ['retrieve']
 
     def get_serializer_class(self):
@@ -100,7 +102,7 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
 
     model = Person
     queryset = Person.objects.all()
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, CrudPermissions)
     filter_fields = [f.name for f in model._meta.get_fields()]
     eager_load_actions = ['retrieve']
 
@@ -187,3 +189,12 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
             person.role.run_password_validators(password)
         except DjangoValidationError as e:
             raise ValidationError(e)
+
+
+class SessionView(APIView):
+
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        locale = request.META.get('HTTP_ACCEPT_LANGUAGE', None)
+        return Response(self.request.user.to_dict_with_permissions(locale))

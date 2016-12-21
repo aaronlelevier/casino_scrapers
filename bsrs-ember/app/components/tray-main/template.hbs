@@ -13,10 +13,12 @@
         <span>{{fa-icon "pie-chart"}}</span>
         {{/link-to}}
       </li>
+      {{#if (has-permission permissions=permissions resource="admin")}}
       <li>{{#link-to "admin" class="t-nav-admin"}}
         <span>{{fa-icon "cog"}}</span>
         {{/link-to}}
       </li>
+      {{/if}}
     </ul>
   </nav>
 </aside>

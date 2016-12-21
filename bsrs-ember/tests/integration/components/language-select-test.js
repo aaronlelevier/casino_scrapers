@@ -3,7 +3,7 @@ import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import { clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import LOCALED from 'bsrs-ember/vendor/defaults/locale';
 
 var store, person, locale_one, locale_two, trans, run = Ember.run;
@@ -12,6 +12,7 @@ const PowerSelect = '.ember-power-select-trigger';
 const relatedModelName = 'locale';
 const COMPONENT = `.t-${relatedModelName}-select`;
 const DROPDOWN = '.ember-power-select-dropdown';
+const PD = PERSON_DEFAULTS.defaults();
 
 moduleForComponent('language-select', 'integration: language-select test', {
   integration: true,

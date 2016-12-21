@@ -1,7 +1,7 @@
 var TICKET_ACTIVITY_FACTORY = (function() {
   var factory = function(pd, td, cd, general, ta, ad) {
     this.ad = ad;
-    this.pd = pd;
+    this.pd = pd['default'].defaults();
     this.td = td;
     this.cd = cd;
     this.ta = ta;

@@ -6,7 +6,7 @@ import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance'
 import AD from 'bsrs-ember/vendor/defaults/automation';
 import AF from 'bsrs-ember/vendor/automation_fixtures';
 import PersonF from 'bsrs-ember/vendor/people_fixtures';
-import PersonD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import TENANT_DEFAULTS from 'bsrs-ember/vendor/defaults/tenant';
 import config from 'bsrs-ember/config/environment';
 import page from 'bsrs-ember/tests/pages/automation-mobile';
@@ -22,6 +22,7 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.BASE_AUTOMATION_URL;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 const DETAIL_URL = `${BASE_URL}/index/${AD.idOne}`;
+const PersonD  = PERSON_DEFAULTS.defaults();
 
 moduleForAcceptance('Acceptance | general grid automation mobile test', {
   beforeEach() {

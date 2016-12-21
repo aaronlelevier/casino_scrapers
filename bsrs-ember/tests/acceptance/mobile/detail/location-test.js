@@ -6,7 +6,7 @@ import { xhr, clearxhr } from 'bsrs-ember/tests/helpers/xhr';
 import { waitFor } from 'bsrs-ember/tests/helpers/utilities';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
-import PD from 'bsrs-ember/vendor/defaults/person';
+//import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import SD from 'bsrs-ember/vendor/defaults/location-status';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import page from 'bsrs-ember/tests/pages/location';
@@ -20,6 +20,7 @@ var list_xhr;
 const BASE_URL = BASEURLS.base_locations_url;
 const DETAIL_URL = `${BASE_URL}/${LD.idOne}`;
 const LOCATION_PUT_URL = `${LOCATIONS_URL}${LD.idOne}/`;
+//const PD = PERSON_DEFAULTS.defaults();
 
 moduleForAcceptance('Acceptance | general mobile location detail test', {
   beforeEach() {

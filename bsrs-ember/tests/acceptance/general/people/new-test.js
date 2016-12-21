@@ -6,7 +6,7 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import PF from 'bsrs-ember/vendor/people_fixtures';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
@@ -25,6 +25,7 @@ const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const PEOPLE_INDEX_URL = BASE_PEOPLE_URL + '/index';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + UUID.value;
 const NEW_URL = BASE_PEOPLE_URL + '/new/1';
+const PD = PERSON_DEFAULTS.defaults();
 
 var payload, detail_xhr, list_xhr, people_detail_data, detailEndpoint, username_search;
 
@@ -141,8 +142,8 @@ test('visiting /people/new and creating a new person', function(assert) {
   page.firstNameFill(PD.first_name);
   page.middleInitialFill(PD.middle_initial);
   page.lastNameFill(PD.last_name);
-  ajax(PEOPLE_URL, 'POST', JSON.stringify(payload), {}, 201, response);
-  ajax(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
+  xhr(PEOPLE_URL, 'POST', JSON.stringify(payload), {}, 201, response);
+  xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -259,8 +260,8 @@ test('can change default role and locale', function(assert) {
   fillIn('.t-person-first-name', PD.first_name);
   fillIn('.t-person-middle-initial', PD.middle_initial);
   fillIn('.t-person-last-name', PD.last_name);
-  ajax(PEOPLE_URL, 'POST', JSON.stringify(payload_two), {}, 201, {});
-  ajax(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
+  xhr(PEOPLE_URL, 'POST', JSON.stringify(payload_two), {}, 201, {});
+  xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
@@ -279,8 +280,8 @@ test('adding a new person should allow for another new person to be created afte
   fillIn('.t-person-first-name', PD.first_name);
   fillIn('.t-person-middle-initial', PD.middle_initial);
   fillIn('.t-person-last-name', PD.last_name);
-  ajax(PEOPLE_URL, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
-  ajax(`${PEOPLE_URL}abc123/`, 'GET', null, {}, 200, people_detail_data);
+  xhr(PEOPLE_URL, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
+  xhr(`${PEOPLE_URL}abc123/`, 'GET', null, {}, 200, people_detail_data);
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/abc123`);
@@ -301,7 +302,7 @@ test('adding a new person should allow for another new person to be created afte
     phone_numbers: [],
     locale: PD.locale_id,
   };
-  ajax(`${PEOPLE_URL}abc123/`, 'PUT', JSON.stringify(multi_new_put_payload), {}, 200, {});
+  xhr(`${PEOPLE_URL}abc123/`, 'PUT', JSON.stringify(multi_new_put_payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_INDEX_URL);

@@ -82,33 +82,30 @@ let ApplicationRoute = Route.extend({
     locale_list.forEach((model) => {
       store.push('locale', model);
     });
-    const person_current = Ember.$.extend(true, [], Ember.$('[data-preload-person-current]').data('configuration'));
-    let current_locale = store.find('locale', person_current.locale);
-    config.i18n.currentLocale = current_locale.get('locale');
-
-    // Set timezone and store in person-current
     let zone = moment.tz.guess();
-    if(!zone){
+    if (!zone) {
       zone = 'America/Los_Angeles';
     }
     this.get('moment').changeTimeZone(zone);
-    //TODO: Add preferred timezone to the bootstrap data for timezone override
-    if(!person_current.timezone){
-      person_current.timezone = zone;
+    return this.get('personCurrent').fetch()
+    .then((person) => {
+      let current_locale = store.find('locale', person.locale);
+      config.i18n.currentLocale = current_locale.get('locale');
+      if (!person.timezone) {
+        person.timezone = zone;
+      }
+      // Person service needs timezone for translations request
       this.get('personCurrent').set('timezone', zone);
-    }
-
-    //Sets current user
-    store.push('person-current', person_current);
-    var person_deserializer = this.get('PersonDeserializer');
-    // push in 'logged in' Person
-    person_deserializer.deserialize(person_current, person_current.id);
-
-    return this.get('translationsFetcher').fetch();
-
+      // Set current user
+      store.push('person-current', person);
+      // Push 'logged in' Person to store
+      this.get('PersonDeserializer').deserialize(person, person.id);
+    });
   },
-  setupController(controller) {
-    controller.set('tabs', this.get('simpleStore').find('tab'));
+  model() {
+    // Prior hook resolves after current person's session request is made
+    // Translations depend on having a person_current in the store
+    return this.get('translationsFetcher').fetch();
   },
   afterModel(){
     this.set('i18n.locale', config.i18n.currentLocale);
@@ -120,6 +117,9 @@ let ApplicationRoute = Route.extend({
       Ember.$('.application-loading').addClass('fadeOut');
     });
     Ember.$('.loading-image').addClass('bounceOut');
+  },
+  setupController(controller/*, model is not needed */) {
+    controller.set('tabs', this.get('simpleStore').find('tab'));
   },
   handleApplicationNotice(xhr, model) {
     if (xhr.status >= 400) {

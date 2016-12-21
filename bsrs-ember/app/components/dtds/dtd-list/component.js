@@ -1,6 +1,9 @@
+import Ember from 'ember';
 import GridViewComponent from 'bsrs-ember/components/grid-view/component';
+const { inject } = Ember;
 
 export default GridViewComponent.extend({
+  personCurrent: inject.service(),
   columns: [
     {
       field: 'key',

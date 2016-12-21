@@ -4,11 +4,13 @@ import { moduleFor, test } from 'ember-qunit';
 import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
 import { eachPermission } from 'bsrs-ember/utilities/permissions';
 
+
+
 moduleFor('service:person-current', 'Unit | Service | person current', {
   needs: ['model:person-current', 'service:simpleStore', 'service:translationsFetcher', 'service:i18n'],
   beforeEach() {
     this.store = this.container.lookup('service:simpleStore');
-    this.store.push('person-current', PERSON_CURRENT);
+    this.store.push('person-current', PERSON_CURRENT.defaults());
   },
   afterEach() {
     delete this.store;
@@ -16,7 +18,7 @@ moduleFor('service:person-current', 'Unit | Service | person current', {
 });
 
 test('vendor fixture data has user permissions list', function(assert) {
-  let permissions = PERSON_CURRENT.permissions;
+  let permissions = PERSON_CURRENT.defaults().permissions;
   assert.expect(permissions.length);
   eachPermission((resource, prefix) => {
     let perm = `${prefix}_${resource}`;
@@ -27,11 +29,12 @@ test('vendor fixture data has user permissions list', function(assert) {
 test('current person is found from the store', function(assert) {
   let service = this.subject();
   let model = service.get('model');
-  assert.equal(model.get('id'), PERSON_CURRENT.id, 'current person id is: ' + PERSON_CURRENT.id);
+  let expected = PERSON_CURRENT.defaults();
+  assert.equal(model.get('id'), expected.id, 'current person id is: ' + expected.id);
 });
 
 test('current person service includes permissions list', function(assert) {
-  let permissions = PERSON_CURRENT.permissions;
+  let permissions = PERSON_CURRENT.defaults().permissions;
   let service = this.subject();
   assert.equal(service.get('permissions').length, permissions.length, 'length is' + permissions.length);
   permissions = service.get('permissions');
@@ -43,7 +46,7 @@ test('current person service includes permissions list', function(assert) {
 
 test('permissions list will return a different permissions list if the model underlying the person-current changes (app re-login)', function(assert) {
   // OLD PERSON
-  let permissions = PERSON_CURRENT.permissions;
+  let permissions = PERSON_CURRENT.defaults().permissions;
   let service = this.subject();
   assert.equal(service.get('permissions').length, permissions.length, 'length is' + permissions.length);
   permissions = service.get('permissions');

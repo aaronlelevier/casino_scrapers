@@ -16,7 +16,7 @@ import {ticket_payload, required_ticket_payload} from 'bsrs-ember/tests/helpers/
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import PF from 'bsrs-ember/vendor/people_fixtures';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/tickets';
 import moment from 'moment';
@@ -26,6 +26,7 @@ import { TICKET_ASSIGNEE, PS_SEARCH } from 'bsrs-ember/tests/helpers/const-names
 
 const TICKET_NEW_URL = TICKET_LIST_URL + '/new/1';
 const CC_SEARCH = '.ember-power-select-trigger-multiple-input';
+const PD = PERSON_DEFAULTS.defaults();
 
 let list_xhr, location_xhr, people_xhr, counter;
 

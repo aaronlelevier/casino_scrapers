@@ -123,6 +123,7 @@ urlpatterns = [
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     # APIViews (not ViewSets)
     url(r'^api/dashboard/$', bigsky_views_api.DashboardView.as_view()),
+    url(r'^api/session/$', person_views.SessionView.as_view()),
 ]
 
 # No Requirement

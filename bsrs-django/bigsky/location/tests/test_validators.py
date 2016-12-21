@@ -9,11 +9,13 @@ from location.models import Location
 from location.serializers import LocationUpdateSerializer
 from location.validators import LocationParentChildValidator
 from person.tests.factory import create_person, PASSWORD
+from utils.tests.mixins import MockPermissionsAllowAnyMixin
 
 
-class LocationUpdateTests(APITestCase):
+class LocationUpdateTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(LocationUpdateTests, self).setUp()
         create_locations()
         self.location = Location.objects.get(name='ca')
         # Login
@@ -25,11 +27,13 @@ class LocationUpdateTests(APITestCase):
         # Error msg
         self.message = LocationParentChildValidator.message
 
+    def tearDown(self):
+        super(LocationUpdateTests, self).tearDown()
+        self.client.logout()
+
     def test_update_parents_same_location_level(self):
-        """
-        This should raise a ValidationError (400) b/c Parents/Children can't 
-        have the same LocationLevel as the Location
-        """
+        # This should raise a ValidationError (400) b/c Parents/Children can't
+        # have the same LocationLevel as the Location
         key = 'parents'
         new_location = mommy.make(Location, location_level=self.location.location_level)
         self.data[key] = [str(new_location.id)]
@@ -45,10 +49,8 @@ class LocationUpdateTests(APITestCase):
         )
 
     def test_update_children_same_location_level(self):
-        """
-        This should raise a ValidationError (400) b/c Parents/Children can't 
-        have the same LocationLevel as the Location
-        """
+        # This should raise a ValidationError (400) b/c Parents/Children can't
+        # have the same LocationLevel as the Location
         key = 'children'
         new_location = mommy.make(Location, location_level=self.location.location_level)
         self.data[key] = [str(new_location.id)]

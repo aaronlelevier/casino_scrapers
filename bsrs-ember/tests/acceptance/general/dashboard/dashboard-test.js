@@ -7,18 +7,19 @@ import config from 'bsrs-ember/config/environment';
 import TD from 'bsrs-ember/vendor/defaults/tenant';
 import TicketD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
-import PF from 'bsrs-ember/vendor/people_fixtures';
+//import PF from 'bsrs-ember/vendor/people_fixtures';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import CF from 'bsrs-ember/vendor/category_fixtures';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import { roleNewData } from 'bsrs-ember/tests/helpers/payloads/role';
 import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, LOCATIONS_URL, LOCATION_LIST_URL, LOCATION_LEVELS_URL, LOCATION_LEVEL_LIST_URL, PEOPLE_URL, PEOPLE_LIST_URL, 
   ROLES_URL, ROLE_LIST_URL, CATEGORY_LIST_URL, CATEGORIES_URL, TENANT_LIST_URL } from 'bsrs-ember/utilities/urls';
 
-var application;
+let application;
 
+const PD = PERSON_DEFAULTS.defaults();
 const PREFIX = config.APP.NAMESPACE;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 const TICKET_NEW_URL = TICKET_LIST_URL + '/new/1';

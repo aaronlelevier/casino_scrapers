@@ -8,7 +8,7 @@ import wait from 'ember-test-helpers/wait';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import AD from 'bsrs-ember/vendor/defaults/automation';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import ATD from 'bsrs-ember/vendor/defaults/automation-action-type';
 import SED from 'bsrs-ember/vendor/defaults/sendemail';
@@ -16,7 +16,9 @@ import SMSD from 'bsrs-ember/vendor/defaults/sendsms';
 import page from 'bsrs-ember/tests/pages/automation';
 import generalPage from 'bsrs-ember/tests/pages/general';
 
-var store, model, trans;
+const PD = PERSON_DEFAULTS.defaults();
+
+let store, model, trans;
 
 moduleForComponent('automation-single', 'integration: automation-single test', {
   integration: true,

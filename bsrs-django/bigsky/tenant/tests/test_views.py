@@ -477,7 +477,7 @@ class TenantPermissionTests(TenantSetUpMixin, APITestCase):
 
         response = self.client.get('/api/admin/tenants/{}/'.format(self.tenant.id))
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 404)
 
     def test_permissions__diff_tenant_ok_if_staff(self):
         self.client.logout()

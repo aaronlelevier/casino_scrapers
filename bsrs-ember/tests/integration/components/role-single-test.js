@@ -68,6 +68,11 @@ test('if save isRunning, btn is disabled', function(assert) {
   });
   // monkey patched.  Not actually passed to component but save.isRunning comes from save ember-concurrency task
   this.saveIsRunning = { isRunning: 'disabled' };
-  this.render(hbs`{{roles/role-single model=model saveTask=saveIsRunning}}`);
+  this.permissions = ['change_role'];
+  this.render(hbs`{{roles/role-single 
+    model=model 
+    saveTask=saveIsRunning
+    permissions=permissions
+  }}`);
   assert.equal(this.$('.t-save-btn').attr('disabled'), 'disabled', 'Button is disabled if xhr save is outstanding');
 });

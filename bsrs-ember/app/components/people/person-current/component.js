@@ -10,9 +10,8 @@ export default Ember.Component.extend({
   classNames: ['dropdown current-user t-current-user'],
   personCurrent: Ember.inject.service(),
   instance: Ember.computed(function(){
-    var service = this.get('personCurrent');
-    return service.get('model');
-  }),
+    return this.get('personCurrent').get('model');
+  }).volatile(),
   actions: {
     logout() {
       Ember.$.get('/api-auth/logout/', function(data){

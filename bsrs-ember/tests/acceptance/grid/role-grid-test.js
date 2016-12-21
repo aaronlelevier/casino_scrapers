@@ -592,22 +592,22 @@ test('save filterset button only available when a dynamic filter is present', fu
 ////this test is specifically for filterset it just happens to use this module and the role fixture data
 //test('save filterset button is not available when page size or page is altered and only sort/find/search are persisted', function(assert) {
 //  const updated_pg_size = PAGE_SIZE*2;
-//  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
+//  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
 //  visit(ROLE_LIST_URL);
 //  andThen(() => {
 //    assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
 //  });
-//  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=2`, 'GET',null,{},200,RF.list_two());
+//  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=2`, 'GET',null,{},200,RF.list_two());
 //  click('.t-page:eq(1) a');
 //  andThen(() => {
 //    assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
 //  });
-//  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1&page_size=${updated_pg_size}`, 'GET',null,{},200,RF.paginated(PAGE_SIZE));
+//  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1&page_size=${updated_pg_size}`, 'GET',null,{},200,RF.paginated(PAGE_SIZE));
 //  alterPageSize('.t-page-size', updated_pg_size);
 //  andThen(() => {
 //    assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
 //  });
-//  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name&page_size=${updated_pg_size}` ,'GET',null,{},200,RF.paginated(updated_pg_size));
+//  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name&page_size=${updated_pg_size}` ,'GET',null,{},200,RF.paginated(updated_pg_size));
 //  click(SORT_NAME_DIR);
 //  andThen(() => {
 //    assert.equal(find(SAVE_FILTERSET_MODAL).length, 1);
@@ -616,22 +616,22 @@ test('save filterset button only available when a dynamic filter is present', fu
 //  andThen(() => {
 //    assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
 //  });
-//  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1&page_size=${updated_pg_size}&name__icontains=xav` ,'GET',null,{},200,RF.list());
+//  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1&page_size=${updated_pg_size}&name__icontains=xav` ,'GET',null,{},200,RF.list());
 //  filterGrid('name', 'xav');
 //  andThen(() => {
 //    assert.equal(find(SAVE_FILTERSET_MODAL).length, 1);
 //  });
-//  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name&page_size=${updated_pg_size}&name__icontains=xav`, 'GET',null,{},200,RF.paginated(PAGE_SIZE));
+//  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name&page_size=${updated_pg_size}&name__icontains=xav`, 'GET',null,{},200,RF.paginated(PAGE_SIZE));
 //  click(SORT_NAME_DIR);
 //  andThen(() => {
 //    assert.equal(find(SAVE_FILTERSET_MODAL).length, 1);
 //  });
-//  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name&page_size=${PAGE_SIZE}&name__icontains=xav`, 'GET',null,{},200,RF.paginated(PAGE_SIZE));
+//  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name&page_size=${PAGE_SIZE}&name__icontains=xav`, 'GET',null,{},200,RF.paginated(PAGE_SIZE));
 //  alterPageSize('.t-page-size', PAGE_SIZE);
 //  andThen(() => {
 //    assert.equal(find(SAVE_FILTERSET_MODAL).length, 1);
 //  });
-//  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=2&ordering=name&page_size=${PAGE_SIZE}&name__icontains=xav`, 'GET',null,{},200,RF.paginated(PAGE_SIZE));
+//  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=2&ordering=name&page_size=${PAGE_SIZE}&name__icontains=xav`, 'GET',null,{},200,RF.paginated(PAGE_SIZE));
 //  click('.t-page:eq(1) a');
 //  andThen(() => {
 //    assert.equal(find(SAVE_FILTERSET_MODAL).length, 1);
@@ -640,7 +640,7 @@ test('save filterset button only available when a dynamic filter is present', fu
 //  let payload = {id: 'abc123', name: 'example', endpoint_name: 'admin.roles.index', endpoint_uri: query};
 //  patchRandomAsync(0);
 //  click(SAVE_FILTERSET_MODAL);
-//  ajax('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
+//  xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
 //  saveFilterSet('example', 'admin.roles.index');
 //  andThen(() => {
 //    const filterset = store.find('filterset', 'abc123');
@@ -655,18 +655,17 @@ test('applying a saved filterset will reset the page to 1 by default', function(
   Ember.run(function() {
     store.push('filterset', {id: 'def456', name: filter_name, endpoint_name: 'admin.roles.index', endpoint_uri: '?find=name%3Axav&sort=name'});
   });
-  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
   visit(ROLE_LIST_URL);
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
     assert.equal(find('.t-filterset-wrap div:eq(0) a').text().trim(), filter_name);
   });
-  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=2`, 'GET',null,{},200,RF.list_two());
+  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=2`, 'GET',null,{},200,RF.list_two());
   click('.t-page:eq(1) a');
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
   });
-  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name&name__icontains=xav` ,'GET',null,{},200,RF.paginated(updated_pg_size));
+  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name&name__icontains=xav` ,'GET',null,{},200,RF.paginated(updated_pg_size));
   click('.t-filterset-wrap div:eq(0) a');
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
@@ -688,7 +687,6 @@ test('each time you apply a saved filterset the query params are reset to reflec
     store.push('filterset', {id: 'def456', name: filter_one, endpoint_name: 'admin.roles.index', endpoint_uri: '?find=name%3Axav&search=zap'});
     store.push('filterset', {id: 'ghi789', name: filter_two, endpoint_name: 'admin.roles.index', endpoint_uri: '?search=admin&sort=name'});
   });
-  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
   visit(ROLE_LIST_URL);
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
@@ -697,7 +695,7 @@ test('each time you apply a saved filterset the query params are reset to reflec
     assert.ok(!find('.t-filterset-wrap div:eq(0) a').hasClass('active'));
     assert.ok(!find('.t-filterset-wrap div:eq(1) a').hasClass('active'));
   });
-  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1&search=zap&name__icontains=xav` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
+  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1&search=zap&name__icontains=xav` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
   click('.t-filterset-wrap div:eq(0) a');
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
@@ -705,7 +703,7 @@ test('each time you apply a saved filterset the query params are reset to reflec
     assert.ok(find('.t-filterset-wrap div:eq(0) a').hasClass('active'));
     assert.ok(!find('.t-filterset-wrap div:eq(1) a').hasClass('active'));
   });
-  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name&search=admin` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
+  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name&search=admin` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
   click('.t-filterset-wrap div:eq(1) a');
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
@@ -717,12 +715,12 @@ test('each time you apply a saved filterset the query params are reset to reflec
 
 //this test is specifically for applying saved filtersets ... it just happens to use this module and the role fixture data
 skip('after saving a filterset the save button button is not visible', function(assert) {
-  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
+  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
   visit(ROLE_LIST_URL);
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
   });
-  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
+  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
   click(SORT_NAME_DIR);
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 1);
@@ -731,7 +729,7 @@ skip('after saving a filterset the save button button is not visible', function(
   let payload = {id: 'abc123', name: 'example', endpoint_name: 'admin.roles.index', endpoint_uri: query};
   patchRandomAsync(0);
   click(SAVE_FILTERSET_MODAL);
-  ajax('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
+  xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
   saveFilterSet('example', 'admin.roles.index');
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
@@ -748,7 +746,6 @@ test('when a filterset that has a search is applied both the querystring and the
     store.push('filterset', {id: 'ghi789', name: filter_two, endpoint_name: 'admin.roles.index', endpoint_uri: '?search=admin&sort=name'});
     store.push('filterset', {id: 'jkl234', name: filter_three, endpoint_name: 'admin.roles.index', endpoint_uri: '?sort=name'});
   });
-  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
   visit(ROLE_LIST_URL);
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
@@ -760,7 +757,7 @@ test('when a filterset that has a search is applied both the querystring and the
     assert.ok(!find('.t-filterset-wrap div:eq(1) a').hasClass('active'));
     assert.ok(!find('.t-filterset-wrap div:eq(2) a').hasClass('active'));
   });
-  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1&search=zap&name__icontains=xav` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
+  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1&search=zap&name__icontains=xav` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
   click('.t-filterset-wrap div:eq(0) a');
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
@@ -770,7 +767,7 @@ test('when a filterset that has a search is applied both the querystring and the
     assert.ok(!find('.t-filterset-wrap div:eq(1) a').hasClass('active'));
     assert.ok(!find('.t-filterset-wrap div:eq(2) a').hasClass('active'));
   });
-  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name&search=admin` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
+  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name&search=admin` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
   click('.t-filterset-wrap div:eq(1) a');
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
@@ -780,7 +777,7 @@ test('when a filterset that has a search is applied both the querystring and the
     assert.ok(find('.t-filterset-wrap div:eq(1) a').hasClass('active'));
     assert.ok(!find('.t-filterset-wrap div:eq(2) a').hasClass('active'));
   });
-  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
+  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
   click('.t-filterset-wrap div:eq(2) a');
   andThen(() => {
     assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
@@ -808,15 +805,15 @@ skip('adding a new filterset with search will still allow the search input to be
   Ember.run(function() {
     store.push('filterset', {id: 'def456', name: filter_one, endpoint_name: 'admin.roles.index', endpoint_uri: '?sort=name'});
   });
-  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
+  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
   visit(ROLE_LIST_URL);
-  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
+  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
   click(SORT_NAME_DIR);
   andThen(() => {
     assert.equal(currentURL(), '/admin/roles?sort=name');
     assert.equal(find('.t-filterset-wrap li:eq(0) a').text().trim(), filter_one);
   });
-  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name&search=4` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
+  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name&search=4` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
   fillIn('.t-grid-search-input', '4');
   triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
   andThen(() => {
@@ -827,13 +824,13 @@ skip('adding a new filterset with search will still allow the search input to be
   let payload = {id: 'abc123', name: 'example', endpoint_name: 'admin.roles.index', endpoint_uri: query};
   patchRandomAsync(0);
   click(SAVE_FILTERSET_MODAL);
-  ajax('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
+  xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
   saveFilterSet('example', 'admin.roles.index');
   andThen(() => {
     assert.equal(currentURL(), '/admin/roles/index?search=4&sort=name');
     assert.equal(find('.t-grid-search-input').val(), '4');
   });
-  ajax(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
+  xhr(`${PREFIX}${ROLE_LIST_URL}/?page=1&ordering=name` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
   click('.t-filterset-wrap li:eq(0) a');
   andThen(() => {
     assert.equal(currentURL(), '/admin/roles/index?sort=name');

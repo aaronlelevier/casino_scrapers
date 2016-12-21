@@ -100,6 +100,7 @@ class RoleTests(TestCase):
     def test_to_dict(self):
         ret = self.role.to_dict()
 
+        self.assertEqual(len(ret), 4)
         self.assertEqual(ret['id'], str(self.role.id))
         self.assertEqual(ret['name'], self.role.name)
         self.assertEqual(ret['default'], True if self.role.name == settings.DEFAULT_ROLE else False)
@@ -489,7 +490,7 @@ class PersonTests(TestCase):
         self.person._update_defaults()
 
         self.assertEqual(self.person.status, self.person_default_status)
-        self.assertEqual(self.person.locale, Locale.objects.system_default())
+        self.assertIsNone(self.person.locale)
         self.assertIsNotNone(self.person.password_expire_date)
         self.assertEqual(self.person.fullname, self.person.get_full_name())
 
@@ -662,6 +663,16 @@ class PersonTests(TestCase):
         self.assertEqual(dict_person['locations'][0]['number'], self.person.locations.first().number)
         self.assertEqual(dict_person['locations'][0]['name'], self.person.locations.first().name)
 
+    def test_to_dict_locale(self):
+        locale, _ = Locale.objects.get_or_create(locale='es')
+        self.person.locale = None
+        self.person.save()
+        self.assertIsNone(self.person.locale)
+
+        ret = self.person.to_dict('es;q=0.8')
+
+        self.assertEqual(ret['locale'], str(locale.id))
+
     def test_all_locations_and_children(self):
         """
         Tests that a full Location object is being returned, which will later
@@ -699,6 +710,19 @@ class PersonTests(TestCase):
         # remove
         person.locations.remove(top_location)
         self.assertFalse(person.has_top_level_location)
+
+    def test_permissions(self):
+        perms = Permission.objects.filter(codename__in=['add_ticket', 'change_ticket'])
+        role = self.person.role
+        role.group.permissions.set([p for p in perms])
+        self.assertEqual(role.group.permissions.count(), 2)
+
+        ret = self.person.permissions
+
+        self.assertIsInstance(ret, list)
+        self.assertEqual(len(ret), 2)
+        self.assertIn('add_ticket', ret)
+        self.assertIn('change_ticket', ret)
 
 
 ### PASSWORD

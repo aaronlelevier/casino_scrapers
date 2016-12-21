@@ -23,11 +23,13 @@ from translation.models import Locale
 from translation.tests.factory import create_locale, create_locales
 from utils import create
 from utils.tests.test_helpers import create_default
+from utils.tests.mixins import MockPermissionsAllowAnyMixin
 
 
-class PersonAccessTests(TestCase):
+class PersonAccessTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(PersonAccessTests, self).setUp()
         create_person_statuses()
         self.person = create_single_person()
 
@@ -49,10 +51,11 @@ class PersonAccessTests(TestCase):
         self.assertEqual(response.status_code, 403)
 
 
-class PersonCreateTests(APITestCase):
+class PersonCreateTests(MockPermissionsAllowAnyMixin, APITestCase):
     # Test: create, update, partial_update
 
     def setUp(self):
+        super(PersonCreateTests, self).setUp()
         self.person = create_single_person()
         self.client.login(username=self.person.username, password=PASSWORD)
         create_default(PersonStatus)
@@ -72,6 +75,7 @@ class PersonCreateTests(APITestCase):
         }
 
     def tearDown(self):
+        super(PersonCreateTests, self).tearDown()
         self.client.logout()
 
     def test_data(self):
@@ -97,9 +101,10 @@ class PersonCreateTests(APITestCase):
         self.assertNotIn('password', data)
 
 
-class PersonListTests(TestCase):
+class PersonListTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(PersonListTests, self).setUp()
         for i in range(5):
             self.person = create_single_person()
         # Login
@@ -109,6 +114,7 @@ class PersonListTests(TestCase):
         self.data = json.loads(self.response.content.decode('utf8'))
 
     def tearDown(self):
+        super(PersonListTests, self).tearDown()
         self.client.logout()
 
     def test_response(self):
@@ -273,9 +279,10 @@ class PersonListTests(TestCase):
         self.assertEqual(data['results'][1]['type'], model_two.__class__.__name__.lower())
 
 
-class PersonDetailTests(TestCase):
+class PersonDetailTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(PersonDetailTests, self).setUp()
         self.person = create_single_person()
         # Contact info
         create_contacts(self.person)
@@ -292,6 +299,7 @@ class PersonDetailTests(TestCase):
         self.data = json.loads(response.content.decode('utf8'))
 
     def tearDown(self):
+        super(PersonDetailTests, self).tearDown()
         self.client.logout()
 
     def test_retrieve(self):
@@ -440,7 +448,7 @@ class PersonDetailTests(TestCase):
         self.assertEqual(category_data['name'], parent_category.name)
 
 
-class PersonUpdateTests(APITestCase):
+class PersonUpdateTests(MockPermissionsAllowAnyMixin, APITestCase):
     '''
     All required Model fields must be supplied in a PUT, so the PASSWORD is
     required if doing a PUT.
@@ -452,6 +460,7 @@ class PersonUpdateTests(APITestCase):
     '''
 
     def setUp(self):
+        super(PersonUpdateTests, self).setUp()
         self.password = PASSWORD
         self.role = create_role()
         self.location = create_location(location_level=self.role.location_level)
@@ -474,6 +483,7 @@ class PersonUpdateTests(APITestCase):
         self.data = serializer.data
 
     def tearDown(self):
+        super(PersonUpdateTests, self).tearDown()
         self.client.logout()
 
     def test_auth_amount(self):
@@ -521,7 +531,7 @@ class PersonUpdateTests(APITestCase):
         self.assertEqual(self.data['middle_initial'], data['middle_initial'])
 
     def test_locale(self):
-        # setup
+        # set up
         self.data['locale'] = str(self.locale.id)
         # test
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
@@ -531,7 +541,7 @@ class PersonUpdateTests(APITestCase):
 
     # TODO: aaron
     # def test_locale__none_gets_set_as_default(self):
-    #     # setup
+    #     # set up
     #     self.data['locale'] = None
     #     # test
     #     response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
@@ -740,9 +750,10 @@ class PersonUpdateTests(APITestCase):
         self.assertEqual(person.photo.filename, photo_data['filename'])
 
 
-class PersonSearchTests(APITransactionTestCase):
+class PersonSearchTests(MockPermissionsAllowAnyMixin, APITransactionTestCase):
 
     def setUp(self):
+        super(PersonSearchTests, self).setUp()
         self.role = create_role()
         create_person_statuses()
         create_locales()
@@ -752,6 +763,7 @@ class PersonSearchTests(APITransactionTestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(PersonSearchTests, self).tearDown()
         self.client.logout()
         ContentType.objects.clear_cache()
 
@@ -790,9 +802,10 @@ class PersonSearchTests(APITransactionTestCase):
         self.assertEqual(data["count"], Person.objects.search_multi(keyword).count())
 
 
-class PasswordTests(APITestCase):
+class PasswordTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(PasswordTests, self).setUp()
         self.roles = create_roles()
         self.person = create_single_person()
         self.person2 = create_single_person()
@@ -800,6 +813,7 @@ class PasswordTests(APITestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(PasswordTests, self).tearDown()
         self.client.logout()
 
     ### ``reset_password``
@@ -874,3 +888,58 @@ class PasswordTests(APITestCase):
         self.client.logout()
         self.client.login(username=self.person2.username, password=new_password)
         self.assertIn('_auth_user_id', self.client.session)
+
+
+class SessionViewTests(MockPermissionsAllowAnyMixin, APITestCase):
+
+    def setUp(self):
+        super(SessionViewTests, self).setUp()
+        self.person = create_single_person()
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        super(SessionViewTests, self).tearDown()
+        self.client.logout()
+
+    def test_get(self):
+        response = self.client.get('/api/session/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['id'], str(self.person.id))
+        self.assertEqual(data['first_name'], self.person.first_name)
+        self.assertEqual(data['middle_initial'], self.person.middle_initial)
+        self.assertEqual(data['last_name'], self.person.last_name)
+        self.assertEqual(data['username'], self.person.username)
+        self.assertEqual(data['title'], self.person.title)
+        self.assertEqual(data['employee_id'], self.person.employee_id)
+        self.assertEqual(data['locale'], str(self.person.locale.id))
+        self.assertEqual(data['role'], str(self.person.role.id))
+        self.assertEqual(data['tenant'], str(self.person.role.tenant.id))
+        self.assertIn('inherited', data)
+        self.assertEqual(data['locations'][0]['id'], str(self.person.locations.first().id))
+        self.assertEqual(data['locations'][0]['number'], self.person.locations.first().number)
+        self.assertEqual(data['locations'][0]['location_level'], str(self.person.locations.first().location_level.id))
+        self.assertEqual(data['locations'][0]['status_fk'], str(self.person.locations.first().status.id))
+        self.assertEqual(data['locations'][0]['number'], self.person.locations.first().number)
+        self.assertEqual(data['status_fk'], str(self.person.status.id))
+        self.assertEqual(sorted(data['permissions']), sorted(self.person.permissions))
+
+    def test_must_be_authenticated(self):
+        self.client.logout()
+        response = self.client.get('/api/session/')
+        self.assertEqual(response.status_code, 403)
+
+    def test_locale(self):
+        self.person.locale = None
+        self.person.save()
+        self.assertIsNone(self.person.locale)
+        mommy.make(Locale, locale='es')
+
+        response = self.client.get(
+            '/api/session/', HTTP_ACCEPT_LANGUAGE='es;q=0.8')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Locale.objects.get(id=data['locale']).locale, 'es')

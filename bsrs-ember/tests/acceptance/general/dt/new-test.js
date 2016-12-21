@@ -12,7 +12,7 @@ import DT from 'bsrs-ember/vendor/defaults/dtd';
 import FD from 'bsrs-ember/vendor/defaults/field';
 import OD from 'bsrs-ember/vendor/defaults/option';
 import TICKET from 'bsrs-ember/vendor/defaults/ticket';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import CD from 'bsrs-ember/vendor/defaults/category';
@@ -36,6 +36,7 @@ const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 const DT_URL = BASEURLS.base_dt_url;
 const DT_NEW_URL = `${DT_URL}/new`;
 const DT_START_ENDPOINT = `${PREFIX}${DT_URL}/dt-start/`;
+const PD = PERSON_DEFAULTS.defaults();
 
 const SEARCH = '.ember-power-select-search input';
 
@@ -189,9 +190,8 @@ test('has_multi_locations === true, validation: cant click next until select loc
   });
   // location
   xhr(`${PREFIX}/admin/locations/location__icontains=a/`, 'GET', null, {}, 200, LF.search_idThree());
-  dtPage.locationsClickDropdown();
-  fillIn(`${SEARCH}`, 'a');
-  dtPage.locationsOptionOneClick();
+  selectSearch('.t-location-select', 'a');
+  selectChoose('.t-location-select', LF.search_idThree().results[0].name);
   andThen(() => {
     assert.equal(dtPage.locationsValue, LD.storeNameThree);
     assert.ok(!find('.t-dt-start').attr('disabled'));

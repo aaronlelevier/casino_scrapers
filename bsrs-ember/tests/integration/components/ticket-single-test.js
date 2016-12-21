@@ -5,7 +5,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
-import PD from 'bsrs-ember/vendor/defaults/person';
+//import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
@@ -13,6 +13,7 @@ import { clickTrigger, nativeMouseUp } from 'bsrs-ember/tests/helpers/ember-powe
 import wait from 'ember-test-helpers/wait';
 
 let store, ticket, trans;
+//const PD = PERSON_DEFAULTS.defaults();
 
 moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
   integration: true,
@@ -92,7 +93,13 @@ test('if save isRunning, btn is disabled', function(assert) {
   this.set('activities', []);
   // monkey patched.  Not actually passed to component but save.isRunning comes from save ember-concurrency task
   this.saveIsRunning = { isRunning: 'disabled' };
-  this.render(hbs`{{tickets/ticket-single model=model activities=activities saveTask=saveIsRunning}}`);
+  this.permissions = ['change_ticket'];
+  this.render(hbs`{{tickets/ticket-single 
+    model=model 
+    activities=activities 
+    saveTask=saveIsRunning
+    permissions=permissions
+  }}`);
   assert.equal(this.$('.t-save-btn').attr('disabled'), 'disabled', 'Button is disabled if xhr save is outstanding');
 });
 

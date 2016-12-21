@@ -6,11 +6,12 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import translations from "bsrs-ember/vendor/translation_fixtures";
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import wait from 'ember-test-helpers/wait';
 
-var store, trans;
+let store, trans;
 const ERR_TEXT = '.validated-input-error-dialog';
+const PD = PERSON_DEFAULTS.defaults();
 
 moduleForComponent('person-text-input', 'integration: person-text-input test', {
   integration: true,
@@ -21,8 +22,8 @@ moduleForComponent('person-text-input', 'integration: person-text-input test', {
     });
     translation.initialize(this);
     trans = this.container.lookup('service:i18n');
-    var service = this.container.lookup('service:i18n');
-    var json = translations.generate('en');
+    let service = this.container.lookup('service:i18n');
+    let json = translations.generate('en');
     loadTranslations(service, json);
   }
 });
@@ -31,7 +32,7 @@ test('first_name validation error if not present or greater than 30 characters',
   const FIRST_NAME = '.t-person-first-name';
   let modalDialogService = this.container.lookup('service:modal-dialog');
   modalDialogService.destinationElementId = 'first_name';
-  var done = assert.async();
+  let done = assert.async();
   this.render(hbs`{{people/person-text-input model=model field="first_name"}}`);
   // presence required
   let $err = Ember.$('.invalid');
@@ -70,7 +71,7 @@ test('middle_initial validation error if number entered (max-length 1 fyi)', fun
   const MIDDLE_INITIAL = '.t-person-middle-initial';
   let modalDialogService = this.container.lookup('service:modal-dialog');
   modalDialogService.destinationElementId = 'middle_initial';
-  var done = assert.async();
+  let done = assert.async();
   this.render(hbs`{{people/person-text-input model=model field="middle_initial"}}`);
   // presence required
   let $err = this.$('.invalid');
@@ -102,7 +103,7 @@ test('last_name validation error if not present or greater than 30 characters', 
   const LAST_NAME = '.t-person-last-name';
   let modalDialogService = this.container.lookup('service:modal-dialog');
   modalDialogService.destinationElementId = 'last_name';
-  var done = assert.async();
+  let done = assert.async();
   this.render(hbs`{{people/person-text-input model=model field="last_name"}}`);
   // presence required
   let $err = this.$('.invalid');

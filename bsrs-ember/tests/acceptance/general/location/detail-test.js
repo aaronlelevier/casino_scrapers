@@ -995,7 +995,7 @@ test('starting with multiple children, can remove all children (while not popula
     assert.equal(page.childrenSelected.indexOf(LD.storeNameTwo), 2);
   });
   let payload = LF.put({id: LD.idOne, name: LD.storeNameTwo, children: [LD.idTwo, LD.idThree]});
-  ajax(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
+  xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);
@@ -1175,7 +1175,7 @@ test('starting with multiple parents, can remove all parents (while not populati
     assert.equal(page.parentsSelected.indexOf(LD.storeNameParent), 2);
   });
   let payload = LF.put({id: LD.idOne, name: LD.storeNameTwo, parents: [LD.idParent, LD.idParentTwo]});
-  ajax(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
+  xhr(LOCATION_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);

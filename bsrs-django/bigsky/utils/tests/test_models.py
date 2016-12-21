@@ -16,7 +16,6 @@ from ticket.models import TicketStatus
 from utils import create
 from utils.helpers import create_default
 from utils.models import Tester
-from utils.permissions import perms_map
 
 
 class BaseManagerTests(TestCase):
@@ -205,50 +204,6 @@ class DefaultToDictMixinTests(TestCase):
         self.assertEqual(len(ret), 2)
         self.assertEqual(ret['id'], str(self.status.id))
         self.assertEqual(ret['name'], self.status.name)
-
-
-class TesterPermissionTests(TestCase):
-
-    def setUp(self):
-        self.model_name = Tester.__name__.lower() # returns: 'tester'
-        self.ct = ContentType.objects.get(app_label="utils", model=self.model_name)
-
-    def test_perms(self):
-        ct = self.ct
-        self.assertIsInstance(ct, ContentType)
-
-        # perm doesn't exit yet
-        with self.assertRaises(ObjectDoesNotExist):
-            Permission.objects.get(content_type=ct, codename='view_{}'.format(self.model_name))
-
-        # create perm
-        # VARs
-        name = 'Can view {}'.format(ct.name)
-        codename = 'view_{}'.format(ct.name)
-
-        # create a single instance to be used in all 3 view types
-        for i in perms_map.keys():
-            if i in ['HEAD', 'OPTIONS', 'GET']:
-                return Permission.objects.create(name=name, codename=codename, content_type=ct)
-
-        self.assertIsInstance(
-            Permission.objects.get(content_type=ct, codename='view_{}'.format(self.model_name)),
-            Permission
-            )
-
-
-class TesterPermissionAlreadyCreatedTests(TransactionTestCase):
-
-    def test_perms(self):
-        self.model_name = Tester._meta.verbose_name.lower() # returns: 'tester'
-        self.ct = ContentType.objects.get(app_label="utils", model=self.model_name)
-
-        create._create_model_view_permissions()
-
-        self.assertIsInstance(
-            Permission.objects.get(content_type=self.ct, codename='view_{}'.format(self.model_name)),
-            Permission
-            )
 
 
 class UpdateTests(TestCase):

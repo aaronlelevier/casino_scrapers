@@ -5,16 +5,17 @@ import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PERSON_LD from 'bsrs-ember/vendor/defaults/person';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import waitFor from 'ember-test-helpers/wait';
 import { typeInSearch, clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 
-var store, person, ticket, location_repo, trans, run = Ember.run;
+let store, person, ticket, location_repo, trans, run = Ember.run;
 const PowerSelect = '.ember-power-select-trigger';
 const DROPDOWN = '.ember-power-select-dropdown';
 const COMPONENT = '.t-link-destination-select';
+const PD = PERSON_DEFAULTS.defaults();
 
 moduleForComponent('power-select-location', 'integration: power-select-location', {
   integration: true,

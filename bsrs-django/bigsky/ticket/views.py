@@ -6,9 +6,11 @@ from rest_framework.response import Response
 
 from ticket.mixins import CreateTicketModelMixin, UpdateTicketModelMixin
 from ticket.models import Ticket, TicketActivity
+from ticket.permissions import TicketActivityPermissions
 from ticket.serializers import (TicketSerializer, TicketCreateSerializer,
     TicketListSerializer, TicketActivitySerializer)
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
+from utils.permissions import CrudPermissions
 from utils.views import BaseModelViewSet
 
 
@@ -28,7 +30,7 @@ class TicketViewSet(EagerLoadQuerySetMixin, TicketQuerySetFilters, CreateTicketM
     model = Ticket
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, CrudPermissions)
     filter_fields = [f.name for f in model._meta.get_fields()]
 
     def get_serializer_class(self):
@@ -55,7 +57,7 @@ class TicketActivityViewSet(BaseModelViewSet):
     model = TicketActivity
     queryset = TicketActivity.objects.all()
     serializer_class = TicketActivitySerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, TicketActivityPermissions)
     filter_fields = [f.name for f in model._meta.get_fields()]
 
     def get_serializer_class(self):

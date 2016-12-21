@@ -1,6 +1,7 @@
 import datetime
 import json
 import uuid
+from unittest.mock import MagicMock
 
 from django.utils.timezone import now
 
@@ -14,18 +15,18 @@ from generic.models import Attachment
 from generic.tests.factory import create_file_attachment
 from person.tests.factory import PASSWORD, create_single_person, DistrictManager
 from ticket.models import Ticket, TicketStatus, TicketActivity, TicketActivityType
+from ticket.permissions import TicketActivityPermissions
 from ticket.serializers import TicketCreateSerializer
 from ticket.tests.factory import (create_ticket, create_ticket_activity,
     create_ticket_activity_type, create_ticket_activity_types,)
 from ticket.tests.factory_related import create_ticket_priority, create_ticket_status
-from ticket.tests.mixins import TicketSetupNoLoginMixin, TicketSetupMixin
+from ticket.tests.mixins import (TicketSetupNoLoginMixin, TicketSetupMixin,
+    MockTicketActivityPermissionsMixin)
 from utils.helpers import media_path
+from utils.tests.mixins import MockPermissionsAllowAnyMixin
 
 
 class TicketListFulltextTests(TicketSetupMixin, APITestCase):
-
-    def setUp(self):
-        super(TicketListFulltextTests, self).setUp()
 
     def test_ticket_filter_related_m2m_with_icontains(self):
         letters = str(uuid.uuid4())
@@ -411,9 +412,10 @@ class TicketSearchTests(TicketSetupMixin, APITestCase):
         self.assertEqual(data["count"], count)
 
 
-class TicketActivityViewSetTests(APITestCase):
+class TicketActivityViewSetTests(MockTicketActivityPermissionsMixin, APITestCase):
 
     def setUp(self):
+        super(TicketActivityViewSetTests, self).setUp()
         self.password = PASSWORD
         create_categories()
         self.person = create_single_person()
@@ -427,11 +429,20 @@ class TicketActivityViewSetTests(APITestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(TicketActivityViewSetTests, self).tearDown()
         self.client.logout()
 
     def test_get(self):
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
         self.assertEqual(response.status_code, 200)
+
+    def test_put(self):
+        response = self.client.put('/api/tickets/{}/activity/'.format(self.ticket.id))
+        self.assertEqual(response.status_code, 405)
+
+    def test_delete(self):
+        response = self.client.delete('/api/tickets/{}/activity/'.format(self.ticket.id))
+        self.assertEqual(response.status_code, 405)
 
     def test_ticket_details(self):
         activity_type = create_ticket_activity_type("comment")
@@ -544,9 +555,10 @@ class TicketActivityViewSetTests(APITestCase):
                                    .count()))
 
 
-class TicketActivityViewSetReponseTests(APITestCase):
+class TicketActivityViewSetReponseTests(MockTicketActivityPermissionsMixin, APITestCase):
 
     def setUp(self):
+        super(TicketActivityViewSetReponseTests, self).setUp()
         create_categories()
 
         self.dm = DistrictManager()
@@ -565,6 +577,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(TicketActivityViewSetReponseTests, self).tearDown()
         self.client.logout()
 
     def test_create(self):
@@ -777,9 +790,10 @@ class TicketActivityViewSetReponseTests(APITestCase):
         # self.assertEqual(data['results'][0]['content'][0]['fullname'], person.fullname)
 
 
-class TicketAndTicketActivityTests(APITestCase):
+class TicketAndTicketActivityTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
+        super(TicketAndTicketActivityTests, self).setUp()
         create_categories()
 
         self.dm = DistrictManager()
@@ -795,6 +809,7 @@ class TicketAndTicketActivityTests(APITestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(TicketAndTicketActivityTests, self).tearDown()
         self.client.logout()
 
     def test_create(self):
@@ -1031,9 +1046,7 @@ class TicketAndTicketActivityTests(APITestCase):
         self.assertEqual(TicketActivity.objects.count(), 1)
 
     def test_attachment_add__then_add_ticket(self):
-        """
-        Each TicketActivity log should only log the Attachment(s) added.
-        """
+        # Each TicketActivity log should only log the Attachment(s) added.
         name = 'attachment_add'
         self.assertEqual(TicketActivity.objects.count(), 0)
 
@@ -1074,6 +1087,7 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
         self.person_two = create_single_person()
 
     def tearDown(self):
+        super(TicketQuerySetFiltersTests, self).tearDown()
         self.client.logout()
 
     def test_cannot_view_tickets(self):

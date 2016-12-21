@@ -7,7 +7,7 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS, { TICKET_LIST_URL, EXPORT_DATA_URL } from 'bsrs-ember/utilities/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
@@ -31,6 +31,7 @@ const BACKSPACE = {keyCode: 8};
 const SORT_LOCATION_DIR = '.t-sort-location-name-dir';
 const SORT_ASSIGNEE_DIR = '.t-sort-assignee-fullname-dir';
 const FILTER_PRIORITY = '.t-filter-priority-translated-name';
+const PD = PERSON_DEFAULTS.defaults();
 
 var application, endpoint, list_xhr, functionalStore;
 

@@ -14,7 +14,7 @@ import AJFD from 'bsrs-ember/vendor/defaults/automation-join-pfilter';
 import PJCD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
-import PersonD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import TPD from 'bsrs-ember/vendor/defaults/ticket-priority';
 import TSD from 'bsrs-ember/vendor/defaults/ticket-status';
 import SED from 'bsrs-ember/vendor/defaults/sendemail';
@@ -22,7 +22,9 @@ import SMSD from 'bsrs-ember/vendor/defaults/sendsms';
 import SEJRD from 'bsrs-ember/vendor/defaults/generic-join-recipients';
 import SMSJRD from 'bsrs-ember/vendor/defaults/generic-join-recipients';
 
-var store, automation, deserializer, pfilter, pfilter_unused;
+const PersonD = PERSON_DEFAULTS.defaults();
+
+let store, automation, deserializer, pfilter, pfilter_unused;
 
 module('unit: automation deserializer test', {
   beforeEach() {

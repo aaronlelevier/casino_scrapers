@@ -6,7 +6,7 @@ import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import translations from "bsrs-ember/vendor/translation_fixtures";
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import SD from 'bsrs-ember/vendor/defaults/status';
@@ -15,7 +15,8 @@ import page from 'bsrs-ember/tests/pages/person';
 import general from 'bsrs-ember/tests/pages/general';
 import { clickTrigger, nativeMouseUp } from 'bsrs-ember/tests/helpers/ember-power-select';
 
-var store, role, trans;
+let store, role, trans;
+const PD = PERSON_DEFAULTS.defaults();
 
 moduleForComponent('person-single', 'integration: person-single test', {
   integration: true,
@@ -67,7 +68,7 @@ test('dropdown displays correct print and duplicate text', function(assert) {
 });
 
 test('validation on person username works if clear out username', function(assert) {
-  var done = assert.async();
+  let done = assert.async();
   run(() => {
     this.set('model', store.push('person', {id: PD.idOne, username: 'foo'}));
   });
@@ -92,7 +93,12 @@ test('if save isRunning, btn is disabled', function(assert) {
   });
   // monkey patched.  Not actually passed to component but save.isRunning comes from save ember-concurrency task
   this.saveIsRunning = { isRunning: 'disabled' };
-  this.render(hbs`{{people/person-single model=model saveTask=saveIsRunning}}`);
+  this.permissions = ['change_person'];
+  this.render(hbs`{{people/person-single 
+    model=model 
+    saveTask=saveIsRunning
+    permissions=permissions
+  }}`);
   assert.equal(this.$('.t-save-btn').attr('disabled'), 'disabled', 'Button is disabled if xhr save is outstanding');
 });
 

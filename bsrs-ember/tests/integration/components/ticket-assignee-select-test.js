@@ -5,15 +5,17 @@ import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import wait from 'ember-test-helpers/wait';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import waitFor from 'ember-test-helpers/wait';
 import { typeInSearch, clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 
-let store, ticket, person_one, person_two, person_three, run = Ember.run, person_repo;
+const PD = PERSON_DEFAULTS.defaults();
 const PowerSelect = '.ember-power-select-trigger';
 const DROPDOWN = '.ember-power-select-dropdown';
 const COMPONENT = '.t-ticket-assignee-select';
+
+let store, ticket, person_one, person_two, person_three, run = Ember.run, person_repo;
 
 moduleForComponent('ticket-assignee-select', 'integration: ticket-assignee-select test', {
   integration: true,

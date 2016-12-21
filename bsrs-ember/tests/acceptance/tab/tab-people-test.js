@@ -7,12 +7,13 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PD_PUT from 'bsrs-ember/vendor/defaults/person-put';
 import random from 'bsrs-ember/models/random';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { PREFIX, ROLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
+const PD = PERSON_DEFAULTS.defaults();
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
 const NEW_URL = BASE_PEOPLE_URL + '/new/1';

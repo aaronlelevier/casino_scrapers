@@ -5,13 +5,14 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import { typeInSearch, clickTrigger, nativeMouseUp } from '../../helpers/ember-power-select';
 // import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
-import LINK from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import DTD from 'bsrs-ember/vendor/defaults/dtd';
 import waitFor from 'ember-test-helpers/wait';
 
 let store, dtd, link_one, dtd_two, run = Ember.run, dtd_repo;
 const PowerSelect = '.ember-power-select-trigger';
 const DROPDOWN = '.ember-power-select-dropdown';
+const LINK = PERSON_DEFAULTS.defaults();
 
 moduleForComponent('db-fetch-custom-select', 'integration: db-fetch-custom-select test', {
   integration: true,

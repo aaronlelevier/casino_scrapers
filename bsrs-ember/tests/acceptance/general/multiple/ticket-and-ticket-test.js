@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
+import { xhr } from 'bsrs-ember/tests/helpers/xhr';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
@@ -23,19 +24,16 @@ const TICKET_ACTIVITIES_TWO_URL = `${PREFIX}/tickets/${idTwo}/activity/`;
 
 var application, ticket_one, ticket_two;
 
-moduleForAcceptance('Acceptance | general ticket and ticket test', {
-  beforeEach() {
-  },
-});
+moduleForAcceptance('Acceptance | general ticket and ticket test');
 
 test('rolling back should have no effect on another open tickets dirty status', function(assert) {
-  ajax(`${PREFIX}${BASEURLS.base_tickets_url}/?page=1`, 'GET', null, {}, 200, TF.list());
+  xhr(`${PREFIX}${BASEURLS.base_tickets_url}/?page=1`, 'GET', null, {}, 200, TF.list());
   visit(TICKET_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
   });
-  ajax(`${PREFIX}${TICKET_ONE_DETAIL_URL}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
-  ajax(TICKET_ACTIVITIES_ONE_URL, 'GET', null, {}, 200, TA_FIXTURES.empty());
+  xhr(`${PREFIX}${TICKET_ONE_DETAIL_URL}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
+  xhr(TICKET_ACTIVITIES_ONE_URL, 'GET', null, {}, 200, TA_FIXTURES.empty());
   click('.t-grid-data:eq(0)');
   andThen(() => {
     assert.equal(currentURL(), TICKET_ONE_DETAIL_URL);
@@ -50,8 +48,8 @@ test('rolling back should have no effect on another open tickets dirty status', 
     assert.equal(ticket_one.get('locationIsDirty'), false);
     assert.equal(ticket_one.get('location_fk'), LD.idOne);
   });
-  ajax(`${PREFIX}${TICKET_TWO_DETAIL_URL}/`, 'GET', null, {}, 200, TF.detail(idTwo));
-  ajax(TICKET_ACTIVITIES_TWO_URL, 'GET', null, {}, 200, TA_FIXTURES.empty());
+  xhr(`${PREFIX}${TICKET_TWO_DETAIL_URL}/`, 'GET', null, {}, 200, TF.detail(idTwo));
+  xhr(TICKET_ACTIVITIES_TWO_URL, 'GET', null, {}, 200, TA_FIXTURES.empty());
   click('.t-grid-data:eq(1)');
   andThen(() => {
     assert.equal(currentURL(), TICKET_TWO_DETAIL_URL);

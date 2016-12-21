@@ -12,7 +12,7 @@ import CD from 'bsrs-ember/vendor/defaults/currency';
 import COD from 'bsrs-ember/vendor/defaults/country';
 import DD from 'bsrs-ember/vendor/defaults/dtd';
 import DF from 'bsrs-ember/vendor/dtd_fixtures';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import SF from 'bsrs-ember/vendor/state_fixtures';
 import CountryF from 'bsrs-ember/vendor/country_fixtures';
@@ -25,6 +25,7 @@ const BASE_URL = BASEURLS.BASE_TENANT_URL;
 const DETAIL_URL = `${BASE_URL}/${TD.idOne}`;
 const API_DETAIL_URL = `${TENANT_URL}${TD.idOne}/`;
 const CURRENCY = '.t-currency-select';
+const PD = PERSON_DEFAULTS.defaults();
 
 var  detailXhr, listXhr;
 

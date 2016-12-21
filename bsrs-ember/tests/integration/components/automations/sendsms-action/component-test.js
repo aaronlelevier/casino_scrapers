@@ -5,7 +5,7 @@ import hbs from 'htmlbars-inline-precompile';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import SMSD from 'bsrs-ember/vendor/defaults/sendsms';
 import SMSJRD from 'bsrs-ember/vendor/defaults/generic-join-recipients';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import page from 'bsrs-ember/tests/pages/automation';
 import AAD from 'bsrs-ember/vendor/defaults/automation-action';
 import repository from 'bsrs-ember/tests/helpers/repository';
@@ -15,7 +15,9 @@ import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import { clickTrigger, triggerKeydown, nativeMouseUp, nativeMouseDown, typeInSearch } from 'bsrs-ember/tests/helpers/ember-power-select';
 import wait from 'ember-test-helpers/wait';
 
-var store, trans, action, automation_repo;
+const PD = PERSON_DEFAULTS.defaults();
+
+let store, trans, action, automation_repo;
 
 moduleForComponent('automations/sendsms-action', 'Integration | Component | automations/sendsms action', {
   integration: true,

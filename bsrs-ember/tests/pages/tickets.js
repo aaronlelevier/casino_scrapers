@@ -4,7 +4,7 @@ import config from 'bsrs-ember/config/environment';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import CD from 'bsrs-ember/vendor/defaults/category';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import { POWER_SELECT_OPTIONS } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BASEURLS, { TICKET_LIST_URL } from 'bsrs-ember/utilities/urls';
 
@@ -24,8 +24,9 @@ const CATEGORY_ONE = '.t-model-category-select:eq(0) .ember-basic-dropdown-trigg
 const CATEGORY_TWO = '.t-model-category-select:eq(1) .ember-basic-dropdown-trigger';
 const CATEGORY_THREE = '.t-model-category-select:eq(2) .ember-basic-dropdown-trigger';
 const STATUS = '.t-ticket-status-select .ember-basic-dropdown-trigger';
+const PD = PERSON_DEFAULTS.defaults();
 
-var TicketPage = PageObject.create({
+let TicketPage = PageObject.create({
   visitNew: visitable(NEW_URL),
   visit: visitable(TICKETS_URL),
   visitDetail: visitable(DETAIL_URL),

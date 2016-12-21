@@ -58,7 +58,7 @@ moduleForAcceptance('Acceptance | general role new', {
   }
 });
 
-test('visiting role/new', (assert) => {
+test('visiting role/new', function(assert) {
   page.visit();
   generalPage.new();
   andThen(() => {
@@ -83,7 +83,7 @@ test('visiting role/new', (assert) => {
   fillIn('.t-settings-dashboard_text', RD.dashboard_textTwo);
   selectChoose('.t-role-role-type', RD.roleTypeGeneral);
   selectChoose('.t-location-level-select', LLD.nameCompany);
-  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
+  xhr(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
   page.categoryClickDropdown();
   page.categoryClickOptionOneEq();
   fillIn('.t-amount', CURRENCY_DEFAULTS.authAmountOne);
@@ -109,7 +109,7 @@ test('visiting role/new', (assert) => {
   });
 });
 
-test('validation works and when hit save, we do same post', (assert) => {
+test('validation works and when hit save, we do same post', function(assert) {
   page.visit();
   generalPage.new();
   andThen(() => {
@@ -131,7 +131,7 @@ test('validation works and when hit save, we do same post', (assert) => {
   });
 });
 
-test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
+test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', function(assert) {
   page.visitNew();
   page.nameFill(RD.nameOne);
   generalPage.cancel();
@@ -155,7 +155,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
   });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', function(assert) {
   page.visitNew();
   page.nameFill(RD.nameOne);
   generalPage.cancel();
@@ -182,7 +182,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
+test('when user enters new form and doesnt enter data, the record is correctly removed from the store', function(assert) {
   page.visitNew();
   generalPage.cancel();
   andThen(() => {
@@ -191,9 +191,9 @@ test('when user enters new form and doesnt enter data, the record is correctly r
 });
 
 /*ROLE TO CATEGORY M2M*/
-test('clicking power select for parent categories will fire off xhr request for all parent categories', (assert) => {
+test('clicking power select for parent categories will fire off xhr request for all parent categories', function(assert) {
   page.visitNew();
-  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
+  xhr(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
   page.categoryClickDropdown();
   andThen(() => {
     assert.equal(page.categoryOptionLength, 2);
@@ -222,12 +222,12 @@ test('clicking power select for parent categories will fire off xhr request for 
   });
 });
 
-test('adding and removing removing a category in power select for categories will save correctly and cleanup role_categories_fks', (assert) => {
+test('adding and removing removing a category in power select for categories will save correctly and cleanup role_categories_fks', function(assert) {
   page.visitNew();
   andThen(() => {
     patchRandom(counter);
   });
-  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
+  xhr(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
   page.categoryClickDropdown();
   andThen(() => {
     assert.equal(page.categoryOptionLength, 2);
@@ -264,9 +264,9 @@ test('adding and removing removing a category in power select for categories wil
   });
 });
 
-test('can add multiple categories', (assert) => {
+test('can add multiple categories', function(assert) {
   page.visitNew();
-  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
+  xhr(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
   page.categoryClickDropdown();
   andThen(() => {
     let role = store.find('role', UUID.value);
@@ -294,7 +294,7 @@ test('can add multiple categories', (assert) => {
   });
 });
 
-test('adding a new role should allow for another new role to be created after the first is persisted', (assert) => {
+test('adding a new role should allow for another new role to be created after the first is persisted', function(assert) {
   let role_count;
   uuidReset();
   payload.id = 'abc123';
@@ -303,10 +303,10 @@ test('adding a new role should allow for another new role to be created after th
   generalPage.new();
   page.nameFill(RD.nameOne);
   selectChoose(LLEVEL_SELECT, LLD.nameCompany);
-  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
+  xhr(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
   page.categoryClickDropdown();
   page.categoryClickOptionOneEq();
-  ajax(url, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
+  xhr(url, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), ROLE_LIST_URL);
@@ -320,9 +320,9 @@ test('adding a new role should allow for another new role to be created after th
   });
 });
 
-test('setting permissions and save', (assert) => {
+test('setting permissions and save', function(assert) {
   page.visitNew();
-  ajax(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
+  xhr(`${PREFIX}/admin/categories/parents/`, 'GET', null, {}, 200, CF.top_level());
   page.categoryClickDropdown();
   page.categoryClickOptionOneEq();
   page.nameFill(RD.nameOne);

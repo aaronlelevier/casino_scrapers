@@ -5,12 +5,13 @@ import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance'
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import BASEURLS from 'bsrs-ember/utilities/urls';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
-import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr'; //kill this soon plz
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TENANT_DEFAULTS from 'bsrs-ember/vendor/defaults/tenant';
 
+const PEOPLE_DEFAULTS = PERSON_DEFAULTS.defaults();
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_people_url;
 const LIST_URL = BASE_URL + '/index';

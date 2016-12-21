@@ -1,6 +1,6 @@
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import PD from 'bsrs-ember/vendor/defaults/person';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import AD from 'bsrs-ember/vendor/defaults/automation';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
@@ -8,7 +8,8 @@ import CD from 'bsrs-ember/vendor/defaults/category';
 import GD from 'bsrs-ember/vendor/defaults/general';
 import ActivityDeserializer from 'bsrs-ember/deserializers/activity';
 
-var store, subject, uuid;
+let store, subject, uuid;
+const PD = PERSON_DEFAULTS.defaults();
 
 module('unit: activity deserializer test', {
     beforeEach() {
