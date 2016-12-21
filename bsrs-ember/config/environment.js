@@ -63,6 +63,7 @@ module.exports = function(environment) {
 
     ENV.DEBOUNCE_TIMEOUT_INTERVAL = 15;
     ENV.APP.ANIMATION_TIME = 15;
+    ENV.APP.POWER_SELECT_DEBOUNCE = 100; // tests depend on testing that there is a power select debounce and doesnt show options until after certain period of time
     ENV.APP.VALIDATION_TIMEOUT_INTERVAL = 15;
     ENV.APP.emberModalDialog = {
       modalRootElementId: 'ember-testing'

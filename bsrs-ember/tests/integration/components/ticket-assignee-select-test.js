@@ -119,7 +119,7 @@ test('should not send off xhr within DEBOUNCE INTERVAL', function(assert) {
   Ember.run.later(() => {
     assert.equal($('.ember-power-select-option').length, 1);
     done();
-  }, 150);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
+  }, 50);//50ms used to allow repo to get hit, but within the DEBOUNCE INTERVAL, thus option length is not 3 yet
 });
 
 test('ticket assignee should have avatar and fullname', function(assert) {
