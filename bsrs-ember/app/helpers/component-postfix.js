@@ -17,5 +17,7 @@ export default Ember.Helper.helper((params) => {
         return 'cc-add-remove';
     }else if(params[0] === 'attachment_add' || params[0] === 'attachment_remove') {
         return 'attachment-add-remove';
+    }else if(params[0] === 'send_sms' || params[0] === 'send_email') {
+        return 'send-msg-ticket-activity';
     }
 });

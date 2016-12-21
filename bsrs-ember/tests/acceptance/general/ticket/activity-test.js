@@ -306,6 +306,55 @@ test('ticket detail does not show the activity list without a matching ticket fo
   });
 });
 
+// SEND SMS
+test('ticket detail shows the activity list including event data (send_sms)', function(assert) {
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.send_sms_or_email_only('send_sms', 1, TD.idOne));
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `Text message sent to ${PD.fullnameBoy} via ${AD.descriptionOne} 15 days ago`);
+  });
+});
+
+// SEND EMAIL
+test('ticket detail shows the activity list including event data (send_email)', function(assert) {
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.send_sms_or_email_only('send_email', 1, TD.idOne));
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `Email sent to ${PD.fullnameBoy} via ${AD.descriptionOne} 15 days ago`);
+  });
+});
+
+// SEND SMS / EMAIL - COMBINED - These are using the same component, so just test links poplate for component's sake
+test('can click on automation that created activity and redirects to that automation', assert => {
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.send_sms_or_email_only('send_email', 1, TD.idOne));
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
+  click('.t-link');
+  xhr(`${AUTOMATION_URL}${AD.idOne}/`, 'GET', null, {}, 200, AF.detail(AD.idOne));
+  andThen(() => {
+    assert.equal(currentURL(), `${BASEURLS.BASE_AUTOMATION_URL}/${AD.idOne}`);
+  });
+});
+
+test('can click on a recipient for the activity and redirects to that recipients detail page', assert => {
+  xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.send_sms_or_email_only('send_email', 1, TD.idOne));
+  page.visitDetail();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL);
+  });
+  click('.t-recipients:eq(0)');
+  xhr(`${PEOPLE_URL}${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
+  andThen(() => {
+    assert.equal(currentURL(), `${BASEURLS.base_people_url}/${PD.idBoy}`);
+  });
+});
+
 //CC
 test('ticket detail shows the activity list including event data (cc_add)', function(assert) {
   xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(1));

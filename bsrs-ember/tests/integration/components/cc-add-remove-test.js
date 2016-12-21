@@ -28,10 +28,7 @@ moduleForComponent('cc-add-remove', 'Integration | Component | cc-add-remove', {
       activityAutomation = store.push('activity', {
         id: TAD.idAssigneeOne,
         created: created,
-        automation: {
-          id: AD.idOne,
-          description: AD.descriptionOne
-        },
+        automation_fk: AD.idOne,
         type: 'cc_add',
         added: [{
           id: PD.idOne, fullname: PD.fullname
@@ -46,6 +43,7 @@ moduleForComponent('cc-add-remove', 'Integration | Component | cc-add-remove', {
           id: PD.idOne, fullname: PD.fullname
         }]
       });
+      store.push('activity/automation', {id: AD.idOne, description: AD.descriptionOne});
       store.push('activity/person', {id: PD.idOne, fullname: PD.fullname});
     });
   }

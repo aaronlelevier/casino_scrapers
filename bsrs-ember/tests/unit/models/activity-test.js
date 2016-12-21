@@ -2,6 +2,7 @@ import Ember from 'ember';
 import { test, module } from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
+import AD from 'bsrs-ember/vendor/defaults/automation';
 import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import TAD from 'bsrs-ember/vendor/defaults/ticket_activity';
@@ -12,7 +13,7 @@ let store, activity, run = Ember.run;
 
 module('unit: activity test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:activity', 'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity/assignee', 'model:activity/person', 'model:ticket', 'model:ticket-status', 'model:ticket-priority', 'model:activity/category-to', 'model:activity/category-from', 'model:activity/attachment-add', 'model:activity/attachment-remove']);
+    store = module_registry(this.container, this.registry, ['model:activity', 'model:activity/cc-add', 'model:activity/automation', 'model:activity/send-email', 'model:activity/cc-remove', 'model:activity/send-sms', 'model:activity/assignee', 'model:activity/person', 'model:ticket', 'model:ticket-status', 'model:ticket-priority', 'model:activity/category-to', 'model:activity/category-from', 'model:activity/attachment-add', 'model:activity/attachment-remove']);
   }
 });
 
@@ -132,6 +133,20 @@ test('person returns associated model or undefined', (assert) => {
   assert.equal(person.get('id'), PD.idOne);
 });
 
+test('automation returns associated model or undefined', (assert) => {
+  activity = store.push('activity', {id: TAD.idCreate, automation_fk: AD.idOne});
+  store.push('activity/automation', {id: AD.idOne});
+  store.push('activity/automation', {id: 3});
+  let automation = activity.get('automation');
+  assert.equal(automation.get('id'), AD.idOne);
+  activity.set('automation_fk', 3);
+  automation = activity.get('automation');
+  assert.equal(automation.get('id'), 3);
+  activity.set('automation_fk', AD.idOne);
+  automation = activity.get('automation');
+  assert.equal(automation.get('id'), AD.idOne);
+});
+
 test('added returns associated array of cc or empty array (cc_add type)', (assert) => {
   activity = store.push('activity', {id: TAD.idCcAddOne, type: 'cc_add'});
   let three = store.push('activity/cc-add', {id: 3, fullname: 'm', activities: [TAD.idCcAddOne]});
@@ -230,4 +245,54 @@ test('removed_attachment returns associated array of attachments or empty array 
   });
   removed_attachment = activity.get('removed_attachment');
   assert.equal(removed_attachment.get('length'), 0);
+});
+
+test('send_sms returns associated array of send_sms', (assert) => {
+  activity = store.push('activity', {id: TAD.idCcAddOne, type: 'cc_add'});
+  let three = store.push('activity/send-sms', {id: 3, fullname: 'm', activities: [TAD.idCcAddOne]});
+  store.push('activity/send-sms', {id: 2, fullname: 'n', activities: []});
+  let one = store.push('activity/send-sms', {id: 1, fullname: 'o', activities: [999, TAD.idCcAddOne]});
+  let send_sms = activity.get('send_sms');
+  assert.equal(send_sms.get('length'), 2);
+  assert.equal(send_sms.objectAt(0).get('id'), 3);
+  assert.equal(send_sms.objectAt(0).get('fullname'), 'm');
+  assert.equal(send_sms.objectAt(1).get('id'), 1);
+  assert.equal(send_sms.objectAt(1).get('fullname'), 'o');
+  run(function() {
+    store.push('activity/send-sms', {id: three.get('id'), activities: []});
+  });
+  send_sms = activity.get('send_sms');
+  assert.equal(send_sms.get('length'), 1);
+  assert.equal(send_sms.objectAt(0).get('id'), 1);
+  assert.equal(send_sms.objectAt(0).get('fullname'), 'o');
+  run(function() {
+    store.push('activity/send-sms', {id: one.get('id'), activities: []});
+  });
+  send_sms = activity.get('send_sms');
+  assert.equal(send_sms.get('length'), 0);
+});
+
+test('send_email returns associated array of send_email', (assert) => {
+  activity = store.push('activity', {id: TAD.idCcAddOne, type: 'cc_add'});
+  let three = store.push('activity/send-email', {id: 3, fullname: 'm', activities: [TAD.idCcAddOne]});
+  store.push('activity/send-email', {id: 2, fullname: 'n', activities: []});
+  let one = store.push('activity/send-email', {id: 1, fullname: 'o', activities: [999, TAD.idCcAddOne]});
+  let send_email = activity.get('send_email');
+  assert.equal(send_email.get('length'), 2);
+  assert.equal(send_email.objectAt(0).get('id'), 3);
+  assert.equal(send_email.objectAt(0).get('fullname'), 'm');
+  assert.equal(send_email.objectAt(1).get('id'), 1);
+  assert.equal(send_email.objectAt(1).get('fullname'), 'o');
+  run(function() {
+    store.push('activity/send-email', {id: three.get('id'), activities: []});
+  });
+  send_email = activity.get('send_email');
+  assert.equal(send_email.get('length'), 1);
+  assert.equal(send_email.objectAt(0).get('id'), 1);
+  assert.equal(send_email.objectAt(0).get('fullname'), 'o');
+  run(function() {
+    store.push('activity/send-email', {id: one.get('id'), activities: []});
+  });
+  send_email = activity.get('send_email');
+  assert.equal(send_email.get('length'), 0);
 });

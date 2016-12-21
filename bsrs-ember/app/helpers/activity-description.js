@@ -96,6 +96,8 @@ export default Ember.Helper.helper(function(params, addon) {
     const to = activity.get('to.name');
     const from = activity.get('from.name');
     return i18n.t('activity.ticket.to_from', {type:type, to: i18n.t(to), from:i18n.t(from), timestamp:timestamp});
+  } else if (type === 'send_sms' || type === 'send_email') {
+    return i18n.t('activity.ticket.msg_sent', {timestamp:timestamp});
   }
 
   // if type is none of the above

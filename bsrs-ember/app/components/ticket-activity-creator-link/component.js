@@ -7,7 +7,7 @@ var TicketActivityCreatorLink = Ember.Component.extend({
     if (activity.get('person')) {
       return activity.get('person').get('fullname');
     } else if (activity.get('automation')) {
-      return activity.automation.description;
+      return activity.get('automation').get('description');
     }
   })
 });
