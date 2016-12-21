@@ -259,22 +259,6 @@ class BootstrappedDataTests(SetupMixin, TestCase):
         self.assertEqual("admin.role.type.internal", configuration[0])
         self.assertEqual("admin.role.type.third_party", configuration[1])
 
-    def test_role__default_name_bool_and_location_level(self):
-        [r.delete() for r in Role.objects.all()]
-        role = create_role()
-        role.location_level = None
-        role.categories.clear() # so don't have categories, location level conflicts
-        role.save()
-        self.assertIsNone(role.location_level)
-        self.assertNotEqual(role.name, settings.DEFAULT_ROLE)
-
-        response = self.client.get(reverse('index'))
-        data = json.loads(response.context['role_config'])
-
-        self.assertEqual(1, len(data))
-        self.assertFalse(data[0]['default'])
-        self.assertIsNone(data[0]['location_level'])
-
     def test_person_statuses(self):
         configuration = json.loads(self.response.context['person_status_config'])
         self.assertTrue(len(configuration) > 0)

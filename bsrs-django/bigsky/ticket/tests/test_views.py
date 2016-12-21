@@ -25,7 +25,7 @@ from ticket.tests.factory import (create_ticket, create_standard_ticket,
 from ticket.tests.factory_related import create_ticket_priority, create_ticket_status
 from ticket.tests.mixins import (TicketSetupNoLoginMixin, TicketSetupMixin,
     MockTicketActivityPermissionsMixin)
-from utils.helpers import media_path
+from utils.helpers import media_path, clear_related
 from utils.tests.mixins import MockPermissionsAllowAnyMixin
 
 
@@ -498,6 +498,7 @@ class TicketActivityViewSetTests(MockTicketActivityPermissionsMixin, APITestCase
         self.assertEqual(data['results'][0]['content']['comment'], 'with comment')
 
     def test_paginate(self):
+        ticket_activity = create_ticket_activity(ticket=self.ticket)
         # page 1
         response = self.client.get('/api/tickets/{}/activity/?page=1'.format(self.ticket.id))
         self.assertEqual(response.status_code, 200)
