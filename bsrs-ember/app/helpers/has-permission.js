@@ -8,16 +8,17 @@ import { RESOURCES_WITH_PERMISSION } from 'bsrs-ember/utilities/constants';
  * @return {Boolean} returns true if string in array of permissions
  */
 
-function adminPerms (perms) {
-  if (perms.includes('view_person') && perms.includes('view_role') && perms.includes('view_category') && perms.includes('view_location') && perms.includes('view_locationlevel')) {
+function adminPerms(perms, verb) {
+  if (perms.includes(`${verb}_person`) && perms.includes(`${verb}_role`) && perms.includes(`${verb}_category`) && 
+    perms.includes(`${verb}_location`) && perms.includes(`${verb}_locationlevel`)) {
     return true;
   }
   return false;
 }
 
-export function hasPermission(params, { permissions: permissions, resource: resource, verb: verb }) {
+export function hasPermission(_params, { permissions: permissions, resource: resource, verb: verb }) {
   if (resource === 'admin') {
-    return adminPerms(permissions);
+    return adminPerms(permissions, verb);
   }
 
   if (resource && RESOURCES_WITH_PERMISSION.includes(resource)) {
