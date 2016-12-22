@@ -188,7 +188,6 @@ class Ticket(BaseModel):
     attachments = GenericRelation(Attachment)
     # Fields
     request = models.TextField(blank=True, null=True)
-    dt_path = JSONField(blank=True, default=[])
     completion_date = models.DateTimeField(null=True)
     # Auto-fields
     number = models.IntegerField(blank=True, unique=True, default=next_number)

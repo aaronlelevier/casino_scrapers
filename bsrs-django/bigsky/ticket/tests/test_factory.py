@@ -122,25 +122,25 @@ class CreateTicketTests(TestCase):
         self.ticket.save()
         self.assertIsInstance(self.ticket.creator, Person)
 
-    def test_dt_path(self):
-        """
-        dt_path should be previous dtd (start dtd) and existing one that user bailed on
-        """
-        start_dtd = TreeData.objects.get_start()
-        self.assertEqual(len(self.ticket.dt_path), 2)
-        self.assertTrue(start_dtd.links.first().destination)
-        self.assertEqual(self.ticket.dt_path[0]['dtd']['id'], str(start_dtd.id))
-        self.assertEqual(self.ticket.dt_path[0]['dtd']['description'], start_dtd.description)
-        self.assertEqual(self.ticket.dt_path[0]['dtd']['prompt'], start_dtd.prompt)
-        self.assertEqual(self.ticket.dt_path[0]['dtd']['note'], start_dtd.note)
-        self.assertEqual(len(self.ticket.dt_path[0]['dtd']['fields']), 5)
-        self.assertTrue(self.ticket.dt_path[0]['dtd']['fields'][0]['id'])
-        self.assertTrue(self.ticket.dt_path[0]['dtd']['fields'][0]['value'])
-        self.assertTrue(self.ticket.dt_path[0]['dtd']['fields'][0]['label'])
-        self.assertEqual(self.ticket.dt_path[0]['dtd']['fields'][0]['required'], 'true')
-        self.assertEqual(type(self.ticket.dt_path[0]['dtd']['fields'][3]['value']), int)
-        self.assertEqual(self.ticket.dt_path[1]['dtd']['id'], str(start_dtd.links.first().destination.id))
-        self.assertEqual(self.ticket.dt_path[1]['dtd']['description'], 'You are almost done')
+    # def test_dt_path(self):
+    #     """
+    #     dt_path should be previous dtd (start dtd) and existing one that user bailed on
+    #     """
+    #     start_dtd = TreeData.objects.get_start()
+    #     self.assertEqual(len(self.ticket.dt_path), 2)
+    #     self.assertTrue(start_dtd.links.first().destination)
+    #     self.assertEqual(self.ticket.dt_path[0]['dtd']['id'], str(start_dtd.id))
+    #     self.assertEqual(self.ticket.dt_path[0]['dtd']['description'], start_dtd.description)
+    #     self.assertEqual(self.ticket.dt_path[0]['dtd']['prompt'], start_dtd.prompt)
+    #     self.assertEqual(self.ticket.dt_path[0]['dtd']['note'], start_dtd.note)
+    #     self.assertEqual(len(self.ticket.dt_path[0]['dtd']['fields']), 5)
+    #     self.assertTrue(self.ticket.dt_path[0]['dtd']['fields'][0]['id'])
+    #     self.assertTrue(self.ticket.dt_path[0]['dtd']['fields'][0]['value'])
+    #     self.assertTrue(self.ticket.dt_path[0]['dtd']['fields'][0]['label'])
+    #     self.assertEqual(self.ticket.dt_path[0]['dtd']['fields'][0]['required'], 'true')
+    #     self.assertEqual(type(self.ticket.dt_path[0]['dtd']['fields'][3]['value']), int)
+    #     self.assertEqual(self.ticket.dt_path[1]['dtd']['id'], str(start_dtd.links.first().destination.id))
+    #     self.assertEqual(self.ticket.dt_path[1]['dtd']['description'], 'You are almost done')
 
 
 class CreateStandardTicketTests(TestCase):
