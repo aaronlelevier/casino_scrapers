@@ -70,10 +70,30 @@ test('it renders with defaults checked or unchecked', function(assert) {
   assert.equal(this.$('[data-test-id="permission-delete-category"] > input').is(':checked'), false);
 });
 
+test('permissions should render in the correct order and labels should match their underlying checkboxes', function(assert) {
+  this.model = role;
+  this.render(hbs`{{roles/permissions-section model=model}}`);
+  //labels
+
+  assert.equal(this.$('[data-test-id="t-permission-view-header"]').length, 1);
+  assert.equal(this.$('[data-test-id="t-permission-view-header"] [data-test-id*="t-permission-view"]').length, 4);
+  assert.equal(this.$('[data-test-id="t-permission-view-header"] div:nth-child(2)').text().trim(), 'role.label.permission.view');
+  assert.equal(this.$('[data-test-id="t-permission-view-header"] div:nth-child(3)').text().trim(), 'role.label.permission.create');
+  assert.equal(this.$('[data-test-id="t-permission-view-header"] div:nth-child(4)').text().trim(), 'role.label.permission.edit');
+  assert.equal(this.$('[data-test-id="t-permission-view-header"] div:nth-child(5)').text().trim(), 'role.label.permission.delete');
+
+  assert.equal(this.$('[data-test-id="t-permission-view-row"]').length, 6);
+  assert.equal(this.$('[data-test-id="t-permission-view-row"]:eq(0) div:nth-child(2) label')[0].getAttribute('data-test-id'), 'permission-view-ticket');
+  assert.equal(this.$('[data-test-id="t-permission-view-row"]:eq(0) div:nth-child(3) label')[0].getAttribute('data-test-id'), 'permission-add-ticket');
+  assert.equal(this.$('[data-test-id="t-permission-view-row"]:eq(0) div:nth-child(4) label')[0].getAttribute('data-test-id'), 'permission-change-ticket');
+  assert.equal(this.$('[data-test-id="t-permission-view-row"]:eq(0) div:nth-child(5) label')[0].getAttribute('data-test-id'), 'permission-delete-ticket');
+
+});
+
 test('check dirty tracking', function(assert) {
   this.model = role;
   this.render(hbs`{{roles/permissions-section model=model}}`);
-  
+
   // category
   assert.equal(this.$('[data-test-id="permission-view-category"] > input').is(':checked'), true);
   assert.equal(this.$('[data-test-id="permission-add-category"] > input').is(':checked'), true);

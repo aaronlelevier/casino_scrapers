@@ -1,10 +1,10 @@
-<div class="permission-row--header">
-  <div class="flex-item--auto" data-test-id={{concat  "t-permission-view-" permissionItem}}></div>
-  <div class="permission-cell--checkbox" data-test-id="t-permission-view-create">
-    {{t "role.label.permission.create"}}
-  </div>
+<div class="permission-row--header" data-test-id="t-permission-view-header">
+  <div class="flex-item--auto"></div>
   <div class="permission-cell--checkbox" data-test-id="t-permission-view-view">
     {{t "role.label.permission.view"}}
+  </div>
+  <div class="permission-cell--checkbox" data-test-id="t-permission-view-create">
+    {{t "role.label.permission.create"}}
   </div>
   <div class="permission-cell--checkbox" data-test-id="t-permission-view-edit">
     {{t "role.label.permission.edit"}}
@@ -15,7 +15,7 @@
 </div>
 
 {{#each permissionsList as |permissionItem|}}
-	<div class="permission-row">
+	<div class="permission-row" data-test-id="t-permission-view-row">
     <div class="permission-cell flex-item--auto" data-test-id={{concat  "t-permission-view-" permissionItem}}>
       {{t (concat "role.label.permission." permissionItem) }}
 		</div>
