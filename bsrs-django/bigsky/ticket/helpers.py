@@ -17,13 +17,13 @@ class TicketActivityToRepresentation(object):
             if self.type.name == TicketActivityType.ASSIGNEE:
                 self.set_assignee_data()
             elif self.type.name == TicketActivityType.SEND_EMAIL:
-                self.set_person_data()
+                self.set_person_data_with_key_from_list(key='send_email')
             elif self.type.name == TicketActivityType.SEND_SMS:
-                self.set_person_data()
+                self.set_person_data_with_key_from_list(key='send_sms')
             elif self.type.name == TicketActivityType.CC_ADD:
-                self.set_person_list_data_with_key(key='added')
+                self.set_person_data_with_key_from_dict(key='added')
             elif self.type.name == TicketActivityType.CC_REMOVE:
-                self.set_person_list_data_with_key(key='removed')
+                self.set_person_data_with_key_from_dict(key='removed')
             elif self.type.name == TicketActivityType.CATEGORIES:
                 self.set_category_data()
             elif self.type.name == TicketActivityType.ATTACHMENT_ADD:
@@ -38,12 +38,15 @@ class TicketActivityToRepresentation(object):
             person = Person.objects_all.get(id=v)
             self.data['content'][k] = person.to_simple_fullname_dict()
 
-    def set_person_data(self):
-        self.data['content'] = (Person.objects.filter(id__in=self.data['content'])
-                                              .values('id', 'fullname'))
+    def set_person_data_with_key_from_list(self, key):
+        person_ids = self.data['content']
+        self._set_person_data_with_key(key, person_ids)
 
-    def set_person_list_data_with_key(self, key):
+    def set_person_data_with_key_from_dict(self, key):
         person_ids = list(self.data['content'].values())
+        self._set_person_data_with_key(key, person_ids)
+
+    def _set_person_data_with_key(self, key, person_ids):
         self.data['content'] = {key: []}
 
         for id in person_ids:

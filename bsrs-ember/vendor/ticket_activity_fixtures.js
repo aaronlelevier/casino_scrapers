@@ -152,6 +152,22 @@ var TICKET_ACTIVITY_FACTORY = (function() {
     delete activity.content;
     return activity;
   },
+  factory.prototype.get_send_sms_or_email = function(i, count, type, ticket_pk) {
+    var d = new Date();
+    var added_removed = [];
+    for (var j=1; j <= count; j++) {
+      var person = {id: '249543cf-8fea-426a-8bc3-09778cd7800' + j, fullname: this.pd.fullnameBoy};
+      added_removed.push(person);
+    }
+    var ticket_id = ticket_pk || this.td.idOne;
+    var date_reset = type === 'cc_remove' ? 20 : 15;
+    var activity = {id: i, type: type, created: d.setDate(d.getDate()-date_reset), ticket: ticket_id};
+    activity.automation = {id: this.ad.idOne, description: this.ad.descriptionOne};
+    activity.person = null;
+    activity.content = {};
+    activity.content[type] = added_removed;
+    return activity;
+  },
   factory.prototype.get_attachment_activity = function(i) {
     var arr = [
       [this.general.nameTicketAttachmentOne, this.ta.fileAttachmentAddOne, this.ta.imageThumnailOne],
@@ -292,6 +308,12 @@ var TICKET_ACTIVITY_FACTORY = (function() {
   factory.prototype.cc_remove_only = function(count, ticket_pk) {
     var uuid = '149447cc-1a19-4d8d-829b-bfb81cb5ecc1';
     var activity = this.get_cc_add_remove(uuid, count, 'cc_remove', ticket_pk);
+    var response = [activity];
+    return {'count':2,'next':null,'previous':null,'results': response};
+  };
+  factory.prototype.send_sms_or_email_only = function(activity_name, count, ticket_pk) {
+    var uuid = '149447cc-1a19-4d8d-829b-bfb81cb5ecc1';
+    var activity = this.get_send_sms_or_email(uuid, count, activity_name, ticket_pk);
     var response = [activity];
     return {'count':2,'next':null,'previous':null,'results': response};
   };

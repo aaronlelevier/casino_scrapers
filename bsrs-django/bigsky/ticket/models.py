@@ -258,8 +258,7 @@ class TicketActivityType(BaseModel):
 class TicketActivityQuerySet(BaseQuerySet):
 
     def filter_out_unsupported_types(self):
-        return (self.exclude(type__name__in=[TicketActivityType.REQUEST, TicketActivityType.SEND_EMAIL,
-                                             TicketActivityType.SEND_SMS])
+        return (self.exclude(type__name__in=[TicketActivityType.REQUEST])
                     .exclude(type__name=TicketActivityType.ASSIGNEE, content__contains={'from':None}))
 
 

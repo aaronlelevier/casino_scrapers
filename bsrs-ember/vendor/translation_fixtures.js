@@ -7,6 +7,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
       lang = {
         'en': {
           'activity.empty.comments':'No Comments',
+          'admin.address_type.store':'Store',
           'activity.empty.status_updates':'No Status Updates',
           'activity.one':'Activity',
           'activity.tabs.all_updates':'All Updates',
@@ -19,6 +20,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
           'activity.ticket.attachment_remove.other':'removed %s{{count}} files %s{{timestamp}} %s{{removed}}',
           'activity.ticket.categories':'changed the category from %s{{from}} %sto %s{{to}} %s{{timestamp}}',
           'activity.ticket.cc_add':'added %s{{added}} %sto CC %s{{timestamp}}',
+          'activity.ticket.msg_sent':'sent to %svia %s{{timestamp}}',
           'activity.ticket.cc_remove':'removed %s{{removed}} %sfrom CC %s{{timestamp}}',
           'activity.ticket.comment':'commented %s{{timestamp}} %s{{comment}}',
           'activity.ticket.create':'created this ticket %s{{timestamp}}',

@@ -1,0 +1,2 @@
+<span class="activity-icon" data-test-id='t-activity-icon'>{{fa-icon faIcon}}</span>
+<span data-test-id="t-message-type">{{messageType}} {{sentTo}}</span> {{#each ccs as |cc|}}{{#link-to 'admin.people.person' cc.id class="t-recipients"}}{{cc.fullname}}{{/link-to}}{{/each}} <span data-test-id="t-sent-via">{{via}} {{ticket-activity-creator-link activity=activity}}</span> <span class="activity-timestamp t-activity-timestamp" title="{{fulltime}}">{{moment-from-now activity.created interval=60000}}</span>

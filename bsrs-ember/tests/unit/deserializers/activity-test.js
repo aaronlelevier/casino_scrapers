@@ -15,7 +15,8 @@ module('unit: activity deserializer test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:uuid', 'model:ticket-status', 'model:ticket-priority', 
           'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity', 'model:activity/assignee', 'model:activity/person', 
-          'model:activity/category-to', 'model:activity/category-from', 'model:activity/attachment-add','model:activity/attachment-remove']);
+          'model:activity/category-to', 'model:activity/category-from', 'model:activity/attachment-add','model:activity/attachment-remove',
+          'model:activity/send-sms', 'model:activity/send-email', 'model:activity/automation']);
         uuid = this.container.lookup('model:uuid');
         subject = ActivityDeserializer.create({simpleStore:store, uuid:uuid});
     }
@@ -173,8 +174,34 @@ test('activity with automation assignee (no person object on activity object)', 
     // assert.notOk(store.find('activity').objectAt(0).get('automation'));
     assert.equal(store.find('activity').objectAt(0).get('type'), 'assignee');
     // assert.equal(store.find('activity/automation').get('length'), 1);
-    assert.equal(store.find('activity').objectAt(0).automation.id, AD.idOne);
-    assert.equal(store.find('activity').objectAt(0).automation.description, AD.descriptionOne);
+    assert.equal(store.find('activity').objectAt(0).get('automation.id'), AD.idOne);
+    assert.equal(store.find('activity').objectAt(0).get('automation.description'), AD.descriptionOne);
+});
+
+test('activity with send_sms', assert => {
+    let response = TA_FIXTURES.send_sms_or_email_only('send_sms', 1, TD.idOne);
+    subject.deserialize(response);
+    assert.equal(store.find('activity').get('length'), 1);
+    assert.equal(store.find('activity').objectAt(0).get('ticket'), TD.idOne);
+    assert.equal(store.find('activity').objectAt(0).get('send_sms').get('length'), 1);
+    assert.equal(store.find('activity').objectAt(0).get('send_sms').objectAt(0).get('id'), PD.idBoy);
+    assert.equal(store.find('activity').objectAt(0).get('send_sms').objectAt(0).get('fullname'), PD.fullnameBoy);
+    assert.equal(store.find('activity').objectAt(0).get('automation').get('id'), AD.idOne);
+    assert.equal(store.find('activity').objectAt(0).get('automation').get('description'), AD.descriptionOne);
+    assert.notOk(store.find('activity').objectAt(0).get('content'));
+});
+
+test('activity with send_email', assert => {
+    let response = TA_FIXTURES.send_sms_or_email_only('send_email', 1, TD.idOne);
+    subject.deserialize(response);
+    assert.equal(store.find('activity').get('length'), 1);
+    assert.equal(store.find('activity').objectAt(0).get('ticket'), TD.idOne);
+    assert.equal(store.find('activity').objectAt(0).get('send_email').get('length'), 1);
+    assert.equal(store.find('activity').objectAt(0).get('send_email').objectAt(0).get('id'), PD.idBoy);
+    assert.equal(store.find('activity').objectAt(0).get('send_email').objectAt(0).get('fullname'), PD.fullnameBoy);
+    assert.equal(store.find('activity').objectAt(0).get('automation').get('id'), AD.idOne);
+    assert.equal(store.find('activity').objectAt(0).get('automation').get('description'), AD.descriptionOne);
+    assert.notOk(store.find('activity').objectAt(0).get('content'));
 });
 
 //existing, then deserialize over the top

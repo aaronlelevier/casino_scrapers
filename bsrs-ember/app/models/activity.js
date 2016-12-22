@@ -31,6 +31,14 @@ var ActivityModel = Ember.Object.extend({
     };
     return this.get('simpleStore').find(`activity/person`, filter);
   }),
+  automation: Ember.computed.alias('belongs_automation.firstObject'),
+  belongs_automation: Ember.computed('automation_fk', function() {
+    const automation_fk = this.get('automation_fk');
+    const filter = function(automation) {
+      return automation.get('id') === automation_fk;
+    };
+    return this.get('simpleStore').find(`activity/automation`, filter);
+  }),
   added: Ember.computed(function() {
     const activity_id = this.get('id');
     const filter = function(cc) {
@@ -44,6 +52,20 @@ var ActivityModel = Ember.Object.extend({
       return Ember.$.inArray(activity_id, cc.get('activities')) > -1;
     };
     return this.get('simpleStore').find('activity/cc-remove', filter);
+  }),
+  send_sms: Ember.computed(function() {
+    const activity_id = this.get('id');
+    const filter = function(cc) {
+      return Ember.$.inArray(activity_id, cc.get('activities')) > -1;
+    };
+    return this.get('simpleStore').find('activity/send-sms', filter);
+  }),
+  send_email: Ember.computed(function() {
+    const activity_id = this.get('id');
+    const filter = function(cc) {
+      return Ember.$.inArray(activity_id, cc.get('activities')) > -1;
+    };
+    return this.get('simpleStore').find('activity/send-email', filter);
   }),
   added_attachment: Ember.computed(function() {
     const activity_id = this.get('id');

@@ -27,11 +27,9 @@ moduleForComponent('to-from', 'Integration | Component | to-from', {
       activityAutomation = store.push('activity', {
         id: TAD.idAssigneeOne,
         created: created,
-        automation: {
-          id: AD.idOne,
-          description: AD.descriptionOne
-        }
+        automation_fk: AD.idOne
       });
+      store.push('activity/automation', {id: AD.idOne, description: AD.descriptionOne});
       activityPerson = store.push('activity', {id: TAD.idCreate, type: 'assignee', person_fk: PD.idOne});
       store.push('activity/person', {id: PD.idOne, fullname: PD.fullname});
     });

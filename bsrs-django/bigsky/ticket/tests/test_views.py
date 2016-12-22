@@ -755,7 +755,6 @@ class TicketActivityViewSetReponseTests(MockTicketActivityPermissionsMixin, APIT
 
         self.assertEqual(response.status_code, 200)
 
-    # TODO: add back assertions once UI supports this type
     def test_send_email(self):
         person = create_single_person()
         ticket_activity = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.SEND_EMAIL,
@@ -764,10 +763,10 @@ class TicketActivityViewSetReponseTests(MockTicketActivityPermissionsMixin, APIT
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 0)
-        # self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
-        # self.assertEqual(data['results'][0]['content'][0]['id'], str(person.id))
-        # self.assertEqual(data['results'][0]['content'][0]['fullname'], person.fullname)
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+        self.assertEqual(data['results'][0]['content']['send_email'][0]['id'], str(person.id))
+        self.assertEqual(data['results'][0]['content']['send_email'][0]['fullname'], person.fullname)
 
     # TODO: add back assertions once UI supports this type
     def test_send_sms(self):
@@ -778,10 +777,10 @@ class TicketActivityViewSetReponseTests(MockTicketActivityPermissionsMixin, APIT
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 0)
-        # self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
-        # self.assertEqual(data['results'][0]['content'][0]['id'], str(person.id))
-        # self.assertEqual(data['results'][0]['content'][0]['fullname'], person.fullname)
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+        self.assertEqual(data['results'][0]['content']['send_sms'][0]['id'], str(person.id))
+        self.assertEqual(data['results'][0]['content']['send_sms'][0]['fullname'], person.fullname)
 
 
 class TicketAndTicketActivityTests(MockPermissionsAllowAnyMixin, APITestCase):
