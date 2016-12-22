@@ -1,5 +1,6 @@
 LOCALE,KEY,ENGLISH,VALUE,CONTEXT,FIXUTURE,VALUE-UNDERSCORE,VALUE-TRANSLATABLE
 en,activity.empty.comments,No Comments,No Comments,,"'activity.empty.comments':'No Comments',",No Comments,No Comments
+en,admin.address_type.store,Store,Store,,"'admin.address_type.store':'Store',",Store,Store
 en,activity.empty.status_updates,No Status Updates,No Status Updates,,"'activity.empty.status_updates':'No Status Updates',",No Status Updates,No Status Updates
 en,activity.one,Activity,Activity,,"'activity.one':'Activity',",Activity,Activity
 en,activity.tabs.all_updates,All Updates,All Updates,,"'activity.tabs.all_updates':'All Updates',",All Updates,All Updates
@@ -12,6 +13,7 @@ en,activity.ticket.attachment_remove.one,removed %s{{count}} file %s{{timestamp}
 en,activity.ticket.attachment_remove.other,removed %s{{count}} files %s{{timestamp}} %s{{removed}},removed %s{{count}} files %s{{timestamp}} %s{{removed}},,"'activity.ticket.attachment_remove.other':'removed %s{{count}} files %s{{timestamp}} %s{{removed}}',",removed %s{{count_var_ files %s{{timestamp_var_ %s{{removed_var_,removed %s_count_var_ files %s_timestamp_var_ %s_removed_var_
 en,activity.ticket.categories,changed the category from %s{{from}} %sto %s{{to}} %s{{timestamp}},changed the category from %s{{from}} %sto %s{{to}} %s{{timestamp}},,"'activity.ticket.categories':'changed the category from %s{{from}} %sto %s{{to}} %s{{timestamp}}',",changed the category from %s{{from_var_ %sto %s{{to_var_ %s{{timestamp_var_,changed the category from %s_from_var_ %sto %s_to_var_ %s_timestamp_var_
 en,activity.ticket.cc_add,added %s{{added}} %sto CC %s{{timestamp}},added %s{{added}} %sto CC %s{{timestamp}},,"'activity.ticket.cc_add':'added %s{{added}} %sto CC %s{{timestamp}}',",added %s{{added_var_ %sto CC %s{{timestamp_var_,added %s_added_var_ %sto CC %s_timestamp_var_
+en,activity.ticket.msg_sent,sent to %svia %s{{timestamp}},sent to %svia %s{{timestamp}},,"'activity.ticket.msg_sent':'sent to %svia %s{{timestamp}}',",sent to %svia %s{{timestamp_var_,sent to %svia %s_timestamp_var_
 en,activity.ticket.cc_remove,removed %s{{removed}} %sfrom CC %s{{timestamp}},removed %s{{removed}} %sfrom CC %s{{timestamp}},,"'activity.ticket.cc_remove':'removed %s{{removed}} %sfrom CC %s{{timestamp}}',",removed %s{{removed_var_ %sfrom CC %s{{timestamp_var_,removed %s_removed_var_ %sfrom CC %s_timestamp_var_
 en,activity.ticket.comment,commented %s{{timestamp}} %s{{comment}},commented %s{{timestamp}} %s{{comment}},,"'activity.ticket.comment':'commented %s{{timestamp}} %s{{comment}}',",commented %s{{timestamp_var_ %s{{comment_var_,commented %s_timestamp_var_ %s_comment_var_
 en,activity.ticket.create,created this ticket %s{{timestamp}},created this ticket %s{{timestamp}},,"'activity.ticket.create':'created this ticket %s{{timestamp}}',",created this ticket %s{{timestamp_var_,created this ticket %s_timestamp_var_
