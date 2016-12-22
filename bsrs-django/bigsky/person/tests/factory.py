@@ -8,6 +8,8 @@ from model_mommy import mommy
 from accounting.models import Currency
 from category.models import Category
 from category.tests.factory import create_single_category, create_repair_category
+from contact.models import Email, PhoneNumber
+from contact.tests.factory import create_contact, create_email_type, create_phone_number_type
 from generic.tests.factory import create_image_attachment
 from location.models import (LocationLevel, Location, LocationStatus, LocationType,
     LOCATION_COMPANY, LOCATION_DISTRICT, LOCATION_REGION,)
@@ -188,6 +190,7 @@ def update_admin(person):
     remove_any_categories(person)
     update_locale(person)
     grant_all_permissions(person)
+    add_ph_and_email(person)
 
 
 def grant_all_permissions(person):
@@ -195,6 +198,18 @@ def grant_all_permissions(person):
     perm_info.setUp()
     perms = perm_info.all()
     person.role.group.permissions.set([p for p in perms])
+
+
+def add_ph_and_email(person):
+    email_type = create_email_type()
+    email = create_contact(Email, person, email_type)
+    email.email = settings.EMAIL_HOST_USER
+    email.save()
+
+    ph_type = create_phone_number_type()
+    ph = create_contact(PhoneNumber, person, ph_type)
+    ph.number = settings.DEFAULT_PHONE_NUMBER
+    ph.save()
 
 
 def update_locale(person):

@@ -757,7 +757,7 @@ class AutomationFilterTypeTests(APITestCase):
             if d['field'] == 'priority':
                 priority_data = d
         self.assertTrue(priority_data['id'])
-        self.assertEqual(priority_data['key'], 'admin.placeholder.priority_filter_select')
+        self.assertEqual(priority_data['key'], AutomationFilterType.PRIORITY)
         self.assertEqual(priority_data['field'], 'priority')
         self.assertNotIn('unique_key', priority_data['lookups'])
 

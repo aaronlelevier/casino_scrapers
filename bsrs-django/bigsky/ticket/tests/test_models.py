@@ -1,5 +1,3 @@
-from mock import patch
-
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db.models import Q, Max
@@ -7,7 +5,6 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from automation.models import AutomationEvent
 from automation.tests.factory import create_automation
 from category.tests.factory import create_categories, create_single_category
 from generic.tests.factory import create_file_attachment
@@ -47,6 +44,12 @@ class TicketStatusTests(TestCase):
         self.assertEqual(ret['id'], str(status.id))
         self.assertEqual(ret['name'], status.name)
         self.assertFalse(ret['default'])
+
+    def test_automation_event(self):
+        for status in TicketStatus.objects.all():
+            self.assertEqual(status.automation_event,
+                             TicketStatus.status_event_map[status.name],
+                             '%s not found' % status.automation_event)
 
 
 class TicketPriorityTests(TestCase):
@@ -282,36 +285,6 @@ class TicketTests(TestCase):
 
     def test_ordering(self):
         self.assertEqual(Ticket._meta.ordering, ('-created',))
-
-    @patch("ticket.models.tasks.process_ticket.apply_async")
-    def test_save__process_ticket__on_fresh_create_only_called_once(self, mock_func):
-        status_new = create_default(TicketStatus)
-        location = create_location()
-
-        mommy.make(Ticket, status=status_new, location=location)
-
-        self.assertEqual(mock_func.call_count, 1)
-
-    @patch("ticket.models.tasks.process_ticket.apply_async")
-    def test_save__process_ticket__new_status(self, mock_func):
-        # This is the only tiime that wee wan't the "process_ticket"
-        # function to be called
-        self.ticket.status = self.status_new
-
-        self.ticket.save()
-
-        self.assertEqual(mock_func.call_count, 1)
-        self.assertEqual(mock_func.call_args[0][0], (self.ticket.location.location_level.tenant.id,))
-        self.assertEqual(mock_func.call_args[0][1]['ticket_id'], self.ticket.id)
-        self.assertEqual(mock_func.call_args[0][1]['event_key'], AutomationEvent.STATUS_NEW)
-
-    @patch("ticket.models.tasks.process_ticket.apply_async")
-    def test_save__process_ticket__not_new_status(self, mock_func):
-        self.ticket.status = self.status_draft
-
-        self.ticket.save()
-
-        self.assertFalse(mock_func.called)
 
     def test_category(self):
         # categories - are joined directly onto the Ticket, but do

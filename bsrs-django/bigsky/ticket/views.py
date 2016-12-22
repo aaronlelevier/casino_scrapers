@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from ticket.mixins import CreateTicketModelMixin, UpdateTicketModelMixin
 from ticket.models import Ticket, TicketActivity
 from ticket.permissions import TicketActivityPermissions
-from ticket.serializers import (TicketSerializer, TicketCreateSerializer,
+from ticket.serializers import (TicketSerializer, TicketCreateUpdateSerializer,
     TicketListSerializer, TicketActivitySerializer)
 from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
 from utils.permissions import CrudPermissions
@@ -40,7 +40,7 @@ class TicketViewSet(EagerLoadQuerySetMixin, TicketQuerySetFilters, CreateTicketM
         if self.action == 'list':
             return TicketListSerializer
         elif self.action in ('create', 'update', 'partial_update'):
-            return TicketCreateSerializer
+            return TicketCreateUpdateSerializer
         else:
             return TicketSerializer
 

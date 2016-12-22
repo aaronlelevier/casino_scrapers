@@ -4,14 +4,6 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from category.models import Category
-from category.tests.factory import create_single_category, REPAIR
-from contact.models import Address, AddressType
-from contact.tests.factory import (
-    create_contact, add_office_to_location, create_contact_state, create_contact_country)
-from location.tests.factory import create_top_level_location
-from person.models import Person
-from person.tests.factory import create_single_person
 from automation.models import (
     AutomationEvent, Automation, AutomationManager, AutomationQuerySet,
     AutomationActionType, AutomationFilterType, AutomationFilter, AutomationAction)
@@ -21,7 +13,16 @@ from automation.tests.factory import (
     create_automation_filter_type_state, create_ticket_location_country_filter,
     create_automation_filter_type_country, create_automation_action_type,
     create_automation_action_send_email, create_automation_action_send_sms,
-    create_automation_event)
+    create_automation_event, create_ticket_location_filter)
+from category.models import Category
+from category.tests.factory import create_single_category, REPAIR, create_categories
+from contact.models import Address, AddressType
+from contact.tests.factory import (
+    create_contact, add_office_to_location, create_contact_state, create_contact_country)
+from location.models import Location, LOCATION_COMPANY
+from location.tests.factory import create_top_level_location, create_locations
+from person.models import Person
+from person.tests.factory import create_single_person
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import TicketPriority, TicketStatus, TicketActivityType
 from ticket.tests.factory import create_ticket, create_ticket_activity_types
@@ -112,6 +113,10 @@ class AutomationManagerTests(SetupMixin, TestCase):
     @patch("automation.models.AutomationManager.process_actions")
     def test_process_ticket__calls_process_actions(self, mock_func):
         self.assertTrue(self.automation.is_match(self.ticket))
+        self.assertIn(
+            self.event.key,
+            self.automation.events.values_list('key', flat=True)
+        )
         self.assertFalse(self.automation_two.is_match(self.ticket))
 
         ret = Automation.objects.process_ticket(self.tenant.id, self.ticket, self.event.key)
@@ -135,6 +140,21 @@ class AutomationManagerTests(SetupMixin, TestCase):
             self.assertFalse(automation.is_match(self.ticket))
 
         Automation.objects.process_ticket(self.tenant.id, self.ticket, self.event.key)
+
+        self.assertFalse(mock_func.called)
+
+    @patch("automation.models.AutomationManager.process_actions")
+    def test_process_ticket__no_match__wrong_automation_event_trigger(self, mock_func):
+        # ticket one
+        self.assertTrue(self.automation.is_match(self.ticket))
+        self.automation.events.clear()
+        status_complete_event = create_automation_event(AutomationEvent.STATUS_COMPLETE)
+        self.automation.events.add(status_complete_event)
+        self.assertNotEqual(self.event.key, status_complete_event.key)
+        # ticket two
+        self.assertFalse(self.automation_two.is_match(self.ticket))
+
+        ret = Automation.objects.process_ticket(self.tenant.id, self.ticket, self.event.key)
 
         self.assertFalse(mock_func.called)
 
@@ -264,7 +284,7 @@ class AutomationManagerTests(SetupMixin, TestCase):
         self.assertEqual(mock_func.call_args[1]['from'], init_status)
         self.assertEqual(mock_func.call_args[1]['to'], ticket_status)
 
-    @patch("contact.models.EmailManager.process_send_email")
+    @patch("contact.tasks.process_send_email.apply_async")
     def test_process_actions__send_email(self, mock_func):
         clear_related(self.automation, 'actions')
         action = create_automation_action_send_email(self.automation)
@@ -275,11 +295,12 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
         Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
 
-        self.assertEqual(mock_func.call_args[0][0], self.ticket)
-        self.assertEqual(mock_func.call_args[0][1], action)
-        self.assertEqual(mock_func.call_args[0][2], self.event.key)
+        self.assertEqual(mock_func.call_args[0][0][0], self.ticket.id)
+        self.assertEqual(mock_func.call_args[0][0][1], action.id)
+        self.assertEqual(mock_func.call_args[0][0][2], self.event.key)
+        self.assertEqual(mock_func.call_args[1]['queue'], 'bigsky')
 
-    @patch("contact.models.PhoneNumberManager.process_send_sms")
+    @patch("contact.tasks.process_send_sms.apply_async")
     def test_process_actions__send_sms(self, mock_func):
         clear_related(self.automation, 'actions')
         action = create_automation_action_send_sms(self.automation)
@@ -290,9 +311,10 @@ class AutomationManagerTests(SetupMixin, TestCase):
 
         Automation.objects.process_actions(self.automation, self.ticket, self.event.key)
 
-        self.assertEqual(mock_func.call_args[0][0], self.ticket)
-        self.assertEqual(mock_func.call_args[0][1], action)
-        self.assertEqual(mock_func.call_args[0][2], self.event.key)
+        self.assertEqual(mock_func.call_args[0][0][0], self.ticket.id)
+        self.assertEqual(mock_func.call_args[0][0][1], action.id)
+        self.assertEqual(mock_func.call_args[0][0][2], self.event.key)
+        self.assertEqual(mock_func.call_args[1]['queue'], 'bigsky')
 
     def test_process_actions__ticket_request(self):
         init_ticket_request = self.ticket.request
@@ -673,3 +695,85 @@ class AutomationFilterTests(SetupMixin, TestCase):
         ret = state_filter.is_match(self.ticket)
 
         self.assertFalse(ret)
+
+
+class AutomationFilterCategoryTests(TestCase):
+
+    def setUp(self):
+        self.ticket = create_ticket()
+        clear_related(self.ticket, 'categories')
+        create_categories()
+        self.type = Category.objects.get(name='Repair', label='Type')
+        self.trade = self.type.children.get(name='Electrical', label='Trade')
+        self.issue = self.trade.children.get(name='Surge Protector', label='Issue')
+        self.ticket.categories.add(self.type, self.trade, self.issue)
+
+    def test_setup(self):
+        self.assertEqual(self.ticket.categories.count(), 3)
+        ticket_categories = self.ticket.categories.all()
+        self.assertIn(self.type, ticket_categories)
+        self.assertIn(self.trade, ticket_categories)
+        self.assertIn(self.issue, ticket_categories)
+
+    def test_type_is_match(self):
+        self._test_is_match([str(self.type.id)])
+
+    def test_trade_is_match(self):
+        self._test_is_match([str(self.trade.id)])
+
+    def test_issue_is_match(self):
+        self._test_is_match([str(self.issue.id)])
+
+    def _test_is_match(self, criteria):
+        cf = create_ticket_categories_filter()
+        cf.criteria = criteria
+
+        category_ids = (str(x) for x in self.ticket.categories.values_list('id', flat=True))
+        self.assertTrue(set(category_ids).intersection(set(cf.criteria)))
+        self.assertTrue(cf.is_match(self.ticket))
+
+
+class AutomationFilterLocationTests(TestCase):
+
+    def setUp(self):
+        create_locations()
+        self.ticket = create_ticket()
+        self.company = Location.objects.get(name=LOCATION_COMPANY)
+        self.location_filter = create_ticket_location_filter(location=self.company)
+        self.region = self.company.children.get(name='east')
+        self.district = self.region.children.get(name='ca')
+
+    def test_match_direct(self):
+        # `ticket.location` in `filter.criteria`
+        self.ticket.location = self.company
+
+        self.assertIn(str(self.ticket.location.id), self.location_filter.criteria)
+        self.assertTrue(self.location_filter.is_match(self.ticket))
+
+    def test_match_direct_child_location(self):
+        # `ticket.location` is a child location of `filter.criteria`
+        self.ticket.location = self.region
+
+        self.assertIn(str(self.company.id), self.location_filter.criteria)
+        self.assertNotIn(str(self.ticket.location.id), self.location_filter.criteria)
+        self.assertTrue(self.location_filter.is_match(self.ticket))
+
+    def test_match_indirect_child_location(self):
+        # `ticket.location` is a grand child location of `filter.criteria`
+        self.ticket.location = self.district
+
+        self.assertIn(str(self.company.id), self.location_filter.criteria)
+        self.assertNotIn(str(self.ticket.location.id), self.location_filter.criteria)
+        self.assertTrue(self.location_filter.is_match(self.ticket))
+
+    def test_no_match_for_child_filter(self):
+        # a ticket is created for a location above the filter level,
+        # so this shouldn't be a match
+        location_filter = create_ticket_location_filter(location=self.district)
+        self.ticket.location = self.region
+
+        self.assertIn(str(self.district.id), location_filter.criteria)
+        self.assertNotIn(str(self.ticket.location.id), location_filter.criteria)
+        self.assertFalse(location_filter.is_match(self.ticket))
+
+

@@ -38,6 +38,47 @@ moduleForComponent('to-from', 'Integration | Component | to-from', {
   }
 });
 
+test('fa-icon is generated based on ticket activity type', function(assert) {
+  // status
+  run(() => {
+    store.push('activity', {id: TAD.idAssigneeOne, type: 'status'});
+  });
+  this.activity = activityAutomation;
+  this.i18nString = trans.t('activity.ticket.to_from',
+    {type:'assignee', from:'foo', to:'bar', timestamp:timestamp});
+  this.render(hbs`{{
+    to-from
+    activity=activity
+    i18nString=i18nString
+    fulltime=(moment-from-now activity.created)
+  }}`);
+  assert.equal(this.$('[data-test-id=t-activity-icon]').find('.fa-clock-o').length, 1);
+  // assignee
+  run(() => {
+    store.push('activity', {id: TAD.idAssigneeOne, type: 'assignee'});
+  });
+  this.set('activity', activityAutomation);
+  this.render(hbs`{{
+    to-from
+    activity=activity
+    i18nString=i18nString
+    fulltime=(moment-from-now activity.created)
+  }}`);
+  assert.equal(this.$('[data-test-id=t-activity-icon]').find('.fa-user').length, 1);
+  // priority
+  run(() => {
+    store.push('activity', {id: TAD.idAssigneeOne, type: 'priority'});
+  });
+  this.set('activity', activityAutomation);
+  this.render(hbs`{{
+    to-from
+    activity=activity
+    i18nString=i18nString
+    fulltime=(moment-from-now activity.created)
+  }}`);
+  assert.equal(this.$('[data-test-id=t-activity-icon]').find('.fa-exclamation-triangle').length, 1);
+});
+
 test('content for automation generated ticket activity with assignee', function(assert) {
   this.activity = activityAutomation;
   // from/to here are assignee names

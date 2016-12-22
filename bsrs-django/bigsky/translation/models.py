@@ -120,6 +120,9 @@ class TranslationManager(BaseManager):
             self.gspread_get_csv(language, locale)
 
     def gspread_get_csv(self, language, locale):
+        """
+        Connects to Google Sheets API and retrieves worksheets for i18n.
+        """
         scope = ['https://spreadsheets.google.com/feeds']
         credentials = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(self.translation_dir, 'i18n.json'), scope)
         gc = gspread.authorize(credentials)
@@ -127,6 +130,9 @@ class TranslationManager(BaseManager):
         self._write_to_csv(wks, language, locale)
 
     def _write_to_csv(self, wks, language, locale):
+        """
+        Writes retrieved worksheets from Google sheets to CSVs.
+        """
         with open(os.path.join(self.translation_dir, '{}.csv'.format(locale)), 'w', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
             for row in wks.get_all_values():
@@ -150,17 +156,10 @@ class TranslationManager(BaseManager):
             self.import_csv(locale)
 
     def import_csv(self, locale_name):
-        '''
-        # Boiler-plate code for creating a new `Translation` record
-
-        .. code-block:: python
-
-            from translation.models import Translation, Locale
-            for model in [Translation, Locale]:
-                for m in model.objects_all.all():
-                    m.delete(override=True)
-            Translation.objects.import_csv('en')
-        '''
+        """
+        Reads CSVs and writes i18n strings to database using
+        the Translation models.
+        """
         with open(os.path.join(self.translation_dir, '{}.csv'.format(locale_name))) as csvfile:
             reader = csv.DictReader(csvfile)
             values = {}

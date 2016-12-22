@@ -8,7 +8,7 @@ from rest_framework.decorators import list_route
 from dtd.models import TreeData
 from dtd.serializers import TreeDataDetailSerializer
 from ticket.models import Ticket
-from ticket.serializers import TicketCreateSerializer, TicketSerializer
+from ticket.serializers import TicketCreateUpdateSerializer, TicketSerializer
 from utils.views import BaseModelViewSet
 
 
@@ -35,7 +35,7 @@ class DTTicketViewSet(BaseModelViewSet):
     """
 
     queryset = Ticket.objects.all()
-    serializer_class = TicketCreateSerializer
+    serializer_class = TicketCreateUpdateSerializer
     permission_classes = (IsAuthenticated,)
 
     def list(self, request, *args, **kwargs):

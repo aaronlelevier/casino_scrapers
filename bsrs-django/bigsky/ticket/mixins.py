@@ -5,7 +5,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 
-from ticket.models import TicketActivityType, TicketActivity
+from ticket.models import TicketActivityType, TicketActivity, TicketStatus
 from utils.helpers import model_to_dict
 
 
@@ -173,7 +173,15 @@ class UpdateTicketModelMixin(object):
         log = TicketUpdateLogger(instance, request.user, init_ticket, post_ticket)
         log.run_check_ticket_changes()
 
-        return Response(serializer.data)
+        # Process Automation
+        if init_ticket.get('status') != post_ticket.get('status'):
+            new_status = TicketStatus.objects.get(id=post_ticket.get('status')).name
+            instance.process_ticket_automations(new_status)
+
+        # call `get_serializer` again because the instance may have
+        # been modified by the automation processing, so we return
+        # the most current representation of the record.
+        return Response(self.get_serializer(instance).data)
 
     def add_other_info_data(self, init_ticket, request_data):
         for field in self.other_info_fields:

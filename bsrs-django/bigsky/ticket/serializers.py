@@ -32,7 +32,7 @@ class TicketStatusSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-class TicketCreateSerializer(BaseCreateSerializer):
+class TicketCreateUpdateSerializer(BaseCreateSerializer):
 
     attachments = serializers.PrimaryKeyRelatedField(
         queryset=Attachment.objects.all(), many=True, required=False)
@@ -43,7 +43,11 @@ class TicketCreateSerializer(BaseCreateSerializer):
 
     def create(self, validated_data):
         validated_data.pop('attachments', None)
-        return super(TicketCreateSerializer, self).create(validated_data)
+        instance = super(TicketCreateUpdateSerializer, self).create(validated_data)
+
+        instance.process_ticket_automations(instance.status.name)
+
+        return instance
 
 
 class TicketListSerializer(serializers.ModelSerializer):

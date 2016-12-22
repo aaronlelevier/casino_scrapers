@@ -1,4 +1,4 @@
-<span class="activity-icon">{{fa-icon "user"}}</span>
+<span class="activity-icon" data-test-id="t-activity-icon">{{fa-icon faIcon}}</span>
 {{ticket-activity-creator-link activity=activity}} {{begString}}
 {{#link-to "admin.people.person" activity.from.id class="t-to-from-new"}}{{fromString}}{{/link-to}}
 {{middleString}}

@@ -254,6 +254,9 @@ EMAIL_HOST_USER = 'bigsky.sc.test@gmail.com'
 EMAIL_HOST_PASSWORD = os.environ['DEV_SC_USER_PASSWORD']
 EMAIL_PORT = 587
 
+### PHONE NUMBERS
+DEFAULT_PHONE_NUMBER = '8587155000'
+
 # TODO: Logging needs to be moved to a directory with the right permissions
 # that we can write to. If it's logging w/i the project, the directory
 # wont have the write permissions
@@ -269,6 +272,14 @@ CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 # custom
 CELERY_DEFAULT_QUEUE = 'bigsky'
+
+
+# Twilio account with Aaron's Ph #
+TWILIO_ACCOUNT_SID='AC5e0258fb4b1ecc8269a244a3de641067'
+TWILIO_AUTH_TOKEN='5e10e4862ee9bc8fc1c3d569cf36ab5c'
+TWILIO_NUMBER_FROM='+12405756610'
+TWILIO_NUMBER_TO='+17754194000'
+
 
 # LOGGING = {
 #     'version': 1,

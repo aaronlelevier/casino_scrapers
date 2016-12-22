@@ -9,7 +9,7 @@ from dtd.serializers import TreeDataDetailSerializer, TreeDataCreateUpdateSerial
 from dtd.tests.factory import create_tree_data
 from dtd.tests.mixins import TreeDataTestSetUpMixin
 from ticket.models import Ticket
-from ticket.serializers import TicketCreateSerializer, TicketSerializer
+from ticket.serializers import TicketCreateUpdateSerializer, TicketSerializer
 from ticket.tests.factory import create_ticket
 
 
@@ -19,7 +19,7 @@ class DTTicketViewSetTests(TreeDataTestSetUpMixin, APITestCase):
         super(DTTicketViewSetTests, self).setUp()
         # serializer data
         self.ticket = create_ticket(assignee=self.person)
-        serializer = TicketCreateSerializer(self.ticket)
+        serializer = TicketCreateUpdateSerializer(self.ticket)
         self.data = serializer.data
         link = self.tree_data.links.first()
         link.destination = mommy.make(TreeData)
