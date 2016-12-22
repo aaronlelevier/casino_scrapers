@@ -576,20 +576,4 @@ test('attachment added for each attachment on ticket (when ticket has existing a
   assert.equal(store.find('attachment').get('length'), 2);
 });
 
-/* DT Path */
-
-test('dt path deserialized correctly', assert => {
-  let json = TF.generate(TD.idOne, TD.statusSevenId);
-  json.assignee = null;
-  run(() => {
-    subject.deserialize(json, json.id);
-  });
-  ticket = store.find('ticket', TD.idOne);
-  assert.equal(ticket.get('status_fk'), TD.statusSevenId);
-  assert.equal(ticket.get('status.id'), TD.statusSevenId);
-  assert.equal(ticket.get('dt_path').length, 2);
-  assert.equal(ticket.get('dt_path')[0]['ticket']['id'], TD.idOne);
-  assert.equal(ticket.get('dt_path')[0]['dtd']['id'], DTD.idOne);
-});
-
 //TODO: when attachments can be deleted (from ticket) we need a "server is the truth" test that removes in-memory relationships

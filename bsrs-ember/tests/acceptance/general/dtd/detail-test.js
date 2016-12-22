@@ -657,7 +657,7 @@ test('changing tree and reverting tree should not show as dirty', async function
   await ticketPage.categoryThreeClickOptionOne();
   assert.ok(link.get('isDirtyOrRelatedDirty'));
   assert.ok(link.get('categoriesIsDirty'));
-  xhr(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [{id:CD.idPlumbingChild}], CD.idOne, 1));
+  ajax(`${PREFIX}/admin/categories/?parent=${CD.idOne}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbing, CD.nameRepairChild, [{id:CD.idPlumbingChild}], CD.idOne, 1));
   await ticketPage.categoryTwoClickDropdown();
   await ticketPage.categoryTwoClickOptionPlumbing();
   assert.ok(link.get('isDirtyOrRelatedDirty'));

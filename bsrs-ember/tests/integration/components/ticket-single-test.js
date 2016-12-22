@@ -34,17 +34,7 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
       store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOneKey});
       store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityTwoKey});
       store.push('ticket-priority', {id: TD.priorityThreeId, name: TD.priorityThreeKey});
-      const dt_path = [{
-        id: TD.idOne,
-        requester: TD.requesterOne,
-        location: LD.idThree,
-        status: TD.statusZeroId,
-        priority: TD.priorityZeroId,
-        categories: [],
-        cc: [],
-        attachments: [],
-      }];
-      ticket = store.push('ticket', {id: TD.idOne, request: 'foo', dt_path: dt_path});
+      ticket = store.push('ticket', {id: TD.idOne, request: 'foo'});
     });
     /* Desktop */
     const flexi = this.container.lookup('service:device/layout');

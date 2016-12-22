@@ -940,22 +940,4 @@ skip('deep linking with an xhr with a 404 status code will show up in the error 
   errorTearDown();
 });
 
-test('dt continue button will show up if ticket has a status of draft and can click on it to restart dt', async function(assert) {
-  clearxhr(detail_xhr);
-  detail_data = TF.detail(TD.idOne, TD.statusSevenId);
-  detail_xhr = xhr(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_data);
-  await page.visitDetail();
-  assert.equal(currentURL(), DETAIL_URL);
-  assert.equal(find('.t-dt-continue').text(), t('ticket.continue'));
-  const dt_data = DTF.detailWithAllFields(DT.idOne);
-  const returned_ticket = TF.detail(TD.idOne);
-  const dt_TICKETS_URL = `${DT_URL}${DT.idTwo}/ticket/?ticket=${TD.idOne}`;
-  xhr(dt_TICKETS_URL, 'GET', null, {}, 200, {dtd: dt_data, ticket: returned_ticket});
-  await page.continueDT();
-  assert.ok(dtdPage.previewActionButton);
-  assert.equal(dtdPage.breadcrumbText, `${substringBreadcrumb(DT.descriptionOne)} ${substringBreadcrumb(DT.descriptionTwo)}`);
-  const ticket = this.store.find('ticket', TD.idOne);
-  assert.notOk(ticket.get('hasSaved'));//prevents PATCH when bail on existing dtd
-});
-
 /* jshint ignore:end */

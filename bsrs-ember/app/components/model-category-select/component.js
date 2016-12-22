@@ -50,9 +50,8 @@ var TicketCategories = Ember.Component.extend({
      */
     handleOpen(category_parent_id) {
       const url = `${CATEGORIES_URL}?parent=${category_parent_id}&page_size=1000`;
-      const _this = this;
       PromiseMixin.xhr(url, 'GET').then((response) => {
-        _this.set('options', response.results);
+        set(this, 'options', response.results);
       });
     },
     blurOut() {

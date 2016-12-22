@@ -1,12 +1,11 @@
 var BSRS_TICKET_FACTORY = (function() {
-  var factory = function(ticket, people_defaults, people_fixtures, location_fixtures, category_fixtures, category_defaults, dtd_defaults, field_defaults, option_defaults, config) {
+  var factory = function(ticket, people_defaults, people_fixtures, location_fixtures, category_fixtures, category_defaults, field_defaults, option_defaults, config) {
     this.ticket = ticket;
     this.people_defaults = people_defaults['default'].defaults();
     this.people_fixtures = people_fixtures.default || people_fixtures;
     this.location_fixtures = location_fixtures.default || location_fixtures;
     this.category_fixtures = category_fixtures.default || category_fixtures;
     this.category_defaults = category_defaults.default || category_defaults;
-    this.dtd_defaults = dtd_defaults.default || dtd_defaults;
     this.field_defaults = field_defaults.default || field_defaults;
     this.option_defaults = option_defaults.default || option_defaults;
     this.config = config;
@@ -48,7 +47,7 @@ var BSRS_TICKET_FACTORY = (function() {
       created: new Date()
     }
   };
-  factory.prototype.generate = function(i, status_id, dt_path) {
+  factory.prototype.generate = function(i, status_id) {
     var id = i || this.ticket.idOne;
     var categories = this.categories();
     var location = this.location_fixtures.get();
@@ -67,43 +66,6 @@ var BSRS_TICKET_FACTORY = (function() {
       location: location,
       attachments: [],
       created: new Date(),
-      dt_path: dt_path || [{ //need to improve this dt_path object to reflect what it will actually look like (dtd needs more)
-        ticket: {
-          id: this.ticket.idOne,
-          requester: '',
-          location: this.ticket.locationOneId,
-          status: this.ticket.statusOneId,
-          priority: this.ticket.priorityOneId,
-          request: ["label: wat", "label: foo"],
-          categories: [this.category_defaults.idOne, this.category_defaults.idTwo],
-          cc: [],
-          attachments: [],
-        },
-        dtd: {
-          id: this.dtd_defaults.idOne,
-          description: this.dtd_defaults.descriptionOne,
-          prompt: this.dtd_defaults.promptOne,
-          note: this.dtd_defaults.noteOne,
-        }
-      }, {
-        ticket: {
-          id: this.ticket.idTwo,
-          requester: '',
-          location: this.ticket.locationOneId,
-          status: this.ticket.statusOneId,
-          priority: this.ticket.priorityOneId,
-          request: ["label: wat", "label: foo"],
-          categories: [this.category_defaults.idOne, this.category_defaults.idTwo],
-          cc: [],
-          attachments: [],
-        },
-        dtd: {
-          id: this.dtd_defaults.idTwo,
-          description: this.dtd_defaults.descriptionTwo,
-          prompt: this.dtd_defaults.promptOne,
-          note: this.dtd_defaults.noteOne,
-        }
-      }],
     }
   };
   factory.prototype.list = function(statusId, statusName) {
@@ -149,9 +111,9 @@ var BSRS_TICKET_FACTORY = (function() {
     }
     return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
   };
-  factory.prototype.detail = function(i, status_id, dt_path) {
+  factory.prototype.detail = function(i, status_id) {
     var pk = i || this.ticket.idOne;
-    var detail = this.generate(pk, status_id, dt_path);
+    var detail = this.generate(pk, status_id);
     detail.attachments = [];
     return detail;
   };
@@ -184,18 +146,17 @@ if (typeof window === 'undefined') {
   var people_fixtures = require('../vendor/people_fixtures');
   var location_fixtures = require('../vendor/location_fixtures');
   var category_defaults = require('../vendor/defaults/category');
-  var dtd_defaults = require('../vendor/defaults/dtd');
   var field_defaults = require('../vendor/defaults/field');
   var options_defaults = require('../vendor/defaults/option');
   var config = require('../config/environment');
   objectAssign(BSRS_TICKET_FACTORY.prototype, mixin.prototype);
-  module.exports = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, people_fixtures, location_fixtures, category_fixtures, category_defaults, dtd_defaults, field_defaults, options_defaults, config);
+  module.exports = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, people_fixtures, location_fixtures, category_fixtures, category_defaults, field_defaults, options_defaults, config);
 } else {
-  define('bsrs-ember/vendor/ticket_fixtures', ['exports', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/people_fixtures', 'bsrs-ember/vendor/location_fixtures', 'bsrs-ember/vendor/category_fixtures', 'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/defaults/dtd', 'bsrs-ember/vendor/defaults/field', 'bsrs-ember/vendor/defaults/option', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
-         function (exports, ticket_defaults, person_defaults, people_fixtures, location_fixtures, category_fixtures, category_defaults, dtd_defaults, field_defaults, option_defaults, mixin, config) {
+  define('bsrs-ember/vendor/ticket_fixtures', ['exports', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/people_fixtures', 'bsrs-ember/vendor/location_fixtures', 'bsrs-ember/vendor/category_fixtures', 'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/defaults/field', 'bsrs-ember/vendor/defaults/option', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
+         function (exports, ticket_defaults, person_defaults, people_fixtures, location_fixtures, category_fixtures, category_defaults, field_defaults, option_defaults, mixin, config) {
          'use strict';
          Object.assign(BSRS_TICKET_FACTORY.prototype, mixin.prototype);
-         var Factory = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, people_fixtures, location_fixtures, category_fixtures, category_defaults, dtd_defaults, field_defaults, option_defaults, config);
+         var Factory = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, people_fixtures, location_fixtures, category_fixtures, category_defaults, field_defaults, option_defaults, config);
          return {default: Factory};
 });
 }

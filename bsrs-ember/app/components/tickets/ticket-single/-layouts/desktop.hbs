@@ -11,11 +11,6 @@
     }}
     <section class="docSection container-fluid">
       <div class="row">
-        {{#if (eq model.status.name "ticket.status.draft")}}
-        <div class="btn-group btn-group-sm pull-right center-block">
-          {{#link-to "dt.dt" continueDTId model.id tagName="button" class="btn btn-info t-dt-continue"}}{{t "ticket.continue"}}{{/link-to}}
-        </div>
-        {{/if}}
         <div class="col-md-12">
           <section class="card-title">
             <div class="row">

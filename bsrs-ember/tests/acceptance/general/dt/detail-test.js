@@ -87,7 +87,7 @@ moduleForAcceptance('Acceptance | general dt detail', {
 
 /* jshint ignore:start */
 
-test('decision tree displays data and can click to next destination after updating option (patch ticket)', async function(assert) {
+skip('decision tree displays data and can click to next destination after updating option (patch ticket)', async function(assert) {
   const detail_data = DTF.detail(DT.idOne);
   detail_data.fields[0].required = true;
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
@@ -143,7 +143,7 @@ test('decision tree displays data and can click to next destination after updati
   assert.ok(dtPage.fieldOneCheckboxIsChecked());
 });
 
-test('updating field text (patch ticket)', async function(assert) {
+skip('updating field text (patch ticket)', async function(assert) {
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeOne;
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
@@ -170,7 +170,7 @@ test('updating field text (patch ticket)', async function(assert) {
   assert.equal(currentURL(), DEST_URL);
 });
 
-test('updating field text no label (patch ticket)', async function(assert) {
+skip('updating field text no label (patch ticket)', async function(assert) {
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeOne;
   detail_data['fields'][0]['label'] = undefined;
@@ -200,7 +200,7 @@ test('updating field text no label (patch ticket)', async function(assert) {
   assert.equal(currentURL(), DEST_URL);
 });
 
-test('updating field number (patch ticket)', async function(assert) {
+skip('updating field number (patch ticket)', async function(assert) {
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeTwo;
   detail_data['fields'][0]['label'] = FD.labelTwo;
@@ -231,7 +231,7 @@ test('updating field number (patch ticket)', async function(assert) {
   assert.equal(currentURL(), DEST_URL);
 });
 
-test('updating field textarea (patch ticket)', async function(assert) {
+skip('updating field textarea (patch ticket)', async function(assert) {
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeThree;
   detail_data['fields'][0]['label'] = FD.labelThree;
@@ -261,7 +261,7 @@ test('updating field textarea (patch ticket)', async function(assert) {
   assert.equal(currentURL(), DEST_URL);
 });
 
-test('updating field select (patch ticket)', async function(assert) {
+skip('updating field select (patch ticket)', async function(assert) {
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeFour;
   detail_data['fields'][0]['label'] = FD.labelFour;
@@ -292,7 +292,7 @@ test('updating field select (patch ticket)', async function(assert) {
   assert.equal(currentURL(), DEST_URL);
 });
 
-test('can\'t click to next destination if field is required (patch ticket)', async function(assert) {
+skip('can\'t click to next destination if field is required (patch ticket)', async function(assert) {
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeThree;
   detail_data['fields'][0]['label'] = FD.labelThree;
@@ -324,7 +324,7 @@ test('can\'t click to next destination if field is required (patch ticket)', asy
   assert.equal(currentURL(), DEST_URL);
 });
 
-test('can click to next destination if field is not required and don\'t fill in field value (patch ticket)', async function(assert) {
+skip('can click to next destination if field is not required and don\'t fill in field value (patch ticket)', async function(assert) {
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeThree;
   detail_data['fields'][0]['label'] = FD.labelThree;
@@ -353,7 +353,7 @@ test('can click to next destination if field is not required and don\'t fill in 
   assert.deepEqual(ticket.get('request'), TD.requestOne);
 });
 
-test('can click to next destination after updating multiple fields (patch ticket)', async function(assert) {
+skip('can click to next destination after updating multiple fields (patch ticket)', async function(assert) {
   const detail_data = DTF.detail(DT.idOne);
   detail_data['fields'][0]['type'] = FD.typeOne;
   detail_data['fields'][0]['label'] = FD.labelFour;
@@ -401,7 +401,7 @@ test('can click to next destination after updating multiple fields (patch ticket
   assert.equal(currentURL(), DEST_URL);
 });
 
-test('fill out: number, text, textarea, and select (patch ticket)', async function(assert) {
+skip('fill out: number, text, textarea, and select (patch ticket)', async function(assert) {
   let detail_data = DTF.detailWithAllFields(DT.idOne);
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
   await visit(DETAIL_URL);
@@ -451,7 +451,7 @@ test('fill out: number, text, textarea, and select (patch ticket)', async functi
   assert.deepEqual(ticket.get('request'), requestValue);
 });
 
-// test('if dt_path length is 1 and deep link, wont push another dt_path object in (deep linking from old decision tree)', async function(assert) {
+// skip('if dt_path length is 1 and deep link, wont push another dt_path object in (deep linking from old decision tree)', async function(assert) {
 //   let detail_data = DTF.detailWithAllFields(DT.idOne);
 //   returned_ticket.dt_path[0]['dtd'] = {id: DT.idOne, description: 'Start', fields: []};
 //   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
@@ -463,12 +463,12 @@ test('fill out: number, text, textarea, and select (patch ticket)', async functi
 //   let ticket_payload = { id: TD.idOne, request: TD.requestOne, priority: LINK.priorityOne, status: LINK.statusOne, categories: link.get('sorted_categories').mapBy('id') };
 //   xhr(TICKET_PATCH_URL, 'PATCH', JSON.stringify(ticket_payload), {}, 200, dtd_payload);
 //   await page.clickNextBtn();
-//   return pauseTest();
+//   return pauseskip();
 //   const ticket = this.store.find('ticket', TD.idOne);
 //   assert.equal(ticket.get('dt_path').length, 1);
 // });
 
-test('will show breadcrumbs if description present', async function(assert) {
+skip('will show breadcrumbs if description present', async function(assert) {
   let detail_data = DTF.detailWithAllFields(DT.idOne);
   returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: 'Start'};
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
@@ -476,7 +476,7 @@ test('will show breadcrumbs if description present', async function(assert) {
   assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb('Start'));
 });
 
-test('will show breadcrumbs if prompt present', async function(assert) {
+skip('will show breadcrumbs if prompt present', async function(assert) {
   let detail_data = DTF.detailWithAllFields(DT.idOne);
   returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, prompt: DT.promptOne};
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
@@ -484,7 +484,7 @@ test('will show breadcrumbs if prompt present', async function(assert) {
   assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.promptOne));
 });
 
-test('will show breadcrumbs if note present', async function(assert) {
+skip('will show breadcrumbs if note present', async function(assert) {
   let detail_data = DTF.detailWithAllFields(DT.idOne);
   returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, note: DT.noteOne};
   const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
@@ -492,7 +492,7 @@ test('will show breadcrumbs if note present', async function(assert) {
   assert.equal(find('.t-dt-breadcrumb:eq(0)').text().trim(), substringBreadcrumb(DT.noteOne));
 });
 
-test('visit step 1 url, go back to step 0, then go back to 1 url after updating some info (checkbox)', async function(assert) {
+skip('visit step 1 url, go back to step 0, then go back to 1 url after updating some info (checkbox)', async function(assert) {
   //DTD idOne
   let detail_data = DTF.detailWithAllFields(DT.idOne);
   returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: DT.descriptionStart, fields: [{ id: FD.idTwo, label: FD.labelTwo, value: 23, required: true }] };
@@ -658,7 +658,7 @@ skip('visit 1 url, go back to step 0, then go back to 1 url after updating some 
   assert.equal(updated_ticket.get('dt_path')[0]['dtd']['id'], DT.idThree);
 });
 
-test('visit 2 url, go back to step 0, then go back to 1 url after updating some info (input/text area) should keep info around and update ticket request', async function(assert) {
+skip('visit 2 url, go back to step 0, then go back to 1 url after updating some info (input/text area) should keep info around and update ticket request', async function(assert) {
   // DT.idOne is 3rd
   // DT.idTwo is 2nd
   // DT.idThree is 1st (Start)
@@ -769,7 +769,7 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
   assert.equal(find('.t-dtd-field-preview').val(), 'Im second');
 });
 
-test('visit 2 url, go back to step 0, then go back to 1 url after updating some info (checkbox) should keep info around and update ticket request', async function(assert) {
+skip('visit 2 url, go back to step 0, then go back to 1 url after updating some info (checkbox) should keep info around and update ticket request', async function(assert) {
   // DT.idOne is 3rd
   // DT.idTwo is 2nd
   // DT.idThree is 1st (Start) - w/ fields and options array of ids that were selected
@@ -876,7 +876,7 @@ test('visit 2 url, go back to step 0, then go back to 1 url after updating some 
   assert.equal(find('.t-dtd-field-preview').val(), 'Im second');
 });
 
-test('visit 2 url, go back to step 0, then go a different route should save ticket request and blow away dt_path ahead of step 0', async function(assert) {
+skip('visit 2 url, go back to step 0, then go a different route should save ticket request and blow away dt_path ahead of step 0', async function(assert) {
   // DTD idOne is 3rd
   // DTD idThree is 1st
   let detail_data = DTF.detailWithAllFields(DT.idOne);
@@ -969,7 +969,7 @@ test('visit 2 url, go back to step 0, then go a different route should save tick
   assert.equal(currentURL(), DTD_GRIDTWO_URL);
 });
 
-test('submit dtd (w/ empty destination) will patch ticket and navigate to dt.endpage route', async function(assert) {
+skip('submit dtd (w/ empty destination) will patch ticket and navigate to dt.endpage route', async function(assert) {
   const detail_data = DTF.detail(DT.idOne);
   detail_data['links'][0]['destination'] = undefined;
   detail_data['links'][0]['text'] = LINK.textSubmit;
@@ -997,7 +997,7 @@ test('submit dtd (w/ empty destination) will patch ticket and navigate to dt.end
   assert.equal(currentURL(), ENDPAGE_URL);
 });
 
-//test('navigating away from start page will save data', async function(assert) {
+//skip('navigating away from start page will save data', async function(assert) {
 //  let detail_data = DTF.detailWithAllFields(DT.idOne);
 //  returned_ticket.dt_path[0]['dtd'] = {id: DT.idThree, description: 'Start'};
 //  const detail_xhr = xhr(endpoint, 'GET', null, {}, 200, {dtd: detail_data, ticket: returned_ticket});
