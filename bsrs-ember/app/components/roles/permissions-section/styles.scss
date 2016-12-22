@@ -1,24 +1,24 @@
 & {
-  .permission-row,
-  .permission-row--header {
+  .permission-section__row,
+  .permission-section__row--header {
     display: flex;
     padding: 1rem;
   }
-  .permission-row:nth-child(odd) {
+  .permission-section__row:nth-child(odd) {
     background: $lightGray;
   }
-  .permission-row--header {
+  .permission-section__row--header {
     border: $borderStyle;
     border-width: 0 0 1px;
   }
-  .permission-cell,
-  .permission-cell--checkbox {
+  .permission-section__cell,
+  .permission-section__cell--checkbox {
     line-height: 2rem;
     height: 2rem;
     @extend %label;
     @include truncate;
   }
-  .permission-cell--checkbox {
+  .permission-section__cell--checkbox {
     width: 11%;
     text-align: center;
   }
