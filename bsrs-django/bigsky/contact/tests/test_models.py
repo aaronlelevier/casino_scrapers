@@ -165,6 +165,15 @@ class PhoneNumberManagerTests(TestCase):
         self.assertIsNone(activity.person)
         self.assertEqual(sorted(activity.content), sorted([str(self.person.id), str(person_two.id)]))
 
+    def test_process_send_sms__ticket_activity_is_not_created_if_no_recipients_are_found(self):
+        self.action.content['recipients'] = []
+        self.assertEqual(len(PhoneNumber.objects.get_recipients(self.action, self.ticket)), 0)
+        init_count = TicketActivity.objects.count()
+
+        PhoneNumber.objects.process_send_sms(self.ticket, self.action, self.event.key)
+
+        self.assertEqual(TicketActivity.objects.count(), init_count)
+
 
 class PhoneNumberTests(TestCase):
 
@@ -427,6 +436,15 @@ class EmailManagerTests(TestCase):
         self.assertEqual(activity.ticket, self.ticket)
         self.assertIsNone(activity.person)
         self.assertEqual(sorted(activity.content), sorted([str(self.person.id), str(person_two.id)]))
+
+    def test_process_send_email__ticket_activity_is_not_created_if_no_recipients_are_found(self):
+        self.action.content['recipients'] = []
+        self.assertEqual(len(Email.objects.get_recipients(self.action, self.ticket)), 0)
+        init_count = TicketActivity.objects.count()
+
+        Email.objects.process_send_email(self.ticket, self.action, self.event.key)
+
+        self.assertEqual(TicketActivity.objects.count(), init_count)
 
 
 class EmailTests(TestCase):

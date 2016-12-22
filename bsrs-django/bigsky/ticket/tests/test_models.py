@@ -444,17 +444,11 @@ class TicketActivityManagerTests(TestCase):
         a = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.REQUEST)
         b = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.ASSIGNEE,
                                    content={'from': None, 'to': str(person.id)})
-        c = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.SEND_EMAIL,
-                                   content=[str(person.id)])
-        d = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.SEND_SMS,
-                                   content=[str(person.id)])
-        e = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.COMMENT,
+        c = create_ticket_activity(ticket=self.ticket, type=TicketActivityType.COMMENT,
                                    automation=True)
 
         ret = TicketActivity.objects.filter_out_unsupported_types()
 
         self.assertNotIn(a, ret.all())
         self.assertNotIn(b, ret.all())
-        self.assertNotIn(c, ret.all())
-        self.assertNotIn(d, ret.all())
-        self.assertIn(e, ret.all())
+        self.assertIn(c, ret.all())

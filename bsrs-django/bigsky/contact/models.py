@@ -141,8 +141,10 @@ class PhoneNumberManager(EmailAndSmsMixin, BaseManager):
                 body = interpolate.text(action.content.get('body', ''))
                 self.send_sms(ph, body)
 
-        TicketActivityType = get_model_class("ticketactivitytype")
-        self.create_ticket_activity(TicketActivityType.SEND_SMS, ticket, sent_sms_person_ids)
+        if sent_sms_person_ids:
+            TicketActivityType = get_model_class("ticketactivitytype")
+            self.create_ticket_activity(TicketActivityType.SEND_SMS, ticket,
+                                        sent_sms_person_ids)
 
 
     def send_sms(self, ph, body):
@@ -312,8 +314,10 @@ class EmailManager(EmailAndSmsMixin, BaseManager):
                 self.send_email(email, subject, html_content=html_content,
                                 text_content=text_content)
 
-        TicketActivityType = get_model_class("ticketactivitytype")
-        self.create_ticket_activity(TicketActivityType.SEND_EMAIL, ticket, sent_email_person_ids)
+        if sent_email_person_ids:
+            TicketActivityType = get_model_class("ticketactivitytype")
+            self.create_ticket_activity(TicketActivityType.SEND_EMAIL, ticket,
+                                        sent_email_person_ids)
 
     def send_email(self, email, subject, html_content, text_content):
         """
