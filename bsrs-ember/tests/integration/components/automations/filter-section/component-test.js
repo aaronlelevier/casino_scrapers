@@ -6,7 +6,7 @@ import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import { clickTrigger, nativeMouseUp } from '../../../../helpers/ember-power-select';
+import { clickTrigger, nativeMouseUp, nativeMouseDown } from '../../../../helpers/ember-power-select';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import page from 'bsrs-ember/tests/pages/automation';
 import AD from 'bsrs-ember/vendor/defaults/automation';
@@ -16,24 +16,26 @@ import CD from 'bsrs-ember/vendor/defaults/criteria';
 import PJFD from 'bsrs-ember/vendor/defaults/pfilter-join-criteria';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 
-var store, trans, automation, results, automation_repo;
+var trans, automation, results, automation_repo;
 
 moduleForComponent('automations/filter-section', 'Integration | Component | automations/filter-section', {
   integration: true,
   beforeEach() {
     page.setContext(this);
-    store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-join-pfilter', 'model:pfilter']);
+    this.store = module_registry(this.container, this.registry, ['model:automation', 'model:automation-join-pfilter', 'model:pfilter']);
 
     trans = this.container.lookup('service:i18n');
     loadTranslations(trans, translations.generate('en'));
     translation.initialize(this);
 
+
     run(() => {
-      automation = store.push('automation', {id: AD.idOne, description: AD.descriptionOne, automation_pf_fks: [AJFD.idOne]});
-      store.push('automation-join-pfilter', {id: AJFD.idOne, automation_pk: AD.idOne, pfilter_pk: PFD.idOne});
-      store.push('pfilter', {id: PFD.idOne, source_id: PFD.sourceIdOne, key: PFD.keyOne, field: PFD.fieldOne, criteria: PFD.criteriaOne, lookups: {}});
+      automation = this.store.push('automation', {id: AD.idOne, description: AD.descriptionOne, automation_pf_fks: [AJFD.idOne]});
+      this.store.push('automation-join-pfilter', {id: AJFD.idOne, automation_pk: AD.idOne, pfilter_pk: PFD.idOne});
+      this.store.push('pfilter', {id: PFD.idOne, source_id: PFD.sourceIdOne, key: PFD.keyOne, field: PFD.fieldOne, criteria: PFD.criteriaOne, lookups: {}});
       // ticket-priorities
-      store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne});
+      this.store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne});
+      this.store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityTwo});
     });
     automation_repo = repository.initialize(this.container, this.registry, 'automation');
     results = [{id: PFD.sourceIdOne, key: PFD.keyOne, field: PFD.fieldOne, lookups: {}},
@@ -42,14 +44,16 @@ moduleForComponent('automations/filter-section', 'Integration | Component | auto
     automation_repo.getFilters = () => new Ember.RSVP.Promise((resolve) => {
       resolve({'results': results});
     });
+    this.model = automation;
   },
   afterEach() {
     page.removeContext(this);
+    delete this.store;
+    delete this.model;
   }
 });
 
 test('add pfilter - adds a filter with a random uuid and a source_id for the AvailableFilter [AF] selected', function(assert) {
-  this.model = automation;
   this.render(hbs`{{automations/filter-section model=model}}`);
   assert.equal(this.$('.t-automation-pf-select').length, 1);
   assert.equal(automation.get('pf').get('length'), 1);
@@ -68,7 +72,6 @@ test('add pfilter - adds a filter with a random uuid and a source_id for the Ava
 });
 
 test('delete - removes automation.pf in the store', function(assert) {
-  this.model = automation;
   this.render(hbs`{{automations/filter-section model=model}}`);
   assert.equal(this.$('.t-automation-pf-select').length, 1);
   assert.equal(automation.get('pf').get('length'), 1);
@@ -78,7 +81,6 @@ test('delete - removes automation.pf in the store', function(assert) {
 });
 
 test('add an empty filter then delete it', function(assert) {
-  this.model = automation;
   this.render(hbs`{{automations/filter-section model=model}}`);
   assert.equal(this.$('.t-automation-pf-select').length, 1);
   page.addFilter();
@@ -89,11 +91,10 @@ test('add an empty filter then delete it', function(assert) {
 
 test('change pfilter from an existing to a different pfilter', function(assert) {
   run(() => {
-    store.push('pfilter-join-criteria', {id: PJFD.idOne, pfilter_pk: PFD.idOne, criteria_pk: CD.idOne});
-    store.push('pfilter', {id: PFD.idOne, pfilter_criteria_fks: [PJFD.idOne]});
-    store.push('criteria', {id: CD.idOne});
+    this.store.push('pfilter-join-criteria', {id: PJFD.idOne, pfilter_pk: PFD.idOne, criteria_pk: CD.idOne});
+    this.store.push('pfilter', {id: PFD.idOne, pfilter_criteria_fks: [PJFD.idOne]});
+    this.store.push('criteria', {id: CD.idOne, name: TD.priorityOne});
   });
-  this.model = automation;
   this.render(hbs`{{automations/filter-section model=model}}`);
   assert.equal(this.$('.t-automation-pf-select').length, 1);
   assert.equal(automation.get('pf').get('length'), 1);
@@ -110,7 +111,6 @@ test('change pfilter from an existing to a different pfilter', function(assert) 
 });
 
 test('add new pfilter, and automation is not dirty until select pfilter which displays component', function(assert) {
-  this.model = automation;
   this.render(hbs`{{automations/filter-section model=model}}`);
   // existing pfilter
   assert.equal(this.$('.t-priority-criteria').length, 1);
@@ -145,7 +145,6 @@ test('add new pfilter, and automation is not dirty until select pfilter which di
 test('delete pfilter and automation is dirty and can add and remove filter sequentially as well', function(assert) {
   automation.add_pf({id: PFD.idTwo, key: PFD.keyTwo});
   automation.saveRelated();
-  this.model = automation;
   this.render(hbs`{{automations/filter-section model=model}}`);
   assert.equal(this.$('.ember-power-select-selected-item:eq(0)').text().trim(), trans.t(PFD.keyOne));
   assert.equal(this.$('.ember-power-select-selected-item:eq(1)').text().trim(), trans.t(PFD.keyTwo));
@@ -170,10 +169,10 @@ test('delete pfilter and automation is dirty and can add and remove filter seque
 
 test('if automation has dynamic pfilter, power-select component will filter out response result', function(assert) {
   run(() => {
-    store.clear();
-    automation = store.push('automation', {id: AD.idOne, description: AD.descriptionOne, automation_pf_fks: [AJFD.idOne]});
-    store.push('automation-join-pfilter', {id: AJFD.idOne, automation_pk: AD.idOne, pfilter_pk: PFD.idTwo});
-    store.push('pfilter', {id: PFD.idTwo, key: PFD.keyTwo, field: PFD.locationField, lookups: PFD.lookupsDynamic});
+    this.store.clear();
+    automation = this.store.push('automation', {id: AD.idOne, description: AD.descriptionOne, automation_pf_fks: [AJFD.idOne]});
+    this.store.push('automation-join-pfilter', {id: AJFD.idOne, automation_pk: AD.idOne, pfilter_pk: PFD.idTwo});
+    this.store.push('pfilter', {id: PFD.idTwo, key: PFD.keyTwo, field: PFD.locationField, lookups: PFD.lookupsDynamic});
   });
   this.model = automation;
   this.render(hbs`{{automations/filter-section model=model}}`);
@@ -184,12 +183,11 @@ test('if automation has dynamic pfilter, power-select component will filter out 
 
 test('delete the middle filter, and it correctly leaves the remaining start n end filter in the page', function(assert) {
   run(() => {
-    store.push('pfilter', {id: PFD.idTwo, key: PFD.keyTwo, field: PFD.locationField, criteria: PFD.criteriaTwo, lookups: {}});
-    store.push('pfilter', {id: PFD.idThree, key: PFD.keyThree, field: PFD.locationField, criteria: PFD.criteriaThree, lookups: {}});
+    this.store.push('pfilter', {id: PFD.idTwo, key: PFD.keyTwo, field: PFD.locationField, criteria: PFD.criteriaTwo, lookups: {}});
+    this.store.push('pfilter', {id: PFD.idThree, key: PFD.keyThree, field: PFD.locationField, criteria: PFD.criteriaThree, lookups: {}});
     automation.add_pf({id: PFD.idTwo});
     automation.add_pf({id: PFD.idThree});
   });
-  this.model = automation;
   this.render(hbs`{{automations/filter-section model=model}}`);
   assert.equal(this.$('.t-automation-pf-select').length, 3);
   assert.equal(page.automationFilterOneText, trans.t(PFD.keyOne));
@@ -202,8 +200,21 @@ test('delete the middle filter, and it correctly leaves the remaining start n en
 });
 
 test('ticket-priority-select is not searchable', function(assert) {
-  this.model = automation;
   this.render(hbs`{{automations/filter-section model=model}}`);
   assert.equal(this.$('.t-priority-criteria').length, 1);
   assert.equal(this.$('.ember-power-select-multiple-trigger').length, 2);
+});
+
+test('ticket-priority-select displays ticket-priority-tag component ', function(assert) {
+  this.render(hbs`{{automations/filter-section model=model}}`);
+  clickTrigger('.t-priority-criteria');
+  nativeMouseUp(`.ember-power-select-option:contains(${TD.priorityOne})`);
+  assert.equal(this.$('[data-test-id="priority-tag"]').length, 1);
+  assert.equal(this.$('[data-test-id="priority-tag"]').text().trim(), TD.priorityOne);
+  clickTrigger('.t-priority-criteria');
+  nativeMouseUp(`.ember-power-select-option:contains(${TD.priorityTwo})`);
+  assert.equal(this.$('[data-test-id="priority-tag"]').length, 2);
+  assert.equal(this.$('[data-test-id="priority-tag"]:eq(1)').text().trim(), TD.priorityTwo);
+  nativeMouseDown('.ember-power-select-multiple-remove-btn:eq(0)');
+  assert.equal(this.$('[data-test-id="priority-tag"]').length, 1);
 });

@@ -18,6 +18,7 @@ const Validations = buildValidations({
 export default Model.extend(Validations, OptConf, {
   init() {
     this._super(...arguments);
+    // criteria may be priority, location, category, etc
     many_to_many.bind(this)('criteria', 'pfilter');
   },
   source_id: attr(''),

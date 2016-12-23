@@ -8,8 +8,10 @@ export function automationAction(params/*, hash*/) {
       case ACTION_ASSIGNEE:
         return 'tickets/ticket-assignee-select';
       case ACTION_PRIORITY:
+        // selecting single priority select
         return 'tickets/ticket-priority-select-action';
       case ACTION_STATUS:
+        // selecting single status select
         return 'tickets/ticket-status-select-action';
       case ACTION_SEND_EMAIL:
         return 'automations/sendemail-action';

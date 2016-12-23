@@ -1,0 +1,24 @@
+&{
+  .ember-power-select-multiple {
+    .ember-power-select-trigger {
+      .ember-power-select-multiple-options {
+        .ember-power-select-multiple-option {
+          border: none;
+          background: none;
+          position: relative;
+          .tag {
+            padding-right: 26px;
+          }
+          .ember-power-select-multiple-remove-btn {
+            z-index: 1;
+            right: 6px;
+            position: absolute;
+            top: 1px;
+            background: rgba(0, 0 ,0, 0.1);
+            color: #FFF;
+          }
+        }
+      }
+    }
+  }  
+}

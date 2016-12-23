@@ -1,9 +1,16 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 
-export function automationFilter(params/*, hash*/) {
-  if (params[0]) {
-    switch (params[0]) {
+/**
+ * - used to render a component based on the pfliter's criteria
+ * - component helper passes in the pfilter model
+ * - all components render multi power select
+ * @function automationFilter
+ * @param {Array} params - array with pfilter.field in it
+ */
+export function automationFilter(_params, { type }) {
+  if (type) {
+    switch (type) {
       case 'priority':
         return 'tickets/ticket-priority-select';
       case 'location':

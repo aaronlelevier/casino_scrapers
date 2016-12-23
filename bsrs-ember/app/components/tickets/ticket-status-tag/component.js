@@ -4,6 +4,7 @@ import Ember from 'ember';
  * Component has two API designs
  * 1. item - parent model (ticket), for ex// grid
  * 2. optionModel - the owning model, for ex// power select status
+ * @class ticketStatusTag
  */
 var TicketStatusTag = Ember.Component.extend({
   tagName: 'span',

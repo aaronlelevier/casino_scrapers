@@ -1,5 +1,10 @@
 import Ember from 'ember';
 
+/**
+ * This is used to select multiple priorities
+ * Uses Ticket Priority Tag component in select dropdown
+ * @class TicketPrioritySelect
+ */
 export default Ember.Component.extend({
   simpleStore: Ember.inject.service(),
   options: Ember.computed(function() {
