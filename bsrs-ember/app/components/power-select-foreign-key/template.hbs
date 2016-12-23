@@ -1,13 +1,15 @@
 <span data-validation-target={{valuePath}}></span>
+{{log allowClear}}
 {{#power-select-mobile
   class=(concat relatedModelName '-select' ' t-' relatedModelName '-select' (if showMessage ' invalid'))
   tagName="div"
   selected=selected
-  allowClear=clear
+  allowClear=allowClear
   onchange=(action "selected")
   searchEnabled=false
   options=options
   labelText=labelText
+  placeholder=(t placeholder)
   as |optionModel|
 }}
 {{#if componentArg}}

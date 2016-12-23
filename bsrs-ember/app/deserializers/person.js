@@ -72,20 +72,12 @@ var extract_person_location = function(model, store, location_level_fk, location
     model.person_locations_fks = server_locations_sum;
 };
 
-var extract_locale = (model, store) => {
-  const locale_id = model.locale || store.find('person', model.id).get('locale_fk');
-  const locale = store.find('locale', locale_id);
-  let existing_people = locale.get('people') || [];
-  existing_people = existing_people.indexOf(model.id) > -1 ? existing_people : existing_people.concat(model.id);
-  store.push('locale', {id: locale.get('id'), people: existing_people});
-  model.locale_fk = locale.get('id');
-  delete model.locale;
-};
 
 var PersonDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('status', 'person');
+    belongs_to.bind(this)('locale', 'person');
     belongs_to.bind(this)('photo', 'person');
     belongs_to.bind(this)('phone_number_type');
     belongs_to.bind(this)('email_type');
@@ -142,11 +134,15 @@ var PersonDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin, 
       // location
       extract_person_location(model, store, location_level_fk, location_deserializer);
       // locale
-      extract_locale(model, store);
+      const locale_id = model.locale;
+      model.locale_fk = locale_id;
+      delete model.locale;
       model.detail = true;
       model = copySettingsToFirstLevel(model);
       run(() => {
         person = store.push('person', model);
+        // locale
+        this.setup_locale({id: locale_id}, person);
         // photo
         this.setup_photo(photo, person);
         // status

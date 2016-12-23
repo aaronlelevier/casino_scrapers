@@ -14,6 +14,7 @@ const { run, computed, defineProperty, inject } = Ember;
 var PowerSelectFKComponent = Ember.Component.extend({
   simpleStore: inject.service(),
   displayName: 'name',
+  placeholder: 'power.select.select',
   init() {
     this._super(...arguments);
     const valuePath = this.get('valuePath');

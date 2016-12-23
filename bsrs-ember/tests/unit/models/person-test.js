@@ -65,6 +65,13 @@ test('change_locale will update the persons locale and dirty the model', (assert
   assert.ok(person.get('localeIsDirty'));
 });
 
+test('change_locale can be set to null', (assert) => {
+  store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
+  assert.equal(person.get('locale').get('id'), LOCALED.idOne);
+  person.change_locale(null);
+  assert.equal(person.get('locale'), null);
+});
+
 test('save person will set locale_fk to current locale id', (assert) => {
   store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: [PD.idOne]});
   let inactive_locale = store.push('locale', {id: LOCALED.idTwo, name: LOCALED.nameTwo, people: []});

@@ -36,6 +36,8 @@ var BSRS_LOCALE_DEFAULTS_OBJECT = (function() {
             presentation_nameOther: 'en',
             rtlOther: false,
             defaultOther: false,
+            
+            defaultPlaceholder: 'admin.locale.default'
         }
     };
     return factory;

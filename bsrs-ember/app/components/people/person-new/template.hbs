@@ -77,12 +77,14 @@
         </div>
         <div class="row">
           <div class="col-md-12">
-            {{#form-group title="admin.person.label.language" for="locale"}}
+            {{#form-group title="admin.person.label.language" dataTestId="locale" optional="true" for="locale"}}
             {{power-select-foreign-key
               model=model
-              selected=selectedLocale
+              selected=model.locale
               change_method="change_locale"
               relatedModelName="locale"
+              allowClear="true"
+              placeholder="admin.locale.default"
             }}
             {{/form-group}}
           </div>

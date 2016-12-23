@@ -110,15 +110,6 @@ var Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMi
   personCurrent: Ember.inject.service('person-current'),
   translationsFetcher: Ember.inject.service('translations-fetcher'),
   i18n: Ember.inject.service(),
-  changeLocale(){
-    const personCurrentId = this.get('personCurrent').get('model.id');
-    if (personCurrentId === this.get('id')) {
-      config.i18n.currentLocale = this.get('locale').get('locale');
-      return this.get('translationsFetcher').fetch().then(() => {
-        this.get('i18n').set('locale', config.i18n.currentLocale); 
-      }.bind(this));
-    }
-  },
   fullname: Ember.computed('first_name', 'last_name', function() {
     const { first_name, last_name } = this.getProperties('first_name', 'last_name');
     return first_name + ' ' + last_name;

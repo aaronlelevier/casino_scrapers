@@ -242,7 +242,7 @@ test('can change default role and locale', function(assert) {
   });
   selectChoose('.t-locale-select', PD.localeTwo);
   andThen(() => {
-    assert.equal(page.localeInput, LD.nameTwo);
+    assert.equal(page.localeInput.replace(/\W+/, ''), LD.nameTwo);
   });
   const payload_two = {
     id: UUID.value,

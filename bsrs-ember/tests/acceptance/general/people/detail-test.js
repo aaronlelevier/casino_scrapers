@@ -117,7 +117,7 @@ test('when you deep link to the person detail view you get bound attrs', functio
     assert.equal(find('.t-input-multi-phone').find('input:eq(0)').val(), PND.numberOne);
     assert.equal(find('.t-input-multi-phone').find('input:eq(1)').val(), PND.numberTwo);
     assert.equal(page.statusInput, t(SD.activeName));
-    assert.equal(page.localeInput, PD.localeFull);
+    assert.equal(page.localeInput.replace(/\W+/, ''), PD.localeFull);
     assert.equal(page.roleInput, RD.nameOne);
     assert.equal(find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol);
   });
@@ -1015,7 +1015,7 @@ test('can change status to inactive for person and save (power select)', functio
 test('can change locale to inactive for person and save (power select)', function(assert) {
   page.visitDetail();
   andThen(() => {
-    assert.equal(page.localeInput, PD.localeFull);
+    assert.equal(page.localeInput.replace(/\W+/, ''), PD.localeFull);
   });
   selectChoose(LOCALE_SELECT, PD.localeTwo);
   andThen(() => {
@@ -1023,7 +1023,7 @@ test('can change locale to inactive for person and save (power select)', functio
     assert.equal(person.get('locale_fk'), LOCALED.idOne);
     assert.equal(person.get('locale.id'), LOCALED.idTwo);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
-    assert.equal(page.localeInput, PD.localeTwoFull);
+    assert.equal(page.localeInput.replace(/\W+/, ''), PD.localeTwoFull);
   });
   let url = PREFIX + DETAIL_URL + '/';
   let payload = PF.put({id: PD.idOne, locale: LOCALED.idTwo});
@@ -1042,7 +1042,7 @@ test('when changing the locale for a user (not current user), the language is no
     let person = this.store.find('person', PD.idOne);
     assert.ok(person.get('id') !== PERSON_CURRENT.defaults().id);
     assert.equal(find('.t-person-first-name').val(), PD.first_name);
-    assert.equal(page.localeInput, PD.localeFull);
+    assert.equal(page.localeInput.replace(/\W+/, ''), PD.localeFull);
     assert.equal(find('.t-person-first-name').prop('placeholder'), 'First Name');
   });
   selectChoose(LOCALE_SELECT, PD.localeTwo);

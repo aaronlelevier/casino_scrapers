@@ -125,11 +125,11 @@ test('clear-btn not present by default', function(assert) {
   assert.equal($component.find('.ember-power-select-clear-btn').length, 0);
 });
 
-test('clear-btn present if clear=true', function(assert) {
+test('clear-btn present if allowClear=true', function(assert) {
   priority_one.set('tickets', [TD.idOne]);
   let priorities = store.find('ticket-priority');
   this.set('ticket', ticket);
-  this.render(hbs`{{power-select-foreign-key model=ticket selected=ticket.priority change_method='change_priority' relatedModelName='ticket-priority' clear=true}}`);
+  this.render(hbs`{{power-select-foreign-key model=ticket selected=ticket.priority change_method='change_priority' relatedModelName='ticket-priority' allowClear=true}}`);
   let $component = this.$(COMPONENT);
   assert.equal($component.find('.ember-power-select-clear-btn').length, 1);
 });

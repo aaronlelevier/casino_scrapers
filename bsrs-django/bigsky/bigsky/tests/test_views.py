@@ -295,14 +295,6 @@ class BootstrappedDataTests(SetupMixin, TestCase):
         self.assertEqual(locale.presentation_name, data[0]['presentation_name'])
         self.assertEqual(locale.rtl, data[0]['rtl'])
 
-    def test_locales__default(self):
-        data = json.loads(self.response.context['locales'])
-
-        for d in data:
-            if d['native_name'] == 'en':
-                self.assertTrue(d['default'])
-            else:
-                self.assertFalse(d['default'])
 
     def test_currency(self):
         currency = Currency.objects.default()

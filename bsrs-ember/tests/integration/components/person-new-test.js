@@ -50,11 +50,12 @@ test('locale should default if not present in Person model', function(assert) {
   this.set('locales', locales);
   this.render(hbs`{{people/person-new model=model locales=locales}}`);
   let $component = this.$('.t-locale-select');
-  assert.equal($component.text().trim(), trans.t(LD.nameOneKey));
+  assert.equal($component.text().trim(), trans.t(LD.defaultPlaceholder));
   assert.ok(person.get('isNotDirty'));
   clickTrigger('.t-locale-select');
   nativeMouseUp(`.ember-power-select-option:contains(${PD.localeTwo})`);
-  assert.equal($component.text().trim(), trans.t(LD.nameTwoKey));
+  assert.equal(page.localeInput.replace(/\W+/, ''), trans.t(PD.localeTwo));
+  assert.equal(Ember.$('[data-test-id="locale"] > label > span').text().trim(), trans.t('optional'));
 });
 
 // test('password validation error if not present or greater than 30 characters', function(assert) {

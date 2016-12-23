@@ -24,14 +24,14 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          {{#form-group title="admin.person.label.title" for="title"}}
-          {{input type="text" placeholder=(t "admin.person.label.title") value=model.title class="form-control t-person-title" id="title"}}
+          {{#form-group title="admin.person.label.title" for="title" dataTestId="title"}}
+          {{input type="text"  placeholder=(t "admin.person.label.title") value=model.title class="form-control t-person-title" id="title"}}
           {{/form-group}}
         </div>
       </div>
       <div class="row">
         <div class="col-md-12">
-          {{#form-group title="admin.person.label.role-name" for="role"}}
+          {{#form-group title="admin.person.label.role-name" for="role" dataTestId="role-name"}}
           {{role-select
             model=model
             role_change=role_change
@@ -41,7 +41,7 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          {{#form-group title="admin.person.label.location" for="location"}}
+          {{#form-group title="admin.person.label.location" for="location" dataTestId="location"}}
           {{db-fetch-multi-select
             model=model
             multiAttr="locations"
@@ -59,7 +59,7 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          {{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
+          {{#form-group title="admin.person.label.auth_amount" for="auth_amount" dataTestId="auth-amount"}}
           {{#if model.inherited.auth_amount.inherits_from}}
           <p class="inherited-msg t-inherited-msg-auth_amount">
             {{#link-to "admin.roles.index.role" model.inherited.auth_amount.inherits_from_id class="t-inherited-msg-auth_amount-link"}}
@@ -79,19 +79,21 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          {{#form-group title="admin.person.label.employee_id" for="employee_id"}}
+          {{#form-group title="admin.person.label.employee_id" for="employee_id" dataTestId="employee-id"}}
           {{input type="text" placeholder=(t "admin.person.label.employee_id") value=model.employee_id class="form-control t-person-employee_id" id="employee_id"}}
           {{/form-group}}
         </div>
       </div>
       <div class="row">
         <div class="col-md-12">
-          {{#form-group title="admin.person.label.language" for="locale"}}
+          {{#form-group title="admin.person.label.language" for="locale" dataTestId="locale"}}
           {{power-select-foreign-key
             model=model
             selected=model.locale
             change_method="change_locale"
             relatedModelName="locale"
+            allowClear="true"
+            placeholder="admin.locale.default"
           }}
           {{/form-group}}
         </div>
