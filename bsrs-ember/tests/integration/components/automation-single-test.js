@@ -8,6 +8,7 @@ import wait from 'ember-test-helpers/wait';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import AD from 'bsrs-ember/vendor/defaults/automation';
+import AAD from 'bsrs-ember/vendor/defaults/automation-action';
 import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import ATD from 'bsrs-ember/vendor/defaults/automation-action-type';
@@ -226,4 +227,23 @@ test('select sendemail filter will remove old related model', function(assert) {
     assert.equal(action.get('assignee_fk'), undefined);
     assert.ok(action.get('sendemail').get('id'));
   });
+});
+
+test('select ticket request filter and update automation', function(assert) {
+  model.add_action({id: '1'});
+  const action = store.find('automation-action', 1);
+  action.change_type({id: ATD.idOne, key: ATD.keyOne});
+  action.change_assignee({id: PD.idOne});
+  assert.equal(action.get('assignee').get('id'), PD.idOne);
+  assert.equal(action.get('assignee_fk'), undefined);
+  this.model = model;
+  this.render(hbs `{{automations/automation-single model=model}}`);
+  clickTrigger('.t-automation-action-type-select');
+  nativeMouseUp(`.ember-power-select-option:contains(${ATD.keySix})`);
+  assert.equal(this.$('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), trans.t(ATD.keySix), 'selected type');
+  page.ticketRequestFillIn(AAD.requestTwo);
+  assert.equal(page.ticketRequestValue, AAD.requestTwo);
+  assert.equal(action.get('assignee'), undefined);
+  assert.equal(action.get('assignee_fk'), undefined);
+  assert.ok(action.get('request'), AAD.requestTwo);
 });
