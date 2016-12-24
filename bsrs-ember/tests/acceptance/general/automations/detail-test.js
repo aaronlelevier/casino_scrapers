@@ -598,37 +598,4 @@ test('select status filter and update automation', async function(assert) {
   assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 
-test('select ticketcc filter and update automation', async function(assert) {
-  await page.visitDetail();
-  assert.equal(currentURL(), DETAIL_URL);
-  assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
-  assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
-  xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
-  await selectChoose('.t-automation-action-type-select:eq(0)', AATD.keySevenTrans);
-  assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keySevenTrans));
-  xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
-  await selectSearch('.t-action-ticketcc-select', 'e');
-  await selectChoose('.t-action-ticketcc-select', PD.fullnameBoy2);
-  assert.equal(page.actionTicketccOne.replace(/\W/, '').trim(), PD.fullnameBoy2);
-  clearxhr(listXhr);
-  // let payload = AF.put({
-  //   actions: [{
-  //     id: AAD.idOne,
-  //     type: AATD.idFour,
-  //     content: {
-  //       sendemail: {
-  //         body: SED.bodyTwo,
-  //         subject: SED.subjectTwo,
-  //         recipients: [PD.idSearch]
-  //       } 
-  //     }
-  //   }]
-  // });
-  // xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
-  // generalPage.save();
-  // andThen(() => {
-  //   assert.equal(currentURL(), AUTOMATION_LIST_URL);
-  // });
-});
-
 /* jshint ignore:end */

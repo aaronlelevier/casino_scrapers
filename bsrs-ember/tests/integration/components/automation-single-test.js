@@ -41,34 +41,44 @@ moduleForComponent('automation-single', 'integration: automation-single test', {
     const width = breakpoints.find(bp => bp.name === 'desktop').begin + 5;
     flexi.set('width', width);
 
-    let automation_repo = repository.initialize(this.container, this.registry, 'automation');
+    const person_repo = repository.initialize(this.container, this.registry, 'person');
+    person_repo.findPeople = function() {
+      return new Ember.RSVP.Promise((resolve, reject) => {
+        resolve([
+          { id: PD.idOne, fullname: PD.fullname },
+          { id: PD.idTwo, fullname: PD.fullnameBoy },
+        ]);
+      });
+    };
+
+    const automation_repo = repository.initialize(this.container, this.registry, 'automation');
     automation_repo.getEmailRecipients = function() {
       return new Ember.RSVP.Promise((resolve, reject) => {
         resolve([
-            { id: PD.idOne, fullname: PD.fullname, type: 'role' },
-            { id: PD.idTwo, fullname: PD.fullnameBoy, type: 'person' },
-          ]);
+          { id: PD.idOne, fullname: PD.fullname, type: 'role' },
+          { id: PD.idTwo, fullname: PD.fullnameBoy, type: 'person' },
+        ]);
       });
     };
     automation_repo.getSmsRecipients = function() {
       return new Ember.RSVP.Promise((resolve, reject) => {
         resolve([
-            { id: PD.idOne, fullname: PD.fullname, type: 'role' },
-            { id: PD.idTwo, fullname: PD.fullnameBoy, type: 'person' },
-          ]);
+          { id: PD.idOne, fullname: PD.fullname, type: 'role' },
+          { id: PD.idTwo, fullname: PD.fullnameBoy, type: 'person' },
+        ]);
       });
     };
     automation_repo.getActionTypes = function() {
       return new Ember.RSVP.Promise((resolve, reject) => {
         resolve({ results: [
-            { id: ATD.idOne, key: ATD.keyOne },
-            { id: ATD.idTwo, key: ATD.keyTwo },
-            { id: ATD.idThree, key: ATD.keyThree },
-            { id: ATD.idFour, key: ATD.keyFour },
-            { id: ATD.idFive, key: ATD.keyFive },
-            { id: ATD.idSix, key: ATD.keySix },
-            { id: ATD.idSeven, key: ATD.keySeven },
-          ]});
+          { id: ATD.idOne, key: ATD.keyOne },
+          { id: ATD.idTwo, key: ATD.keyTwo },
+          { id: ATD.idThree, key: ATD.keyThree },
+          { id: ATD.idFour, key: ATD.keyFour },
+          { id: ATD.idFive, key: ATD.keyFive },
+          { id: ATD.idSix, key: ATD.keySix },
+          { id: ATD.idSeven, key: ATD.keySeven },
+        ]});
       });
     };
   },
@@ -246,4 +256,27 @@ test('select ticket request filter and update automation', function(assert) {
   assert.equal(action.get('assignee'), undefined);
   assert.equal(action.get('assignee_fk'), undefined);
   assert.ok(action.get('request'), AAD.requestTwo);
+});
+
+test('select ticketcc filter and update automation', function(assert) {
+  model.add_action({id: '1'});
+  const action = store.find('automation-action', 1);
+  action.change_type({id: ATD.idOne, key: ATD.keyOne});
+  action.change_assignee({id: PD.idOne});
+  assert.equal(action.get('assignee').get('id'), PD.idOne);
+  assert.equal(action.get('assignee_fk'), undefined);
+  this.model = model;
+  this.render(hbs `{{automations/automation-single model=model}}`);
+  clickTrigger('.t-automation-action-type-select');
+  nativeMouseUp(`.ember-power-select-option:contains(${ATD.keySeven})`);
+  assert.equal(this.$('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), trans.t(ATD.keySeven), 'selected type');
+  clickTrigger('.t-action-ticketcc-select');
+  typeInSearch('a');
+  return wait().then(() => {
+    nativeMouseUp('.ember-power-select-option:eq(0)');
+    assert.equal(page.actionTicketccOne.replace(/\W/, '').trim(), PD.fullname, 'ticketcc selected');
+    assert.equal(action.get('assignee'), undefined);
+    assert.equal(action.get('assignee_fk'), undefined);
+    assert.equal(action.get('ticketcc').get('length'), 1);
+  });
 });
