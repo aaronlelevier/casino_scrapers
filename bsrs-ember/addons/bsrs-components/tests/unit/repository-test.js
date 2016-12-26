@@ -8,7 +8,9 @@ var store, deserializer;
 
 module('unit: repository test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:user', 'model:hat', 'model:user-hat-list', 'model:email', 'model:shoe', 'model:user-shoe', 'model:finger', 'model:user-finger']);
+    store = module_registry(this.container, this.registry, ['model:user', 'model:hat', 'model:shirt', 
+      'model:user-hat-list', 'model:email', 'model:shoe', 'model:user-shoe', 'model:finger', 
+      'model:user-finger']);
     deserializer = Deserializer.create({simpleStore: store});
     run(() => {
       store.push('hat', {id: 2});
@@ -16,7 +18,7 @@ module('unit: repository test', {
   }
 });
 
-test('repository sets up hat relationship in deserializer', (assert) => {
+test('repository sets up hat relationship in deserializer (bootstrapped)', function(assert) {
   const json = {id: 1, detail: true, hat_fk: 2};
   run(() => {
     deserializer.deserialize(json);
@@ -25,7 +27,16 @@ test('repository sets up hat relationship in deserializer', (assert) => {
   assert.deepEqual(hat.get('users'), [1]);
 });
 
-test('accepts null', (assert) => {
+test('repository sets up shirt relationship in deserializer as object (non-bootstrapped)', function(assert) {
+  const json = {id: 1, detail: true, shirt: {id: 2, name: 'who'} };
+  run(() => {
+    deserializer.deserialize_two(json);
+  });
+  const shirt = store.find('shirt', 2);
+  assert.deepEqual(shirt.get('users'), [1]);
+});
+
+test('accepts null', function(assert) {
   const json = {id: 1, detail: true, hat_fk: null};
   run(() => {
     deserializer.deserialize(json);
@@ -34,7 +45,7 @@ test('accepts null', (assert) => {
   assert.equal(hat.get('users'), undefined);
 });
 
-test('shoes relationship setup in deserializer', (assert) => {
+test('shoes relationship setup in deserializer', function(assert) {
   const json = {id: 1, shoes: [{id: 2}]};
   run(() => {
     deserializer.deserialize_four(json);
@@ -51,7 +62,7 @@ test('shoes relationship setup in deserializer', (assert) => {
   assert.equal(m2m_models.objectAt(0).get('user_pk'), 1);
 });
 
-test('fingers relationship setup in deserializer', (assert) => {
+test('fingers relationship setup in deserializer', function(assert) {
   const json = {id: 1, fingers: [{id: 2}]};
   run(() => {
     deserializer.deserialize_five(json);

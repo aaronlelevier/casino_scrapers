@@ -84,15 +84,14 @@ test('person setup correct locale fk with existing locale pointer to person', fu
 });
 
 test('person can be deserialized without a locale (no existing)', function(assert) {
-  assert.equal(person.get('locale.id'), undefined);
+  assert.equal(person.get('locale'), undefined);
   const response = PF.generate(PD.idOne);
   delete response.locale;
   run(() => {
     this.store.push('person', {id: PD.idOne, status_fk: SD.activeId, role_fk: PD.role});
-    locale = this.store.push('locale', {id: LOCALED.idOne, name: LOCALED.nameOne, people: []});
     subject.deserialize(response, PD.idOne);
   });
-  assert.equal(person.get('locale').get('id'), undefined);
+  assert.equal(person.get('locale'), undefined);
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
 });
 

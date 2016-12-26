@@ -23,12 +23,9 @@ const PEOPLE_DONALD_DETAIL_URL = `${BASEURLS.base_people_url}/${PD.idDonald}`;
 const TICKET_ACTIVITIES_URL = `${TICKETS_URL}${TD.idOne}/activity/`;
 const LOCATION = '.t-person-locations-select .ember-basic-dropdown-trigger';
 
-let application, person, ticket;
+let person, ticket;
 
-moduleForAcceptance('Acceptance | general ticket and people test', {
-  beforeEach() {
-  },
-});
+moduleForAcceptance('Acceptance | general ticket and people test');
 
 test('clicking between person detail and ticket detail will not dirty the active person model', function(assert) {
   xhr(`${PREFIX}${PEOPLE_DETAIL_URL}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));

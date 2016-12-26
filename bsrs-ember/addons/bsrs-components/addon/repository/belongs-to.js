@@ -2,44 +2,55 @@ import Ember from 'ember';
 const { run } = Ember;
 
 /**
- * @method belongs_to_extract
  * use extract rather than just change method b/c we do not want to push in the related model if it is the same as what existed locally
  * detail flag is used to differentiate b/w list and detail parent models
+ * detail type may be an {Object} (non bootstrapped) or {String} (bootstrapped) id
+ * list also accepted. Can only pass 'type' {Object}.  Requires model to have `-list` at the end 
+ * @method belongs_to_extract
+ * @param related - {String} or {Object} - related model on parent
+ * @param store
+ * @param {Class} parentModel - hydrated model
+ * @param {String} ownerName - ticket belongs to a priority - priority is the owning model
+ * @param {String} collection - array storing ids on owning model
+ *
+ * LIST ONLY -- think about splitting out repo methods for list and detail only
+ * @param {String} parentModelName - string of parent model
  */
-var belongs_to_extract = function(type, store, parent_model, ownerName, relatedModelName, collection) {
+let belongs_to_extract = function(related, store, parentModel, ownerName, parentModelName, collection) {
+
   // DETAIL: belongs_to_extract(response.priority_fk, store, ticket, 'priority', 'ticket', 'tickets');
+  const checkType = (related && typeof related === 'object') ? related.id : related;
+  if (!!related && parentModel.get('detail') && parentModel.get(`${ownerName}.id`) !== checkType) {
+    return parentModel[`change_${ownerName}`](related);
+    
   // LIST: belongs_to_extract(status_json, store, ticket, 'status', 'ticket', 'tickets');
-  let model;
-  if (!!type && parent_model.get('detail') && parent_model.get(`${ownerName}.id`) !== type) {
-    model = parent_model[`change_${ownerName}`](type);
-  } else if (type && typeof type === 'object') {
-    const type_list = store.find(`${relatedModelName}-${ownerName}-list`, type.id);
-    const type_arr = type_list.get(`${collection}`) || [];
-    const updated_type_arr = type_arr.concat(parent_model.get('id')).uniq();
-    const join_model = {id: type.id, name: type.name};
-    join_model[`${collection}`] = updated_type_arr;
+  } else if (!parentModel.get('detail') && related && typeof related === 'object') {
+    const related_list = store.find(`${parentModelName}-${ownerName}-list`, related.id);
+    const related_arr = related_list.get(`${collection}`) || [];
+    const updated_related_arr = related_arr.concat(parentModel.get('id')).uniq();
+    related[`${collection}`] = updated_related_arr;
     run(() =>{
-      model = store.push(`${relatedModelName}-${ownerName}-list`, join_model);
+      return store.push(`${parentModelName}-${ownerName}-list`, related);
     });
   }
-  return model;
 };
 
-var belongs_to = function(ownerName, relatedModelName) {
-  Ember.defineProperty(this, `setup_${ownerName}`, undefined, belongs_to_json(ownerName, relatedModelName));
+let belongs_to = function(ownerName, parentModelName) {
+  Ember.defineProperty(this, `setup_${ownerName}`, undefined, belongs_to_json(ownerName, parentModelName));
 };
 
 /**
- * Creates many to many setup for deserializer
+ * Curries function for deserializer. json and model are passed in at a later time
+ * Function also imported and used independent of setup funciton above
  *
  * @method belongs_to_json
  * @param ownerName {string} - 'status', 'email'
- * @param relatedModelName {string} - optional 'person' if model name is diff
+ * @param parentModelName {string} - optional 'person' if model name is diff
  */
-var belongs_to_json = function(ownerName, relatedModelName) {
+let belongs_to_json = function(ownerName, parentModelName) {
   return function(json, model) {
     const store = this.get('simpleStore');
-    return belongs_to_extract(json, store, model, ownerName, relatedModelName, this.OPT_CONF[ownerName]['collection']);
+    return belongs_to_extract(json, store, model, ownerName, parentModelName, this.OPT_CONF[ownerName]['collection']);
   };
 };
 
