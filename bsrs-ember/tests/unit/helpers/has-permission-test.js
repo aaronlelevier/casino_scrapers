@@ -40,3 +40,18 @@ test('passing a resource with dashes or underscore works', function(assert) {
   let result = hasPermission([], { permissions: ['view_locationlevel'], verb: 'view', resource: 'location-_level'});
   assert.ok(result);
 });
+
+test('if permissions updates (ie. polling), map returns correct result and is memoized', function(assert) {
+  let result = hasPermission([], { permissions: [''], verb: 'view', resource: 'locationlevel'});
+  assert.notOk(result);
+  result = hasPermission([], { permissions: ['view_locationlevel'], verb: 'view', resource: 'locationlevel'});
+  assert.ok(result);
+  result = hasPermission([], { permissions: ['view_role'], verb: 'view', resource: 'role'});
+  assert.ok(result);
+  let result2 = hasPermission([], { permissions: [''], verb: 'view', resource: 'role'});
+  assert.notOk(result2);
+  assert.notStrictEqual(result2, result);
+  let result3 = hasPermission([], { permissions: [''], verb: 'view', resource: 'role'});
+  assert.notOk(result3);
+  assert.strictEqual(result2, result3);
+});

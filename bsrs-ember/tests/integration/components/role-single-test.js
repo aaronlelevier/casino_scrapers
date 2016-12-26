@@ -7,16 +7,16 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import CD from 'bsrs-ember/vendor/defaults/currency';
 import wait from 'ember-test-helpers/wait';
 
-var store, trans;
+var trans;
 const ERR_TEXT = '.validated-input-error-dialog';
 
 moduleForComponent('role-single', 'integration: role-single test', {
   integration: true,
-  setup() {
-    store = module_registry(this.container, this.registry, ['model:role', 'model:currency']);
+  beforeEach() {
+    this.store = module_registry(this.container, this.registry, ['model:role', 'model:currency']);
     trans = this.container.lookup('service:i18n');
-    run(function() {
-      store.push('currency', {
+    run(() => {
+      this.store.push('currency', {
         id: CD.id,
         symbol: CD.symbol,
         name: CD.name,
@@ -27,14 +27,15 @@ moduleForComponent('role-single', 'integration: role-single test', {
         symbol_native: CD.symbol_native,
         default: true,
       });
+      this.model = this.store.push('role', {});
     });
+  },
+  afterEach() {
+    delete this.store;
   }
 });
 
 test('translation keys', function(assert) {
-  run(() => {
-    this.set('model', store.push('role', {}));
-  });
   this.render(hbs `{{roles/role-single model=model}}`);
   assert.equal(getLabelText('name'), trans.t('admin.role.label.name'));
   assert.equal(getLabelText('role_type'), trans.t('admin.role.label.role_type'));
@@ -46,9 +47,6 @@ test('translation keys', function(assert) {
 
 test('auth amount required', function(assert) {
   var done = assert.async();
-  run(() => {
-    this.set('model', store.push('role', {}));
-  });
   this.render(hbs `{{roles/role-single model=model}}`);
   assert.notOk(Ember.$('.invalid').is(':visible'));
   this.$('.t-amount').val('8').trigger('keyup');
@@ -63,9 +61,6 @@ test('auth amount required', function(assert) {
 });
 
 test('if save isRunning, btn is disabled', function(assert) {
-  run(() => {
-    this.set('model', store.push('role', {}));
-  });
   // monkey patched.  Not actually passed to component but save.isRunning comes from save ember-concurrency task
   this.saveIsRunning = { isRunning: 'disabled' };
   this.permissions = ['change_role'];

@@ -206,7 +206,7 @@ test('on boot we should fetch and load the person-current, logged in Person, con
     assert.equal(person_current.get('last_name'), expected.last_name);
     assert.equal(person_current.get('username'), expected.username);
     assert.equal(person_current.get('title'), expected.title);
-    assert.equal(person_current.get('status.id'), expected.status);
+    assert.equal(person_current.get('status.id'), expected.status_fk);
     assert.equal(person_current.get('role.id'), this.store.find('person', expected.id).get('role').get('id'));
     assert.equal(person_current.get('locale.id'), expected.locale);
     assert.equal(person_current.get('timezone'), expected.timezone);

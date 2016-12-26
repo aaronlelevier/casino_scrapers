@@ -28,6 +28,7 @@ moduleForComponent('base-component', 'integration: base-component test', {
     run(() => {
       this.store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey});
       ticket = this.store.push('ticket', {id: TD.idOne});
+      this.permissions = [];
     });
   },
   afterEach() {
@@ -38,7 +39,7 @@ moduleForComponent('base-component', 'integration: base-component test', {
 test('if btnDisabled as a result of save xhr outstanding, button is disabled', function(assert) {
   this.model = ticket;
   this.btnDisabled = true;
-  this.render(hbs`{{base-component model=model btnDisabled=btnDisabled}}`);
+  this.render(hbs`{{base-component model=model btnDisabled=btnDisabled permissions=permissions}}`);
   assert.equal(this.$('.t-save-btn').attr('disabled'), 'disabled', 'Button is disabled if xhr save is outstanding');
 });
 
@@ -48,7 +49,7 @@ test('if model is invalid save button should be visiable and disables', function
   });
   this.model = ticket;
   this.btnDisabled = false;
-  this.render(hbs`{{base-component model=model btnDisabled=btnDisabled}}`);
+  this.render(hbs`{{base-component model=model btnDisabled=btnDisabled permissions=permissions}}`);
   assert.equal(ticket.get('isDirtyOrRelatedDirty'), true);
   assert.equal(ticket.get('validations.isInvalid'), true);
   assert.equal(this.$('.t-save-btn').attr('disabled'), 'disabled', 'Button is disabled if model is dirty and invalid');
@@ -71,7 +72,7 @@ test('if model is clean save button is disabled', function(assert) {
   });
   this.model = ticket;
   this.btnDisabled = false;
-  this.render(hbs`{{base-component model=model btnDisabled=btnDisabled}}`);
+  this.render(hbs`{{base-component model=model btnDisabled=btnDisabled permissions=permissions}}`);
   assert.equal(ticket.get('isNotDirty'), true);
   assert.equal(ticket.get('isNotDirtyOrRelatedNotDirty'), true);
   assert.equal(ticket.get('validations.isInvalid'), false);

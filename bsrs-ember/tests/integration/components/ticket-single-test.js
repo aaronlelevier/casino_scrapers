@@ -12,31 +12,33 @@ import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 import { clickTrigger, nativeMouseUp } from 'bsrs-ember/tests/helpers/ember-power-select';
 import wait from 'ember-test-helpers/wait';
 
-let store, ticket, trans;
+let ticket, trans;
 
 moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
   integration: true,
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:ticket',
+    this.store = module_registry(this.container, this.registry, ['model:ticket',
       'model:ticket-status', 'model:model-category', 'service:device/layout',
       'service:person-current']);
     translation.initialize(this);
     trans = this.container.lookup('service:i18n');
     run(() => {
-      store.push('person-current', PERSON_CURRENT.defaults());
-      store.push('model-category', {id: TICKET_CD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
-      store.push('model-category', {id: TICKET_CD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
-      store.push('model-category', {id: TICKET_CD.idThree, model_pk: TD.idOne, category_pk: CD.unusedId});
-      store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo});
-      store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId});
-      store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: null});
-      store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey});
-      store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwoKey});
-      store.push('ticket-status', {id: TD.statusThreeId, name: TD.statusThreeKey});
-      store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOneKey});
-      store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityTwoKey});
-      store.push('ticket-priority', {id: TD.priorityThreeId, name: TD.priorityThreeKey});
-      ticket = store.push('ticket', {id: TD.idOne, request: 'foo'});
+      this.store.push('person-current', PERSON_CURRENT.defaults());
+      this.store.push('model-category', {id: TICKET_CD.idOne, model_pk: TD.idOne, category_pk: CD.idOne});
+      this.store.push('model-category', {id: TICKET_CD.idTwo, model_pk: TD.idOne, category_pk: CD.idTwo});
+      this.store.push('model-category', {id: TICKET_CD.idThree, model_pk: TD.idOne, category_pk: CD.unusedId});
+      this.store.push('category', {id: CD.idOne, name: CD.nameOne, parent_id: CD.idTwo});
+      this.store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.unusedId});
+      this.store.push('category', {id: CD.unusedId, name: CD.nameThree, parent_id: null});
+      this.store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey});
+      this.store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwoKey});
+      this.store.push('ticket-status', {id: TD.statusThreeId, name: TD.statusThreeKey});
+      this.store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOneKey});
+      this.store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityTwoKey});
+      this.store.push('ticket-priority', {id: TD.priorityThreeId, name: TD.priorityThreeKey});
+      ticket = this.store.push('ticket', {id: TD.idOne, request: 'foo'});
+      this.model = ticket;
+      this.activities = [];
     });
     /* Desktop */
     const flexi = this.container.lookup('service:device/layout');
@@ -44,6 +46,9 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
     const width = breakpoints.find(bp => bp.name === 'desktop').begin + 5;
     flexi.set('width', width);
   },
+  afterEach() {
+    delete this.store;
+  }
 });
 
 test('validation on ticket request works', function(assert) {
@@ -51,9 +56,7 @@ test('validation on ticket request works', function(assert) {
   let modalDialogService = this.container.lookup('service:modal-dialog');
   modalDialogService.destinationElementId = 'request';
   var done = assert.async();
-  let statuses = store.find('ticket-status');
-  this.model = ticket;
-  this.activities = [];
+  let statuses = this.store.find('ticket-status');
   this.render(hbs`{{tickets/ticket-single model=model activities=activities}}`);
   const $component = this.$('.t-ticket-request-validator.invalid');
   assert.notOk($component.is(':visible'));
@@ -81,8 +84,6 @@ test('validation on ticket request works', function(assert) {
 });
 
 test('if save isRunning, btn is disabled', function(assert) {
-  this.set('model', ticket);
-  this.set('activities', []);
   // monkey patched.  Not actually passed to component but save.isRunning comes from save ember-concurrency task
   this.saveIsRunning = { isRunning: 'disabled' };
   this.permissions = ['change_ticket'];
@@ -96,10 +97,8 @@ test('if save isRunning, btn is disabled', function(assert) {
 });
 
 test('click status dropdown and choose status from dropdown', function(assert) {
-  let statuses = store.find('ticket-status');
+  let statuses = this.store.find('ticket-status');
   // line in the browser using the stop sign where this.get is undefined
-  this.set('model', ticket);
-  this.set('activities', []);
   this.render(hbs`{{tickets/ticket-single model=model activities=activities}}`);
   let $component = this.$('.t-ticket-status-select'); // actual component
   assert.equal($component.length, 1);
@@ -111,8 +110,6 @@ test('click status dropdown and choose status from dropdown', function(assert) {
 });
 
 test('click priority dropdown an choose priority from dropdown', function(assert) {
-  this.set('model', ticket);
-  this.set('activities', []);
   this.render(hbs`{{tickets/ticket-single model=model activities=activities}}`);
   let $component = this.$('.t-ticket-priority-select');
   assert.equal($component.length, 1);
@@ -127,10 +124,8 @@ test('permissions to "read only" show disabled input and select boxes', function
   let person = PERSON_CURRENT.defaults();
   person.permissions = person.permissions.filter((perm) => { return perm !== 'change_ticket'; });
   run(() => {
-    store.push('person-current', person);
+    this.store.push('person-current', person);
   });
-  this.set('model', ticket);
-  this.set('activities', []);
   this.render(hbs`{{tickets/ticket-single model=model activities=activities}}`);
   let $component = this.$('.t-ticket-status-select'); // actual component
   assert.equal($component.length, 1);
