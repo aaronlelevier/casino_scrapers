@@ -1,6 +1,8 @@
 #!/bin/bash -lx
 
 echo $(date -u) "EMBER UNIT AND INTEGRATION BUILD STARTED!"
+source ~/.bashrc
+node --version
 
 # Start at root of project
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"

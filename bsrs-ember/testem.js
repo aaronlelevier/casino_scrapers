@@ -5,7 +5,7 @@ module.exports = {
   "disable_watching": true,
   "parallel": 2,
   "launch_in_ci": [
-    "Firefox"
+    "Chrome"
   ],
   "launch_in_dev": [
     "Firefox",
