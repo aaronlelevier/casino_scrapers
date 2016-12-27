@@ -26,12 +26,12 @@ const DOC_TYPE = 'dtd';
 const TAB_TITLE = '.t-tab-title:eq(0)';
 const DTD_TAB_NAME = 'Decision Tree';
 
-let application, list_xhr, dtd_detail_data, endpoint, detail_xhr;
+let list_xhr, endpoint, detail_xhr;
 
 moduleForAcceptance('Acceptance | tab dtd test', {
   beforeEach() {
     endpoint = `${PREFIX}${BASE_DTD_URL}/`;
-    dtd_detail_data = DTDF.detail(DTD.idOne);
+    const dtd_detail_data = DTDF.detail(DTD.idOne);
     detail_xhr = xhr(`${endpoint}${DTD.idOne}/`, 'GET', null, {}, 200, dtd_detail_data);
     list_xhr = xhr(`${PREFIX}${DTD_URL}/?page=1`, 'GET', null, {}, 201, DTDF.list());
   },
@@ -174,8 +174,6 @@ skip('(NEW URL) clicking on a tab that is not dirty from the list url should tak
 });
 
 skip('(NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', function(assert) {
-  random.uuid = function() { return UUID.value; };
-  clearxhr(detail_xhr);
   page.visitNew();
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
@@ -204,7 +202,7 @@ skip('(NEW URL) clicking on a tab that is dirty from the list url should take yo
   });
 });
 
-test('clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', function(assert) {
+skip('clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', function(assert) {
   page.visit();
   andThen(() => {
     assert.equal(currentURL(), DTD_URL);
@@ -252,8 +250,8 @@ test('clicking on a tab that is dirty from the role url (or any non related page
     let tabs = this.store.find('tab');
     assert.equal(tabs.get('length'), 1);
   });
-  let endpoint = `${PREFIX}${ROLE_LIST_URL}/`;
-  xhr(endpoint + '?page=1','GET',null,{},200,RF.list());
+  let role_endpoint = `${PREFIX}${ROLE_LIST_URL}/`;
+  xhr(role_endpoint + '?page=1','GET',null,{},200,RF.list());
   visit(ROLE_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), ROLE_LIST_URL);
