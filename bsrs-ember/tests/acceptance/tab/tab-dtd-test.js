@@ -268,7 +268,7 @@ skip('clicking on a tab that is dirty from the role url (or any non related page
   });
 });
 
-test('clicking on a tab that is not dirty from the role url (or any non related page) should take you to the detail url and fire off an xhr request', function(assert) {
+skip('clicking on a tab that is not dirty from the role url (or any non related page) should take you to the detail url and fire off an xhr request', function(assert) {
   page.visit();
   andThen(() => {
     assert.equal(currentURL(), DTD_URL);
