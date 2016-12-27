@@ -26,6 +26,7 @@ export function hasPermission(_params, { permissions: permissions = [], resource
   // convert to string and if permissions change, then array will contain a diff string with opposite bool
   const key = permissions.sort().join('') + verb + resource;
   if (key && map[key]) {
+    // O(1)
     return map[key];
   } else {
     if (resource !== 'admin' && !RESOURCES_WITH_PERMISSION.includes(resource)) {
@@ -35,6 +36,7 @@ export function hasPermission(_params, { permissions: permissions = [], resource
     if (resource === 'admin') {
       return map[key] = adminPerms(permissions, verb);
     } else if (resource) {
+      // O(n)
       // Regex to swap out something like location-level noun to locationlevel as expected by backend
       return map[key] = permissions.includes(`${verb}_${resource.replace(/[-_]/g, '')}`);
     }

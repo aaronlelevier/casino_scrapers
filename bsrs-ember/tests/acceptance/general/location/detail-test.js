@@ -368,15 +368,17 @@ test('newly added addresses without a valid address or postal_code are ignored a
   page.addressPostalCodeThirdFillIn('1');
   triggerEvent('.t-address-postal-code2', 'keyup', {keyCode: 65});
   andThen(() => {
-    assert.equal($('.validated-input-error-dialog').length, 2);
-    // TODO: rely on emberi18ncpvalidations or roll our own
-    // assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.address'));
-    assert.notOk(page.addressZeroValidationErrorVisible);
-    assert.notOk(page.addressOneValidationErrorVisible);
-    assert.ok(page.addressTwoValidationErrorVisible);
-    assert.notOk(page.postalCodeZeroValidationErrorVisible);
-    assert.notOk(page.postalCodeOneValidationErrorVisible);
-    assert.ok(page.postalCodeTwoValidationErrorVisible);
+    waitFor(assert, () => {
+      assert.equal($('.validated-input-error-dialog').length, 2);
+      // TODO: rely on emberi18ncpvalidations or roll our own
+      // assert.equal($('.validated-input-error-dialog').text().trim(), t('errors.address'));
+      assert.notOk(page.addressZeroValidationErrorVisible);
+      assert.notOk(page.addressOneValidationErrorVisible);
+      assert.ok(page.addressTwoValidationErrorVisible);
+      assert.notOk(page.postalCodeZeroValidationErrorVisible);
+      assert.notOk(page.postalCodeOneValidationErrorVisible);
+      assert.ok(page.postalCodeTwoValidationErrorVisible);
+    });
   });
   page.addressPostalCodeThirdFillIn('');
   triggerEvent('.t-address-postal-code2', 'keyup', {keyCode: 65});
