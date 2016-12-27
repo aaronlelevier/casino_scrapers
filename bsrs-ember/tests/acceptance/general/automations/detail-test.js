@@ -427,37 +427,6 @@ test('add and delete an action', async function(assert) {
   assert.equal(page.actionTypeSelectedOne, t('power.select.select'));
 });
 
-test('select ticket assginee filter and update automation', async function(assert) {
-  await page.visitDetail();
-  assert.equal(currentURL(), DETAIL_URL);
-  assert.equal(find('.t-automation-pf-select .ember-power-select-selected-item').text().trim(), t(PFD.keyOne));
-  assert.equal(page.prioritySelectedOne.split(/\s+/)[1], t(TD.priorityOneKey));
-  xhr(`${AUTOMATION_ACTION_TYPES_URL}`, 'GET', null, {}, 200, AF.list_action_types());
-  await selectChoose('.t-automation-action-type-select:eq(0)', AATD.keyOneTrans);
-  assert.equal(find('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), t(AATD.keyOneTrans));
-  let personData = PF.search_power_select();
-  let personOneId = personData.results[0].id;
-  let personOneFullname = personData.results[0].fullname;
-  let keyword = 'a';
-  // xhr(`${PEOPLE_URL}person__icontains=e/`, 'GET', null, {}, 200, PF.search_power_select());
-  xhr(`${PEOPLE_URL}person__icontains=${keyword}/`, 'GET', null, {}, 200, personData);
-  await selectSearch('.t-automation-action-assignee-select', keyword);
-  await selectChoose('.t-automation-action-assignee-select', personOneFullname);
-  assert.equal(page.actionAssigneeSelectedOne, personOneFullname);
-  let payload = AF.put({
-    actions: [{
-      id: AAD.idOne,
-      type: AATD.idOne,
-      content: {
-        assignee: personOneId
-      }
-    }],
-  });
-  xhr(API_DETAIL_URL, 'PUT', payload, {}, 200, AF.list());
-  await generalPage.save();
-  assert.equal(currentURL(), AUTOMATION_LIST_URL);
-});
-
 test('visit detail and update an actions assignee', async function(assert) {
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);
@@ -500,7 +469,7 @@ test('get an action priority and update it to a new priority', async function(as
   clearxhr(detailXhr);
   const json = AF.detail();
   json.actions[0]['type'] = { id: AATD.idTwo, key: AATD.keyTwo };
-  json.actions[0]['priority'] = { id: TPD.idOne, name: TPD.keyOne };
+  json.actions[0]['priority'] = { id: TPD.idOne, name: TPD.nameOne };
   xhr(API_DETAIL_URL, 'GET', null, {}, 200, json);
   await page.visitDetail();
   assert.equal(currentURL(), DETAIL_URL);

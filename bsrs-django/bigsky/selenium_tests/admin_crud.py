@@ -407,7 +407,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         action_type_dropdown.click()
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
         time.sleep(1)
-        self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]//li[5]").click()
+        self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]//li[text() = 'Ticket: Priority']").click()
 
         # action2 - priority
         priority_dropdown = self.driver.find_element_by_class_name("t-ticket-priority-select")

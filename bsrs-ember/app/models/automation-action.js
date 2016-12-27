@@ -146,7 +146,10 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
         set(this, 'sendsms_fk', undefined);
         break;
       case ACTION_TICKET_CC:
-        this.remove_ticketcc(this.get('ticketcc').objectAt(0).get('id'));
+        const ticketcc = this.get('ticketcc');
+        if (ticketcc.get('length') > 0) {
+          this.remove_ticketcc(ticketcc.objectAt(0).get('id'));
+        }
         break;
     }
   },

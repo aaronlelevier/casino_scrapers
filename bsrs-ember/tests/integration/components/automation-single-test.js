@@ -180,6 +180,21 @@ test('selecting assignee shows empty select power select', function(assert) {
   assert.equal(model.get('action').objectAt(0).get('assignee'), undefined);
 });
 
+test('select assignee filter and updating automation', function(assert) {
+  model.add_action({id: '1'});
+  this.model = model;
+  this.render(hbs `{{automations/automation-single model=model}}`);
+  clickTrigger('.t-automation-action-type-select');  
+  nativeMouseUp(`.ember-power-select-option:contains(${ATD.keyOne})`);
+  assert.equal(this.$('.t-automation-action-type-select .ember-power-select-selected-item:eq(0)').text().trim(), trans.t(ATD.keyOne), 'selected type');
+  clickTrigger('.t-automation-action-assignee-select');  
+  typeInSearch('a');
+  return wait().then(() => {
+    nativeMouseUp('.ember-power-select-option:eq(0)');
+    assert.equal(this.$('.t-automation-action-assignee-select .ember-power-select-selected-item:eq(0)').text().trim(), PD.fullname, 'selected person');
+  });
+});
+
 test('select sendsms filter and update automation', function(assert) {
   model.add_action({id: '1'});
   this.model = model;

@@ -802,7 +802,7 @@ test('deserialize single - priority - different id', assert => {
   assert.ok(automation.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(automation.get('action').objectAt(0).get('priority_fk'), TPD.idOne);
   assert.equal(automation.get('action').objectAt(0).get('priority').get('id'), TPD.idOne);
-  assert.equal(automation.get('action').objectAt(0).get('priority').get('name'), TPD.keyOne);
+  assert.equal(automation.get('action').objectAt(0).get('priority').get('name'), TPD.nameOne);
   // deserialize
   const json = AF.detail(AD.idOne, { type: 'priority', id: TPD.idTwo, name: TPD.nameTwo });
   run(() => {

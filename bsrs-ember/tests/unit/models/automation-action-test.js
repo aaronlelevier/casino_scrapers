@@ -504,10 +504,10 @@ test('type validation - ticketcc - if the type is ticketcc, a related ticketcc i
 test('action has a related priority', assert => {
   run(() => {
     action = store.push('automation-action', {id: AAD.idOne, priority_fk: ATD.idOne});
-    store.push('ticket-priority', {id: TPD.idOne, key: TPD.keyOne, actions: [AAD.idOne]});
+    store.push('ticket-priority', {id: TPD.idOne, name: TPD.nameOne, actions: [AAD.idOne]});
   });
   assert.equal(action.get('priority').get('id'), TPD.idOne);
-  assert.equal(action.get('priority.key'), TPD.keyOne);
+  assert.equal(action.get('priority.name'), TPD.nameOne);
 });
 
 test('change_priority and dirty tracking', assert => {
@@ -657,6 +657,16 @@ test('remove_related will remove the current belongs_to or m2m', assert => {
     store.push('related-person', {id: PD.idOne, actions: [AAD.idOne]});
   });
   assert.equal(action.get('ticketcc').objectAt(0).get('id'), PD.idOne);
+  assert.equal(action.get('type').get('key'), ATD.keySeven);
+  action.remove_related();
+  assert.equal(action.get('ticketcc').get('length'), 0);
+
+  action.remove_type(ATD.idSeven);
+  run(() => {
+    action = store.push('automation-action', {id: AAD.idOne, type_fk: ATD.idSeven});
+    store.push('automation-action-type', {id: ATD.idSeven, key: ATD.keySeven, actions: [AAD.idOne]});
+  });
+  assert.equal(action.get('ticketcc').get('length'), 0);
   assert.equal(action.get('type').get('key'), ATD.keySeven);
   action.remove_related();
   assert.equal(action.get('ticketcc').get('length'), 0);

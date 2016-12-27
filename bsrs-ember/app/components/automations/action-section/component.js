@@ -1,11 +1,24 @@
 import Ember from 'ember';
 import injectRepo from 'bsrs-ember/utilities/inject';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-import { ACTION_SEND_EMAIL, ACTION_SEND_SMS, ACTION_ASSIGNEE, ACTION_PRIORITY, ACTION_STATUS, ACTION_TICKET_REQUEST, ACTION_TICKET_CC } from 'bsrs-ember/models/automation-action';
+import { ACTION_ASSIGNEE, ACTION_PRIORITY, ACTION_SEND_EMAIL, ACTION_SEND_SMS,
+  ACTION_STATUS, ACTION_TICKET_REQUEST, ACTION_TICKET_CC } from 'bsrs-ember/models/automation-action';
 
 export default Ember.Component.extend({
   repository: injectRepo('automation'),
   uuid: injectUUID('uuid'),
+  filterActions(results) {
+    const automation = this.get('model');
+    const actions = automation.get('action');
+    const automation_action_type_ids = actions.map(action => action.get('type.id'));
+    return results.filter((item) => {
+      const key = item.key;
+      if (key === ACTION_PRIORITY || key === ACTION_STATUS || key === ACTION_ASSIGNEE || key === ACTION_TICKET_REQUEST || key === ACTION_TICKET_CC) {
+        return automation_action_type_ids.includes(item.id) ? false : true;
+      }
+      return true;
+    });
+  },
   actions: {
     /**
      * @method addAction
@@ -43,7 +56,8 @@ export default Ember.Component.extend({
     },
     fetchActions() {
       this.get('repository').getActionTypes().then((response) => {
-        this.set('optionz', response.results);
+        const results = this.filterActions(response.results);
+        this.set('optionz', results);
       });
     },
     /** 
