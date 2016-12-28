@@ -234,7 +234,7 @@ let Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMi
       last_name: this.get('last_name'),
       role: this.get('role').get('id'),
       status: this.get('status_fk') || this.get('status_repo').get_default().get('id'),
-      locale: this.get('locale.id') || this.get('locale_repo').get_default().get('id'),
+      locale: this.get('locale.id'),
     };
   },
   serialize() {
@@ -271,7 +271,7 @@ let Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMi
       locations: this.get('locations_ids'),
       emails: emails,
       phone_numbers: phonenumbers,
-      locale: this.get('locale.id'),
+      locale: this.get('locale.id') || null,
       password: this.get('password'),
       photo: this.get('photo.id'),
     };

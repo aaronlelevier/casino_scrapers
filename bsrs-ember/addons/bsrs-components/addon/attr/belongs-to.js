@@ -104,6 +104,7 @@ var change_belongs_to = function(_ownerName) {
     }
     
     /* Find existing and update fk array w/o parent model id */
+    /* Will remove if passed in null */
     const related = this_override_property_getter || name.replace('-', '_');
     const current_related = this.get(related);
     if(current_related) {

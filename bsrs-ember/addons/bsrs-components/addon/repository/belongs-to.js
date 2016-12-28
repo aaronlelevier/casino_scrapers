@@ -20,7 +20,7 @@ let belongs_to_extract = function(related, store, parentModel, ownerName, parent
 
   // DETAIL: belongs_to_extract(response.priority_fk, store, ticket, 'priority', 'ticket', 'tickets');
   const checkType = (related && typeof related === 'object') ? related.id : related;
-  if (!!related && parentModel.get('detail') && parentModel.get(`${ownerName}.id`) !== checkType) {
+  if (parentModel.get('detail') && parentModel.get(`${ownerName}.id`) !== checkType) {
     return parentModel[`change_${ownerName}`](related);
     
   // LIST: belongs_to_extract(status_json, store, ticket, 'status', 'ticket', 'tickets');

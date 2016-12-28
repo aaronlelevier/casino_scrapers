@@ -41,6 +41,8 @@ moduleFor('deserializer:person', 'Unit | Deserializer | person', {
     subject = PersonDeserializer.create({simpleStore: this.store, uuid: uuid, LocationDeserializer: location_deserializer});
     run(() => {
       status = this.store.push('status', {id: SD.activeId, name: SD.activeName, people: [PD.idOne]});
+      // need to push in locale to emulate bootstrapped locales
+      this.store.push('locale', {id: LOCALED.idOne});
       this.store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.idOne], location_level_fk: LLD.idOne});
       this.store.push('location-level', {id: LLD.idOne, name: LLD.nameOne, roles: [RD.idOne]});
       person = this.store.push('person', {id: PD.idOne, status_fk: SD.activeId, role_fk: PD.role});
@@ -104,7 +106,7 @@ test('person can be deserialized without a locale (existing)', function(assert) 
     subject.deserialize(response, PD.idOne);
   });
   assert.equal(person.get('locale_fk'), undefined);
-  assert.equal(person.get('locale').get('id'), undefined);
+  assert.equal(person.get('locale.id'), undefined);
   assert.equal(locale.get('people').length, 0);
   assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
 });

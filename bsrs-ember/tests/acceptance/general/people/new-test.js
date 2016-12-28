@@ -39,8 +39,7 @@ moduleForAcceptance('Acceptance | general person new test', {
       middle_initial: PD.middle_initial,
       last_name: PD.last_name,
       role: PD.role,
-      status: SD.activeId,
-      locale: LD.idOne
+      status: SD.activeId
     };
     list_xhr = xhr(PEOPLE_URL + '?page=1','GET',null,{},200,PF.empty());
     detailEndpoint = PEOPLE_URL;

@@ -142,7 +142,7 @@ var PersonDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin, 
       run(() => {
         person = store.push('person', model);
         // locale
-        this.setup_locale({id: locale_id}, person);
+        this.setup_locale(locale_id, person);
         // photo
         this.setup_photo(photo, person);
         // status

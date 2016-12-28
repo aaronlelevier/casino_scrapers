@@ -18,9 +18,11 @@ var LocationMixin = Ember.Mixin.create({
   add_location(location) {
     // setup llevel w/ location
     const store = this.get('simpleStore');
-    const location_store = store.push('location', location);
-    location_store.change_location_level(location.location_level_fk);
-    this.add_locations_container(location);
+    run(() => {
+      const location_store = store.push('location', location);
+      location_store.change_location_level(location.location_level_fk);
+      this.add_locations_container(location);
+    });
   },
   add_locations_container: add_many_to_many('locations', 'person'),
   saveLocations() {
