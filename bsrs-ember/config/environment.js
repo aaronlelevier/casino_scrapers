@@ -64,6 +64,7 @@ module.exports = function(environment) {
 
     ENV.DEBOUNCE_TIMEOUT_INTERVAL = 15;
     ENV.APP.ANIMATION_TIME = 15;
+    ENV.APP.POLL_INTERVAL = 15;
     ENV.APP.VALIDATION_TIMEOUT_INTERVAL = 15;
     ENV.APP.emberModalDialog = {
       modalRootElementId: 'ember-testing'
