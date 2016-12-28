@@ -116,8 +116,6 @@ PERSON_FIELDS = ('id', 'username', 'first_name', 'middle_initial', 'last_name',
 PERSON_DETAIL_FIELDS = PERSON_FIELDS + ('employee_id', 'locale', 'locations', 'emails', 'phone_numbers',
                                         'addresses', 'password_one_time')
 
-PERSON_DETAIL_FIELDS_WITH_STATUS = PERSON_DETAIL_FIELDS + ('status',)
-
 
 class PersonCreateSerializer(RemovePasswordSerializerMixin, BaseCreateSerializer):
     '''
@@ -208,7 +206,7 @@ class PersonCurrentSerializer(PersonDetailSerializer):
 
     class Meta:
         model = Person
-        fields = PERSON_DETAIL_FIELDS_WITH_STATUS + ('all_locations_and_children',
+        fields = PERSON_DETAIL_FIELDS + ('all_locations_and_children',
                                          'categories',)
 
 
@@ -231,7 +229,7 @@ class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSeriali
         model = Person
         validators = [RoleLocationValidator('role', 'locations')]
         write_only_fields = ('password',)
-        fields = PERSON_DETAIL_FIELDS_WITH_STATUS + ('auth_amount', 'auth_currency', 'password')
+        fields = PERSON_DETAIL_FIELDS + ('auth_amount', 'auth_currency', 'password', 'status')
 
     def update(self, instance, validated_data):
         # Pasword

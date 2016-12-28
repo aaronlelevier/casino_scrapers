@@ -423,6 +423,7 @@ class PersonDetailTests(MockPermissionsAllowAnyMixin, APITestCase):
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.person.id))
+        self.assertNotIn('status', data)
 
     def test_current__all_locations_and_children(self):
         child_location = mommy.make(Location)

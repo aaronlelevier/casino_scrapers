@@ -7,7 +7,6 @@ import moment from 'moment';
 
 let ApplicationRoute = Route.extend({
   RoleDeserializer: injectDeserializer('role'),
-  PersonDeserializer: injectDeserializer('person'),
   personCurrent: inject.service(),
   translationsFetcher: inject.service(),
   djangoLogin: inject.service(),
@@ -82,25 +81,20 @@ let ApplicationRoute = Route.extend({
     locale_list.forEach((model) => {
       store.push('locale', model);
     });
+
+    // TIMEZONE
     let zone = moment.tz.guess();
     if (!zone) {
       zone = 'America/Los_Angeles';
     }
     this.get('moment').changeTimeZone(zone);
-    return this.get('personCurrent').fetch()
-    .then((person) => {
-      let current_locale = store.find('locale', person.locale);
-      config.i18n.currentLocale = current_locale.get('locale');
-      if (!person.timezone) {
-        person.timezone = zone;
-      }
-      // Person service needs timezone for translations request
-      this.get('personCurrent').set('timezone', zone);
-      // Set current user
-      store.push('person-current', person);
-      // Push 'logged in' Person to store
-      this.get('PersonDeserializer').deserialize(person, person.id);
-    });
+
+    // Person service needs timezone for translations request
+    this.get('personCurrent').set('timezone', zone);
+
+    // FETCH PERSON CURRENT
+    const pc = this.get('personCurrent');
+    return pc.fetch().then(pc.setupPersonCurrent.bind(pc));
   },
   model() {
     // Prior hook resolves after current person's session request is made
@@ -120,6 +114,21 @@ let ApplicationRoute = Route.extend({
   },
   setupController(controller/*, model is not needed */) {
     controller.set('tabs', this.get('simpleStore').find('tab'));
+  },
+  /**
+   * start polling for person current
+   * @method activate
+   */
+  activate() {
+    const personCurrent = this.get('personCurrent');
+    personCurrent.start(this, personCurrent.fetch);
+  },
+  /**
+   * @method deactivate
+   */
+  deactivate() {
+    const personCurrent = this.get('personCurrent');
+    personCurrent.stop();
   },
   handleApplicationNotice(xhr, model) {
     if (xhr.status >= 400) {

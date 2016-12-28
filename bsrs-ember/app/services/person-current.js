@@ -2,9 +2,11 @@ import Ember from 'ember';
 import { SESSION_URL } from 'bsrs-ember/utilities/urls';
 import { eachPermission } from 'bsrs-ember/utilities/permissions';
 import { RESOURCES_WITH_PERMISSION, PERMISSION_PREFIXES } from 'bsrs-ember/utilities/constants';
+import config from 'bsrs-ember/config/environment';
+import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
 const {
-  Mixin, Service, RSVP, computed, inject, get, set
+  Mixin, Service, RSVP, computed, inject, get, set, run
 } = Ember;
 
 /*
@@ -60,6 +62,7 @@ let PermissionsMixin = Mixin.create(setupPermissions());
 */
 export default Service.extend(PermissionsMixin, {
   simpleStore: inject.service(),
+  PersonDeserializer: injectDeserializer('person'),
 
   /*
     @property model
@@ -98,5 +101,47 @@ export default Service.extend(PermissionsMixin, {
       .then( (data) => resolve(data) )
       .catch( (error) => reject(error) );
     });
-  }
+  },
+
+  /* LONG POLLING */
+  time: config.POLL_INTERVAL,
+  running: null,
+  /**
+   * set running property and call schedule function
+   * @method start
+   */
+  start(context, func) {
+    set(this, 'running', this.schedule(context, func));
+  },
+  /**
+   * set cancel running property.  Only for tests
+   * @method stop
+   */
+  stop() {
+    run.cancel(this.get('running'));
+  },
+  /**
+   * recursive loop to set running property and then call itself
+   * must apply function after setting running to avoid recursive loop
+   * @method schedule
+   */
+  schedule(context, func) {
+    return run.later(this, () => {
+      // keep setting the running property to the new function
+      set(this, 'running', this.schedule(context, func));
+      func.apply(context).then(this.setupPersonCurrent.bind(this));
+    }, config.APP.POLL_INTERVAL);
+  },
+  setupPersonCurrent(person) {
+    const store = this.get('simpleStore');
+    const current_locale = store.find('locale', person.locale);
+    config.i18n.currentLocale = current_locale.get('locale');
+    if (!person.timezone) {
+      person.timezone = this.get('timezone'); 
+    }
+    // Set current user
+    store.push('person-current', {id: person.id, permissions: person.permissions});
+    // Push 'logged in' Person to store
+    this.get('PersonDeserializer').deserialize(person, person.id);
+  },
 });

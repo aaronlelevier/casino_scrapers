@@ -192,7 +192,11 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
 
 
 class SessionView(APIView):
-
+    """
+    Using Person Deserializer.  Client should not expect a resource identifier
+    object in the deserializer.  It should just use an fk identifier for
+    bootstrapped resources.
+    """
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
