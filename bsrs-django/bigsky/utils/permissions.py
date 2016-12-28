@@ -13,7 +13,8 @@ class CrudPermissions(permissions.BasePermission):
         'GET': 'view',
         'POST': 'add',
         'PUT': 'change',
-        'DELETE': 'delete'
+        'DELETE': 'delete',
+        'OPTIONS':''
     }
 
     def has_permission(self, request, view):
