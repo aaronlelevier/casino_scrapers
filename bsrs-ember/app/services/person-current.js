@@ -124,6 +124,8 @@ export default Service.extend(PermissionsMixin, {
    * recursive loop to set running property and then call itself
    * must apply function after setting running to avoid recursive loop
    * @method schedule
+   * @param context
+   * @param func - async function
    */
   schedule(context, func) {
     return run.later(this, () => {

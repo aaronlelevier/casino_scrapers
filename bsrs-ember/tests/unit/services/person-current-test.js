@@ -10,16 +10,25 @@ import { RESOURCES_WITH_PERMISSION } from 'bsrs-ember/utilities/constants';
 
 const PC = PERSON_CURRENT.defaults();
 
+let person_current, person_deserializer;
+
 moduleFor('service:person-current', 'Unit | Service | person current', {
   needs: ['model:person-current', 'model:location-level', 'model:location', 'model:location-status', 'model:person-location', 
     'service:simpleStore', 'model:locale', 'model:person', 'model:status', 'service:translationsFetcher', 'service:i18n', 'validator:presence', 
     'validator:unique-username', 'validator:length', 'validator:format', 'validator:has-many'],
   beforeEach() {
     this.store = this.container.lookup('service:simpleStore');
-    this.store.push('person-current', PC);
+    person_current = this.store.push('person-current', PC);
+
+    //no-op deserialize function
+    person_deserializer = PersonDeserializer.create();
+    this.deserialize = person_deserializer.deserialize;
+    person_deserializer.deserialize = () => {};
   },
   afterEach() {
     delete this.store;
+    person_deserializer.deserialize = this.deserialize;
+    delete this.deserialize;
   },
 });
 
@@ -91,18 +100,19 @@ test('has computed rights from the permissions list', function(assert) {
 test('start sets running object to a function and stops', function(assert) {
   assert.expect(1);
   const done = assert.async();
-  const service = this.subject();
+  const service = this.subject({PersonDeserializer: person_deserializer});
   const func = function() {
     assert.ok(true);
     service.stop();
     done();
+    return new Ember.RSVP.Promise(resolve => resolve(person_current));
   };
   service.start(this, func);
 });
 
 test('schedule is recursive', function(assert) {
   assert.expect(2);
-  const service = this.subject();
+  const service = this.subject({PersonDeserializer: person_deserializer});
   let done = assert.async();
   let polls = 0;
   let spy = sinon.spy(service, 'schedule');
@@ -116,6 +126,7 @@ test('schedule is recursive', function(assert) {
       spy.restore();
       done();
     }
+    return new Ember.RSVP.Promise(resolve => resolve(person_current));
   };
   service.start(this, func);
 });
@@ -123,6 +134,7 @@ test('schedule is recursive', function(assert) {
 test('setupPersonCurrent will call deserialize on a person', function(assert) {
   assert.expect(2);
   const person_deserializer = PersonDeserializer.create();
+  //no-op deserialize function
   person_deserializer.deserialize = function() {
     assert.ok(true);
   };
