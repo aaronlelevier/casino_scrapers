@@ -113,7 +113,9 @@ def create_single_person(name=None, role=None, location=None, status=None, local
             middle_initial = name[:1]
             last_name = name
     else:
-        first_name, middle_initial, last_name = random.choice(person_names.ALL)
+        first_name = create._generate_chars()
+        middle_initial = create._generate_chars()[0]
+        last_name = create._generate_chars()
 
     role = role or create_role()
     status = status or create_person_status(random.choice(PERSON_STATUSES))
