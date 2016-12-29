@@ -61,8 +61,10 @@ class RoleCreateUpdateSerializer(BaseCreateSerializer):
         return super(RoleCreateUpdateSerializer, self).update(instance, validated_data)
 
     def _add_permissions(self, instance, init_perms, post_perms):
-        update_to_true_perms = [k for k,v in post_perms.items()
-                                  if v and post_perms[k] != init_perms.get(k, False)]
+        """
+        Frontend passes all permission, but we only add truthy permissions
+        """
+        update_to_true_perms = [k for k,v in post_perms.items() if v]
 
         self._add_permissions_to_update(instance, update_to_true_perms)
 
@@ -72,6 +74,10 @@ class RoleCreateUpdateSerializer(BaseCreateSerializer):
             instance.group.permissions.set([p for p in perms])
 
     def _remove_permissions(self, instance, init_perms, post_perms):
+        """
+        init_perms is queried from db and returns only truthy perms
+        M2M joins dont exist if falsey permissions on role
+        """
         update_to_false_perms = [k for k,v in post_perms.items()
                                    if not v and post_perms[k] != init_perms.get(k, False)]
 

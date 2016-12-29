@@ -203,47 +203,40 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
         )
 
     def test_permissions__from_false_to_true(self):
+        self.assertNotIn('add_ticket', self.role.permissions)
+        self.assertNotIn('change_ticket', self.role.permissions)
         self.data['permissions'].update({
             'add_ticket': True,
             'change_ticket': True
         })
-        for k,v in self.role.permissions.items():
-            self.assertFalse(v, "{} != False".format(k))
 
         response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
             self.data, format='json')
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        for k,v in data['permissions'].items():
-            if k in ['add_ticket', 'change_ticket']:
-                self.assertTrue(v, "{}: {} != True".format(k,v))
-            else:
-                self.assertFalse(v, "{}: {} != False".format(k,v))
+        self.assertTrue(self.role.permissions['add_ticket'])
+        self.assertTrue(self.role.permissions['change_ticket'])
 
     def test_permissions__from_true_to_false(self):
         # role's initial perms
         perms = Permission.objects.filter(codename__in=['add_ticket', 'change_ticket'])
         self.role.group.permissions.set([p for p in perms])
-        self.assertEqual(self.role.group.permissions.count(), 2)
+        # pre-test
+        self.assertTrue(self.role.permissions['add_ticket'])
+        self.assertTrue(self.role.permissions['change_ticket'])
         # remove 'change_ticket' only
-        self.data['permissions'].update({
-            'add_ticket': True,
-            'change_ticket': False
-        })
+        self.data['permissions'] = {
+            'add_ticket': True
+        }
 
         response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
             self.data, format='json')
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        for k,v in data['permissions'].items():
-            if k == 'add_ticket':
-                self.assertTrue(v, "{}: {} != True".format(k,v))
-            else:
-                self.assertFalse(v, "{}: {} != False".format(k,v))
-        # check db
-        self.assertEqual(self.role.group.permissions.count(), 1)
+        self.assertTrue(data['permissions']['add_ticket'])
+        self.assertNotIn('change_ticket', data['permissions'])
 
     def test_permissions__no_change__all_false(self):
         self.assertEqual(self.role.group.permissions.count(), 0)
@@ -255,21 +248,52 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(data['permissions'] == self.data['permissions'])
 
-    def test_permissions__no_change__true_and_false_mixed(self):
-        perms = Permission.objects.filter(codename__in=['add_ticket', 'change_ticket'])
+    def test_permissions__add_true_to_existing(self):
+        perms = Permission.objects.filter(codename__in=['add_ticket'])
         self.role.group.permissions.set([p for p in perms])
-        self.assertEqual(self.role.group.permissions.count(), 2)
-        self.data['permissions'].update({
+        # pre-test
+        self.assertTrue(self.role.permissions['add_ticket'])
+        self.assertNotIn('change_ticket', self.role.permissions)
+        self.data['permissions'] = {
             'add_ticket': True,
             'change_ticket': True
-        })
+        }
+
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(self.role.permissions['add_ticket'])
+        self.assertTrue(self.role.permissions['change_ticket'])
+
+    def test_permissions__send_true_for_true_perm_and_it_is_unaffected(self):
+        perms = Permission.objects.filter(codename__in=['add_ticket'])
+        self.role.group.permissions.set([p for p in perms])
+        # pre-test
+        self.assertTrue(self.role.permissions['add_ticket'])
+        self.data['permissions'] = {
+            'add_ticket': True
+        }
+
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(self.role.permissions['add_ticket'])
+
+    def test_permissions__send_false_for_false_perm_and_it_is_unaffected(self):
+        self.assertEqual(self.role.group.permissions.count(), 0)
+        self.data['permissions'] = {
+            'add_ticket': False
+        }
 
         response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
             self.data, format='json')
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertTrue(data['permissions'] == self.data['permissions'])
+        self.assertNotIn('add_ticket', data['permissions'])
+        self.assertEqual(self.role.group.permissions.count(), 0)
 
 
 class RoleRouteDataTests(RoleSetupMixin, APITestCase):
