@@ -69,4 +69,7 @@
   .ember-power-select-status-icon {
     opacity: 0;
   }
+  [role=button]{
+    cursor: default;
+  }
 }

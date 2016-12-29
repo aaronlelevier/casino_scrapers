@@ -14,14 +14,40 @@ test('it returns false if permissions does not contain passed in strings', funct
   assert.notOk(result);
 });
 
-test('if resource is admin, then checks permissions if contains all resources for view', function(assert) {
-  let result = hasPermission([], { permissions: ['view_person', 'view_category', 'view_role', 'view_location', 
+test('if resource is admin, then checks permissions if contains any resources for view', function(assert) {
+  let result;
+  result = hasPermission([], { permissions: ['view_ticket'], verb: 'view', resource: 'admin'});
+  assert.notOk(result);
+  result = hasPermission([], { permissions: ['view_person'], verb: 'view', resource: 'admin'});
+  assert.ok(result);
+  result = hasPermission([], { permissions: ['view_category'], verb: 'view', resource: 'admin'});
+  assert.ok(result);
+  result = hasPermission([], { permissions: ['view_role'], verb: 'view', resource: 'admin'});
+  assert.ok(result);
+  result = hasPermission([], { permissions: ['view_location'], verb: 'view', resource: 'admin'});
+  assert.ok(result);
+  result = hasPermission([], { permissions: ['view_locationlevel'], verb: 'view', resource: 'admin'});
+  assert.ok(result);
+  result = hasPermission([], { permissions: ['view_person', 'view_category', 'view_role', 'view_location',
     'view_locationlevel'], verb: 'view', resource: 'admin'});
   assert.ok(result);
 });
 
-test('if resource is admin, then checks permissions if contains all resources for add', function(assert) {
-  let result = hasPermission([], { permissions: ['add_person', 'add_category', 'add_role', 'add_location', 
+test('if resource is admin, then checks permissions if contains any resources for add', function(assert) {
+  let result;
+  result = hasPermission([], { permissions: ['add_ticket'], verb: 'add', resource: 'admin'});
+  assert.notOk(result);
+  result = hasPermission([], { permissions: ['add_person'], verb: 'add', resource: 'admin'});
+  assert.ok(result);
+  result = hasPermission([], { permissions: ['add_category'], verb: 'add', resource: 'admin'});
+  assert.ok(result);
+  result = hasPermission([], { permissions: ['add_role'], verb: 'add', resource: 'admin'});
+  assert.ok(result);
+  result = hasPermission([], { permissions: ['add_location'], verb: 'add', resource: 'admin'});
+  assert.ok(result);
+  result = hasPermission([], { permissions: ['add_locationlevel'], verb: 'add', resource: 'admin'});
+  assert.ok(result);
+  result = hasPermission([], { permissions: ['add_person', 'add_category', 'add_role', 'add_location',
     'add_locationlevel'], verb: 'add', resource: 'admin'});
   assert.ok(result);
 });

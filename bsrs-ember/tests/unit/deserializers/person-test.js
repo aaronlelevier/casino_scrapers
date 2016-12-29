@@ -28,10 +28,10 @@ const PD = PERSON_DEFAULTS.defaults();
 let subject, uuid, location_deserializer, location_level_deserializer, status, locale, person, role;
 
 moduleFor('deserializer:person', 'Unit | Deserializer | person', {
-  needs: ['model:person', 'model:random','model:uuid', 'model:person-list', 'model:role', 'model:person-location','model:location', 
-    'model:location-level','model:email', 'model:email-type', 'model:phonenumber', 'model:phone-number-type', 'model:person-join-phonenumber', 
-    'model:person-join-email', 'service:person-current','service:translations-fetcher', 'service:i18n', 'model:status', 'model:person-status-list', 
-    'model:location-status', 'model:locale', 'model:attachment', 'model:currency', 'validator:presence', 'validator:unique-username', 'validator:length', 
+  needs: ['model:person', 'model:random','model:uuid', 'model:person-list', 'model:role', 'model:person-location','model:location',
+    'model:location-level','model:email', 'model:email-type', 'model:phonenumber', 'model:phone-number-type', 'model:person-join-phonenumber',
+    'model:person-join-email', 'service:person-current','service:translations-fetcher', 'service:i18n', 'model:status', 'model:person-status-list',
+    'model:location-status', 'model:locale', 'model:attachment', 'model:currency', 'validator:presence', 'validator:unique-username', 'validator:length',
     'validator:format', 'validator:has-many'],
   beforeEach() {
     this.store = module_registry(this.container, this.registry);

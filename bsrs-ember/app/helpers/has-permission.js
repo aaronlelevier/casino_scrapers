@@ -6,8 +6,8 @@ import { RESOURCES_WITH_PERMISSION } from 'bsrs-ember/utilities/constants';
  * @function hasPermission
  */
 function adminPerms(perms, verb) {
-  if (perms.includes(`${verb}_person`) && perms.includes(`${verb}_role`) && perms.includes(`${verb}_category`) && 
-    perms.includes(`${verb}_location`) && perms.includes(`${verb}_locationlevel`)) {
+  if (perms.includes(`${verb}_person`) || perms.includes(`${verb}_role`) || perms.includes(`${verb}_category`) ||
+    perms.includes(`${verb}_location`) || perms.includes(`${verb}_locationlevel`)) {
       return true;
     }
   return false;

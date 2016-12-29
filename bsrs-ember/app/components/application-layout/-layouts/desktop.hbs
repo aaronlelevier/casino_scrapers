@@ -1,10 +1,12 @@
 <div class="bs-desktop">
   <header class="main">
-    {{nav-bar}}
+    {{nav-bar
+      permissions=permissions
+    }}
   </header>
-  {{tab-list 
-    tabs=tabs 
-    linkToNew=linkToNew 
+  {{tab-list
+    tabs=tabs
+    linkToNew=linkToNew
     linkToNew=linkToNew
     closeTabMaster=(action "closeTabMaster")
     permissions=permissions

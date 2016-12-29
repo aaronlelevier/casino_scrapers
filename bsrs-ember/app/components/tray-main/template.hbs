@@ -14,10 +14,10 @@
         {{/link-to}}
       </li>
       {{#if (has-permission permissions=permissions resource="admin" verb="view")}}
-      <li>{{#link-to "admin" class="t-nav-admin"}}
-        <span>{{fa-icon "cog"}}</span>
-        {{/link-to}}
-      </li>
+        <li>{{#link-to "admin" class="t-nav-admin"}}
+          <span>{{fa-icon "cog"}}</span>
+          {{/link-to}}
+        </li>
       {{/if}}
     </ul>
   </nav>

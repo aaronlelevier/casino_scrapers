@@ -29,6 +29,16 @@ test('navigating to unkown route will redirect to dashboard', (assert) => {
   });
 });
 
+test('if permissions can view admin, then show icon', function(assert) {
+  run(() => {
+    this.store.push('person-current', {id: PD.idOne, permissions: ['view_person']});
+  });
+  generalPage.visitDashboard();
+  andThen(() => {
+    assert.equal(find('.t-nav-admin').length, 1);
+  });
+});
+
 test('if permissions cant view admin, then doesnt show icon', function(assert) {
   run(() => {
     this.store.push('person-current', {id: PD.idOne, permissions: ['view_ticket']});
@@ -36,5 +46,25 @@ test('if permissions cant view admin, then doesnt show icon', function(assert) {
   generalPage.visitDashboard();
   andThen(() => {
     assert.equal(find('.t-nav-admin').length, 0);
+  });
+});
+
+test('if permissions can view ticket, then menu option is visible', function(assert) {
+  run(() => {
+    this.store.push('person-current', {id: PD.idOne, permissions: ['view_ticket']});
+  });
+  generalPage.visitDashboard();
+  andThen(() => {
+    assert.equal(find('.t-nav-tickets').length, 1);
+  });
+});
+
+test('if permissions cant view tickets, then doesnt show ticket menu option', function(assert) {
+  run(() => {
+    this.store.push('person-current', {id: PD.idOne, permissions: []});
+  });
+  generalPage.visitDashboard();
+  andThen(() => {
+    assert.equal(find('.t-nav-tickets').length, 0);
   });
 });
