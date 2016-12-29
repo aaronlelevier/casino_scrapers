@@ -1,7 +1,6 @@
 import Ember from 'ember';
 
-var RoleType = Ember.Object.extend({
-});
+var RoleType = Ember.Object.extend();
 
 export default RoleType;
 

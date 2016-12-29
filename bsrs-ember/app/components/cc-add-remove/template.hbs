@@ -1,2 +1,2 @@
-<span class="activity-icon">{{fa-icon "user"}}</span>
-{{ticket-activity-creator-link activity=activity}} {{begString}} {{#each ccs as |cc|}}{{#link-to 'admin.people.person' cc.id class="t-ticket-cc-add-remove"}}{{cc.fullname}}{{/link-to}} {{/each}}{{middle}} <span class="activity-timestamp t-activity-timestamp" title="{{fulltime}}">{{timestamp}}</span>
+<span class="activity-icon" data-test-id="activity-icon">{{fa-icon "users"}}</span>
+{{ticket-activity-creator-link activity=activity}} {{begString}}{{oxford-comma array=ccs prop="fullname" linkto="admin.people.person" classItem="t-ticket-cc-add-remove"}}{{middle}} <span class="activity-timestamp t-activity-timestamp" title="{{fulltime}}">{{moment-from-now activity.created interval=60000}}</span>

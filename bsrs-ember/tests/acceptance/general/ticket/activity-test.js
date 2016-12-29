@@ -52,7 +52,7 @@ test('can deep link to the person who created the activity', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
+    assert.equal(find(ACTIVITY_ITEMS).length, 2);
   });
   xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail());
   click('.t-link');
@@ -69,7 +69,7 @@ test('can deep link to new assignee', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
+    assert.equal(find(ACTIVITY_ITEMS).length, 2);
   });
   xhr(`${PEOPLE_URL}${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
   click('.t-to-from-new');
@@ -83,7 +83,7 @@ test('can deep link to old assignee', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
+    assert.equal(find(ACTIVITY_ITEMS).length, 2);
   });
   xhr(`${PEOPLE_URL}${PD.idSearch}/`, 'GET', null, {}, 200, PF.detail(PD.idSearch));
   click('.t-to-from-old');
@@ -97,7 +97,7 @@ test('deep links to the person who created the record (to-from)', function(asser
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
+    assert.equal(find(ACTIVITY_ITEMS).length, 2);
   });
   xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
   click('.t-link');
@@ -111,7 +111,7 @@ test('deep links to the automation that created the record (to-from)', function(
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
+    assert.equal(find(ACTIVITY_ITEMS).length, 2);
   });
   xhr(`${AUTOMATION_URL}${AD.idOne}/`, 'GET', null, {}, 200, AF.detail(AD.idOne));
   click('.t-link');
@@ -127,7 +127,7 @@ test('deep links to the automation that created the record (categories-activity)
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+    assert.equal(find(ACTIVITY_ITEMS).length, 1);
   });
   xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
   click('.t-link');
@@ -141,7 +141,7 @@ test('deep links to the automation that created the record (categories-activity)
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+    assert.equal(find(ACTIVITY_ITEMS).length, 1);
   });
   xhr(`${AUTOMATION_URL}${AD.idOne}/`, 'GET', null, {}, 200, AF.detail(AD.idOne));
   click('.t-link');
@@ -157,7 +157,7 @@ test('deep links to the automation that created the record (cc-add-remove)', fun
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+    assert.equal(find(ACTIVITY_ITEMS).length, 1);
   });
   xhr(`${PEOPLE_URL}${PD.idOne}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
   click('.t-link');
@@ -171,7 +171,7 @@ test('deep links to the automation that created the record (cc-add-remove)', fun
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+    assert.equal(find(ACTIVITY_ITEMS).length, 1);
   });
   xhr(`${AUTOMATION_URL}${AD.idOne}/`, 'GET', null, {}, 200, AF.detail(AD.idOne));
   click('.t-link');
@@ -187,7 +187,7 @@ test('ticket detail shows the activity list including event data (assignee)', fu
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
+    assert.equal(find(ACTIVITY_ITEMS).length, 2);
     assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the assignee from ${PD.fullnameBoy2} to ${PD.fullnameBoy} a month ago`);
     assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the assignee from ${PD.fullnameBoy2} to ${PD.fullnameBoy} a month ago`);
   });
@@ -198,7 +198,7 @@ test('ticket detail does not show the activity list without a matching ticket fo
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    assert.equal(find(ACTIVITY_ITEMS).length, 0);
   });
 });
 
@@ -207,7 +207,7 @@ test('ticket detail shows the activity list including event data (create)', func
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+    assert.equal(find(ACTIVITY_ITEMS).length, 1);
     assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} created this ticket 3 months ago`);
   });
 });
@@ -217,7 +217,7 @@ test('ticket detail does not show the activity list without a matching ticket fo
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    assert.equal(find(ACTIVITY_ITEMS).length, 0);
   });
 });
 
@@ -236,7 +236,7 @@ test('ticket detail shows the activity list including event data (status)', func
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
+    assert.equal(find(ACTIVITY_ITEMS).length, 3);
     assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
     assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
     assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
@@ -249,7 +249,7 @@ test('ticket detail does not show the activity list without a matching ticket fo
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    assert.equal(find(ACTIVITY_ITEMS).length, 0);
   });
 });
 
@@ -258,7 +258,7 @@ test('ticket detail shows the activity list including event data (priority)', fu
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
+    assert.equal(find(ACTIVITY_ITEMS).length, 3);
     assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
     assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
     assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim().replace(/[\n]/gm, ''), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
@@ -271,7 +271,7 @@ test('ticket detail shows the activity list including event data (category)', fu
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+    assert.equal(find(ACTIVITY_ITEMS).length, 1);
     assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the category from ${CD.nameTwo} to ${CD.nameOne} 3 months ago`);
   });
 });
@@ -281,7 +281,7 @@ test('ticket detail shows the activity list including event data (multiple categ
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+    assert.equal(find(ACTIVITY_ITEMS).length, 1);
     assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the category from ${CD.nameTwo}/${CD.namePlumbingChild} to ${CD.nameOne}/${CD.nameThree} 3 months ago`);
   });
 });
@@ -291,7 +291,7 @@ test('ticket detail shows the activity list including event data (category multi
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
+    assert.equal(find(ACTIVITY_ITEMS).length, 2);
     assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the category from ${CD.nameTwo} to ${CD.nameOne} 3 months ago`);
     assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the category from ${CD.nameTwo} to ${CD.nameOne} 3 months ago`);
   });
@@ -302,7 +302,7 @@ test('ticket detail does not show the activity list without a matching ticket fo
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    assert.equal(find(ACTIVITY_ITEMS).length, 0);
   });
 });
 
@@ -312,8 +312,8 @@ test('ticket detail shows the activity list including event data (send_sms)', fu
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `Text message sent to ${PD.fullnameBoy} via ${AD.descriptionOne} 15 days ago`);
+    assert.equal(find(ACTIVITY_ITEMS).length, 1);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().replace(/[\s]+/gm, ''), `${t('automation.actions.sms')}sentto${PD.fullnameBoy.replace(/\s/, '')}via${AD.descriptionOne}15daysago`);
   });
 });
 
@@ -323,8 +323,8 @@ test('ticket detail shows the activity list including event data (send_email)', 
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `Email sent to ${PD.fullnameBoy} via ${AD.descriptionOne} 15 days ago`);
+    assert.equal(find(ACTIVITY_ITEMS).length, 1);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().replace(/[\s]+/gm, ''), `${t('automation.actions.email')}sentto${PD.fullnameBoy.replace(/\s/, '')}via${AD.descriptionOne}15daysago`);
   });
 });
 
@@ -348,7 +348,7 @@ test('can click on a recipient for the activity and redirects to that recipients
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
   });
-  click('.t-recipients:eq(0)');
+  click('.t-recipients0');
   xhr(`${PEOPLE_URL}${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
   andThen(() => {
     assert.equal(currentURL(), `${BASEURLS.base_people_url}/${PD.idBoy}`);
@@ -361,8 +361,8 @@ test('ticket detail shows the activity list including event data (cc_add)', func
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} added ${PD.fullnameBoy} to CC 15 days ago`);
+    assert.equal(find(ACTIVITY_ITEMS).length, 1);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().replace(/[\s\n]+/g, ''), `${PD.fullname.replace(/\s/, '')}added${PD.fullnameBoy.replace(/\s/, '')}toCC15daysago`);
   });
 });
 
@@ -371,8 +371,8 @@ test('ticket detail shows the activity list including event data (multiple cc_ad
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} added ${PD.fullnameBoy} ${PD.fullnameBoy} to CC 15 days ago`);
+    assert.equal(find(ACTIVITY_ITEMS).length, 1);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().replace(/[\s\n]+/g, ''), `${PD.fullname.replace(/\s/, '')}added${PD.fullnameBoy.replace(/\s/, '')}${t("general.and")}${PD.fullnameBoy.replace(/\s/, '')}toCC15daysago`);
   });
 });
 
@@ -381,11 +381,10 @@ test('can deep link to cc added (cc_add)', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} added ${PD.fullnameBoy} to CC 15 days ago`);
+    assert.equal(find(ACTIVITY_ITEMS).length, 1);
   });
   xhr(`${PEOPLE_URL}${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
-  click('.t-ticket-cc-add-remove:eq(0)');
+  click('.t-ticket-cc-add-remove0');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idBoy}`);
   });
@@ -396,17 +395,16 @@ test('can deep link to cc added (multiple cc_add)', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} added ${PD.fullnameBoy} ${PD.fullnameBoy} to CC 15 days ago`);
+    assert.equal(find(ACTIVITY_ITEMS).length, 1);
   });
   xhr(`${PEOPLE_URL}${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
-  click('.t-ticket-cc-add-remove:eq(0)');
+  click('.t-ticket-cc-add-remove0');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idBoy}`);
   });
   page.visitDetail();
   xhr(`${PEOPLE_URL}${PD.idSearch}/`, 'GET', null, {}, 200, PF.detail(PD.idSearch));
-  click('.t-ticket-cc-add-remove:eq(1)');
+  click('.t-ticket-cc-add-remove1');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idSearch}`);
   });
@@ -417,7 +415,7 @@ test('ticket detail does not show the activity list without a matching ticket fo
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    assert.equal(find(ACTIVITY_ITEMS).length, 0);
   });
 });
 
@@ -426,8 +424,8 @@ test('ticket detail shows the activity list including event data (cc_remove)', f
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} removed ${PD.fullnameBoy} from CC 20 days ago`);
+    assert.equal(find(ACTIVITY_ITEMS).length, 1);
+    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().replace(/[\s\n]+/g, ''), `${PD.fullname.replace(/\s/, '')}removed${PD.fullnameBoy.replace(/\s/, '')}fromCC20daysago`);
   });
 });
 
@@ -436,7 +434,7 @@ test('ticket detail does not show the activity list without a matching ticket fo
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    assert.equal(find(ACTIVITY_ITEMS).length, 0);
   });
 });
 
@@ -445,11 +443,10 @@ test('can deep link to cc removed (cc_remove)', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} removed ${PD.fullnameBoy} from CC 20 days ago`);
+    assert.equal(find(ACTIVITY_ITEMS).length, 1);
   });
   xhr(`${PEOPLE_URL}${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
-  click('.t-ticket-cc-add-remove:eq(0)');
+  click('.t-ticket-cc-add-remove0');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idBoy}`);
   });
@@ -460,17 +457,16 @@ test('can deep link to cc removed (multiple cc_remove)', function(assert) {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-    assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} removed ${PD.fullnameBoy} ${PD.fullnameBoy} from CC 20 days ago`);
+    assert.equal(find(ACTIVITY_ITEMS).length, 1);
   });
   xhr(`${PEOPLE_URL}${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
-  click('.t-ticket-cc-add-remove:eq(0)');
+  click('.t-ticket-cc-add-remove0');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idBoy}`);
   });
   page.visitDetail();
   xhr(`${PEOPLE_URL}${PD.idSearch}/`, 'GET', null, {}, 200, PF.detail(PD.idSearch));
-  click('.t-ticket-cc-add-remove:eq(1)');
+  click('.t-ticket-cc-add-remove1');
   andThen(() => {
     assert.equal(currentURL(), `${BASE_PEOPLE_URL}/${PD.idSearch}`);
   });

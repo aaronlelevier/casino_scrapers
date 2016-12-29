@@ -1,48 +1,58 @@
 import Ember from 'ember';
-const { computed, Component } = Ember;
+const { get, computed, Component } = Ember;
 
-var sendMsgTicketActivity = Ember.Component.extend({
-  _activityTypeData(key) {
-    let data;
-    switch(this.get('activity.type')) {
-      case 'send_sms':
-        data = {
-          messageType: 'Text message',
-          faIcon: 'fa-mobile'
-        };
-        break;
-      case 'send_email':
-        data = {
-          messageType:'Email',
-          faIcon: 'fa-envelope'
-        };
-        break;
-    }
-    return data[key];
-  },
+export default Component.extend({
+  classNames: ['activity-wrap', 't-activity-wrap'],
+
+  smsMessageType: 'automation.actions.sms',
+  smsFaIcon: 'fa-mobile',
+  emailMessageType: 'automation.actions.email',
+  emailFaIcon: 'fa-envelope',
+
+  /**
+   * @property messageType
+   */
   messageType: computed(function() {
-    return this._activityTypeData('messageType');
+    const type = get(this, 'activity.type');
+    return type === 'send_sms' ? this.smsMessageType : this.emailMessageType;
   }),
+  /**
+   * @property faIcon
+   */
   faIcon: computed(function() {
-    return this._activityTypeData('faIcon');
+    const type = get(this, 'activity.type');
+    return type === 'send_sms' ? this.smsFaIcon : this.emailFaIcon;
   }),
   spliti18nString: computed(function() {
-    const str = this.get('i18nString').string;
+    const str = get(this, 'i18nString').string;
     return str.split('%s');
   }),
+  /**
+   * - eg. 'sent to'
+   * @property sentTo
+   */
   sentTo: computed({
-    get() { return this.get('spliti18nString')[0].trim(); }
+    get() { return get(this, 'spliti18nString')[0].trim(); }
   }),
+  /**
+   * - eg. 'via'
+   * @property via
+   */
   via: computed({
-    get() { return this.get('spliti18nString')[1].trim(); }
+    get() { return get(this, 'spliti18nString')[1].trim(); }
   }),
+  /**
+   * @property timestamp
+   */
   timestamp: computed({
-    get() { return this.get('spliti18nString')[2].trim(); }
+    get() { return get(this, 'spliti18nString')[2].trim(); }
   }),
+  /**
+   * comma delimited names with comma after last one
+   * m2m on activity model (many send_sms/send_email)
+   * @property ccs
+   */
   ccs: computed(function() {
-    return this.get('activity').get(this.get('activity.type'));
-  }),
-  classNames: ['activity-wrap']
+    return get(this, 'activity').get(get(this, 'activity.type'));
+  })
 });
-
-export default sendMsgTicketActivity;

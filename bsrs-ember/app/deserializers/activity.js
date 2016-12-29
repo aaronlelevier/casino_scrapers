@@ -1,13 +1,13 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
 
-var extract_comment = function(model) {
+let extract_comment = function(model) {
   if (model.content && model.content.comment) {
     model.comment = model.content.comment;
   }
 };
 
-var extract_category = function(store, model, uuid) {
+let extract_category = function(store, model, uuid) {
   const content = model.content;
   if (content && model.type === 'categories' && content.to && content.from) {
     const to = content.to;
@@ -25,7 +25,7 @@ var extract_category = function(store, model, uuid) {
   }
 };
 
-var extract_to_and_from_or_added_removed = function(store, model) {
+let extract_to_and_from_or_added_removed = function(store, model) {
   const content = model.content;
   if (content) {
     if (content.to && content.to.id) {
@@ -62,7 +62,7 @@ var extract_to_and_from_or_added_removed = function(store, model) {
   }
 };
 
-var extract_person = function(store, model) {
+let extract_person = function(store, model) {
   if (model.person) {
     store.push('activity/person', model.person);
     model.person_fk = model.person.id;
@@ -70,7 +70,7 @@ var extract_person = function(store, model) {
   delete model.person;
 };
 
-var extract_automation = function(store, model) {
+let extract_automation = function(store, model) {
   if (model.automation) {
     store.push('activity/automation', model.automation);
     model.automation_fk = model.automation.id;
@@ -78,7 +78,7 @@ var extract_automation = function(store, model) {
   delete model.automation;
 };
 
-var ActivityDeserializer = Ember.Object.extend({
+let ActivityDeserializer = Ember.Object.extend({
   uuid: inject('uuid'),
   deserialize(response, type) {
     let uuid = this.get('uuid');

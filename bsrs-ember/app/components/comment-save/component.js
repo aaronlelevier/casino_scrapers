@@ -1,5 +1,5 @@
 import Ember from 'ember';
 
-var ComponentSave = Ember.Component.extend({});
+var ComponentSave = Ember.Component.extend();
 
 export default ComponentSave;

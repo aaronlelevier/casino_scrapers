@@ -55,7 +55,6 @@ test('fa-icon is generated based on ticket activity type', function(assert) {
   run(() => {
     store.push('activity', {id: TAD.idAssigneeOne, type: 'assignee'});
   });
-  this.set('activity', activityAutomation);
   this.render(hbs`{{
     to-from
     activity=activity
@@ -67,7 +66,6 @@ test('fa-icon is generated based on ticket activity type', function(assert) {
   run(() => {
     store.push('activity', {id: TAD.idAssigneeOne, type: 'priority'});
   });
-  this.set('activity', activityAutomation);
   this.render(hbs`{{
     to-from
     activity=activity

@@ -62,8 +62,9 @@ test('content for automation generated ticket activity cc-add-remove cc_add', fu
     fulltime=(moment-from-now activity.created)
   }}`);
   assert.equal(this.$('.t-link').text().trim(), activityAutomation.get('automation').description);
-  assert.equal(this.$('.t-ticket-cc-add-remove').text().trim(), PD.fullname);
+  assert.equal(this.$('.t-ticket-cc-add-remove0').text().trim(), PD.fullname);
   assert.ok(this.$('.t-activity-timestamp').text().trim());
+  assert.ok(this.$('[data-test-id="activity-icon"] > i').attr('class').includes('fa-users'));
 });
 
 test('content for person generated ticket activity cc-add-remove cc_add', function(assert) {
@@ -77,7 +78,7 @@ test('content for person generated ticket activity cc-add-remove cc_add', functi
     fulltime=(moment-from-now activity.created)
   }}`);
   assert.equal(this.$('.t-link').text().trim(), activityPerson.get('person').get('fullname'));
-  assert.equal(this.$('.t-ticket-cc-add-remove').text().trim(), PD.fullname);
+  assert.equal(this.$('.t-ticket-cc-add-remove0').text().trim(), PD.fullname);
 });
 
 // cc_remove
@@ -98,7 +99,7 @@ test('content for automation generated ticket activity cc-add-remove cc_remove',
     fulltime=(moment-from-now activity.created)
   }}`);
   assert.equal(this.$('.t-link').text().trim(), activityAutomation.get('automation').description);
-  assert.equal(this.$('.t-ticket-cc-add-remove').text().trim(), PD.fullname);
+  assert.equal(this.$('.t-ticket-cc-add-remove0').text().trim(), PD.fullname);
   assert.ok(this.$('.t-activity-timestamp').text().trim());
 });
 
@@ -118,5 +119,5 @@ test('content for person generated ticket activity cc-add-remove cc_remove', fun
     fulltime=(moment-from-now activity.created)
   }}`);
   assert.equal(this.$('.t-link').text().trim(), activityPerson.get('person').get('fullname'));
-  assert.equal(this.$('.t-ticket-cc-add-remove').text().trim(), PD.fullname);
+  assert.equal(this.$('.t-ticket-cc-add-remove0').text().trim(), PD.fullname);
 });

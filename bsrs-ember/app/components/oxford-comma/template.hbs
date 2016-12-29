@@ -1,0 +1,4 @@
+{{!-- if greater than 0 and less than the last, put a comma with a space --}}
+{{!-- if last item, add comma && and.  If only two items, no comma --}}
+{{!-- on one line for testability --}}
+{{#each array as |item index|}}{{#if (and (gt index 0) (lt index lastItemCount))}}&#44;{{else if (gt index 0)}}{{if (gt index 1) ','}}&nbsp;{{t "general.and"}}{{/if}}&nbsp;{{#link-to linkto item.id class=(concat classItem index)}}{{get item prop}}{{/link-to}}{{/each}}

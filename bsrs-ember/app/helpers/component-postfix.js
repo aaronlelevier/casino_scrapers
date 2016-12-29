@@ -1,23 +1,21 @@
 import Ember from 'ember';
 
+const map = Object.create(null); // if somebody passed a param of that is on the prototype of the object
+map.assignee = 'to-from';
+map.comment = 'comment-activity';
+map.categories = 'categories-activity';
+map.create = 'create-activity';
+map.priority = 'to-from';
+map.status = 'to-from';
+map.cc_add = 'cc-add-remove';
+map.cc_remove = 'cc-add-remove';
+map.attachment_add = 'attachment-add-remove';
+map.attachment_remove = 'attachment-add-remove';
+map.send_sms = 'send-msg-ticket-activity';
+map.send_email = 'send-msg-ticket-activity';
+
+Object.freeze(map);
+
 export default Ember.Helper.helper((params) => {
-    if (params[0] === 'assignee') {
-        return 'to-from';
-    }else if (params[0] === 'comment') {
-        return 'comment-activity';
-    }else if (params[0] === 'categories') {
-        return 'categories-activity';
-    }else if(params[0] === 'create'){
-        return 'create-activity';
-    }else if(params[0] === 'priority'){
-        return 'to-from';
-    }else if(params[0] === 'status'){
-        return 'to-from'; 
-    }else if(params[0] === 'cc_add' || params[0] === 'cc_remove') {
-        return 'cc-add-remove';
-    }else if(params[0] === 'attachment_add' || params[0] === 'attachment_remove') {
-        return 'attachment-add-remove';
-    }else if(params[0] === 'send_sms' || params[0] === 'send_email') {
-        return 'send-msg-ticket-activity';
-    }
+  return map[params[0]];
 });

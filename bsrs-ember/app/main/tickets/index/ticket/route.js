@@ -13,7 +13,8 @@ let TicketSingleRoute = TabRoute.extend(FindById, {
   repository: inject('ticket'),
   attachmentRepository: inject('attachment'),
   deviceLayout: Ember.inject.service('device/layout'),
-  /* @method transitionCB
+  /** 
+   * @method transitionCB
    * removes attachments from local store and find newly attached files and sends out batch delete 
    */ 
   transitionCB(model) {
@@ -28,7 +29,6 @@ let TicketSingleRoute = TabRoute.extend(FindById, {
     const repository = this.get('repository');
     let ticket = repository.fetch(pk);
     const otherXhrs = [this.get('activityRepository').find('ticket', 'tickets', pk, ticket)];
-
     return this.findByIdScenario(ticket, pk, { repository:repository }, false, otherXhrs);
   },
   setupController: function(controller, hash) {

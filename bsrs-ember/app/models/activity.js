@@ -42,56 +42,56 @@ var ActivityModel = Ember.Object.extend({
   added: Ember.computed(function() {
     const activity_id = this.get('id');
     const filter = function(cc) {
-      return Ember.$.inArray(activity_id, cc.get('activities')) > -1;
+      return cc.get('activities').includes(activity_id);
     };
     return this.get('simpleStore').find('activity/cc-add', filter);
   }),
   removed: Ember.computed(function() {
     const activity_id = this.get('id');
     const filter = function(cc) {
-      return Ember.$.inArray(activity_id, cc.get('activities')) > -1;
+      return cc.get('activities').includes(activity_id);
     };
     return this.get('simpleStore').find('activity/cc-remove', filter);
   }),
   send_sms: Ember.computed(function() {
     const activity_id = this.get('id');
     const filter = function(cc) {
-      return Ember.$.inArray(activity_id, cc.get('activities')) > -1;
+      return cc.get('activities').includes(activity_id);
     };
     return this.get('simpleStore').find('activity/send-sms', filter);
   }),
   send_email: Ember.computed(function() {
     const activity_id = this.get('id');
     const filter = function(cc) {
-      return Ember.$.inArray(activity_id, cc.get('activities')) > -1;
+      return cc.get('activities').includes(activity_id);
     };
     return this.get('simpleStore').find('activity/send-email', filter);
   }),
   added_attachment: Ember.computed(function() {
     const activity_id = this.get('id');
     const filter = function(attachment) {
-      return Ember.$.inArray(activity_id, attachment.get('activities')) > -1;
+      return attachment.get('activities').includes(activity_id);
     };
     return this.get('simpleStore').find('activity/attachment-add', filter);
   }),
   removed_attachment: Ember.computed(function() {
     const activity_id = this.get('id');
     const filter = function(attachment) {
-      return Ember.$.inArray(activity_id, attachment.get('activities')) > -1;
+      return attachment.get('activities').includes(activity_id);
     };
     return this.get('simpleStore').find('activity/attachment-remove', filter);
   }),
   categories_to: Ember.computed(function() {
     const activity_id = this.get('id');
     const filter = function(category) {
-      return Ember.$.inArray(activity_id, category.get('activities')) > -1;
+      return category.get('activities').includes(activity_id);
     };
     return this.get('simpleStore').find('activity/category-to', filter);
   }),
   categories_from: Ember.computed(function() {
     const activity_id = this.get('id');
     const filter = function(category) {
-      return Ember.$.inArray(activity_id, category.get('activities')) > -1;
+      return category.get('activities').includes(activity_id);
     };
     return this.get('simpleStore').find('activity/category-from', filter);
   }),
