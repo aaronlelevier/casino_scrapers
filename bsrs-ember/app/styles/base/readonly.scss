@@ -1,0 +1,62 @@
+//READONLY
+
+input[readonly],
+input[readonly].form-control,
+textarea[readonly],
+textarea[readonly].form-control {
+	background: none;
+}//input
+
+.readonly {
+  .ember-power-select-trigger-multiple-input[disabled],
+  .ember-power-select-trigger[aria-disabled=true]{
+    user-select: inherit;
+    cursor: text;
+  }
+
+	.ember-power-select-multiple {
+		.ember-power-select-trigger{
+			.ember-power-select-multiple-options{
+				.ember-power-select-multiple-option{
+					margin-top: 0;
+					border: none;
+					background: none;
+				}
+			}
+		}
+	}
+
+  &.form-group{
+    margin-bottom: 1rem;
+    .ember-power-select-trigger-multiple-input[disabled],
+    .ember-power-select-trigger[aria-disabled=true] {
+      background: none;
+      border: none;
+      height: 2rem;
+      line-height: 2rem;
+      padding: 0.1rem 0;
+    }
+  }
+  &.input-group{
+    .ember-power-select-trigger-multiple-input[disabled],
+    .ember-power-select-trigger[aria-disabled=true] {
+      background: $white;
+    }
+  }
+  .ember-power-select-status-icon {
+    opacity: 0;
+  }
+  [role=button]{
+    cursor: text;
+  }
+  .ember-power-select-selected-item .photo-avatar,
+  .ember-power-select-selected-item .tag,
+  .ember-power-select-option .tag{
+    margin-left: 0;
+  }
+	.ember-power-select-selected-item .photo-avatar,
+	.ember-power-select-multiple-option .photo-avatar{
+		border: none;
+		background: none !important;
+	}
+}

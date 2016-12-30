@@ -60,16 +60,3 @@
     @extend %tagSelectedOption;
   }
 }
-
-.readonly {
-  .ember-power-select-trigger-multiple-input[disabled],
-  .ember-power-select-trigger[aria-disabled=true] {
-    background-color: transparent;
-  }
-  .ember-power-select-status-icon {
-    opacity: 0;
-  }
-  [role=button]{
-    cursor: default;
-  }
-}

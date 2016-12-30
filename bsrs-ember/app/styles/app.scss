@@ -41,10 +41,11 @@
 * BASE - no classes, just basic html elements
 * Body................Restrict app viewport to 100% of height and width
 * Form...............Styling for form elements
+* Readonly...............Base styles and overrides to support readonly mode
 */
 @import 'app/styles/base/body.scss';
 @import 'app/styles/base/form.scss';
-
+@import 'app/styles/base/readonly.scss';
 @import 'app/styles/globals/file.scss';
 @import 'app/styles/globals/tag.scss';
 
