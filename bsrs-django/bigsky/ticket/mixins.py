@@ -9,37 +9,6 @@ from ticket.models import TicketActivityType, TicketActivity, TicketStatus
 from utils.helpers import model_to_dict
 
 
-class CreateTicketModelMixin(object):
-    """
-    Create a model instance.
-    """
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        ticket = self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        # custom: start
-        self._create_activity_type(ticket, request.user)
-        # custom: end
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-    def perform_create(self, serializer):
-        return serializer.save()
-
-    def get_success_headers(self, data):
-        try:
-            return {'Location': data[api_settings.URL_FIELD_NAME]}
-        except (TypeError, KeyError):
-            return {}
-
-    # custom methods not in DRF
-
-    @staticmethod
-    def _create_activity_type(ticket, person):
-        type, _ = TicketActivityType.objects.get_or_create(name=TicketActivityType.CREATE)
-        TicketActivity.objects.create(type=type, ticket=ticket, person=person)
-
-
 class TicketUpdateLogger(object):
     """
     Log specific changes to the ``Ticket`` as ``TicketActivity` records

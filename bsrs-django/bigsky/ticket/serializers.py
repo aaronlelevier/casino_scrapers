@@ -8,7 +8,7 @@ from location.serializers import LocationStatusFKSerializer, LocationTicketListS
 from person.serializers import PersonTicketSerializer, PersonTicketListSerializer
 from person.serializers_leaf import PersonSimpleSerializer
 from ticket.helpers import TicketActivityToRepresentation
-from ticket.models import Ticket, TicketActivity, TicketPriority, TicketStatus
+from ticket.models import Ticket, TicketActivity, TicketActivityType, TicketPriority, TicketStatus
 from utils.serializers import BaseCreateSerializer
 
 
@@ -43,11 +43,16 @@ class TicketCreateUpdateSerializer(BaseCreateSerializer):
 
     def create(self, validated_data):
         validated_data.pop('attachments', None)
+
         instance = super(TicketCreateUpdateSerializer, self).create(validated_data)
 
+        self._log_ticket_activity_create(instance)
         instance.process_ticket_automations(instance.status.name)
-
         return instance
+
+    def _log_ticket_activity_create(self, instance):
+        type, _ = TicketActivityType.objects.get_or_create(name=TicketActivityType.CREATE)
+        TicketActivity.objects.create(type=type, ticket=instance, person=instance.creator)
 
 
 class TicketListSerializer(serializers.ModelSerializer):
