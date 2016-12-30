@@ -11,6 +11,8 @@ export default Ember.Route.extend({
   actions: {
     error(error) {
       if ([401,403].includes(error.code)) {
+        // Forbidden means not logged in.  If logged in, 404 for protected resource
+        // Unauthorized - not using 401
         this.send('showLogin');
       } else if (error.code >= 400 && error.code < 500) {
         this.intermediateTransitionTo('error', error);

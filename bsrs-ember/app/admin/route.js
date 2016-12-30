@@ -17,8 +17,10 @@ export default Ember.Route.extend({
       if ([401,403].includes(error.code)) {
         this.send('showLogin');
       } else if (error.code >= 400 && error.code < 500) {
+        // for Client Error (404) - transition out of context
         this.intermediateTransitionTo('error', error);
       } else {
+        // transition out of context to 500 error
         this.intermediateTransitionTo('application_error', error);
       }
     }

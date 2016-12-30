@@ -98,6 +98,7 @@ let GridViewRoute = Ember.Route.extend({
         if ([401,403].includes(xhr.status)) {
           reject( new ClientError(msg, 'error', xhr) );
         } else if (xhr.status >= 400) {
+          // in context error so will call setupController
           resolve( new ClientError(msg, 'error', xhr) );
         }
       });
