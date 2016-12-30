@@ -23,6 +23,9 @@ function adminPerms(perms, verb) {
 const map = Object.create(null);
 
 export function hasPermission(_params, { permissions: permissions = [], resource: resource, verb: verb }) {
+  // Regex to swap out something like location-level noun to locationlevel as expected by backend
+  // may be undefined as some permissions might not be defined yet
+  resource = resource && resource.replace(/[-_]/g, '');
   // convert to string and if permissions change, then array will contain a diff string with opposite bool
   const key = permissions.sort().join('') + verb + resource;
   if (key && map[key]) {
@@ -37,8 +40,7 @@ export function hasPermission(_params, { permissions: permissions = [], resource
       return map[key] = adminPerms(permissions, verb);
     } else if (resource) {
       // O(n)
-      // Regex to swap out something like location-level noun to locationlevel as expected by backend
-      return map[key] = permissions.includes(`${verb}_${resource.replace(/[-_]/g, '')}`);
+      return map[key] = permissions.includes(`${verb}_${resource}`);
     }
   }
 }
