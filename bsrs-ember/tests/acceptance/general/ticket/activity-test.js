@@ -122,7 +122,7 @@ test('deep links to the automation that created the record (to-from)', function(
 
 // "categories-activity"
 
-test('deep links to the automation that created the record (categories-activity)', function(assert) {
+test('deep links to the person that created the record (categories-activity)', function(assert) {
   xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.categories_only());
   page.visitDetail();
   andThen(() => {
@@ -152,7 +152,7 @@ test('deep links to the automation that created the record (categories-activity)
 
 // "cc-add-remove" : start
 
-test('deep links to the automation that created the record (cc-add-remove)', function(assert) {
+test('deep links to the person that created the record (cc-add-remove)', function(assert) {
   xhr(`${TICKETS_URL}${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only());
   page.visitDetail();
   andThen(() => {

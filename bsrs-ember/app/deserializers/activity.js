@@ -25,37 +25,49 @@ let extract_category = function(store, model, uuid) {
   }
 };
 
+
+/**
+ * add model_id (activity id) to the activities array of the, e.g. activity/send-email model
+ * prevents a cc model from having only one activity model by finding and concating the activity id
+ * @method add_activity_to_cc
+ */
+let add_activity_to_cc = function(cc, model_id, type, store) {
+  const existing_activities = store.find(`activity/${type}`, cc.id).get('activities') || [];
+  cc.activities = existing_activities.concat(model_id).uniq();
+  store.push(`activity/${type}`, cc);
+};
+
+/**
+ * @method extract_to_and_from_or_added_removed
+ */
 let extract_to_and_from_or_added_removed = function(store, model) {
   const content = model.content;
+  const model_id = model.id;
   if (content) {
     if (content.to && content.to.id) {
       store.push(`activity/${model.type}`, model.content.to);
       store.push(`activity/${model.type}`, model.content.from);
       model.to_fk = model.content.to.id;
       model.from_fk = model.content.from.id;
-    }else if (content.added) {
+    } else if (content.added) {
       const type = model.type.dasherize();
       content.added.forEach((cc) => {
-        //TODO: this will be a problem if cc smashes over existing one. maybe need to make uuid like above
-        cc.activities = [model.id];
         if(cc.file){
           cc.ext = cc.file.split('.').pop().toLowerCase();
         }
-        store.push(`activity/${type}`, cc);
+        add_activity_to_cc(cc, model_id, type, store);
       });
-    }else if (content.removed) {
+    } else if (content.removed) {
       const type = model.type.dasherize();
       content.removed.forEach((cc) => {
-        cc.activities = [model.id];
-        store.push(`activity/${type}`, cc);
+        add_activity_to_cc(cc, model_id, type, store);
       });
-    }else if (content.send_sms || content.send_email) {
+    } else if (content.send_sms || content.send_email) {
       const type = model.type.dasherize();
       content[`${model.type}`].forEach((cc) => {
-        cc.activities = [model.id];
-        store.push(`activity/${type}`, cc);
+        add_activity_to_cc(cc, model_id, type, store);
       });
-    }else {
+    } else {
       model.to_fk = model.content.to;
       model.from_fk = model.content.from;
     }

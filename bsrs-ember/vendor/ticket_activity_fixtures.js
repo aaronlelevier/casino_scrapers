@@ -41,7 +41,6 @@ var TICKET_ACTIVITY_FACTORY = (function() {
     var ticket_id = ticket_pk || this.td.idOne;
     var activity = {id: i, type: 'categories', created: d.setDate(d.getDate()-25), ticket: ticket_id};
     activity.automation = {id: this.ad.idOne, description: this.ad.descriptionOne};
-    activity.person = null;
     activity.content = {to: [{id: this.cd.idOne, name: this.cd.nameOne}], from: [{id: this.cd.idTwo, name: this.cd.nameTwo}]};
     return activity;
   },
@@ -141,8 +140,8 @@ var TICKET_ACTIVITY_FACTORY = (function() {
   },
   factory.prototype.get_automation_cc_add_remove = function(i, count, type, ticket_pk) {
     var activity = this.get_cc_add_remove(i, count, type, ticket_pk);
-    activity.person = null;
     activity.automation = {id: this.ad.idOne, description: this.ad.descriptionOne};
+    delete activity.person;
     return activity;
   },
   factory.prototype.get_cc_add_remove_json = function(i, count, type, ticket_pk) {
@@ -163,7 +162,6 @@ var TICKET_ACTIVITY_FACTORY = (function() {
     var date_reset = type === 'cc_remove' ? 20 : 15;
     var activity = {id: i, type: type, created: d.setDate(d.getDate()-date_reset), ticket: ticket_id};
     activity.automation = {id: this.ad.idOne, description: this.ad.descriptionOne};
-    activity.person = null;
     activity.content = {};
     activity.content[type] = added_removed;
     return activity;
@@ -210,7 +208,7 @@ var TICKET_ACTIVITY_FACTORY = (function() {
     var uuid = '649447cc-1a19-4d8d-829b-bfb81cb5ece1';
     var activity = this.get_create(uuid, ticket_pk);
     response.push(activity);
-    return {'count':1,'next':null,'previous':null,'results': response};
+    return this.response(1, response);
   };
   factory.prototype.get_comment_json = function(i) {
     var activity = this.get_comment(i);
@@ -228,7 +226,7 @@ var TICKET_ACTIVITY_FACTORY = (function() {
       var activity = this.get_comment(uuid+i, ticket_pk, comment);
       response.push(activity);
     }
-    return {'count':count,'next':null,'previous':null,'results': response};
+    return this.response(count, response);
   };
   factory.prototype.categories_only = function(ticket_pk, count) {
     var response = [];
@@ -238,7 +236,7 @@ var TICKET_ACTIVITY_FACTORY = (function() {
       var activity = this.get_category(uuid+i, ticket_pk);
       response.push(activity);
     }
-    return {'count':count,'next':null,'previous':null,'results': response};
+    return this.response(count, response);
   };
   factory.prototype.automation_categories_only = function(ticket_pk, count) {
     var response = [];
@@ -248,14 +246,14 @@ var TICKET_ACTIVITY_FACTORY = (function() {
       var activity = this.get_categories_automation(uuid+i, ticket_pk);
       response.push(activity);
     }
-    return {'count':count,'next':null,'previous':null,'results': response};
+    return this.response(count, response);
   };
   factory.prototype.categories_multiple_only = function(ticket_pk) {
     var response = [];
     var uuid = '859447cc-1a19-5d8d-929b-bfb81cb6fdz';
     var activity = this.get_category_multiple(uuid, ticket_pk);
     response.push(activity);
-    return {'count':1,'next':null,'previous':null,'results': response};
+    return this.response(1, response);
   };
   factory.prototype.assignee_only = function(ticket_pk) {
     var response = [];
@@ -264,7 +262,7 @@ var TICKET_ACTIVITY_FACTORY = (function() {
       var activity = this.get_assignee(uuid+i, ticket_pk);
       response.push(activity);
     }
-    return {'count':2,'next':null,'previous':null,'results': response};
+    return this.response(2, response);
   };
   factory.prototype.automation_assignee_only = function(ticket_pk) {
     var response = [];
@@ -273,7 +271,7 @@ var TICKET_ACTIVITY_FACTORY = (function() {
       var activity = this.get_assignee_automation(uuid+i, ticket_pk);
       response.push(activity);
     }
-    return {'count':2,'next':null,'previous':null,'results': response};
+    return this.response(2, response);
   };
   factory.prototype.status_only = function(ticket_pk) {
     var response = [];
@@ -282,7 +280,7 @@ var TICKET_ACTIVITY_FACTORY = (function() {
       var activity = this.get_status(uuid+i, ticket_pk, i);
       response.push(activity);
     }
-    return {'count':2,'next':null,'previous':null,'results': response};
+    return this.response(3, response);
   };
   factory.prototype.priority_only = function(ticket_pk) {
     var response = [];
@@ -291,43 +289,59 @@ var TICKET_ACTIVITY_FACTORY = (function() {
       var activity = this.get_priority(uuid+i, ticket_pk);
       response.push(activity);
     }
-    return {'count':2,'next':null,'previous':null,'results': response};
+    return this.response(3, response);
   };
-  factory.prototype.cc_add_only = function(count, ticket_pk) {
-    var uuid = '949447cc-1a19-4d8d-829b-bfb81cb5ece1';
-    var activity = this.get_cc_add_remove(uuid, count, 'cc_add', ticket_pk);
-    var response = [activity];
-    return {'count':2,'next':null,'previous':null,'results': response};
+  factory.prototype.cc_add_only = function(count, ticket_pk, multiple) {
+    multiple = multiple || 1;
+    var response = [];
+    for (var i=1; i <= multiple; i++) {
+      var uuid = '949447cc-1a19-4d8d-829b-bfb81cb5ece' + i;
+      var activity = this.get_cc_add_remove(uuid, count, 'cc_add', ticket_pk);
+      response.push(activity);
+    }
+    return this.response(multiple, response);
   };
   factory.prototype.automation_cc_add_only = function(count, ticket_pk) {
     var uuid = '949447cc-1a19-4d8d-829b-bfb81cb5ece1';
     var activity = this.get_automation_cc_add_remove(uuid, count, 'cc_add', ticket_pk);
     var response = [activity];
-    return {'count':2,'next':null,'previous':null,'results': response};
+    return this.response(1, response);
   };
-  factory.prototype.cc_remove_only = function(count, ticket_pk) {
-    var uuid = '149447cc-1a19-4d8d-829b-bfb81cb5ecc1';
-    var activity = this.get_cc_add_remove(uuid, count, 'cc_remove', ticket_pk);
-    var response = [activity];
-    return {'count':2,'next':null,'previous':null,'results': response};
+  factory.prototype.cc_remove_only = function(count, ticket_pk, multiple) {
+    multiple = multiple || 1;
+    var response = [];
+    for (var i=1; i <= multiple; i++) {
+      var uuid = '149447cc-1a19-4d8d-829b-bfb81cb5ecc' + i;
+      var activity = this.get_cc_add_remove(uuid, count, 'cc_remove', ticket_pk);
+      response.push(activity);
+    }
+    return this.response(multiple, response);
   };
-  factory.prototype.send_sms_or_email_only = function(activity_name, count, ticket_pk) {
-    var uuid = '149447cc-1a19-4d8d-829b-bfb81cb5ecc1';
-    var activity = this.get_send_sms_or_email(uuid, count, activity_name, ticket_pk);
-    var response = [activity];
-    return {'count':2,'next':null,'previous':null,'results': response};
+  factory.prototype.send_sms_or_email_only = function(activity_name, count, ticket_pk, multiple) {
+    // activity_name is either send_email or send_sms
+    multiple = multiple || 1;
+    var response = [];
+    for (var i=1; i <= multiple; i++) {
+      var uuid = '149447cc-1a19-4d8d-829b-bfb81cb5ecc' + i;
+      var activity = this.get_send_sms_or_email(uuid, count, activity_name, ticket_pk);
+      response.push(activity);
+    }
+    return this.response(multiple, response);
   };
   factory.prototype.attachment_add_only = function(count, ticket_pk) {
     var uuid = '449447cd-1a19-4d8d-829b-bfb81cb5jcw8';
     var activity = this.get_attachment_add_remove(uuid, count, 'attachment_add', ticket_pk);
     var response = [activity];
-    return {'count':2,'next':null,'previous':null,'results': response};
+    return this.response(1, response);
   };
   factory.prototype.attachment_remove_only = function(count, ticket_pk) {
     var uuid = '449447cd-1a19-4d8d-829b-bfb81cb5jcw8';
     var activity = this.get_attachment_add_remove(uuid, count, 'attachment_remove', ticket_pk);
     var response = [activity];
-    return {'count':2,'next':null,'previous':null,'results': response};
+    return this.response(1, response);
+  };
+  factory.prototype.response = function(count, response) {
+    return {'count':count,'next':null,'previous':null,'results': response};
   };
   return factory;
 })();

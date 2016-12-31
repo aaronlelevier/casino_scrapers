@@ -58,7 +58,7 @@ moduleForAcceptance('Acceptance | general role new', {
   }
 });
 
-test('scott visiting role/new', function(assert) {
+test('visiting role/new', function(assert) {
   page.visit();
   generalPage.new();
   andThen(() => {
