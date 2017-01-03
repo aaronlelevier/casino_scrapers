@@ -4,28 +4,16 @@ import SortBy from 'bsrs-ember/mixins/sort-by';
 import FilterBy from 'bsrs-ember/mixins/filter-by';
 import regex_property from 'bsrs-ember/utilities/regex-property';
 
+const { Component, computed } = Ember;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
-var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, {
+var GridViewComponent = Component.extend(SortBy, FilterBy, {
   toggleFilter: false,
-  // searched_content: Ember.computed('find', 'sort', 'page', 'search', 'model.[]', function() {
-  //   const search = this.get('search') ? this.get('search').trim().toLowerCase() : '';
-  //   const regex = new RegExp(search);
-  //   const columns = this.get('columns').filter(function(c) {
-  //     return c.isSearchable;
-  //   }).map(function(c) {
-  //     return c.field;
-  //   });
-  //   // columns is an array of strings
-  //   let filter = columns.map((property) => {
-  //     return this.get('model').filter((object) => {
-  //       //TODO: n+1 problem?  debugger here on list view will show this
-  //       return regex_property(object, property, regex);
-  //     });
-  //   }.bind(this));
-  //   return filter.reduce((a, b) => { return a.concat(b); }).uniq();
-  // }),
-  found_content: Ember.computed('find', 'sort', 'page', 'search', 'model.[]', function() {
+
+  /**
+   * @property found_content
+   */
+  found_content: computed('find', 'sort', 'page', 'search', 'model.[]', function() {
     const find = this.get('find') || '';
     const searched_content = this.get('model');
     const params = find.split(',');
@@ -46,7 +34,13 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, {
     }
     return searched_content;
   }).readOnly(),
-  paginated_content: Ember.computed('found_content.[]', function() {
+
+  /**
+   * requested is an ArrayProxy from the pagination service
+   * page_size is a queryParam
+   * @property paginated_content
+   */
+  paginated_content: computed('found_content.[]', function() {
     const requested = this.get('requested');
     const page = parseInt(this.get('page')) || 1;
     const page_size = parseInt(this.get('page_size')) || PAGE_SIZE;
@@ -55,7 +49,11 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, {
     const found_content = this.get('found_content');
     return found_content.slice(0, Math.max(page_size, 10));
   }).readOnly(),
-  paginated_content_mobile: Ember.computed('found_content.[]', function() {
+
+  /**
+   * @property paginated_content_mobile
+   */
+  paginated_content_mobile: computed('found_content.[]', function() {
     const requested = this.get('requested');
     const page = parseInt(this.get('page')) || 1;
     const page_size = parseInt(this.get('page_size')) || PAGE_SIZE;
@@ -64,6 +62,7 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, {
     const found_content = this.get('found_content');
     return found_content;
   }).readOnly(),
+
   actions: {
     keyup(search) {
       Ember.run.scheduleOnce('actions', this, function() {
