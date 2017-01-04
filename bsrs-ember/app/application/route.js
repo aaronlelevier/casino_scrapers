@@ -90,18 +90,32 @@ let ApplicationRoute = Route.extend({
     this.get('moment').changeTimeZone(zone);
 
     // Person service needs timezone for translations request
-    this.get('personCurrent').set('timezone', zone);
-
-    // FETCH PERSON CURRENT
     const pc = this.get('personCurrent');
-    return pc.fetch().then(pc.setupPersonCurrent.bind(pc));
+    pc.set('timezone', zone);
   },
   model() {
     // Prior hook resolves after current person's session request is made
     // Translations depend on having a person_current in the store
-    return this.get('translationsFetcher').fetch();
+    // Application tree needs setup person, so needs to be xhr aware
+    // If use polling, model hook will never complete, so setup polling in setupController
+    const pc = this.get('personCurrent');
+    return new Ember.RSVP.hash({
+      translations: this.get('translationsFetcher').fetch(),
+      person: pc.fetch()
+    });
   },
-  afterModel(){
+  /**
+   * - deserializes current person and setups polling
+   * - sets i18n locale
+   * - shows loading image
+   * @method afterModel
+   * @param {Object} hash - resolved translation and person xhrs
+   */
+  afterModel(hash) {
+    const pc = this.get('personCurrent');
+    pc.setupPersonCurrent(hash.person);
+    pc.get('pollPersonCurrent').perform();
+
     this.set('i18n.locale', config.i18n.currentLocale);
     Ember.$('.loading-image').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
       Ember.$('.application-loading').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
@@ -114,21 +128,6 @@ let ApplicationRoute = Route.extend({
   },
   setupController(controller/*, model is not needed */) {
     controller.set('tabs', this.get('simpleStore').find('tab'));
-  },
-  /**
-   * start polling for person current
-   * @method activate
-   */
-  activate() {
-    const personCurrent = this.get('personCurrent');
-    personCurrent.start(this, personCurrent.fetch);
-  },
-  /**
-   * @method deactivate
-   */
-  deactivate() {
-    const personCurrent = this.get('personCurrent');
-    personCurrent.stop();
   },
   handleApplicationNotice(xhr, model) {
     if (xhr.status >= 400) {

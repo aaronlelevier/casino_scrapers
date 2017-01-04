@@ -20,7 +20,7 @@ moduleForAcceptance('Acceptance | general application error test', {
   }
 });
 
-test('xhr with a 500 on locale fetch', (assert) => {
+test('xhr with a 500 on person-current fetch', (assert) => {
   visit(LOCATION_URL);
   andThen(() => {
     assert.equal(currentURL(), LOCATION_URL);

@@ -97,38 +97,27 @@ test('has computed rights from the permissions list', function(assert) {
   });
 });
 
-test('start sets running object to a function and stops', function(assert) {
-  assert.expect(1);
+test('pollPersonCurrent is recursive and deserializes a person in setupPersonCurrent', function(assert) {
   const done = assert.async();
-  const service = this.subject({PersonDeserializer: person_deserializer});
-  const func = function() {
+  assert.expect(3);
+  const setupPersonCurrent = function() {
     assert.ok(true);
-    service.stop();
-    done();
-    return new Ember.RSVP.Promise(resolve => resolve(person_current));
   };
-  service.start(this, func);
-});
-
-test('schedule is recursive', function(assert) {
-  assert.expect(2);
-  const service = this.subject({PersonDeserializer: person_deserializer});
-  let done = assert.async();
-  let polls = 0;
-  let spy = sinon.spy(service, 'schedule');
-  const func = function() {
-    polls = polls += 1;
-    if (polls < 2) {
-      assert.ok(true);
-    } else {
-      service.stop();
-      assert.ok(spy.calledThrice, 'scheduled 2x, but cancelling last call for a total 3');
-      spy.restore();
+  const fetch = function() {
+    assert.ok(true);
+    counter++;
+    if (counter === 2) {
+      task.cancel();
       done();
     }
-    return new Ember.RSVP.Promise(resolve => resolve(person_current));
+    return new Ember.RSVP.Promise(resolve => resolve());
   };
-  service.start(this, func);
+  const service = this.subject({setupPersonCurrent: setupPersonCurrent, fetch: fetch, PersonDeserializer: person_deserializer});
+  let counter = 0;
+  let task;
+  run(() => {
+    task = service.get('pollPersonCurrent').perform();
+  });
 });
 
 test('setupPersonCurrent will call deserialize on a person', function(assert) {

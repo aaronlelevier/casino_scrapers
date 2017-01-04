@@ -185,18 +185,16 @@ export default function startApp(attrs={}) {
       content: PERSON_CURRENT.defaults()
     }
   });
-  if (!attrs.error) {
-    // Mock english translations
-    var request = { url: '/api/translations/?locale=en&timezone=America/Los_Angeles' , method: 'GET' };
-    var response = translations.generate('en');
-    Ember.$.fauxjax.new({
-      request: request,
-      response: {
-        status: 200,
-        content: response
-      }
-    });
-  }
+  // Mock english translations
+  var request = { url: '/api/translations/?locale=en&timezone=America/Los_Angeles' , method: 'GET' };
+  var response = translations.generate('en');
+  Ember.$.fauxjax.new({
+    request: request,
+    response: {
+      status: 200,
+      content: response
+    }
+  });
 
   Ember.run(() => {
     application = Application.create(attributes);
