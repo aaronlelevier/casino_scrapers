@@ -3,7 +3,7 @@ from django.contrib.auth.models import ContentType
 
 from rest_framework.exceptions import ValidationError
 
-from automation.models import Automation, AutomationActionType
+from automation.models import  AutomationActionType
 from person.models import Person
 from ticket.models import TicketPriority, TicketStatus
 
@@ -108,31 +108,3 @@ class AutomationFilterTypeValidator(object):
 
         if dupe_keys:
             raise ValidationError("Duplicate filter(s): {}".format(' ,'.join(dupe_keys)))
-
-
-class UniqueByTenantValidator(object):
-
-    def __init__(self, field):
-        self.field = field
-
-    def __call__(self, data):
-        field_value = data.get(self.field, None)
-        tenant = data.get('tenant', None)
-        kwargs = {
-            self.field: field_value,
-            'tenant': tenant
-        }
-
-        if self.instance:
-            exists = Automation.objects.filter(**kwargs).exclude(id=self.instance.id).exists()
-        else:
-            exists = Automation.objects.filter(**kwargs).exists()
-
-        if exists:
-            raise ValidationError("{}: '{}' already exists for Tenant: '{}'"
-                                  .format(self.field, field_value, tenant.id))
-
-    def set_context(self, serializer=None):
-        """Determine the existing instance, prior to the validation
-        call being made."""
-        self.instance = getattr(serializer, 'instance', None)

@@ -45,6 +45,14 @@ wait
 ./manage.py dumpdata generic --indent=2 > fixtures/generic.json
 ./manage.py dumpdata tenant --indent=2 > fixtures/tenant.json
 
+# create Subscriber / Locations in SC, and dump to fixtures
+wait
+./manage.py create_sc_tenant
+./manage.py create_sc_locations
+wait
+./manage.py loaddata fixtures/tenant.json
+./manage.py dumpdata location --indent=2 > fixtures/location.json
+
 wait
 ./manage.py create_tickets
 wait

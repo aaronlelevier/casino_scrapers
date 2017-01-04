@@ -4,7 +4,7 @@ import uuid
 from rest_framework.exceptions import ValidationError
 from rest_framework.test import APITestCase
 
-from automation.models import Automation, AutomationActionType
+from automation.models import AutomationActionType
 from automation.serializers import AutomationCreateUpdateSerializer
 from automation.tests.mixins import ViewTestSetupMixin
 from automation.tests.factory import create_ticket_location_filter, create_automation_action_types
@@ -12,8 +12,6 @@ from automation.validators import AutomationActionValidator
 from location.models import Location
 from location.tests.factory import create_top_level_location
 from person.models import Person
-from person.tests.factory import create_single_person, PASSWORD
-from tenant.tests.factory import get_or_create_tenant
 from ticket.models import TicketPriority, TicketStatus
 
 
@@ -314,40 +312,3 @@ class AutomationFilterTypeValidatorTests(ViewTestSetupMixin, APITestCase):
             "Duplicate filter(s): {}-location_level-{}"
                 .format(dupe_field, str(self.location.location_level.id))
         )
-
-
-class UniqueByTenantValidatorTests(ViewTestSetupMixin, APITestCase):
-
-    def test_not_unique_by_tenant(self):
-        self.data['id'] = str(uuid.uuid4())
-
-        response = self.client.post('/api/admin/automations/', self.data, format='json')
-
-        self.assertEqual(response.status_code, 400)
-        msg = json.loads(response.content.decode('utf8'))
-        self.assertEqual(
-            msg['non_field_errors'][0],
-            "description: '{}' already exists for Tenant: '{}'".format(self.data['description'],
-                                                                       self.tenant.id)
-        )
-
-    def test_unique_by_tenant_but_not_unique_accross_model(self):
-        # this is fine, 'description' only needs to be unique by Tenant
-        tenant_two = get_or_create_tenant('foo')
-        person = create_single_person()
-        person.role.tenant = tenant_two
-        person.role.save()
-        self.client.logout()
-        self.client.login(username=person.username, password=PASSWORD)
-
-        self.data['id'] = str(uuid.uuid4())
-        self.data['actions'] = []
-
-        response = self.client.post('/api/admin/automations/', self.data, format='json')
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(response.status_code, 201)
-        # automation is unique by tenant,description
-        automation = Automation.objects.get(id=data['id'])
-        self.assertEqual(automation.description, self.automation.description)
-        self.assertNotEqual(automation.tenant, self.automation.tenant)

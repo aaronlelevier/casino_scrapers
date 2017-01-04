@@ -19,6 +19,7 @@ from contact.models import State, Country, PhoneNumberType, AddressType, EmailTy
 from generic.models import SavedSearch
 from generic.tests.factory import create_image_attachment
 from location.models import LocationLevel, LocationStatus
+from location.tests.factory import create_location_level
 from person.models import PersonStatus, Role, Person
 from person.tests.factory import PASSWORD, create_person, create_single_person, create_role
 from ticket.models import TicketStatus, TicketPriority
@@ -173,9 +174,9 @@ class BootstrappedDataTests(SetupMixin, TestCase):
         create_categories()
         self.person = create_person()
         self.phone_number_types = mommy.make(PhoneNumberType)
-        self.location_levels = mommy.make(LocationLevel, name='Base')
-        self.location_level_child = mommy.make(LocationLevel, name='Child')
-        self.location_level_parent = mommy.make(LocationLevel, name='Parent', children=[self.location_levels])
+        self.location_levels = create_location_level(name='Base')
+        self.location_level_child = create_location_level(name='Child')
+        self.location_level_parent = create_location_level(name='Parent', children=[self.location_levels])
         self.location_levels.children.add(self.location_level_child)
         self.location_levels.parents.add(self.location_level_parent)
         self.location_levels.save()
@@ -183,7 +184,6 @@ class BootstrappedDataTests(SetupMixin, TestCase):
         LocationStatus.objects.default()
         self.person_status = mommy.make(PersonStatus)
         self.ticket_status = mommy.make(TicketStatus)
-        # TicketStatus.objects.default()
         self.ticket_priority = mommy.make(TicketPriority)
 
         categories = Category.objects.order_by("-parent")

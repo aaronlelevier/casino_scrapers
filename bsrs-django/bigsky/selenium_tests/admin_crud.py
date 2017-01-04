@@ -835,9 +835,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # b/c first save won't work if the 'password' is still attached to the person.
         self.gen_elem_page.click_save_btn()
         time.sleep(1)
-        person_page.find_list_data()
-        self.driver.refresh()
-        person_page.find_list_data()
         self.wait_for_xhr_request("t-grid-search-input").send_keys(username)
         time.sleep(1)
         new_person = person_page.click_name_in_list_pages(username, new_model=None)
@@ -959,7 +956,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         implementation_contact_email_type_option.click()
 
         implementation_contact_email = self.driver.find_element_by_class_name("t-email-email")
-        implementation_contact_email.send_keys("shanaya@twaine.com")
+        implementation_contact_email.send_keys("{}@twaine.com".format(rand_chars()))
 
         billing_contact = self.driver.find_element_by_class_name('t-tenant-billing_contact')
         billing_contact.send_keys("John Wayne")

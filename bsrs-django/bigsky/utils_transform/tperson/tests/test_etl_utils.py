@@ -176,7 +176,7 @@ class CreatePersonTests(TestCase):
 
     def test_non_top_level_with_no_locations(self):
         # none top level Role, with no locations, so no Person record gets created
-        non_top_level = mommy.make(LocationLevel)
+        non_top_level = create_location_level()
         non_top_level_role = create_role(location_level=non_top_level)
         self.domino_person.role = non_top_level_role.name
         self.domino_person.save()

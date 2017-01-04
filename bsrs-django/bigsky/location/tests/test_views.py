@@ -9,11 +9,11 @@ from model_mommy import mommy
 
 from contact.models import Address, PhoneNumber, PhoneNumberType, Email
 from contact.tests.factory import create_contact, create_contacts
-from location.tests.factory import (create_location_levels, create_locations,
-    create_location, create_location_level, LOS_ANGELES, SAN_DIEGO)
 from location.models import (Location, LocationLevel, LocationStatus,
 LOCATION_COMPANY, LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE,)
-from location.serializers import LocationUpdateSerializer
+from location.serializers import LocationCreateUpdateSerializer
+from location.tests.factory import (create_location_levels, create_locations,
+    create_location, create_location_level, LOS_ANGELES, SAN_DIEGO)
 from person.tests.factory import create_person, create_single_person, create_role, PASSWORD
 from utils import create
 from utils.tests.mixins import MockPermissionsAllowAnyMixin
@@ -105,7 +105,7 @@ class LocationLevelTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def test_create(self):
         new_name = 'region_lp'
-        child_location_level = mommy.make(LocationLevel)
+        child_location_level = create_location_level()
         data = {
             'id': str(uuid.uuid4()),
             'name': new_name,
@@ -138,7 +138,7 @@ class LocationLevelTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def test_create__bool_fields_not_required(self):
         new_name = 'region_lp'
-        child_location_level = mommy.make(LocationLevel)
+        child_location_level = create_location_level()
         data = {
             'id': str(uuid.uuid4()),
             'name': new_name,
@@ -148,6 +148,23 @@ class LocationLevelTests(MockPermissionsAllowAnyMixin, APITestCase):
         response = self.client.post('/api/admin/location-levels/', data, format='json')
 
         self.assertEqual(response.status_code, 201)
+
+    def test_create__name_unique_by_tenant(self):
+        location_level = create_location_level()
+        data = {
+            'id': str(uuid.uuid4()),
+            'name': location_level.name
+        }
+
+        response = self.client.post('/api/admin/location-levels/', data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['non_field_errors'][0],
+            "name: '{}' already exists for Tenant: '{}'".format(
+                location_level.name, self.person.role.tenant.id)
+        )
 
     ### UPDATE
 
@@ -175,6 +192,24 @@ class LocationLevelTests(MockPermissionsAllowAnyMixin, APITestCase):
         self.assertEqual(data['catalog_categories'], updated_obj.catalog_categories)
         self.assertEqual(data['assets'], updated_obj.assets)
         self.assertNotIn('tenant', data)
+
+    def test_update__name_unique_by_tenant(self):
+        region = LocationLevel.objects.get(name=LOCATION_REGION)
+        location_level = create_location_level()
+        data = {
+            'id': str(uuid.uuid4()),
+            'name': location_level.name
+        }
+
+        response = self.client.put('/api/admin/location-levels/{}/'.format(region.id), data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['non_field_errors'][0],
+            "name: '{}' already exists for Tenant: '{}'".format(
+                location_level.name, self.person.role.tenant.id)
+        )
 
     ### DETAIL ROUTES
 
@@ -512,7 +547,7 @@ class LocationCreateTests(MockPermissionsAllowAnyMixin, APITestCase):
         self.person = create_person()
         self.client.login(username=self.person.username, password=PASSWORD)
         # Data: base data to update unique fields on and POST to test CREATEs
-        serializer = LocationUpdateSerializer(self.location)
+        serializer = LocationCreateUpdateSerializer(self.location)
         self.data = serializer.data
 
     def tearDown(self):
@@ -553,7 +588,7 @@ class LocationCreateTests(MockPermissionsAllowAnyMixin, APITestCase):
         # Requery Update Serializer Data b/c children/parents may have changed
         # when the "old_location" was deleted
         self.location = Location.objects.get(id=self.location.id)
-        self.data = LocationUpdateSerializer(self.location).data
+        self.data = LocationCreateUpdateSerializer(self.location).data
         # test
         self.data.update({
             'id': str(uuid.uuid4()),
@@ -573,7 +608,7 @@ class LocationUpdateTests(MockPermissionsAllowAnyMixin, APITestCase):
         self.person = create_person()
         self.client.login(username=self.person.username, password=PASSWORD)
         # Data
-        serializer = LocationUpdateSerializer(self.location)
+        serializer = LocationCreateUpdateSerializer(self.location)
         self.data = serializer.data
 
     def tearDown(self):
@@ -643,7 +678,7 @@ class LocationUpdateTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def test_nested_contact_update(self):
         ph = create_contact(PhoneNumber, self.location)
-        serializer = LocationUpdateSerializer(self.location)
+        serializer = LocationCreateUpdateSerializer(self.location)
         data = serializer.data
         new_number = '456'
         data['phone_numbers'][0]['number'] = new_number
@@ -655,7 +690,7 @@ class LocationUpdateTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def test_nested_contact_remove(self):
         ph = create_contact(PhoneNumber, self.location)
-        serializer = LocationUpdateSerializer(self.location)
+        serializer = LocationCreateUpdateSerializer(self.location)
         data = serializer.data
         data.pop('phone_numbers') # field is not required, so doesn't need to be sent from client-side
         response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
@@ -672,7 +707,7 @@ class LocationUpdateTests(MockPermissionsAllowAnyMixin, APITestCase):
         create_contact(PhoneNumber, location2)
         # Delete ``self.location`` PHs
         create_contact(PhoneNumber, self.location)
-        serializer = LocationUpdateSerializer(self.location)
+        serializer = LocationCreateUpdateSerializer(self.location)
         data = serializer.data
         data.pop('phone_numbers')
         self.client.put('/api/admin/locations/{}/'.format(self.location.id), data, format='json')

@@ -1,11 +1,17 @@
+import json
+import uuid
+
 from django.test import TestCase
 
 from rest_framework.test import APITestCase
 
+from automation.models import Automation
+from automation.tests.mixins import ViewTestSetupMixin
 from location.tests.factory import create_locations
 from location.models import Location
-from location.serializers import LocationUpdateSerializer
+from location.serializers import LocationCreateUpdateSerializer
 from person.tests.factory import create_person, create_single_person, PASSWORD
+from tenant.tests.factory import get_or_create_tenant
 from utils.validators import (
     regex_check_contains, contains_digit, contains_upper_char,
     contains_lower_char, contains_special_char, contains_no_whitespaces,
@@ -23,7 +29,7 @@ class UniqueForActiveValidatorTests(MockPermissionsAllowAnyMixin, APITestCase):
         self.person = create_person()
         self.client.login(username=self.person.username, password=PASSWORD)
         # Data
-        serializer = LocationUpdateSerializer(self.location)
+        serializer = LocationCreateUpdateSerializer(self.location)
         self.data = serializer.data
 
     def tearDown(self):
@@ -45,12 +51,49 @@ class UniqueForActiveValidatorTests(MockPermissionsAllowAnyMixin, APITestCase):
         # Requery Update Serializer Data b/c children/parents may have changed 
         # when the "old_location" was deleted
         self.location = Location.objects.get(id=self.location.id)
-        self.data = LocationUpdateSerializer(self.location).data
+        self.data = LocationCreateUpdateSerializer(self.location).data
         # test
         self.data['number'] = old_location.number
         response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
             self.data, format='json')
         self.assertEqual(response.status_code, 200)
+
+
+class UniqueByTenantValidatorTests(ViewTestSetupMixin, APITestCase):
+
+    def test_not_unique_by_tenant(self):
+        self.data['id'] = str(uuid.uuid4())
+
+        response = self.client.post('/api/admin/automations/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        msg = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            msg['non_field_errors'][0],
+            "description: '{}' already exists for Tenant: '{}'".format(self.data['description'],
+                                                                       self.tenant.id)
+        )
+
+    def test_unique_by_tenant_but_not_unique_accross_model(self):
+        # this is fine, 'description' only needs to be unique by Tenant
+        tenant_two = get_or_create_tenant('foo')
+        person = create_single_person()
+        person.role.tenant = tenant_two
+        person.role.save()
+        self.client.logout()
+        self.client.login(username=person.username, password=PASSWORD)
+
+        self.data['id'] = str(uuid.uuid4())
+        self.data['actions'] = []
+
+        response = self.client.post('/api/admin/automations/', self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 201)
+        # automation is unique by tenant,description
+        automation = Automation.objects.get(id=data['id'])
+        self.assertEqual(automation.description, self.automation.description)
+        self.assertNotEqual(automation.tenant, self.automation.tenant)
 
 
 DIGITS = "Bobby123"

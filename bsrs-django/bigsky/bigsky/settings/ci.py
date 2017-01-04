@@ -17,6 +17,7 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [
     '--nologcapture',
+    '--exclude-dir={}'.format(os.path.join(BASE_DIR, "sc/tests")),
     '--exclude-dir={}'.format(os.path.join(BASE_DIR, "utils_transform/tcategory/tests")),
     '--exclude-dir={}'.format(os.path.join(BASE_DIR, "utils_transform/tlocation/tests")),
     '--exclude-dir={}'.format(os.path.join(BASE_DIR, "utils_transform/tperson/tests")),

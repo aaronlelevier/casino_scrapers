@@ -73,6 +73,20 @@ class CreateLocationLevelTests(TestCase):
         ret = factory.create_location_level(name)
         self.assertEqual(ret.name, name)
 
+    def test_children(self):
+        child = factory.create_location_level()
+
+        ret = factory.create_location_level(children=[child])
+
+        self.assertIn(child, ret.children.all())
+
+    def test_parents(self):
+        parent = factory.create_location_level()
+
+        ret = factory.create_location_level(parents=[parent])
+
+        self.assertIn(parent, ret.parents.all())
+
 
 class CreateLocationsTests(TestCase):
 

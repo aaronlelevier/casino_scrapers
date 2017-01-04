@@ -11,6 +11,7 @@ from contact.serializers import (PhoneNumberSerializer, EmailSerializer, Address
 from location.serializers import LocationIdNameOnlySerializer, LocationStatusFKSerializer
 from person.models import Person, Role, PersonStatus
 from person.validators import RoleLocationValidator, RoleCategoryValidator
+from utils.validators import UniqueByTenantValidator
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
     RemovePasswordSerializerMixin)
 
@@ -32,33 +33,7 @@ class RoleListSerializer(BaseCreateSerializer):
         fields = ROLE_LIST_FIELDS
 
 
-class RoleCreateUpdateSerializer(BaseCreateSerializer):
-
-    permissions = serializers.DictField(required=False)
-
-    class Meta:
-        model = Role
-        validators = [RoleCategoryValidator()]
-        fields = ROLE_CREATE_UPDATE_FIELDS
-
-    def create(self, validated_data):
-        perm_data = validated_data.pop('permissions', {})
-
-        instance = super(RoleCreateUpdateSerializer, self).create(validated_data)
-
-        update_to_true_perms = [k for k,v in perm_data.items() if v]
-        self._add_permissions_to_update(instance, update_to_true_perms)
-        return instance
-
-    def update(self, instance, validated_data):
-        init_perms = copy.copy(instance.permissions)
-        post_perms = validated_data.pop('permissions', {})
-
-        if init_perms != post_perms:
-            self._add_permissions(instance, init_perms, post_perms)
-            self._remove_permissions(instance, init_perms, post_perms)
-
-        return super(RoleCreateUpdateSerializer, self).update(instance, validated_data)
+class RolePermissionsMixin(object):
 
     def _add_permissions(self, instance, init_perms, post_perms):
         """
@@ -87,6 +62,52 @@ class RoleCreateUpdateSerializer(BaseCreateSerializer):
 
     def _permissions_to_update(self, perms):
         return Permission.objects.filter(codename__in=perms)
+
+
+class RoleCreateSerializer(RolePermissionsMixin, BaseCreateSerializer):
+
+    permissions = serializers.DictField(required=False)
+
+    class Meta:
+        model = Role
+        validators = [RoleCategoryValidator(),
+                      UniqueByTenantValidator(Role, 'name')]
+        fields = ROLE_CREATE_UPDATE_FIELDS + ('tenant',)
+
+    def create(self, validated_data):
+        perm_data = validated_data.pop('permissions', {})
+
+        instance = super(RoleCreateSerializer, self).create(validated_data)
+
+        update_to_true_perms = [k for k,v in perm_data.items() if v]
+        self._add_permissions_to_update(instance, update_to_true_perms)
+        return instance
+
+    def to_representation(self, data):
+        data = super(RoleCreateSerializer, self).to_representation(data)
+        data.pop('tenant', None)
+        return data
+
+
+class RoleUpdateSerializer(RolePermissionsMixin, BaseCreateSerializer):
+
+    permissions = serializers.DictField(required=False)
+
+    class Meta:
+        model = Role
+        validators = [RoleCategoryValidator(),
+                      UniqueByTenantValidator(Role, 'name')]
+        fields = ROLE_CREATE_UPDATE_FIELDS
+
+    def update(self, instance, validated_data):
+        init_perms = copy.copy(instance.permissions)
+        post_perms = validated_data.pop('permissions', {})
+
+        if init_perms != post_perms:
+            self._add_permissions(instance, init_perms, post_perms)
+            self._remove_permissions(instance, init_perms, post_perms)
+
+        return super(RoleUpdateSerializer, self).update(instance, validated_data)
 
 
 class RoleDetailSerializer(BaseCreateSerializer):

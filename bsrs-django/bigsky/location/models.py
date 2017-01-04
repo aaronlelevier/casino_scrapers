@@ -1,5 +1,3 @@
-import uuid
-
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.fields import GenericRelation
@@ -153,7 +151,7 @@ class LocationLevelManager(SelfReferencingManager):
         return self.get_queryset().search_multi(keyword)
 
 
-class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
+class LocationLevel(SelfRefrencingBaseModel, BaseModel):
     '''
     LocationLevel records must be unique by: name, role_type
     '''
@@ -169,7 +167,8 @@ class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
     def I18N_HEADER_FIELDS(cls):
         return [x[1] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
 
-    tenant = models.ForeignKey(Tenant, related_name="location_levels", null=True)
+    name = models.CharField(max_length=100, help_text="unique by tenant")
+    tenant = models.ForeignKey(Tenant, related_name="location_levels")
     contact = models.BooleanField(blank=True, default=True,
         help_text="Defines whether locations in this type will have related Contact models.")
     can_create_tickets = models.BooleanField(blank=True, default=True,
@@ -370,6 +369,8 @@ class Location(SelfRefrencingBaseModel, BaseModel):
         return [x[1] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
 
     # keys
+    scid = models.IntegerField(null=True, unique=True,
+        help_text="id of SC primary key record of the location. Will be null on initial BS create")
     location_level = models.ForeignKey(LocationLevel, related_name='locations')
     status = models.ForeignKey(LocationStatus, related_name='locations', blank=True, null=True)
     type = models.ForeignKey(LocationType, related_name='locations', blank=True, null=True)
@@ -401,3 +402,7 @@ class Location(SelfRefrencingBaseModel, BaseModel):
     @property
     def is_office_or_store(self):
         return any((x.is_office_or_store for x in self.addresses.all()))
+
+    @property
+    def is_store(self):
+        return self.location_level.name == LOCATION_STORE

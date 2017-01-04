@@ -14,7 +14,7 @@ from contact.models import (Address, AddressType, Email, EmailType,
 from contact.tests.factory import (create_contact, create_contacts, create_phone_number_type,
     create_email_type)
 from location.models import Location, LocationLevel
-from location.tests.factory import create_location
+from location.tests.factory import create_location, create_location_level
 from person.models import Person, Role, PersonStatus
 from person.serializers import PersonUpdateSerializer
 from person.tests.factory import (PASSWORD, create_single_person, create_role, create_roles,
@@ -603,7 +603,7 @@ class PersonUpdateTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def test_location_level_equal_new_role(self):
         # create separate LocationLevel
-        location_level = mommy.make(LocationLevel)
+        location_level = create_location_level()
         new_role = create_role(name='new', location_level=location_level)
         location = mommy.make(Location, location_level=location_level)
         self.assertNotEqual(self.person.role.location_level, location_level)
@@ -933,6 +933,10 @@ class SessionViewTests(MockPermissionsAllowAnyMixin, APITestCase):
         self.assertEqual(response.status_code, 403)
 
     def test_locale(self):
+        # hard delete locale, so no conflicts when creating 'es' locale below
+        locale = self.person.locale
+        locale.delete(override=True)
+        # person setup
         self.person.locale = None
         self.person.save()
         self.assertIsNone(self.person.locale)

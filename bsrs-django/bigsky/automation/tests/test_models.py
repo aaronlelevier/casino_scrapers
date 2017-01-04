@@ -775,5 +775,3 @@ class AutomationFilterLocationTests(TestCase):
         self.assertIn(str(self.district.id), location_filter.criteria)
         self.assertNotIn(str(self.ticket.location.id), location_filter.criteria)
         self.assertFalse(location_filter.is_match(self.ticket))
-
-

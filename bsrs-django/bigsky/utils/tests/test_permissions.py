@@ -6,6 +6,7 @@ from rest_framework.test import APITestCase
 
 from category.tests.factory import create_single_category
 from location.models import Location, LocationLevel
+from location.tests.factory import create_location_level
 from person.helpers import PermissionInfo
 from person.tests.factory import PASSWORD, create_person
 from ticket.models import Ticket
@@ -22,7 +23,7 @@ class CrudPermissionsTests(APITestCase):
 
         PermissionInfo().setUp()
         self.location = mommy.make(Location)
-        self.location_level = mommy.make(LocationLevel)
+        self.location_level = create_location_level()
         self.role = self.person.role
         self.ticket = mommy.make(Ticket)
 

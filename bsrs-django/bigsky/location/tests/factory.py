@@ -26,12 +26,24 @@ def create_location_levels():
     fmu.children.add(store)
 
 
-def create_location_level(name=LOCATION_COMPANY):
+def create_location_level(name=LOCATION_COMPANY, children=None, parents=None):
+    """
+    :param name: String name
+    :param children: List of LocationLevel instances
+    :param parents: List of LocationLevel instances
+    """
     try:
         obj = LocationLevel.objects.get(name=name)
     except LocationLevel.DoesNotExist:
         tenant = get_or_create_tenant()
         obj = LocationLevel.objects.create(name=name, tenant=tenant)
+
+    if children:
+        obj.children.set(children)
+
+    if parents:
+        obj.parents.set(parents)
+
     return obj
 
 

@@ -36,7 +36,3 @@ class HelperTests(TestCase):
         ret = d["Tom"] 
         self.assertEqual(ret['id'], '2345')
         self.assertEqual(ret['name'], 'Tom')
-
-    def test_empty_str_if_none(self):
-        self.assertEqual(helpers.empty_str_if_none(None), '')
-        self.assertEqual(helpers.empty_str_if_none('foo'), 'foo')

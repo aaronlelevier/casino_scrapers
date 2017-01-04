@@ -9,7 +9,7 @@ from rest_framework.test import APITestCase
 from accounting.models import Currency
 from accounting.serializers import CurrencySerializer
 from location.models import LocationLevel
-from location.tests.factory import create_location
+from location.tests.factory import create_location, create_location_level
 from person.models import Person, Role
 from person.tests.factory import create_single_person, create_role, create_roles, PASSWORD
 from utils import create
@@ -173,8 +173,8 @@ class RelatedOrderingTests(MockPermissionsAllowAnyMixin, APITestCase):
     def setUp(self):
         super(RelatedOrderingTests, self).setUp()
         # Role
-        self.store = mommy.make(LocationLevel, name='store')
-        self.department = mommy.make(LocationLevel, name='department')
+        self.store = create_location_level('store')
+        self.department = create_location_level('department')
 
         self.role_admin = create_role(name="admin", location_level=self.store)
         self.role_mgr = create_role(name="Manager", location_level=self.store)

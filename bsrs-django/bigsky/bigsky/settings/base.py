@@ -48,6 +48,7 @@ LOCAL_APPS = [
     'generic',
     'location',
     'person',
+    'sc',
     'tenant',
     'third_party',
     'ticket',

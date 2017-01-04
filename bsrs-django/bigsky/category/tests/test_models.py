@@ -8,6 +8,7 @@ from accounting.models import Currency
 from category.models import Category, CategoryManager, CategoryQuerySet, CategoryStatus
 from category.tests import factory
 from person.tests.factory import create_single_person
+from tenant.tests.factory import get_or_create_tenant
 from utils.models import DefaultNameManager
 from utils.tests.test_helpers import create_default
 
@@ -131,9 +132,11 @@ class CategoryTests(CategorySetupMixin, TestCase):
             self.assertTrue(hasattr(category, f))
 
     def test_label__no_parent_no_label_set(self):
+        tenant = get_or_create_tenant()
         category = Category.objects.create(
             name='foo',
-            status=random.choice(self.statuses)
+            status=random.choice(self.statuses),
+            tenant=tenant
         )
 
         self.assertIsNone(category.parent)
@@ -142,15 +145,18 @@ class CategoryTests(CategorySetupMixin, TestCase):
 
     def test_label__has_parent_but_no_label_set(self):
         subcategory_label = 'bar'
+        tenant = get_or_create_tenant()
         parent = Category.objects.create(
             name='foo',
             status=random.choice(self.statuses),
-            subcategory_label=subcategory_label
+            subcategory_label=subcategory_label,
+            tenant=tenant
         )
         category = Category.objects.create(
             name='foo',
             status=random.choice(self.statuses),
-            parent=parent
+            parent=parent,
+            tenant=tenant
         )
 
         self.assertEqual(category.parent, parent)
@@ -159,11 +165,13 @@ class CategoryTests(CategorySetupMixin, TestCase):
     def test_top_level_label__explicit(self):
         label = 'foo'
         subcategory_label = 'bar'
+        tenant = get_or_create_tenant()
         category = Category.objects.create(
             name='my new category',
             label=label,
             subcategory_label=subcategory_label,
-            status=random.choice(self.statuses)
+            status=random.choice(self.statuses),
+            tenant=tenant
         )
 
         self.assertIsNone(category.parent)

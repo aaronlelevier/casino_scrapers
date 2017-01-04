@@ -57,7 +57,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.assertEqual(self.lorem[0], usernames[0].text)
         self.wait_for_xhr_request("t-sort-username-dir").click()
         titles = self.wait_for_xhr_request("t-person-title", plural=True)
-        self.assertEqual('Facility Management Unit', titles[1].text)
+        self.assertEqual('Store', titles[1].text)
         # order: -username,title
         self.wait_for_xhr_request("t-sort-username-dir").click()
         self.wait_for_xhr_request("t-sort-username-dir").click()
@@ -65,7 +65,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.assertEqual(self.lorem[0], usernames[0].text)
         self.wait_for_xhr_request("t-sort-username-dir").click()
         titles = self.wait_for_xhr_request("t-person-title", plural=True)
-        self.assertEqual('Facility Management Unit', titles[1].text)
+        self.assertEqual('Store', titles[1].text)
 
     def test_search_input(self):
         people = self.wait_for_xhr_request("t-grid-data", plural=True)

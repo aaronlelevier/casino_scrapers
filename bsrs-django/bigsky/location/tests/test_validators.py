@@ -6,7 +6,7 @@ from model_mommy import mommy
 
 from location.tests.factory import  create_locations
 from location.models import Location
-from location.serializers import LocationUpdateSerializer
+from location.serializers import LocationCreateUpdateSerializer
 from location.validators import LocationParentChildValidator
 from person.tests.factory import create_person, PASSWORD
 from utils.tests.mixins import MockPermissionsAllowAnyMixin
@@ -22,7 +22,7 @@ class LocationUpdateTests(MockPermissionsAllowAnyMixin, APITestCase):
         self.person = create_person()
         self.client.login(username=self.person.username, password=PASSWORD)
         # Data
-        serializer = LocationUpdateSerializer(self.location)
+        serializer = LocationCreateUpdateSerializer(self.location)
         self.data = serializer.data
         # Error msg
         self.message = LocationParentChildValidator.message

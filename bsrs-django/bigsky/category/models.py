@@ -102,7 +102,7 @@ class Category(BaseModel):
     def I18N_HEADER_FIELDS(cls):
         return [x[1] for x in cls._RAW_EXPORT_FIELDS_AND_HEADERS]
 
-    tenant = models.ForeignKey(Tenant, related_name="categories", null=True)
+    tenant = models.ForeignKey(Tenant, related_name="categories")
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=100, blank=True, null=True)
     label = models.CharField(max_length=100, editable=False, blank=True, null=True,

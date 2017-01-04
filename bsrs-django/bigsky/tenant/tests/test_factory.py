@@ -5,7 +5,6 @@ from contact.models import (
     Email, EmailType, Address, AddressType, PhoneNumber, PhoneNumberType, State, Country)
 from dtd.models import TreeData, DTD_START_KEY
 from dtd.tests.factory import create_tree_data
-from person.models import Person
 from person.tests.factory import create_single_person
 from tenant.models import Tenant
 from tenant.tests import factory
@@ -67,19 +66,6 @@ class TenantTests(TestCase):
 
         self.assertEqual(ret.implementation_contact, person)
 
-    def test_sc_subscriber_post_data(self):
-        raw_sc_subscriber_post_data = {
-            "Name": "foo",
-            "Address1": "9246 Lightwave Ave.",
-            "Address2": "",
-            "Country": "United States",
-            "State": "California",
-            "City": "San Diego",
-            "Zip": "92123",
-            "Email": "test@email.com",
-            "Phone": "858-715-5000",
-            "Fax": "858-715-5001",
-            "ContactName": "Bob"
-        }
-
-        self.assertEqual(factory.SC_SUBSCRIBER_POST_DATA, raw_sc_subscriber_post_data)
+    def test_no_scid(self):
+        ret = factory.get_or_create_tenant(with_scid=False)
+        self.assertIsNone(ret.scid)

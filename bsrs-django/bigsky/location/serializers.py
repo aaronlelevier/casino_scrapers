@@ -5,9 +5,10 @@ from contact.serializers import (PhoneNumberSerializer, EmailSerializer, Address
 from location.models import LocationLevel, LocationStatus, LocationType, Location
 from location.validators import LocationParentChildValidator
 from person.serializers_leaf import PersonSimpleSerializer
+from sc.etl import LocationEtlAdapter
 from tenant.mixins import RemoveTenantMixin
 from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin, NestedCreateContactSerializerMixin
-from utils.validators import UniqueForActiveValidator
+from utils.validators import UniqueForActiveValidator, UniqueByTenantValidator
 
 
 ### LOCATION LEVEL
@@ -37,6 +38,7 @@ class LocationLevelCreateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
     class Meta:
         model = LocationLevel
+        validators = [UniqueByTenantValidator(LocationLevel, 'name')]
         fields = LOCATION_LEVEL_BASE_DETAIL_FIELDS + ('tenant', 'children',)
 
 
@@ -44,6 +46,7 @@ class LocationLevelUpdateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = LocationLevel
+        validators = [UniqueByTenantValidator(LocationLevel, 'name')]
         fields = LOCATION_LEVEL_BASE_DETAIL_FIELDS + ('children',)
 
 
@@ -135,7 +138,7 @@ class LocationDetailSerializer(serializers.ModelSerializer):
             'parents', 'children', 'emails', 'phone_numbers', 'addresses',)
 
 
-class LocationUpdateSerializer(NestedCreateContactSerializerMixin, NestedContactSerializerMixin,
+class LocationCreateUpdateSerializer(NestedCreateContactSerializerMixin, NestedContactSerializerMixin,
     serializers.ModelSerializer):
 
     emails = EmailSerializer(required=False, many=True)
@@ -151,3 +154,13 @@ class LocationUpdateSerializer(NestedCreateContactSerializerMixin, NestedContact
         ]
         fields = ('id', 'name', 'number', 'status', 'location_level',
             'parents', 'children', 'emails', 'phone_numbers', 'addresses',)
+
+    def create(self, validated_data):
+        instance = super(LocationCreateUpdateSerializer, self).create(validated_data)
+        LocationEtlAdapter(instance).post()
+        return instance
+
+    def update(self, instance, validated_data):
+        instance = super(LocationCreateUpdateSerializer, self).update(instance, validated_data)
+        LocationEtlAdapter(instance).put()
+        return instance

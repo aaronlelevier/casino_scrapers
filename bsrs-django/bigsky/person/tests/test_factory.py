@@ -11,7 +11,8 @@ from category.models import LABEL_TRADE
 from category.tests.factory import create_single_category, create_categories, REPAIR
 from location.models import (Location, LocationLevel, LOCATION_COMPANY, LOCATION_DISTRICT,
     LOCATION_REGION)
-from location.tests.factory import create_location, create_locations, create_location_levels
+from location.tests.factory import (create_location, create_locations,
+    create_location_level, create_location_levels)
 from person.helpers import PermissionInfo
 from person.models import Role, Person
 from person.tests import factory
@@ -78,7 +79,7 @@ class CreateRoleTests(TestCase):
         self.assertEqual(role.name, name)
 
     def test_with_location_level(self):
-        location_level = mommy.make(LocationLevel)
+        location_level = create_location_level(LOCATION_REGION)
 
         role = factory.create_role(location_level=location_level)
 

@@ -10,12 +10,13 @@ from person.models import Role, Person
 from automation.models import (AutomationEvent, Automation, AutomationFilter, AutomationFilterType,
     AutomationAction, AutomationActionType)
 from automation.validators import (
-    AutomationActionValidator, AutomationFilterFieldValidator, UniqueByTenantValidator,
+    AutomationActionValidator, AutomationFilterFieldValidator,
     AutomationFilterTypeValidator)
 from tenant.mixins import RemoveTenantMixin
 from ticket.models import TicketPriority, TicketStatus
 from utils.create import update_model
 from utils.helpers import get_person_and_role_ids
+from utils.validators import UniqueByTenantValidator
 from utils.serializers import BaseCreateSerializer
 
 
@@ -191,7 +192,7 @@ class AutomationCreateUpdateSerializer(RemoveTenantMixin, BaseCreateSerializer):
     class Meta:
         model = Automation
         validators = [AutomationFilterTypeValidator(),
-                      UniqueByTenantValidator('description')]
+                      UniqueByTenantValidator(Automation, 'description')]
         fields = AUTOMATION_FIELDS + ('events', 'filters', 'actions',)
 
     def create(self, validated_data):

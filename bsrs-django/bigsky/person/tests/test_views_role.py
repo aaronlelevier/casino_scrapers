@@ -10,10 +10,11 @@ from rest_framework.test import APITestCase
 from accounting.models import Currency
 from category.models import Category
 from location.models import LocationLevel
+from location.tests.factory import create_location_level
 from person import config as person_config
 from person.helpers import PermissionInfo
 from person.models import Role
-from person.serializers import RoleCreateUpdateSerializer
+from person.serializers import RoleUpdateSerializer
 from person.tests.factory import create_role
 from person.tests.mixins import RoleSetupMixin
 
@@ -127,6 +128,7 @@ class RoleCreateTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['auth_currency'], self.data['auth_currency'])
         self.assertEqual(data['dashboard_text'], self.data['dashboard_text'])
         self.assertEqual(sorted(data['categories']), sorted(self.data['categories']))
+        self.assertNotIn('tenant', data)
 
     def test_new_roles_tenant_set_to_logged_in_users_tenant(self):
         response = self.client.post('/api/admin/roles/', self.data, format='json')
@@ -155,12 +157,25 @@ class RoleCreateTests(RoleSetupMixin, APITestCase):
         role = Role.objects.get(id=data['id'])
         self.assertEqual(role.group.permissions.count(), 2)
 
+    def test_name_unique_by_tenant(self):
+        self.data['name'] = self.person.role.name
+
+        response = self.client.post('/api/admin/roles/', self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            data['non_field_errors'][0],
+            "name: '{}' already exists for Tenant: '{}'".format(
+                self.person.role.name, self.person.role.tenant.id)
+        )
+
 
 class RoleUpdateTests(RoleSetupMixin, APITestCase):
 
     def setUp(self):
         super(RoleUpdateTests, self).setUp()
-        self.data = RoleCreateUpdateSerializer(self.role).data
+        self.data = RoleUpdateSerializer(self.role).data
 
     def test_update(self):
         category = mommy.make(Category)
@@ -183,10 +198,11 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
         self.assertEqual(data['auth_currency'], role_data['auth_currency'])
         self.assertEqual(data['dashboard_text'], role_data['dashboard_text'])
         self.assertIsInstance(data['categories'], list)
+        self.assertNotIn('tenant', data)
 
     def test_update__location_level(self):
         role_data = copy.copy(self.data)
-        role_data['location_level'] = str(mommy.make(LocationLevel).id)
+        role_data['location_level'] = str(create_location_level().id)
         self.assertNotEqual(
             self.data['location_level'],
             role_data['location_level']
@@ -294,6 +310,23 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertNotIn('add_ticket', data['permissions'])
         self.assertEqual(self.role.group.permissions.count(), 0)
+
+    def test_name_unique_by_tenant(self):
+        role = create_role()
+        self.assertEqual(role.tenant, self.person.role.tenant)
+        self.assertNotEqual(self.person.role.name, role.name)
+        self.data['name'] = role.name
+
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['non_field_errors'][0],
+            "name: '{}' already exists for Tenant: '{}'".format(
+                role.name, self.person.role.tenant.id)
+        )
 
 
 class RoleRouteDataTests(RoleSetupMixin, APITestCase):

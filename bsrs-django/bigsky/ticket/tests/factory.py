@@ -14,6 +14,7 @@ from location.models import Location, LocationStatus, LocationType, LOCATION_COM
 from location.tests.factory import create_locations
 from person.models import Person
 from person.tests.factory import create_single_person
+from tenant.tests.factory import get_or_create_tenant
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity,)
 from ticket.tests.factory_related import (create_ticket_status, create_ticket_statuses,
@@ -294,10 +295,11 @@ def create_extra_ticket_with_categories():
     of the ordering.
     """
     # Category
+    tenant = get_or_create_tenant()
     create_default(CategoryStatus)
-    loss_prevention, _ = Category.objects.get_or_create(name="Loss Prevention", subcategory_label="trade")
-    locks, _ = Category.objects.get_or_create(name="Locks", parent=loss_prevention, subcategory_label="issue")
-    a_locks, _ = Category.objects.get_or_create(name="A Lock", parent=locks)
+    loss_prevention, _ = Category.objects.get_or_create(name="Loss Prevention", tenant=tenant, subcategory_label="trade")
+    locks, _ = Category.objects.get_or_create(name="Locks", tenant=tenant, parent=loss_prevention, subcategory_label="issue")
+    a_locks, _ = Category.objects.get_or_create(name="A Lock", tenant=tenant, parent=locks)
     # Ticket
     create_default(TicketStatus)
     create_default(LocationStatus)

@@ -12,7 +12,8 @@ from utils.create import _generate_chars
 from utils.helpers import generate_uuid
 
 
-def get_or_create_tenant(company_name=settings.DEFAULT_TENANT_COMPANY_NAME, **kwargs):
+def get_or_create_tenant(company_name=settings.DEFAULT_TENANT_COMPANY_NAME,
+                         with_scid=True, **kwargs):
     # check if any Emails, which would have been added in the contact
     # fixtures are present. If not, we need to add the contact fixtures
     if not Email.objects.first():
@@ -23,7 +24,7 @@ def get_or_create_tenant(company_name=settings.DEFAULT_TENANT_COMPANY_NAME, **kw
     except Tenant.DoesNotExist:
         defaults = {
             'id': generate_uuid(Tenant),
-            'scid': random.randint(1,100),
+            'scid': random.randint(1,100) if with_scid else None,
             'company_name': company_name,
             'company_code': _generate_chars(),
             'implementation_contact_initial': _generate_chars(),

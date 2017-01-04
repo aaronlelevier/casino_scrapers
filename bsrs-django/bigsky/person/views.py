@@ -34,8 +34,10 @@ class RoleViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
             return ps.RoleDetailSerializer
         elif self.action == 'list':
             return ps.RoleListSerializer
+        elif self.action == 'create':
+            return ps.RoleCreateSerializer
         else:
-            return ps.RoleCreateUpdateSerializer
+            return ps.RoleUpdateSerializer
 
     @list_route(methods=['get'], url_path=r"route-data/new")
     def route_data_new(self, request):
@@ -49,13 +51,8 @@ class RoleViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
     def create(self, request, *args, **kwargs):
         """Assign new Role's tenant to match the logged
         in User's Tenant."""
-        response = super(RoleViewSet, self).create(request, *args, **kwargs)
-
-        role = Role.objects.get(id=response.data['id'])
-        role.tenant = request.user.role.tenant
-        role.save()
-
-        return response
+        request.data['tenant'] = str(request.user.role.tenant.id)
+        return super(RoleViewSet, self).create(request, *args, **kwargs)
 
 
 ### PERSON

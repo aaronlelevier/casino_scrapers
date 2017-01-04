@@ -79,28 +79,28 @@ class TicketCategoryOrderingSetupMixin(object):
         create_default(LocationStatus)
         create_default(LocationType)
         # 1: Loss Prevention - Locks - Drawer Lock
-        loss_prevention = Category.objects.create(name="Loss Prevention", subcategory_label="trade")
-        locks = Category.objects.create(name="Locks", parent=loss_prevention, subcategory_label="issue")
-        drawer_locks = Category.objects.create(name="Drawer Lock", parent=locks)
+        loss_prevention = mommy.make(Category, name="Loss Prevention", subcategory_label="trade")
+        locks = mommy.make(Category, name="Locks", parent=loss_prevention, subcategory_label="issue")
+        drawer_locks = mommy.make(Category, name="Drawer Lock", parent=locks)
 
         # 2: Loss Prevention - Sensors - Front Door
-        sensors = Category.objects.create(name="Sensors", parent=loss_prevention, subcategory_label='issue')
-        front_door = Category.objects.create(name="Front Door", parent=sensors)
+        sensors = mommy.make(Category, name="Sensors", parent=loss_prevention, subcategory_label='issue')
+        front_door = mommy.make(Category, name="Front Door", parent=sensors)
 
         # 3: Repair - Electrical - Outlets
-        repair = Category.objects.create(name="Repair", subcategory_label="trade")
-        electrical = Category.objects.create(name="Electrical", parent=repair, subcategory_label="issue")
-        outlets = Category.objects.create(name="Outlets", parent=electrical)
+        repair = mommy.make(Category, name="Repair", subcategory_label="trade")
+        electrical = mommy.make(Category, name="Electrical", parent=repair, subcategory_label="issue")
+        outlets = mommy.make(Category, name="Outlets", parent=electrical)
 
         # 4: Repair - Electrical - Switches
-        switches = Category.objects.create(name="Switches", parent=electrical)
+        switches = mommy.make(Category, name="Switches", parent=electrical)
 
         # 5: Repair - Plumbing - Leak
-        plumbing = Category.objects.create(name="Plumbing", parent=repair, subcategory_label="issue")
-        leak = Category.objects.create(name="Leak", parent=plumbing)
+        plumbing = mommy.make(Category, name="Plumbing", parent=repair, subcategory_label="issue")
+        leak = mommy.make(Category, name="Leak", parent=plumbing)
 
         # 6: Repair - Plumbing - Toilet
-        toilet = Category.objects.create(name="Toilet", parent=plumbing)
+        toilet = mommy.make(Category, name="Toilet", parent=plumbing)
 
         # Tickets
         self.one = mommy.make(Ticket, request="one")

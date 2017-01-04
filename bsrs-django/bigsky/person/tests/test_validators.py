@@ -5,9 +5,9 @@ from rest_framework.test import APITestCase
 
 from category.tests.factory import create_single_category
 from location.models import Location, LocationLevel
-from location.tests.factory import create_location
+from location.tests.factory import create_location, create_location_level
 from person.models import Person
-from person.serializers import RoleCreateUpdateSerializer, PersonUpdateSerializer
+from person.serializers import RoleUpdateSerializer, PersonUpdateSerializer
 from person.tests.factory import PASSWORD, create_single_person, create_role
 from utils.tests.mixins import MockPermissionsAllowAnyMixin
 
@@ -30,7 +30,7 @@ class RoleLocationValidatorTests(MockPermissionsAllowAnyMixin, APITestCase):
         self.client.logout()
 
     def test_location_level_not_equal_init_role(self):
-        location_level = mommy.make(LocationLevel)
+        location_level = create_location_level()
         location = mommy.make(Location, location_level=location_level)
         self.assertNotEqual(self.person.role.location_level, location_level)
         self.data['locations'].append(str(location.id))
@@ -47,7 +47,7 @@ class RoleLocationValidatorTests(MockPermissionsAllowAnyMixin, APITestCase):
     def test_location_level_not_equal_new_role(self):
         location = mommy.make(Location, location_level=self.person.role.location_level)
         self.data['locations'].append(str(location.id))
-        location_level = mommy.make(LocationLevel)
+        location_level = create_location_level()
         new_role = create_role(name='new', location_level=location_level)
         self.data['role'] = str(new_role.id)
 
@@ -69,7 +69,7 @@ class RoleCategoryValidatorTests(MockPermissionsAllowAnyMixin, APITestCase):
         self.child_category = create_single_category(parent=self.parent_category)
         # data
         self.role = create_role()
-        serializer = RoleCreateUpdateSerializer(self.role)
+        serializer = RoleUpdateSerializer(self.role)
         self.data = serializer.data
         # Login
         self.person = create_single_person()

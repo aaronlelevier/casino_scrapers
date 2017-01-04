@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.db.models import Q
 from django.shortcuts import get_object_or_404
 
 from rest_framework.response import Response
@@ -153,10 +152,8 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
             return ls.LocationListSerializer
         elif self.action == 'retrieve':
             return ls.LocationDetailSerializer
-        elif self.action in ('create', 'update', 'partial_update'):
-            return ls.LocationUpdateSerializer
         else:
-            raise MethodNotAllowed(method=self.action)
+            return ls.LocationCreateUpdateSerializer
 
     def get_queryset(self):
         queryset = super(LocationViewSet, self).get_queryset()

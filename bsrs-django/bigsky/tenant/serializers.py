@@ -1,7 +1,4 @@
-import json
-
 from rest_framework import serializers
-from rest_framework.exceptions import ValidationError
 
 from accounting.serializers import CurrencyIdNameSerializer
 from contact.models import Email, Address, PhoneNumber, Country
@@ -10,8 +7,10 @@ from contact.serializers import (
     CountryIdNameSerializer)
 from dtd.serializers import TreeDataListSerializer
 from person.serializers_leaf import PersonSimpleSerializer
+from sc.etl import TenantEtlAdapter, TenantEtlDataAdapter
+from tenant.helpers import TenantFixtures
 from tenant.models import Tenant
-from tenant.oauth import BsOAuthSession, DEV_SC_SUBSCRIBERS_URL
+from tenant.validators import TenantEmailValidator
 from utils import create
 from utils.serializers import BaseCreateSerializer
 
@@ -82,33 +81,19 @@ class TenantCreateSerializer(TenantContactsMixin, BaseCreateSerializer):
 
     class Meta:
         model = Tenant
+        validators = [TenantEmailValidator()]
         fields = TENANT_FIELDS
 
     def create(self, validated_data):
         validated_data = self.update_or_create_nested_contacts(validated_data)
+        scid = TenantEtlDataAdapter(validated_data).post()
+
         instance = super(TenantCreateSerializer, self).create(validated_data)
-        self._send_mail(instance.implementation_email.email)
-        self._sc_create(instance)
+
+        instance.scid = scid
+        instance.save()
+        TenantFixtures(instance).setUp()
         return instance
-
-    # TODO: update this w/ email template / django send_mail when ready
-    def _send_mail(self, email):
-        pass
-
-    def _sc_create(self, instance):
-        session = BsOAuthSession()
-        tries = 3
-        for i in range(tries):
-            sc_response = session.post(DEV_SC_SUBSCRIBERS_URL, data=instance.sc_post_data)
-
-            if sc_response.status_code == 201:
-                data = json.loads(sc_response.content.decode('utf8'))
-                instance.scid = data['id']
-                instance.save()
-                break;
-            else:
-                if tries == i+1: # b/c range() 0 indexed
-                    raise ValidationError("Error creating subscriber")
 
 
 class TenantUpdateSerializer(TenantCreateSerializer):
@@ -125,6 +110,9 @@ class TenantUpdateSerializer(TenantCreateSerializer):
 
         instance = self._update_countries(instance, countries)
         instance.save()
+
+        TenantEtlAdapter(instance).put()
+
         return instance
 
     @staticmethod

@@ -12,8 +12,9 @@ from contact.tests.factory import create_contact, create_address_type
 from location.models import (
     Location, LocationManager, LocationQuerySet,  LocationLevel, LocationLevelManager,
     LocationLevelQuerySet, LocationStatus, LocationType, LOCATION_COMPANY, LOCATION_REGION,
-    LOCATION_FMU, LOCATION_STORE,)
-from location.tests.factory import create_location, create_locations
+    LOCATION_DISTRICT, LOCATION_FMU, LOCATION_STORE,)
+from location.tests.factory import (create_location, create_locations, SAN_DIEGO,
+    create_location_level)
 from person.tests.factory import create_single_person
 from utils.models import DefaultNameManager
 from utils.tests.test_helpers import create_default
@@ -24,11 +25,11 @@ class SelfReferencingManagerTests(TestCase):
     ``LocationLevel`` Model used for testing of: ``SelfReferencingManager``
     '''
     def setUp(self):
-        self.region = mommy.make(LocationLevel, name='region')
-        self.district = mommy.make(LocationLevel, name='district')
-        self.store1 = mommy.make(LocationLevel, name='store1')
-        self.store2 = mommy.make(LocationLevel, name='store2')
-        self.store3 = mommy.make(LocationLevel, name='wat')
+        self.region = create_location_level(name='region')
+        self.district = create_location_level(name='district')
+        self.store1 = create_location_level(name='store1')
+        self.store2 = create_location_level(name='store2')
+        self.store3 = create_location_level(name='wat')
 
         # test that ``get_all_children()`` traverses multiple levels, and
         # doesn't just get the ``children`` for a single ``LocationLevel``
@@ -67,10 +68,10 @@ class LocationLevelManagerTests(TestCase):
     Test default M2M Manager methods which don't traverse relationships.
     '''
     def setUp(self):
-        self.region = mommy.make(LocationLevel, name='region')
-        self.district = mommy.make(LocationLevel, name='district')
-        self.store1 = mommy.make(LocationLevel, name='store1')
-        self.store2 = mommy.make(LocationLevel, name='store2')
+        self.region = create_location_level(name='region')
+        self.district = create_location_level(name='district')
+        self.store1 = create_location_level(name='store1')
+        self.store2 = create_location_level(name='store2')
 
     def test_queryset_cls(self):
         self.assertEqual(LocationLevelManager.queryset_cls, LocationLevelQuerySet)
@@ -97,7 +98,7 @@ class LocationLevelManagerTests(TestCase):
         self.assertEqual(self.district.parents.count(), 1)
 
     def test_create_top_level(self):
-        ret = LocationLevel.objects.create_top_level()
+        ret = create_location_level()
         self.assertIsInstance(ret, LocationLevel)
         self.assertEqual(ret.name, settings.DEFAULT_LOCATION_LEVEL)
 
@@ -147,16 +148,16 @@ class LocationLevelTests(TestCase):
         self.assertTrue(location_level.is_top_level)
 
     def test_is_top_level__false(self):
-        location_level = mommy.make(LocationLevel, name='foo')
+        location_level = create_location_level(name='foo')
         self.assertFalse(location_level.is_top_level)
 
     def test_to_dict(self):
         # middle
-        location_level = mommy.make(LocationLevel)
+        location_level = create_location_level()
         # child
-        location_level_two = mommy.make(LocationLevel)
+        location_level_two = create_location_level()
         # parent
-        location_level_three = mommy.make(LocationLevel, children=[location_level])
+        location_level_three = create_location_level(children=[location_level])
         location_level.children.add(location_level_two)
         location_level.parents.add(location_level_three)
         self.assertIsInstance(location_level.children.first(), LocationLevel)
@@ -452,3 +453,14 @@ class LocationTests(TestCase):
         self.assertTrue(address.is_office_or_store)
         self.location.addresses.add(address)
         self.assertTrue(self.location.is_office_or_store)
+
+    def test_is_store(self):
+        create_locations()
+        store = Location.objects.get(name=SAN_DIEGO)
+        district = store.parents.filter(location_level__name=LOCATION_DISTRICT).first()
+
+        self.assertEqual(store.location_level.name, LOCATION_STORE)
+        self.assertTrue(store.is_store)
+
+        self.assertNotEqual(district.location_level.name, LOCATION_STORE)
+        self.assertFalse(district.is_store)

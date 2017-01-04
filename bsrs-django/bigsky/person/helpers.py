@@ -57,6 +57,8 @@ class PermissionInfo(object):
                 try:
                     Permission.objects.get(
                         codename='{}_{}'.format(perm, data['model']))
+                except Permission.MultipleObjectsReturned:
+                    pass
                 except Permission.DoesNotExist:
                     Permission.objects.create(
                         codename='{}_{}'.format(perm, data['model']),

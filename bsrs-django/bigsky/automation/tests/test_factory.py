@@ -15,7 +15,6 @@ from person.models import Role, Person
 from tenant.models import Tenant
 from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketPriority, TicketStatus
-from utils.create import LOREM_IPSUM_WORDS
 from utils.helpers import create_default
 
 

@@ -7,6 +7,7 @@ from django.conf import settings
 
 from model_mommy import mommy
 from pretend import stub
+from rest_framework.exceptions import ValidationError
 from rest_framework.test import APITestCase
 
 from accounting.models import Currency
@@ -15,7 +16,7 @@ from contact.serializers import EmailSerializer, AddressSerializer, PhoneNumberS
 from contact.tests.factory import create_address
 from dtd.models import TreeData, DTD_START_KEY
 from person.tests.factory import PASSWORD, create_single_person
-from tenant.oauth import BsOAuthSession, DEV_SC_SUBSCRIBERS_URL
+from tenant.helpers import TenantFixtures
 from tenant.models import Tenant
 from tenant.serializers import TenantCreateSerializer, TenantUpdateSerializer
 
@@ -121,23 +122,22 @@ class TenantDetailTests(TenantSetUpMixin, APITestCase):
 
 class TenantCreateTests(TenantSetUpMixin, APITestCase):
 
-    def setUp(self):
-        super(TenantCreateTests, self).setUp()
-        # mockey patch, so SC POST isn't called
-        def _sc_create(self, *args, **kwargs):
-            pass
-        TenantCreateSerializer._sc_create = _sc_create
-
-    def test_data(self):
+    @patch("tenant.serializers.TenantFixtures.setUp")
+    @patch("tenant.serializers.TenantEtlDataAdapter.post")
+    def test_data(self, mock_adapter_post, mock_fixtures_setup):
+        mock_adapter_post.return_value = random.randint(1,100)
         new_id = str(uuid.uuid4())
         new_company_code = 'foo'
         new_company_name = 'bar'
+        implementation_email = EmailSerializer(mommy.make(Email)).data
+        implementation_email['id'] = str(uuid.uuid4())
         serializer = TenantCreateSerializer(self.tenant)
         init_data = serializer.data
         init_data.update({
             'id': new_id,
             'company_code': new_company_code,
-            'company_name': new_company_name
+            'company_name': new_company_name,
+            'implementation_email': implementation_email
         })
         self.assertTrue(init_data['implementation_email'])
         self.assertTrue(init_data['billing_email'])
@@ -158,9 +158,9 @@ class TenantCreateTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['countries'][0], str(self.tenant.countries.first().id))
         # implementation
         self.assertEqual(data['implementation_contact_initial'], self.tenant.implementation_contact_initial)
-        self.assertEqual(data['implementation_email']['id'], str(self.tenant.implementation_email.id))
-        self.assertEqual(data['implementation_email']['type'], str(self.tenant.implementation_email.type.id))
-        self.assertEqual(data['implementation_email']['email'], self.tenant.implementation_email.email)
+        self.assertEqual(data['implementation_email']['id'], implementation_email['id'])
+        self.assertEqual(data['implementation_email']['type'], implementation_email['type'])
+        self.assertEqual(data['implementation_email']['email'], implementation_email['email'])
         # billing
         self.assertEqual(data['billing_email']['id'], str(self.tenant.billing_email.id))
         self.assertEqual(data['billing_email']['type'], str(self.tenant.billing_email.type.id))
@@ -177,8 +177,14 @@ class TenantCreateTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['billing_address']['state'], str(self.tenant.billing_address.state.id))
         self.assertEqual(data['billing_address']['country'], str(self.tenant.billing_address.country.id))
         self.assertEqual(data['billing_address']['postal_code'], self.tenant.billing_address.postal_code)
+        # mock post
+        self.assertTrue(mock_adapter_post.called)
+        self.assertTrue(mock_fixtures_setup.called)
 
-    def test_create_nested_contacts(self):
+    @patch("tenant.serializers.TenantFixtures.setUp")
+    @patch("tenant.serializers.TenantEtlDataAdapter.post")
+    def test_create_nested_contacts(self, mock_adapter_post, mock_fixtures_setup):
+        mock_adapter_post.return_value = random.randint(1,100)
         new_id = str(uuid.uuid4())
         new_company_code = 'foo'
         new_company_name = 'bar'
@@ -213,6 +219,9 @@ class TenantCreateTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['billing_email']['id'], init_data['billing_email']['id'])
         self.assertEqual(data['billing_address']['id'], init_data['billing_address']['id'])
         self.assertEqual(data['billing_phone_number']['id'], init_data['billing_phone_number']['id'])
+        # mock post
+        self.assertTrue(mock_adapter_post.called)
+        self.assertTrue(mock_fixtures_setup.called)
 
 
 class TenantCreateEmailAndRemoteCallsTests(TenantSetUpMixin, APITestCase):
@@ -222,74 +231,60 @@ class TenantCreateEmailAndRemoteCallsTests(TenantSetUpMixin, APITestCase):
         new_id = str(uuid.uuid4())
         new_company_code = 'foo'
         new_company_name = 'bar'
+        implementation_email = EmailSerializer(mommy.make(Email)).data
+        implementation_email['id'] = str(uuid.uuid4())
         serializer = TenantCreateSerializer(self.tenant)
         self.init_data = serializer.data
         self.init_data.update({
             'id': new_id,
             'company_code': new_company_code,
-            'company_name': new_company_name
+            'company_name': new_company_name,
+            'implementation_email': implementation_email
         })
 
-    @patch("tenant.serializers.BsOAuthSession.post")
-    @patch("tenant.serializers.TenantCreateSerializer._send_mail")
-    @patch("tenant.serializers.TenantCreateSerializer._sc_create")
-    def test_send_email_and_sc_create(self, mock_sc_create, mock_send_mail, mock_post):
-        sc_response = stub(status_code=201, content=json.dumps({'id': random.randint(0,100)}).encode('utf8'))
-        mock_post.return_value = sc_response
+    @patch("tenant.serializers.TenantFixtures.setUp")
+    @patch("tenant.serializers.TenantEtlDataAdapter.post")
+    def test_sc_post_and_fixtures_setup_called(self, mock_adapter_post, mock_fixtures_setup):
+        mock_adapter_post.return_value = random.randint(1,100)
 
         response = self.client.post('/api/admin/tenants/', self.init_data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201)
-        tenant = Tenant.objects.get(id=data['id'])
-        # mocks
-        self.assertEqual(mock_send_mail.call_args[0][0], tenant.implementation_email.email)
-        self.assertIsInstance(mock_sc_create.call_args[0][0], Tenant)
+        self.assertTrue(mock_adapter_post.called)
+        self.assertTrue(mock_fixtures_setup.called)
 
-    @patch("tenant.serializers.BsOAuthSession.post")
-    def test_sc_to_post_api(self, mock_post):
-        sc_response = stub(status_code=201, content=json.dumps({'id': random.randint(0,100)}).encode('utf8'))
-        mock_post.return_value = sc_response
+    @patch("tenant.serializers.TenantFixtures.setUp")
+    @patch("tenant.serializers.TenantEtlDataAdapter.post")
+    def test_sc_error(self, mock_adapter_post, mock_fixtures_setup):
+        mock_adapter_post.side_effect = ValidationError("Subscriber with such name already exists")
 
         response = self.client.post('/api/admin/tenants/', self.init_data, format='json')
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(response.status_code, 201, data)
-        tenant = Tenant.objects.get(id=data['id'])
-        # mocks
-        self.assertEqual(mock_post.call_args[0][0], DEV_SC_SUBSCRIBERS_URL)
-        session = BsOAuthSession()
-        self.assertEqual(mock_post.call_args_list[0][1]['data'], tenant.sc_post_data)
-
-    @patch("tenant.serializers.BsOAuthSession.post")
-    def test_sc_to_post_api__use_response_to_set_scid(self, mock_post):
-        sc_response = stub(status_code=201, content=json.dumps({'id': random.randint(0,100)}).encode('utf8'))
-        mock_post.return_value = sc_response
-
-        response = self.client.post('/api/admin/tenants/', self.init_data, format='json')
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(response.status_code, 201)
-        tenant = Tenant.objects.get(id=data['id'])
-        # mocks
-        self.assertTrue(mock_post.called)
-        data = json.loads(sc_response.content.decode('utf8'))
-        self.assertEqual(tenant.scid, data['id'])
-
-    @patch("tenant.serializers.BsOAuthSession.post")
-    def test_sc_to_post_api__error_occurred(self, mock_post):
-        mock_post.return_value = stub(status_code=400)
-
-        response = self.client.post('/api/admin/tenants/', self.init_data, format='json')
-
         self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            json.loads(response.content.decode('utf8'))[0],
+            "Subscriber with such name already exists"
+        )
+
+    @patch("tenant.serializers.TenantFixtures.setUp")
+    @patch("tenant.serializers.TenantEtlDataAdapter.post")
+    def test_sc_scid(self, mock_adapter_post, mock_fixtures_setup):
+        scid = random.randint(1,100)
+        mock_adapter_post.return_value = scid
+
+        response = self.client.post('/api/admin/tenants/', self.init_data, format='json')
+
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data, ["Error creating subscriber"])
+        tenant = Tenant.objects.get(id=data['id'])
+        self.assertEqual(tenant.scid, scid)
 
 
 class TenantUpdateTests(TenantSetUpMixin, APITestCase):
 
-    def test_data(self):
+    @patch("tenant.serializers.TenantEtlAdapter.put")
+    def test_data(self,mock_func):
         dtd = mommy.make(TreeData)
         currency = mommy.make(Currency, code='FOO')
         serializer = TenantUpdateSerializer(self.tenant)
@@ -341,7 +336,8 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['implementation_contact'], str(self.tenant.implementation_contact.id))
         self.assertEqual(data['dtd_start'], str(self.tenant.dtd_start.id))
 
-    def test_update_related_models(self):
+    @patch("tenant.serializers.TenantEtlAdapter.put")
+    def test_update_related_models(self, mock_func):
         dtd = mommy.make(TreeData)
         serializer = TenantUpdateSerializer(self.tenant)
         country = mommy.make(Country, common_name='foo')
@@ -394,7 +390,8 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['billing_phone_number'], updated_data['billing_phone_number'])
         self.assertEqual(data['billing_address'], updated_data['billing_address'])
 
-    def test_update_existing_related_models_field(self):
+    @patch("tenant.serializers.TenantEtlAdapter.put")
+    def test_update_existing_related_models_field(self, mock_func):
         # contacts
         implementation_email = mommy.make(Email, _fill_optional=['type'])
         billing_email = mommy.make(Email, _fill_optional='type')
@@ -445,7 +442,8 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(data['billing_phone_number'], updated_data['billing_phone_number'])
         self.assertEqual(data['billing_address'], updated_data['billing_address'])
 
-    def test_remove_related_models(self):
+    @patch("tenant.serializers.TenantEtlAdapter.put")
+    def test_remove_related_models(self, mock_func):
         serializer = TenantUpdateSerializer(self.tenant)
         updated_data = serializer.data
         updated_data.update({
@@ -459,6 +457,16 @@ class TenantUpdateTests(TenantSetUpMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['id'], str(self.tenant.id))
         self.assertEqual(data['countries'], [])
+
+    @patch("tenant.serializers.TenantEtlAdapter.put")
+    def test_sc_put_sent(self, mock_func):
+        updated_data = TenantUpdateSerializer(self.tenant).data
+
+        response = self.client.put('/api/admin/tenants/{}/'.format(self.tenant.id),
+            updated_data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(mock_func.called)
 
 
 class TenantDeleteTests(TenantSetUpMixin, APITestCase):

@@ -47,6 +47,42 @@ class UniqueForActiveValidator(object):
         self.instance = getattr(serializer, 'instance', None)
 
 
+class UniqueByTenantValidator(object):
+
+    def __init__(self, model_cls, field):
+        """
+        :param model_cls: Model class to be validated against
+        :param field:
+            String name of field to validate uniqueness per Tenant
+        """
+        self.model_cls = model_cls
+        self.field = field
+
+    def __call__(self, data):
+        field_value = data.get(self.field, None)
+        tenant = data.get('tenant', None)
+        kwargs = {
+            self.field: field_value,
+            'tenant': tenant
+        }
+
+        if self.instance:
+            tenant = self.instance.tenant
+            kwargs['tenant'] = tenant
+            exists = self.model_cls.objects.filter(**kwargs).exclude(id=self.instance.id).exists()
+        else:
+            exists = self.model_cls.objects.filter(**kwargs).exists()
+
+        if exists:
+            raise ValidationError("{}: '{}' already exists for Tenant: '{}'"
+                                  .format(self.field, field_value, tenant.id))
+
+    def set_context(self, serializer=None):
+        """Determine the existing instance, prior to the validation
+        call being made."""
+        self.instance = getattr(serializer, 'instance', None)
+
+
 ### REGEX VALIDATORS
 
 def valid_email(email):

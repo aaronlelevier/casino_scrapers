@@ -47,19 +47,3 @@ class Tenant(BaseModel):
     def _update_defaults(self):
         if not self.default_currency:
             self.default_currency = Currency.objects.default()
-
-    @property
-    def sc_post_data(self):
-        return {
-            "Name": self.company_name,
-            "Address1": self.billing_address.address,
-            "Address2": "",
-            "Country": self.billing_address.country.common_name,
-            "State": self.billing_address.state.name,
-            "City": self.billing_address.city,
-            "Zip": self.billing_address.postal_code,
-            "Email": self.implementation_email.email,
-            "Phone": self.billing_phone_number.number,
-            "Fax": "",
-            "ContactName": self.implementation_contact_initial
-        }

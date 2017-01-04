@@ -113,15 +113,11 @@ class RoleTests(TestCase):
         self.role._update_defaults()
 
         self.assertIsInstance(self.role.group, Group)
-        self.assertEqual(self.role.group.name, self.role.name)
+        self.assertEqual(
+            self.role.group.name,
+            "{}-{}".format(self.role.name, self.role.tenant.scid)
+        )
         self.assertEqual(self.role.auth_amount, 0)
-
-    def test_tenant_not_defaulted_on_save(self):
-        tenant = get_or_create_tenant()
-        self.assertIsNotNone(self.role.tenant)
-        self.role.tenant = None
-        self.role.save()
-        self.assertIsNone(self.role.tenant)
 
     def test_related_categories_can_only_be_top_level(self):
         parent = create_single_category()
