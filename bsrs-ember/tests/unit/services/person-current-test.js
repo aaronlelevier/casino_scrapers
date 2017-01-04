@@ -1,7 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
 import { moduleFor, test, skip } from 'ember-qunit';
-import sinon from 'sinon';
 import PersonDeserializer from 'bsrs-ember/deserializers/person';
 import LocationDeserializer from 'bsrs-ember/deserializers/location';
 import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
