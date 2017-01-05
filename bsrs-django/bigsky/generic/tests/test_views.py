@@ -51,6 +51,18 @@ class SavedSearchTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(SavedSearch.objects.get(id=data['id']), SavedSearch)
 
+    def test_create__ticket(self):
+        data = {
+            "id": str(uuid.uuid4()),
+            "name": "my new search",
+            "endpoint_name": 'main.tickets.index',
+            "endpoint_uri": "/api/tickets/"
+        }
+        response = self.client.post('/api/admin/saved-searches/', data, format='json')
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertIsInstance(SavedSearch.objects.get(id=data['id']), SavedSearch)
+
     def test_list(self):
         response = self.client.get('/api/admin/saved-searches/')
         self.assertEqual(response.status_code, 200)

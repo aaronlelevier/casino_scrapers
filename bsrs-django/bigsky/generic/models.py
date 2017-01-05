@@ -52,11 +52,25 @@ class SavedSearch(BaseModel):
         return super(SavedSearch, self).save(*args, **kwargs)
 
     def validate_endpoint_name(self):
-        from bigsky.urls import router
-        if self.endpoint_name not in [".".join(x[0].split('/'))+".index" if "index" in self.endpoint_name 
-                else ".".join(x[0].split('/')) for x in router.registry]:
+        if self.endpoint_name not in self.valid_endpoints:
             raise DjangoValidationError("{} is not a valid Ember List API endpoint name."
                 .format(self.endpoint_name))
+
+    @property
+    def valid_endpoints(self):
+        from bigsky.urls import router
+
+        ret = []
+        for x in router.registry:
+            if "index" in self.endpoint_name:
+                ret.append(".".join(x[0].split('/'))+".index")
+            else:
+                ret.append(".".join(x[0].split('/')))
+
+        # custom endpoints
+        ret.append("main.tickets.index")
+
+        return ret
 
     def validate_person_name_unique(self):
         """Use ``self.created`` check, so this validator will only be triggered
