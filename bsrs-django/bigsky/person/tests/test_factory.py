@@ -12,7 +12,7 @@ from category.tests.factory import create_single_category, create_categories, RE
 from location.models import (Location, LocationLevel, LOCATION_COMPANY, LOCATION_DISTRICT,
     LOCATION_REGION)
 from location.tests.factory import (create_location, create_locations,
-    create_location_level, create_location_levels)
+    create_location_level, create_location_levels, create_top_level_location)
 from person.helpers import PermissionInfo
 from person.models import Role, Person
 from person.tests import factory
@@ -290,15 +290,15 @@ class UpdateAdminTests(TestCase):
 
     @patch("person.tests.factory.grant_all_permissions")
     def test_update_admin(self, mock_func):
-        top_level_location = Location.objects.create_top_level()
-        top_level_location_level = LocationLevel.objects.create_top_level()
+        top_level_location = create_top_level_location()
+        top_level_location_level = create_location_level()
         create_locales()
         person = factory.create_single_person()
 
         factory.update_admin(person)
 
         # django-admin access attrs
-        self.assertTrue(person.is_superuser)
+        self.assertTrue(person.is_staff)
         self.assertTrue(person.is_superuser)
         # Locations - 'admin' belongs to the top level
         person_locations = person.locations.values_list('id', flat=True)

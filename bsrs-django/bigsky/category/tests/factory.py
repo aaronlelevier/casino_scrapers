@@ -20,19 +20,19 @@ def create_repair_category():
         return mommy.make(Category, name=REPAIR, subcategory_label=LABEL_TRADE, description=1)
 
 
-def create_single_category(name=None, parent=None):
+def create_single_category(name=None, parent=None, tenant=None):
     if not name:
         name = random_lorem()
 
     status = create_category_status()
-    tenant = get_or_create_tenant()
+    tenant = tenant or get_or_create_tenant()
 
     return Category.objects.create(
         name=name,
         subcategory_label=LABEL_TRADE,
         status=status,
-        tenant=tenant,
-        parent=parent
+        parent=parent,
+        tenant=tenant
     )
 
 

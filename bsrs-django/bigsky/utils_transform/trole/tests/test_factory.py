@@ -1,12 +1,16 @@
 from django.test import TestCase
 
 from category.models import Category
-from location.models import LocationLevel, LOCATION_REGION
+from location.models import LocationLevel
+from tenant.tests.factory import get_or_create_tenant
 from utils_transform.trole.models import DominoRole
 from utils_transform.trole.tests import factory
 
 
 class FactoryTests(TestCase):
+
+    def setUp(self):
+        self.tenant = get_or_create_tenant('foo')
 
     def test_get_role_none_id_fields(self):
         raw_ret = [f.name for f in DominoRole._meta.get_fields()
@@ -45,7 +49,7 @@ class FactoryTests(TestCase):
         self.assertEqual(ret.selection, selection)
 
     def test_create_domino_role_and_related(self):
-        ret = factory.create_domino_role_and_related()
+        ret = factory.create_domino_role_and_related(self.tenant)
 
         self.assertIsInstance(ret, DominoRole)
         self.assertEqual(ret.selection, factory.ROLE_SELECTION)
@@ -56,5 +60,5 @@ class FactoryTests(TestCase):
 
     def test_create_domino_role_and_related__selection(self):
         selection = 'foo'
-        ret = factory.create_domino_role_and_related(selection=selection)
+        ret = factory.create_domino_role_and_related(self.tenant, selection=selection)
         self.assertEqual(ret.selection, selection)

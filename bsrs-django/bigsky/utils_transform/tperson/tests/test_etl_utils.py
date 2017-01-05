@@ -8,11 +8,12 @@ from model_mommy import mommy
 
 from contact.models import PhoneNumber, Email
 from contact.tests.factory import create_phone_number_type, create_email_type
-from location.models import (Location, LocationStatus, LocationType, LocationLevel,
+from location.models import (Location, LocationStatus, LocationType,
     LOCATION_COMPANY, LOCATION_REGION)
-from location.tests.factory import create_location_level
+from location.tests.factory import create_location, create_location_level, create_top_level_location
 from person.models import Role, Person, PersonStatus
 from person.tests.factory import create_single_person, create_person_status, create_role
+from tenant.tests.factory import get_or_create_tenant
 from utils.create import LOREM_IPSUM_WORDS, _generate_chars
 from utils.tests.test_helpers import create_default
 from utils_transform.tperson.management.commands._etl_utils import (create_phone_numbers,
@@ -115,9 +116,10 @@ class CreatePersonTests(TestCase):
         create_email_type(name='admin.emailtype.sms')
         create_default(LocationStatus)
         create_default(LocationType)
-        company_location = Location.objects.create_top_level()
+        company_location = create_top_level_location()
         create_role(name='Internal Audit', location_level=company_location.location_level, category=None)
 
+        self.tenant = get_or_create_tenant()
         self.domino_person = create_domino_person()
 
     def test_no_role(self):
@@ -127,7 +129,7 @@ class CreatePersonTests(TestCase):
         with self.assertRaises(Role.DoesNotExist):
             Role.objects.get(name=name)
 
-        person = create_person(self.domino_person)
+        person = create_person(self.domino_person, self.tenant)
 
         self.assertIsNone(person)
         with self.assertRaises(Person.DoesNotExist):
@@ -137,7 +139,7 @@ class CreatePersonTests(TestCase):
         Role.objects.all().delete()
         with open(settings.LOGGING_INFO_FILE, 'w'): pass
 
-        person = create_person(self.domino_person)
+        person = create_person(self.domino_person, self.tenant)
 
         self.assertEqual(Role.objects.count(), 0)
         with open(settings.LOGGING_INFO_FILE, 'r') as f:
@@ -148,17 +150,23 @@ class CreatePersonTests(TestCase):
         )
 
     def test_top_level_with_locations(self):
-        location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_COMPANY)
-        role = mommy.make(Role, location_level=location_level)
+        location_level = create_location_level(LOCATION_COMPANY)
+        role = create_role(location_level=location_level)
+        self.assertTrue(
+            Role.objects.filter(name__exact=self.domino_person.role,
+                                tenant=self.tenant).exists())
         self.domino_person.role = role.name
         original_locations = "foo;bar"
+        create_location(location_level, name='foo', number='foo')
+        create_location(location_level, name='bar', number='bar')
+        self.assertEqual(Location.objects.count(), 3)
         self.domino_person.locations = original_locations
         self.domino_person.save()
         self.assertTrue(top_level_with_locations(role, self.domino_person))
         self.assertNotEqual(self.domino_person.locations, LOCATION_COMPANY)
         with open(settings.LOGGING_INFO_FILE, 'w'): pass
 
-        person = create_person(self.domino_person)
+        person = create_person(self.domino_person, self.tenant)
 
         # Person - fine to create, but still log
         self.assertIsInstance(person, Person)
@@ -176,13 +184,13 @@ class CreatePersonTests(TestCase):
 
     def test_non_top_level_with_no_locations(self):
         # none top level Role, with no locations, so no Person record gets created
-        non_top_level = create_location_level()
+        non_top_level = create_location_level(LOCATION_REGION)
         non_top_level_role = create_role(location_level=non_top_level)
         self.domino_person.role = non_top_level_role.name
         self.domino_person.save()
         self.assertTrue(non_top_level_with_no_locations(non_top_level_role, self.domino_person))
 
-        person = create_person(self.domino_person)
+        person = create_person(self.domino_person, self.tenant)
 
         # Person
         self.assertIsNone(person)
@@ -206,7 +214,7 @@ class CreatePersonTests(TestCase):
         domino_person.username = name
         domino_person.save()
 
-        person = create_person(domino_person)
+        person = create_person(domino_person, self.tenant)
 
         self.assertEqual(len(person.first_name), 30)
         self.assertEqual(len(person.middle_initial), 1)
@@ -214,7 +222,7 @@ class CreatePersonTests(TestCase):
         self.assertEqual(len(person.username), 30)
 
     def test_password(self):
-        person = create_person(self.domino_person)
+        person = create_person(self.domino_person, self.tenant)
 
         self.assertIsNotNone(person.password)
         self.client.login(username=self.domino_person.username,
@@ -224,7 +232,7 @@ class CreatePersonTests(TestCase):
     def test_create_person(self):
         domino_person = create_domino_person()
     
-        person = create_person(domino_person)
+        person = create_person(domino_person, self.tenant)
 
         self.assertIsInstance(person, Person)
         self.assertEqual(person.username, domino_person.username)
@@ -237,7 +245,7 @@ class CreatePersonTests(TestCase):
     def test_run_person_migrations(self):
         domino_person = create_domino_person()
 
-        run_person_migrations()
+        run_person_migrations(self.tenant)
 
         person = Person.objects.get(username__exact=domino_person.username)
         self.assertEqual(person.role.name, 'Internal Audit')
@@ -246,7 +254,7 @@ class CreatePersonTests(TestCase):
 
     @patch("utils_transform.tperson.management.commands._etl_utils.bigsky_person_update")
     def test_run_migrations__calls_bigsky_person_update(self, mock_func):
-        run_person_migrations()
+        run_person_migrations(self.tenant)
         self.assertTrue(mock_func.called)
 
     def test_bigsky_person_update(self):
@@ -254,7 +262,7 @@ class CreatePersonTests(TestCase):
         domino_person = create_domino_person()
         domino_person.username = username
         domino_person.save()
-        person = create_person(domino_person)
+        person = create_person(domino_person, self.tenant)
         self.assertEqual(person.username, username)
         self.assertFalse(person.is_staff)
         self.assertFalse(person.is_superuser)
@@ -263,10 +271,11 @@ class CreatePersonTests(TestCase):
 
         self.assertTrue(person.is_staff)
         self.assertTrue(person.is_superuser)
+        self.assertEqual(len(person.permissions), 24)
 
     def test_bigsky_person_update__not_bigsky_person_no_change(self):
         domino_person = create_domino_person()
-        person = create_person(domino_person)
+        person = create_person(domino_person, self.tenant)
         self.assertNotEqual(person.username, 'bigsky')
         self.assertFalse(person.is_staff)
         self.assertFalse(person.is_superuser)
@@ -281,7 +290,7 @@ class CreatePersonTests(TestCase):
         domino_person = create_domino_person()
         domino_person.middle_initial = None
         
-        person_ = create_person(domino_person)
+        person_ = create_person(domino_person, self.tenant)
 
         self.assertEqual(person_.middle_initial, None)
 
@@ -299,7 +308,7 @@ class CreatePersonTests(TestCase):
         # Role
         create_role(name='Store Manager', location_level=store_location_level, category=None)
 
-        person_ = create_person(domino_person)
+        person_ = create_person(domino_person, self.tenant)
 
         person_location = person_.locations.all()[0]
         self.assertIsInstance(person_location, Location)
@@ -312,7 +321,7 @@ class CreatePersonTests(TestCase):
         store_location_level = create_location_level(name='Store')
         create_role(name='Store Manager', location_level=store_location_level, category=None)
 
-        create_person(domino_person)
+        create_person(domino_person, self.tenant)
 
         with self.assertRaises(Person.DoesNotExist):
             Person.objects.get(username=domino_person.username)
@@ -324,7 +333,7 @@ class CreatePersonTests(TestCase):
         store_location_level = create_location_level(name='Store')
         create_role(name='Store Manager', location_level=store_location_level, category=None)
 
-        create_person(domino_person)
+        create_person(domino_person, self.tenant)
 
         with self.assertRaises(Person.DoesNotExist):
             Person.objects.get(username=domino_person.username)
@@ -332,7 +341,7 @@ class CreatePersonTests(TestCase):
     def test_person_phonenumber(self):
         domino_person = create_domino_person()
         
-        person_ = create_person(domino_person)
+        person_ = create_person(domino_person, self.tenant)
 
         person_phonenumber = person_.phone_numbers.all()[0]
         self.assertIsInstance(person_phonenumber, PhoneNumber)
@@ -341,22 +350,22 @@ class CreatePersonTests(TestCase):
     def test_person_email(self):
         domino_person = create_domino_person()
         
-        person_ = create_person(domino_person)
+        person_ = create_person(domino_person, self.tenant)
 
         person_email_address = person_.emails.all()[0]
         self.assertIsInstance(person_email_address, Email)
         self.assertEqual(person_email_address.email, EMAILADDRESS)
 
     def test_add_locations__logged(self):
-        location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_REGION)
-        role = mommy.make(Role, location_level=location_level)
+        location_level = create_location_level(LOCATION_REGION)
+        role = create_role(location_level=location_level)
         self.domino_person.role = role.name
         self.domino_person.locations = "foo;bar"
         self.domino_person.save()
         role = Role.objects.get(name=self.domino_person.role)
         with open(settings.LOGGING_INFO_FILE, 'w'): pass
 
-        person = create_person(self.domino_person)
+        person = create_person(self.domino_person, self.tenant)
 
         with open(settings.LOGGING_INFO_FILE, 'r') as f:
             content = f.read()

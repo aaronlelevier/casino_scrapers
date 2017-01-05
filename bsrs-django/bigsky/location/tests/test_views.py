@@ -583,7 +583,7 @@ class LocationCreateTests(MockPermissionsAllowAnyMixin, APITestCase):
     def test_create_unique_for_active_deleted(self):
         # delete the "old_location", so it will be fine to re-use it's ``number``
         self.assertTrue(self.data['number'])
-        old_location = Location.objects.exclude(number=self.data['number']).first()
+        old_location = create_location(number=create._generate_chars())
         old_location.delete()
         # Requery Update Serializer Data b/c children/parents may have changed
         # when the "old_location" was deleted

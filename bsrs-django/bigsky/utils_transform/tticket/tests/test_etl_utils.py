@@ -31,7 +31,7 @@ class EtlUtilsTests(TestCase):
         create_ticket_priorities()
         create_ticket_statuses()
         self.priority = TicketPriority.objects.get(name=TicketPriority.EMERGENCY)
-        self.status = TicketStatus.objects.get(name=TicketStatus.NEW)
+        self.status = TicketStatus.objects.get(name=TicketStatus.CANCELLED)
         # successful DominoTicet ETL setup
         self.dt = create_domino_ticket()
         self.dt.status = self.dt.priority = self.dt.location_number = '1'

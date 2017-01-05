@@ -11,14 +11,15 @@ PROJECT_DIR=/var/www
 echo "PROJECT DIR - CHECK IF PERSISTENT PROJECT DIRECTORY EXISTS"
 if [  ! -d "${PROJECT_DIR}/persistent" ];
     then
-        echo "DOES NOT EXIST"
+        echo "PERSISTENT DIR DOES NOT EXIST"
         mkdir ${PROJECT_DIR}/persistent
     else
-        echo "EXISTS"
+        echo "PERSISTENT DIR EXISTS"
 fi
 cd ${PROJECT_DIR}/persistent
 TEST=$?; if [ "$TEST" == 1 ]; then echo "mkdir failed"; exit $TEST; fi
 
+BRANCH=persistent
 
 echo "GIT - PULL/CLONE REPO"
 if [  -d "${PROJECT_DIR}/persistent/bsrs" ];
@@ -26,14 +27,14 @@ if [  -d "${PROJECT_DIR}/persistent/bsrs" ];
         echo "BSRS REPO EXISTS"
         cd bsrs
         git checkout .
+        git checkout $BRANCH
         git pull
     else
         echo "BSRS REPO DOES NOT EXIST"
-        git clone git@github.com:bigskytech/bsrs.git
+        git clone -b $BRANCH git@github.com:bigskytech/bsrs.git
         cd bsrs
 fi
 TEST=$?; if [ "$TEST" == 1 ]; then echo "git pull/clone failed"; exit $TEST; fi
-
 
 echo "DJANGO"
 
@@ -75,7 +76,9 @@ cd ../../bsrs-ember
 wait
 echo "NPM INSTALL"
 rm -rf node_modules/bsrs-components
-npm install --no-optional
+npm cache clean
+bower cache clean
+npm install
 TEST=$?; if [ "$TEST" == 1 ]; then echo "npm install failed"; exit $TEST; fi
 
 

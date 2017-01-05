@@ -146,6 +146,12 @@ class RoleTests(TestCase):
         self.assertTrue(ret['add_ticket'])
         self.assertTrue(ret['change_ticket'])
 
+    def test_group_name(self):
+        self.assertEqual(
+            self.role.group_name,
+            "{}-{}".format(self.role.name, self.role.tenant.scid)
+        )
+
 
 class RolePasswordTests(TestCase):
 

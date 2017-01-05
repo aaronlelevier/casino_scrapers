@@ -32,11 +32,11 @@ def create_domino_role(selection=ROLE_SELECTION):
     return mommy.make(DominoRole, **data)
 
 
-def create_domino_role_and_related(selection=ROLE_SELECTION):
+def create_domino_role_and_related(tenant, selection=ROLE_SELECTION):
     #create location level that will be linked to Role
-    create_location_level(LOCATION_REGION)
+    create_location_level(LOCATION_REGION, tenant=tenant)
     #create categories that will be linked to this Role
-    create_single_category(CATEGORY1)
-    create_single_category(CATEGORY2)
+    create_single_category(CATEGORY1, tenant=tenant)
+    create_single_category(CATEGORY2, tenant=tenant)
     # DominoRole
     return create_domino_role(selection)

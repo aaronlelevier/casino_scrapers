@@ -3,7 +3,9 @@ logger = logging.getLogger(__name__)
 
 from contact.models import PhoneNumber, PhoneNumberType, Email, EmailType
 from location.models import Location, LOCATION_COMPANY
+from location.tests.factory import create_top_level_location
 from person.models import Person, Role, PersonStatus
+from person.tests.factory import update_login_person, grant_all_permissions
 from utils_transform.tperson.models import DominoPerson
 
 
@@ -28,9 +30,9 @@ def create_email(domino_person, related_instance):
             object_id=related_instance.id, email=domino_person.sms_address, type=email_type)
 
 
-def run_person_migrations():
+def run_person_migrations(tenant):
     for x in DominoPerson.objects.all():
-        create_person(x)
+        create_person(x, tenant)
 
     # Make the 'bigsky' Person staff & superuser so they can view-all
     # in the Django Admin. Admin can be used for debugging, etc.
@@ -43,15 +45,15 @@ def bigsky_person_update():
     except Person.DoesNotExist:
         pass
     else:
-        person.is_staff = True
-        person.is_superuser = True
-        person.save()
+        grant_all_permissions(person)
+        update_login_person(person)
         return person
 
 
-def create_person(domino_instance):
+def create_person(domino_instance, tenant):
     try:
-        role = Role.objects.get(name__exact=domino_instance.role)
+        role = Role.objects.get(name__exact=domino_instance.role,
+                                tenant=tenant)
     except Role.DoesNotExist:
         log_role_not_found(domino_instance)
         return
@@ -152,8 +154,9 @@ def add_locations(person, role, domino_instance):
                 location_not_found = True
             else:
                 person.locations.add(location)
-    else:
-        top_location = Location.objects.create_top_level()
+
+    if role.location_level.is_top_level:
+        top_location = create_top_level_location()
         person.locations.add(top_location)
 
     return location_not_found

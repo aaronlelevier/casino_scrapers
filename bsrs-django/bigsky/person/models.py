@@ -170,6 +170,10 @@ class Role(BaseModel):
     def fullname(self):
         return self.name
 
+    @property
+    def group_name(self):
+        return "{}-{}".format(self.name, self.tenant.scid)
+
     def inherited(self):
         return {
             'dashboard_text': self.proxy_dashboard_text,

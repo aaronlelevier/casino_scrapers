@@ -3,8 +3,11 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from contact.models import State, Country, PhoneNumber, Email, Address
+from contact.tests.factory import create_contact_types
 from location.models import (Location, LocationStatus, LocationType, LocationLevel,
     LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE)
+from location.tests.factory import (create_location,
+    create_location_level ,create_location_levels)
 from utils.tests.test_helpers import create_default
 from utils_transform.tlocation.management.commands._etl_utils import (
     create_phone_numbers, create_email, create_address, _resolve_none_str, _resolve_state,
@@ -19,16 +22,13 @@ class LocationSetupMixin(object):
     def setUp(self):
         create_default(LocationStatus)
         create_default(LocationType)
+        create_location_levels()
+        create_contact_types()
 
 
 class LocationRegionTests(LocationSetupMixin, TestCase):
-    """
-    Also tests ``Base methods`` for Contact Models shared by 
-    Domino -> to -> Django flat table transforms.
-    """
-
-    fixtures = ['location_levels.json', 'contact_types.json']
-
+    # Also tests ``Base methods`` for Contact Models shared by
+    # Domino -> to -> Django flat table transforms.
     def setUp(self):
         super(LocationRegionTests, self).setUp()
         self.company = Location.objects.create_top_level()
@@ -88,6 +88,14 @@ class LocationRegionTests(LocationSetupMixin, TestCase):
 
         self.assertIsInstance(ret, Email)
 
+    def test_create_email__dont_create_if_no_email(self):
+        self.location_region.email = None
+
+        ret = create_email(self.location_region, self.location)
+
+        self.assertIsNone(ret)
+
+
     # create_address
 
     def test_create_address(self):
@@ -129,9 +137,7 @@ class LocationRegionTests(LocationSetupMixin, TestCase):
         ret = create_address(domino_region, self.location)
 
         self.assertIsInstance(ret.state, State)
-        self.assertEqual(State.objects.count(), init_count+1)
         self.assertIsInstance(ret.country, Country)
-        self.assertEqual(Country.objects.count(), init_count_country+1)
 
     # _resolve_none_str
 
@@ -175,6 +181,21 @@ class LocationRegionTests(LocationSetupMixin, TestCase):
         self.assertEqual(State.objects.count(), init_count)
         self.assertIsInstance(ret, State)
 
+    def test_resolve_state__multiple(self):
+        state_code = "NY"
+        # multiple states w/ the same state_code are gracefully handled
+        state = mommy.make(State, state_code=state_code)
+        state_two = mommy.make(State, state_code=state_code)
+        init_count = State.objects.count()
+        self.location_region.state = state_code
+        self.location_region.save()
+        self.assertEqual(self.location_region.state, state.state_code)
+
+        ret = _resolve_state(self.location_region.state)
+
+        self.assertEqual(State.objects.count(), init_count)
+        self.assertIsInstance(ret, State)
+
     # _resolve_country
 
     def test_resolve_country__none(self):
@@ -205,6 +226,21 @@ class LocationRegionTests(LocationSetupMixin, TestCase):
         self.assertEqual(Country.objects.count(), init_count)
         self.assertIsInstance(ret, Country)
 
+    def test_resolve_country__multiple(self):
+        common_name = "U.S"
+        # multiple countries w/ the same common_name are gracefully handled
+        country = mommy.make(Country, common_name=common_name)
+        country_two = mommy.make(Country, common_name=common_name)
+        init_count = Country.objects.count()
+        self.location_region.country = common_name
+        self.location_region.save()
+        self.assertEqual(self.location_region.country, country.common_name)
+
+        ret = _resolve_country(self.location_region.country)
+
+        self.assertEqual(Country.objects.count(), init_count)
+        self.assertIsInstance(ret, Country)
+
     # join_company_to_region
 
     def test_join_company_to_region(self):
@@ -218,8 +254,6 @@ class LocationRegionTests(LocationSetupMixin, TestCase):
 
 
 class LocationDistrictTests(LocationSetupMixin, TestCase):
-
-    fixtures = ['location_levels.json', 'contact_types.json']
 
     def setUp(self):
         super(LocationDistrictTests, self).setUp()
@@ -247,7 +281,7 @@ class LocationDistrictTests(LocationSetupMixin, TestCase):
 
         self.assertIn(self.district_location, self.region_location.children.all())
 
-    def test_join_region_to_district__fail(self):
+    def test_join_region_to_district__does_not_exist(self):
         self.domino_district.regionnumber = 'foo'
         self.domino_district.save()
         self.assertNotEqual(
@@ -259,10 +293,20 @@ class LocationDistrictTests(LocationSetupMixin, TestCase):
 
         self.assertNotIn(self.district_location, self.region_location.children.all())
 
+    def test_join_region_to_district__multiple(self):
+        location_level_region = create_location_level(LOCATION_REGION)
+        region = create_location(location_level_region)
+        region.number = self.domino_district.regionnumber
+        region.save()
+        self.assertTrue(Location.objects.filter(
+            location_level__name=LOCATION_REGION).count() > 1)
+
+        join_region_to_district(self.domino_district, self.district_location)
+
+        self.assertNotIn(self.district_location, self.region_location.children.all())
+
 
 class LocationStoreTests(LocationSetupMixin, TestCase):
-
-    fixtures = ['location_levels.json', 'contact_types.json']
 
     def setUp(self):
         super(LocationStoreTests, self).setUp()
@@ -296,7 +340,7 @@ class LocationStoreTests(LocationSetupMixin, TestCase):
 
         self.assertIn(self.store_location, self.district_location.children.all())
 
-    def test_join_district_to_store__fail(self):
+    def test_join_district_to_store__does_not_exist(self):
         self.domino_store.distnumber = 'foo'
         self.domino_store.save()
         self.assertNotEqual(
@@ -304,6 +348,18 @@ class LocationStoreTests(LocationSetupMixin, TestCase):
             self.domino_district.number
         )
         
+        join_district_to_store(self.domino_store, self.store_location)
+
+        self.assertNotIn(self.store_location, self.district_location.children.all())
+
+    def test_join_region_to_district__multiple(self):
+        location_level_district = create_location_level(LOCATION_DISTRICT)
+        district = create_location(location_level_district)
+        district.number = self.domino_store.distnumber
+        district.save()
+        self.assertTrue(Location.objects.filter(
+            location_level__name=LOCATION_DISTRICT).count() > 1)
+
         join_district_to_store(self.domino_store, self.store_location)
 
         self.assertNotIn(self.store_location, self.district_location.children.all())

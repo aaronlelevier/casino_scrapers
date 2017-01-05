@@ -323,7 +323,7 @@ class LocationManagerTests(TestCase):
         self.assertTrue(ret > 0)
 
     def test_search_multi_number(self):
-        location = create_location()
+        location = create_location(number='123')
         search = location.number
         raw_qs_count = Location.objects.filter(
                 Q(number__icontains=search)

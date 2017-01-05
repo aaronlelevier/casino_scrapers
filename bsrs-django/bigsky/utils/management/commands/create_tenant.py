@@ -1,12 +1,12 @@
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
+from location.tests.factory import create_location_levels
 from tenant.tests.factory import get_or_create_tenant
-from utils_transform.trole.management.commands._etl_utils import (
-    run_role_migrations,)
 
 
 class Command(BaseCommand):
+    help = 'Create a Tenant with Location Levels'
 
     def add_arguments(self, parser):
         """
@@ -14,8 +14,8 @@ class Command(BaseCommand):
         """
         parser.add_argument('name', nargs='?', default=settings.DEFAULT_TENANT_COMPANY_NAME)
 
+
     def handle(self, *args, **options):
         name = options.get('name', None)
         tenant = get_or_create_tenant(name)
-
-        run_role_migrations(tenant)
+        create_location_levels(tenant)

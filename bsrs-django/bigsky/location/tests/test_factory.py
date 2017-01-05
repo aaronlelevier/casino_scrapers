@@ -59,6 +59,17 @@ class CreateLocationLevelsTests(TestCase):
     def test_all_location_levels_have_a_tenant(self):
         self.assertEqual(LocationLevel.objects.filter(tenant__isnull=True).count(), 0)
 
+    def test_tenant(self):
+        tenant = get_or_create_tenant('foo')
+        tenant_two = get_or_create_tenant('bar')
+        self.assertEqual(
+            LocationLevel.objects.filter(tenant=tenant).count(), 0)
+
+        factory.create_location_levels(tenant)
+
+        self.assertEqual(
+            LocationLevel.objects.filter(tenant=tenant).count(), 5)
+
 
 class CreateLocationLevelTests(TestCase):
 
@@ -66,12 +77,21 @@ class CreateLocationLevelTests(TestCase):
         ret = factory.create_location_level()
         self.assertIsInstance(ret, LocationLevel)
         self.assertEqual(ret.name, LOCATION_COMPANY)
-        self.assertIsInstance(ret.tenant, Tenant)
+        self.assertEqual(ret.tenant, get_or_create_tenant())
 
     def test_with_arbitrary_name(self):
         name = 'foo'
         ret = factory.create_location_level(name)
         self.assertEqual(ret.name, name)
+
+    def test_tenant(self):
+        init_tenant = get_or_create_tenant()
+        tenant = get_or_create_tenant('foo')
+        self.assertNotEqual(init_tenant, tenant)
+
+        ret = factory.create_location_level(tenant=tenant)
+
+        self.assertEqual(ret.tenant, tenant)
 
     def test_children(self):
         child = factory.create_location_level()
@@ -189,6 +209,14 @@ class CreateLocationTests(TestCase):
 
         self.assertIsInstance(ret, Location)
         self.assertEqual(ret.location_level, location_level)
+
+    def test_create_location__kwargs(self):
+        name = 'foo'
+
+        ret = factory.create_location(name=name)
+
+        self.assertEqual(ret.name, name)
+
 
 class CreateTopLevelLocation(TestCase):
 

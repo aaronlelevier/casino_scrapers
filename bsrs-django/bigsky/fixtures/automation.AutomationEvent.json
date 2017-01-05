@@ -1,0 +1,172 @@
+[
+{
+  "model": "automation.automationevent",
+  "pk": "093ef698-ee76-4ea7-bfd0-053c4380db6c",
+  "fields": {
+    "created": "2016-12-28T22:40:25.123Z",
+    "modified": "2016-12-28T22:40:25.123Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_complete"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "0de279f1-cc8b-4b5b-8b87-f7c5a4654a40",
+  "fields": {
+    "created": "2016-12-28T22:40:25.115Z",
+    "modified": "2016-12-28T22:40:25.115Z",
+    "deleted": null,
+    "key": "automation.event.ticket_cc_add"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "25d58939-04ae-482e-8267-81893a6ab9e7",
+  "fields": {
+    "created": "2016-12-28T22:40:25.131Z",
+    "modified": "2016-12-28T22:40:25.131Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_new"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "27dd5f7f-cf8e-4d84-9dc5-865ef4f198cb",
+  "fields": {
+    "created": "2016-12-28T22:40:25.129Z",
+    "modified": "2016-12-28T22:40:25.129Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_in_progress"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "2b416f6f-2e74-45a4-9c2d-a8112e09d844",
+  "fields": {
+    "created": "2016-12-28T22:40:25.117Z",
+    "modified": "2016-12-28T22:40:25.117Z",
+    "deleted": null,
+    "key": "automation.event.ticket_comment"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "52d37415-1c23-4bb9-9d00-ce3a9fb1bd15",
+  "fields": {
+    "created": "2016-12-28T22:40:25.111Z",
+    "modified": "2016-12-28T22:40:25.111Z",
+    "deleted": null,
+    "key": "automation.event.ticket_attachment_add"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "69a2d333-e4d6-46e5-9de3-3afb36a5a1c1",
+  "fields": {
+    "created": "2016-12-28T22:40:25.119Z",
+    "modified": "2016-12-28T22:40:25.119Z",
+    "deleted": null,
+    "key": "automation.event.ticket_location_change"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "6a4bdbd7-ef04-4181-8002-9b20fc5840d0",
+  "fields": {
+    "created": "2016-12-28T22:40:25.126Z",
+    "modified": "2016-12-28T22:40:25.126Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_denied"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "6ea1c9a5-1b18-4f4d-8f2d-66472aa101e2",
+  "fields": {
+    "created": "2016-12-28T22:40:25.125Z",
+    "modified": "2016-12-28T22:40:25.125Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_deferred"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "8f4f0906-c303-4dcd-a1ce-621302972647",
+  "fields": {
+    "created": "2016-12-28T22:40:25.122Z",
+    "modified": "2016-12-28T22:40:25.122Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_cancelled"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "9c1c10f9-8dc8-4383-b0ee-63bcca2eba51",
+  "fields": {
+    "created": "2016-12-28T22:40:25.134Z",
+    "modified": "2016-12-28T22:40:25.134Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_solved"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "a484b7bf-c89f-4c03-8bf4-ad62f53867db",
+  "fields": {
+    "created": "2016-12-28T22:40:25.135Z",
+    "modified": "2016-12-28T22:40:25.135Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_unsatisfactory"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "ab0b73cc-46a8-44e0-81d8-92f1ab30e586",
+  "fields": {
+    "created": "2016-12-28T22:40:25.106Z",
+    "modified": "2016-12-28T22:40:25.106Z",
+    "deleted": null,
+    "key": "automation.event.ticket_assignee_change"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "cc390efa-f5a8-4848-89c2-ed81690c5326",
+  "fields": {
+    "created": "2016-12-28T22:40:25.128Z",
+    "modified": "2016-12-28T22:40:25.128Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_draft"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "cf7602cd-23c1-4666-9549-57b7e56cac6e",
+  "fields": {
+    "created": "2016-12-28T22:40:25.113Z",
+    "modified": "2016-12-28T22:40:25.113Z",
+    "deleted": null,
+    "key": "automation.event.ticket_category_change"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "da554480-6fad-4191-aaa1-541901d76fd0",
+  "fields": {
+    "created": "2016-12-28T22:40:25.132Z",
+    "modified": "2016-12-28T22:40:25.132Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_pending"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "ffe15f21-40d2-4f64-b2a0-0d7f284b6ace",
+  "fields": {
+    "created": "2016-12-28T22:40:25.120Z",
+    "modified": "2016-12-28T22:40:25.120Z",
+    "deleted": null,
+    "key": "automation.event.ticket_priority_change"
+  }
+}
+]

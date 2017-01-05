@@ -343,7 +343,9 @@ en,automation.actions.cc,CC(s),CC(s),,"'automation.actions.cc':'CC(s)',",Work,Wo
 en,automation.actions.message,Message,Message,,"'automation.actions.message':'Message',",Work,Work
 en,automation.actions.recipients,Recipients,Recipients,,"'automation.actions.recipients':'Recipients',",Work,Work
 en,automation.actions.request,Request Text,Request Text,,"'automation.actions.request':'Request Text',",Work,Work
+en,automation.actions.email,Email,Email,,"'automation.actions.email':'Email',",Work,Work
 en,automation.actions.send_email,Send Email,Send Email,,"'automation.actions.send_email':'Send Email',",Work,Work
+en,automation.actions.sms,Text Message,Text Message,,"'automation.actions.sms':'Text Message',",Work,Work
 en,automation.actions.send_sms,Send Text Message,Send Text Message,,"'automation.actions.send_sms':'Send Text Message',",Work,Work
 en,automation.actions.status,Status,Status,,"'automation.actions.status':'Status',",Work,Work
 en,automation.actions.status,Status,Status,,"'automation.actions.status':'Status',",Work,Work
@@ -498,6 +500,7 @@ en,errors.ticket.request.length,Request must be at least 5 characters,Request mu
 en,errors.ticket.requester,Requester must be provided,Requester must be provided,,"'errors.ticket.requester':'Requester must be provided',",Requester must be provided,Requester must be provided
 en,errors.ticket.status,Status must be provided,Status must be provided,,"'errors.ticket.status':'Status must be provided',",Status must be provided,Status must be provided
 en,general.drop.image,Drop Image Here,Drop Image Here,,"'general.drop.image':'Drop Image Here',",Drop Image Here,Drop Image Here
+en,general.and,and,and,,"'general.and':'and',",and,and
 en,general.new,New,New,,"'general.new':'New',",New,New
 en,general.optional,optional,optional,,"'general.optional':'optional',",optional,optional
 en,grid.export,Export,Export,,"'grid.export':'Export',",Export,Export
@@ -599,6 +602,7 @@ en,ticket.status.new,New,New,,"'ticket.status.new':'New',",New,New
 en,ticket.status.pending,Pending,Pending,,"'ticket.status.pending':'Pending',",Pending,Pending
 en,ticket.status.solved,Solved,Solved,,"'ticket.status.solved':'Solved',",Solved,Solved
 en,ticket.status.unsatisfactory,Unsatisfactory,Unsatisfactory,,"'ticket.status.unsatisfactory':'Unsatisfactory',",Unsatisfactory,Unsatisfactory
+en,ticket.button.dispatch,Dispatch Work Order,Dispatch Work Order,,"'ticket.button.dispatch':'Dispatch Work Order',",Dispatch Work Order,Dispatch Work Order
 en,upload.progress,Progress,Progress,,"'upload.progress':'Progress',",Progress,Progress
 en,validation.invalid,Invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid,Invalid
 en,validation.valid,Valid,Valid,,"'validation.valid':'Valid',",Valid,Valid

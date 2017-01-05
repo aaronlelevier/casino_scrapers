@@ -1,0 +1,69 @@
+[
+{
+  "model": "automation.automationfiltertype",
+  "pk": "0344e4e6-7d8d-4c4c-9ed3-ecdf38afa19c",
+  "fields": {
+    "created": "2016-12-28T22:40:25.359Z",
+    "modified": "2016-12-28T22:40:25.359Z",
+    "deleted": null,
+    "key": "",
+    "context": "ticket.ticket",
+    "field": "location",
+    "lookups": {
+      "filters": "location_level"
+    }
+  }
+},
+{
+  "model": "automation.automationfiltertype",
+  "pk": "1e004d0f-e85a-42e0-acc9-4863f9ce5e61",
+  "fields": {
+    "created": "2016-12-28T22:40:25.290Z",
+    "modified": "2016-12-28T22:40:25.290Z",
+    "deleted": null,
+    "key": "admin.placeholder.category_filter_select",
+    "context": "ticket.ticket",
+    "field": "categories",
+    "lookups": {}
+  }
+},
+{
+  "model": "automation.automationfiltertype",
+  "pk": "2d417716-c7b2-4784-aea0-1268dd21a59c",
+  "fields": {
+    "created": "2016-12-28T22:40:25.224Z",
+    "modified": "2016-12-28T22:40:25.224Z",
+    "deleted": null,
+    "key": "admin.placeholder.priority_filter_select",
+    "context": "ticket.ticket",
+    "field": "priority",
+    "lookups": {}
+  }
+},
+{
+  "model": "automation.automationfiltertype",
+  "pk": "5548af68-c7d5-44d4-9489-c8a0212c5383",
+  "fields": {
+    "created": "2016-12-28T22:40:25.432Z",
+    "modified": "2016-12-28T22:40:25.432Z",
+    "deleted": null,
+    "key": "admin.placeholder.state_filter_select",
+    "context": "ticket.ticket",
+    "field": "state",
+    "lookups": {}
+  }
+},
+{
+  "model": "automation.automationfiltertype",
+  "pk": "a0ef4d0b-aedc-471e-882f-b29d3257458d",
+  "fields": {
+    "created": "2016-12-28T22:40:25.499Z",
+    "modified": "2016-12-28T22:40:25.499Z",
+    "deleted": null,
+    "key": "admin.placeholder.country_filter_select",
+    "context": "ticket.ticket",
+    "field": "country",
+    "lookups": {}
+  }
+}
+]

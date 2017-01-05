@@ -6,6 +6,7 @@ from model_mommy import mommy
 from category.tests import factory
 from category.models import Category, CategoryStatus, CATEGORY_STATUSES, LABEL_TRADE, LABEL_TYPE
 from tenant.models import Tenant
+from tenant.tests.factory import get_or_create_tenant
 from utils.helpers import generate_uuid
 
 
@@ -42,6 +43,13 @@ class CreateSingleCategoryTests(TestCase):
         self.assertEqual(ret.label, LABEL_TYPE)
         self.assertEqual(ret.subcategory_label, LABEL_TRADE)
         self.assertEqual(ret.description, 1)
+
+    def test_tenant(self):
+        tenant = get_or_create_tenant('bar')
+
+        ret = factory.create_single_category(tenant=tenant)
+
+        self.assertEqual(ret.tenant, tenant)
 
 
 class CategoryTests(TransactionTestCase):

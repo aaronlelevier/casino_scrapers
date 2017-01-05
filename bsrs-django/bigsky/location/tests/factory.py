@@ -10,14 +10,14 @@ SAN_DIEGO = 'san_diego'
 LOS_ANGELES = 'los_angeles'
 
 
-def create_location_levels():
-    tenant = get_or_create_tenant()
+def create_location_levels(tenant=None):
+    tenant = tenant or get_or_create_tenant()
 
-    company = create_location_level(name=LOCATION_COMPANY)
-    region = create_location_level(name=LOCATION_REGION)
-    district = create_location_level(name=LOCATION_DISTRICT)
-    store = create_location_level(name=LOCATION_STORE)
-    fmu = create_location_level(name=LOCATION_FMU)
+    company = create_location_level(LOCATION_COMPANY, tenant)
+    region = create_location_level(LOCATION_REGION, tenant)
+    district = create_location_level(LOCATION_DISTRICT, tenant)
+    store = create_location_level(LOCATION_STORE, tenant)
+    fmu = create_location_level(LOCATION_FMU, tenant)
     # JOIN's
     company.children.add(region)
     company.children.add(fmu)
@@ -26,17 +26,17 @@ def create_location_levels():
     fmu.children.add(store)
 
 
-def create_location_level(name=LOCATION_COMPANY, children=None, parents=None):
+def create_location_level(name=LOCATION_COMPANY, tenant=None,
+                          children=None, parents=None):
     """
     :param name: String name
+    :param tenant: Tenant instance
     :param children: List of LocationLevel instances
     :param parents: List of LocationLevel instances
     """
-    try:
-        obj = LocationLevel.objects.get(name=name)
-    except LocationLevel.DoesNotExist:
-        tenant = get_or_create_tenant()
-        obj = LocationLevel.objects.create(name=name, tenant=tenant)
+    tenant = tenant or get_or_create_tenant()
+
+    obj, _ = LocationLevel.objects.get_or_create(name=name, tenant=tenant)
 
     if children:
         obj.children.set(children)
@@ -59,7 +59,7 @@ def create_location_related_defaults(wrapped_function):
 @create_location_related_defaults
 def create_locations(_many=None):
     create_location_levels()
-    company = Location.objects.create_top_level()
+    company = create_top_level_location()
     # Region
     region_ll = LocationLevel.objects.get(name=LOCATION_REGION)
     east = mommy.make(Location, number=_generate_chars(), location_level=region_ll, name='east')
@@ -96,10 +96,9 @@ def create_locations(_many=None):
 
 
 @create_location_related_defaults
-def create_location(location_level=None):
+def create_location(location_level=None, **kwargs):
     location_level = location_level or create_location_level()
-    return mommy.make(Location, name=_generate_chars(), number=_generate_chars(),
-        location_level=location_level)
+    return mommy.make(Location, location_level=location_level, **kwargs)
 
 
 @create_location_related_defaults
@@ -108,5 +107,5 @@ def create_top_level_location():
         location = Location.objects.get(name=LOCATION_COMPANY)
     except Location.DoesNotExist:
         location_level = create_location_level()
-        location = mommy.make(Location, name=LOCATION_COMPANY, location_level=location_level)
+        location = create_location(location_level, name=LOCATION_COMPANY)
     return location

@@ -10,8 +10,10 @@ from automation.tests.mixins import ViewTestSetupMixin
 from location.tests.factory import create_locations
 from location.models import Location
 from location.serializers import LocationCreateUpdateSerializer
+from location.tests.factory import create_location
 from person.tests.factory import create_person, create_single_person, PASSWORD
 from tenant.tests.factory import get_or_create_tenant
+from utils.create import _generate_chars
 from utils.validators import (
     regex_check_contains, contains_digit, contains_upper_char,
     contains_lower_char, contains_special_char, contains_no_whitespaces,
@@ -46,7 +48,7 @@ class UniqueForActiveValidatorTests(MockPermissionsAllowAnyMixin, APITestCase):
     def test_update_unique_for_active_deleted(self):
         # delete the "old_location", so it will be fine to re-use it's ``number``
         self.assertTrue(self.data['number'])
-        old_location = Location.objects.exclude(number=self.data['number']).first()
+        old_location = create_location(number=_generate_chars())
         old_location.delete()
         # Requery Update Serializer Data b/c children/parents may have changed 
         # when the "old_location" was deleted

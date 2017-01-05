@@ -1,10 +1,21 @@
+from django.conf import settings
 from django.core.management.base import BaseCommand
 
+from tenant.tests.factory import get_or_create_tenant
 from utils_transform.tperson.management.commands._etl_utils import (
     run_person_migrations,)
 
 
 class Command(BaseCommand):
 
+    def add_arguments(self, parser):
+        """
+        :name: String name of Tenant to create
+        """
+        parser.add_argument('name', nargs='?', default=settings.DEFAULT_TENANT_COMPANY_NAME)
+
     def handle(self, *args, **options):
-        run_person_migrations()
+        name = options.get('name', None)
+        tenant = get_or_create_tenant(name)
+
+        run_person_migrations(tenant)

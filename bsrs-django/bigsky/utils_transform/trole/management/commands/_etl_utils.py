@@ -20,23 +20,22 @@ SELECTION_STORE = "Store Manager"
 SELECTION_FMU = "FMU Manager"
 
 
-def run_role_migrations():
+def run_role_migrations(tenant):
     for x in DominoRole.objects.all():
-        create_role(x)
+        create_role(x, tenant)
 
 
-def create_role(domino_instance):
+def create_role(domino_instance, tenant):
     role_type = get_role_type(domino_instance)
     location_level_name = get_location_level(domino_instance)
 
     try:
-        location_level = LocationLevel.objects.get(name__exact=location_level_name)
+        location_level = LocationLevel.objects.get(name__exact=location_level_name,
+                                                   tenant=tenant)
     except LocationLevel.DoesNotExist:
         location_level = None
         logger.info("LocationLevel name:{} Not Found.".format(location_level_name))
     
-    tenant = get_or_create_tenant()
-
     role = Role.objects.create(
         name=domino_instance.name,
         role_type=role_type,
@@ -48,7 +47,8 @@ def create_role(domino_instance):
     for cat in cats:
         try:
             category = Category.objects.get(name__exact=cat,
-                                            label__exact=settings.TOP_LEVEL_CATEGORY_LABEL)
+                                            label__exact=settings.TOP_LEVEL_CATEGORY_LABEL,
+                                            tenant=tenant)
         except Category.DoesNotExist:
             logger.info("Category name:{} Not Found.".format(cat))
         else:

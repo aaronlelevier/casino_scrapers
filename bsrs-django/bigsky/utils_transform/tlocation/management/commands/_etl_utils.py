@@ -28,9 +28,10 @@ def create_phone_numbers(domino_location, related_instance):
 def create_email(domino_location, related_instance):
     email_type = EmailType.objects.get(name='admin.emailtype.location')
 
-    return Email.objects.create(content_object=related_instance,
-        object_id=related_instance.id, email=domino_location.email,
-        type=email_type)
+    if domino_location.email:
+        return Email.objects.create(content_object=related_instance,
+            object_id=related_instance.id, email=domino_location.email,
+            type=email_type)
 
 
 def create_address(domino_location, related_instance):
@@ -63,6 +64,8 @@ def _resolve_state(domino_abbr):
     if domino_abbr:
         try:
             state = State.objects.get(state_code=domino_abbr)
+        except State.MultipleObjectsReturned:
+            state = State.objects.filter(state_code=domino_abbr).first()
         except State.DoesNotExist:
             state = State.objects.create(name=domino_abbr, state_code=domino_abbr)
         return state
@@ -73,6 +76,8 @@ def _resolve_country(country):
     if country:
         try:
             country = Country.objects.get(common_name=country)
+        except Country.MultipleObjectsReturned:
+            country = Country.objects.filter(common_name=country).first()
         except Country.DoesNotExist:
             country = Country.objects.create(common_name=country)
         return country
@@ -87,7 +92,10 @@ def join_region_to_district(domino_location, related_instance):
 
     try:
         region = regions.get(number=domino_location.regionnumber)
-    except Location.DoesNotExist as e:
+    except Location.MultipleObjectsReturned:
+        logger.debug("Location.pk:{}, LocationRegion.regionnumber:{} Multiple Exist."
+            .format(related_instance.id, domino_location.regionnumber))
+    except Location.DoesNotExist:
         logger.debug("Location.pk:{}, LocationRegion.regionnumber:{} Not Found."
             .format(related_instance.id, domino_location.regionnumber))
     else:
@@ -99,7 +107,10 @@ def join_district_to_store(domino_location, related_instance):
 
     try:
         district = districts.get(number=domino_location.distnumber)
-    except Location.DoesNotExist as e:
+    except Location.MultipleObjectsReturned:
+        logger.debug("Location.pk:{}, LocationDistrict.distnumber:{} Multiple Exist."
+            .format(related_instance.id, domino_location.distnumber))
+    except Location.DoesNotExist:
         logger.debug("Location.pk:{}, LocationDistrict.distnumber:{} Not Found."
             .format(related_instance.id, domino_location.distnumber))
     else:

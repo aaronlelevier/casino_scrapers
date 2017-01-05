@@ -1,0 +1,72 @@
+[
+{
+  "model": "automation.automationactiontype",
+  "pk": "0d5e7741-e909-4e8b-bad7-aeae014455e5",
+  "fields": {
+    "created": "2016-12-28T22:40:25.146Z",
+    "modified": "2016-12-28T22:40:25.146Z",
+    "deleted": null,
+    "key": "automation.actions.ticket_status"
+  }
+},
+{
+  "model": "automation.automationactiontype",
+  "pk": "523a05bb-a49d-4450-98e9-8a9a2449e4cd",
+  "fields": {
+    "created": "2016-12-28T22:40:25.142Z",
+    "modified": "2016-12-28T22:40:25.142Z",
+    "deleted": null,
+    "key": "automation.actions.ticket_cc"
+  }
+},
+{
+  "model": "automation.automationactiontype",
+  "pk": "7a47c214-ac9c-45f0-bd5d-d6159a012e8a",
+  "fields": {
+    "created": "2016-12-28T22:40:25.137Z",
+    "modified": "2016-12-28T22:40:25.137Z",
+    "deleted": null,
+    "key": "automation.actions.ticket_assignee"
+  }
+},
+{
+  "model": "automation.automationactiontype",
+  "pk": "7f54993a-dc22-4d19-86f4-7c3de2952128",
+  "fields": {
+    "created": "2016-12-28T22:40:25.139Z",
+    "modified": "2016-12-28T22:40:25.139Z",
+    "deleted": null,
+    "key": "automation.actions.send_email"
+  }
+},
+{
+  "model": "automation.automationactiontype",
+  "pk": "aaf9bfbb-08f6-4915-bb66-5b793228509e",
+  "fields": {
+    "created": "2016-12-28T22:40:25.145Z",
+    "modified": "2016-12-28T22:40:25.145Z",
+    "deleted": null,
+    "key": "automation.actions.ticket_request"
+  }
+},
+{
+  "model": "automation.automationactiontype",
+  "pk": "b1465cb4-44b3-48e3-8a65-d001137b09cf",
+  "fields": {
+    "created": "2016-12-28T22:40:25.140Z",
+    "modified": "2016-12-28T22:40:25.140Z",
+    "deleted": null,
+    "key": "automation.actions.send_sms"
+  }
+},
+{
+  "model": "automation.automationactiontype",
+  "pk": "d685a721-846f-4f86-abf6-91abf8624969",
+  "fields": {
+    "created": "2016-12-28T22:40:25.143Z",
+    "modified": "2016-12-28T22:40:25.143Z",
+    "deleted": null,
+    "key": "automation.actions.ticket_priority"
+  }
+}
+]

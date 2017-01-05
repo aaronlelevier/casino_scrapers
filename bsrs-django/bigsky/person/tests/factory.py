@@ -14,7 +14,8 @@ from generic.tests.factory import create_image_attachment
 from location.models import (LocationLevel, Location, LocationStatus, LocationType,
     LOCATION_COMPANY, LOCATION_DISTRICT, LOCATION_REGION,)
 from location.tests.factory import (
-    create_location, create_locations, create_location_level, create_location_levels)
+    create_location, create_locations, create_location_level, create_location_levels,
+    create_top_level_location)
 from person.helpers import PermissionInfo
 from person.models import Role, Person, PersonStatus
 from tenant.tests.factory import get_or_create_tenant
@@ -230,7 +231,7 @@ def add_top_level_location(person):
     """
     remove_all_locations(person)
 
-    location = Location.objects.create_top_level()
+    location = create_top_level_location()
     person.role = Role.objects.get(location_level__name=settings.DEFAULT_LOCATION_LEVEL)
     person.save()
 
