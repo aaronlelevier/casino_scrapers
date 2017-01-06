@@ -780,7 +780,7 @@ class PersonAndRoleTests(TestCase):
         # don't match
         self.person_two = create_single_person('bar')
         self.role_two = create_role('bar')
-        self.role_three = create_role('fooo')
+        self.role_three = create_role('biz')
         self.role_three.tenant = get_or_create_tenant('other')
         self.role_three.save()
 

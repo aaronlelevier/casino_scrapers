@@ -24,7 +24,7 @@ def get_or_create_tenant(company_name=settings.DEFAULT_TENANT_COMPANY_NAME,
     except Tenant.DoesNotExist:
         defaults = {
             'id': generate_uuid(Tenant),
-            'scid': random.randint(1,100) if with_scid else None,
+            'scid': random.randint(1,1000) if with_scid else None,
             'company_name': company_name,
             'company_code': _generate_chars(),
             'implementation_contact_initial': _generate_chars(),
