@@ -1,38 +1,55 @@
+.btn-icon {
+  display: flex;
+  align-items: center;
+  padding: 0;
+  font-size: 1.3rem;
+  min-height: 2.462em;
+  .fa {
+    width: 2.462em;
+    height: 2.462em;
+    line-height: 2.462em;
+    border-radius: $borderRadiusLeft;
+    background: rgba(0, 0, 0, 0.1);
+  }
+  .btn-text {
+    padding: 0 1.2em;
+  }
+}
 .btn-add,
 .btn-add:hover {
-	background-color: $lightGray;
-	border-color: $gray;
-	color: $darkGray;
-	&:active,
-	&:focus{
-		background-color: $lightGray;
-		border-color: $activeColor;
-		color: $dark;
-	}
+  background-color: $lightGray;
+  border-color: $gray;
+  color: $darkGray;
+  &:active,
+  &:focus{
+    background-color: $lightGray;
+    border-color: $activeColor;
+    color: $dark;
+  }
 }
 .btn-delete	{
-	&:active,
-	&:focus,
-	&:hover{
-		color: $deleteColor !important;
-	}
+  &:active,
+  &:focus,
+  &:hover{
+    color: $deleteColor !important;
+  }
 }
 .btn-file {
-    position: relative;
-    overflow: hidden;
+  position: relative;
+  overflow: hidden;
 }
 .btn-file input[type=file] {
-    position: absolute;
-    top: 0;
-    right: 0;
-    min-width: 100%;
-    min-height: 100%;
-    font-size: 100px;
-    text-align: right;
-    filter: alpha(opacity=0);
-    opacity: 0;
-    outline: none;
-    background: white;
-    cursor: inherit;
-    display: block;
+  position: absolute;
+  top: 0;
+  right: 0;
+  min-width: 100%;
+  min-height: 100%;
+  font-size: 100px;
+  text-align: right;
+  filter: alpha(opacity=0);
+  opacity: 0;
+  outline: none;
+  background: white;
+  cursor: inherit;
+  display: block;
 }

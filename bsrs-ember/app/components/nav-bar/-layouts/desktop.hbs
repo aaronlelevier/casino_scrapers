@@ -3,7 +3,6 @@
   {{#if (has-permission permissions=permissions resource="ticket" verb="view")}}
     <li>{{#link-to "main.tickets" class="t-nav-tickets"}}{{t 'modules.tickets.titleShort'}}{{/link-to}}</li>
   {{/if}}  
-  <li>{{#link-to "work-orders"}}{{t 'modules.workOrders.titleShort'}}{{/link-to}}</li>
   <li>{{#link-to "invoices"}}{{t 'modules.invoices.titleShort'}}{{/link-to}}</li>
 </ul>
 {{user-menu}}

@@ -5,7 +5,6 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 export default Ember.Component.extend({
   tabList: Ember.inject.service(),
   tagName: 'div',
-  classNames: ['col-md-12'],
   uuid: injectUUID('uuid'),
   repository: inject('attachment'),
   error: Ember.inject.service(),

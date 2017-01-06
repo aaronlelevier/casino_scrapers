@@ -1,3 +1,11 @@
+<section class="card-title">
+  <div class="row">
+    <h2 class="col-md-12">
+      {{t "ticket.title.comment-activity"}}
+    </h2>
+  </div>
+</section>
+
 <section>
   <div class="row">
     <div class="col-md-12">
@@ -8,7 +16,7 @@
     <div class="col-md-12">
       <div class="ticket-actions">
         <div class="ticket-action save">
-          <span onclick={{save}} class="btn btn-default btn-add t-ticket-action-save">{{fa-icon "check-circle"}} {{t "crud.update.button"}}</span>
+          <span onclick={{save}} class="btn btn-primary t-ticket-action-save">{{fa-icon "check-circle"}} {{t "crud.update.button"}}</span>
         </div>
         <div class="ticket-action attach">
           <span class="btn btn-default btn-file">{{fa-icon "paperclip"}} {{t "button.upload"}}<input type="file" multiple="multiple" onchange={{action "upload"}}></span>

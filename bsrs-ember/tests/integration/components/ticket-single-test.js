@@ -137,3 +137,10 @@ test('permissions to "read only" show disabled input and select boxes', function
   let powerSelectTrigger = this.$('[aria-disabled]');
   assert.equal(powerSelectTrigger.length, 6, '6 selects are disabled');
 });
+
+test('ticket single renders work order dispatch btn if no work orders', function(assert) {
+  this.render(hbs`{{tickets/ticket-single model=model activities=activities}}`);
+  assert.equal(this.$('[data-test-id="wo-dispatch"]').length, 1);
+  assert.equal(this.$('[data-test-id="wo-dispatch"]').text().trim(), trans.t('work-order.button.dispatch'));
+  assert.ok(this.$('[data-test-id="wo-dispatch"] > i').attr('class').includes('fa-wrench'));
+});

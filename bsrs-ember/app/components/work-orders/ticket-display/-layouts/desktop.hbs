@@ -1,0 +1,37 @@
+<section class="card-title">
+  <div class="row">
+    <h2 class="col-md-12">
+      {{t "work_order.one"}}
+    </h2>
+  </div>
+</section>
+
+{{#each wos as |model indx|}}
+  <section class="card-title card-title--photo flex flex--align-center">
+    <div class="contractor flex-item--auto">
+      {{form-photo
+        icon="user"
+        model=model
+        droppedImage=model.provider_logo
+      }}
+      <h1 data-test-id={{concat "provider-name" indx}}>{{model.provider_name}}</h1>
+      <p data-test-id={{concat "provider-address1-" indx}}>{{model.provider_address1}}</p>
+    </div>
+    <div class="flex-item--auto">
+      {{work-orders/status-single model=model}}
+    </div>
+    <div class="work-order-meta">
+      {{#form-group title="work_order.label.scheduled_date" readonly=true}}
+        <div data-test-id={{concat "scheduled-date" indx}}>{{moment-format model.scheduled_date "MM/DD/YYYY"}}</div>
+      {{/form-group}}
+    </div>
+    <div class="work-order-meta">
+      {{#form-group title="work_order.label.cost_estimate" readonly=true}}
+        <div data-test-id={{concat "cost-estimate" indx}}>{{model.cost_estimate}}</div>
+      {{/form-group}}
+    </div>
+    <div>
+      <div class="expander">{{fa-icon "caret-up"}}</div>
+    </div>
+  </section>
+{{/each}}

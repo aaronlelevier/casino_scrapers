@@ -38,7 +38,7 @@ test('<%= firstProperty %> is required validation, cannot save w/o <%= firstProp
     });
   });
   this.set('model', model);
-  this.render(hbs `{{<%= dasherizedModuleName %>s/<%= dasherizedModuleName %>-single model=model}}`);
+  this.render(hbs`{{<%= dasherizedModuleName %>s/<%= dasherizedModuleName %>-single model=model}}`);
   let $err = this.$('.invalid');
   assert.notOk($err.is(':visible'));
   generalPage.save();
@@ -47,19 +47,19 @@ test('<%= firstProperty %> is required validation, cannot save w/o <%= firstProp
 });
 
 test('header - shows detail if not model.new', function(assert) {
-  this.render(hbs `{{<%= dasherizedModuleName %>s/<%= dasherizedModuleName %>-single model=model}}`);
+  this.render(hbs`{{<%= dasherizedModuleName %>s/<%= dasherizedModuleName %>-single model=model}}`);
   assert.equal(this.$('.t-<%= dasherizedModuleName %>-header').text().trim(), trans.t('<%= dasherizedModuleName %>.detail'));
 });
 
 test('header - shows new if model.new', function(assert) {
   model.set('new', true);
   this.set('model', model);
-  this.render(hbs `{{<%= dasherizedModuleName %>s/<%= dasherizedModuleName %>-single model=model}}`);
+  this.render(hbs`{{<%= dasherizedModuleName %>s/<%= dasherizedModuleName %>-single model=model}}`);
   assert.equal(this.$('.t-<%= dasherizedModuleName %>-header').text().trim(), trans.t('<%= dasherizedModuleName %>.new'));
 });
 
 test('labels are translated', function(assert) {
-  this.render(hbs `{{<%= dasherizedModuleName %>s/<%= dasherizedModuleName %>-single}}`);
+  this.render(hbs`{{<%= dasherizedModuleName %>s/<%= dasherizedModuleName %>-single}}`);
   assert.equal(getLabelText('<%= firstProperty %>'), trans.t('<%= dasherizedModuleName %>.<%= firstProperty %>'));
   assert.equal(getLabelText('<%= secondProperty %>'), trans.t('<%= dasherizedModuleName %>.<%= secondProperty %>'));
 });

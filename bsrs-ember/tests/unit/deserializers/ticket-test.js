@@ -10,14 +10,20 @@ import SD from 'bsrs-ember/vendor/defaults/status';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import CD from 'bsrs-ember/vendor/defaults/category';
+import CurrencyD from 'bsrs-ember/vendor/defaults/currency';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import TicketDeserializer from 'bsrs-ember/deserializers/ticket';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import WorkOrderDeserializer from 'bsrs-ember/deserializers/work-order';
+import WORK_ORDER_STATUSES from 'bsrs-ember/vendor/defaults/work-order-status';
+import WORK_ORDER from 'bsrs-ember/vendor/defaults/work-order';
 
 const PD = PERSON_DEFAULTS.defaults();
+const WOSD = WORK_ORDER_STATUSES.defaults();
+const WD = WORK_ORDER.defaults();
 
 let store, subject, uuid, ticket_priority, ticket_status, ticket, functionalStore;
 
@@ -31,12 +37,15 @@ module('unit: ticket deserializer test', {
       'model:attachment', 'model:location-status', 'service:person-current',
       'service:translations-fetcher', 'service:i18n', 'model:locale', 'model:role',
       'model:general-status-list', 'model:ticket-priority-list', 'model:category-list',
-      'model:category-children', 'model:generic-join-attachment',
+      'model:category-children', 'model:generic-join-attachment','model:work-order',
       'model:related-person', 'model:related-location', 'validator:presence',
-      'validator:length', 'validator:ticket-status', 'validator:ticket-categories']);
+      'validator:length', 'validator:ticket-status', 'validator:ticket-categories',
+      'model:ticket-join-wo', 'model:currency', 'model:work-order-status']);
     uuid = this.container.lookup('model:uuid');
     functionalStore = this.container.lookup('service:functional-store');
-    subject = TicketDeserializer.create({simpleStore: store, functionalStore: functionalStore, uuid: uuid});
+    const workOrderDeserializer = WorkOrderDeserializer.create({simpleStore: store});
+    subject = TicketDeserializer.create({simpleStore: store, functionalStore: functionalStore, 
+      workOrderDeserializer: workOrderDeserializer, uuid: uuid});
     run(() => {
       store.push('related-location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
       ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne]});
@@ -579,6 +588,50 @@ test('attachment added for each attachment on ticket (when ticket has existing a
   assert.ok(ticket.get('isNotDirty'));
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(store.find('attachment').get('length'), 2);
+});
+
+test('deserialize detail with one work order and no existing locally', (assert) => {
+  const json = TF.generate(TD.idOne);
+  run(() => {
+    subject.deserialize(json, json.id);
+  });
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.equal(ticket.get('wo').objectAt(0).get('id'), WD.idOne);
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  const workOrder = store.find('work-order', WD.idOne);
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('deserialize detail with one work order and existing locally', (assert) => {
+  store.push('ticket-join-wo', {id: 1, ticket_pk: TD.idOne, work_order_pk: WD.idOne});
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
+  store.push('work-order', {id: WD.idOne});
+  const json = TF.generate(TD.idOne);
+  run(() => {
+    subject.deserialize(json, json.id);
+  });
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.equal(ticket.get('wo').objectAt(0).get('id'), WD.idOne);
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  const workOrder = store.find('work-order', WD.idOne);
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('deserialize detail with multiple work orders', (assert) => {
+  const json = TF.generate(TD.idOne);
+  json.work_order.push({ id: WD.idTwo, cost_estimate_currency: { id: CurrencyD.idOne }, status: {id: WOSD.idOne, name: WOSD.nameFive} });
+  store.push('currency', {id: CurrencyD.idOne, workOrders: [WD.idOne]});
+  run(() => {
+    subject.deserialize(json, json.id);
+  });
+  assert.equal(ticket.get('wo').get('length'), 2);
+  assert.equal(ticket.get('wo').objectAt(0).get('id'), WD.idTwo);
+  assert.equal(ticket.get('wo').objectAt(1).get('id'), WD.idOne);
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  const workOrder = store.find('work-order', WD.idOne);
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+  const workOrder2 = store.find('work-order', WD.idTwo);
+  assert.ok(workOrder2.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 //TODO: when attachments can be deleted (from ticket) we need a "server is the truth" test that removes in-memory relationships

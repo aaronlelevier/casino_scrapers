@@ -10,48 +10,64 @@
       permissions=permissions
     }}
     <section class="docSection container-fluid">
-      <div class="row">
-        <div class="col-md-12">
-          <section class="card-title">
-            <div class="row">
-              <h1 class="col-md-12 t-ticket-header">
-                {{model.sorted_categories.lastObject.name}}
-                <small>{{t 'ticket.label.numberSymbol'}}{{model.number}}</small>
-              </h1>
-              <p class="col-md-12">
-                {{timestamp-created model=model}}
-              </p>
-              <div class="col-md-12 ticket-categories">
-                {{parent-model-category-select
-                  model=model
-                  valuePath="categories"
-                  disabled=model.isReadOnly
-                  readonly=model.isReadOnly
-                }}
-              </div>
-              <div class="col-md-12 request-wrap">
-                <div class="input-group">
-                  <span class="input-group-addon">{{t "ticket.label.request"}}</span>
-                  {{validated-input
-                    model=model
-                    placeholder=(t "ticket.label.request")
-                    valuePath="request"
-                    className="t-ticket-request-single ticket-request"
-                    textarea=true
-                    class="t-ticket-request-validator"
-                    readonly=model.isReadOnly
-                  }}
-                </div>
-              </div>
-            </div>
-          </section>
+
+      <section class="card-title">
+        <div class="row">
+          <h1 class="col-md-12 t-ticket-header">
+            {{model.sorted_categories.lastObject.name}}
+            <small>{{t 'ticket.label.numberSymbol'}}{{model.number}}</small>
+          </h1>
+          <p class="col-md-12">
+            {{timestamp-created model=model}}
+          </p>
         </div>
-        {{tickets/ticket-comments-and-file-upload 
-          model=model 
-          deleteAttachment="deleteAttachment" 
-          save=(action "save" "update" "updateActivities")
-        }}
-      </div>
+      </section>
+
+      <section>
+        <div class="row">
+          <div class="col-md-12 ticket-categories">
+            {{parent-model-category-select
+              model=model
+              valuePath="categories"
+              disabled=model.isReadOnly
+              readonly=model.isReadOnly
+            }}
+          </div>
+
+          <div class="col-md-12 request-wrap">
+            <div class="input-group">
+              <span class="input-group-addon">{{t "ticket.label.request"}}</span>
+              {{validated-input
+                model=model
+                placeholder=(t "ticket.label.request")
+                valuePath="request"
+                className="t-ticket-request-single ticket-request"
+                textarea=true
+                class="t-ticket-request-validator"
+                readonly=model.isReadOnly
+              }}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {{#if model.wo}}
+        {{work-orders/ticket-display wos=model.wo}}
+      {{else}}
+        <section>
+          <div class="row">
+            <div class="col-md-12">
+              <button class="btn btn-primary btn-icon" data-test-id="wo-dispatch" type="button">{{fa-icon "wrench"}} <span class="btn-text">{{t "work-order.button.dispatch"}}</span></button>
+            </div>
+          </div>
+        </section>
+      {{/if}}
+
+      {{tickets/ticket-comments-and-file-upload 
+        model=model 
+        deleteAttachment="deleteAttachment" 
+        save=(action "save" "update" "updateActivities")
+      }}
       {{activity-list activities=activities}}
     </section>
   </div>

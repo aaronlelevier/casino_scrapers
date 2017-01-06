@@ -5,6 +5,7 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
 import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
+import WORK_ORDER_DEFAULTS from 'bsrs-ember/vendor/defaults/work-order';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import TPD from 'bsrs-ember/vendor/defaults/ticket-join-person';
@@ -15,6 +16,7 @@ import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LINK from 'bsrs-ember/vendor/defaults/link';
 
 const PD = PERSON_DEFAULTS.defaults();
+const WD = WORK_ORDER_DEFAULTS.defaults();
 
 let store, ticket, link;
 
@@ -25,8 +27,8 @@ module('unit: ticket test', {
       'model:ticket-join-person', 'model:model-category', 'model:uuid', 
       'service:person-current', 'service:translations-fetcher', 'service:i18n',
       'model:attachment', 'model:status', 'model:role', 'model:location-level',
-      'model:dtd', 'model:link', 'model:generic-join-attachment', 
-      'model:related-person', 'model:related-location']);
+      'model:dtd', 'model:link', 'model:generic-join-attachment', 'model:work-order', 
+      'model:related-person', 'model:related-location', 'model:ticket-join-wo']);
     run(() => {
       store.push('status', {id: SD.activeId, name: SD.activeName});
       store.push('role', {id: RD.idOne, name: RD.nameOne, location_level_fk: LLD.idOne});
@@ -1425,4 +1427,341 @@ test('patchSerialize - show full serialized object (with optional values not pre
     status: undefined,
     categories: [],
   });
+});
+
+
+// WORK ORDER
+test('work order property should return all associated work order or empty array', (assert) => {
+  let m2m = store.push('ticket-join-wo', {id: 1, ticket_pk: TD.idOne, work_order_pk: WD.idOne});
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
+  store.push('work-order', {id: WD.idOne});
+  let workOrder = ticket.get('wo');
+  assert.equal(workOrder.get('length'), 1);
+  assert.equal(workOrder.objectAt(0).get('id'), WD.idOne);
+  run(() => {
+    store.push('ticket-join-wo', {id: m2m.get('id'), removed: true});
+  });
+  assert.equal(ticket.get('wo').get('length'), 0);
+});
+
+test('wo property is not dirty when no wo present (empty array)', (assert) => {
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: []});
+  store.push('work-order', {id: WD.idOne});
+  assert.equal(ticket.get('wo').get('length'), 0);
+  assert.ok(ticket.get('woIsNotDirty'));
+});
+
+test('wo property is not dirty when attr on workOrder is changed', (assert) => {
+  store.push('ticket-join-wo', {id: 1, ticket_pk: TD.idOne, work_order_pk: WD.idOne});
+  let workOrder = store.push('work-order', {id: WD.idOne});
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('woIsNotDirty'));
+  run(() => {
+    store.push('work-order', {id: WD.idOne, first_name: WD.first_name});
+  });
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.equal(ticket.get('wo').objectAt(0).get('first_name'), WD.first_name);
+});
+
+test('removing a ticket-join-wo will mark the ticket as dirty and reduce the associated wo models to zero', (assert) => {
+  store.push('ticket-join-wo', {id: 1, ticket_pk: TD.idOne, work_order_pk: WD.idOne});
+  store.push('work-order', {id: WD.idOne});
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('woIsNotDirty'));
+  ticket.remove_wo(WD.idOne);
+  assert.ok(ticket.get('woIsDirty'));
+  assert.equal(ticket.get('wo').get('length'), 0);
+});
+
+test('replacing a ticket-join-wo with some other ticket-join-wo still shows the ticket model as dirty', (assert) => {
+  store.push('ticket-join-wo', {id: 1, ticket_pk: TD.idOne, work_order_pk: WD.idOne});
+  store.push('work-order', {id: WD.idOne});
+  const workOrder_two = {id: WD.idTwo};
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  ticket.remove_wo(WD.idOne);
+  assert.ok(ticket.get('woIsDirty'));
+  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.equal(ticket.get('wo').get('length'), 0);
+  ticket.add_wo(workOrder_two);
+  assert.ok(ticket.get('woIsDirty'));
+  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.equal(ticket.get('wo').objectAt(0).get('id'), WD.idTwo);
+});
+
+test('wo property only returns the single matching item even when multiple workOrders (wo) exist', (assert) => {
+  store.push('ticket-join-wo', {id: 1, ticket_pk: TD.idOne, work_order_pk: WD.idTwo});
+  const workOrder_two = {id: WD.idTwo};
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
+  ticket.add_wo(workOrder_two);
+  let wo = ticket.get('wo');
+  assert.equal(wo.get('length'), 1);
+  assert.equal(wo.objectAt(0).get('id'), WD.idTwo);
+});
+
+test('wo property returns multiple matching items when multiple workOrders (wo) exist', (assert) => {
+  store.push('work-order', {id: WD.idOne});
+  store.push('work-order', {id: WD.idTwo});
+  store.push('ticket-join-wo', {id: 1, work_order_pk: WD.idTwo, ticket_pk: TD.idOne});
+  store.push('ticket-join-wo', {id: 2, work_order_pk: WD.idOne, ticket_pk: TD.idOne});
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1, 2]});
+  let wo = ticket.get('wo');
+  assert.equal(wo.get('length'), 2);
+  assert.equal(wo.objectAt(0).get('id'), WD.idOne);
+  assert.equal(wo.objectAt(1).get('id'), WD.idTwo);
+});
+
+test('wo property will update when the m2m array suddenly has the workOrder pk (starting w/ empty array)', (assert) => {
+  let workOrder = {id: WD.idOne};
+  assert.equal(ticket.get('wo').get('length'), 0);
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  ticket.add_wo(workOrder);
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.equal(ticket.get('wo').objectAt(0).get('id'), WD.idOne);
+  assert.ok(ticket.get('woIsDirty'));
+  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+});
+
+test('wo property will update when the m2m array suddenly has the workOrder pk', (assert) => {
+  store.push('ticket-join-wo', {id: 1, work_order_pk: WD.idOne, ticket_pk: TD.idOne});
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
+  store.push('work-order', {id: WD.idOne});
+  let workOrder_two = {id: WD.idTwo};
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  ticket.add_wo(workOrder_two);
+  assert.equal(ticket.get('wo').get('length'), 2);
+  assert.equal(ticket.get('wo').objectAt(0).get('id'), WD.idOne);
+  assert.equal(ticket.get('wo').objectAt(1).get('id'), WD.idTwo);
+  assert.ok(ticket.get('woIsDirty'));
+  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+});
+
+test('wo property will update when the m2m array suddenly removes the workOrder', (assert) => {
+  store.push('ticket-join-wo', {id: 1, work_order_pk: WD.idOne, ticket_pk: TD.idOne});
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
+  store.push('work-order', {id: WD.idOne});
+  assert.equal(ticket.get('wo').get('length'), 1);
+  ticket.remove_wo(WD.idOne);
+  assert.equal(ticket.get('wo').get('length'), 0);
+});
+
+test('when wo is changed dirty tracking works as expected (removing)', (assert) => {
+  store.push('ticket-join-wo', {id: 1, ticket_pk: TD.idOne, work_order_pk: WD.idOne});
+  store.push('work-order', {id: WD.idOne});
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('woIsNotDirty'));
+  ticket.remove_wo(WD.idOne);
+  assert.equal(ticket.get('wo').get('length'), 0);
+  assert.ok(ticket.get('woIsDirty'));
+  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  ticket.rollback();
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  ticket.remove_wo(WD.idOne);
+  assert.equal(ticket.get('wo').get('length'), 0);
+  assert.ok(ticket.get('woIsDirty'));
+  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  ticket.rollback();
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('add_wo will add back old join model after it was removed and dirty the model (multiple)', (assert) => {
+  const ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1, 2]});
+  store.push('work-order', {id: WD.idTwo});
+  const workOrder_three = store.push('work-order', {id: WD.idThree});
+  store.push('ticket-join-wo', {id: 1, ticket_pk: TD.idOne, work_order_pk: WD.idTwo});
+  store.push('ticket-join-wo', {id: 2, ticket_pk: TD.idOne, work_order_pk: WD.idThree});
+  ticket.remove_wo(workOrder_three.get('id'));
+  assert.equal(ticket.get('wo').get('length'), 1);
+  ticket.add_wo({id: WD.idThree});
+  assert.equal(ticket.get('wo').get('length'), 2);
+  assert.ok(ticket.get('woIsNotDirty'));
+});
+
+test('add_wo will add photo to workOrder', function(assert) {
+  store.push('ticket-join-wo', {id: 1, work_order_pk: WD.idOne, ticket_pk: TD.idOne});
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
+  store.push('work-order', {id: WD.idOne});
+  const workOrder_json = {id: WD.idTwo, fullname: WD.fullname, photo: { id: '9', image_thumbnail: 'wat.jpg'} };
+  ticket.add_wo(workOrder_json);
+  assert.equal(ticket.get('wo').objectAt(1).photo.id, '9');
+  assert.equal(ticket.get('wo').objectAt(1).photo.image_thumbnail, 'wat.jpg');
+});
+
+test('multiple ticket\'s with same wo will rollback correctly', (assert) => {
+  store.push('ticket-join-wo', {id: 1, ticket_pk: TD.idOne, work_order_pk: WD.idOne});
+  store.push('ticket-join-wo', {id: 2, ticket_pk: TD.idTwo, work_order_pk: WD.idOne});
+  store.push('work-order', {id: WD.idOne});
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
+  let ticket_two = store.push('ticket', {id: TD.idTwo, ticket_wo_fks: [2]});
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket_two.get('woIsNotDirty'));
+  ticket_two.remove_wo(WD.idOne);
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.equal(ticket_two.get('wo').get('length'), 0);
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket_two.get('woIsDirty'));
+  ticket_two.rollback();
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(ticket_two.get('woIsNotDirty'));
+  assert.equal(ticket_two.get('wo').get('length'), 1);
+  assert.ok(ticket_two.get('isNotDirtyOrRelatedNotDirty'));
+  ticket.remove_wo(WD.idOne);
+  assert.equal(ticket.get('wo').get('length'), 0);
+  assert.ok(ticket.get('woIsDirty'));
+  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.equal(ticket_two.get('wo').get('length'), 1);
+  assert.ok(ticket_two.get('woIsNotDirty'));
+  ticket.rollback();
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(ticket_two.get('wo').get('length'), 1);
+  assert.ok(ticket_two.get('woIsNotDirty'));
+});
+
+test('when wo is changed dirty tracking works as expected (replacing)', (assert) => {
+  store.push('ticket-join-wo', {id: 1, ticket_pk: TD.idOne, work_order_pk: WD.idOne});
+  store.push('work-order', {id: WD.idOne});
+  const workOrder_two = {id: WD.idTwo};
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('woIsNotDirty'));
+  ticket.remove_wo(WD.idOne);
+  assert.ok(ticket.get('woIsDirty'));
+  assert.equal(ticket.get('wo').get('length'), 0);
+  ticket.add_wo(workOrder_two);
+  assert.ok(ticket.get('woIsDirty'));
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.equal(ticket.get('wo').objectAt(0).get('id'), WD.idTwo);
+  ticket.rollback();
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  ticket.remove_wo(WD.idOne);
+  ticket.add_wo(workOrder_two);
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('woIsDirty'));
+  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  ticket.rollback();
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('when workOrder is suddently removed it shows as a dirty relationship (when it has multiple locations to begin with)', (assert) => {
+  store.push('work-order', {id: WD.idOne});
+  store.push('work-order', {id: WD.idTwo});
+  store.push('ticket-join-wo', {id: 1, work_order_pk: WD.idOne, ticket_pk: TD.idOne});
+  store.push('ticket-join-wo', {id: 2, work_order_pk: WD.idTwo, ticket_pk: TD.idOne});
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1, 2]});
+  assert.equal(ticket.get('wo').get('length'), 2);
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  ticket.remove_wo(WD.idTwo);
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('woIsDirty'));
+  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+});
+
+test('rollback ticket will reset the previously used workOrders (wo) when switching from valid wo array to nothing', (assert) => {
+  store.push('work-order', {id: WD.idOne});
+  store.push('work-order', {id: WD.idTwo});
+  store.push('ticket-join-wo', {id: 1, work_order_pk: WD.idOne, ticket_pk: TD.idOne});
+  store.push('ticket-join-wo', {id: 2, work_order_pk: WD.idTwo, ticket_pk: TD.idOne});
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1, 2]});
+  assert.equal(ticket.get('wo').get('length'), 2);
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  ticket.remove_wo(WD.idTwo);
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('woIsDirty'));
+  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  ticket.rollback();
+  assert.equal(ticket.get('wo').get('length'), 2);
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  ticket.remove_wo(WD.idTwo);
+  ticket.remove_wo(WD.idOne);
+  assert.equal(ticket.get('wo').get('length'), 0);
+  assert.ok(ticket.get('woIsDirty'));
+  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  ticket.rollback();
+  assert.equal(ticket.get('wo').get('length'), 2);
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  assert.equal(ticket.get('wo').objectAt(0).get('id'), WD.idOne);
+  assert.equal(ticket.get('wo').objectAt(1).get('id'), WD.idTwo);
+});
+
+test('rollback wo will reset the previous workOrders (wo) when switching from one workOrder to another and saving in between each step', (assert) => {
+  store.push('work-order', {id: WD.idOne});
+  store.push('work-order', {id: WD.idTwo});
+  const workOrder_unused = {id: WD.unusedId};
+  store.push('ticket-join-wo', {id: 1, work_order_pk: WD.idOne, ticket_pk: TD.idOne});
+  store.push('ticket-join-wo', {id: 2, work_order_pk: WD.idTwo, ticket_pk: TD.idOne});
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1, 2]});
+  assert.equal(ticket.get('wo').get('length'), 2);
+  ticket.remove_wo(WD.idOne);
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('woIsDirty'));
+  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  ticket.save();
+  ticket.saveRelated();
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.ok(ticket.get('isNotDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+  ticket.add_wo(workOrder_unused);
+  assert.equal(ticket.get('wo').get('length'), 2);
+  assert.ok(ticket.get('woIsDirty'));
+  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  ticket.save();
+  ticket.saveRelated();
+  assert.equal(ticket.get('wo').get('length'), 2);
+  assert.ok(ticket.get('isNotDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('wo_ids computed returns a flat list of ids for each workOrder', (assert) => {
+  store.push('work-order', {id: WD.idOne});
+  store.push('work-order', {id: WD.idTwo});
+  store.push('ticket-join-wo', {id: 1, work_order_pk: WD.idOne, ticket_pk: TD.idOne});
+  store.push('ticket-join-wo', {id: 2, work_order_pk: WD.idTwo, ticket_pk: TD.idOne});
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1, 2]});
+  assert.equal(ticket.get('wo').get('length'), 2);
+  assert.deepEqual(ticket.get('wo_ids'), [WD.idOne, WD.idTwo]);
+  ticket.remove_wo(WD.idOne);
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.deepEqual(ticket.get('wo_ids'), [WD.idTwo]);
+});
+
+test('ticket_wo_ids computed returns a flat list of ids for each workOrder', (assert) => {
+  store.push('work-order', {id: WD.idOne});
+  store.push('work-order', {id: WD.idTwo});
+  store.push('ticket-join-wo', {id: 1, work_order_pk: WD.idOne, ticket_pk: TD.idOne});
+  store.push('ticket-join-wo', {id: 2, work_order_pk: WD.idTwo, ticket_pk: TD.idOne});
+  ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1, 2]});
+  assert.equal(ticket.get('wo').get('length'), 2);
+  assert.deepEqual(ticket.get('ticket_wo_ids'), [1, 2]);
+  ticket.remove_wo(WD.idOne);
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.deepEqual(ticket.get('ticket_wo_ids'), [2]);
 });

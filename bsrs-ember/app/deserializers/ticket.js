@@ -1,5 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
+import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 import { belongs_to_extract, belongs_to } from 'bsrs-components/repository/belongs-to';
 import { many_to_many_extract, many_to_many } from 'bsrs-components/repository/many-to-many';
 import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
@@ -13,8 +14,10 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     belongs_to.bind(this)('location', 'location');
     belongs_to.bind(this)('photo');
     many_to_many.bind(this)('cc', 'ticket');
+    many_to_many.bind(this)('wo', 'ticket');
     many_to_many.bind(this)('attachments', 'ticket');
   },
+  workOrderDeserializer: injectDeserializer('work-order'),
   deserialize(response, id) {
     if (id) {
       return this._deserializeSingle(response);
@@ -24,6 +27,18 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
   },
   setupCC(cc_json, ticket) {
     this.setup_cc(cc_json, ticket);
+  },
+  setupWorkOrder(ticket, work_order_json = []) {
+    const workOrderDeserializer = this.get('workOrderDeserializer');
+    // work order will contain related json that we do not want to push in store (e.g. currency)
+    const work_order_json_simple = work_order_json.map((wo) => {
+      return { id: wo.id };
+    });
+    this.setup_wo(work_order_json_simple, ticket);
+    work_order_json.forEach((wo) => {
+      // push remaining attrs and setup relationships on work order model
+      workOrderDeserializer.deserialize(wo, wo.id);
+    });
   },
   setupCategories(categories_json, ticket) {
     const store = this.get('simpleStore');
@@ -64,6 +79,8 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     // m2m
     let cc_json = response.cc;
     delete response.cc;
+    let work_order_json = response.work_order;
+    delete response.work_order;
     let attachments_json = response.attachments.map((id) => { return { id: id }; });
     delete response.attachments;
     const categories_json = response.categories;
@@ -77,6 +94,7 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     this.setup_assignee(assignee_json, ticket);
     this.setup_location(location_json, ticket);
     this.setupCC(cc_json, ticket);
+    this.setupWorkOrder(ticket, work_order_json);
     this.setupCategories(categories_json, ticket);
 
     // this.setup_attachments(attachments_json, ticket);

@@ -106,6 +106,8 @@ module.exports = function(defaults) {
     app.import('vendor/defaults/ticket-status.js');
     app.import('vendor/defaults/ticket.js');
     app.import('vendor/defaults/translation.js');
+    app.import('vendor/defaults/work-order.js');
+    app.import('vendor/defaults/work-order-status.js');
     app.import('vendor/currency_fixtures.js');
     app.import('vendor/dtd_fixtures.js');
     app.import('vendor/email_fixtures.js');
@@ -122,6 +124,7 @@ module.exports = function(defaults) {
     app.import('vendor/third_party_fixtures.js');
     app.import('vendor/ticket_activity_fixtures.js');
     app.import('vendor/ticket_fixtures.js');
+    app.import('vendor/work_order_fixtures.js');
     app.import('vendor/timemachine.js', {exports: {'vendor/timemachine': ['default']}});
     app.import('vendor/translation_fixtures.js');
   }

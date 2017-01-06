@@ -56,6 +56,7 @@ let TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     belongs_to.bind(this)('assignee', 'ticket');
     belongs_to.bind(this)('location', 'ticket', {change_func:false});
     many_to_many.bind(this)('cc', 'ticket');
+    many_to_many.bind(this)('wo', 'ticket');
     many_to_many.bind(this)('attachment', 'generic', {plural: true});
     many_to_many.bind(this)('category', 'model', {plural:true, add_func:false});
   },
@@ -82,7 +83,7 @@ let TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     const name = get(this, 'priority.name');
     return name ? name.replace(/\./g, '-') : '';
   }),
-  isDirtyOrRelatedDirty: Ember.computed.or('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'locationIsDirty', 'attachmentsIsDirty').readOnly(), 
+  isDirtyOrRelatedDirty: Ember.computed.or('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'locationIsDirty', 'attachmentsIsDirty', 'woIsDirty').readOnly(), 
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty').readOnly(),
   /**
    * @method saveAttachmentsContainer
@@ -162,12 +163,14 @@ let TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     this.rollbackAssignee();
     this.rollbackAttachmentsContainer();
     this.rollbackAttachments();
+    this.rollbackWo();
     this._super(...arguments);
   },
   saveRelated() {
     this.saveStatus();
     this.savePriority();
     this.saveCc();
+    this.saveWo();
     this.saveAssignee();
     this.saveAttachmentsContainer();
     this.saveAttachments();

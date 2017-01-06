@@ -1,0 +1,51 @@
+& {
+  .status-icon {
+    width: 3rem;
+    height: 3rem;
+    line-height: 2.7rem;
+    text-align: center;
+    border-radius: 50%;
+    border: $borderStyle;
+    display: inline-block;
+  }
+  .status-name {
+    height: 3rem;
+    line-height: 3rem;
+    padding: 0 20px;
+    border-radius: $borderRadius;
+    display: inline-block;
+    margin-left: 10px;
+    position: relative;
+    &:before {
+      content: " ";
+      position: absolute;
+      top: 10px;
+      left: -5px;
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-right: 5px solid $lightGreen;
+    }
+  }
+  &.is-positive {
+    .status-icon, .status-name {
+      background: $lightGreen;
+      border-color: $lightGreen;
+      color: $white;
+    }
+    .status-name:before {
+      border-right-color: $lightGreen;
+    }
+  }
+  &.is-negative {
+    .status-icon, .status-name {
+      background: $orange;
+      border-color: $orange;
+      color: $white;
+    }
+    .status-name:before {
+      border-right-color: $orange;
+    }
+  }
+}

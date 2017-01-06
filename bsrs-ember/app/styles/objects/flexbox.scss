@@ -1,4 +1,8 @@
-// 0 1 auto
+.flex--align-center {
+  align-items: center;
+}
+
+// 0 1 auto  -- grow, shrink, basis
 .flex-item--none {
   flex: 0 0 auto;
 }
@@ -14,6 +18,7 @@
   flex: auto;
 }
 
+// custom html elements
 flexauto {
   @extend %flex-item--auto;
 }

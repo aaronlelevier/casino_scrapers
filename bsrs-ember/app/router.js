@@ -75,7 +75,6 @@ Router.map(function() {
     this.route('dt', {path: '/:dt_id/ticket/:ticket_id'});
     this.route('completed', {path: '/completed/:ticket_id'});
   });
-  this.route('work-orders');
   this.route('calendar');
   this.route('search');
   this.route('invoices');

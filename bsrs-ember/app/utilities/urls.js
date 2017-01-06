@@ -31,7 +31,6 @@ export const TENANT_URL = `${PREFIX}/admin/tenants/`;
 export const THIRD_PARTIES_URL = `${PREFIX}/admin/third-parties/`;
 export const TRANSLATION_URL = `${PREFIX}/admin/translations/`;
 export const TICKETS_URL = `${PREFIX}/tickets/`;
-export const WOS_URL = `${PREFIX}/work-orders/`;
 
 // App Urls
 export const AUTOMATION_LIST_URL = '/admin/automations/index';
@@ -59,7 +58,6 @@ var BASEURLS = {
   base_roles_url: '/admin/roles',
   base_third_parties_url: '/admin/third-parties',
   base_tickets_url: '/tickets',
-  base_wos_url: '/work-orders',
   base_setting_url: '/admin/settings',
   BASE_TENANT_URL: '/admin/tenants',
   DASHBOARD_URL: '/dashboard',

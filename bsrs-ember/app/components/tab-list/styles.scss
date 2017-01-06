@@ -63,9 +63,9 @@ nav.tabs{
       i{
         display: block;
         &.dirty {
-          color: $lightGreen;
+          color: $dirtyColor;
           &:hover {
-            color: $darkGreen;
+            color: $dirtyHoverColor;
           }
         }
       }

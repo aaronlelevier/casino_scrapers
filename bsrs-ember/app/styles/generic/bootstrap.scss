@@ -110,8 +110,8 @@ fieldset[disabled] .form-control,
   z-index: 2;
 }
 .btn-primary{
-  background: $activeColor;
-  border-color: $activeColor;
+  background: $lightGreen;
+  border-color: $lightGreen;
   &:hover,
   &:focus{
     background: $darkGreen !important;

@@ -42,6 +42,10 @@ export default Ember.Mixin.create({
       associated_model: 'related-person',
       join_model: 'ticket-join-person'
     },
+    wo: {
+      associated_model: 'work-order',
+      join_model: 'ticket-join-wo'
+    },
     attachments: {
       associated_model: 'attachment',
       join_model: 'generic-join-attachment',

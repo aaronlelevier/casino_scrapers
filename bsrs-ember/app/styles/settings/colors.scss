@@ -1,8 +1,10 @@
 //Add Color Palette
 $blue: #2970ca;
 $lightBlue: #6abff0;
+$darkBlue: #5baad9;
 $lightGreen: #8abf54;
-$darkGreen: #8764c8;
+$darkGreen: #7bac45;
+$purple: #8764c8;
 $lightOrange: #fcd0b2;
 $orange: #ec8213;
 $darkOrange: #de453b;
@@ -31,3 +33,7 @@ $deleteColor: $orange;
 
 //shadows
 $shadowColor: $medGray;
+
+//dirty
+$dirtyColor: $orange;
+$dirtyHoverColor: $darkOrange;
