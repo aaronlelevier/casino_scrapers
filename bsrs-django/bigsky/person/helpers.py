@@ -26,6 +26,7 @@ class PermissionInfo(object):
         ('ticket', 'ticket'),
         ('person', 'person'),
         ('person', 'role'),
+        ('provider', 'provider'),
         ('location', 'location'),
         ('location', 'locationlevel'),
         ('category', 'category')
@@ -41,7 +42,7 @@ class PermissionInfo(object):
 
     @classmethod
     def names(cls):
-        yield from ('_'.join(x) for x in product(cls.PERMS, cls.MODELS))
+        return ['_'.join(x) for x in product(cls.PERMS, cls.MODELS)] + ['view_provider']
 
     def setUp(self):
         """

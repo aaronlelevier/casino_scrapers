@@ -22,6 +22,7 @@ from dtd import views as dtd_views
 from generic import views as generic_views
 from location import views as location_views
 from person import views as person_views
+from provider import views as provider_views
 from automation import views as automation_views
 from tenant import views as tenant_views
 from third_party import views as third_party_views
@@ -64,6 +65,8 @@ router.register(r'admin/automations', automation_views.AutomationViewSet)
 router.register(r'admin/automation-automation-filter-types', automation_views.AutomationFilterTypeViewSet)
 router.register(r'admin/automation-events', automation_views.AutomationEventViewSet)
 router.register(r'admin/automation-action-types', automation_views.AutomationActionTypeViewSet)
+# PROVIDERS
+router.register(r'providers', provider_views.ProviderViewSet)
 # TENANT
 router.register(r'admin/tenants', tenant_views.TenantViewSet)
 # THIRD PARTY
