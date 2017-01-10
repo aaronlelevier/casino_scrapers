@@ -155,16 +155,6 @@ timestamp of when the record was deleted.""")
         return value
 
 
-class TesterQuerySet(BaseQuerySet):
-    pass
-
-class TesterManager(BaseManager):
-    queryset_cls = TesterQuerySet
-
-class Tester(BaseModel):
-    objects = TesterManager()
-    
-
 class ToDictNameMixin(object):
 
     def to_dict(self):

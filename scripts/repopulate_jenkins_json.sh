@@ -33,10 +33,12 @@ wait
 # category and location need a tenant
 ./manage.py create_categories
 ./manage.py dumpdata category --indent=2 > fixtures/category.json
+# provider per category
+./manage.py create_provider
+./manage.py dumpdata provider --indent=2 > fixtures/provider.json
+# location
 ./manage.py create_locations
 ./manage.py dumpdata location --indent=2 > fixtures/location.json
-# other
-./manage.py loaddata fixtures/third_party.json
 
 wait
 ./manage.py create_all_people

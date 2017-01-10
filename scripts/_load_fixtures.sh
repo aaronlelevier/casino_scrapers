@@ -3,5 +3,6 @@
 cd bsrs-django/bigsky/
 
 while read P; do
-  python $P
+    wait
+    python $P
 done <"../../_fixtures.txt"

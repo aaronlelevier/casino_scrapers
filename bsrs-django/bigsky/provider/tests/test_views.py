@@ -24,11 +24,12 @@ class UserWithPrivilegeProviderTest(APITestCase):
     When the filtered query set is empty
     Then respond with a 200 OK and an empty array in the JSON body
 
-    Scenario 3: Successful request for provider list, with results
+    Scenario 3: Successful request for provider list, with results filtered by name
     Given a GET request to the /api/providers endpoint with a parameter for: ?category=<id> (by trade)
     When the request include a param to search by a provider's name, &name__icontains=<String>
     Then filter the provider data set per subscriber/location by the matching trade (by name)
     And the result set is filtered by providers with matching names
+    Then respond with 200 OK and the result set of providers, include attributes: id, name
     """
 
     def setUp(self):
@@ -115,7 +116,7 @@ class UserWithPrivilegeProviderTest(APITestCase):
 
 class UserUnauthenticatedProviderTest(APITestCase):
     """
-    Scenario 4: Failed request for provider list, invalid/missing Denali token/session
+    Scenario: Failed request for provider list, invalid/missing Denali token/session
     Given a POST request to the /api/providers endpoint
     When the user's session or csrf cookies are not valid
     Then respond with 403, Forbidden (no body)
@@ -137,7 +138,7 @@ class UserUnauthenticatedProviderTest(APITestCase):
 
 class UserWithoutPrivilegeProviderTest(APITestCase):
     """
-    Scenario 5: Failed request for provider list, insufficient privilege(s)
+    Scenario: Failed request for provider list, insufficient privilege(s)
     Given a POST request to the /api/providers endpoint
     When the user does not have view_provider privileges
     Then respond with 404, Not Found
@@ -151,7 +152,6 @@ class UserWithoutPrivilegeProviderTest(APITestCase):
 
     def tearDown(self):
         self.client.logout()
-
 
     def test_insufficient_permission_to_view(self):
         self.assertTrue(self.person.is_authenticated())

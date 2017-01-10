@@ -15,7 +15,6 @@ from translation.tests.factory import create_translation_keys_for_fixtures
 from ticket.models import TicketStatus
 from utils import create
 from utils.helpers import create_default
-from utils.models import Tester
 
 
 class BaseManagerTests(TestCase):
@@ -64,17 +63,20 @@ class BaseManagerTests(TestCase):
 
 class BaseModelTests(TestCase):
 
+    # The 'Country' is arbitrarily picked here to test the
+    # behavior of the BaseModel
+
     def setUp(self):
         # default ``objects`` model manager should only
         # return non-deleted objects
-        self.t_del = mommy.make(Tester, deleted=timezone.now())
-        self.t_ok = mommy.make(Tester)
+        self.t_del = mommy.make(Country, deleted=timezone.now())
+        self.t_ok = mommy.make(Country)
 
     def test_objects(self):
-        self.assertEqual(Tester.objects.count(), 1)
+        self.assertEqual(Country.objects.count(), 1)
 
     def test_objects_all(self):
-        self.assertEqual(Tester.objects_all.count(), 2)
+        self.assertEqual(Country.objects_all.count(), 2)
 
     def test_str(self):
         self.assertEqual(
@@ -88,7 +90,7 @@ class BaseModelTests(TestCase):
     def test_delete__soft_delete(self):
         self.t_ok.delete()
         self.assertIsNotNone(self.t_ok.deleted)
-        self.assertIsInstance(Tester.objects_all.get(id=self.t_ok.id), Tester)
+        self.assertIsInstance(Country.objects_all.get(id=self.t_ok.id), Country)
 
     def test_delete__hard_delete(self):
         country = mommy.make(Country)
@@ -98,10 +100,7 @@ class BaseModelTests(TestCase):
             Country.objects_all.get(id=country.id)
 
     def test_to_dict(self):
-        self.assertEqual(
-            self.t_ok.to_dict(),
-            {'id': str(self.t_ok.id)}
-        )
+        self.assertIsInstance(self.t_ok.to_dict(), dict)
 
     def test_model_fields__explicit(self):
         self.assertEqual(Person.MODEL_FIELDS, ['id', 'username'])
@@ -111,11 +110,11 @@ class BaseModelTests(TestCase):
     def test_model_fields__all_fields(self):
         # if MODEL_FIELDS isn't set on the Model, then return all fields
         with self.assertRaises(AttributeError):
-            Tester.MODEL_FIELDS
+            Country.MODEL_FIELDS
 
         self.assertEqual(
-            Tester.export_fields,
-            [x.name for x in Tester._meta.get_fields()]
+            Country.export_fields,
+            [x.name for x in Country._meta.get_fields()]
         )
 
     def test_export_fields__explicit(self):
@@ -129,11 +128,11 @@ class BaseModelTests(TestCase):
     def test_export_fields__all_fields(self):
         # if EXPORT_FIELDS isn't set on the Model, then return all fields
         with self.assertRaises(AttributeError):
-            Tester.EXPORT_FIELDS
+            Country.EXPORT_FIELDS
 
         self.assertEqual(
-            Tester.export_fields,
-            [x.name for x in Tester._meta.get_fields()]
+            Country.export_fields,
+            [x.name for x in Country._meta.get_fields()]
         )
 
     def test_get_i18n_value(self):
