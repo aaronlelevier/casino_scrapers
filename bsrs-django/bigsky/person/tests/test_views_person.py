@@ -719,7 +719,7 @@ class PersonUpdateTests(MockPermissionsAllowAnyMixin, APITestCase):
         self.assertFalse(self.person.emails.all())
 
     def test_update_middle_initial(self):
-        new_initial = 'z'
+        new_initial = '1'
         self.assertNotEqual(self.data['middle_initial'], new_initial)
         self.data['middle_initial'] = new_initial
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
