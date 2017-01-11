@@ -17,34 +17,42 @@
       </span>
     </div>
   </div>
-  <div class="row">
+
+  {{#card-title}}
     <div class="col-md-12">
-      <section class="card-title card-title--photo">
-        <div class="row">
-          <div class="col-md-12">
-            {{form-photo icon="building" model=model}}
-            <h1>
-              {{#if model.name}}
-                {{model.name}}
-                {{#if model.number}}<small>{{model.number}}</small>{{/if}}
-              {{else}}
-                <span class="new">{{t 'admin.location.new'}}</span>
-              {{/if}}
-            </h1>
-            {{#if model.location_level.name}}<p>{{model.location_level.name}}</p>{{/if}}
-          </div>
-        </div>
-      </section>
+      {{#image-block
+        icon="building" 
+        model=model
+        size="large"
+      }}
+        <h1 class="title">
+          {{#if model.name}}
+            {{model.name}}
+            {{#if model.number}}<small>{{model.number}}</small>{{/if}}
+          {{else}}
+            <span class="new">{{t 'admin.location.new'}}</span>
+          {{/if}}
+        </h1>
+        {{#if model.location_level.name}}<p class="subtitle">{{model.location_level.name}}</p>{{/if}}
+      {{/image-block}}
     </div>
-    {{locations/location/detail-section
-      model=model
-    }}
+  {{/card-title}}
+
+  {{#card-section}}
+  {{locations/location/detail-section
+    model=model
+  }}
+  {{/card-section}}
+
+  {{card-title title="admin.location.label.contact"}}
+  {{#card-section}}
     {{locations/location/contact-section
       model=model
     }}
-    {{locations/location/organization-section
-      model=model
-      disabled=disabled
-    }}
-  </div>
+  {{/card-section}}
+
+  {{locations/location/organization-section
+    model=model
+    disabled=disabled
+  }}
 </section>

@@ -46,7 +46,7 @@ test('upload will post form data and on save append the attachment', function(as
     assert.equal(model.get('photo').get('image_full'), 'wat.jpg');
     assert.equal(model.get('isDirty'), false);
     assert.ok(model.get('isDirtyOrRelatedDirty'));
-    assert.equal(find('.image-drop').attr('style'), 'background-image: url(wat.jpg);');
+    assert.equal(find('.t-image-drop').attr('style'), 'background-image: url(wat.jpg);');
   });
   let payload = PF.put({id: PD.idOne, photo: UUID.value});
   delete payload.auth_currency; // need to figure out why need to do this
@@ -250,7 +250,7 @@ test('bad gateway when saving an attachment (502)', function(assert) {
       const event = Ember.$.Event('drop');
       const image = { name: 'foo.png', type: 'image/png', size: 234000 };
       event.dataTransfer = { files: [image] };
-      find('.image-drop').trigger(event);
+      find('.t-image-drop').trigger(event);
     });
   });
   andThen(() => {

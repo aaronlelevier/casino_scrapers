@@ -9,33 +9,23 @@
 }}
 
 <section class="docSection container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-      <section class="card-title">
-        <div class="row">
-          <h1 class="col-md-12">
-            {{#if model.name}}
-            {{model.name}}
-            {{else}}
-            <span class="new">{{t 'admin.role.new'}}</span>
-            {{/if}}
-          </h1>
-        </div>
-      </section>
-    </div>
-    <div class="col-md-12">
-      {{roles/detail-section
-        model=model
-        categories_children=categories_children
-      }}
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      {{roles/settings-section
-        model=model
-        otherXhrs=otherXhrs
-      }}
-    </div>
-  </div>
+
+  {{#card-title}}
+    <h1 class="col-md-12">
+      {{#if model.name}}
+      {{model.name}}
+      {{else}}
+      <span class="new">{{t 'admin.role.new'}}</span>
+      {{/if}}
+    </h1>
+  {{/card-title}}
+
+  {{roles/detail-section
+    model=model
+    categories_children=categories_children
+  }}
+  {{roles/settings-section
+    model=model
+    otherXhrs=otherXhrs
+  }}
 </section>

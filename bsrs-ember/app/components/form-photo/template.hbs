@@ -1,8 +1,15 @@
-{{image-drop
-  model=model
-  droppedImage=droppedImage
-  addHoverText=(t "admin.person.label.add_profile_picture")
-  changeHoverText=(t "admin.person.label.change_profile_picture")
-  dropText=(t "general.drop.image")
-  onError=onError
-}}
+{{#unless readonly}}
+  {{image-drop
+    model=model
+    droppedImage=droppedImage
+    addHoverText=addHoverText
+    changeHoverText=changeHoverText
+    dropText=(t "general.drop.image")
+    onError=onError
+  }}
+{{else}}
+  {{photo-display
+    droppedImage=droppedImage
+  }}
+{{/unless}}
+

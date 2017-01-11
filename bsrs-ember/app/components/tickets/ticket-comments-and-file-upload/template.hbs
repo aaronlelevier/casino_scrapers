@@ -1,12 +1,6 @@
-<section class="card-title">
-  <div class="row">
-    <h2 class="col-md-12">
-      {{t "ticket.title.comment-activity"}}
-    </h2>
-  </div>
-</section>
+{{card-title title="ticket.title.comment-activity"}}
 
-<section>
+{{#card-section}}
   <div class="row">
     <div class="col-md-12">
       {{comment-save model=model}}
@@ -44,4 +38,4 @@
     {{/if}}
     {{/each}}
   </div>
-</section>
+{{/card-section}}

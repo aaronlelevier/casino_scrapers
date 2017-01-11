@@ -1,27 +1,23 @@
 <section class="docSection docSectionWithFooter container-fluid t-grid-wrap">
-  <div class="row">
-    <div class="col-md-12">
-      <section class="card-title">
-        <div class="row">
-          <h1 class="col-md-8">
-            <span class="t-grid-title">{{grid_title}}</span>
-            {{#if (filters-applied sort find search)}}
-            <span class="t-reset-grid reset-grid" {{action "resetGrid"}}>{{t 'grid.reset_all_options'}}</span>
-            {{/if}}
-            {{#unless model.isLoaded}}
-              {{grid-loading-graphic}}
-            {{/unless}}
-          </h1>
-          <div class="col-md-4 text-center pull-right">
-            {{grid-search-input search=search placeholder=search_placeholder keyup=(action "keyup")}}
-          </div>
-          <div class="col-md-12 filtersets t-filterset-wrap">
-            {{filterset-navigation filtersets=filtersets route=routeName}}
-          </div>
-        </div>
-      </section>
+
+  {{#card-title}}
+    <h1 class="col-md-8">
+      <span class="t-grid-title">{{grid_title}}</span>
+      {{#if (filters-applied sort find search)}}
+      <span class="t-reset-grid reset-grid" {{action "resetGrid"}}>{{t 'grid.reset_all_options'}}</span>
+      {{/if}}
+      {{#unless model.isLoaded}}
+        {{grid-loading-graphic}}
+      {{/unless}}
+    </h1>
+    <div class="col-md-4 text-center pull-right">
+      {{grid-search-input search=search placeholder=search_placeholder keyup=(action "keyup")}}
     </div>
-  </div>
+    <div class="col-md-12 filtersets t-filterset-wrap">
+      {{filterset-navigation filtersets=filtersets route=routeName}}
+    </div>
+  {{/card-title}}
+
   <div class="table-responsive">
     <table class="table table-striped table-hover">
       <thead>

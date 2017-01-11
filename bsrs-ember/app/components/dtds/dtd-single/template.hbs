@@ -2,7 +2,7 @@
   <div class="form">
     <section class="docSection container-fluid">
       <div class="row">
-        <h2 class="col-md-12 dtd-detail-title t-dtd-detail-title">{{t title}}</h2>
+        <h2 class="docSection__header col-md-12 dtd-detail-title t-dtd-detail-title">{{t title}}</h2>
       </div>
       <div class="row">
         {{base-component
@@ -15,8 +15,8 @@
           permissions=permissions
         }}
       </div>
-      <section class="sub-section row">
-        <h3 class="col-md-12">{{t 'admin.dtd.title.display'}}</h3>
+        {{card-title title="admin.dtd.title.display"}}
+        {{#card-section}}
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.dtd.label.key" for="key"}}
@@ -88,9 +88,10 @@
           {{/unless}}
           {{/each}}
         </div>
-      </section>
-      <section class="sub-section row">
-        <h3 class="col-md-12">{{t 'admin.dtd.title.fields'}}</h3>
+      {{/card-section}}
+
+      {{card-title title="admin.dtd.title.fields"}}
+      {{#card-section}}
         <div class="row">
           <div class="col-md-12">
             {{#form-group title="admin.dtd.label.fields" for="fields"}}
@@ -100,9 +101,10 @@
             {{/form-group}}
           </div>
         </div>
-      </section>
-      <section class="sub-section row">
-        <h3 class="col-md-12">{{t 'admin.dtd.title.navigation'}}</h3>
+      {{/card-section}}
+
+      {{card-title title="admin.dtd.title.navigation"}}
+      {{#card-section}}
         <div class="col-md-12">
           {{#form-group title="admin.dtd.label.link_type" for="link_type"}}
           {{#each model.link_types as |type|}}
@@ -123,7 +125,7 @@
           }}
           {{/form-group}}
         </div>
-      </section>
+      {{/card-section}}
     </section>
   </div>
 </article>

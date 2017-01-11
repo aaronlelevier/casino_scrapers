@@ -1,58 +1,54 @@
-<div class="col-md-12">
-  <section>
-    <div class="row">
-      <div class="col-md-12">
-        {{#form-group title="admin.location.label.name" for="name"}}
-          {{validated-input
-            model=model
-            valuePath="name"
-            className="t-location-name"
-            placeholder=(t "admin.location.label.name")
-            class="t-location-name-validator"
-          }}
-        {{/form-group}}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        {{#form-group title="admin.location.label.number" for="number"}}
-          {{validated-input
-            model=model
-            valuePath="number"
-            className="t-location-number"
-            placeholder=(t "admin.location.label.number")
-            class="t-location-number-validator"
-          }}
-        {{/form-group}}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        {{#form-group title="admin.location.label.location_level" for="location_location_level_select"}}
-          {{power-select-foreign-key
-            model=model
-            selected=model.location_level
-            change_method="change_location_level"
-            relatedModelName="location-level"
-            notTranslated=true
-            valuePath="location_level"
-          }}
-        {{/form-group}}
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        {{#form-group title="admin.location.label.status-name" for="location_status"}}
-          {{power-select-foreign-key
-            model=model
-            selected=model.status
-            change_method="change_status"
-            relatedModelName="location-status"
-            valuePath="status"
-            componentArg="tickets/ticket-status-tag"
-          }}
-        {{/form-group}}
-      </div>
-    </div>
-  </section>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="admin.location.label.name" for="name"}}
+      {{validated-input
+        model=model
+        valuePath="name"
+        className="t-location-name"
+        placeholder=(t "admin.location.label.name")
+        class="t-location-name-validator"
+      }}
+    {{/form-group}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="admin.location.label.number" for="number"}}
+      {{validated-input
+        model=model
+        valuePath="number"
+        className="t-location-number"
+        placeholder=(t "admin.location.label.number")
+        class="t-location-number-validator"
+      }}
+    {{/form-group}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="admin.location.label.location_level" for="location_location_level_select"}}
+      {{power-select-foreign-key
+        model=model
+        selected=model.location_level
+        change_method="change_location_level"
+        relatedModelName="location-level"
+        notTranslated=true
+        valuePath="location_level"
+      }}
+    {{/form-group}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="admin.location.label.status-name" for="location_status"}}
+      {{power-select-foreign-key
+        model=model
+        selected=model.status
+        change_method="change_status"
+        relatedModelName="location-status"
+        valuePath="status"
+        componentArg="tickets/ticket-status-tag"
+      }}
+    {{/form-group}}
+  </div>
 </div>

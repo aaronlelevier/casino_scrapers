@@ -9,7 +9,7 @@ const ImageDrop = Component.extend({
   uuid: injectUUID('uuid'),
   active: false,
   attributeBindings: ['style'],
-  classNames: ['image-drop'],
+  classNames: ['t-image-drop'],
   classNameBindings: [
     'active',
   ],

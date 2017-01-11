@@ -55,3 +55,13 @@ test('labels are translated', function(assert) {
   assert.equal(this.$('label:eq(0)').text().trim(), trans.t('work_order.label.scheduled_date'));
   assert.equal(this.$('label:eq(1)').text().trim(), trans.t('work_order.label.cost_estimate'));
 });
+
+test('if no work order photo, then display wrench (test just asserts class name)', function(assert) {
+  run(() => {
+    model = store.push('work-order', { id: WD.idOne, provider_logo: '' });
+    store.push('work-order', { id: WD.idTwo, provider_logo: '' });
+  });
+  this.wos = store.find('work-order');
+  this.render(hbs`{{work-orders/ticket-display wos=wos}}`);
+  assert.equal(this.$('.wrench').length, 2);
+});

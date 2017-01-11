@@ -132,6 +132,8 @@ var BSRS_TICKET_FACTORY = (function() {
     delete response.priority_fk;
     delete response.number;
     delete response.created;
+    // TODO: tmp before figuring out serializer
+    delete response.work_order;
     for(var key in ticket) {
       response[key] = ticket[key];
     }

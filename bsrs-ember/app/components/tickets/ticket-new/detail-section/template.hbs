@@ -1,4 +1,4 @@
-<section>
+{{#card-section}}
   <div class="col-md-12">
     {{#form-group title="ticket.label.location-name" for="location"}}
     {{db-fetch-select 
@@ -26,13 +26,10 @@
       {{/form-group}}
     </div>
   </div>
-</section>
-<section class="card-title">
-  <div class="row">
-    <h2 class="col-md-12">{{t "ticket.label.request"}}</h2>
-  </div>
-</section>
-<section>
+{{/card-section}}
+
+{{card-title title="ticket.label.request"}}
+{{#card-section}}
   <div class="col-md-12">
     <div class="ticket-categories">
       {{parent-model-category-select
@@ -54,4 +51,4 @@
       </div>
     </div>
   </div>
-</section>
+{{/card-section}}

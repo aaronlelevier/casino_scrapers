@@ -1,18 +1,18 @@
 & {
-	line-height: $photoHeightWidth;
-	height: $photoHeightWidth;
-	width: $photoHeightWidth;
 	background: $light;
-	font-size: 50px;
 	text-align: center;
 	color: $gray;
   position: relative;
   border-radius: $photoBorderRadius;
   overflow: hidden;
   &:before {
+    font-size: 50px;
     @include font-awesome("\f007");
   }
 	&.building:before {
 		@include font-awesome("\f1ad");
+	}
+	&.wrench:before {
+		@include font-awesome("\f0ad");
 	}
 }

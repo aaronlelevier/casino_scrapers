@@ -1,0 +1,27 @@
+& {
+  margin: $gutter 0;
+  border: $borderStyle;
+  border-width: 0 0 1px;
+  padding: 0 $gutter 0;
+  h1 {
+    color: $dark;
+    font-size: 2.8rem;
+    margin: 0;
+    padding-bottom: 10px;
+    small{
+      font-size: 2.5rem;
+      color: $medGray;
+    }
+    .new{
+      color: $medGray;
+    }
+  }
+  h2 {
+    color: $dark;
+    margin: 0;
+    font-size: 1.3em;
+    padding-top: $gutter;
+    padding-bottom: $gutter;
+    text-transform: uppercase;
+  }
+}

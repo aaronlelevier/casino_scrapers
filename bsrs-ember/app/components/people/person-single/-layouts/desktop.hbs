@@ -9,65 +9,47 @@
 }}
 
 <section class="docSection container-fluid">
-  <div class="row">
+  {{#card-title}}
     <div class="col-md-12">
-      <section class="card-title card-title--photo">
-        <div class="row">
-          <div class="col-md-12">
-            {{form-photo
-              icon="user"
-              model=model
-              onError=onError
-            }}
-            <h1 class="t-person-single-header">
-              {{#if (or model.first_name model.middle_initial model.last_name)}}
-                {{model.first_name}} {{model.middle_initial}} {{model.last_name}}
-              {{else}}
-                {{model.username}}
-              {{/if}}
-            </h1>
-            <p class="t-person-single-sub-header">{{model.role.name}}</p>
-          </div>
-        </div>
-      </section>
+      {{#image-block
+        icon="user"
+        model=model
+        onError=onError
+        droppedImage=model.photo.image_medium
+        addHoverText=(t "admin.person.label.add_profile_picture")
+        changeHoverText=(t "admin.person.label.change_profile_picture")
+        size="large"
+      }}
+        <h1 class="title t-person-single-header">
+          {{#if (or model.first_name model.middle_initial model.last_name)}}
+            {{model.first_name}} {{model.middle_initial}} {{model.last_name}}
+          {{else}}
+            {{model.username}}
+          {{/if}}
+        </h1>
+        <p class="subtitle t-person-single-sub-header">{{model.role.name}}</p>
+      {{/image-block}}
     </div>
-  </div>
+  {{/card-title}}
+
   {{people/detail-section
     model=model
     role_change=role_change
   }}
-  <div class="row">
-    <div class="col-md-12">
-      <section class="card-title">
-        <div class="row">
-          <h2 class="col-md-12">{{t "admin.person.label.credentials"}}</h2>
-        </div>
-      </section>
-    </div>
-  </div>
+
+  {{card-title title="admin.person.label.credentials"}}
+
   {{people/credentials-section
     model=model
     statuses=statuses
   }}
-  <div class="row">
-    <div class="col-md-12">
-      <section class="card-title">
-        <div class="row">
-          <h2 class="col-md-12">{{t "admin.person.label.contact"}}</h2>
-        </div>
-      </section>
-    </div>
-  </div>
+
+  {{card-title title="admin.person.label.contact"}}
+
   {{people/contact-section
     model=model
   }}
-  <div class="row">
-    <div class="col-md-12">
-      <section class="card-title">
-        <div class="row">
-          <h2 class="col-md-12">{{t "admin.person.label.settings"}}</h2>
-        </div>
-      </section>
-    </div>
-  </div>
+
+  {{card-title title="admin.person.label.settings"}}
+
 </section>

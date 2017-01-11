@@ -9,56 +9,32 @@
 }}
 
 <section class="docSection container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-      <section class="card-title">
-        <div class="row">
-          <h1 class="col-md-12 t-automation-header">
-            {{#if model.new}}
-              <span class="new">{{t "admin.automation.new"}}</span>
-            {{else}}
-              {{#if model.description}}
-                {{model.description}}
-              {{else}}
-                <span class="new">{{t "admin.automation.detail"}}</span>
-              {{/if}}
-            {{/if}}
-          </h1>
-        </div>
-      </section>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <section>
-        {{automations/detail-section model=model}}
-      </section>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <section class="card-title">
-        <div class="row">
-          <h2 class="col-md-12">{{t "admin.automation.criteria"}}</h2>
-        </div>
-      </section>
-    </div>
-    <div class="col-md-12">
-      <section>
-        {{automations/filter-section model=model id="pf"}}
-      </section>
-    </div>
-    <div class="col-md-12">
-      <section class="card-title">
-        <div class="row">
-          <h2 class="col-md-12">{{t "admin.automation.actions"}}</h2>
-        </div>
-      </section>
-    </div>
-    <div class="col-md-12">
-      <section>
-        {{automations/action-section model=model id="action"}}
-      </section>
-    </div>
-  </div>
+  {{#card-title}}
+    <h1 class="col-md-12 t-automation-header">
+      {{#if model.new}}
+        <span class="new">{{t "admin.automation.new"}}</span>
+      {{else}}
+        {{#if model.description}}
+          {{model.description}}
+        {{else}}
+          <span class="new">{{t "admin.automation.detail"}}</span>
+        {{/if}}
+      {{/if}}
+    </h1>
+  {{/card-title}}
+
+  {{#card-section}}
+    {{automations/detail-section model=model}}
+  {{/card-section}}
+
+  {{card-title title="admin.automation.criteria"}}
+  {{#card-section}}
+    {{automations/filter-section model=model id="pf"}}
+  {{/card-section}}
+
+  {{card-title title="admin.automation.actions"}}
+  {{#card-section}}
+    {{automations/action-section model=model id="action"}}
+  {{/card-section}}
+
 </section>

@@ -1,13 +1,8 @@
-<div class="col-md-12">
-  <section class="card-title">
-    <div class="row">
-      <h2 class="col-md-12">{{t "admin.location.label.parents-name"}}</h2>
-    </div>
-  </section>
-  <section>
-    <div class="row">
-      <div class="col-md-12">
-        {{#form-group title="admin.location.label.parents-name" for="location_parents" optional="true"}}
+{{card-title title="admin.location.label.parents-name"}}
+{{#card-section}}
+  <div class="row">
+    <div class="col-md-12">
+      {{#form-group title="admin.location.label.parents-name" for="location_parents" optional="true"}}
         {{db-fetch-multi-select
           model=model
           disabled=disabled
@@ -22,19 +17,16 @@
           searchMethod="findLocationParents"
           extra_params=extra_params
         }}
-        {{/form-group}}
-      </div>
+      {{/form-group}}
     </div>
-  </section>
-  <section class="card-title">
-    <div class="row">
-      <h2 class="col-md-12">{{t "admin.location.label.children-name"}}</h2>
-    </div>
-  </section>
-  <section>
-    <div class="row">
-      <div class="col-md-12">
-        {{#form-group title="admin.location.label.children-name" for="location_children" optional="true"}}
+  </div>
+{{/card-section}}
+
+{{card-title title="admin.location.label.children-name"}}
+{{#card-section}}
+  <div class="row">
+    <div class="col-md-12">
+      {{#form-group title="admin.location.label.children-name" for="location_children" optional="true"}}
         {{db-fetch-multi-select
           model=model
           disabled=disabled
@@ -49,8 +41,7 @@
           searchMethod="findLocationChildren"
           extra_params=extra_params
         }}
-        {{/form-group}}
-      </div>
+      {{/form-group}}
     </div>
-  </section>
-</div>
+  </div>
+{{/card-section}}

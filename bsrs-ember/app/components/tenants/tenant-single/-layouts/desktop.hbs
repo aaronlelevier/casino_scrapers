@@ -9,64 +9,33 @@
 }}
 
 <section class="docSection container-fluid">
-  <div class="row">
-    <div class="col-md-12">
-      <section class="card-title">
-        <div class="row">
-          <h1 class="col-md-12 t-tenant-header">
-            {{#if model.company_name}}
-              {{model.company_name}}
-            {{else}}
-              <span class="new">{{t "tenant.new"}}</span>
-            {{/if}}
-          </h1>
-        </div>
-      </section>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <section>
-        {{tenants/tenant/detail-section
-          model=model
-        }}
-      </section>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <section class="card-title">
-        <div class="row">
-          <h2 class="col-md-12">{{t "admin.tenant.implementation"}}</h2>
-        </div>
-      </section>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <section>
-        {{tenants/tenant/implementation-section
-          model=model
-        }}
-      </section>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <section class="card-title">
-        <div class="row">
-          <h2 class="col-md-12">{{t "admin.tenant.billing"}}</h2>
-        </div>
-      </section>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-12">
-      <section>
-        {{tenants/tenant/billing-section
-          model=model
-        }}
-      </section>
-    </div>
-  </div>
+  {{#card-title}}
+    <h1 class="col-md-12 t-tenant-header">
+      {{#if model.company_name}}
+        {{model.company_name}}
+      {{else}}
+        <span class="new">{{t "tenant.new"}}</span>
+      {{/if}}
+    </h1>
+  {{/card-title}}
+
+  {{#card-section}}
+    {{tenants/tenant/detail-section
+      model=model
+    }}
+  {{/card-section}}
+
+  {{card-title title="admin.tenant.implementation"}}
+  {{#card-section}}
+    {{tenants/tenant/implementation-section
+      model=model
+    }}
+  {{/card-section}}
+
+  {{card-title title="admin.tenant.billing"}}
+  {{#card-section}}
+    {{tenants/tenant/billing-section
+      model=model
+    }}
+  {{/card-section}}
 </section>

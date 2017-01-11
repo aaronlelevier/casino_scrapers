@@ -22,29 +22,22 @@
     }}
 
     <section class="docSection container-fluid">
-      <div class="row">
-        <div class="col-md-12">
-          <section class="card-title">
-            <div class="row">
-              <h1 class="col-md-12">
-              {{#unless model.top_level_category.name}}
-                <span class="new">{{t "ticket.new"}}</span>
-              {{else}}
-                {{model.top_level_category.name}}
-              {{/unless}}
-              </h1>
 
-            </div>
-          </section>
-        </div>
-        <div class="col-md-12">
-          {{tickets/ticket-new/detail-section
-            model=model
-            locationRepo=locationRepo
-            submitted=submitted
-          }}
-        </div>
-      </div>
+      {{#card-title}}
+        <h1 class="col-md-12">
+        {{#unless model.top_level_category.name}}
+          <span class="new">{{t "ticket.new"}}</span>
+        {{else}}
+          {{model.top_level_category.name}}
+        {{/unless}}
+        </h1>
+      {{/card-title}}
+
+      {{tickets/ticket-new/detail-section
+        model=model
+        locationRepo=locationRepo
+        submitted=submitted
+      }}
     </section>
   </div>
 </article>
