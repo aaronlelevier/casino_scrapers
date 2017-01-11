@@ -23,6 +23,8 @@ let WorkOrder = Model.extend(OptConf, Validations, {
   init() {
     this._super(...arguments);
     belongs_to.bind(this)('status', 'work-order', { bootstrapped: true });
+    belongs_to.bind(this)('category', 'work-order');
+    belongs_to.bind(this)('provider', 'work-order');
     belongs_to.bind(this)('cost_estimate_currency', 'work-order', { bootstrapped: true });
   },
   simpleStore: Ember.inject.service(),
@@ -34,18 +36,9 @@ let WorkOrder = Model.extend(OptConf, Validations, {
   approval_date: attr(''),
   approved_amount: attr(''),
   cost_estimate: attr(''),
-  provider_name: attr(''),
-  provider_logo: attr(''),
-  provider_address1: attr(''),
-  provider_address2: attr(''),
-  provider_city: attr(''),
-  provider_state: attr(''),
-  provider_postal_code: attr(''),
-  provider_phone: attr(''),
-  provider_email: attr(''),
 
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'costEstimateCurrencyIsDirty', 'statusIsDirty', function() {
-    return this.get('isDirty') || this.get('costEstimateCurrencyIsDirty') || this.get('statusIsDirty');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'costEstimateCurrencyIsDirty', 'statusIsDirty', 'categoryIsDirty', 'providerIsDirty', function() {
+    return this.get('isDirty') || this.get('costEstimateCurrencyIsDirty') || this.get('statusIsDirty') || this.get('categoryIsDirty') || this.get('providerIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
 
@@ -53,11 +46,15 @@ let WorkOrder = Model.extend(OptConf, Validations, {
     this._super(...arguments);
     this.rollbackCostEstimateCurrency();
     this.rollbackStatus();
+    this.rollbackCategory();
+    this.rollbackProvider();
   },
 
   saveRelated() {
     this.saveCostEstimateCurrency();
     this.saveStatus();
+    this.saveCategory();
+    this.saveProvider();
   },
 });
 

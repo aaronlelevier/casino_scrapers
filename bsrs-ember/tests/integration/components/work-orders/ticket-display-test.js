@@ -32,21 +32,23 @@ moduleForComponent('ticket-display', 'integration: ticket-display test', {
   },
 });
 
-test('header - shows provider name and address', function(assert) {
+test('header - shows provider name and address with logo, cost estimate, scheduled date and status name', function(assert) {
   this.wos = store.find('work-order');
   this.render(hbs`{{work-orders/ticket-display wos=wos}}`);
   assert.equal(this.$('[data-test-id="provider-name0"]').text(), model.get('provider_name'));
   assert.equal(this.$('[data-test-id="provider-name1"]').text(), model2.get('provider_name'));
   assert.equal(this.$('[data-test-id="provider-address1-0"]').text(), model.get('provider_address1'));
   assert.equal(this.$('[data-test-id="provider-address1-1"]').text(), model2.get('provider_address1'));
-  // assert.equal(this.$('[data-test-id="provider-logo0"]').text(), model.get('provider_logo'));
-  // assert.equal(this.$('[data-test-id="provider-logo1"]').text(), model2.get('provider_logo'));
+  const logo1 = this.$('[data-test-id="provider-logo0"]').css('background-image');
+  assert.equal(logo1.replace(/\"/g, ''), `url(${model.get('provider_logo')})`);
+  const logo2 = this.$('[data-test-id="provider-logo0"]').css('background-image');
+  assert.equal(logo2.replace(/\"/g, ''), `url(${model2.get('provider_logo')})`);
   assert.equal(this.$('[data-test-id="scheduled-date1"]').text(), moment(model.get('scheduled_date')).format('MM/DD/YYYY'));
   assert.equal(this.$('[data-test-id="scheduled-date1"]').text(), moment(model2.get('scheduled_date')).format('MM/DD/YYYY'));
   assert.equal(this.$('[data-test-id="cost-estimate0"]').text(), model.get('cost_estimate'));
   assert.equal(this.$('[data-test-id="cost-estimate1"]').text(), model2.get('cost_estimate'));
-  // assert.equal(this.$('[data-test-id="status0"]').text(), model.get('status'));
-  // assert.equal(this.$('[data-test-id="status1"]').text(), model2.get('status'));
+  assert.equal(this.$('[data-test-id="wo-status-name"]:eq(0)').text(), model.get('status.name'));
+  assert.equal(this.$('[data-test-id="wo-status-name"]:eq(1)').text(), model2.get('status.name'));
 });
 
 test('labels are translated', function(assert) { 

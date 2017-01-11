@@ -4,15 +4,18 @@ import { moduleFor, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import WORK_ORDER_STATUSES from 'bsrs-ember/vendor/defaults/work-order-status';
 import WORK_ORDER from 'bsrs-ember/vendor/defaults/work-order';
+import PROVIDER from 'bsrs-ember/vendor/defaults/provider';
 import CurrencyD from 'bsrs-ember/vendor/defaults/currency';
+import CD from 'bsrs-ember/vendor/defaults/category';
 
 let workOrder, inactive_currency;
 
 const WD = WORK_ORDER.defaults();
 const WOSD = WORK_ORDER_STATUSES.defaults();
+const PRD = PROVIDER.defaults();
 
-moduleFor('model:work-order', 'Unit | Model | work-order', {
-  needs: ['model:currency', 'model:work-order-status'],
+moduleFor('model:work-order', 'terrance Unit | Model | work-order', {
+  needs: ['model:currency', 'model:work-order-status', 'model:category', 'model:provider' ,'service:i18n','validator:presence'],
   beforeEach() {
     this.store = module_registry(this.container, this.registry);
     run(() => {
@@ -72,77 +75,6 @@ test('dirty test | cost_estimate', function(assert) {
   assert.equal(workOrder.get('isDirty'), false);
 });
 
-test('dirty test | provider_name', function(assert) {
-  assert.equal(workOrder.get('isDirty'), false);
-  workOrder.set('provider_name', 'wat');
-  assert.equal(workOrder.get('isDirty'), true);
-  workOrder.set('provider_name', '');
-  assert.equal(workOrder.get('isDirty'), false);
-});
-
-test('dirty test | provider_logo', function(assert) {
-  assert.equal(workOrder.get('isDirty'), false);
-  workOrder.set('provider_logo', 'wat');
-  assert.equal(workOrder.get('isDirty'), true);
-  workOrder.set('provider_logo', '');
-  assert.equal(workOrder.get('isDirty'), false);
-});
-
-test('dirty test | provider_address1', function(assert) {
-  assert.equal(workOrder.get('isDirty'), false);
-  workOrder.set('provider_address1', 'wat');
-  assert.equal(workOrder.get('isDirty'), true);
-  workOrder.set('provider_address1', '');
-  assert.equal(workOrder.get('isDirty'), false);
-});
-
-test('dirty test | provider_address2', function(assert) {
-  assert.equal(workOrder.get('isDirty'), false);
-  workOrder.set('provider_address2', 'wat');
-  assert.equal(workOrder.get('isDirty'), true);
-  workOrder.set('provider_address2', '');
-  assert.equal(workOrder.get('isDirty'), false);
-});
-
-test('dirty test | provider_city', function(assert) {
-  assert.equal(workOrder.get('isDirty'), false);
-  workOrder.set('provider_city', 'wat');
-  assert.equal(workOrder.get('isDirty'), true);
-  workOrder.set('provider_city', '');
-  assert.equal(workOrder.get('isDirty'), false);
-});
-
-test('dirty test | provider_state', function(assert) {
-  assert.equal(workOrder.get('isDirty'), false);
-  workOrder.set('provider_state', 'wat');
-  assert.equal(workOrder.get('isDirty'), true);
-  workOrder.set('provider_state', '');
-  assert.equal(workOrder.get('isDirty'), false);
-});
-
-test('dirty test | provider_postal_code', function(assert) {
-  assert.equal(workOrder.get('isDirty'), false);
-  workOrder.set('provider_postal_code', 'wat');
-  assert.equal(workOrder.get('isDirty'), true);
-  workOrder.set('provider_postal_code', '');
-  assert.equal(workOrder.get('isDirty'), false);
-});
-
-test('dirty test | provider_phone', function(assert) {
-  assert.equal(workOrder.get('isDirty'), false);
-  workOrder.set('provider_phone', 'wat');
-  assert.equal(workOrder.get('isDirty'), true);
-  workOrder.set('provider_phone', '');
-  assert.equal(workOrder.get('isDirty'), false);
-});
-
-test('dirty test | provider_email', function(assert) {
-  assert.equal(workOrder.get('isDirty'), false);
-  workOrder.set('provider_email', 'wat');
-  assert.equal(workOrder.get('isDirty'), true);
-  workOrder.set('provider_email', '');
-  assert.equal(workOrder.get('isDirty'), false);
-});
 
 /* Cost Estimate currency */
 test('related currency should return one currency for a work-order', function(assert) {
@@ -259,5 +191,110 @@ test('saveRelated workOrder status to save model and make it clean', function(as
   assert.ok(workOrder.get('isDirtyOrRelatedDirty'));
   workOrder.saveRelated();
   assert.equal(workOrder.get('status').get('id'), WOSD.idTwo);
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('workOrder has a related work order category', function(assert) {
+  run(() => {
+    workOrder = this.store.push('work-order', {id: WD.idOne, category_fk: CD.idOne});
+    this.store.push('category', {id: CD.idOne, name: CD.nameOne, workOrders: [WD.idOne]});
+  });
+  assert.equal(workOrder.get('category').get('id'), CD.idOne);
+  assert.equal(workOrder.get('category.name'), CD.nameOne);
+});
+
+test('change_category and dirty tracking', function(assert) {
+  run(() => {
+    workOrder = this.store.push('work-order', {id: WD.idOne, category_fk: CD.idOne});
+    this.store.push('category', {id: CD.idOne, name: CD.nameOne, workOrders: [WD.idOne]});
+  });
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(workOrder.get('categoryIsNotDirty'));
+  workOrder.change_category({id: CD.idTwo});
+  assert.equal(workOrder.get('category').get('id'), CD.idTwo);
+  assert.ok(workOrder.get('isDirtyOrRelatedDirty'));
+  assert.ok(workOrder.get('categoryIsDirty'));
+});
+
+test('rollback category will revert and reboot the dirty type to clean', function(assert) {
+  run(() => {
+    workOrder = this.store.push('work-order', {id: WD.idOne, category_fk: CD.idOne});
+    this.store.push('category', {id: CD.idOne, name: CD.nameOne, workOrders: [WD.idOne]});
+  });
+  assert.equal(workOrder.get('category').get('id'), CD.idOne);
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+  workOrder.change_category({id: CD.idTwo});
+  assert.equal(workOrder.get('category').get('id'), CD.idTwo);
+  assert.ok(workOrder.get('isDirtyOrRelatedDirty'));
+  workOrder.rollback();
+  assert.equal(workOrder.get('category').get('id'), CD.idOne);
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('saveRelated workOrder category to save model and make it clean', function(assert) {
+  run(() => {
+    workOrder = this.store.push('work-order', {id: WD.idOne, category_fk: CD.idOne});
+    this.store.push('category', {id: CD.idOne, name: CD.nameOne, workOrders: [WD.idOne]});
+  });
+  assert.equal(workOrder.get('category').get('id'), CD.idOne);
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+  workOrder.change_category({id: CD.idTwo});
+  assert.equal(workOrder.get('category').get('id'), CD.idTwo);
+  assert.ok(workOrder.get('isDirtyOrRelatedDirty'));
+  workOrder.saveRelated();
+  assert.equal(workOrder.get('category').get('id'), CD.idTwo);
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+// Provider
+test('workOrder has a related work order category', function(assert) {
+  run(() => {
+    workOrder = this.store.push('work-order', {id: WD.idOne, provider_fk: PRD.idOne});
+    this.store.push('provider', {id: PRD.idOne, name: PRD.nameOne, workOrders: [WD.idOne]});
+  });
+  assert.equal(workOrder.get('provider').get('id'), PRD.idOne);
+  assert.equal(workOrder.get('provider.name'), PRD.nameOne);
+});
+
+test('change_provider and dirty tracking', function(assert) {
+  run(() => {
+    workOrder = this.store.push('work-order', {id: WD.idOne, provider_fk: PRD.idOne});
+    this.store.push('provider', {id: PRD.idOne, name: CD.nameOne, workOrders: [WD.idOne]});
+  });
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(workOrder.get('providerIsNotDirty'));
+  workOrder.change_provider({id: PRD.idTwo});
+  assert.equal(workOrder.get('provider').get('id'), PRD.idTwo);
+  assert.ok(workOrder.get('isDirtyOrRelatedDirty'));
+  assert.ok(workOrder.get('providerIsDirty'));
+});
+
+test('rollback provider will revert and reboot the dirty type to clean', function(assert) {
+  run(() => {
+    workOrder = this.store.push('work-order', {id: WD.idOne, provider_fk: PRD.idOne});
+    this.store.push('provider', {id: PRD.idOne, name: CD.nameOne, workOrders: [WD.idOne]});
+  });
+  assert.equal(workOrder.get('provider').get('id'), PRD.idOne);
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+  workOrder.change_provider({id: PRD.idTwo});
+  assert.equal(workOrder.get('provider').get('id'), PRD.idTwo);
+  assert.ok(workOrder.get('isDirtyOrRelatedDirty'));
+  workOrder.rollback();
+  assert.equal(workOrder.get('provider').get('id'), PRD.idOne);
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('saveRelated workOrder provider to save model and make it clean', function(assert) {
+  run(() => {
+    workOrder = this.store.push('work-order', {id: WD.idOne, provider_fk: PRD.idOne});
+    this.store.push('provider', {id: PRD.idOne, name: CD.nameOne, workOrders: [WD.idOne]});
+  });
+  assert.equal(workOrder.get('provider').get('id'), PRD.idOne);
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+  workOrder.change_provider({id: PRD.idTwo});
+  assert.equal(workOrder.get('provider').get('id'), PRD.idTwo);
+  assert.ok(workOrder.get('isDirtyOrRelatedDirty'));
+  workOrder.saveRelated();
+  assert.equal(workOrder.get('provider').get('id'), PRD.idTwo);
   assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
 });

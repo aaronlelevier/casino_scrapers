@@ -3,7 +3,7 @@
 module.exports = function(environment) {
   var ENV = {
     contentSecurityPolicy: {
-      'img-src': ["'self' data:", "http://pngimg.com/upload/cat_PNG1631.png", "http://www.femalefirst.co.uk/image-library/square/250/m/xmel-gibson-awi.jpg.pagespeed.ic.6BxCJhF4Ru.jpg"],
+      'img-src': ["'self' data:", "http://pngimg.com", "http://www.femalefirst.co.uk"],
       'font-src': "'self' data:",
       'script-src': "'self' 'unsafe-inline'",
       'style-src': "'self' 'unsafe-inline'",

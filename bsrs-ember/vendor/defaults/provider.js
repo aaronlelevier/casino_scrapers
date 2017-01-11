@@ -1,4 +1,4 @@
-var BSRS_PROVIDER_DEFAULTS_OBJECT = (function() {
+var BSRS_WORK_ORDER_DEFAULTS_OBJECT = (function() {
   var factory = function() {
   };
   factory.prototype.defaults = function() {
@@ -35,11 +35,11 @@ var BSRS_PROVIDER_DEFAULTS_OBJECT = (function() {
 })();
 
 if (typeof window === 'undefined') {
-  module.exports['default'] = new BSRS_PROVIDER_DEFAULTS_OBJECT();
+  module.exports['default'] = new BSRS_WORK_ORDER_DEFAULTS_OBJECT();
 } else {
-  define('bsrs-ember/vendor/defaults/provider', ['exports'], function (exports) {
+  define('bsrs-ember/vendor/defaults/work-order', ['exports'], function (exports) {
     'use strict';
-    var wo = new BSRS_PROVIDER_DEFAULTS_OBJECT();
+    var wo = new BSRS_WORK_ORDER_DEFAULTS_OBJECT();
     exports.default = wo;
   });
 }

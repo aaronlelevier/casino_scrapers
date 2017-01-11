@@ -90,6 +90,7 @@ module.exports = function(defaults) {
     app.import('vendor/defaults/pfilter.js');
     app.import('vendor/defaults/phone-number-type.js');
     app.import('vendor/defaults/phone-number.js');
+    app.import('vendor/defaults/provider.js');
     app.import('vendor/defaults/role-category.js');
     app.import('vendor/defaults/role.js');
     app.import('vendor/defaults/sendemail.js');

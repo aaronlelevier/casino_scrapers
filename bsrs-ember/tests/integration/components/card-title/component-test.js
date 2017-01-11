@@ -11,11 +11,11 @@ test('it renders as a section tag', function(assert) {
 });
 
 test('if pass title, then shows header tag', function(assert) {
-  this.render(hbs`{{card-title title="wat"}}`);
-  assert.equal(this.$('[data-test-id="h2"]').text().trim(), 'wat');
+  this.render(hbs`{{card-title title="Giant Beanstalk"}}`);
+  assert.equal(this.$('[data-test-id="h2"]').text().trim(), 'Giant Beanstalk');
 });
 
 test('if dont pass title, acts as block component', function(assert) {
-  this.render(hbs`{{#card-title}}foobar{{/card-title}}`);
-  assert.equal(this.$().text().trim(), 'foobar');
+  this.render(hbs`{{#card-title}}Wyatt Earp{{/card-title}}`);
+  assert.equal(this.$().text().trim(), 'Wyatt Earp');
 });

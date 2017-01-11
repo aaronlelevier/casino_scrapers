@@ -12,6 +12,7 @@ import LD from 'bsrs-ember/vendor/defaults/ticket';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LOCALE_DEFAULTS from 'bsrs-ember/vendor/defaults/locale';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
+import WORK_ORDER_STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/work-order-status';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currency';
 import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
 import config from 'bsrs-ember/config/environment';
@@ -22,6 +23,7 @@ const HOME_URL = '/';
 const PREFIX = config.APP.NAMESPACE;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
 const { run } = Ember;
+const WOSD = WORK_ORDER_STATUS_DEFAULTS.defaults();
 
 moduleForAcceptance('Acceptance | general bootup test', {
   beforeEach() {
@@ -108,6 +110,28 @@ test('on boot we should fetch and load the ticket status configuration', functio
     assert.equal(this.store.find('ticket-status').objectAt(6).get('name'), LD.statusSevenKey);
     assert.equal(this.store.find('ticket-status').objectAt(7).get('id'), LD.statusEightId);
     assert.equal(this.store.find('ticket-status').objectAt(7).get('name'), LD.statusEightKey);
+  });
+});
+
+test('on boot we should fetch and load the work order status configuration', function(assert) {
+  visit(HOME_URL);
+  andThen(() => {
+    assert.equal(this.store.find('work-order-status').get('length'), 13);
+    assert.equal(this.store.find('work-order-status').objectAt(0).get('id'), WOSD.idOne);
+    assert.equal(this.store.find('work-order-status').objectAt(0).get('name'), WOSD.nameOne);
+    assert.equal(this.store.find('work-order-status').objectAt(1).get('id'), WOSD.idTwo);
+    assert.equal(this.store.find('work-order-status').objectAt(1).get('name'), WOSD.nameThree);
+    assert.equal(this.store.find('work-order-status').objectAt(2).get('name'), WOSD.nameTwo);
+    assert.equal(this.store.find('work-order-status').objectAt(3).get('name'), WOSD.nameFour);
+    assert.equal(this.store.find('work-order-status').objectAt(4).get('name'), WOSD.nameFive);
+    assert.equal(this.store.find('work-order-status').objectAt(5).get('name'), WOSD.nameSix);
+    assert.equal(this.store.find('work-order-status').objectAt(6).get('name'), WOSD.nameSeven);
+    assert.equal(this.store.find('work-order-status').objectAt(7).get('name'), WOSD.nameEight);
+    assert.equal(this.store.find('work-order-status').objectAt(8).get('name'), WOSD.nameNine);
+    assert.equal(this.store.find('work-order-status').objectAt(9).get('name'), WOSD.nameTen);
+    assert.equal(this.store.find('work-order-status').objectAt(10).get('name'), WOSD.nameEleven);
+    assert.equal(this.store.find('work-order-status').objectAt(11).get('name'), WOSD.nameTwelve);
+    assert.equal(this.store.find('work-order-status').objectAt(12).get('name'), WOSD.nameThirteen);
   });
 });
 

@@ -6,7 +6,7 @@
   border-radius: $photoBorderRadius;
   overflow: hidden;
   &:before {
-    font-size: 50px;
+    font-size: 5rem;
     @include font-awesome("\f007");
   }
 	&.building:before {

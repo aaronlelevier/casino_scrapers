@@ -27,5 +27,13 @@ export default Ember.Mixin.create({
       owner: 'work-order-status',
       override_property_getter: 'status',
     },
+    category: {
+      collection: 'workOrders',
+      owner: 'category'
+    },
+    provider: {
+      collection: 'workOrders',
+      owner: 'provider'
+    }
   }
 });

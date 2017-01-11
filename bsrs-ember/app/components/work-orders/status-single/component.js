@@ -11,8 +11,9 @@ export default Ember.Component.extend({
   /**
    * lookup status name in icons map
    * @property statusValue
+   * @type boolean
    */
-  statusValue: computed('faIcon', function() {
+  statusValue: computed(function() {
     const status = this.get('model').get('status');
     return this.get('icons')[status.get('name')];
   }),
