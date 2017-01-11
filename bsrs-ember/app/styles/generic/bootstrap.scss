@@ -34,7 +34,7 @@ select.form-control{
 
 .btn-default:focus,
 .btn-default.focus{
-  border: $borderStyle;
+  border: $borderStyle !important;
   background: $white;
 }
 
@@ -106,16 +106,17 @@ fieldset[disabled] .form-control,
 .btn-default:active,
 .btn-default.active{
   border-color: $gray;
-  background: $gray !important;
+  background: $gray;
   z-index: 2;
 }
-.btn-primary{
+.btn-primary {
   background: $lightGreen;
   border-color: $lightGreen;
   &:hover,
+  &:active,
   &:focus{
-    background: $darkGreen !important;
-    border-color: $darkGreen;
+    background: $darkGreen !important; //needed for active, etc
+    border-color: $darkGreen !important;
   }
 }
 .btn-danger{
@@ -186,6 +187,12 @@ fieldset[disabled] .form-control,
   opacity: 1;
   background: $lightGray;
   color: $medGray;
+  border-color: $lightGray;
+}
+.btn-primary[disabled]:hover {
+  background: $lightGray;
+  color: $medGray;
+  border-color: $lightGray;
 }
 .btn-default.disabled.focus, .btn-default.disabled:focus, .btn-default.disabled:hover, .btn-default[disabled].focus, .btn-default[disabled]:focus, .btn-default[disabled]:hover, fieldset[disabled] .btn-default.focus, fieldset[disabled] .btn-default:focus, fieldset[disabled] .btn-default:hover {
   background-color: $lightGray;

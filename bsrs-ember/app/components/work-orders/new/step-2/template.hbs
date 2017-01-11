@@ -1,0 +1,25 @@
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="work_order.label.approved_amount" for="approved_amount" dataTestId="approved_amount"}}
+    {{validated-input
+      model=model
+      valuePath="approved_amount"
+      className="t-wo-approved_amount"
+      placeholder=(t "work_order.label.name")
+    }}
+    {{/form-group}}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="work_order.label.scheduled_date" for="scheduled_date" dataTestId="scheduled_date"}}
+      <span class="">{{fa-icon "calendar"}}</span>
+      {{pikaday-input 
+        onSelection=(action "setDate")
+        class="form-control t-scheduled-date"
+        format="MM/DD/YYYY"
+      }}
+    {{/form-group}}
+  </div>
+</div>

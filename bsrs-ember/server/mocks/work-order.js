@@ -40,5 +40,5 @@ module.exports = function(app) {
     res.status(204).end();
   });
 
-  app.use('/api/admin/work-orders', adminWorkOrdersRouter);
+  app.use('/api/work-orders', adminWorkOrdersRouter);
 };

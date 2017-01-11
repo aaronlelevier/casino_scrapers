@@ -1,0 +1,49 @@
+<div data-test-id="item1" class="item timeline__item 
+  {{if states.[0].isError states.[0].errorClass}}
+  {{if states.[0].isCompleted states.[0].completedClass}}
+  {{if states.[0].isActive states.[0].activeClass}}"
+>
+  <div class="item__icon">
+  </div>
+  <div class="item__text">
+    <button 
+      class="btn" 
+      {{action "determineStep" "work-orders/new/step-1"}} 
+      data-test-id="step1">{{t "work_order.create.select_provider"}}
+    </button>
+  </div>
+</div>
+
+<div data-test-id="item2" class="item timeline__item 
+  {{if states.[1].isError states.[1].errorClass}}
+  {{if states.[1].isCompleted states.[1].completedClass}}
+  {{if states.[1].isActive states.[1].activeClass}}"
+>
+  <div class="item__icon">
+  </div>
+  <div class="item__text">
+    <button 
+      disabled={{if disabledStep1 "disabled"}} 
+      class="btn" 
+      {{action "determineStep" "work-orders/new/step-2"}} 
+      data-test-id="step2">
+      {{t "work_order.create.cost_schedule"}}
+    </button>
+  </div>
+</div>
+
+<div data-test-id="item3" class="item timeline__item 
+  {{if states.[2].isCompleted states.[2].completedClass}}
+  {{if states.[2].isActive states.[2].activeClass}}"
+>
+  <div class="item__icon">
+  </div>
+  <div class="item__text">
+    <button 
+      disabled={{if disabledStep2 "disabled"}} 
+      class="btn" 
+      {{action "determineStep" "work-orders/new/step-3"}} 
+      data-test-id="step3">{{t "work_order.create.confirm_send"}}
+    </button>
+  </div>
+</div>

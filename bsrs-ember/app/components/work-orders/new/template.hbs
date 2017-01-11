@@ -1,0 +1,32 @@
+<div data-test-id="work-order-modal" class="modal-header flex">
+  <h1 class="flex-item--auto" data-test-id="work-order-header">{{t "work_order.new"}}</h1>
+  <button {{action "cancel"}} class="btn btn-default btn-icon" data-test-id="cancel">{{fa-icon "times-circle"}} <span class="btn-text">{{t "work_order.create.cancel"}}</span></button>
+</div>
+
+<div class="modal-body">
+  {{work-orders/new/status-tracker
+    determineStep=(action "determineStep")
+    disabledStep1=disabledStep1
+    disabledStep2=disabledStep2
+    states=states
+  }}
+
+  <div class="form-wrap">
+  {{component componentRendered
+    model=model
+    workOrderRepo=workOrderRepo 
+  }}
+  </div>
+</div>
+
+<div class="modal-footer">
+  {{work-orders/new/buttons 
+    disabled=disabled
+    next=(action "next")
+    back=(action "back")
+    done=(action "cancel")
+    dispatchWorkOrder=(action "dispatchWorkOrder" model)
+    currentStateRendered=currentStateRendered
+    saveWorkOrderTask=saveWorkOrderTask
+  }}
+</div>

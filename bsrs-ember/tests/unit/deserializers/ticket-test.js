@@ -11,6 +11,7 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CurrencyD from 'bsrs-ember/vendor/defaults/currency';
+import ProviderD from 'bsrs-ember/vendor/defaults/provider';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
@@ -40,7 +41,7 @@ module('unit: ticket deserializer test', {
       'model:category-children', 'model:generic-join-attachment','model:work-order',
       'model:related-person', 'model:related-location', 'validator:presence',
       'validator:length', 'validator:ticket-status', 'validator:ticket-categories',
-      'model:ticket-join-wo', 'model:currency', 'model:work-order-status']);
+      'model:ticket-join-wo', 'model:currency', 'model:work-order-status', 'model:provider']);
     uuid = this.container.lookup('model:uuid');
     functionalStore = this.container.lookup('service:functional-store');
     const workOrderDeserializer = WorkOrderDeserializer.create({simpleStore: store});
@@ -619,7 +620,8 @@ test('deserialize detail with one work order and existing locally', (assert) => 
 
 test('deserialize detail with multiple work orders', (assert) => {
   const json = TF.generate(TD.idOne);
-  json.work_order.push({ id: WD.idTwo, cost_estimate_currency: { id: CurrencyD.idOne }, status: {id: WOSD.idOne, name: WOSD.nameFive} });
+  json.work_order.push({ id: WD.idTwo, cost_estimate_currency: { id: CurrencyD.idOne }, 
+    status: {id: WOSD.idOne, name: WOSD.nameFive}, category: { id: CD.idOne }, provider: { id: ProviderD.idOne } });
   store.push('currency', {id: CurrencyD.idOne, workOrders: [WD.idOne]});
   run(() => {
     subject.deserialize(json, json.id);

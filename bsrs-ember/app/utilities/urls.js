@@ -31,6 +31,8 @@ export const TENANT_URL = `${PREFIX}/admin/tenants/`;
 export const THIRD_PARTIES_URL = `${PREFIX}/admin/third-parties/`;
 export const TRANSLATION_URL = `${PREFIX}/admin/translations/`;
 export const TICKETS_URL = `${PREFIX}/tickets/`;
+export const WORK_ORDER_URL = `${PREFIX}/work-orders/`;
+export const PROVIDER_URL = `${PREFIX}/providers/`;
 
 // App Urls
 export const AUTOMATION_LIST_URL = '/admin/automations/index';

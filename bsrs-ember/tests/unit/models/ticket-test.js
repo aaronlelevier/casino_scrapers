@@ -1429,7 +1429,6 @@ test('patchSerialize - show full serialized object (with optional values not pre
   });
 });
 
-
 // WORK ORDER
 test('work order property should return all associated work order or empty array', (assert) => {
   let m2m = store.push('ticket-join-wo', {id: 1, ticket_pk: TD.idOne, work_order_pk: WD.idOne});

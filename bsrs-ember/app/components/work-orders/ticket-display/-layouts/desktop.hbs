@@ -7,14 +7,14 @@
     <div class="contractor flex-item--auto">
       {{#image-block
         model=model
-        droppedImage=model.provider_logo
+        droppedImage=model.provider.logo
         size="medium"
         readonly="true"
         icon="wrench"
         dataTestId=(concat "provider-logo" indx)
       }}
-      <h1 class="title" data-test-id={{concat "provider-name" indx}}>{{model.provider_name}}</h1>
-        <p class="subtitle" data-test-id={{concat "provider-address1-" indx}}>{{model.provider_address1}}</p>
+      <h1 class="title" data-test-id={{concat "provider-name" indx}}>{{model.provider.name}}</h1>
+        <p class="subtitle" data-test-id={{concat "provider-address1-" indx}}>{{model.provider.address1}}</p>
       {{/image-block}}
     </div>
     <div class="flex-item--auto">

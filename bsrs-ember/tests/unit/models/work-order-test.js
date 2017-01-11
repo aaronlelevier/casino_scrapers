@@ -14,7 +14,7 @@ const WD = WORK_ORDER.defaults();
 const WOSD = WORK_ORDER_STATUSES.defaults();
 const PRD = PROVIDER.defaults();
 
-moduleFor('model:work-order', 'terrance Unit | Model | work-order', {
+moduleFor('model:work-order', 'Unit | Model | work-order', {
   needs: ['model:currency', 'model:work-order-status', 'model:category', 'model:provider' ,'service:i18n','validator:presence'],
   beforeEach() {
     this.store = module_registry(this.container, this.registry);
@@ -297,4 +297,26 @@ test('saveRelated workOrder provider to save model and make it clean', function(
   workOrder.saveRelated();
   assert.equal(workOrder.get('provider').get('id'), PRD.idTwo);
   assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('serialize', function(assert) {
+  run(() => {
+      this.store.push('work-order-status', {id: WOSD.idOne, name: WOSD.nameOne, workOrders: [WD.idOne, WD.idTwo]});
+      workOrder = this.store.push('work-order', { id: WD.idOne, cost_estimate: WD.costEstimateOne, approved_amount: WD.approvedAmount, 
+        scheduled_date: WD.scheduledDateOne, approval_date: WD.approvalDateOne, expiration_date: WD.expirationDateOne, cost_estimate_currency_fk: CurrencyD.idOne, 
+        status_fk: WOSD.idOne, provider_fk: PRD.idOne, category_fk: CD.idOne });
+      this.store.push('provider', {id: PRD.idOne, name: PRD.nameOne, address1: PRD.address1One, logo: PRD.logoOne, workOrders: [WD.idOne]});
+      this.store.push('currency', {id: CurrencyD.idOne, workOrders: [WD.idOne]});
+      this.store.push('category', { id: CD.idOne, name: CD.nameElectricalChild, workOrders: [WD.idOne] });
+  });
+  let ret = workOrder.serialize();
+  assert.equal(ret.id, WD.idOne);
+  assert.equal(ret.cost_estimate, WD.costEstimateOne);
+  assert.equal(ret.approved_amount, WD.approvedAmount);
+  assert.equal(ret.scheduled_date, WD.scheduledDateOne);
+  assert.deepEqual(ret.approval_date, WD.scheduledDateOne);
+  assert.deepEqual(ret.expiration_date, WD.scheduledDateOne);
+  assert.equal(ret.status, WOSD.idOne);
+  assert.equal(ret.category, CD.idOne);
+  assert.equal(ret.provider, PRD.idOne);
 });

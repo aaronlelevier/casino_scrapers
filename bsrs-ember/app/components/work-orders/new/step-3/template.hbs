@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="work_order.label.provider" readonly=true}}
+      {{#image-block
+        model=model
+        droppedImage=model.provider.logo
+        size="medium"
+        readonly="true"
+        icon="wrench"
+        dataTestId=(concat "provider-logo" indx)
+      }}
+      <h1 class="title" data-test-id="provider-name">{{model.provider.name}}</h1>
+      <p class="subtitle" data-test-id="provider-address1">{{model.provider.address1}}</p>
+      {{/image-block}}
+    {{/form-group}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="work_order.label.category" readonly=true}}
+      <div data-test-id="category">{{model.category.name}}</div>
+    {{/form-group}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="work_order.label.approved_amount" readonly=true}}
+      <div data-test-id="approved-amount">{{model.approved_amount}}</div>
+    {{/form-group}}
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="work_order.label.scheduled_date" readonly=true}}
+      <div data-test-id="scheduled-date">{{moment-format model.scheduled_date "MM/DD/YYYY"}}</div>
+    {{/form-group}}
+  </div>
+</div>
+

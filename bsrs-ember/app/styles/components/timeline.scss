@@ -1,0 +1,122 @@
+.timeline {
+  height: 8rem;
+  position: relative;
+  margin: 1rem 4rem 5rem;
+
+  .btn { // TODO: maybe take out
+    background: transparent;
+    border: none;
+    &:hover, &:focus {
+      color: inherit;
+    }
+  }
+
+  &:before {
+    content: " ";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 1.5rem;
+    border: 1px dashed $gray;
+  }
+
+  .timeline__item {
+    margin: 0 $gutter;
+
+    .item__icon {
+      display: block;
+      text-align: center;
+      position: relative;
+      &:before {
+        border-radius: 50%;
+        border: $borderStyle;
+        background: $light;
+        display: inline-block;
+        line-height: 3rem;
+        text-align: center;
+        color: $medGray;
+        @include font-awesome("\f024", 3rem, 3rem);
+      }
+    }
+
+    .item__text {
+      margin: 1rem 0 0;
+      background: $light;
+      border-radius: $borderRadius;
+      position: relative;
+      &:before {
+        content: " ";
+        position: absolute;
+        top: -5px;
+        left: calc(50% - 5px);
+        width: 0;
+        height: 0;
+        border-left: 5px solid transparent;
+        border-right: 5px solid transparent;
+        border-bottom: 5px solid $light;
+      }
+    }
+
+    &:first-child {
+      margin: 0 $gutter 0 0;
+      .item__icon {
+        text-align: left;
+      }
+      .item__text {
+        &:before {
+          left: 9px;
+        }
+      }
+    }
+    &:last-child {
+      margin: 0 0 0 $gutter;
+      .item__icon {
+        text-align: right;
+      }
+      .item__text {
+        &:before {
+          left: auto;
+          right: 9px;
+        }
+      }
+    }
+
+    &.timeline__item--active {
+      .item__icon:before, .item__text {
+        background-color: $dark;
+        border-color: $dark;
+        color: $white;
+      }
+      .item__text:before {
+        border-bottom-color: $dark;
+      }
+    }
+    &.timeline__item--completed {
+      .item__icon:before {
+        @include font-awesome("\f00c", 3rem, 3rem);
+        background-color: $lightGreen;
+        border-color: $lightGreen;
+        color: $white;
+      }
+      .item__text {
+        background-color: $lightGreen;
+        border-color: $lightGreen;
+        color: $white;
+      }
+      .item__text:before {
+        border-bottom-color: $lightGreen;
+      }
+    }
+    &.timeline__item--error {
+      .item__icon:before, .item__text {
+        background-color: $dirtyColor;
+        border-color: $dirtyColor;
+        color: $white;
+      }
+      .item__text:before {
+        border-bottom-color: $dirtyColor;
+      }
+    }
+
+  }
+}

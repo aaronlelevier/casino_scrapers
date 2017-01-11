@@ -94,8 +94,8 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     this.setup_assignee(assignee_json, ticket);
     this.setup_location(location_json, ticket);
     this.setupCC(cc_json, ticket);
-    this.setupWorkOrder(ticket, work_order_json);
     this.setupCategories(categories_json, ticket);
+    this.setupWorkOrder(ticket, work_order_json);
 
     // this.setup_attachments(attachments_json, ticket);
     let [m2m_attachments, attachments, m2m_attachment_fks] = many_to_many_extract(attachments_json, store, ticket, 'generic_attachments', 'generic_pk', 'attachment', 'attachment_pk');

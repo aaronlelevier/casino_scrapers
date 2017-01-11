@@ -11,6 +11,7 @@ let TicketSingleRoute = TabRoute.extend(FindById, {
   ticketNumber: undefined,
   activityRepository: inject('activity'),
   repository: inject('ticket'),
+  workOrderRepository: inject('work-order'),
   attachmentRepository: inject('attachment'),
   deviceLayout: Ember.inject.service('device/layout'),
   /** 
@@ -29,7 +30,7 @@ let TicketSingleRoute = TabRoute.extend(FindById, {
     const repository = this.get('repository');
     let ticket = repository.fetch(pk);
     const otherXhrs = [this.get('activityRepository').find('ticket', 'tickets', pk, ticket)];
-    return this.findByIdScenario(ticket, pk, { repository:repository }, false, otherXhrs);
+    return this.findByIdScenario(ticket, pk, { repository: repository }, false, otherXhrs);
   },
   setupController: function(controller, hash) {
     controller.setProperties(hash);
@@ -49,6 +50,35 @@ let TicketSingleRoute = TabRoute.extend(FindById, {
 
     // set doctitle
     this.set('ticketNumber', hash.model.get('number'));
+  },
+  actions: {
+    findWorkOrderCategory() {
+      const ticket = this.modelFor(this.routeName).model;
+      const leaf_category = ticket.get('leaf_category');
+      return this.get('workOrderRepository').findWorkOrderCategory(leaf_category.get('id'));
+    },
+    /**
+     * should set tickets leaf category as the category for the work order
+     * @method createWorkOrder
+     */
+    createWorkOrder() {
+      const ticket = this.modelFor(this.routeName).model;
+      const leaf_category = ticket.get('leaf_category');
+      return this.get('workOrderRepository').createWorkOrder(leaf_category.get('id'));
+    },
+    /**
+     * will pause until work order is created before showing ticket single
+     * @method saveWorkOrder
+     */
+    saveWorkOrder(wo) {
+      return this.get('workOrderRepository').update(wo);
+    },
+    /**
+     * @method dispatchWorkOrder
+     */
+    dispatchWorkOrder(work_order) {
+      return this.get('workOrderRepository').dispatchWorkOrder(work_order);
+    },
   }
 });
 

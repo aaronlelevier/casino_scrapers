@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="work_order.label.category" for="category"}}
+    {{db-fetch-select
+      model=model
+      selectedAttr=model.category
+      className="t-wo-create-trade-select"
+      displayName="name"
+      change_func="change_category"
+      repository=workOrderRepo
+      searchMethod="findWorkOrderCategory"
+      valuePath="category"
+    }}
+    {{/form-group}}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="work_order.label.provider" for="category"}}
+      {{#power-select-mobile
+        selected=model.provider
+        class="t-wo-create-provider-select"
+        tagName="div"
+        search=(perform searchRepo)
+        onchange=(action "selected")
+        as |optionModel|
+      }}
+        {{get optionModel "name"}}
+      {{/power-select-mobile}}
+    {{/form-group}}
+  </div>
+</div>

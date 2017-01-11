@@ -1,4 +1,4 @@
-var BSRS_PROVIDER_DEFAULTS_OBJECT = (function() {
+var BSRS_WO_DEFAULTS_OBJECT = (function() {
   var factory = function() {
   };
   factory.prototype.defaults = function() {
@@ -8,6 +8,7 @@ var BSRS_PROVIDER_DEFAULTS_OBJECT = (function() {
       unusedId: '86a957f1-6bdc-447b-ac33-1e18c23b32dd',
       costEstimateOne: '350.00',
       costEstimateTwo: '500.14',
+      approvedAmount: '300.00',
       scheduledDateOne: new Date(),
       scheduledDateTwo: new Date(),
       completedDateOne: new Date(),
@@ -16,6 +17,7 @@ var BSRS_PROVIDER_DEFAULTS_OBJECT = (function() {
       expirationDateTwo: new Date(),
       approvalDateOne: new Date(),
       approvalDateTwo: new Date(),
+      trackingNumberOne: '86a957f16bdc447bac331e18c23b32dd',
       providerNameOne: 'Bobs Construction',
       providerNameTwo: 'Charlies Construction',
       providerLogoOne: 'http://pngimg.com/upload/cat_PNG1631.png',
@@ -35,11 +37,11 @@ var BSRS_PROVIDER_DEFAULTS_OBJECT = (function() {
 })();
 
 if (typeof window === 'undefined') {
-  module.exports['default'] = new BSRS_PROVIDER_DEFAULTS_OBJECT();
+  module.exports['default'] = new BSRS_WO_DEFAULTS_OBJECT();
 } else {
-  define('bsrs-ember/vendor/defaults/provider', ['exports'], function (exports) {
+  define('bsrs-ember/vendor/defaults/work-order', ['exports'], function (exports) {
     'use strict';
-    var wo = new BSRS_PROVIDER_DEFAULTS_OBJECT();
+    var wo = new BSRS_WO_DEFAULTS_OBJECT();
     exports.default = wo;
   });
 }

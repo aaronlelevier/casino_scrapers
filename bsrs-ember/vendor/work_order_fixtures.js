@@ -1,23 +1,16 @@
 var BSRS_WORK_ORDER_FACTORY = (function() {
-  var factory = function(workOrder, workOrderStatuses, currency, config) {
+  var factory = function(workOrder, workOrderStatuses, currency, provider_fixtures, category_fixtures, config) {
     this.workOrder = workOrder['default'].defaults();
     this.workOrderStatuses = workOrderStatuses['default'].defaults();
+    this.provider_fixtures = provider_fixtures.default || provider_fixtures;
     this.currency = currency;
+    this.category_fixtures = category_fixtures.default || category_fixtures;
     this.config = config;
   };
   factory.prototype.generate = function(i) {
     var id = i || this.workOrder.idOne;
     return {
       id: id,
-      provider_name: this.workOrder.providerNameOne,
-      provider_logo: this.workOrder.providerLogoOne,
-      provider_address1: this.workOrder.providerAddress1One,
-      provider_address2: this.workOrder.providerAddress2One,
-      provider_city: this.workOrder.providerCityOne,
-      provider_state: this.workOrder.providerStateOne,
-      provider_postal_code: this.workOrder.providerPostalCodeOne,
-      provider_phone: this.workOrder.providerPhoneOne,
-      provider_email: this.workOrder.providerEmailOne,
       cost_estimate_currency: {
         id: this.currency.idOne,
         name: this.currency.name
@@ -27,7 +20,10 @@ var BSRS_WORK_ORDER_FACTORY = (function() {
       approval_date: this.workOrder.approvalDateOne,
       completed_date: this.workOrder.completedDateOne,
       expiration_date: this.workOrder.expirationDateOne,
-      status: {id: this.workOrderStatuses.idOne, name: this.workOrderStatuses.nameFive}
+      tracking_number: this.workOrder.trackingNumberOne,
+      status: {id: this.workOrderStatuses.idOne, name: this.workOrderStatuses.nameFive},
+      category: this.category_fixtures.generate(),
+      provider: this.provider_fixtures.generate(),
     };
   };
   factory.prototype.detail = function(id) {
@@ -61,16 +57,20 @@ if (typeof window === 'undefined') {
   var workOrder = require('./defaults/work-order');
   var workOrderStatuses = require('./defaults/work-order-status');
   var currency = require('./defaults/currency');
+  var provider_fixtures = require('./provider_fixtures');
+  var category_fixtures = require('../vendor/category_fixtures');
   var config = require('../config/environment');
   objectAssign(BSRS_WORK_ORDER_FACTORY.prototype, mixin.prototype);
-  module.exports = new BSRS_WORK_ORDER_FACTORY(workOrder, workOrderStatuses, currency, config);
+  module.exports = new BSRS_WORK_ORDER_FACTORY(workOrder, workOrderStatuses, currency, provider_fixtures, category_fixtures, config);
 }
 else {
-  define('bsrs-ember/vendor/work_order_fixtures', ['exports', 'bsrs-ember/vendor/defaults/work-order', 'bsrs-ember/vendor/defaults/work-order-status', 'bsrs-ember/vendor/defaults/currency', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
-    function(exports, workOrder, workOrderStatuses, currency, mixin, config) {
+  define('bsrs-ember/vendor/work_order_fixtures', ['exports', 'bsrs-ember/vendor/defaults/work-order', 
+    'bsrs-ember/vendor/defaults/work-order-status', 'bsrs-ember/vendor/defaults/currency', 'bsrs-ember/vendor/provider_fixtures', 'bsrs-ember/vendor/category_fixtures', 
+    'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
+    function(exports, workOrder, workOrderStatuses, currency, provider_fixtures, category_fixtures, mixin, config) {
       'use strict';
       Object.assign(BSRS_WORK_ORDER_FACTORY.prototype, mixin.prototype);
-      return new BSRS_WORK_ORDER_FACTORY(workOrder, workOrderStatuses, currency, config);
+      return new BSRS_WORK_ORDER_FACTORY(workOrder, workOrderStatuses, currency, provider_fixtures, category_fixtures, config);
     }
   );
 }

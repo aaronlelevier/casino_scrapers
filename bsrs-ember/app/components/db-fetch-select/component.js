@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import { task, timeout } from 'ember-concurrency';
-const { computed, defineProperty } = Ember;
+const { computed } = Ember;
 
 const DEBOUNCE_MS = config.APP.POWER_SELECT_DEBOUNCE;
 

@@ -118,6 +118,7 @@ module.exports = function(defaults) {
     app.import('vendor/mixin.js');
     app.import('vendor/people_fixtures.js');
     app.import('vendor/phone_number_fixtures.js');
+    app.import('vendor/provider_fixtures.js');
     app.import('vendor/role_fixtures.js');
     app.import('vendor/state_fixtures.js');
     app.import('vendor/tab_fixtures.js');

@@ -58,7 +58,7 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMix
   findTicketDrafts(){
     /* Not store bound b/c no interaction with data */
     return PromiseMixin.xhr(`${TICKETS_URL}?status__name=ticket.status.draft`, 'GET').then(response => response.results);
-  }
+  },
 });
 
 export default TicketRepo;

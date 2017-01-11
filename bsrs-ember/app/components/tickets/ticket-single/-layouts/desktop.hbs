@@ -49,13 +49,25 @@
         </div>
       {{/card-section}}
 
+      {{#if dispatchWorkOrderSteps}}
+        {{#ember-wormhole to="work-order-create"}}
+          {{#modal-dialog translucentOverlay=true}}
+            {{work-orders/new 
+              model=workOrderModel 
+              cancel=(action "cancelWorkOrder")
+              dispatchWorkOrder=dispatchWorkOrder
+            }}
+          {{/modal-dialog}}
+        {{/ember-wormhole}}
+      {{/if}}
+
       {{#if model.wo}}
         {{work-orders/ticket-display wos=model.wo}}
       {{else}}
         {{#card-section}}
           <div class="row">
             <div class="col-md-12">
-              <button class="btn btn-primary btn-icon" data-test-id="wo-dispatch" type="button">{{fa-icon "wrench"}} <span class="btn-text">{{t "work-order.button.dispatch"}}</span></button>
+              <button {{action "createWorkOrder"}} class="btn btn-primary btn-icon" data-test-id="wo-dispatch" type="button">{{fa-icon "wrench"}} <span class="btn-text">{{t "work-order.button.dispatch"}}</span></button>
             </div>
           </div>
         {{/card-section}}
