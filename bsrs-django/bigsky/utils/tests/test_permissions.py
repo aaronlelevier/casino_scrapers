@@ -6,11 +6,12 @@ from rest_framework.test import APITestCase
 
 from category.tests.factory import create_single_category
 from location.models import Location, LocationLevel
-from location.tests.factory import create_location_level
+from location.tests.factory import create_location
 from person.helpers import PermissionInfo
 from person.tests.factory import PASSWORD, create_person
 from provider.tests.factory import create_provider
 from ticket.models import Ticket
+from ticket.tests.factory import create_ticket
 from utils.permissions import CrudPermissions
 
 
@@ -23,11 +24,11 @@ class CrudPermissionsTests(APITestCase):
         self.trade = create_single_category()
 
         PermissionInfo().setUp()
-        self.location = mommy.make(Location)
-        self.location_level = create_location_level()
+        self.location = create_location()
+        self.location_level = self.location.location_level
         self.role = self.person.role
-        self.ticket = mommy.make(Ticket)
         self.provider = create_provider(create_single_category())
+        self.ticket = create_ticket()
 
         self.RESOUCE_MAP = {
             'category': ('admin/categories', self.trade.id),

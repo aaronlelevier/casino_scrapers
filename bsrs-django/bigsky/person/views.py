@@ -12,12 +12,13 @@ from rest_framework.views import APIView
 
 from person import serializers as ps
 from person.models import Person, Role, PersonAndRole
-from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin
+from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin, FilterByTenantMixin
 from utils.permissions import CrudPermissions
 from utils.views import BaseModelViewSet, paginate_queryset_as_response
 
 
-class RoleViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
+class RoleViewSet(FilterByTenantMixin, EagerLoadQuerySetMixin,
+                  SearchMultiMixin, BaseModelViewSet):
     """
     API endpoint that allows roles to be viewed or edited.
     """
@@ -39,6 +40,12 @@ class RoleViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
         else:
             return ps.RoleUpdateSerializer
 
+    def create(self, request, *args, **kwargs):
+        """Assign new Role's tenant to match the logged
+        in User's Tenant."""
+        request.data['tenant'] = str(request.user.role.tenant.id)
+        return super(RoleViewSet, self).create(request, *args, **kwargs)
+
     @list_route(methods=['get'], url_path=r"route-data/new")
     def route_data_new(self, request):
         tenant = request.user.role.tenant
@@ -47,12 +54,6 @@ class RoleViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
                 'dashboard_text': tenant.dashboard_text
             }
         })
-
-    def create(self, request, *args, **kwargs):
-        """Assign new Role's tenant to match the logged
-        in User's Tenant."""
-        request.data['tenant'] = str(request.user.role.tenant.id)
-        return super(RoleViewSet, self).create(request, *args, **kwargs)
 
 
 ### PERSON
@@ -115,6 +116,10 @@ class PersonViewSet(EagerLoadQuerySetMixin, SearchMultiMixin, BaseModelViewSet):
             return ps.PersonCreateSerializer
         else:
             return ps.PersonListSerializer
+
+    def get_queryset(self):
+        queryset = super(PersonViewSet, self).get_queryset()
+        return queryset.filter(role__tenant=self.request.user.role.tenant)
 
     @list_route(methods=['GET'])
     def current(self, request):

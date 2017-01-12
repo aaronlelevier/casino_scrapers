@@ -8,7 +8,8 @@ from rest_framework.test import APITestCase
 
 from category.models import Category, LABEL_TRADE
 from category.serializers import CategoryUpdateSerializer
-from category.tests.factory import create_single_category, create_categories
+from category.tests.factory import (create_single_category, create_categories,
+    create_other_category)
 from person.tests.factory import PASSWORD, create_person
 from utils import create
 from utils.tests.mixins import MockPermissionsAllowAnyMixin
@@ -112,6 +113,18 @@ class CategoryListTests(CategoryViewTestSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
 
+    def test_other_tenants_categories_filtered_out(self):
+        create_other_category()
+        total_count = Category.objects.count()
+        logged_in_user_count = Category.objects.filter(
+            tenant=self.person.role.tenant).count()
+        self.assertTrue(total_count > logged_in_user_count)
+
+        response = self.client.get('/api/admin/categories/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], logged_in_user_count)
+
 
 class CategoryDetailTests(CategoryViewTestSetupMixin, APITestCase):
 
@@ -188,6 +201,16 @@ class CategoryDetailTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertTrue(data['children'])
         # Forloop comprehension required b/c data['children'] is a nested obj and not a list
         self.assertIn(str(self.trade.children.first().id), [c['id'] for c in data['children']])
+
+    def test_other_tenants_categories_filtered_out(self):
+        other_category = create_other_category()
+        self.assertNotEqual(other_category.tenant,
+                            self.person.role.tenant)
+
+        response = self.client.get('/api/admin/categories/{}/'
+                                   .format(other_category.id))
+
+        self.assertEqual(response.status_code, 404)
 
 
 class CategoryUpdateTests(CategoryViewTestSetupMixin, APITestCase):
@@ -364,8 +387,8 @@ class CategoryFilterTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertEqual(data['count'], 11)
 
     def test_filter_by_name(self):
-        mommy.make(Category, name="cat")
-        mommy.make(Category, name="dog")
+        create_single_category(name="cat")
+        create_single_category(name="dog")
         name = "dog"
         response = self.client.get('/api/admin/categories/?name__icontains={}'.format(name))
         data = json.loads(response.content.decode('utf8'))

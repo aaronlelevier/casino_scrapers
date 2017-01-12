@@ -195,3 +195,14 @@ class SearchMultiMixin(object):
             queryset = queryset.search_multi(keyword=search)
 
         return queryset
+
+
+class FilterByTenantMixin(object):
+    """
+    To filter by Tenant on API ViewSets where the model has
+    a Tenant FK.
+    """
+
+    def get_queryset(self):
+        queryset = super(FilterByTenantMixin, self).get_queryset()
+        return queryset.filter(tenant=self.request.user.role.tenant)

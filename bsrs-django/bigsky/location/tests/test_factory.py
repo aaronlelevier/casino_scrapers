@@ -234,3 +234,21 @@ class CreateTopLevelLocation(TestCase):
         ret = factory.create_top_level_location()
         ret_two = factory.create_top_level_location()
         self.assertEqual(ret, ret_two)
+
+
+class CreateOtherTenantFactoryTests(TestCase):
+
+    def setUp(self):
+        self.tenant = get_or_create_tenant()
+
+    def test_create_other_location_level(self):
+        ret = factory.create_other_location_level()
+
+        self.assertIsInstance(ret, LocationLevel)
+        self.assertNotEqual(ret.tenant, self.tenant)
+
+    def test_create_other_location(self):
+        ret = factory.create_other_location()
+
+        self.assertIsInstance(ret, Location)
+        self.assertNotEqual(ret.location_level.tenant, self.tenant)

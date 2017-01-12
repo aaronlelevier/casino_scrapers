@@ -15,7 +15,7 @@ from location.models import (LocationLevel, Location, LocationStatus, LocationTy
     LOCATION_COMPANY, LOCATION_DISTRICT, LOCATION_REGION,)
 from location.tests.factory import (
     create_location, create_locations, create_location_level, create_location_levels,
-    create_top_level_location)
+    create_top_level_location, create_other_location, create_other_location_level)
 from person.helpers import PermissionInfo
 from person.models import Role, Person, PersonStatus
 from tenant.tests.factory import get_or_create_tenant
@@ -277,3 +277,16 @@ def create_person_status(name=None):
 
 def create_person_statuses():
     return [create_person_status(s) for s in PERSON_STATUSES]
+
+
+def create_other_role():
+    """Role for a diff. Tenant"""
+    other_location_level = create_other_location_level()
+    return create_role(location_level=other_location_level)
+
+
+def create_other_person():
+    """Person for a diff. Tenant"""
+    other_role = create_other_role()
+    other_location = create_other_location()
+    return create_single_person(role=other_role, location=other_location)

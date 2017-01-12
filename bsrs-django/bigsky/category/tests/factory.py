@@ -164,3 +164,9 @@ def create_category_status(name=None):
         status = CategoryStatus.objects.get(name=name)
 
     return status
+
+
+def create_other_category():
+    """Category for a diff. Tenant"""
+    other_tenant = get_or_create_tenant('other')
+    return create_single_category(tenant=other_tenant)

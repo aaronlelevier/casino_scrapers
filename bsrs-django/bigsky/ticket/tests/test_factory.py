@@ -14,6 +14,7 @@ from generic.models import Attachment
 from location.models import Location, LOCATION_COMPANY
 from person.models import Person
 from person.tests.factory import create_single_person, DistrictManager
+from tenant.tests.factory import get_or_create_tenant
 from ticket.models import Ticket, TicketStatus, TicketPriority, TicketActivityType, TicketActivity
 from ticket.tests import factory, factory_related
 from utils.helpers import generate_uuid
@@ -422,3 +423,16 @@ class CreateTicketsActivityTypesTests(TestCase):
         obj = factory.create_ticket_activity_type()
         self.assertIsInstance(obj, TicketActivityType)
         self.assertIn(obj.name, TicketActivityType.ALL)
+
+
+class CreateOtherTenantFactoryTests(TestCase):
+
+    def setUp(self):
+        self.tenant = get_or_create_tenant()
+
+    def test_create_other_ticket(self):
+        ret = factory.create_other_ticket()
+
+        self.assertIsInstance(ret, Ticket)
+        self.assertNotEqual(ret.location.location_level.tenant,
+                            self.tenant)

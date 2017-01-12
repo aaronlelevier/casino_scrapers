@@ -15,8 +15,9 @@ from person import config as person_config
 from person.helpers import PermissionInfo
 from person.models import Role
 from person.serializers import RoleUpdateSerializer
-from person.tests.factory import create_role
+from person.tests.factory import create_role, create_other_role
 from person.tests.mixins import RoleSetupMixin
+from tenant.tests.factory import get_or_create_tenant
 
 
 class RoleListTests(RoleSetupMixin, APITestCase):
@@ -40,6 +41,18 @@ class RoleListTests(RoleSetupMixin, APITestCase):
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
+
+    def test_other_tenant_roles_filtered_out(self):
+        create_other_role()
+        total_count = Role.objects.count()
+        logged_in_user_count = Role.objects.filter(
+            tenant=self.person.role.tenant).count()
+        self.assertTrue(total_count > logged_in_user_count)
+
+        response = self.client.get('/api/admin/roles/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], logged_in_user_count)
 
 
 class RoleDetailTests(RoleSetupMixin, APITestCase):
@@ -96,6 +109,15 @@ class RoleDetailTests(RoleSetupMixin, APITestCase):
         self.assertEqual(len(data['permissions']), 2)
         self.assertTrue(data['permissions'][perms[0].codename])
         self.assertTrue(data['permissions'][perms[1].codename])
+
+    def test_other_tenant_roles_filtered_out(self):
+        other_role = create_other_role()
+        self.assertNotEqual(self.person.role.tenant, other_role.tenant)
+
+        response = self.client.get('/api/admin/roles/{}/'
+                                   .format(other_role.id))
+
+        self.assertEqual(response.status_code, 404)
 
 
 class RoleCreateTests(RoleSetupMixin, APITestCase):

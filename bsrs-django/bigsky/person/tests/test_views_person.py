@@ -18,7 +18,8 @@ from location.tests.factory import create_location, create_location_level
 from person.models import Person, Role, PersonStatus
 from person.serializers import PersonUpdateSerializer
 from person.tests.factory import (PASSWORD, create_single_person, create_role, create_roles,
-    create_all_people, create_person_statuses)
+    create_all_people, create_person_statuses, create_other_person)
+from tenant.tests.factory import get_or_create_tenant
 from translation.models import Locale
 from translation.tests.factory import create_locale, create_locales
 from utils import create
@@ -278,6 +279,18 @@ class PersonListTests(MockPermissionsAllowAnyMixin, APITestCase):
         self.assertEqual(data['results'][1]['fullname'], model_two.fullname)
         self.assertEqual(data['results'][1]['type'], model_two.__class__.__name__.lower())
 
+    def test_other_tenants_persons_filtered_out(self):
+        create_other_person()
+        total_count = Person.objects.count()
+        logged_in_user_count = Person.objects.filter(
+            role__tenant=self.person.role.tenant).count()
+        self.assertTrue(total_count > logged_in_user_count)
+
+        response = self.client.get('/api/admin/people/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], logged_in_user_count)
+
 
 class PersonDetailTests(MockPermissionsAllowAnyMixin, APITestCase):
 
@@ -447,6 +460,16 @@ class PersonDetailTests(MockPermissionsAllowAnyMixin, APITestCase):
         category_data = data['categories'][0]
         self.assertEqual(category_data['id'], str(parent_category.id))
         self.assertEqual(category_data['name'], parent_category.name)
+
+    def test_other_tenants_persons_filtered_out(self):
+        other_person = create_other_person()
+        self.assertNotEqual(self.person.role.tenant,
+                            other_person.role.tenant)
+
+        response = self.client.get('/api/admin/people/{}/'
+                                   .format(other_person.id))
+
+        self.assertEqual(response.status_code, 404)
 
 
 class PersonUpdateTests(MockPermissionsAllowAnyMixin, APITestCase):

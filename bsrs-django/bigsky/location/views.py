@@ -8,7 +8,7 @@ from rest_framework.exceptions import MethodNotAllowed
 
 from location.models import Location, LocationLevel, LocationStatus, LocationType
 from location import serializers as ls
-from utils.mixins import SearchMultiMixin
+from utils.mixins import SearchMultiMixin, FilterByTenantMixin
 from utils.permissions import CrudPermissions
 from utils.views import BaseModelViewSet, paginate_queryset_as_response
 
@@ -32,7 +32,10 @@ class SelfReferencingRouteMixin(object):
 
 ### LOCATION LEVEL
 
-class LocationLevelViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelViewSet):
+class LocationLevelViewSet(FilterByTenantMixin,
+                           SelfReferencingRouteMixin,
+                           SearchMultiMixin,
+                           BaseModelViewSet):
     '''
     ## Detail Routes
 
@@ -157,6 +160,9 @@ class LocationViewSet(SelfReferencingRouteMixin, SearchMultiMixin, BaseModelView
 
     def get_queryset(self):
         queryset = super(LocationViewSet, self).get_queryset()
+
+        # filter by Tenant
+        queryset = queryset.filter(location_level__tenant=self.request.user.role.tenant)
 
         if settings.LOCATION_FILTERING:
             ids = self.request.user.locations.objects_and_their_children()

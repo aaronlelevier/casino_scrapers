@@ -21,7 +21,8 @@ from ticket.models import Ticket, TicketStatus, TicketActivity, TicketActivityTy
 from ticket.permissions import TicketActivityPermissions
 from ticket.serializers import TicketCreateUpdateSerializer
 from ticket.tests.factory import (create_ticket, create_standard_ticket,
-    create_ticket_activity, create_ticket_activity_type, create_ticket_activity_types,)
+    create_ticket_activity, create_ticket_activity_type, create_ticket_activity_types,
+    create_other_ticket)
 from ticket.tests.factory_related import create_ticket_priority, create_ticket_status
 from ticket.tests.mixins import (TicketSetupNoLoginMixin, TicketSetupMixin,
     MockTicketActivityPermissionsMixin)
@@ -125,6 +126,18 @@ class TicketListTests(TicketSetupMixin, APITestCase):
         )
         self.assertTrue(data['count'] > 0)
 
+    def test_other_tenants_tickets_filtered_out(self):
+        create_other_ticket()
+        total_count = Ticket.objects.count()
+        logged_in_user_count = Ticket.objects.filter(
+            location__location_level__tenant=self.person.role.tenant).count()
+        self.assertTrue(total_count > logged_in_user_count)
+
+        response = self.client.get('/api/tickets/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], logged_in_user_count)
+
 
 class TicketDetailTests(TicketSetupMixin, APITestCase):
 
@@ -212,6 +225,16 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
         self.assertTrue(data_cc['photo']['image_thumbnail'])
         self.assertNotIn('status', data_cc)
         self.assertNotIn('role', data_cc)
+
+    def test_other_tenants_tickets_filtered_out(self):
+        other_ticket = create_other_ticket()
+        self.assertNotEqual(other_ticket.location.location_level.tenant,
+                            self.person.role.tenant)
+
+        response = self.client.get('/api/tickets/{}/'
+                                   .format(other_ticket.id))
+
+        self.assertEqual(response.status_code, 404)
 
 
 class TicketUpdateTests(TicketSetupMixin, APITestCase):

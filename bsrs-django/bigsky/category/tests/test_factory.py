@@ -204,3 +204,15 @@ class CreateCategoriesTests(TestCase):
 
     def test_tenant_exists_on_all_categories(self):
         self.assertEqual(Category.objects.filter(tenant__isnull=True).count(), 0)
+
+
+class CreateOtherTenantFactoryTests(TestCase):
+
+    def setUp(self):
+        self.tenant = get_or_create_tenant()
+
+    def test_create_other_category(self):
+        ret = factory.create_other_category()
+
+        self.assertIsInstance(ret, Category)
+        self.assertNotEqual(ret.tenant, self.tenant)

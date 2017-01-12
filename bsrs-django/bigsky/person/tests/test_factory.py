@@ -17,6 +17,7 @@ from person.helpers import PermissionInfo
 from person.models import Role, Person
 from person.tests import factory
 from tenant.models import Tenant
+from tenant.tests.factory import get_or_create_tenant
 from translation.models import Locale
 from translation.tests.factory import create_locales
 
@@ -407,3 +408,29 @@ class CreateAllPeopleTests(TestCase):
 
         if x:
             self.fail()
+
+
+class CreateOtherTenantFactoryTests(TestCase):
+
+    def setUp(self):
+        self.tenant = get_or_create_tenant()
+        self.role = factory.create_role()
+        self.location_level = create_location_level()
+
+    def test_create_other_role(self):
+        ret = factory.create_other_role()
+
+        self.assertIsInstance(ret, Role)
+        self.assertNotEqual(ret.tenant, self.tenant)
+        self.assertNotEqual(ret.tenant, self.role.tenant)
+        self.assertNotEqual(ret.tenant, self.location_level.tenant)
+
+    def test_create_other_person(self):
+        ret = factory.create_other_person()
+
+        self.assertIsInstance(ret, Person)
+        self.assertNotEqual(ret.role.tenant, self.tenant)
+        self.assertEqual(ret.locations.count(), 1)
+        other_location = ret.locations.first()
+        self.assertNotEqual(other_location.location_level.tenant,
+                            self.tenant)

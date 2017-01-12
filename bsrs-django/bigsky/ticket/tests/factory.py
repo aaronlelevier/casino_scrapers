@@ -11,7 +11,7 @@ from category.tests.factory import create_repair_category, create_single_categor
 from dtd.models import TreeData
 from generic.tests.factory import create_file_attachment, create_image_attachment
 from location.models import Location, LocationStatus, LocationType, LOCATION_COMPANY
-from location.tests.factory import create_locations
+from location.tests.factory import create_locations, create_other_location
 from person.models import Person
 from person.tests.factory import create_single_person
 from tenant.tests.factory import get_or_create_tenant
@@ -340,3 +340,10 @@ def create_ticket_activity_type(name=None, weight=1):
 
 def create_ticket_activity_types():
     return [create_ticket_activity_type(name=name) for name in TicketActivityType.ALL]
+
+
+def create_other_ticket():
+    ticket = create_ticket()
+    ticket.location = create_other_location()
+    ticket.save()
+    return ticket

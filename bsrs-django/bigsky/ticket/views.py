@@ -19,6 +19,10 @@ class TicketQuerySetFilters(object):
     def get_queryset(self):
         queryset = super(TicketQuerySetFilters, self).get_queryset()
 
+        # filter by Tenant
+        queryset = queryset.filter(
+            location__location_level__tenant=self.request.user.role.tenant)
+
         if settings.TICKET_FILTERING_ON:
             queryset = queryset.filter_on_categories_and_location(self.request.user)
         return queryset

@@ -13,7 +13,8 @@ from location.models import (Location, LocationLevel, LocationStatus,
 LOCATION_COMPANY, LOCATION_REGION, LOCATION_DISTRICT, LOCATION_STORE,)
 from location.serializers import LocationCreateUpdateSerializer
 from location.tests.factory import (create_location_levels, create_locations,
-    create_location, create_location_level, LOS_ANGELES, SAN_DIEGO)
+    create_location, create_location_level, LOS_ANGELES, SAN_DIEGO,
+    create_other_location, create_other_location_level)
 from person.tests.factory import create_person, create_single_person, create_role, PASSWORD
 from utils import create
 from utils.tests.mixins import MockPermissionsAllowAnyMixin
@@ -62,6 +63,17 @@ class LocationLevelTests(MockPermissionsAllowAnyMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
 
+    def test_list_other_tenant_location_levels_filtered_out(self):
+        create_other_location_level()
+        total_count = LocationLevel.objects.count()
+        logged_in_user_count = self.person.role.tenant.location_levels.count()
+        self.assertTrue(total_count > logged_in_user_count)
+
+        response = self.client.get('/api/admin/location-levels/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], logged_in_user_count)
+
     ### GET
 
     def test_get_response(self):
@@ -100,6 +112,16 @@ class LocationLevelTests(MockPermissionsAllowAnyMixin, APITestCase):
             LocationLevel.objects.get(id=data['children'][0]),
             self.district.children.all()
         )
+
+    def test_get_other_tenant_location_levels_filtered_out(self):
+        other_location_level = create_other_location_level()
+        self.assertNotEqual(other_location_level.tenant,
+                            self.person.role.tenant)
+
+        response = self.client.get('/api/admin/location-levels/{}/'
+                                   .format(other_location_level.id))
+
+        self.assertEqual(response.status_code, 404)
 
     ### CREATE
 
@@ -338,6 +360,18 @@ class LocationListTests(MockPermissionsAllowAnyMixin, APITestCase):
 
             self.assertEqual(data['count'], len(person_locations))
 
+    def test_other_tenant_locations_filtered_out(self):
+        create_other_location()
+        total_count = Location.objects.count()
+        logged_in_user_count = Location.objects.filter(
+            location_level__tenant=self.person.role.tenant).count()
+        self.assertTrue(total_count > logged_in_user_count)
+
+        response = self.client.get('/api/admin/locations/')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], logged_in_user_count)
+
     # Custom List Route
 
     def test_get_level_children(self):
@@ -530,6 +564,15 @@ class LocationDetailTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def test_contact_type_nested(self):
         self.assertTrue(self.data['phone_numbers'][0]['type'])
+
+    def test_other_tenant_locations_filtered_out(self):
+        other_location = create_other_location()
+        self.assertNotEqual(other_location.location_level.tenant,
+                            self.person.role.tenant)
+
+        response = self.client.get('/api/admin/locations/{}/'.format(other_location.id))
+
+        self.assertEqual(response.status_code, 404)
 
 
 class LocationCreateTests(MockPermissionsAllowAnyMixin, APITestCase):
@@ -773,66 +816,6 @@ class LocationDeleteTests(MockPermissionsAllowAnyMixin, APITestCase):
         response = self.client.get('/api/admin/locations/{}/'.format(self.district_location.id))
         self.assertEqual(response.status_code, 404)
         self.assertFalse(Location.objects_all.filter(id=self.district_location.id).exists())
-
-
-class LocationOrderingTests(MockPermissionsAllowAnyMixin, APITestCase):
-
-    def setUp(self):
-        super(LocationOrderingTests, self).setUp()
-        # Login
-        self.person = create_person()
-        self.person.locations.all().delete()
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def tearDown(self):
-        super(LocationOrderingTests, self).tearDown()
-        self.client.logout()
-
-    def test_case_insensitive(self):
-        # Setup
-        mommy.make(Location, name='Z')
-        mommy.make(Location, name='a')
-        # test:
-        response = self.client.get('/api/admin/locations/?ordering=name')
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data["results"][0]["name"], "a")
-        self.assertEqual(data["results"][1]["name"], "Z")
-
-    def test_case_insensitive_reverse(self):
-        # Setup
-        mommy.make(Location, name='Z')
-        mommy.make(Location, name='a')
-        # test: expect = B,a,A
-        response = self.client.get('/api/admin/locations/?ordering=-name')
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data["results"][0]["name"], "Z")
-        self.assertEqual(data["results"][1]["name"], "a")
-
-    def test_two_fields(self):
-        # Setup
-        mommy.make(Location, name='Z', number='1')
-        mommy.make(Location, name='a', number='2')
-        mommy.make(Location, name='a', number='1')
-        # test
-        response = self.client.get('/api/admin/locations/?ordering=number,name')
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data["results"][0]["number"], "1")
-        self.assertEqual(data["results"][0]["name"], "a")
-        self.assertEqual(data["results"][1]["number"], "1")
-        self.assertEqual(data["results"][1]["name"], "Z")
-
-    def test_two_fields_reverse(self):
-        # Setup
-        mommy.make(Location, name='Z', number='1')
-        mommy.make(Location, name='a', number='2')
-        mommy.make(Location, name='a', number='1')
-        # test
-        response = self.client.get('/api/admin/locations/?ordering=-number,name')
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data["results"][0]["number"], "2")
-        self.assertEqual(data["results"][0]["name"], "a")
-        self.assertEqual(data["results"][1]["number"], "1")
-        self.assertEqual(data["results"][1]["name"], "a")
 
 
 class LocationSearchTests(MockPermissionsAllowAnyMixin, APITestCase):

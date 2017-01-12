@@ -109,3 +109,15 @@ def create_top_level_location():
         location_level = create_location_level()
         location = create_location(location_level, name=LOCATION_COMPANY)
     return location
+
+
+def create_other_location_level():
+    """LocationLevel for a diff. Tenant"""
+    tenant = get_or_create_tenant('other')
+    return create_location_level(tenant=tenant)
+
+
+def create_other_location():
+    """Location for a diff. Tenant"""
+    other_location_level = create_other_location_level()
+    return create_location(location_level=other_location_level)
