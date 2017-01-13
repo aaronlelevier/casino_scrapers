@@ -3,7 +3,7 @@
 
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 var funnel = require('broccoli-funnel');
-var shim = require('flexi-layouts/lib/pod-templates-shim');
+var shim = require('flexi/lib/pod-templates-shim');
 shim(EmberApp);
 var es5Shim = funnel('node_modules/es5-shim', {
   files: ['es5-shim.js'],
