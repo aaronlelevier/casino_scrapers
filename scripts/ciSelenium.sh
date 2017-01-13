@@ -1,6 +1,9 @@
 #!/bin/bash -lx
 
 echo $(date -u) "SELENIUM BUILD STARTED!"
+source ~/.bashrc
+echo "Node Version:"
+node --version
 
 # Start at root of project
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
