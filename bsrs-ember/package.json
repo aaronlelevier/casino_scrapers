@@ -79,6 +79,7 @@
     "es5-shim": "^4.1.10",
     "express": "^4.14.0",
     "flexi": "git+ssh//git@github.com:html-next/flexi.git",
+    "flexi-layouts": "1.2.4",
     "glob": "^4.5.3",
     "loader.js": "^4.0.10",
     "markdown-code-highlighting": "0.1.0",
