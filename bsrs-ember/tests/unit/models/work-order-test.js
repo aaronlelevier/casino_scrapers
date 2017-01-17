@@ -4,6 +4,7 @@ import { moduleFor, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import WORK_ORDER_STATUSES from 'bsrs-ember/vendor/defaults/work-order-status';
 import WORK_ORDER from 'bsrs-ember/vendor/defaults/work-order';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PROVIDER from 'bsrs-ember/vendor/defaults/provider';
 import CurrencyD from 'bsrs-ember/vendor/defaults/currency';
 import CD from 'bsrs-ember/vendor/defaults/category';
@@ -13,9 +14,14 @@ let workOrder, inactive_currency;
 const WD = WORK_ORDER.defaults();
 const WOSD = WORK_ORDER_STATUSES.defaults();
 const PRD = PROVIDER.defaults();
+const PD = PERSON_DEFAULTS.defaults();
+// const PC = PERSON_CURRENT.defaults();
 
-moduleFor('model:work-order', 'Unit | Model | work-order', {
-  needs: ['model:currency', 'model:work-order-status', 'model:category', 'model:provider' ,'service:i18n','validator:presence'],
+moduleFor('model:work-order', 'Unit | Model | work-order terrance', {
+  needs: ['model:currency','service:translations-fetcher','service:i18n', 'model:uuid', 
+    'model:status','validator:presence', 'validator:unique-username', 'validator:length',
+    'validator:format', 'validator:has-many', 'model:person', 'service:person-current',
+    'model:work-order-status', 'model:category', 'model:provider' ,'service:i18n','validator:presence'],
   beforeEach() {
     this.store = module_registry(this.container, this.registry);
     run(() => {
@@ -299,6 +305,58 @@ test('saveRelated workOrder provider to save model and make it clean', function(
   assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
 });
 
+test('workOrder has a related work order approver', function(assert) {
+  run(() => {
+    workOrder = this.store.push('work-order', {id: WD.idOne, approver_fk: PD.idOne});
+    this.store.push('person', {id: PD.idOne, name: PD.fullname, workOrders: [WD.idOne]});
+  });
+  assert.equal(workOrder.get('approver').get('id'), PD.idOne);
+  assert.equal(workOrder.get('approver.name'), PD.fullname);
+});
+
+test('change_approver and dirty tracking', function(assert) {
+  run(() => {
+    workOrder = this.store.push('work-order', {id: WD.idOne, approver_fk: PD.idOne});
+    this.store.push('person', {id: PD.idOne, name: PD.fullname, workOrders: [WD.idOne]});
+  });
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+  assert.ok(workOrder.get('approverIsNotDirty'));
+  workOrder.change_approver({id: PD.idTwo});
+  assert.equal(workOrder.get('approver').get('id'), PD.idTwo);
+  assert.ok(workOrder.get('isDirtyOrRelatedDirty'));
+  assert.ok(workOrder.get('approverIsDirty'));
+});
+
+test('rollback approver will revert and reboot the dirty type to clean', function(assert) {
+  run(() => {
+    workOrder = this.store.push('work-order', {id: WD.idOne, approver_fk: PD.idOne});
+    this.store.push('person', {id: PD.idOne, name: PD.fullname, workOrders: [WD.idOne]});
+  });
+  assert.equal(workOrder.get('approver').get('id'), PD.idOne);
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+  workOrder.change_approver({id: PD.idTwo});
+  assert.equal(workOrder.get('approver').get('id'), PD.idTwo);
+  assert.ok(workOrder.get('isDirtyOrRelatedDirty'));
+  workOrder.rollback();
+  assert.equal(workOrder.get('approver').get('id'), PD.idOne);
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('saveRelated workOrder approver to save model and make it clean', function(assert) {
+  run(() => {
+    workOrder = this.store.push('work-order', {id: WD.idOne, approver_fk: PD.idOne});
+    this.store.push('person', {id: PD.idOne, name: PD.fullname, workOrders: [WD.idOne]});
+  });
+  assert.equal(workOrder.get('approver').get('id'), PD.idOne);
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+  workOrder.change_approver({id: PD.idTwo});
+  assert.equal(workOrder.get('approver').get('id'), PD.idTwo);
+  assert.ok(workOrder.get('isDirtyOrRelatedDirty'));
+  workOrder.saveRelated();
+  assert.equal(workOrder.get('approver').get('id'), PD.idTwo);
+  assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
+});
+
 test('serialize', function(assert) {
   run(() => {
       this.store.push('work-order-status', {id: WOSD.idOne, name: WOSD.nameOne, workOrders: [WD.idOne, WD.idTwo]});
@@ -320,3 +378,4 @@ test('serialize', function(assert) {
   assert.equal(ret.category, CD.idOne);
   assert.equal(ret.provider, PRD.idOne);
 });
+

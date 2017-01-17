@@ -34,6 +34,11 @@ export default Ember.Mixin.create({
     provider: {
       collection: 'workOrders',
       owner: 'provider'
+    },
+    approver: {
+      collection: 'workOrders',
+      owner: 'person',
+      override_property_getter: 'approver',
     }
   }
 });

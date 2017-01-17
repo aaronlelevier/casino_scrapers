@@ -30,12 +30,14 @@ let WorkOrder = Model.extend(OptConf, Validations, {
     belongs_to.bind(this)('status', 'work-order', { bootstrapped: true });
     belongs_to.bind(this)('category', 'work-order');
     belongs_to.bind(this)('provider', 'work-order');
+    belongs_to.bind(this)('approver', 'work-order', { bootstrapped: true});
     belongs_to.bind(this)('cost_estimate_currency', 'work-order', { bootstrapped: true });
   },
   simpleStore: Ember.inject.service(),
   status_fk: undefined,
   category_fk: undefined,
   provider_fk: undefined,
+  approver_fk: undefined,
   cost_estimate_currency_fk: undefined,
   scheduled_date: attr(''),
   completed_date: attr(''),
@@ -43,9 +45,12 @@ let WorkOrder = Model.extend(OptConf, Validations, {
   approval_date: attr(''),
   approved_amount: attr(''),
   cost_estimate: attr(''),
+  gl_code: attr(''),
+  tracking_number: attr(''),
+  instructions: attr(''),
 
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'costEstimateCurrencyIsDirty', 'statusIsDirty', 'categoryIsDirty', 'providerIsDirty', function() {
-    return this.get('isDirty') || this.get('costEstimateCurrencyIsDirty') || this.get('statusIsDirty') || this.get('categoryIsDirty') || this.get('providerIsDirty');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty','approverIsDirty', 'costEstimateCurrencyIsDirty', 'statusIsDirty', 'categoryIsDirty', 'providerIsDirty', function() {
+    return this.get('isDirty') || this.get('approverIsDirty') ||  this.get('costEstimateCurrencyIsDirty') || this.get('statusIsDirty') || this.get('categoryIsDirty') || this.get('providerIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
 
@@ -55,6 +60,7 @@ let WorkOrder = Model.extend(OptConf, Validations, {
     this.rollbackStatus();
     this.rollbackCategory();
     this.rollbackProvider();
+    this.rollbackApprover();
   },
 
   saveRelated() {
@@ -62,6 +68,7 @@ let WorkOrder = Model.extend(OptConf, Validations, {
     this.saveStatus();
     this.saveCategory();
     this.saveProvider();
+    this.saveApprover();
   },
   serialize() {
     return {

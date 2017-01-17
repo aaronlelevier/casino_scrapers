@@ -31,6 +31,8 @@ var BSRS_WO_DEFAULTS_OBJECT = (function() {
       providerPhoneOne: '+18005550239',
       providerEmailOne: 'bob@bconstruction',
       statusOne: 'work_order.status.new',
+      glCodeOne: 'kjhskjhdkjds',
+      trackingNumberOne: 'klwjhw98dudkjd55',
     };
   };
   return factory;
