@@ -33,7 +33,7 @@ test('visiting admin/roles/new/1 and ignore server error for dashboard_text mess
   page.visitNew();
   andThen(() => {
     assert.equal(currentURL(), NEW_URL);
-    assert.ok(find("[data-test-id='roles/detail-section']").length, 'new form rendered');
+    assert.equal(find("[data-test-id='roles/detail-section']").length, 1, 'new form rendered');
   });
 });
 
