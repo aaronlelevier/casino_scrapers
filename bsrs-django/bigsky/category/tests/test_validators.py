@@ -3,7 +3,7 @@ import uuid
 
 from rest_framework.test import APITestCase
 
-from category.serializers import CategoryUpdateSerializer
+from category.serializers import CategoryUpdateSerializer, CategoryCreateSerializer
 from category.tests.factory import create_single_category
 from person.tests.factory import PASSWORD, create_single_person
 from utils.tests.mixins import MockPermissionsAllowAnyMixin
@@ -23,7 +23,7 @@ class CategoryParentAndNameValidatorTests(MockPermissionsAllowAnyMixin, APITestC
     def test_unique_top_level(self):
         name = 'foo'
         category_one = create_single_category(name=name)
-        serializer = CategoryUpdateSerializer(category_one)
+        serializer = CategoryCreateSerializer(category_one)
         data_two = serializer.data
         data_two.update({
             'id': str(uuid.uuid4()),
@@ -42,7 +42,7 @@ class CategoryParentAndNameValidatorTests(MockPermissionsAllowAnyMixin, APITestC
         name = 'foo'
         parent = create_single_category()
         category_one = create_single_category(name=name, parent=parent)
-        serializer = CategoryUpdateSerializer(category_one)
+        serializer = CategoryCreateSerializer(category_one)
         data_two = serializer.data
         data_two.update({
             'id': str(uuid.uuid4()),
@@ -62,11 +62,13 @@ class CategoryParentAndNameValidatorTests(MockPermissionsAllowAnyMixin, APITestC
         name = 'foo'
         category_one = create_single_category(name=name)
         category_one.delete()
-        serializer = CategoryUpdateSerializer(category_one)
+        parent = create_single_category()
+        serializer = CategoryCreateSerializer(category_one)
         data_two = serializer.data
         data_two.update({
             'id': str(uuid.uuid4()),
-            'name': name
+            'name': name,
+            'parent': str(parent.id)
         })
 
         response = self.client.post('/api/admin/categories/', data_two, format='json')
@@ -75,10 +77,56 @@ class CategoryParentAndNameValidatorTests(MockPermissionsAllowAnyMixin, APITestC
 
     def test_unique_does_not_check_against_own_record_on_a_put(self):
         name = 'foo'
-        category_one = create_single_category(name=name)
+        parent = create_single_category()
+        category_one = create_single_category(name=name, parent=parent)
         serializer = CategoryUpdateSerializer(category_one)
         data = serializer.data
 
         response = self.client.put('/api/admin/categories/{}/'.format(category_one.id), data, format='json')
 
         self.assertEqual(response.status_code, 200)
+
+
+class RootCategoryRequiredFieldValidatorTests(MockPermissionsAllowAnyMixin, APITestCase):
+
+    def setUp(self):
+        super(RootCategoryRequiredFieldValidatorTests, self).setUp()
+        self.person = create_single_person()
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        super(RootCategoryRequiredFieldValidatorTests, self).tearDown()
+        self.client.logout()
+
+    def test_unique_top_level(self):
+        category_one = create_single_category()
+        serializer = CategoryCreateSerializer(category_one)
+        data_two = serializer.data
+        data_two.update({
+            'id': str(uuid.uuid4()),
+            'name': 'foo',
+            'cost_amount': None
+        })
+
+        response = self.client.post('/api/admin/categories/', data_two, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            json.loads(response.content.decode('utf8'))['non_field_errors'][0],
+            "Root Category must have: {field}".format(field='cost_amount')
+        )
+
+    def test_unique_non_top_level_ok(self):
+        category_one = create_single_category()
+        serializer = CategoryCreateSerializer(category_one)
+        data_two = serializer.data
+        data_two.update({
+            'id': str(uuid.uuid4()),
+            'name': 'foo',
+            'cost_amount': None,
+            'parent': str(category_one.id)
+        })
+
+        response = self.client.post('/api/admin/categories/', data_two, format='json')
+
+        self.assertEqual(response.status_code, 201)

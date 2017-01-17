@@ -86,3 +86,60 @@ class InheritedValueField(object):
 
     def _get_inherited_model(self, object, model_str):
         return getattr(object, model_str)
+
+
+class SelfInheritedValueField(object):
+    def __init__(self, parent_model, field):
+        """
+        Used to lookup either a concrete field value on the model
+        instance, or traverse up the parent relationhships to get
+        the value. The parent model at the root must have the value.
+
+        :param parent_model: String name or field on model of the same type
+        :param field: String field name to be inherited
+        """
+        self.parent_model = parent_model
+        self.field = field
+
+    def __get__(self, obj, type=None):
+        """
+        :return:
+            If this is a root Category:
+            {
+                'value': concrete value,
+                'inherited_value': None,
+                'inherits_from': None,
+                'inherits_from_id': None
+            }
+
+            If none root Category:
+            {
+                'value': concrete value
+                'inherited_value': first value found in nearest parent
+                'inherits_from': model class name lower cased
+                'inherits_from_id': nearest parent.id found with value
+            }
+        """
+        ret = {
+            'value': None,
+            'inherited_value': None,
+            'inherits_from': None,
+            'inherits_from_id': None
+        }
+
+        concrete_field = getattr(obj, self.field, None)
+        if concrete_field:
+            ret['value'] = concrete_field
+
+        parent = getattr(obj, self.parent_model)
+        while parent:
+            parent_field = getattr(parent, self.field, None)
+            if parent_field:
+                ret['inherited_value'] = parent_field
+                ret['inherits_from'] = obj.__class__.__name__.lower()
+                ret['inherits_from_id'] = str(getattr(parent, 'id'))
+                break
+            else:
+                parent = getattr(parent, self.parent_model, None)
+
+        return ret

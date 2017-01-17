@@ -146,6 +146,8 @@ class CategoryDetailTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertEqual(data['cost_currency'], str(category.cost_currency.id))
         self.assertEqual(data['cost_code'], category.cost_code)
         self.assertEqual(data['level'], category.level)
+        self.assertEqual(data['inherited']['proxy_cost_amount'], category.proxy_cost_amount)
+        self.assertEqual(data['inherited']['proxy_sc_category_name'], category.proxy_sc_category_name)
 
     def test_data_parent(self):
         category = Category.objects.filter(label='Issue').first()
@@ -259,12 +261,16 @@ class CategoryUpdateTests(CategoryViewTestSetupMixin, APITestCase):
         for field in fields:
             if field not in ['id', 'name']:
                 self.data.pop(field, None)
+        self.data.update({
+            'cost_amount': 1,
+            'parent': str(self.type.id)
+        })
 
         response = self.client.put('/api/admin/categories/{}/'.format(self.trade.id),
             self.data, format='json')
 
-        self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 200)
         self.assertNotEqual(self.trade.name, data['name'])
 
     def test_change_parent(self):
@@ -293,18 +299,37 @@ class CategoryUpdateTests(CategoryViewTestSetupMixin, APITestCase):
     def test_child_added_level_reflects_change(self):
         new_sub_category = create_single_category()
         self.assertEqual(new_sub_category.level, 0)
-        serializer = CategoryUpdateSerializer(self.type)
+        serializer = CategoryUpdateSerializer(self.trade)
         data = serializer.data
-        data['children'] = [new_sub_category.id]
+        data.update({
+            'children': [new_sub_category.id],
+            'cost_amount': 1,
+            'parent': str(self.type.id)
+        })
 
-        response = self.client.put('/api/admin/categories/{}/'.format(self.type.id),
+        response = self.client.put('/api/admin/categories/{}/'.format(self.trade.id),
             data, format='json')
 
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(1, len(data['children']))
         child = Category.objects.get(id=data['children'][0])
-        self.assertEqual(1, child.level)
+        self.assertEqual(2, child.level)
+
+    def test_if_root_category_cost_amount_is_required(self):
+        self.data.update({
+            'parent': None,
+            'cost_amount': None
+        })
+
+        response = self.client.put('/api/admin/categories/{}/'.format(self.type.id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            json.loads(response.content.decode('utf8'))['non_field_errors'][0],
+            "Root Category must have: {field}".format(field='cost_amount')
+        )
 
 
 class CategoryCreateTests(CategoryViewTestSetupMixin, APITestCase):
@@ -349,7 +374,7 @@ class CategoryCreateTests(CategoryViewTestSetupMixin, APITestCase):
         self.data.update({
             'id': str(uuid.uuid4()),
             'name': 'new category',
-            'parent': None,
+            'parent': str(self.trade.id),
             'children': [str(new_sub_category.id)]
         })
         response = self.client.post('/api/admin/categories/', self.data, format='json')

@@ -23,3 +23,20 @@ class CategoryParentAndNameValidator(object):
                             .filter(name=name, parent=parent)
                             .exists()):
             raise ValidationError(self.message.format(name=name, parent=parent))
+
+
+class RootCategoryRequiredFieldValidator(object):
+
+    def __init__(self, field):
+        """
+        :param field: String field name that is required
+        """
+        self.field = field
+
+    def __call__(self, data):
+        """
+        :param data: Dict of serializer data
+        """
+        if not data.get('parent', None) and not data.get(self.field, None):
+            raise ValidationError(
+                "Root Category must have: {field}".format(field=self.field))

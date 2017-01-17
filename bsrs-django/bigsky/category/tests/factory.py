@@ -20,7 +20,7 @@ def create_repair_category():
         return mommy.make(Category, name=REPAIR, subcategory_label=LABEL_TRADE, description=1)
 
 
-def create_single_category(name=None, parent=None, tenant=None):
+def create_single_category(name=None, parent=None, tenant=None, **kwargs):
     if not name:
         name = random_lorem()
 
@@ -32,77 +32,78 @@ def create_single_category(name=None, parent=None, tenant=None):
         subcategory_label=LABEL_TRADE,
         status=status,
         parent=parent,
-        tenant=tenant
+        tenant=tenant,
+        **kwargs
     )
 
 
-# id, name, label, subcategory_label, parent_id
+# id, name, label, subcategory_label, parent_id, sc_category_name
 CATEGORIES = [
-    [1, 'Repair', 'Type', 'Trade', None],
-    [2, 'Appliances', 'Trade', 'Issue', 1],
-    [3, 'Microwave', 'Issue', 'Sub-Issue', 2],
-    [4, 'Broken', 'Sub-Issue', '', 3],
-    [5, 'Replace', 'Sub-Issue', '', 3],
-    [6, 'Refrigerator', 'Issue', 'Sub-Issue', 2],
-    [7, 'Broken', 'Sub-Issue', '', 6],
-    [8, 'Replace', 'Sub-Issue', '', 6],
-    [9, 'Stove', 'Issue', 'Sub-Issue', 2],
-    [10, 'Broken', 'Sub-Issue', '', 9],
-    [11, 'Replace', 'Sub-Issue', '', 9],
-    [12, 'Doors', 'Trade', 'Issue', 1],
-    [13, 'Manual Door', 'Issue', 'Sub-Issue', 12],
-    [14, 'Hinges', 'Sub-Issue', '', 13],
-    [15, 'Knobs', 'Sub-Issue', '', 13],
-    [16, 'Locks', 'Sub-Issue', '', 13],
-    [17, 'Automatic Door', 'Issue', 'Sub-Issue', 12],
-    [18, 'Sensors', 'Sub-Issue', '', 17],
-    [19, 'Pads', 'Sub-Issue', '', 17],
-    [20, 'Tracks', 'Sub-Issue', '', 17],
-    [21, 'Electrical', 'Trade', 'Issue', 1],
-    [22, 'Outlets', 'Issue', 'Sub-Issue', 21],
-    [23, 'Wiring', 'Issue', 'Sub-Issue', 21],
-    [24, 'Surge Protector', 'Issue', 'Sub-Issue', 21],
-    [25, 'Fire', 'Trade', 'Issue', 1],
-    [26, 'Extinguisher', 'Issue', 'Sub-Issue', 25],
-    [27, 'Smoke Detector', 'Issue', 'Sub-Issue', 25],
-    [28, 'Alarm', 'Issue', 'Sub-Issue', 25],
-    [29, 'Gutters', 'Trade', 'Issue', 1],
-    [30, 'HVAC', 'Trade', 'Issue', 1],
-    [31, 'Thermostats', 'Issue', 'Sub-Issue', 30],
-    [32, 'Too Hot', 'Issue', 'Sub-Issue', 30],
-    [33, 'Too Cold', 'Issue', 'Sub-Issue', 30],
-    [34, 'Janitorial', 'Trade', 'Issue', 1],
-    [35, 'Cleaning', 'Issue', 'Sub-Issue', 34],
-    [36, 'Disaster Recovery', 'Issue', 'Sub-Issue', 34],
-    [37, 'Parking Lot', 'Trade', 'Issue', 1],
-    [38, 'Potholes', 'Issue', 'Sub-Issue', 37],
-    [39, 'Repaving', 'Issue', 'Sub-Issue', 37],
-    [40, 'Striping', 'Issue', 'Sub-Issue', 37],
-    [41, 'Plumbing', 'Trade', 'Issue', 1],
-    [42, 'Toilet', 'Issue', 'Sub-Issue', 41],
-    [43, 'Sink', 'Issue', 'Sub-Issue', 41],
-    [44, 'Water Heater', 'Issue', 'Sub-Issue', 41],
-    [45, 'Urinals', 'Issue', 'Sub-Issue', 41],
-    [46, 'Pipes', 'Issue', 'Sub-Issue', 41],
-    [47, 'Signage', 'Trade', 'Issue', 1],
-    [48, 'Channel Lighting', 'Issue', 'Sub-Issue', 47],
-    [49, 'Brand Signage', 'Issue', 'Sub-Issue', 47],
-    [50, 'Pylon', 'Issue', 'Sub-Issue', 47],
-    [51, 'Monument', 'Issue', 'Sub-Issue', 47],
-    [52, 'Lettering', 'Issue', 'Sub-Issue', 47],
-    [53, 'New', 'Sub-Issue', '', 52],
-    [54, 'Replace', 'Sub-Issue', '', 52],
-    [55, 'Maintenance', 'Type', 'Trade', None],
-    [56, 'Parking Lot', 'Trade', 'Issue', 55],
-    [57, 'Potholes', 'Issue', 'Sub-Issue', 56],
-    [58, 'Repaving', 'Issue', 'Sub-Issue', 56],
-    [59, 'Striping', 'Issue', 'Sub-Issue', 56],
-    [60, 'Plumbing', 'Trade', 'Issue', 55],
-    [61, 'Toilet', 'Issue', 'Sub-Issue', 60],
-    [62, 'Sink', 'Issue', 'Sub-Issue', 60],
-    [63, 'Water Heater', 'Issue', 'Sub-Issue', 60],
-    [64, 'Urinals', 'Issue', 'Sub-Issue', 60],
-    [65, 'Pipes', 'Issue', 'Sub-Issue', 60]
+    [1, 'Repair', 'Type', 'Trade', None, 'GENERAL REPAIRS'],
+    [2, 'Appliances', 'Trade', 'Issue', 1, 'APPLIANCES'],
+    [3, 'Microwave', 'Issue', 'Sub-Issue', 2, 'KITCHEN EQUIPMENT'],
+    [4, 'Broken', 'Sub-Issue', '', 3, None],
+    [5, 'Replace', 'Sub-Issue', '', 3, None],
+    [6, 'Refrigerator', 'Issue', 'Sub-Issue', 2, 'KITCHEN EQUIPMENT'],
+    [7, 'Broken', 'Sub-Issue', '', 6, None],
+    [8, 'Replace', 'Sub-Issue', '', 6, None],
+    [9, 'Stove', 'Issue', 'Sub-Issue', 2, 'KITCHEN EQUIPMENT'],
+    [10, 'Broken', 'Sub-Issue', '', 9, None],
+    [11, 'Replace', 'Sub-Issue', '', 9, None],
+    [12, 'Doors', 'Trade', 'Issue', 1, 'DOORS'],
+    [13, 'Manual Door', 'Issue', 'Sub-Issue', 12, None],
+    [14, 'Hinges', 'Sub-Issue', '', 13, None],
+    [15, 'Knobs', 'Sub-Issue', '', 13, None],
+    [16, 'Locks', 'Sub-Issue', '', 13, 'LOCKS and KEYS'],
+    [17, 'Automatic Door', 'Issue', 'Sub-Issue', 12, None],
+    [18, 'Sensors', 'Sub-Issue', '', 17, None],
+    [19, 'Pads', 'Sub-Issue', '', 17, None],
+    [20, 'Tracks', 'Sub-Issue', '', 17, None],
+    [21, 'Electrical', 'Trade', 'Issue', 1, 'ELECTRICAL'],
+    [22, 'Outlets', 'Issue', 'Sub-Issue', 21, None],
+    [23, 'Wiring', 'Issue', 'Sub-Issue', 21, None],
+    [24, 'Surge Protector', 'Issue', 'Sub-Issue', 21, None],
+    [25, 'Fire', 'Trade', 'Issue', 1, 'FIRE PROTECTION and SAFETY'],
+    [26, 'Extinguisher', 'Issue', 'Sub-Issue', 25, None],
+    [27, 'Smoke Detector', 'Issue', 'Sub-Issue', 25, None],
+    [28, 'Alarm', 'Issue', 'Sub-Issue', 25, None],
+    [29, 'Gutters', 'Trade', 'Issue', 1, 'GUTTERS and REPAIRS'],
+    [30, 'HVAC', 'Trade', 'Issue', 1, None],
+    [31, 'Thermostats', 'Issue', 'Sub-Issue', 30, None],
+    [32, 'Too Hot', 'Issue', 'Sub-Issue', 30, None],
+    [33, 'Too Cold', 'Issue', 'Sub-Issue', 30, None],
+    [34, 'Janitorial', 'Trade', 'Issue', 1, 'JANITORIAL'],
+    [35, 'Cleaning', 'Issue', 'Sub-Issue', 34, None],
+    [36, 'Disaster Recovery', 'Issue', 'Sub-Issue', 34, 'DISASTER RECOVERY'],
+    [37, 'Parking Lot', 'Trade', 'Issue', 1, 'PAVING'],
+    [38, 'Potholes', 'Issue', 'Sub-Issue', 37, None],
+    [39, 'Repaving', 'Issue', 'Sub-Issue', 37, None],
+    [40, 'Striping', 'Issue', 'Sub-Issue', 37, None],
+    [41, 'Plumbing', 'Trade', 'Issue', 1, 'PLUMBING'],
+    [42, 'Toilet', 'Issue', 'Sub-Issue', 41, None],
+    [43, 'Sink', 'Issue', 'Sub-Issue', 41, None],
+    [44, 'Water Heater', 'Issue', 'Sub-Issue', 41, 'WATER HEATERS'],
+    [45, 'Urinals', 'Issue', 'Sub-Issue', 41, None],
+    [46, 'Pipes', 'Issue', 'Sub-Issue', 41, None],
+    [47, 'Signage', 'Trade', 'Issue', 1, 'SIGNS and BANNERS'],
+    [48, 'Channel Lighting', 'Issue', 'Sub-Issue', 47, None],
+    [49, 'Brand Signage', 'Issue', 'Sub-Issue', 47, None],
+    [50, 'Pylon', 'Issue', 'Sub-Issue', 47, None],
+    [51, 'Monument', 'Issue', 'Sub-Issue', 47, None],
+    [52, 'Lettering', 'Issue', 'Sub-Issue', 47, None],
+    [53, 'New', 'Sub-Issue', '', 52, None],
+    [54, 'Replace', 'Sub-Issue', '', 52, None],
+    [55, 'Maintenance', 'Type', 'Trade', None, 'GENERAL REPAIRS and MAINTENANCE'],
+    [56, 'Parking Lot', 'Trade', 'Issue', 55, 'PAVING'],
+    [57, 'Potholes', 'Issue', 'Sub-Issue', 56, None],
+    [58, 'Repaving', 'Issue', 'Sub-Issue', 56, None],
+    [59, 'Striping', 'Issue', 'Sub-Issue', 56, None],
+    [60, 'Plumbing', 'Trade', 'Issue', 55, 'PLUMBING'],
+    [61, 'Toilet', 'Issue', 'Sub-Issue', 60, None],
+    [62, 'Sink', 'Issue', 'Sub-Issue', 60, None],
+    [63, 'Water Heater', 'Issue', 'Sub-Issue', 60, 'WATER HEATERS'],
+    [64, 'Urinals', 'Issue', 'Sub-Issue', 60, None],
+    [65, 'Pipes', 'Issue', 'Sub-Issue', 60, None]
 ]
 
 
@@ -111,7 +112,7 @@ def create_categories(tenant=None):
     tenant = tenant or get_or_create_tenant()
 
     for x in CATEGORIES:
-        CategoryData = namedtuple('CategoryData', ['id', 'name', 'label', 'subcategory_label', 'parent_id'])
+        CategoryData = namedtuple('CategoryData', ['id', 'name', 'label', 'subcategory_label', 'parent_id', 'sc_category_name'])
         data = CategoryData._make(x)._asdict()
 
         try:
@@ -124,12 +125,13 @@ def create_categories(tenant=None):
         except Category.DoesNotExist:
             Category.objects.create(
                 id=generate_uuid(Category),
-                description=str(data['id']),
-                name=data['name'],
-                label=data['label'],
-                subcategory_label=data['subcategory_label'],
+                description=str(data.get('id')),
+                name=data.get('name'),
+                label=data.get('label'),
+                subcategory_label=data.get('subcategory_label'),
                 parent=parent,
-                tenant=tenant
+                tenant=tenant,
+                sc_category_name=data.get('sc_category_name')
             )
 
     return Category.objects.all()
@@ -140,7 +142,7 @@ def create_category_statuses():
 
     for status in CATEGORY_STATUSES:
         id = generate_uuid(CategoryStatus)
-        
+
         try:
             cs = CategoryStatus.objects.get(name=status)
         except CategoryStatus.DoesNotExist:

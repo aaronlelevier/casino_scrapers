@@ -6,6 +6,7 @@ from accounting.models import Currency
 from location.models import SelfReferencingQuerySet, SelfReferencingManager
 from tenant.models import Tenant
 from utils import classproperty
+from utils.fields import SelfInheritedValueField
 from utils.models import BaseModel, BaseNameModel, DefaultNameManager
 
 
@@ -109,7 +110,10 @@ class Category(BaseModel):
         help_text="This field cannot be set directly.  It is either set from "
                   "a system setting, or defaulted from the Parent Category.")
     subcategory_label = models.CharField(max_length=100, blank=True)
-    cost_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, null=True)
+    sc_category_name = models.CharField(max_length=100, null=True,
+                                  help_text="Mapping to SC Category name")
+    cost_amount = models.DecimalField(max_digits=15, decimal_places=4, null=True,
+                                      help_text="aka (NTE) not to exceed amount")
     cost_currency = models.ForeignKey(Currency, blank=True, null=True)
     cost_code = models.CharField(max_length=100, blank=True, null=True)
     parent = models.ForeignKey("self", related_name="children", blank=True, null=True)
@@ -158,6 +162,16 @@ class Category(BaseModel):
             return count
         else:
             return self._get_parent_count(category.parent, count+1)
+
+    @property
+    def inherited(self):
+        return {
+            'proxy_cost_amount': self.proxy_cost_amount,
+            'proxy_sc_category_name': self.proxy_sc_category_name
+        }
+
+    proxy_cost_amount = SelfInheritedValueField('parent', 'cost_amount')
+    proxy_sc_category_name = SelfInheritedValueField('parent', 'sc_category_name')
 
     def to_dict(self):
         if self.parent:

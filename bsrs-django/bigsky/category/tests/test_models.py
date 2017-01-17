@@ -185,6 +185,36 @@ class CategoryTests(CategorySetupMixin, TestCase):
     def test_currency(self):
         self.assertIsInstance(self.trade.cost_currency, Currency)
 
+    def test_inherited(self):
+        ret = self.type.inherited
+
+        self.assertEqual(ret['proxy_cost_amount'], self.type.proxy_cost_amount)
+        self.assertEqual(ret['proxy_sc_category_name'], self.type.proxy_sc_category_name)
+
+    def test_proxy_cost_amount(self):
+        cost_amount = 1
+        self.type.cost_amount = cost_amount
+
+        ret = self.type.proxy_cost_amount
+
+        self.assertIsInstance(ret, dict)
+        self.assertEqual(ret['value'], cost_amount)
+        self.assertIn('inherited_value', ret)
+        self.assertIn('inherits_from', ret)
+        self.assertIn('inherits_from_id', ret)
+
+    def test_proxy_sc_category_name(self):
+        sc_category_name = 'foo'
+        self.type.sc_category_name = sc_category_name
+
+        ret = self.type.proxy_sc_category_name
+
+        self.assertIsInstance(ret, dict)
+        self.assertEqual(ret['value'], sc_category_name)
+        self.assertIn('inherited_value', ret)
+        self.assertIn('inherits_from', ret)
+        self.assertIn('inherits_from_id', ret)
+
     def test_to_dict(self):
         d = self.type.to_dict()
         self.assertIsInstance(d, dict)

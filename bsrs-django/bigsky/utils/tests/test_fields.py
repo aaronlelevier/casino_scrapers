@@ -3,6 +3,7 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from accounting.models import Currency
+from category.tests.factory import create_single_category
 from contact.models import Email
 from person.tests.factory import create_single_person
 
@@ -66,3 +67,56 @@ class InheritedValueField(TestCase):
         self.assertEqual(ret['inherited_value'], str(self.tenant.default_currency.id))
         self.assertEqual(ret['inherits_from'], 'role')
         self.assertEqual(ret['inherits_from_id'], str(self.role.id))
+
+
+class SelfInheritedValueFieldTests(TestCase):
+
+    def setUp(self):
+        self.cost_amount = 42
+        self.type = create_single_category(cost_amount=self.cost_amount)
+        self.trade = create_single_category(parent=self.type)
+        self.issue = create_single_category(parent=self.trade)
+
+    def test_concrete_field(self):
+        cost_amount = 1
+        self.trade.cost_amount = cost_amount
+
+        ret = self.trade.proxy_cost_amount
+
+        self.assertEqual(ret['value'], cost_amount)
+        self.assertEqual(ret['inherited_value'], self.cost_amount)
+        self.assertEqual(ret['inherits_from'], 'category')
+        self.assertEqual(ret['inherits_from_id'], str(self.type.id))
+
+    def test_inherited__parent(self):
+        # inherited from model's parent
+        self.assertIsNone(self.trade.cost_amount)
+
+        ret = self.trade.proxy_cost_amount
+
+        self.assertEqual(ret['value'], None)
+        self.assertEqual(ret['inherited_value'], self.cost_amount)
+        self.assertEqual(ret['inherits_from'], 'category')
+        self.assertEqual(ret['inherits_from_id'], str(self.type.id))
+
+    def test_inherited__grandparent(self):
+        # inherited from the model's parent's parent
+        self.assertIsNone(self.issue.cost_amount)
+
+        ret = self.issue.proxy_cost_amount
+
+        self.assertEqual(ret['value'], None)
+        self.assertEqual(ret['inherited_value'], self.cost_amount)
+        self.assertEqual(ret['inherits_from'], 'category')
+        self.assertEqual(ret['inherits_from_id'], str(self.type.id))
+
+    def test_inherited__parent_doesnt_inherit(self):
+        # inherited from the model's parent's parent
+        self.assertEqual(self.type.cost_amount, self.cost_amount)
+
+        ret = self.type.proxy_cost_amount
+
+        self.assertEqual(ret['value'], self.cost_amount)
+        self.assertEqual(ret['inherited_value'], None)
+        self.assertEqual(ret['inherits_from'], None)
+        self.assertEqual(ret['inherits_from_id'], None)

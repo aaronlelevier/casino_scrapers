@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from category.models import Category
-from category.validators import CategoryParentAndNameValidator
+from category.validators import CategoryParentAndNameValidator, RootCategoryRequiredFieldValidator
 from tenant.mixins import RemoveTenantMixin
 from utils.serializers import BaseCreateSerializer
 
@@ -67,10 +67,12 @@ class CategoryDetailSerializer(BaseCreateSerializer):
 
     parent = CategoryChildrenSerializer(read_only=True)
     children = CategoryIDNameSerializer(many=True, read_only=True)
+    inherited = serializers.DictField()
 
     class Meta:
         model = Category
-        fields = CATEGORY_FIELDS + ('level', 'subcategory_label', 'parent', 'children',)
+        fields = CATEGORY_FIELDS + ('level', 'subcategory_label', 'parent',
+                                    'children', 'inherited')
 
     @staticmethod
     def eager_load(queryset):
@@ -85,7 +87,9 @@ class CategoryUpdateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Category
-        validators = [CategoryParentAndNameValidator()]
+        validators = [CategoryParentAndNameValidator(),
+                      RootCategoryRequiredFieldValidator('cost_amount'),
+                      RootCategoryRequiredFieldValidator('sc_category_name')]
         fields = CATEGORY_FIELDS + ('subcategory_label', 'parent', 'children',)
 
 
@@ -96,5 +100,7 @@ class CategoryCreateSerializer(RemoveTenantMixin, BaseCreateSerializer):
 
     class Meta:
         model = Category
-        validators = [CategoryParentAndNameValidator()]
+        validators = [CategoryParentAndNameValidator(),
+                      RootCategoryRequiredFieldValidator('cost_amount'),
+                      RootCategoryRequiredFieldValidator('sc_category_name')]
         fields = CATEGORY_FIELDS + ('tenant', 'subcategory_label', 'parent', 'children',)

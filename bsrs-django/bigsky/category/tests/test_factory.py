@@ -21,7 +21,7 @@ class CreateSingleCategoryTests(TestCase):
     def test_attrs(self):
         name = 'My Cool Category'
 
-        category = factory.create_single_category(name)
+        category = factory.create_single_category(name=name)
 
         self.assertEqual(category.name, name)
         self.assertEqual(category.subcategory_label, LABEL_TRADE)
@@ -50,6 +50,11 @@ class CreateSingleCategoryTests(TestCase):
         ret = factory.create_single_category(tenant=tenant)
 
         self.assertEqual(ret.tenant, tenant)
+
+    def test_can_define_fields(self):
+        ret = factory.create_single_category(cost_amount=10)
+
+        self.assertEqual(ret.cost_amount, 10)
 
 
 class CategoryTests(TransactionTestCase):
