@@ -98,7 +98,7 @@ def create_automation_action_request(automation=None):
 
 def create_automation_action_cc(automation=None):
     automation, type = _get_automation_and_action_type(automation, AutomationActionType.TICKET_CC)
-    person = create_single_person()
+    person = create_single_person('admin')
     return AutomationAction.objects.create(type=type, automation=automation,
                                            content={'ccs': [str(person.id)]})
 

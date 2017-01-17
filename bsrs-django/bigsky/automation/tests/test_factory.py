@@ -136,8 +136,8 @@ class AutomationActionTests(TestCase):
         ret = factory.create_automation_action_cc()
         self.assertEqual(ret.type.key, AutomationActionType.TICKET_CC)
         self.assertEqual(len(ret.content['ccs']), 1)
-        self.assertIsInstance(
-            Person.objects.get(id=ret.content['ccs'][0]), Person)
+        cc = Person.objects.get(id=ret.content['ccs'][0])
+        self.assertEqual(cc.username, 'admin')
 
     def test_create_automation_actions(self):
         factory.create_automation_actions()
