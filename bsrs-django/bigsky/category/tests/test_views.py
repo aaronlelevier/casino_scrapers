@@ -374,6 +374,24 @@ class CategoryFilterTests(CategoryViewTestSetupMixin, APITestCase):
                 Category.objects.filter(name__icontains=name).count()
         )
 
+    def test_filter_children_isnull__true(self):
+        leaf_category_count = Category.objects.filter(children__isnull=True).count()
+        self.assertTrue(leaf_category_count > 0)
+
+        response = self.client.get('/api/admin/categories/?children__isnull=true')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], leaf_category_count)
+
+    def test_filter_children_isnull__false(self):
+        leaf_category_count = Category.objects.filter(children__isnull=False).count()
+        self.assertTrue(leaf_category_count > 0)
+
+        response = self.client.get('/api/admin/categories/?children__isnull=false')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], leaf_category_count)
+
 
 # Sub Routes
 

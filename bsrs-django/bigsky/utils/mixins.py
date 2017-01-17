@@ -151,17 +151,28 @@ class FilterRelatedMixin(object):
         if self.filter_fields:
             kwargs = {}
 
-            for param in self.request.query_params:
-                if param.split("__")[0] in self.filter_fields:
-                    if param.split("__")[-1] == "in":
-                        value = self.request.query_params.get(param).split(',')
+            for k, v in self.request.query_params.items():
+                if k.split("__")[0] in self.filter_fields:
+                    if k.split("__")[-1] == "in":
+                        value = v.split(',')
                     else:
-                        value = self.request.query_params.get(param)
+                        value = self._coerced_value(v)
 
-                    kwargs.update({param: value})
+                    kwargs.update({k: value})
 
             return queryset.filter(**kwargs)
         return queryset
+
+    @staticmethod
+    def _coerced_value(value):
+        """Because booleans are string lowercased values from the
+        querystring. May be able to use `distutils.util.strtobool`
+        but maybe that's overkill at this point."""
+        if value == 'true':
+            return True
+        elif value == 'false':
+            return False
+        return value
 
 
 class SearchMultiMixin(object):
