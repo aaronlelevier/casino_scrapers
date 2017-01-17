@@ -6,7 +6,7 @@ import inject from 'bsrs-ember/utilities/deserializer';
 import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
 import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
-import { TICKETS_URL } from 'bsrs-ember/utilities/urls';
+import { TICKETS_URL, WORK_ORDER_URL } from 'bsrs-ember/utilities/urls';
 
 var PREFIX = config.APP.NAMESPACE;
 var TICKET_URL = '/ticket';

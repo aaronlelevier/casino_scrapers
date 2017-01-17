@@ -8,7 +8,7 @@ import equal from 'bsrs-ember/utilities/equal';
 import CategoriesMixin from 'bsrs-ember/mixins/model/category';
 import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
 import { belongs_to, change_belongs_to } from 'bsrs-components/attr/belongs-to';
-import { many_to_many, add_many_to_many } from 'bsrs-components/attr/many-to-many';
+import { many_to_many, add_many_to_many, many_to_many_dirty } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 const Validations = buildValidations({
@@ -48,6 +48,7 @@ let TicketModel = Model.extend(CategoriesMixin, OptConf, Validations, {
     this._super(...arguments);
     set(this, 'requestValues', []); //store array of values to be sent in dt post or put request field
     set(this, 'ticket_cc_fks', get(this, 'ticket_cc_fks') || []);
+    set(this, 'ticket_wo_fks', get(this, 'ticket_wo_fks') || []);
     set(this, 'model_categories_fks', get(this, 'model_categories_fks') || []);
     set(this, 'generic_attachments_fks', get(this, 'generic_attachments_fks') || []);
     belongs_to.bind(this)('status', 'ticket', {bootstrapped:true});
@@ -55,7 +56,7 @@ let TicketModel = Model.extend(CategoriesMixin, OptConf, Validations, {
     belongs_to.bind(this)('assignee', 'ticket');
     belongs_to.bind(this)('location', 'ticket');
     many_to_many.bind(this)('cc', 'ticket');
-    many_to_many.bind(this)('wo', 'ticket');
+    many_to_many.bind(this)('wo', 'ticket', {dirty:false});
     many_to_many.bind(this)('attachment', 'generic', {plural: true});
     many_to_many.bind(this)('category', 'model', {plural:true, add_func:false});
   },
@@ -82,8 +83,17 @@ let TicketModel = Model.extend(CategoriesMixin, OptConf, Validations, {
     const name = get(this, 'priority.name');
     return name ? name.replace(/\./g, '-') : '';
   }),
-  isDirtyOrRelatedDirty: Ember.computed.or('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'locationIsDirty', 'attachmentsIsDirty', 'woIsDirty').readOnly(), 
+  woIsDirtyContainer: many_to_many_dirty('ticket_wo'),
+  woIsDirty: Ember.computed('wo.@each.{isDirtyOrRelatedDirty}','woIsDirtyContainer', function() {
+    const wos = this.get('wo');
+    return wos.isAny('isDirtyOrRelatedDirty') || this.get('woIsDirtyContainer');
+  }).readOnly(),
+
+  woIsNotDirty: Ember.computed.not('woIsDirty').readOnly(),
+
+  isDirtyOrRelatedDirty: Ember.computed.or('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'locationIsDirty', 'attachmentsIsDirty', 'woIsDirty').readOnly(),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty').readOnly(),
+
   /**
    * @method saveAttachmentsContainer
    * sets new flag so template can render differently for the attachment
@@ -141,7 +151,7 @@ let TicketModel = Model.extend(CategoriesMixin, OptConf, Validations, {
   },
   /* @method rollbackAttachmentsContainer
    * sets attachment fks to be removed in transitionCB from route
-   */ 
+   */
   rollbackAttachmentsContainer() {
     const store = this.get('simpleStore');
     const attachment_ids = this.get('attachments_ids');

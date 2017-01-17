@@ -10,18 +10,11 @@ const Validations = buildValidations({
     presence: true,
     message: 'errors.work_order.scheduled_date'
   }),
-  approved_amount: validator('presence', {
-    presence: true,
-    message: 'errors.work_order.approved_amount'
-  }),
-  cost_estimate: validator('presence', {
-    presence: true,
-    message: 'errors.work_order.cost_estimate'
-  }),
-  cost_estimate_currency: validator('presence', {
-    presence: true,
-    message: 'errors.work_order.cost_estimate_currency'
-  }),
+  cost_estimate: validator('format', {
+    allowBlank: true,
+    // allow only numbers commas and decimal points
+    regex: /^[0-9.,]+$/,
+  })
 });
 
 let WorkOrder = Model.extend(OptConf, Validations, {
@@ -30,17 +23,14 @@ let WorkOrder = Model.extend(OptConf, Validations, {
     belongs_to.bind(this)('status', 'work-order', { bootstrapped: true });
     belongs_to.bind(this)('category', 'work-order');
     belongs_to.bind(this)('provider', 'work-order');
-    belongs_to.bind(this)('approver', 'work-order', { bootstrapped: true});
-    belongs_to.bind(this)('cost_estimate_currency', 'work-order', { bootstrapped: true });
-    // setup location toOne
+    belongs_to.bind(this)('approver', 'work-order', { bootstrapped: true });
   },
   simpleStore: Ember.inject.service(),
   status_fk: undefined,
   category_fk: undefined,
   provider_fk: undefined,
   approver_fk: undefined,
-  // needs a location id
-  cost_estimate_currency_fk: undefined,
+  cost_estimate_currency: attr(),
   scheduled_date: attr(''),
   completed_date: attr(''),
   expiration_date: attr(''),
@@ -51,14 +41,16 @@ let WorkOrder = Model.extend(OptConf, Validations, {
   tracking_number: attr(''),
   instructions: attr(''),
 
-  isDirtyOrRelatedDirty: Ember.computed('isDirty','approverIsDirty', 'costEstimateCurrencyIsDirty', 'statusIsDirty', 'categoryIsDirty', 'providerIsDirty', function() {
-    return this.get('isDirty') || this.get('approverIsDirty') ||  this.get('costEstimateCurrencyIsDirty') || this.get('statusIsDirty') || this.get('categoryIsDirty') || this.get('providerIsDirty');
+  personCurrent: Ember.inject.service('person-current'),
+  isReadOnly: Ember.computed.alias('personCurrent.isReadOnlyWorkorder'),
+
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'approverIsDirty', 'statusIsDirty', 'categoryIsDirty', 'providerIsDirty', function() {
+    return this.get('isDirty') || this.get('approverIsDirty') || this.get('statusIsDirty') || this.get('categoryIsDirty') || this.get('providerIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
 
   rollback() {
     this._super(...arguments);
-    this.rollbackCostEstimateCurrency();
     this.rollbackStatus();
     this.rollbackCategory();
     this.rollbackProvider();
@@ -66,7 +58,6 @@ let WorkOrder = Model.extend(OptConf, Validations, {
   },
 
   saveRelated() {
-    this.saveCostEstimateCurrency();
     this.saveStatus();
     this.saveCategory();
     this.saveProvider();
@@ -75,14 +66,20 @@ let WorkOrder = Model.extend(OptConf, Validations, {
   serialize() {
     return {
       id: get(this, 'id'),
-      approved_amount: get(this, 'approved_amount'),
+      cost_estimate_currency: get(this, 'cost_estimate_currency'),
       cost_estimate: get(this, 'cost_estimate'),
       scheduled_date: get(this, 'scheduled_date'),
-      expiration_date: get(this, 'expiration_date'),
       approval_date: get(this, 'approval_date'),
+      approved_amount: get(this, 'approved_amount'),
+      completed_date: get(this, 'completed_date'),
+      expiration_date: get(this, 'expiration_date'),
+      instructions: get(this, 'instructions'),
+      gl_code: get(this, 'gl_code'),
       status: get(this, 'status.id'),
       category: get(this, 'category.id'),
       provider: get(this, 'provider.id'),
+      approver: get(this, 'approver.id'),
+      ticket: get(this, 'ticket'),
     };
   }
 });

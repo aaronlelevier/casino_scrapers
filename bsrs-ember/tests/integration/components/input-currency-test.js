@@ -8,6 +8,7 @@ import CD from 'bsrs-ember/vendor/defaults/currency';
 import CatD from 'bsrs-ember/vendor/defaults/category';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import page from 'bsrs-ember/tests/pages/input-currency';
+import waitFor from 'ember-test-helpers/wait';
 
 const LONG_AUTH_AMOUNT = '50000.0000';
 const PD = PERSON_DEFAULTS.defaults();
@@ -192,4 +193,34 @@ test('t-amount placeholder is not defaulted if is passed into component', functi
   this.render(hbs `{{input-currency model=model field='auth_amount' currencyField='auth_currency' inheritsFrom=model.inherited.auth_amount.inherits_from placeholder='foo'}}`);
   let $component = this.$('.t-input-currency');
   assert.equal($component.find('.t-amount').get(0)['placeholder'], 'foo');
+});
+test('testing edge cases. ex: chars A-Z, negative numbers, commas & decimals', function(assert) {
+  run(function() {
+    model = store.push('person', {
+      id: PD.id,
+    });
+  });
+  this.set('model', model);
+  this.render(hbs `{{input-currency model=model 
+    field='auth_amount' 
+    currencyField='auth_currency' 
+    inheritsFrom=model.inherited.auth_amount.inherits_from 
+    placeholder='foo'
+  }}`);
+  let $component = this.$('.t-input-currency');
+  // formats negative numbers to positive & all instances of - get cleared out
+  this.$('.t-amount').val('-1.00-').trigger('keyup');
+  return waitFor().then(() => {
+    assert.equal(this.$('.t-amount').val(), '1.00');
+    // will not accept characters A-Z 
+    this.$('.t-amount').val('wat').trigger('keyup');
+    return waitFor().then(() => {
+      assert.equal(this.$('.t-amount').val(), '');
+      //will accept decimals and commoas
+      this.$('.t-amount').val('1,000.00').trigger('keyup');
+      return waitFor().then(() => {
+        assert.equal(this.$('.t-amount').val(), '1,000.00');
+      });
+    });
+  });
 });

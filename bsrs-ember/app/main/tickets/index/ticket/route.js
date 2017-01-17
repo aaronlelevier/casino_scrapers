@@ -64,7 +64,7 @@ let TicketSingleRoute = TabRoute.extend(FindById, {
     createWorkOrder() {
       const ticket = this.modelFor(this.routeName).model;
       const leaf_category = ticket.get('leaf_category');
-      return this.get('workOrderRepository').createWorkOrder(leaf_category.get('id'));
+      return this.get('workOrderRepository').createWorkOrder(leaf_category.get('id'), ticket.get('id'));
     },
     /**
      * will pause until work order is created before showing ticket single
@@ -72,6 +72,14 @@ let TicketSingleRoute = TabRoute.extend(FindById, {
      */
     saveWorkOrder(wo) {
       return this.get('workOrderRepository').update(wo);
+    },
+    /**
+     * @method ticketApplicationNotice
+     * @param {Object} xhr
+     * @param {Object} model
+     */
+    ticketApplicationNotice(xhr, wo) {
+      this.send('sendHandleApplicationNotice', xhr, wo);
     },
     /**
      * @method dispatchWorkOrder

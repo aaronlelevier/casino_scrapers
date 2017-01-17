@@ -32,3 +32,18 @@ test('create - will default status and priority (which exist in the store becaus
     assert.equal(ticket.get('status.id'), store.find('ticket-status', {default: true}).objectAt(0).get('id'));
     assert.equal(ticket.get('priority.id'), store.find('ticket-priority', {default: true}).objectAt(0).get('id'));
 });
+/*
+
+TODO: SAVE CASES for update method
+
+1 dirty ticket with no work orders expects 1 xhr
+1 dirty ticket and 1 dirty work order expect 2 xhrs
+1 clean ticket 1 dirty work order expects 1 xhr
+1 dirty ticket and 1 clean work order expects 1 xhr
+1 clean ticket and 2 dirty work orders expects 2 xhrs
+1 dirty ticket and 2 dirty work orders expects 3 xhrs
+1 dirty ticket and 2 clean work orders expects 1 xhr
+
+mock promisemixin for test 
+
+*/

@@ -28,6 +28,7 @@ test('it renders with defaults checked or unchecked', function(assert) {
   assert.equal(this.$('[data-test-id="t-permission-view-location"]').text().trim(), 'role.label.permission.location');
   assert.equal(this.$('[data-test-id="t-permission-view-locationlevel"]').text().trim(), 'role.label.permission.locationlevel');
   assert.equal(this.$('[data-test-id="t-permission-view-category"]').text().trim(), 'role.label.permission.category');
+  assert.equal(this.$('[data-test-id="t-permission-view-workorder"]').text().trim(), 'role.label.permission.workorder');
   assert.equal(this.$('[data-test-id="t-permission-view-create"]').text().trim(), 'role.label.permission.create');
   assert.equal(this.$('[data-test-id="t-permission-view-view"]').text().trim(), 'role.label.permission.view');
   assert.equal(this.$('[data-test-id="t-permission-view-edit"]').text().trim(), 'role.label.permission.edit');
@@ -68,6 +69,12 @@ test('it renders with defaults checked or unchecked', function(assert) {
   assert.equal(this.$('[data-test-id="permission-add-category"] > input').is(':checked'), true);
   assert.equal(this.$('[data-test-id="permission-change-category"] > input').is(':checked'), true);
   assert.equal(this.$('[data-test-id="permission-delete-category"] > input').is(':checked'), false);
+
+  // workorder
+  assert.equal(this.$('[data-test-id="permission-view-workorder"] > input').is(':checked'), true);
+  assert.equal(this.$('[data-test-id="permission-add-workorder"] > input').is(':checked'), true);
+  assert.equal(this.$('[data-test-id="permission-change-workorder"] > input').is(':checked'), true);
+  assert.equal(this.$('[data-test-id="permission-delete-workorder"] > input').is(':checked'), false);
 });
 
 test('permissions should render in the correct order and labels should match their underlying checkboxes', function(assert) {
@@ -82,7 +89,7 @@ test('permissions should render in the correct order and labels should match the
   assert.equal(this.$('[data-test-id="t-permission-view-header"] div:nth-child(4)').text().trim(), 'role.label.permission.edit');
   assert.equal(this.$('[data-test-id="t-permission-view-header"] div:nth-child(5)').text().trim(), 'role.label.permission.delete');
 
-  assert.equal(this.$('[data-test-id="t-permission-view-row"]').length, 6);
+  assert.equal(this.$('[data-test-id="t-permission-view-row"]').length, 7);
   assert.equal(this.$('[data-test-id="t-permission-view-row"]:eq(0) div:nth-child(2) label')[0].getAttribute('data-test-id'), 'permission-view-ticket');
   assert.equal(this.$('[data-test-id="t-permission-view-row"]:eq(0) div:nth-child(3) label')[0].getAttribute('data-test-id'), 'permission-add-ticket');
   assert.equal(this.$('[data-test-id="t-permission-view-row"]:eq(0) div:nth-child(4) label')[0].getAttribute('data-test-id'), 'permission-change-ticket');

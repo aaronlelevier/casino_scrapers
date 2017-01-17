@@ -38,12 +38,13 @@ import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, LOCATIONS_URL, PEOPLE_URL, CATE
   DT_URL, PROVIDER_URL, WORK_ORDER_URL } from 'bsrs-ember/utilities/urls';
 import { TICKET_ASSIGNEE, PS_SEARCH } from 'bsrs-ember/tests/helpers/const-names';
 
+const WD = WORK_ORDER_DEFAULTS.defaults();
 const PREFIX = config.APP.NAMESPACE;
 const DETAIL_URL = `${TICKET_LIST_URL}/${TD.idOne}`;
 const TICKET_PUT_URL = `${PREFIX}${DETAIL_URL}/`;
+const WO_PUT_URL = `${WORK_ORDER_URL}${WD.idOne}/`;
 const PD = PERSON_DEFAULTS.defaults();
 const ProviderD = PROVIDER_DEFAULTS.defaults();
-const WD = WORK_ORDER_DEFAULTS.defaults();
 
 let list_xhr, detail_xhr, top_level_xhr, detail_data, activity_one;
 
@@ -998,11 +999,116 @@ test('can create a work order', async function(assert) {
   await interactor.selectDate(expectedDate);
   await click('[data-test-id="next"]');
   xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, approved_amount: WD.approvedAmount, 
-    scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne }), {}, 201, WF.detail());
+    scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }), {}, 201, WF.detail());
   await click('[data-test-id="wo-send-post"]');
   await click('[data-test-id="wo-done"]');
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(find('[data-test-id="work-order-modal"]').length, 0);
+});
+
+test('can update a work order', async function(assert) {
+  await page.visitDetail(); 
+  await click('[data-test-id="expander-collapsed0"]');
+  await fillIn('.t-wo-gl_code0', WD.glCodeTwo);
+  let payload = TF.put({id: TD.idOne});
+  const wo_payload = WF.put({id: WD.idOne, gl_code: WD.glCodeTwo});
+  xhr(WO_PUT_URL, 'PUT', JSON.stringify(wo_payload), {}, 200, {});
+  await generalPage.save();
+  assert.ok(urlContains(currentURL(), TICKET_LIST_URL));
+});
+
+test('400 update a work order', async function(assert) {
+  await page.visitDetail(); 
+  await click('[data-test-id="expander-collapsed0"]');
+  const wo_payload = WF.put({ id: WD.idOne, gl_code: WD.glCodeTwo });
+  await fillIn('.t-wo-gl_code0', WD.glCodeTwo);
+  xhr(WO_PUT_URL, 'PUT', JSON.stringify(wo_payload), {}, 400, {
+    "cost_estimate": ["This field contains invalid characters"]
+  });
+  await generalPage.save();
+  assert.equal(currentURL(), DETAIL_URL, 'url did not change');
+  assert.equal(find('app-notice').length, 1, 'error notification displayed');
+  click('app-notice');
+  andThen(() => {
+    assert.equal(find('app-notice').length, 0, 'error notification dismissed');
+  });
+});
+
+test('502 update a work order', async function(assert) {
+  await page.visitDetail(); 
+  await click('[data-test-id="expander-collapsed0"]');
+  const wo_payload = WF.put({ id: WD.idOne, gl_code: WD.glCodeTwo });
+  await fillIn('.t-wo-gl_code0', WD.glCodeTwo);
+  xhr(WO_PUT_URL, 'PUT', JSON.stringify(wo_payload), {}, 502, {
+    detail: "we are testing an unexpected failure"
+  });
+  await generalPage.save();
+  assert.equal(currentURL(), DETAIL_URL, 'url did not change');
+  assert.equal(find('app-notice').length, 1, 'error notification displayed');
+  click('app-notice');
+  andThen(() => {
+    assert.equal(find('app-notice').length, 0, 'error notification dismissed');
+  });
+});
+
+test('400 create a work order', async function(assert) {
+  random.uuid = function() { return UUID.value; };
+  clearxhr(detail_xhr);
+  const detail_data_no_wo = TF.detail(TD.idOne);
+  delete detail_data_no_wo.work_order;
+  xhr(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_data_no_wo);
+  await page.visitDetail(); 
+  await click('[data-test-id="wo-dispatch"]');
+  const ticket = this.store.find('ticket', TD.idOne);
+  assert.equal(find('[data-test-id="work-order-modal"]').length, 1);
+  assert.equal(find('.t-wo-create-trade-select .ember-power-select-selected-item').text().trim(), ticket.get('leaf_category').get('name'));
+  xhr(`${PROVIDER_URL}?categories=${ticket.get('leaf_category').get('id')}&name__icontains=b`, 'GET', null, {}, 200, PROVIDER_FIXTURES.list());
+  await selectSearch('.t-wo-create-provider-select', 'b');
+  await selectChoose('.t-wo-create-provider-select', ProviderD.nameOne);
+  assert.equal(find('.t-wo-create-provider-select .ember-power-select-selected-item').text().trim(), ProviderD.nameOne);
+  await click('[data-test-id="next"]');
+  await fillIn('.t-wo-approved_amount', WD.approvedAmount);
+  let interactor = openDatepicker(Ember.$('.t-scheduled-date'));
+  const expectedDate = new Date(2016, 4, 28);
+  await interactor.selectDate(expectedDate);
+  await click('[data-test-id="next"]');
+  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, approved_amount: WD.approvedAmount, 
+    scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }), 
+    {}, 400, WF.detail());
+  await click('[data-test-id="wo-send-post"]');
+  assert.equal(find('app-notice').length, 1, 'error notification displayed');
+  await click('app-notice');
+  assert.equal(find('app-notice').length, 0, 'error notification dismissed');
+});
+
+test('502 create a work order', async function(assert) {
+  random.uuid = function() { return UUID.value; };
+  clearxhr(detail_xhr);
+  const detail_data_no_wo = TF.detail(TD.idOne);
+  delete detail_data_no_wo.work_order;
+  xhr(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_data_no_wo);
+  await page.visitDetail(); 
+  await click('[data-test-id="wo-dispatch"]');
+  const ticket = this.store.find('ticket', TD.idOne);
+  assert.equal(find('[data-test-id="work-order-modal"]').length, 1);
+  assert.equal(find('.t-wo-create-trade-select .ember-power-select-selected-item').text().trim(), ticket.get('leaf_category').get('name'));
+  xhr(`${PROVIDER_URL}?categories=${ticket.get('leaf_category').get('id')}&name__icontains=b`, 'GET', null, {}, 200, PROVIDER_FIXTURES.list());
+  await selectSearch('.t-wo-create-provider-select', 'b');
+  await selectChoose('.t-wo-create-provider-select', ProviderD.nameOne);
+  assert.equal(find('.t-wo-create-provider-select .ember-power-select-selected-item').text().trim(), ProviderD.nameOne);
+  await click('[data-test-id="next"]');
+  await fillIn('.t-wo-approved_amount', WD.approvedAmount);
+  let interactor = openDatepicker(Ember.$('.t-scheduled-date'));
+  const expectedDate = new Date(2016, 4, 28);
+  await interactor.selectDate(expectedDate);
+  await click('[data-test-id="next"]');
+  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, approved_amount: WD.approvedAmount, 
+    scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }), 
+    {}, 502, WF.detail());
+  await click('[data-test-id="wo-send-post"]');
+  assert.equal(find('app-notice').length, 1, 'error notification displayed');
+  await click('app-notice');
+  assert.equal(find('app-notice').length, 0, 'error notification dismissed');
 });
 
 /* WORK ORDER END */

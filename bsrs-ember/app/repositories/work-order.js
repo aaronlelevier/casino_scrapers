@@ -22,9 +22,9 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
   findWorkOrderProvider(search, category_id) {
     return PromiseMixin.xhr(`${PROVIDER_URL}?categories=${category_id}&name__icontains=${search}`, 'GET').then(response => response.results);
   },
-  createWorkOrder(leaf_category_id) {
+  createWorkOrder(leaf_category_id, ticket_id) {
     const pk = this.get('uuid').v4();
-    const work_order = this.get('simpleStore').push('work-order', { id: pk });
+    const work_order = this.get('simpleStore').push('work-order', { id: pk, ticket: ticket_id });
     this.get('simpleStore').push('category', { id: leaf_category_id, workOrders: [pk] });
     // work_order.change_category({id: leaf_category.get('id')});
     return work_order;

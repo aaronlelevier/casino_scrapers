@@ -17,7 +17,6 @@ var BSRS_WO_DEFAULTS_OBJECT = (function() {
       expirationDateTwo: new Date(),
       approvalDateOne: new Date(),
       approvalDateTwo: new Date(),
-      trackingNumberOne: '86a957f16bdc447bac331e18c23b32dd',
       providerNameOne: 'Bobs Construction',
       providerNameTwo: 'Charlies Construction',
       providerLogoOne: 'http://pngimg.com/upload/cat_PNG1631.png',
@@ -31,8 +30,10 @@ var BSRS_WO_DEFAULTS_OBJECT = (function() {
       providerPhoneOne: '+18005550239',
       providerEmailOne: 'bob@bconstruction',
       statusOne: 'work_order.status.new',
-      glCodeOne: 'kjhskjhdkjds',
-      trackingNumberOne: 'klwjhw98dudkjd55',
+      glCodeOne: '611566',
+      glCodeTwo: '000001',
+      instructions: 'Please make sure to use the extra sticky glue',
+      trackingNumberOne: '86a957f16bdc447bac331e18c23b32dd'
     };
   };
   return factory;

@@ -1,39 +1,5 @@
-{{card-title title="work_order.one"}}
-
-{{#each wos as |model indx|}}
-
-{{#card-section}}
-  <div class="flex flex--align-center">
-    <div class="contractor flex-item--auto">
-      {{#image-block
-        model=model
-        droppedImage=model.provider.logo
-        size="medium"
-        readonly="true"
-        icon="wrench"
-        dataTestId=(concat "provider-logo" indx)
-      }}
-      <h1 class="title" data-test-id={{concat "provider-name" indx}}>{{model.provider.name}}</h1>
-        <p class="subtitle" data-test-id={{concat "provider-address1-" indx}}>{{model.provider.address1}}</p>
-      {{/image-block}}
-    </div>
-    <div class="flex-item--auto">
-      {{work-orders/status-single model=model}}
-    </div>
-    <div class="work-order-meta">
-      {{#form-group title="work_order.label.scheduled_date" readonly=true}}
-        <div data-test-id={{concat "scheduled-date" indx}}>{{moment-format model.scheduled_date "MM/DD/YYYY"}}</div>
-      {{/form-group}}
-    </div>
-    <div class="work-order-meta">
-      {{#form-group title="work_order.label.cost_estimate" readonly=true}}
-        <div data-test-id={{concat "cost-estimate" indx}}>{{model.cost_estimate}}</div>
-      {{/form-group}}
-    </div>
-    <div>
-      <div class="expander">{{fa-icon "caret-up"}}</div>
-    </div>
-  </div>
-{{/card-section}}
-
-{{/each}}
+{{#unless isExpanded}}
+  {{work-orders/ticket-display-collapsed model=model indx=indx toggleIsExpanded=(action "toggleIsExpanded")}}
+{{else}}
+  {{work-orders/ticket-display-expanded model=model indx=indx toggleIsExpanded=(action "toggleIsExpanded")}}
+{{/unless}}

@@ -3,6 +3,7 @@ const { set, get, Component, computed } = Ember;
 import injectRepo from 'bsrs-ember/utilities/inject';
 import Step from 'bsrs-ember/utils/step-machine';
 import { task } from 'ember-concurrency';
+import parseError from 'bsrs-ember/utilities/error-response';
 
 /* MUST BE ORDERED */
 const STEPS = [
@@ -131,8 +132,11 @@ export default Component.extend({
       const currentStateRendered = get(this, 'currentStateRendered');
       this.send('next', currentStateRendered.nextStep);
     }
-    catch (e) {
-      // TODO: implement error handling
+    catch (xhr) {
+      if (xhr.status >= 400) {
+        const error = parseError(xhr.status, xhr.responseText);
+        this.setProperties({ saveError: error.message, level: error.level });
+      }
     }
   }),
 
@@ -203,13 +207,43 @@ export default Component.extend({
       }
     },
     /**
+     * closes modal
      * @method cancel
      */
     cancel() {
       get(this, 'cancel')();
     },
+    /**
+     * @method dispatchWorkOrder
+     */
     dispatchWorkOrder(work_order) {
       get(this, 'saveWorkOrderTask').perform(work_order);
     },
-  }
+    /**
+     * @method dismissErros
+     */
+    dismiss_errors() {
+      this.setProperties({'saveError': null, 'level': null});
+    }
+  },
+
+  /*
+    saveError for display at the application level for notices
+
+    @property saveError
+    @type String|null
+    @default null
+  */
+  saveError: null,
+
+  /*
+    Level of notice to display for application level for saveError messages.
+
+    E.g. `critical`, `error`, `warning`, `info`, `success`
+
+    @property level
+    @type String|null
+    @default null
+  */
+  level: null
 });

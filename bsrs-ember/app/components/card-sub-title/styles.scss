@@ -1,0 +1,17 @@
+& {
+  font-size: 1.5rem;
+  margin: $gutter 0;
+  color: $medGray;
+  .circle-icon {
+    text-align: center;
+    font-size: 1.4rem;
+    margin-right: 0.5rem;
+    display: inline-block;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: $borderStyle;
+    line-height: 2.7rem;
+    background: $light;
+  }
+}

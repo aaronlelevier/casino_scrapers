@@ -1,0 +1,35 @@
+{{#card-section data-test-id="ticket-display-collapsed"}}
+  <div class="work-order-collapsed flex flex--align-center">
+    <div class="contractor flex-item--auto">
+      {{#image-block
+        model=model
+        droppedImage=model.provider.logo
+        size="medium"
+        readonly="true"
+        icon="wrench"
+        dataTestId=(concat "provider-logo" indx)
+      }}
+      <h1 class="title" data-test-id={{concat "provider-name" indx}}>{{model.provider.name}}</h1>
+        <p class="subtitle" data-test-id={{concat "provider-address-" indx}}>
+          {{model.provider.city}}{{if model.provider.city (if model.provider.state ", ")}}{{model.provider.state}}
+        </p>
+      {{/image-block}}
+    </div>
+    <div class="flex-item--auto">
+      {{work-orders/status-single model=model}}
+    </div>
+    <div class="work-order-meta">
+      {{#form-group title="work_order.label.scheduled_date" readonly=true}}
+        <div data-test-id={{concat "scheduled-date" indx}}>{{moment-format model.scheduled_date "MM/DD/YYYY"}}</div>
+      {{/form-group}}
+    </div>
+    <div class="work-order-meta">
+      {{#form-group title="work_order.label.cost_estimate" readonly=true}}
+        <div data-test-id={{concat "cost-estimate" indx}}>{{model.cost_estimate}}</div>
+      {{/form-group}}
+    </div>
+    <div>
+      <div class="expander" data-test-id={{concat "expander-collapsed" indx}}>{{fa-icon "caret-up"}}</div>
+    </div>
+  </div>
+{{/card-section}}

@@ -2,7 +2,7 @@ import Ember from 'ember';
 const { get, set } = Ember;
 import inject from 'bsrs-ember/utilities/inject';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
-import { task } from 'ember-concurrency';
+import { task, all } from 'ember-concurrency';
 
 let TicketSingleComponent = Ember.Component.extend(TabMixin, {
   dispatchWorkOrderSteps: false,
@@ -18,8 +18,33 @@ let TicketSingleComponent = Ember.Component.extend(TabMixin, {
     const last_dt = ticket.get('dt_path').slice(-1);
     return last_dt[0]['dtd']['id'];
   }),
+  /**
+   * 1. Iterator over work orders and save each one, waiting to save the ticket after all have finished
+   * 2. Save ticket only if ticket is dirty after cleaning work orders
+   * @method saveTask
+   */
   saveTask: task(function * (update, updateActivities) {
-    if (this.get('model.validations.isValid')) {
+
+    let childTasks = [];
+    const work_orders = this.get('model').get('wo');
+
+    for (let indx = 0; indx < work_orders.get('length'); ++indx) {
+      const wo = work_orders.objectAt(indx);
+      // TODO: test validations
+      if (wo.get('isDirtyOrRelatedDirty') && wo.get('validations.isValid')) {
+        childTasks.push(this.get('saveWorkOrderTask').perform(wo));
+      }
+    }
+
+    try {
+      yield all(childTasks);
+    } catch(xhr) {
+      // We dont know which work order put xhr failed
+      this.get('ticketApplicationNotice')(xhr, {});
+      return;
+    }
+
+    if (this.get('model.isDirtyOrRelatedDirty') && this.get('model.validations.isValid')) {
       const tab = this.tab();
       const activities = yield this.get('save')(tab, this.get('activityRepository'), update, updateActivities);
 
@@ -27,11 +52,10 @@ let TicketSingleComponent = Ember.Component.extend(TabMixin, {
         this.set('activities', activities);
       }
     }
+
   }),
   saveWorkOrderTask: task(function * (wo) {
-    if (wo.get('validations.isValid')) {
-      yield this.get('saveWorkOrder')(wo);
-    }
+    yield this.get('saveWorkOrder')(wo);
   }),
   actions: {
     /**
@@ -42,13 +66,6 @@ let TicketSingleComponent = Ember.Component.extend(TabMixin, {
      */
     save(update, updateActivities) {
       this.get('saveTask').perform(update, updateActivities);
-
-      const work_orders = this.get('model').get('wo');
-      work_orders.forEach((wo) => {
-        if (wo.get('isDirtyOrRelatedDirty')) {
-          this.get('saveWorkOrderTask').perform(wo);
-        }
-      });
     },
     deleteAttachment(tab, callback) {
       this.sendAction('deleteAttachment', tab, callback);
@@ -58,12 +75,16 @@ let TicketSingleComponent = Ember.Component.extend(TabMixin, {
      * set dispatchWorkOrderSteps to enable modal
      * @method createWorkOrder
      */
-    createWorkOrder() {
+    openWorkOrderModal() {
       const model = get(this, 'model');
       set(this, 'dispatchWorkOrderSteps', true);
       const workOrderModel = get(this, 'createWorkOrder')(model.get('leaf_category'));
       set(this, 'workOrderModel', workOrderModel);
     },
+    /**
+     * close modal
+     * @method cancelWorkOrder
+     */
     cancelWorkOrder() {
       set(this, 'dispatchWorkOrderSteps', false);
     },

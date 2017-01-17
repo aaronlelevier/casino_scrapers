@@ -4,6 +4,7 @@ import { moduleFor, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import WORK_ORDER_DEFAULTS from 'bsrs-ember/vendor/defaults/work-order';
 import WORK_ORDER_STATUSES from 'bsrs-ember/vendor/defaults/work-order-status';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import CD from 'bsrs-ember/vendor/defaults/currency';
 import CategoryD from 'bsrs-ember/vendor/defaults/category';
 import PROVIDER_DEFAULTS from 'bsrs-ember/vendor/defaults/provider';
@@ -13,12 +14,14 @@ import WDeserializer from 'bsrs-ember/deserializers/work-order';
 const WD = WORK_ORDER_DEFAULTS.defaults();
 const WOSD = WORK_ORDER_STATUSES.defaults();
 const ProviderD = PROVIDER_DEFAULTS.defaults();
+const PD = PERSON_DEFAULTS.defaults();
 
 let store, workOrder, deserializer;
 
 moduleFor('deserializer:work-order', 'Unit | Deserializer | work order', {
-  needs: ['model:work-order', 'model:currency', 'model:category', 'model:provider', 'model:work-order-status',
-  'validator:presence', 'service:i18n'],
+  needs: ['model:work-order', 'model:person', 'model:currency', 'model:category', 'model:provider', 'model:work-order-status',
+  'validator:presence', 'service:i18n', 'service:person-current', 'service:translations-fetcher', 'validator:unique-username', 
+    'validator:length', 'validator:format', 'validator:presence', 'validator:has-many'],
   beforeEach() {
     store = module_registry(this.container, this.registry);
     deserializer = WDeserializer.create({ simpleStore: store });
@@ -36,30 +39,16 @@ test('deserialize single', function(assert) {
   });
   assert.equal(workOrder.get('id'), WD.idOne);
   assert.equal(workOrder.get('provider.name'), WD.providerNameOne);
-  assert.equal(workOrder.get('cost_estimate_currency_fk'), CD.idOne);
-  const currency = store.find('currency', CD.idOne);
-  assert.equal(currency.get('workOrders').length, 1);
-  assert.deepEqual(currency.get('workOrders'), [WD.idOne]);
-  assert.equal(workOrder.get('cost_estimate_currency').get('id'), CD.idOne);
-  assert.equal(workOrder.get('cost_estimate_currency').get('name'), CD.name);
-});
-
-test('deserialize single with existing currency', function(assert) {
-  run(() => {
-    store.push('currency', {id: CD.idOne, workOrders: [WD.idOne]});
-  });
-  const json = WF.detail();
-  run(() => {
-    deserializer.deserialize(json, WD.idOne);
-  });
-  assert.equal(workOrder.get('id'), WD.idOne);
-  assert.equal(workOrder.get('provider.name'), WD.providerNameOne);
-  assert.equal(workOrder.get('cost_estimate_currency_fk'), CD.idOne);
-  const currency = store.find('currency', CD.idOne);
-  assert.equal(currency.get('workOrders').length, 1);
-  assert.deepEqual(currency.get('workOrders'), [WD.idOne]);
-  assert.equal(workOrder.get('cost_estimate_currency').get('id'), CD.idOne);
-  assert.equal(workOrder.get('cost_estimate_currency').get('name'), CD.name);
+  assert.equal(workOrder.get('cost_estimate_currency'), CD.idOne);
+  assert.ok(workOrder.get('scheduled_date'));
+  assert.ok(workOrder.get('completed_date'));
+  assert.ok(workOrder.get('expiration_date'));
+  assert.ok(workOrder.get('approval_date'));
+  assert.equal(workOrder.get('approved_amount'), WD.approvedAmount);
+  assert.equal(workOrder.get('cost_estimate'), WD.costEstimateOne);
+  assert.equal(workOrder.get('gl_code'), WD.glCodeOne);
+  assert.equal(workOrder.get('tracking_number'), WD.trackingNumberOne);
+  assert.equal(workOrder.get('instructions'), WD.instructions);
 });
 
 //Work order status
@@ -162,4 +151,36 @@ test('deserialize single with existing provider', function(assert) {
   assert.deepEqual(workOrderProvider.get('workOrders'), [WD.idOne]);
   assert.equal(workOrder.get('provider').get('id'), ProviderD.idOne);
   assert.equal(workOrder.get('provider').get('name'), ProviderD.nameOne);
+});
+
+// Work Order Approver
+test('deserialize single with no existing approver', assert => {
+  const json = WF.detail();
+  run(() => {
+    deserializer.deserialize(json, WD.idOne);
+  });
+  assert.equal(workOrder.get('id'), WD.idOne);
+  assert.equal(workOrder.get('approver.fullname'), PD.fullname);
+  assert.equal(workOrder.get('approver_fk'), PD.idOne);
+  const workOrderApprover = store.find('person', PD.idOne);
+  assert.equal(workOrderApprover.get('workOrders').length, 1);
+  assert.deepEqual(workOrderApprover.get('workOrders'), [WD.idOne]);
+  assert.equal(workOrder.get('approver').get('id'), PD.idOne);
+  assert.equal(workOrder.get('approver').get('fullname'), PD.fullname);
+});
+
+test('deserialize single with existing approver', assert => {
+  const json = WF.detail();
+  run(() => {
+    store.push('person', {id: PD.idOne, fullname: PD.fullname,  workOrders: [WD.idOne]});
+    deserializer.deserialize(json, WD.idOne);
+  });
+  assert.equal(workOrder.get('id'), WD.idOne);
+  assert.equal(workOrder.get('approver.fullname'), PD.fullname);
+  assert.equal(workOrder.get('approver_fk'), PD.idOne);
+  const workOrderApprover = store.find('person', PD.idOne);
+  assert.equal(workOrderApprover.get('workOrders').length, 1);
+  assert.deepEqual(workOrderApprover.get('workOrders'), [WD.idOne]);
+  assert.equal(workOrder.get('approver').get('id'), PD.idOne);
+  assert.equal(workOrder.get('approver').get('fullname'), PD.fullname);
 });

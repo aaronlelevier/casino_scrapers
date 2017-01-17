@@ -22,12 +22,12 @@ let store, ticket, link;
 
 module('unit: ticket test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:ticket', 
+    store = module_registry(this.container, this.registry, ['model:ticket',
       'model:category', 'model:ticket-status', 'model:ticket-priority',
-      'model:ticket-join-person', 'model:model-category', 'model:uuid', 
+      'model:ticket-join-person', 'model:model-category', 'model:uuid',
       'service:person-current', 'service:translations-fetcher', 'service:i18n',
       'model:attachment', 'model:status', 'model:role', 'model:location-level',
-      'model:dtd', 'model:link', 'model:generic-join-attachment', 'model:work-order', 
+      'model:dtd', 'model:link', 'model:generic-join-attachment', 'model:work-order',
       'model:related-person', 'model:related-location', 'model:ticket-join-wo']);
     run(() => {
       store.push('status', {id: SD.activeId, name: SD.activeName});
@@ -1444,18 +1444,18 @@ test('wo property is not dirty when no wo present (empty array)', (assert) => {
   assert.ok(ticket.get('woIsNotDirty'));
 });
 
-test('wo property is not dirty when attr on workOrder is changed', (assert) => {
+test('wo property is dirty when attr on workOrder is changed', (assert) => {
   store.push('ticket-join-wo', {id: 1, ticket_pk: TD.idOne, work_order_pk: WD.idOne});
   let workOrder = store.push('work-order', {id: WD.idOne});
   ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
   assert.equal(ticket.get('wo').get('length'), 1);
   assert.ok(ticket.get('woIsNotDirty'));
   run(() => {
-    store.push('work-order', {id: WD.idOne, first_name: WD.first_name});
+    store.push('work-order', {id: WD.idOne, gl_code: WD.glCodeOne});
   });
-  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('woIsDirty'));
   assert.equal(ticket.get('wo').get('length'), 1);
-  assert.equal(ticket.get('wo').objectAt(0).get('first_name'), WD.first_name);
+  assert.equal(ticket.get('wo').objectAt(0).get('gl_code'), WD.glCodeOne);
 });
 
 test('removing a ticket-join-wo will mark the ticket as dirty and reduce the associated wo models to zero', (assert) => {

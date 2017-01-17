@@ -32,7 +32,7 @@ module('unit: ticket deserializer test', {
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:ticket',
       'model:ticket-list', 'model:person-list', 'model:ticket-join-person',
-      'model:model-category', 'model:ticket-status', 'model:ticket-priority', 
+      'model:model-category', 'model:ticket-status', 'model:ticket-priority',
       'model:status', 'model:location', 'model:location-list','model:person-location',
       'model:person', 'model:category', 'model:uuid', 'model:location-level',
       'model:attachment', 'model:location-status', 'service:person-current',
@@ -45,7 +45,7 @@ module('unit: ticket deserializer test', {
     uuid = this.container.lookup('model:uuid');
     functionalStore = this.container.lookup('service:functional-store');
     const workOrderDeserializer = WorkOrderDeserializer.create({simpleStore: store});
-    subject = TicketDeserializer.create({simpleStore: store, functionalStore: functionalStore, 
+    subject = TicketDeserializer.create({simpleStore: store, functionalStore: functionalStore,
       workOrderDeserializer: workOrderDeserializer, uuid: uuid});
     run(() => {
       store.push('related-location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
@@ -142,7 +142,7 @@ test('ticket assignee setups properly with embedded photo', (assert) => {
     subject.deserialize(response, TD.idOne);
   });
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-  // photo is setup correctly w/ no related attachment model 
+  // photo is setup correctly w/ no related attachment model
   let assignee = ticket.get('assignee');
   assert.ok(assignee.photo.id);
   assert.ok(assignee.photo.image_thumbnail);
@@ -620,8 +620,9 @@ test('deserialize detail with one work order and existing locally', (assert) => 
 
 test('deserialize detail with multiple work orders', (assert) => {
   const json = TF.generate(TD.idOne);
-  json.work_order.push({ id: WD.idTwo, cost_estimate_currency: { id: CurrencyD.idOne }, 
-    status: {id: WOSD.idOne, name: WOSD.nameFive}, category: { id: CD.idOne }, provider: { id: ProviderD.idOne } });
+  json.work_order.push({ id: WD.idTwo, cost_estimate_currency: { id: CurrencyD.idOne },
+    status: {id: WOSD.idOne, name: WOSD.nameFive}, category: { id: CD.idOne },
+    provider: { id: ProviderD.idOne }, approver: { id: PD.idOne }});
   store.push('currency', {id: CurrencyD.idOne, workOrders: [WD.idOne]});
   run(() => {
     subject.deserialize(json, json.id);

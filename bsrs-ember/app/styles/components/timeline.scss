@@ -1,7 +1,8 @@
 .timeline {
   height: 8rem;
   position: relative;
-  margin: 1rem 4rem 5rem;
+  margin: 1rem $gutter $gutter;
+  justify-content: space-between;
 
   .btn { // TODO: maybe take out
     background: transparent;
@@ -22,7 +23,8 @@
 
   .timeline__item {
     margin: 0 $gutter;
-
+    overflow: hidden;
+    position: relative;
     .item__icon {
       display: block;
       text-align: center;
@@ -55,29 +57,39 @@
         border-right: 5px solid transparent;
         border-bottom: 5px solid $light;
       }
+      .btn{
+        max-width: 100%;
+        @include truncate();
+      }
     }
 
     &:first-child {
       margin: 0 $gutter 0 0;
-      .item__icon {
-        text-align: left;
-      }
-      .item__text {
-        &:before {
-          left: 9px;
-        }
+      &:before{
+        content: " ";
+        top: 1.5rem;
+        width: 50%;
+        height: 2px;
+        background: $white;
+        position: absolute;
       }
     }
     &:last-child {
       margin: 0 0 0 $gutter;
       .item__icon {
-        text-align: right;
-      }
-      .item__text {
+        // text-align: right;
         &:before {
-          left: auto;
-          right: 9px;
+          @include font-awesome("\f11e", 3rem, 3rem);
         }
+      }
+      &:before{
+        content: " ";
+        top: 1.5rem;
+        right: 0;
+        width: 50%;
+        height: 2px;
+        background: $white;
+        position: absolute;
       }
     }
 

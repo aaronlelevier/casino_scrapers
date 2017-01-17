@@ -17,11 +17,6 @@ import Ember from 'ember';
  */
 export default Ember.Mixin.create({
   OPT_CONF: {
-    cost_estimate_currency: {
-      collection: 'workOrders',
-      owner: 'currency',
-      override_property_getter: 'cost_estimate_currency',
-    },
     status: {
       collection: 'workOrders',
       owner: 'work-order-status',

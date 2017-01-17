@@ -26,6 +26,19 @@ var BSRS_PEOPLE_FACTORY = (function() {
       status: this.person_defaults.status
     }
   };
+  factory.prototype.get_names = function(i, first_name, last_name) {
+    /* power select and ticket assignee */
+    var first_name = first_name || this.person_defaults.first_name;
+    var last_name = last_name || this.person_defaults.last_name;
+    var fullname = first_name + ' ' + last_name;
+    /* @return {array} */
+    return {
+      id: i || this.person_defaults.id,
+      first_name: first_name,
+      last_name: last_name,
+      fullname: fullname,
+    }
+  };
   factory.prototype.get_no_related = function(i, first_name, last_name) {
     /* power select and ticket assignee */
     var first_name = first_name || this.person_defaults.first_name;

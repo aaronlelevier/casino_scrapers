@@ -1,29 +1,24 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 const { get, set, computed } = Ember;
-import { task, timeout } from 'ember-concurrency';
-import { ValidationComponentInit } from 'bsrs-ember/mixins/validation-component';
+import ValidationInput from 'bsrs-ember/components/validated-input/component';
 
-const TIMEOUT = config.APP.VALIDATION_TIMEOUT_INTERVAL;
-
-export default Ember.Component.extend(ValidationComponentInit, {
+/**
+ * API
+ *
+ */
+export default ValidationInput.extend({
   currency: Ember.inject.service(),
   simpleStore: Ember.inject.service(),
   classNames: ['input-currency t-input-currency'],
-  /** 
-     @method showMessage
-     focusedOut will only highlight the input box with invalid color
-   */
-  showMessage: computed('focusedOut', function() {
-    return this.get('focusedOut');
-  }),
-  /** 
+  attributeBindings: ['valuePath:id'],
+  /**
      @method currencyObject
      @param { string } currencyField - API e.g. "auth_currency"
      @param { string } inheritsFrom - not req from API
      model.currencyField is an FK to a currency object loaded on boot
    */
-  currencyObject: computed('model.auth_currency', 'model.cost_currency', function() {
+  currencyObject: computed('model.auth_currency', 'model.cost_currency', 'model.cost_estimate_currency', function() {
     let store = get(this, 'simpleStore');
     let currencyField = get(this, 'currencyField');
     let inheritsFrom = get(this, 'inheritsFrom');
@@ -35,56 +30,56 @@ export default Ember.Component.extend(ValidationComponentInit, {
     }
     return currency_service.getDefaultCurrency();
   }),
-  /** 
-     @method currencyObjects 
+  /**
+     @method currencyObjects
      power select dropdown list of currencies
    */
   currencyObjects: computed(function() {
     let currency_service = get(this, 'currency');
     return currency_service.getCurrencies();
   }),
-  init() {
-    this._super(...arguments);
-    const field = get(this, 'field');
-    Ember.defineProperty(this, 'bound_field', Ember.computed('model.' + field, function() {
-      const currency_service = get(this, 'currency');
-      // get currency from store based on currencyField API ('auth_currency')
-      const precision = get(this, 'currencyObject').get('decimal_digits');
-      // 'field' is the actual Decimal Field on the backend ('auth_amount')
-      return currency_service.formatCurrency(get(this, 'model').get(field), precision);
-    }));
-  },
   placeholderAmount: computed(function() {
     const currency = get(this, 'currencyObject');
     const field = get(this, 'field');
     let amount = get(currency, `model.${field}`) ? get(currency, `model.${field}`) : 0;
     return parseFloat(amount).toFixed(get(currency, 'decimal_digits'));
   }),
-  setFocusedOut: task(function * () {
-    yield timeout(TIMEOUT);
-    if (this.get('isInvalid')) {
-      this.set('focusedOut', true);
-    }
-  }).restartable(),
   actions: {
+    /**
+     * formats the currency with the correct decimal points
+     * @method formatCurrency
+     */
     formatCurrency() {
       const field = get(this, 'field');
       const currency_service = get(this, 'currency');
       const precision = get(this, 'currencyObject').get('decimal_digits');
-      set(this, 'model.' + field, currency_service.formatCurrency(get(this, 'bound_field'), precision));
-      if (this.get('isInvalid')) { this.set('focusedOut', true); }
+      const bound_field = get(this, `model.${field}`);
+
+      const typedInput = currency_service.formatCurrency(bound_field, precision);
+      set(this, 'model.' + field, typedInput);
     },
+    /**
+     * remove any non number or comma or decimal
+     * @method keyedUp
+     */
+    keyedUp() {
+      // remove negative sign
+      let field = get(this, 'field');
+      let bound_field = get(this, `model.${field}`);
+      if (bound_field.match(/[^0-9.,]/g)) {
+        bound_field = bound_field.replace(/[^0-9.,]/g, '');
+        set(this, 'model.' + field, bound_field);
+      }
+      this._super(...arguments);
+    },
+    /**
+     * sets the id of the selected currency to the currency field
+     * @method selected
+     */
     selected(obj) {
       const model = get(this, 'model');
       const currencyField = get(this, 'currencyField');
       model.set(currencyField, get(obj, 'id'));
     },
-    keyedUp() {
-      if (this.get('isInvalid')) {
-        this.get('setFocusedOut').perform();
-      } else {
-        this.set('focusedOut', false);
-      }
-    }
   }
 });

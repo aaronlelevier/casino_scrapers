@@ -221,6 +221,16 @@ let ApplicationRoute = Route.extend({
       });
     },
 
+    /**
+     * intended to be an opening for any child to have access to the handleApplicationNotice method
+     * @method sendHandleApplicationNotice
+     * @param {Object} xhr
+     * @param {Object} model
+     */
+    sendHandleApplicationNotice(xhr, model) {
+      this.handleApplicationNotice(xhr, model);
+    },
+
     /* MOBILE */
     closeMobileDetail(redirectRoute) {
       this.transitionTo(redirectRoute);

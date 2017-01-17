@@ -33,7 +33,7 @@ moduleForComponent('work-orders/new', 'Integration | Component | work orders/new
     translation.initialize(this);
     trans = this.container.lookup('service:i18n');
     run(() => {
-      model = store.push('work-order', { id: WD.idOne, cost_estimate: WD.costEstimateOne, scheduled_date: WD.scheduledDateOne, cost_estimate_currency_fk: CurrencyD.idOne,
+      model = store.push('work-order', { id: WD.idOne, cost_estimate: WD.costEstimateOne, scheduled_date: WD.scheduledDateOne, cost_estimate_currency: CurrencyD.idOne,
         status_fk: WODS.idOne, category_fk: CD.idOne });
       /* Setup WO with currency and status and category but not provider */
       store.push('currency', {id: CurrencyD.idOne, workOrders: [WD.idOne]});

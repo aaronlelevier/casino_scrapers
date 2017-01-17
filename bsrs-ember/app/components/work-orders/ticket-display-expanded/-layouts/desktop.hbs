@@ -1,0 +1,127 @@
+{{#card-section data-test-id="expanded"}}
+  <div class="work-order-expanded">
+    <div class="flex flex--align-center">
+      <div class="contractor flex-item--auto">
+        {{#image-block
+          model=model
+          droppedImage=model.provider.logo
+          size="medium"
+          readonly="true"
+          icon="wrench"
+          dataTestId=(concat "provider-logo" indx)
+        }}
+        <h1 class="title" data-test-id={{concat "provider-name" indx}}>{{model.provider.name}}</h1>
+          <p class="subtitle" data-test-id={{concat "provider-address-" indx}}>
+            {{model.provider.address1}} {{model.provider.city}}{{if model.provider.city (if model.provider.state ", ")}}{{model.provider.state}} {{model.provider.postal_code}}{{if model.provider.phone " • "}}{{model.provider.phone}}{{if model.provider.email " • "}}{{model.provider.email}}
+          </p>
+        {{/image-block}}
+      </div>
+      <div>
+        <div class="expander" data-test-id={{concat "expander-expanded" indx}} {{action "toggleIsExpanded"}}>{{fa-icon "caret-down"}}</div>
+      </div>
+    </div>
+
+    <div class="timeline flex">
+      {{#each timelineItems as |item i|}}
+        <div data-test-id={{concat "timeline-item-" indx "-" i}} class="item timeline__item">
+          <div class="item__icon">
+          </div>
+          <div class="item__text">
+            <button class="btn" data-test-id={{concat "timeline-btn" indx "-" i}}>
+              {{t item}}
+            </button>
+          </div>
+        </div>
+      {{/each}}
+    </div>
+
+    <div class="row">
+      {{card-sub-title classNames="col-md-8" data-test-id=(concat "work-order-title-cost" indx) title="work_order.title.cost" icon="bank"}}
+      {{card-sub-title classNames="col-md-4" data-test-id=(concat "work-order-title-schedule" indx) title="work_order.title.schedule" icon="clock-o"}}
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        {{#form-group title="work_order.label.cost_estimate" dataTestId=(concat "wo-fg-cost" indx) for="cost_estimate"}}
+
+          <!-- placeholder should be default cost from category -->
+          {{input-currency
+            model=model
+            field="cost_estimate"
+            valuePath="cost_estimate"
+            currencyField="cost_estimate_currency"
+            count=indx
+            placeholder=(t "work_order.label.cost_estimate")
+            readonly=model.isReadOnly
+          }}
+
+          {{#if model.approved_amount}}
+            <p class="help-text--approval" data-test-id={{concat "work-order-approved" indx}}>
+              {{fa-icon "check-circle"}}
+              {{t "work_order.phrase.approval"
+                cost=model.approved_amount
+                currencySymbol=model.cost_estimate_currency.symbol
+                currencyName=model.cost_estimate_currency.code
+                approver=model.approver.fullname
+                approvedDate=(moment-calendar model.approval_date)
+              }}
+            </p>
+          {{else}}
+            <p class="help-text" data-test-id={{concat "work-order-not-approved" indx}}>
+              {{fa-icon "check-circle"}}
+              {{t "work_order.phrase.not_approved"}}
+            </p>
+          {{/if}}
+        {{/form-group}}
+      </div>
+      <div class="col-md-4">
+        {{#form-group title="work_order.label.gl_code" dataTestId=(concat "wo-fg-gl" indx) for="gl_code"}}
+          <!-- placeholder should be default cost from category -->
+          {{validated-input
+            model=model
+            valuePath="gl_code"
+            count=indx
+            className=(concat "t-wo-gl_code" indx)
+            permissions=permissions
+            readonly=model.isReadOnly
+          }}
+        {{/form-group}}
+      </div>
+      <div class="col-md-4">
+        {{#form-group title="work_order.label.scheduled_date" for="scheduled_date" dataTestId=(concat "wo-fg-scheduled_date" indx)}}
+          {{input-calendar
+            onSelection=(action "setDate")
+            format="MM/DD/YYYY"
+            value=model.scheduled_date
+            dataTestId="scheduled-date"
+            disabled=model.isReadOnly
+          }}
+        {{/form-group}}
+        {{#form-group title="work_order.label.tracking_number" readonly=true for="tracking_number" dataTestId=(concat "wo-fg-tracking_number" indx)}}
+          <div data-test-id={{concat "wo-tracking" indx}}>
+            {{#if model.tracking_number}}
+              {{model.tracking_number}}
+            {{else}}
+              {{t "work_order.label.tracking_tbd"}}
+            {{/if}}
+          </div>
+        {{/form-group}}
+      </div>
+    </div>
+    <div class="row">
+      {{card-sub-title classNames="col-md-12" data-test-id=(concat "work-order-title-instructions" indx) title="work_order.title.instructions" icon="wrench"}}
+    </div>
+    <div class="row">
+      <div class="col-md-8">
+        {{#form-group title="work_order.label.instructions" optional=true dataTestId=(concat "wo-fg-instructions" indx) for="instructions"}}
+          <!-- placeholder should be default cost from category -->
+          {{textarea
+            autoresize=true
+            class="form-control t-instructions"
+            value=model.instructions
+            readonly=model.isReadOnly
+          }}
+        {{/form-group}}
+      </div>
+    </div>
+  </div>
+{{/card-section}}

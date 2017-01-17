@@ -1,7 +1,7 @@
 import Ember from 'ember';
 const { w } = Ember.String;
 
-let resources = 'ticket person role location locationlevel category';
+let resources = 'ticket person role location locationlevel category workorder';
 let prefixes = 'view add change delete';
 
 /* constants */

@@ -1,4 +1,15 @@
 & {
+  .work-order-collapsed{
+    padding: $gutter 0;
+    border-radius: $borderRadius;
+    &:hover{
+      cursor: pointer;
+      background: $hoverColorLight;
+    }
+  }
+  .work-order-expanded{
+    padding: $gutter 0;
+  }
   .contractor {
     padding: 0 15px;
   }

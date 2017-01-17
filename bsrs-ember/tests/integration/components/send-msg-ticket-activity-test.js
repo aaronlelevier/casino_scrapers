@@ -17,7 +17,7 @@ const PD = PERSON_DEFAULTS.defaults();
 moduleForComponent('send-msg-ticket-activity', 'Integration | Component | send-msg-ticket-activity', {
   integration: true,
   beforeEach() {
-    this.store = module_registry(this.container, this.registry, ['model:activity', 
+    this.store = module_registry(this.container, this.registry, ['model:activity',
       'model:activity/send-sms', 'model:activity/send-email']);
     trans = this.container.lookup('service:i18n');
     loadTranslations(trans, translations.generate('en'));
@@ -71,7 +71,7 @@ test('content for automation generated ticket activity for an Email', function(a
     fulltime=(moment-from-now activity.created)
   }}`);
   assert.equal(this.$('.t-link').text().trim(), AD.descriptionOne);
-  assert.equal(this.$('.t-activity-wrap').text().replace(/[\s\n]+/gm, ''), 
+  assert.equal(this.$('.t-activity-wrap').text().replace(/[\s\n]+/gm, ''),
     `${trans.t('automation.actions.email')}sentto${PD.fullname.replace(/\s+/, '')}viafoobar${moment(timestamp).fromNow().replace(/[\s]/g, '')}`);
   assert.equal(this.$('[data-test-id=message-type]').text().trim(), trans.t('automation.actions.email') + ' sent to');
   assert.equal(this.$('.t-recipients0').text().trim(), PD.fullname);

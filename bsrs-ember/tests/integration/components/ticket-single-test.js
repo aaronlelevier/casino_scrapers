@@ -1,17 +1,27 @@
 import Ember from 'ember';
-const { run } = Ember;
+const { run, set } = Ember;
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
-import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
+import WORK_ORDER_DEFAULTS from 'bsrs-ember/vendor/defaults/work-order';
+import WORK_ORDER_STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/work-order-status';
+import CurrencyD from 'bsrs-ember/vendor/defaults/currency';
+import PROVIDER_DEFAULTS from 'bsrs-ember/vendor/defaults/provider';
+import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
+import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
 import { clickTrigger, nativeMouseUp } from 'bsrs-ember/tests/helpers/ember-power-select';
 import wait from 'ember-test-helpers/wait';
 
+const WD = WORK_ORDER_DEFAULTS.defaults();
+const PD = PERSON_DEFAULTS.defaults();
+const PC = PERSON_CURRENT.defaults();
+const WOSD = WORK_ORDER_STATUS_DEFAULTS.defaults();
+const ProviderD = PROVIDER_DEFAULTS.defaults();
 let ticket, trans;
 
 moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
@@ -84,7 +94,8 @@ test('validation on ticket request works', function(assert) {
 });
 
 test('if save isRunning, btn is disabled', function(assert) {
-  // monkey patched.  Not actually passed to component but save.isRunning comes from save ember-concurrency task
+  // monkey patched.  Not actually passed to component but saveTask.isRunning comes from save ember-concurrency task
+  this.model.validations = [];
   this.saveIsRunning = { isRunning: 'disabled' };
   this.permissions = ['change_ticket'];
   this.render(hbs`{{tickets/ticket-single 
@@ -139,8 +150,113 @@ test('permissions to "read only" show disabled input and select boxes', function
 });
 
 test('ticket single renders work order dispatch btn if no work orders', function(assert) {
-  this.render(hbs`{{tickets/ticket-single model=model activities=activities}}`);
+  this.permissions = ['add_workorder'];
+  run(() => {
+    this.store.push('ticket', {id: TD.idOne, ticket_wo_fks: []});
+  });
+  this.render(hbs`{{tickets/ticket-single model=model activities=activities permissions=permissions}}`);
   assert.equal(this.$('[data-test-id="wo-dispatch"]').length, 1);
-  assert.equal(this.$('[data-test-id="wo-dispatch"]').text().trim(), trans.t('work_order.button.dispatch'));
+  assert.equal(this.$('[data-test-id="wo-dispatch"]').text().trim(), trans.t('work-order.button.dispatch'));
   assert.ok(this.$('[data-test-id="wo-dispatch"] > i').attr('class').includes('fa-wrench'));
+});
+
+test('one expanded and one collapsed work order are displayed', function(assert) {
+  this.permissions = ['view_workorder'];
+  run(() => {
+    this.store.push('work-order-status', {id: WOSD.idOne, name: WOSD.nameOne, workOrders: [WD.idOne, WD.idTwo]});
+    this.store.push('work-order', { id: WD.idOne, cost_estimate: WD.costEstimateOne, scheduled_date: WD.scheduledDateOne,
+      cost_estimate_currency: CurrencyD.idOne, status_fk: WOSD.idOne, provider_fk: ProviderD.idOne });
+    this.store.push('work-order', { id: WD.idTwo, cost_estimate: WD.costEstimateTwo, scheduled_date: WD.scheduledDateTwo,
+      cost_estimate_currency: CurrencyD.idOne, status_fk: WOSD.idTwo, provider_fk: ProviderD.idOne });
+    this.store.push('provider', {id: ProviderD.idOne, name: ProviderD.nameOne, city: ProviderD.cityOne, logo: ProviderD.logoOne, workOrders: [WD.idOne]});
+    this.store.push('provider', {id: ProviderD.idTwo, name: ProviderD.nameTwo, city: ProviderD.cityOne, logo: ProviderD.logoTwo, workOrders: [WD.idTwo]});
+    this.store.push('currency', {id: CurrencyD.idOne, workOrders: [WD.idOne]});
+    this.store.push('ticket-join-wo', {id: 1, ticket_pk: TD.idOne, work_order_pk: WD.idOne});
+    this.store.push('ticket-join-wo', {id: 2, ticket_pk: TD.idOne, work_order_pk: WD.idTwo});
+    this.store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
+  });
+  this.render(hbs`{{tickets/ticket-single model=model activities=activities permissions=permissions}}`);
+  assert.equal(this.$('[data-test-id*="expander-collapsed"]').length, 2, 'two work order components are collapsed');
+  this.$('[data-test-id="expander-collapsed0"]').click();
+  assert.equal(this.$('[data-test-id*="expander-expanded"]').length, 1, 'one work order component is expanded');
+  assert.equal(this.$('[data-test-id*="expander-collapsed"]').length, 1, 'one work order component is collapsed');
+});
+
+test('two expanded work orders are displayed', function(assert) {
+  this.permissions = ['view_workorder'];
+  run(() => {
+    this.store.push('work-order-status', {id: WOSD.idOne, name: WOSD.nameOne, workOrders: [WD.idOne, WD.idTwo]});
+    this.store.push('work-order', { id: WD.idOne, cost_estimate: WD.costEstimateOne, scheduled_date: WD.scheduledDateOne,
+      cost_estimate_currency: CurrencyD.idOne, status_fk: WOSD.idOne, provider_fk: ProviderD.idOne });
+    this.store.push('work-order', { id: WD.idTwo, cost_estimate: WD.costEstimateTwo, scheduled_date: WD.scheduledDateTwo,
+      cost_estimate_currency: CurrencyD.idOne, status_fk: WOSD.idTwo, provider_fk: ProviderD.idOne });
+    this.store.push('provider', {id: ProviderD.idOne, name: ProviderD.nameOne, city: ProviderD.cityOne, logo: ProviderD.logoOne, workOrders: [WD.idOne]});
+    this.store.push('provider', {id: ProviderD.idTwo, name: ProviderD.nameTwo, city: ProviderD.cityOne, logo: ProviderD.logoTwo, workOrders: [WD.idTwo]});
+    this.store.push('currency', {id: CurrencyD.idOne, workOrders: [WD.idOne]});
+    this.store.push('ticket-join-wo', {id: 1, ticket_pk: TD.idOne, work_order_pk: WD.idOne});
+    this.store.push('ticket-join-wo', {id: 2, ticket_pk: TD.idOne, work_order_pk: WD.idTwo});
+    this.store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
+  });
+  this.render(hbs`{{tickets/ticket-single model=model activities=activities permissions=permissions}}`);
+  assert.equal(this.$('[data-test-id*="expander-collapsed"]').length, 2);
+  this.$('[data-test-id="expander-collapsed0"]').click();
+  this.$('[data-test-id="expander-collapsed1"]').click();
+  assert.equal(this.$('[data-test-id*="expander-expanded"]').length, 2);
+  assert.equal(this.$('[data-test-id*="expander-collapsed"]').length, 0);
+  this.$('[data-test-id="expander-expanded0"]').click();
+  this.$('[data-test-id="expander-expanded1"]').click();
+  assert.equal(this.$('[data-test-id*="expander-expanded"]').length, 0);
+  assert.equal(this.$('[data-test-id*="expander-collapsed"]').length, 2);
+});
+
+test('view work order permissions', function(assert) {
+  this.permissions = ['view_workorder'];
+  run(() => {
+    this.store.push('work-order-status', {id: WOSD.idOne, name: WOSD.nameOne, workOrders: [WD.idOne, WD.idTwo]});
+    this.store.push('work-order', { id: WD.idOne, cost_estimate: WD.costEstimateOne, scheduled_date: WD.scheduledDateOne,
+      cost_estimate_currency: CurrencyD.idOne, status_fk: WOSD.idOne, provider_fk: ProviderD.idOne });
+    this.store.push('provider', {id: ProviderD.idOne, name: ProviderD.nameOne, city: ProviderD.cityOne, logo: ProviderD.logoOne, workOrders: [WD.idOne]});
+    this.store.push('currency', {id: CurrencyD.idOne, workOrders: [WD.idOne]});
+    this.store.push('ticket-join-wo', {id: 1, ticket_pk: TD.idOne, work_order_pk: WD.idOne});
+    this.store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
+  });
+  this.render(hbs`{{tickets/ticket-single model=model activities=activities permissions=permissions}}`);
+  assert.equal(this.$('[data-test-id="ticket-display-collapsed"]').length, 1);
+  run(() => {
+    set(this, 'permissions', []);
+  });
+  assert.equal(this.$('[data-test-id="ticket-display-collapsed"]').length, 0);
+});
+
+test('create work order permissions', function(assert) {
+  this.permissions = ['add_workorder'];
+  run(() => {
+    this.store.push('ticket', {id: TD.idOne, ticket_wo_fks: []});
+  });
+  this.render(hbs`{{tickets/ticket-single model=model activities=activities permissions=permissions}}`);
+  assert.equal(this.$('[data-test-id="wo-dispatch"]').length, 1);
+  run(() => {
+    set(this, 'permissions', []);
+  });
+  assert.equal(this.$('[data-test-id="wo-dispatch"]').length, 0);
+});
+
+test('change work order permissions', function(assert) {
+  this.permissions = ['view_workorder'];
+  run(() => {
+    this.store.push('person-current', { id: PC.id, permissions: ['view_ticket', 'view_workorder'] });
+    this.store.push('work-order-status', {id: WOSD.idOne, name: WOSD.nameOne, workOrders: [WD.idOne, WD.idTwo]});
+    this.store.push('work-order', { id: WD.idOne, cost_estimate: WD.costEstimateOne, gl_code: WD.glCodeOne, scheduled_date: WD.scheduledDateOne,
+      cost_estimate_currency: CurrencyD.idOne, instructions: WD.instructions,  status_fk: WOSD.idOne, provider_fk: ProviderD.idOne });
+    this.store.push('provider', {id: ProviderD.idOne, name: ProviderD.nameOne, city: ProviderD.cityOne, logo: ProviderD.logoOne, workOrders: [WD.idOne]});
+    this.store.push('currency', {id: CurrencyD.idOne, workOrders: [WD.idOne]});
+    this.store.push('ticket-join-wo', {id: 1, ticket_pk: TD.idOne, work_order_pk: WD.idOne});
+    this.store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
+  });
+  this.render(hbs`{{tickets/ticket-single model=model activities=activities permissions=permissions}}`);
+  this.$('[data-test-id="ticket-display-collapsed"]').click();
+  assert.equal(this.$('.t-wo-gl_code0').prop('readonly'), true);
+  assert.equal(this.$('.t-amount').prop('readonly'), true);
+  assert.ok(this.$('[data-test-id="scheduled-date"] input').prop('disabled'), true);
+  assert.ok(this.$('.t-instructions').prop('readonly'), true);
 });

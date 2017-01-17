@@ -2,15 +2,16 @@
   <div class="input-group-addon t-currency-symbol">
     {{currencyObject.symbol}}
   </div>
-  {{input 
-    type="text" 
-    placeholder=(if placeholder placeholder (t "admin.amount_and_default_value" value=placeholderAmount)) 
-    value=bound_field 
+  {{input
+    type="text"
+    placeholder=(if placeholder placeholder (t "admin.amount_and_default_value" value=placeholderAmount))
+    value=(get model field)
     class=(concat "form-control t-amount" (if showMessage " invalid"))
-    id="auth_amount" 
+    id=(if (gt count -1) (concat valuePath count) valuePath)
     disabled=editPrivilege
-    focus-out="formatCurrency" 
+    focus-out="formatCurrency"
     key-up=(action "keyedUp")
+    readonly=readonly
   }}
   {{#power-select
     selected=currencyObject
@@ -25,8 +26,8 @@
   {{/power-select}}
 </div>
 
-{{show-validation-message 
-  model=model 
+{{show-validation-message
+  model=model
   valuePath=valuePath
   showMessage=showMessage
 }}

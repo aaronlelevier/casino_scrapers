@@ -61,21 +61,30 @@
         {{/ember-wormhole}}
       {{/if}}
 
-      {{#if model.wo}}
-        {{work-orders/ticket-display wos=model.wo}}
-      {{else}}
-        {{#card-section}}
-          <div class="row">
-            <div class="col-md-12">
-              <button {{action "createWorkOrder"}} class="btn btn-primary btn-icon t-create-work-order-btn" data-test-id="wo-dispatch" type="button">{{fa-icon "wrench"}} <span class="btn-text">{{t "work_order.button.dispatch"}}</span></button>
-            </div>
-          </div>
-        {{/card-section}}
-      {{/if}}
+        {{#if model.wo}}
+          {{#if (has-permission permissions=permissions verb="view" resource="workorder")}}
+            {{card-title title="work_order.one"}}
+            {{#each model.wo as |listItem indx|}}
+              {{work-orders/ticket-display model=listItem indx=indx permissions=permissions}}
+            {{/each}}
+          {{/if}}
+        {{else}}
+          {{#if (has-permission permissions=permissions verb="add" resource="workorder")}}
+            {{#card-section}}
+              <div class="row">
+                <div class="col-md-12">
+                  <button {{action "openWorkOrderModal"}} class="btn btn-primary btn-icon" data-test-id="wo-dispatch" type="button">{{fa-icon "wrench"}} <span class="btn-text">{{t "work-order.button.dispatch"}}</span></button>
+                </div>
+              </div>
+            {{/card-section}}
+          {{/if}}
+        {{/if}}
 
-      {{tickets/ticket-comments-and-file-upload 
-        model=model 
-        deleteAttachment="deleteAttachment" 
+
+
+      {{tickets/ticket-comments-and-file-upload
+        model=model
+        deleteAttachment="deleteAttachment"
         save=(action "save" "update" "updateActivities")
       }}
       {{activity-list activities=activities}}
@@ -123,16 +132,16 @@
       </div>
       <div class="col-md-12">
         {{#form-group title="ticket.label.cc" for="cc" readonly=model.isReadOnly}}
-        {{db-fetch-multi-select 
-          model=model 
-          multiAttr="cc" 
-          multiAttrIds="cc_ids" 
-          selectedAttr=model.cc 
-          className="t-ticket-cc-select" 
-          displayName="fullname" 
-          add_func="add_cc" 
-          remove_func="remove_cc" 
-          repository=personRepo 
+        {{db-fetch-multi-select
+          model=model
+          multiAttr="cc"
+          multiAttrIds="cc_ids"
+          selectedAttr=model.cc
+          className="t-ticket-cc-select"
+          displayName="fullname"
+          add_func="add_cc"
+          remove_func="remove_cc"
+          repository=personRepo
           searchMethod="findPeople"
           componentArg="photo-avatar"
           disabled=model.isReadOnly

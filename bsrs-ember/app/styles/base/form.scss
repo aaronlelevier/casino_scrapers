@@ -11,3 +11,16 @@ input[type="text"]:disabled {
 		box-shadow: none;
 	}
 }
+.help-text,
+.help-text--approval{
+	font-size: 1.2rem;
+	color: $medGray;
+	i{
+		font-size: 1.3rem;
+	}
+}
+.help-text--approval{
+	i{
+		color: $lightGreen;
+	}
+}
