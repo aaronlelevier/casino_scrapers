@@ -53,14 +53,14 @@ def _get_automation_and_action_type(automation, action_type_key):
 
 def create_automation_action_assignee(automation=None):
     automation, type = _get_automation_and_action_type(automation, AutomationActionType.TICKET_ASSIGNEE)
-    person = create_single_person()
+    person = create_single_person('admin')
     return AutomationAction.objects.create(type=type, automation=automation,
                                            content={'assignee': str(person.id)})
 
 
 def create_automation_action_send_email(automation=None):
     automation, type = _get_automation_and_action_type(automation, AutomationActionType.SEND_EMAIL)
-    person = create_single_person()
+    person = create_single_person('admin')
     role = person.role
     return AutomationAction.objects.create(
         type=type, automation=automation,
@@ -69,7 +69,7 @@ def create_automation_action_send_email(automation=None):
 
 def create_automation_action_send_sms(automation=None):
     automation, type = _get_automation_and_action_type(automation, AutomationActionType.SEND_SMS)
-    person = create_single_person()
+    person = create_single_person('admin')
     role = person.role
     return AutomationAction.objects.create(
         type=type, automation=automation,

@@ -75,8 +75,8 @@ class AutomationActionTests(TestCase):
 
         self.assertIsInstance(ret, AutomationAction)
         self.assertEqual(ret.type.key, AutomationActionType.TICKET_ASSIGNEE)
-        self.assertIsInstance(
-            Person.objects.get(id=ret.content['assignee']), Person)
+        assignee = Person.objects.get(id=ret.content['assignee'])
+        self.assertEqual(assignee.username, 'admin')
 
     def test_create_automation_action_send_email(self):
         ret = factory.create_automation_action_send_email()
@@ -88,7 +88,8 @@ class AutomationActionTests(TestCase):
         self.assertEqual(len(ret.content['recipients']), 2)
         # person recipient
         self.assertEqual(ret.content['recipients'][0]['type'], 'person')
-        self.assertIsInstance(Person.objects.get(id=ret.content['recipients'][0]['id']), Person)
+        assignee = Person.objects.get(id=ret.content['recipients'][0]['id'])
+        self.assertEqual(assignee.username, 'admin')
         # role recipient
         self.assertEqual(ret.content['recipients'][1]['type'], 'role')
         self.assertIsInstance(Role.objects.get(id=ret.content['recipients'][1]['id']), Role)
@@ -106,7 +107,8 @@ class AutomationActionTests(TestCase):
         self.assertEqual(len(ret.content['recipients']), 2)
         # person recipient
         self.assertEqual(ret.content['recipients'][0]['type'], 'person')
-        self.assertIsInstance(Person.objects.get(id=ret.content['recipients'][0]['id']), Person)
+        assignee = Person.objects.get(id=ret.content['recipients'][0]['id'])
+        self.assertEqual(assignee.username, 'admin')
         # role recipient
         self.assertEqual(ret.content['recipients'][1]['type'], 'role')
         self.assertIsInstance(Role.objects.get(id=ret.content['recipients'][1]['id']), Role)

@@ -94,5 +94,4 @@ class TenantFixtures(object):
         grant_all_permissions(admin)
 
     def _create_categories(self):
-        categories = create_categories()
-        categories.update(tenant=self.tenant)
+        categories = create_categories(tenant=self.tenant)

@@ -1,416 +1,311 @@
 [
 {
   "model": "automation.automationevent",
-  "pk": "03db45a2-5d51-4e55-8f20-99bf980d8f07",
+  "pk": "2447bebf-3e46-4210-b93a-c31238d6ac1a",
   "fields": {
-    "created": "2017-01-13T01:41:26.757Z",
-    "modified": "2017-01-13T01:41:26.757Z",
-    "deleted": null,
-    "key": "automation.event.ticket_priority_change"
-  }
-},
-{
-  "model": "automation.automationevent",
-  "pk": "14b7073a-337d-4f27-977f-d8480683af6f",
-  "fields": {
-    "created": "2017-01-13T01:41:26.762Z",
-    "modified": "2017-01-13T01:41:26.762Z",
-    "deleted": null,
-    "key": "automation.event.ticket_status_denied"
-  }
-},
-{
-  "model": "automation.automationevent",
-  "pk": "1fd9bf96-909e-4604-83b0-dc8bb6c8cabe",
-  "fields": {
-    "created": "2017-01-13T01:41:26.771Z",
-    "modified": "2017-01-13T01:41:26.771Z",
-    "deleted": null,
-    "key": "automation.event.ticket_status_unsatisfactory"
-  }
-},
-{
-  "model": "automation.automationevent",
-  "pk": "347417e0-a8c2-4ef2-b626-c1d068214b93",
-  "fields": {
-    "created": "2017-01-13T01:41:26.744Z",
-    "modified": "2017-01-13T01:41:26.744Z",
-    "deleted": null,
-    "key": "automation.event.ticket_assignee_change"
-  }
-},
-{
-  "model": "automation.automationevent",
-  "pk": "4d15efa2-28be-4b88-a29b-d1b204a31231",
-  "fields": {
-    "created": "2017-01-13T01:41:26.752Z",
-    "modified": "2017-01-13T01:41:26.752Z",
-    "deleted": null,
-    "key": "automation.event.ticket_cc_add"
-  }
-},
-{
-  "model": "automation.automationevent",
-  "pk": "66e8a13f-04c6-4c22-a02c-2d1182ec6ca5",
-  "fields": {
-    "created": "2017-01-13T01:41:26.760Z",
-    "modified": "2017-01-13T01:41:26.760Z",
-    "deleted": null,
-    "key": "automation.event.ticket_status_complete"
-  }
-},
-{
-  "model": "automation.automationevent",
-  "pk": "7181b09f-64f1-4abb-b987-9c6b597e0a7a",
-  "fields": {
-    "created": "2017-01-13T01:41:26.765Z",
-    "modified": "2017-01-13T01:41:26.765Z",
-    "deleted": null,
-    "key": "automation.event.ticket_status_in_progress"
-  }
-},
-{
-  "model": "automation.automationevent",
-  "pk": "7bd37c74-1e0d-4a45-8141-ca1bc51df155",
-  "fields": {
-    "created": "2017-01-13T01:41:26.749Z",
-    "modified": "2017-01-13T01:41:26.749Z",
-    "deleted": null,
-    "key": "automation.event.ticket_attachment_add"
-  }
-},
-{
-  "model": "automation.automationevent",
-  "pk": "85a3a6e0-929e-49ed-b5ca-664484edcc26",
-  "fields": {
-    "created": "2017-01-13T01:41:26.754Z",
-    "modified": "2017-01-13T01:41:26.754Z",
-    "deleted": null,
-    "key": "automation.event.ticket_comment"
-  }
-},
-{
-  "model": "automation.automationevent",
-  "pk": "b7e29570-c1fe-4413-be54-e91a3eb4909a",
-  "fields": {
-    "created": "2017-01-13T01:41:26.767Z",
-    "modified": "2017-01-13T01:41:26.767Z",
-    "deleted": null,
-    "key": "automation.event.ticket_status_new"
-  }
-},
-{
-  "model": "automation.automationevent",
-  "pk": "dd83c51a-ddd5-4c01-842e-a754037061c6",
-  "fields": {
-    "created": "2017-01-13T01:41:26.768Z",
-    "modified": "2017-01-13T01:41:26.768Z",
-    "deleted": null,
-    "key": "automation.event.ticket_status_pending"
-  }
-},
-{
-  "model": "automation.automationevent",
-  "pk": "dfc99392-cc0a-414e-8c97-31810319f92c",
-  "fields": {
-    "created": "2017-01-13T01:41:26.750Z",
-    "modified": "2017-01-13T01:41:26.750Z",
-    "deleted": null,
-    "key": "automation.event.ticket_category_change"
-  }
-},
-{
-  "model": "automation.automationevent",
-  "pk": "eb6abfed-5608-4809-8b8c-9d59c798d500",
-  "fields": {
-    "created": "2017-01-13T01:41:26.770Z",
-    "modified": "2017-01-13T01:41:26.770Z",
-    "deleted": null,
-    "key": "automation.event.ticket_status_solved"
-  }
-},
-{
-  "model": "automation.automationevent",
-  "pk": "ed15153d-11e1-4cc2-80fd-0a858596ff50",
-  "fields": {
-    "created": "2017-01-13T01:41:26.764Z",
-    "modified": "2017-01-13T01:41:26.764Z",
-    "deleted": null,
-    "key": "automation.event.ticket_status_draft"
-  }
-},
-{
-  "model": "automation.automationevent",
-  "pk": "ef213485-0e6f-4556-9714-bd1e19c83170",
-  "fields": {
-    "created": "2017-01-13T01:41:26.761Z",
-    "modified": "2017-01-13T01:41:26.761Z",
-    "deleted": null,
-    "key": "automation.event.ticket_status_deferred"
-  }
-},
-{
-  "model": "automation.automationevent",
-  "pk": "f6fd51cd-26d1-4c22-aa39-8066045ebf76",
-  "fields": {
-    "created": "2017-01-13T01:41:26.755Z",
-    "modified": "2017-01-13T01:41:26.755Z",
+    "created": "2017-01-17T17:51:47.230Z",
+    "modified": "2017-01-17T17:51:47.230Z",
     "deleted": null,
     "key": "automation.event.ticket_location_change"
   }
 },
 {
   "model": "automation.automationevent",
-  "pk": "ff30544f-5769-46b6-adf6-a7c7a1b97614",
+  "pk": "301ba3c9-5692-4bc8-980c-98b94d48bc0d",
   "fields": {
-    "created": "2017-01-13T01:41:26.758Z",
-    "modified": "2017-01-13T01:41:26.758Z",
+    "created": "2017-01-17T17:51:47.237Z",
+    "modified": "2017-01-17T17:51:47.237Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_denied"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "480e1c69-0f1c-4f42-9044-ed1a17d5c110",
+  "fields": {
+    "created": "2017-01-17T17:51:47.231Z",
+    "modified": "2017-01-17T17:51:47.231Z",
+    "deleted": null,
+    "key": "automation.event.ticket_priority_change"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "6144cae6-0a98-4cac-b616-39f7add1ec19",
+  "fields": {
+    "created": "2017-01-17T17:51:47.245Z",
+    "modified": "2017-01-17T17:51:47.245Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_solved"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "65444dae-9d54-4ace-bbee-69559e0e89c9",
+  "fields": {
+    "created": "2017-01-17T17:51:47.242Z",
+    "modified": "2017-01-17T17:51:47.242Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_new"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "6b5cdd8f-aeaa-427e-8336-b0d7d87feefb",
+  "fields": {
+    "created": "2017-01-17T17:51:47.236Z",
+    "modified": "2017-01-17T17:51:47.236Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_deferred"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "768ad294-b09d-4448-97ec-1bd4b74d9ce6",
+  "fields": {
+    "created": "2017-01-17T17:51:47.226Z",
+    "modified": "2017-01-17T17:51:47.226Z",
+    "deleted": null,
+    "key": "automation.event.ticket_cc_add"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "8cf1479f-00bf-4af0-bad7-ea62058cf9ef",
+  "fields": {
+    "created": "2017-01-17T17:51:47.224Z",
+    "modified": "2017-01-17T17:51:47.224Z",
+    "deleted": null,
+    "key": "automation.event.ticket_category_change"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "963d5abd-dc7a-4d70-a8da-1c2bd2cb523b",
+  "fields": {
+    "created": "2017-01-17T17:51:47.243Z",
+    "modified": "2017-01-17T17:51:47.243Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_pending"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "9f7556b7-430a-48ff-a35b-913e03e8cb6f",
+  "fields": {
+    "created": "2017-01-17T17:51:47.240Z",
+    "modified": "2017-01-17T17:51:47.240Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_in_progress"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "a658076c-5bf8-45ec-8d78-52b4e4202a42",
+  "fields": {
+    "created": "2017-01-17T17:51:47.222Z",
+    "modified": "2017-01-17T17:51:47.223Z",
+    "deleted": null,
+    "key": "automation.event.ticket_attachment_add"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "b616b7b4-71a9-4b75-8ebc-1d7995c1bed2",
+  "fields": {
+    "created": "2017-01-17T17:51:47.246Z",
+    "modified": "2017-01-17T17:51:47.246Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_unsatisfactory"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "c5831ceb-412c-400a-81dc-b93ad827e937",
+  "fields": {
+    "created": "2017-01-17T17:51:47.228Z",
+    "modified": "2017-01-17T17:51:47.228Z",
+    "deleted": null,
+    "key": "automation.event.ticket_comment"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "cc744596-f30e-4b1e-88c2-1665c2f38964",
+  "fields": {
+    "created": "2017-01-17T17:51:47.218Z",
+    "modified": "2017-01-17T17:51:47.218Z",
+    "deleted": null,
+    "key": "automation.event.ticket_assignee_change"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "ce8d6b40-88fe-4800-96be-341c0f69b9e0",
+  "fields": {
+    "created": "2017-01-17T17:51:47.234Z",
+    "modified": "2017-01-17T17:51:47.234Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_complete"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "d7bdabb9-135d-4324-aff5-93e5bc16bc0a",
+  "fields": {
+    "created": "2017-01-17T17:51:47.239Z",
+    "modified": "2017-01-17T17:51:47.239Z",
+    "deleted": null,
+    "key": "automation.event.ticket_status_draft"
+  }
+},
+{
+  "model": "automation.automationevent",
+  "pk": "e2f2efee-e6ad-4c15-8d3f-1dfe063b0e23",
+  "fields": {
+    "created": "2017-01-17T17:51:47.233Z",
+    "modified": "2017-01-17T17:51:47.233Z",
     "deleted": null,
     "key": "automation.event.ticket_status_cancelled"
   }
 },
 {
   "model": "automation.automationactiontype",
-  "pk": "02d94f9c-7f8c-49e9-bb54-e4c0c2d34e93",
+  "pk": "6857e510-6d3e-41c0-8dd3-4e253ad9235a",
   "fields": {
-    "created": "2017-01-13T01:41:26.782Z",
-    "modified": "2017-01-13T01:41:26.782Z",
-    "deleted": null,
-    "key": "automation.actions.ticket_status"
-  }
-},
-{
-  "model": "automation.automationactiontype",
-  "pk": "36b837fb-363c-4d99-9d30-59d365f28631",
-  "fields": {
-    "created": "2017-01-13T01:41:26.773Z",
-    "modified": "2017-01-13T01:41:26.773Z",
+    "created": "2017-01-17T17:51:47.248Z",
+    "modified": "2017-01-17T17:51:47.248Z",
     "deleted": null,
     "key": "automation.actions.ticket_assignee"
   }
 },
 {
   "model": "automation.automationactiontype",
-  "pk": "6e7da9a9-a4e0-418a-b24e-b56b0fd63b67",
+  "pk": "755044b1-53a2-4763-9c6b-2b98c5c7d997",
   "fields": {
-    "created": "2017-01-13T01:41:26.781Z",
-    "modified": "2017-01-13T01:41:26.781Z",
+    "created": "2017-01-17T17:51:47.255Z",
+    "modified": "2017-01-17T17:51:47.255Z",
     "deleted": null,
-    "key": "automation.actions.ticket_request"
+    "key": "automation.actions.ticket_priority"
   }
 },
 {
   "model": "automation.automationactiontype",
-  "pk": "730608f0-66cf-4f6b-870f-1ce0fb19e0cf",
+  "pk": "8ee3dc4a-b19a-4fd5-b163-19babc00b08a",
   "fields": {
-    "created": "2017-01-13T01:41:26.778Z",
-    "modified": "2017-01-13T01:41:26.778Z",
-    "deleted": null,
-    "key": "automation.actions.ticket_cc"
-  }
-},
-{
-  "model": "automation.automationactiontype",
-  "pk": "a4060935-12ce-4b5b-9e1f-786c2e43a93e",
-  "fields": {
-    "created": "2017-01-13T01:41:26.775Z",
-    "modified": "2017-01-13T01:41:26.775Z",
+    "created": "2017-01-17T17:51:47.250Z",
+    "modified": "2017-01-17T17:51:47.250Z",
     "deleted": null,
     "key": "automation.actions.send_email"
   }
 },
 {
   "model": "automation.automationactiontype",
-  "pk": "d3a17a5e-602d-4764-8389-67f3f8e15c4c",
+  "pk": "c988b1c5-4b5e-48fb-9d8b-e08bef994453",
   "fields": {
-    "created": "2017-01-13T01:41:26.776Z",
-    "modified": "2017-01-13T01:41:26.776Z",
+    "created": "2017-01-17T17:51:47.253Z",
+    "modified": "2017-01-17T17:51:47.253Z",
+    "deleted": null,
+    "key": "automation.actions.ticket_cc"
+  }
+},
+{
+  "model": "automation.automationactiontype",
+  "pk": "d68bd9b6-2807-49c1-bf14-d170a03fbe30",
+  "fields": {
+    "created": "2017-01-17T17:51:47.258Z",
+    "modified": "2017-01-17T17:51:47.258Z",
+    "deleted": null,
+    "key": "automation.actions.ticket_status"
+  }
+},
+{
+  "model": "automation.automationactiontype",
+  "pk": "de59d691-da1d-46d6-bb33-6b632de54d51",
+  "fields": {
+    "created": "2017-01-17T17:51:47.257Z",
+    "modified": "2017-01-17T17:51:47.257Z",
+    "deleted": null,
+    "key": "automation.actions.ticket_request"
+  }
+},
+{
+  "model": "automation.automationactiontype",
+  "pk": "f53e34a6-adf7-455e-8654-58643e8d6784",
+  "fields": {
+    "created": "2017-01-17T17:51:47.252Z",
+    "modified": "2017-01-17T17:51:47.252Z",
     "deleted": null,
     "key": "automation.actions.send_sms"
   }
 },
 {
-  "model": "automation.automationactiontype",
-  "pk": "f384d9a6-5101-4714-8b3c-13293bd28b68",
-  "fields": {
-    "created": "2017-01-13T01:41:26.779Z",
-    "modified": "2017-01-13T01:41:26.779Z",
-    "deleted": null,
-    "key": "automation.actions.ticket_priority"
-  }
-},
-{
   "model": "automation.automationaction",
-  "pk": "0dbac243-3a73-4feb-8ff6-831b2ed64b99",
+  "pk": "2674ba5f-d1ca-4cc9-86b6-531a52cd7cd8",
   "fields": {
-    "created": "2017-01-13T01:41:26.900Z",
-    "modified": "2017-01-13T01:41:26.900Z",
+    "created": "2017-01-17T17:51:48.023Z",
+    "modified": "2017-01-17T17:51:48.023Z",
     "deleted": null,
-    "type": "36b837fb-363c-4d99-9d30-59d365f28631",
-    "automation": "d9cd7273-3056-46bb-9ca1-85229c8891a9",
-    "content": {
-      "assignee": "040530c4-ce6c-4724-9cfd-37a16e787201"
-    }
-  }
-},
-{
-  "model": "automation.automationaction",
-  "pk": "371367fb-0081-477f-b050-4f6694a0b240",
-  "fields": {
-    "created": "2017-01-13T01:41:26.996Z",
-    "modified": "2017-01-13T01:41:26.996Z",
-    "deleted": null,
-    "type": "36b837fb-363c-4d99-9d30-59d365f28631",
-    "automation": "24090849-7542-49ab-8e83-e62cd16aedc5",
-    "content": {
-      "assignee": "040530c4-ce6c-4724-9cfd-37a16e787202"
-    }
-  }
-},
-{
-  "model": "automation.automationaction",
-  "pk": "46553aa4-a91b-4ed4-915c-58736f6e03b1",
-  "fields": {
-    "created": "2017-01-13T01:41:27.570Z",
-    "modified": "2017-01-13T01:41:27.570Z",
-    "deleted": null,
-    "type": "d3a17a5e-602d-4764-8389-67f3f8e15c4c",
-    "automation": "0a539533-d8a6-4ad1-b6e7-95c989ddbbd9",
-    "content": {
-      "body": "bar",
-      "recipients": [
-        {
-          "type": "person",
-          "id": "040530c4-ce6c-4724-9cfd-37a16e787208"
-        },
-        {
-          "type": "role",
-          "id": "5a7edc5f-2a51-4128-8604-bb6022d38dfa"
-        }
-      ]
-    }
-  }
-},
-{
-  "model": "automation.automationaction",
-  "pk": "4a54d4e4-d882-44de-90e8-d411c5729308",
-  "fields": {
-    "created": "2017-01-13T01:41:27.698Z",
-    "modified": "2017-01-13T01:41:27.698Z",
-    "deleted": null,
-    "type": "730608f0-66cf-4f6b-870f-1ce0fb19e0cf",
-    "automation": "3c0c95c9-a5e4-406b-b9e1-9833a4591a30",
+    "type": "c988b1c5-4b5e-48fb-9d8b-e08bef994453",
+    "automation": "8355102a-ef85-4577-bd6d-dd59eaec9045",
     "content": {
       "ccs": [
-        "040530c4-ce6c-4724-9cfd-37a16e787209"
+        "039530c4-ce6c-4724-9cfd-37a16e787201"
       ]
     }
   }
 },
 {
   "model": "automation.automationaction",
-  "pk": "558238ed-b99c-482b-88e1-c9d57f2c3c74",
+  "pk": "2d2552be-95c5-4fb2-8462-49eee3f03a0c",
   "fields": {
-    "created": "2017-01-13T01:41:27.089Z",
-    "modified": "2017-01-13T01:41:27.089Z",
+    "created": "2017-01-17T17:51:47.491Z",
+    "modified": "2017-01-17T17:51:47.491Z",
     "deleted": null,
-    "type": "36b837fb-363c-4d99-9d30-59d365f28631",
-    "automation": "ed938e78-1cac-41b5-9b5f-acab31446473",
+    "type": "6857e510-6d3e-41c0-8dd3-4e253ad9235a",
+    "automation": "9d11ca4f-3997-41d1-89f5-53a5891772fc",
     "content": {
-      "assignee": "040530c4-ce6c-4724-9cfd-37a16e787203"
+      "assignee": "039530c4-ce6c-4724-9cfd-37a16e787200"
     }
   }
 },
 {
   "model": "automation.automationaction",
-  "pk": "56b4dc18-c9c2-41d2-971f-2375427bc350",
+  "pk": "33dee8bb-6146-42d5-938a-b22ef262ec31",
   "fields": {
-    "created": "2017-01-13T01:41:27.599Z",
-    "modified": "2017-01-13T01:41:27.599Z",
+    "created": "2017-01-17T17:51:47.418Z",
+    "modified": "2017-01-17T17:51:47.418Z",
     "deleted": null,
-    "type": "02d94f9c-7f8c-49e9-bb54-e4c0c2d34e93",
-    "automation": "e8fc3631-762d-4a98-92c8-97a9a698173e",
+    "type": "6857e510-6d3e-41c0-8dd3-4e253ad9235a",
+    "automation": "3328d8a5-f05a-4dc1-86b2-6580fddf9895",
     "content": {
-      "status": "049530c4-ce6c-4724-9cfd-37a16e787007"
+      "assignee": "039530c4-ce6c-4724-9cfd-37a16e787200"
     }
   }
 },
 {
   "model": "automation.automationaction",
-  "pk": "5ded15fe-c8bd-44e9-a524-ec7b9d3e8a09",
+  "pk": "501042dd-6f9e-408e-88ba-ed3b8768615b",
   "fields": {
-    "created": "2017-01-13T01:41:27.584Z",
-    "modified": "2017-01-13T01:41:27.584Z",
+    "created": "2017-01-17T17:51:47.646Z",
+    "modified": "2017-01-17T17:51:47.646Z",
     "deleted": null,
-    "type": "f384d9a6-5101-4714-8b3c-13293bd28b68",
-    "automation": "7e3524f8-ca53-4910-b6c1-1e0a8d697593",
+    "type": "6857e510-6d3e-41c0-8dd3-4e253ad9235a",
+    "automation": "3807a85f-a21e-43cb-b4c8-172bca9eae4b",
     "content": {
-      "priority": "051530c4-ce6c-4724-9cfd-37a16e787003"
+      "assignee": "039530c4-ce6c-4724-9cfd-37a16e787200"
     }
   }
 },
 {
   "model": "automation.automationaction",
-  "pk": "7f338a5f-2a02-496f-a87a-43314f38929e",
+  "pk": "86b87ede-ffe1-4fba-82d9-f5bc10341846",
   "fields": {
-    "created": "2017-01-13T01:41:27.479Z",
-    "modified": "2017-01-13T01:41:27.479Z",
+    "created": "2017-01-17T17:51:47.921Z",
+    "modified": "2017-01-17T17:51:47.921Z",
     "deleted": null,
-    "type": "a4060935-12ce-4b5b-9e1f-786c2e43a93e",
-    "automation": "28037d58-704a-424f-823a-404d54907c94",
-    "content": {
-      "body": "bar",
-      "subject": "foo",
-      "recipients": [
-        {
-          "type": "person",
-          "id": "040530c4-ce6c-4724-9cfd-37a16e787207"
-        },
-        {
-          "type": "role",
-          "id": "e5be26d1-d09c-481e-8db0-b463e2040a68"
-        }
-      ]
-    }
-  }
-},
-{
-  "model": "automation.automationaction",
-  "pk": "966b694d-38a0-4c6b-9469-e6b4084f931e",
-  "fields": {
-    "created": "2017-01-13T01:41:27.283Z",
-    "modified": "2017-01-13T01:41:27.283Z",
-    "deleted": null,
-    "type": "36b837fb-363c-4d99-9d30-59d365f28631",
-    "automation": "cc76b958-5b66-4fb9-a782-60c54db0b8d7",
-    "content": {
-      "assignee": "040530c4-ce6c-4724-9cfd-37a16e787205"
-    }
-  }
-},
-{
-  "model": "automation.automationaction",
-  "pk": "bf598fb2-14e1-41e1-820c-2aa4cf99a519",
-  "fields": {
-    "created": "2017-01-13T01:41:27.391Z",
-    "modified": "2017-01-13T01:41:27.391Z",
-    "deleted": null,
-    "type": "36b837fb-363c-4d99-9d30-59d365f28631",
-    "automation": "00e71974-c2a4-43c3-99ed-683e7388ce11",
-    "content": {
-      "assignee": "040530c4-ce6c-4724-9cfd-37a16e787206"
-    }
-  }
-},
-{
-  "model": "automation.automationaction",
-  "pk": "e3c9eb50-3f49-4594-bef3-e34b8a10f30c",
-  "fields": {
-    "created": "2017-01-13T01:41:27.612Z",
-    "modified": "2017-01-13T01:41:27.612Z",
-    "deleted": null,
-    "type": "6e7da9a9-a4e0-418a-b24e-b56b0fd63b67",
-    "automation": "e04ffdc9-104a-4e34-8a79-ad292982aab1",
+    "type": "de59d691-da1d-46d6-bb33-6b632de54d51",
+    "automation": "5d094de5-4b40-4159-b20a-27b2ba35ea1c",
     "content": {
       "request": "foo"
     }
@@ -418,205 +313,310 @@
 },
 {
   "model": "automation.automationaction",
-  "pk": "f5c13708-2b0f-4d98-86c8-6faa82e05460",
+  "pk": "8e86cea8-4c94-4eb6-99a5-e929198f18e1",
   "fields": {
-    "created": "2017-01-13T01:41:27.186Z",
-    "modified": "2017-01-13T01:41:27.186Z",
+    "created": "2017-01-17T17:51:47.343Z",
+    "modified": "2017-01-17T17:51:47.343Z",
     "deleted": null,
-    "type": "36b837fb-363c-4d99-9d30-59d365f28631",
-    "automation": "04c3aa60-1ade-4d72-80ce-93fe7faaeb36",
+    "type": "6857e510-6d3e-41c0-8dd3-4e253ad9235a",
+    "automation": "a377b0ff-0b44-4df3-b3af-1e83e0a82b43",
     "content": {
-      "assignee": "040530c4-ce6c-4724-9cfd-37a16e787204"
+      "assignee": "039530c4-ce6c-4724-9cfd-37a16e787200"
+    }
+  }
+},
+{
+  "model": "automation.automationaction",
+  "pk": "90d24c76-25eb-47e6-b8ce-8a508cd36ab2",
+  "fields": {
+    "created": "2017-01-17T17:51:47.738Z",
+    "modified": "2017-01-17T17:51:47.738Z",
+    "deleted": null,
+    "type": "6857e510-6d3e-41c0-8dd3-4e253ad9235a",
+    "automation": "a6af9f3e-1b53-4d7c-adfc-0a19a61fbdc7",
+    "content": {
+      "assignee": "039530c4-ce6c-4724-9cfd-37a16e787200"
+    }
+  }
+},
+{
+  "model": "automation.automationaction",
+  "pk": "d4714049-bdca-421f-940e-5fc813dbf61d",
+  "fields": {
+    "created": "2017-01-17T17:51:47.810Z",
+    "modified": "2017-01-17T17:51:47.810Z",
+    "deleted": null,
+    "type": "8ee3dc4a-b19a-4fd5-b163-19babc00b08a",
+    "automation": "ed4264f7-19eb-4289-afea-5bea21c24ce7",
+    "content": {
+      "body": "bar",
+      "subject": "foo",
+      "recipients": [
+        {
+          "id": "039530c4-ce6c-4724-9cfd-37a16e787200",
+          "type": "person"
+        },
+        {
+          "id": "3ff23f73-f910-4ed1-9004-898dbec2de0b",
+          "type": "role"
+        }
+      ]
+    }
+  }
+},
+{
+  "model": "automation.automationaction",
+  "pk": "d720f0e9-80a6-4e51-8e0c-09c9ac594191",
+  "fields": {
+    "created": "2017-01-17T17:51:47.568Z",
+    "modified": "2017-01-17T17:51:47.568Z",
+    "deleted": null,
+    "type": "6857e510-6d3e-41c0-8dd3-4e253ad9235a",
+    "automation": "22b2dd1b-ce75-44ab-ae50-f768b619f573",
+    "content": {
+      "assignee": "039530c4-ce6c-4724-9cfd-37a16e787200"
+    }
+  }
+},
+{
+  "model": "automation.automationaction",
+  "pk": "dbbe036d-2572-4c51-9f5b-ccdb1e7e5a40",
+  "fields": {
+    "created": "2017-01-17T17:51:47.893Z",
+    "modified": "2017-01-17T17:51:47.893Z",
+    "deleted": null,
+    "type": "755044b1-53a2-4763-9c6b-2b98c5c7d997",
+    "automation": "286212c3-0fcf-4b2a-b5b4-9eef5283131a",
+    "content": {
+      "priority": "050530c4-ce6c-4724-9cfd-37a16e787003"
+    }
+  }
+},
+{
+  "model": "automation.automationaction",
+  "pk": "e164abb3-debb-4b2e-8fef-7a8ec25379de",
+  "fields": {
+    "created": "2017-01-17T17:51:47.908Z",
+    "modified": "2017-01-17T17:51:47.908Z",
+    "deleted": null,
+    "type": "d68bd9b6-2807-49c1-bf14-d170a03fbe30",
+    "automation": "a723e0ea-99e4-4406-b554-0cafb76d3b59",
+    "content": {
+      "status": "051530c4-ce6c-4724-9cfd-37a16e787007"
+    }
+  }
+},
+{
+  "model": "automation.automationaction",
+  "pk": "e587a182-b1f7-4220-b3fc-ca386a3bf905",
+  "fields": {
+    "created": "2017-01-17T17:51:47.879Z",
+    "modified": "2017-01-17T17:51:47.879Z",
+    "deleted": null,
+    "type": "f53e34a6-adf7-455e-8654-58643e8d6784",
+    "automation": "3cde95f3-cb44-4f8f-b8db-48b448e60aaa",
+    "content": {
+      "body": "bar",
+      "recipients": [
+        {
+          "id": "039530c4-ce6c-4724-9cfd-37a16e787200",
+          "type": "person"
+        },
+        {
+          "id": "3ff23f73-f910-4ed1-9004-898dbec2de0b",
+          "type": "role"
+        }
+      ]
     }
   }
 },
 {
   "model": "automation.automation",
-  "pk": "00e71974-c2a4-43c3-99ed-683e7388ce11",
+  "pk": "22b2dd1b-ce75-44ab-ae50-f768b619f573",
   "fields": {
-    "created": "2017-01-13T01:41:27.312Z",
-    "modified": "2017-01-13T01:41:27.736Z",
-    "deleted": null,
-    "tenant": "045530c4-ce6c-4724-9cfd-37a16e787001",
-    "description": "Filter: None --- Action: automation.actions.ticket_assignee",
-    "events": [
-      "b7e29570-c1fe-4413-be54-e91a3eb4909a"
-    ]
-  }
-},
-{
-  "model": "automation.automation",
-  "pk": "04c3aa60-1ade-4d72-80ce-93fe7faaeb36",
-  "fields": {
-    "created": "2017-01-13T01:41:27.105Z",
-    "modified": "2017-01-13T01:41:27.719Z",
+    "created": "2017-01-17T17:51:47.507Z",
+    "modified": "2017-01-17T17:51:48.045Z",
     "deleted": null,
     "tenant": "045530c4-ce6c-4724-9cfd-37a16e787001",
     "description": "Filter: admin.placeholder.state_filter_select --- Action: automation.actions.ticket_assignee",
     "events": [
-      "b7e29570-c1fe-4413-be54-e91a3eb4909a"
+      "65444dae-9d54-4ace-bbee-69559e0e89c9"
     ]
   }
 },
 {
   "model": "automation.automation",
-  "pk": "0a539533-d8a6-4ad1-b6e7-95c989ddbbd9",
+  "pk": "286212c3-0fcf-4b2a-b5b4-9eef5283131a",
   "fields": {
-    "created": "2017-01-13T01:41:27.488Z",
-    "modified": "2017-01-13T01:41:27.728Z",
-    "deleted": null,
-    "tenant": "045530c4-ce6c-4724-9cfd-37a16e787001",
-    "description": "Filter: None --- Action: automation.actions.send_sms",
-    "events": [
-      "b7e29570-c1fe-4413-be54-e91a3eb4909a"
-    ]
-  }
-},
-{
-  "model": "automation.automation",
-  "pk": "24090849-7542-49ab-8e83-e62cd16aedc5",
-  "fields": {
-    "created": "2017-01-13T01:41:26.914Z",
-    "modified": "2017-01-13T01:41:27.704Z",
-    "deleted": null,
-    "tenant": "045530c4-ce6c-4724-9cfd-37a16e787001",
-    "description": "Filter: admin.placeholder.category_filter_select --- Action: automation.actions.ticket_assignee",
-    "events": [
-      "b7e29570-c1fe-4413-be54-e91a3eb4909a"
-    ]
-  }
-},
-{
-  "model": "automation.automation",
-  "pk": "28037d58-704a-424f-823a-404d54907c94",
-  "fields": {
-    "created": "2017-01-13T01:41:27.400Z",
-    "modified": "2017-01-13T01:41:27.732Z",
-    "deleted": null,
-    "tenant": "045530c4-ce6c-4724-9cfd-37a16e787001",
-    "description": "Filter: None --- Action: automation.actions.send_email",
-    "events": [
-      "b7e29570-c1fe-4413-be54-e91a3eb4909a"
-    ]
-  }
-},
-{
-  "model": "automation.automation",
-  "pk": "3c0c95c9-a5e4-406b-b9e1-9833a4591a30",
-  "fields": {
-    "created": "2017-01-13T01:41:27.620Z",
-    "modified": "2017-01-13T01:41:27.745Z",
-    "deleted": null,
-    "tenant": "045530c4-ce6c-4724-9cfd-37a16e787001",
-    "description": "Filter: None --- Action: automation.actions.ticket_cc",
-    "events": [
-      "b7e29570-c1fe-4413-be54-e91a3eb4909a"
-    ]
-  }
-},
-{
-  "model": "automation.automation",
-  "pk": "7e3524f8-ca53-4910-b6c1-1e0a8d697593",
-  "fields": {
-    "created": "2017-01-13T01:41:27.579Z",
-    "modified": "2017-01-13T01:41:27.749Z",
+    "created": "2017-01-17T17:51:47.888Z",
+    "modified": "2017-01-17T17:51:48.066Z",
     "deleted": null,
     "tenant": "045530c4-ce6c-4724-9cfd-37a16e787001",
     "description": "Filter: None --- Action: automation.actions.ticket_priority",
     "events": [
-      "b7e29570-c1fe-4413-be54-e91a3eb4909a"
+      "65444dae-9d54-4ace-bbee-69559e0e89c9"
     ]
   }
 },
 {
   "model": "automation.automation",
-  "pk": "cc76b958-5b66-4fb9-a782-60c54db0b8d7",
+  "pk": "3328d8a5-f05a-4dc1-86b2-6580fddf9895",
   "fields": {
-    "created": "2017-01-13T01:41:27.202Z",
-    "modified": "2017-01-13T01:41:27.709Z",
+    "created": "2017-01-17T17:51:47.357Z",
+    "modified": "2017-01-17T17:51:48.030Z",
+    "deleted": null,
+    "tenant": "045530c4-ce6c-4724-9cfd-37a16e787001",
+    "description": "Filter: admin.placeholder.category_filter_select --- Action: automation.actions.ticket_assignee",
+    "events": [
+      "65444dae-9d54-4ace-bbee-69559e0e89c9"
+    ]
+  }
+},
+{
+  "model": "automation.automation",
+  "pk": "3807a85f-a21e-43cb-b4c8-172bca9eae4b",
+  "fields": {
+    "created": "2017-01-17T17:51:47.585Z",
+    "modified": "2017-01-17T17:51:48.035Z",
     "deleted": null,
     "tenant": "045530c4-ce6c-4724-9cfd-37a16e787001",
     "description": "Filter: admin.placeholder.country_filter_select --- Action: automation.actions.ticket_assignee",
     "events": [
-      "b7e29570-c1fe-4413-be54-e91a3eb4909a"
+      "65444dae-9d54-4ace-bbee-69559e0e89c9"
     ]
   }
 },
 {
   "model": "automation.automation",
-  "pk": "d9cd7273-3056-46bb-9ca1-85229c8891a9",
+  "pk": "3cde95f3-cb44-4f8f-b8db-48b448e60aaa",
   "fields": {
-    "created": "2017-01-13T01:41:26.793Z",
-    "modified": "2017-01-13T01:41:27.714Z",
+    "created": "2017-01-17T17:51:47.819Z",
+    "modified": "2017-01-17T17:51:48.080Z",
     "deleted": null,
     "tenant": "045530c4-ce6c-4724-9cfd-37a16e787001",
-    "description": "Filter: admin.placeholder.priority_filter_select --- Action: automation.actions.ticket_assignee",
+    "description": "Filter: None --- Action: automation.actions.send_sms",
     "events": [
-      "b7e29570-c1fe-4413-be54-e91a3eb4909a"
+      "65444dae-9d54-4ace-bbee-69559e0e89c9"
     ]
   }
 },
 {
   "model": "automation.automation",
-  "pk": "e04ffdc9-104a-4e34-8a79-ad292982aab1",
+  "pk": "5d094de5-4b40-4159-b20a-27b2ba35ea1c",
   "fields": {
-    "created": "2017-01-13T01:41:27.607Z",
-    "modified": "2017-01-13T01:41:27.753Z",
+    "created": "2017-01-17T17:51:47.917Z",
+    "modified": "2017-01-17T17:51:48.075Z",
     "deleted": null,
     "tenant": "045530c4-ce6c-4724-9cfd-37a16e787001",
     "description": "Filter: None --- Action: automation.actions.ticket_request",
     "events": [
-      "b7e29570-c1fe-4413-be54-e91a3eb4909a"
+      "65444dae-9d54-4ace-bbee-69559e0e89c9"
     ]
   }
 },
 {
   "model": "automation.automation",
-  "pk": "e8fc3631-762d-4a98-92c8-97a9a698173e",
+  "pk": "8355102a-ef85-4577-bd6d-dd59eaec9045",
   "fields": {
-    "created": "2017-01-13T01:41:27.593Z",
-    "modified": "2017-01-13T01:41:27.723Z",
+    "created": "2017-01-17T17:51:47.930Z",
+    "modified": "2017-01-17T17:51:48.053Z",
     "deleted": null,
     "tenant": "045530c4-ce6c-4724-9cfd-37a16e787001",
-    "description": "Filter: None --- Action: automation.actions.ticket_status",
+    "description": "Filter: None --- Action: automation.actions.ticket_cc",
     "events": [
-      "b7e29570-c1fe-4413-be54-e91a3eb4909a"
+      "65444dae-9d54-4ace-bbee-69559e0e89c9"
     ]
   }
 },
 {
   "model": "automation.automation",
-  "pk": "ed938e78-1cac-41b5-9b5f-acab31446473",
+  "pk": "9d11ca4f-3997-41d1-89f5-53a5891772fc",
   "fields": {
-    "created": "2017-01-13T01:41:27.009Z",
-    "modified": "2017-01-13T01:41:27.741Z",
+    "created": "2017-01-17T17:51:47.431Z",
+    "modified": "2017-01-17T17:51:48.071Z",
     "deleted": null,
     "tenant": "045530c4-ce6c-4724-9cfd-37a16e787001",
     "description": "Filter: None --- Action: automation.actions.ticket_assignee",
     "events": [
-      "b7e29570-c1fe-4413-be54-e91a3eb4909a"
+      "65444dae-9d54-4ace-bbee-69559e0e89c9"
+    ]
+  }
+},
+{
+  "model": "automation.automation",
+  "pk": "a377b0ff-0b44-4df3-b3af-1e83e0a82b43",
+  "fields": {
+    "created": "2017-01-17T17:51:47.270Z",
+    "modified": "2017-01-17T17:51:48.040Z",
+    "deleted": null,
+    "tenant": "045530c4-ce6c-4724-9cfd-37a16e787001",
+    "description": "Filter: admin.placeholder.priority_filter_select --- Action: automation.actions.ticket_assignee",
+    "events": [
+      "65444dae-9d54-4ace-bbee-69559e0e89c9"
+    ]
+  }
+},
+{
+  "model": "automation.automation",
+  "pk": "a6af9f3e-1b53-4d7c-adfc-0a19a61fbdc7",
+  "fields": {
+    "created": "2017-01-17T17:51:47.675Z",
+    "modified": "2017-01-17T17:51:48.058Z",
+    "deleted": null,
+    "tenant": "045530c4-ce6c-4724-9cfd-37a16e787001",
+    "description": "Filter: None --- Action: automation.actions.ticket_assignee",
+    "events": [
+      "65444dae-9d54-4ace-bbee-69559e0e89c9"
+    ]
+  }
+},
+{
+  "model": "automation.automation",
+  "pk": "a723e0ea-99e4-4406-b554-0cafb76d3b59",
+  "fields": {
+    "created": "2017-01-17T17:51:47.902Z",
+    "modified": "2017-01-17T17:51:48.049Z",
+    "deleted": null,
+    "tenant": "045530c4-ce6c-4724-9cfd-37a16e787001",
+    "description": "Filter: None --- Action: automation.actions.ticket_status",
+    "events": [
+      "65444dae-9d54-4ace-bbee-69559e0e89c9"
+    ]
+  }
+},
+{
+  "model": "automation.automation",
+  "pk": "ed4264f7-19eb-4289-afea-5bea21c24ce7",
+  "fields": {
+    "created": "2017-01-17T17:51:47.748Z",
+    "modified": "2017-01-17T17:51:48.062Z",
+    "deleted": null,
+    "tenant": "045530c4-ce6c-4724-9cfd-37a16e787001",
+    "description": "Filter: None --- Action: automation.actions.send_email",
+    "events": [
+      "65444dae-9d54-4ace-bbee-69559e0e89c9"
     ]
   }
 },
 {
   "model": "automation.automationfiltertype",
-  "pk": "07ff4119-719b-403b-88ad-82a67bd0020b",
+  "pk": "0b205941-7443-4197-9671-5aef943a6c37",
   "fields": {
-    "created": "2017-01-13T01:41:27.287Z",
-    "modified": "2017-01-13T01:41:27.287Z",
+    "created": "2017-01-17T17:51:47.347Z",
+    "modified": "2017-01-17T17:51:47.347Z",
     "deleted": null,
-    "key": "admin.placeholder.country_filter_select",
+    "key": "admin.placeholder.priority_filter_select",
     "context": "ticket.ticket",
-    "field": "country",
+    "field": "priority",
     "lookups": {}
   }
 },
 {
   "model": "automation.automationfiltertype",
-  "pk": "4184a78a-7fcf-4027-a91e-1f9d3184e707",
+  "pk": "1df37672-b822-4bc3-b3a6-a9d52782e3e2",
   "fields": {
-    "created": "2017-01-13T01:41:26.999Z",
-    "modified": "2017-01-13T01:41:26.999Z",
+    "created": "2017-01-17T17:51:47.421Z",
+    "modified": "2017-01-17T17:51:47.421Z",
     "deleted": null,
     "key": "admin.placeholder.category_filter_select",
     "context": "ticket.ticket",
@@ -626,10 +626,10 @@
 },
 {
   "model": "automation.automationfiltertype",
-  "pk": "4a773dc8-2b8c-4383-82f8-9dcf9f4acf7c",
+  "pk": "528c99a9-4034-4ab2-a4da-9681d1d268ef",
   "fields": {
-    "created": "2017-01-13T01:41:27.095Z",
-    "modified": "2017-01-13T01:41:27.095Z",
+    "created": "2017-01-17T17:51:47.497Z",
+    "modified": "2017-01-17T17:51:47.497Z",
     "deleted": null,
     "key": "",
     "context": "ticket.ticket",
@@ -641,10 +641,23 @@
 },
 {
   "model": "automation.automationfiltertype",
-  "pk": "4d01c341-4c75-407e-ae67-bf62815f2696",
+  "pk": "85131a85-a1c0-470b-b00d-53bc5ec0b04d",
   "fields": {
-    "created": "2017-01-13T01:41:27.192Z",
-    "modified": "2017-01-13T01:41:27.192Z",
+    "created": "2017-01-17T17:51:47.649Z",
+    "modified": "2017-01-17T17:51:47.649Z",
+    "deleted": null,
+    "key": "admin.placeholder.country_filter_select",
+    "context": "ticket.ticket",
+    "field": "country",
+    "lookups": {}
+  }
+},
+{
+  "model": "automation.automationfiltertype",
+  "pk": "992de6ec-9f49-460e-9dd6-aafd70e5f12e",
+  "fields": {
+    "created": "2017-01-17T17:51:47.575Z",
+    "modified": "2017-01-17T17:51:47.575Z",
     "deleted": null,
     "key": "admin.placeholder.state_filter_select",
     "context": "ticket.ticket",
@@ -653,27 +666,29 @@
   }
 },
 {
-  "model": "automation.automationfiltertype",
-  "pk": "b255a552-2f72-452b-aca9-1e9c4b2e6427",
+  "model": "automation.automationfilter",
+  "pk": "35c9abc2-6cdb-4fec-8fc5-049b284dde4b",
   "fields": {
-    "created": "2017-01-13T01:41:26.904Z",
-    "modified": "2017-01-13T01:41:26.904Z",
+    "created": "2017-01-17T17:51:47.348Z",
+    "modified": "2017-01-17T17:51:47.348Z",
     "deleted": null,
-    "key": "admin.placeholder.priority_filter_select",
-    "context": "ticket.ticket",
-    "field": "priority",
-    "lookups": {}
+    "automation": "a377b0ff-0b44-4df3-b3af-1e83e0a82b43",
+    "source": "0b205941-7443-4197-9671-5aef943a6c37",
+    "lookups": {},
+    "criteria": [
+      "050530c4-ce6c-4724-9cfd-37a16e787003"
+    ]
   }
 },
 {
   "model": "automation.automationfilter",
-  "pk": "176994f7-0e73-44ec-bbb2-d8dee878363b",
+  "pk": "52a79c74-5e96-4de3-bcfe-2b5afb5f2dfc",
   "fields": {
-    "created": "2017-01-13T01:41:27.193Z",
-    "modified": "2017-01-13T01:41:27.194Z",
+    "created": "2017-01-17T17:51:47.576Z",
+    "modified": "2017-01-17T17:51:47.576Z",
     "deleted": null,
-    "automation": "04c3aa60-1ade-4d72-80ce-93fe7faaeb36",
-    "source": "4d01c341-4c75-407e-ae67-bf62815f2696",
+    "automation": "22b2dd1b-ce75-44ab-ae50-f768b619f573",
+    "source": "992de6ec-9f49-460e-9dd6-aafd70e5f12e",
     "lookups": {},
     "criteria": [
       "2f193a90-a270-48b7-8752-b4c5ad19156c"
@@ -682,47 +697,28 @@
 },
 {
   "model": "automation.automationfilter",
-  "pk": "7dbf7ac9-a867-4150-873a-0f8ba7f37093",
+  "pk": "8ec9fab8-9141-4690-bd01-5f5365c59288",
   "fields": {
-    "created": "2017-01-13T01:41:26.905Z",
-    "modified": "2017-01-13T01:41:26.905Z",
+    "created": "2017-01-17T17:51:47.422Z",
+    "modified": "2017-01-17T17:51:47.422Z",
     "deleted": null,
-    "automation": "d9cd7273-3056-46bb-9ca1-85229c8891a9",
-    "source": "b255a552-2f72-452b-aca9-1e9c4b2e6427",
+    "automation": "3328d8a5-f05a-4dc1-86b2-6580fddf9895",
+    "source": "1df37672-b822-4bc3-b3a6-a9d52782e3e2",
     "lookups": {},
     "criteria": [
-      "051530c4-ce6c-4724-9cfd-37a16e787003"
+      "024530c4-ce6c-4724-9cfd-37a16e787001"
     ]
   }
 },
 {
   "model": "automation.automationfilter",
-  "pk": "8c58f5ff-38fc-47c7-a77e-0a60b8c70a6a",
+  "pk": "c6a62850-65ce-4807-851b-1a5ad137d3e4",
   "fields": {
-    "created": "2017-01-13T01:41:27.096Z",
-    "modified": "2017-01-13T01:41:27.096Z",
+    "created": "2017-01-17T17:51:47.651Z",
+    "modified": "2017-01-17T17:51:47.651Z",
     "deleted": null,
-    "automation": "ed938e78-1cac-41b5-9b5f-acab31446473",
-    "source": "4a773dc8-2b8c-4383-82f8-9dcf9f4acf7c",
-    "lookups": {
-      "filters": "location_level",
-      "name": "Company",
-      "id": "9118f932-8a6d-42af-8c9a-13137b7cd29e"
-    },
-    "criteria": [
-      "dc669b64-20cb-433b-8d3d-0cf551dee9a8"
-    ]
-  }
-},
-{
-  "model": "automation.automationfilter",
-  "pk": "b0f23d5c-404c-41c0-9ea3-ed61f6e0c277",
-  "fields": {
-    "created": "2017-01-13T01:41:27.288Z",
-    "modified": "2017-01-13T01:41:27.288Z",
-    "deleted": null,
-    "automation": "cc76b958-5b66-4fb9-a782-60c54db0b8d7",
-    "source": "07ff4119-719b-403b-88ad-82a67bd0020b",
+    "automation": "3807a85f-a21e-43cb-b4c8-172bca9eae4b",
+    "source": "85131a85-a1c0-470b-b00d-53bc5ec0b04d",
     "lookups": {},
     "criteria": [
       "61760373-0b13-4a1e-8abe-8166ca841e01"
@@ -731,16 +727,20 @@
 },
 {
   "model": "automation.automationfilter",
-  "pk": "c442b538-f3c8-46a5-ac63-e1474700f52b",
+  "pk": "ca4e870d-2c46-40d0-96de-79fa2413915b",
   "fields": {
-    "created": "2017-01-13T01:41:27.000Z",
-    "modified": "2017-01-13T01:41:27.000Z",
+    "created": "2017-01-17T17:51:47.498Z",
+    "modified": "2017-01-17T17:51:47.498Z",
     "deleted": null,
-    "automation": "24090849-7542-49ab-8e83-e62cd16aedc5",
-    "source": "4184a78a-7fcf-4027-a91e-1f9d3184e707",
-    "lookups": {},
+    "automation": "9d11ca4f-3997-41d1-89f5-53a5891772fc",
+    "source": "528c99a9-4034-4ab2-a4da-9681d1d268ef",
+    "lookups": {
+      "id": "7b966a5c-937a-49a8-9159-7f01c55e5d68",
+      "filters": "location_level",
+      "name": "Company"
+    },
     "criteria": [
-      "023530c4-ce6c-4724-9cfd-37a16e787001"
+      "4182465c-5230-47ae-90ce-7afb2a641922"
     ]
   }
 }

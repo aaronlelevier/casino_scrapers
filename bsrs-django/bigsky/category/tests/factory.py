@@ -106,21 +106,21 @@ CATEGORIES = [
 ]
 
 
-def create_categories():
+def create_categories(tenant=None):
     statuses = create_category_statuses()
-    tenant = get_or_create_tenant()
+    tenant = tenant or get_or_create_tenant()
 
     for x in CATEGORIES:
         CategoryData = namedtuple('CategoryData', ['id', 'name', 'label', 'subcategory_label', 'parent_id'])
         data = CategoryData._make(x)._asdict()
 
         try:
-            parent = Category.objects.get(description=data['parent_id'])
+            parent = Category.objects.get(tenant=tenant, description=data['parent_id'])
         except Category.DoesNotExist:
             parent = None
 
         try:
-            Category.objects.get(name=data['name'], label=data['label'], description=data['id'])
+            Category.objects.get(tenant=tenant, name=data['name'], label=data['label'], description=data['id'])
         except Category.DoesNotExist:
             Category.objects.create(
                 id=generate_uuid(Category),
