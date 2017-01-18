@@ -4,13 +4,13 @@
       <div class="row">
         <div class="col-md-12">
           {{#form-group title="admin.category.label.cost_amount" for="cost_amount"}}
-          {{#if model.inherited.cost_amount.inherits_from}}
+          {{#unless model.inherited.cost_amount.value}}
           <p class="inherited-msg t-inherited-msg-cost_amount">
             {{#link-to "admin.categories.category" model.inherited.cost_amount.inherits_from_id class="t-inherited-msg-cost_amount-link"}}
             {{t "crud.inherited_from" from=model.inherited.cost_amount.inherits_from}}
             {{/link-to}}
           </p>
-          {{/if}}
+          {{/unless}}
           {{input-currency
             model=model
             field="cost_amount"

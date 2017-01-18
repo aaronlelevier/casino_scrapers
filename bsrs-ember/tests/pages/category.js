@@ -34,6 +34,7 @@ var CategoryPage = PageObject.create({
   labelFill: fillable('.t-category-label'),
   labelInput: PageObject.value('.t-category-label'),
   subLabelFill: fillable('.t-category-subcategory-label'),
+  scCategoryNameInput: value('.t-sc-category-name'),
   categoryClickDropdown: clickable(CATEGORY),
   categorySelected: text(`${CATEGORY_ONE}`),
   categoryOneRemove: clickable(`${CATEGORY_ONE} > .ember-power-select-multiple-remove-btn`),
@@ -47,6 +48,10 @@ var CategoryPage = PageObject.create({
   costAmountPlaceholder: () => Ember.$('.t-amount').get(0)['placeholder'],
   costAmountValue: value('.t-amount'),
   costAmountInheritedFromClick: clickable('.t-inherited-msg-cost_amount-link'),
+
+  scCategoryNameInheritedFromText: text('.t-inherited-msg-sc_category_name'),
+  scCategoryNamePlaceholder: () => Ember.$('.t-sc-category-name').get(0)['placeholder'],
+  scCategoryNameInheritedFromClick: clickable('.t-inherited-msg-sc_category_name-link'),
   
   //validation
   nameValidationErrorVisible: hasClass('invalid', '.t-category-name-validator'),

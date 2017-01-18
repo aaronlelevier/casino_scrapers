@@ -39,6 +39,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
       cost_code: this.category_defaults.costCodeOne,
       label: this.category_defaults.labelOne,
       subcategory_label: this.category_defaults.subCatLabelOne,
+      sc_category_name: this.category_defaults.scCategoryNameOne
     }
   },
   factory.prototype.children = function(id) {
@@ -110,6 +111,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
     for (var key in category) {
       response[key] = category[key];
     }
+    delete response.sc_category_name; // field is read-only, so not sent in PUT
     return response;
   };
   factory.prototype.list_power_select = function() {

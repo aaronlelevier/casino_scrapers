@@ -1,5 +1,6 @@
-const COST_AMOUNT_ONE = '10.00';
 const ID_ONE = 'ec62006b-6275-4aa9-abfa-38b146383d301';
+const COST_AMOUNT_ONE = '10.00';
+const SC_CATEGORY_NAME_ONE = 'GENERAL REPAIRS';
 
 var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
     var factory = function(currency_defaults) {
@@ -31,6 +32,8 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             nameElectricalChild: 'Outlet',
             nameUnused: 'wat',
             nameWatChild: 'scott',
+            scCategoryNameOne: SC_CATEGORY_NAME_ONE,
+            scCategoryNameTwo: 'GENERAL REPAIRS and MAINTENANCE',
             idNew: 'abc123',
             status: 'admin.category.status.active',
             descriptionRepair: 'Interior and Exterior Store Repair',
@@ -54,6 +57,12 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
                 cost_amount: {
                     value: null,
                     inherited_value: COST_AMOUNT_ONE,
+                    inherits_from: 'category',
+                    inherits_from_id: ID_ONE
+                },
+                sc_category_name: {
+                    value: null,
+                    inherited_value: SC_CATEGORY_NAME_ONE,
                     inherits_from: 'category',
                     inherits_from_id: ID_ONE
                 }

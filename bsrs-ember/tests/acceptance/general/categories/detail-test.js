@@ -69,6 +69,9 @@ test('when you deep link to the category detail view you get bound attrs', funct
     assert.equal(page.labelInput, CD.labelOne);
     assert.equal(page.amountInput, CD.costAmountOne);
     assert.equal(page.costCodeInput, CD.costCodeOne);
+    // scCategoryName
+    assert.equal(page.scCategoryNameInput, CD.scCategoryNameOne);
+    assert.ok(find('.t-sc-category-name').prop('readOnly'));
   });
   let url = PREFIX + DETAIL_URL + '/';
   let response = CF.detail(CD.idOne);
@@ -435,7 +438,7 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
   errorTearDown();
 });
 
-test('currency helper displays inherited cost_amount, and can click link-to to go to roles inherited value', function(assert) {
+test('currency helper displays inherited cost_amount, and can click link-to to go to category inherited value', function(assert) {
   clearxhr(list_xhr);
   clearxhr(detail_xhr);
   let detailData = CF.detail(CD.idTwo);
@@ -450,6 +453,26 @@ test('currency helper displays inherited cost_amount, and can click link-to to g
   });
   xhr(`${CATEGORIES_URL}${CD.idOne}/`, 'GET', null, {}, 200, CF.detail(CD.idOne));
   page.costAmountInheritedFromClick();
+  andThen(() => {
+    assert.equal(currentURL(), `${BASE_URL}/${CD.idOne}`);
+  });
+});
+
+test('currency helper displays inherited sc_category_name, and can click link-to to go to category inherited value', function(assert) {
+  clearxhr(list_xhr);
+  clearxhr(detail_xhr);
+  let detailData = CF.detail(CD.idTwo);
+  detailData.sc_category_name = undefined;
+  xhr(CATEGORIES_URL + CD.idTwo + '/', 'GET', null, {}, 200, detailData);
+  page.visitDetailTwo();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL_TWO);
+    assert.equal(page.scCategoryNamePlaceholder(), 'Default: ' + CD.scCategoryNameOne);
+    assert.equal(page.scCategoryNameInheritedFromText, 'Inherited from: ' + TD.inherits_from_category);
+    assert.equal(page.scCategoryNameInput, '');
+  });
+  xhr(`${CATEGORIES_URL}${CD.idOne}/`, 'GET', null, {}, 200, CF.detail(CD.idOne));
+  page.scCategoryNameInheritedFromClick();
   andThen(() => {
     assert.equal(currentURL(), `${BASE_URL}/${CD.idOne}`);
   });

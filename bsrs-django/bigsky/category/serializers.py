@@ -72,7 +72,7 @@ class CategoryDetailSerializer(BaseCreateSerializer):
     class Meta:
         model = Category
         fields = CATEGORY_FIELDS + ('level', 'subcategory_label', 'parent',
-                                    'children', 'inherited')
+                                    'children', 'inherited', 'sc_category_name')
 
     @staticmethod
     def eager_load(queryset):

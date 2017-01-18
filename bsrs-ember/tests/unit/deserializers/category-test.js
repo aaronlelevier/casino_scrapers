@@ -62,6 +62,7 @@ test('category deserializer returns correct data (w/ children) with no existing 
     assert.equal(categories.get('length'), 2);
     assert.ok(categories.objectAt(0).get('isNotDirty'), false);
     assert.ok(categories.objectAt(1).get('isNotDirty'), false);
+    assert.equal(category.get('sc_category_name'), CD.scCategoryNameOne);
 });
 
 test('category deserialized with null parent returns correct model with no related parent record (detail)', (assert) => {
@@ -116,14 +117,20 @@ test('category deserializer returns correct data with existing category that has
     assert.ok(categories.objectAt(0).get('isNotDirty'), false);
 });
 
-test('category deserializer detail payload contains inherited object with proxy_cost_amount field', assert => {
+test('category deserializer detail payload contains inherited object with: cost_amount and sc_category_name', assert => {
     let json = CF.detail(CD.idTwo);
     run(() => {
         subject.deserialize(json, CD.idTwo);
     });
     let categories = store.find('category', CD.idTwo);
+    // cost_amount
     assert.equal(categories.get('inherited').cost_amount.value, null);
     assert.equal(categories.get('inherited').cost_amount.inherited_value, CD.costAmountOne);
     assert.equal(categories.get('inherited').cost_amount.inherits_from, 'category');
     assert.equal(categories.get('inherited').cost_amount.inherits_from_id, CD.idOne);
+    // sc_category_name
+    assert.equal(categories.get('inherited').sc_category_name.value, null);
+    assert.equal(categories.get('inherited').sc_category_name.inherited_value, CD.scCategoryNameOne);
+    assert.equal(categories.get('inherited').sc_category_name.inherits_from, 'category');
+    assert.equal(categories.get('inherited').sc_category_name.inherits_from_id, CD.idOne);
 });

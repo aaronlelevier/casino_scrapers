@@ -142,6 +142,7 @@ class CategoryDetailTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertEqual(data['description'], category.description)
         self.assertEqual(data['label'], category.label)
         self.assertEqual(data['subcategory_label'], category.subcategory_label)
+        self.assertEqual(data['sc_category_name'], category.sc_category_name)
         self.assertEqual(data['cost_amount'], category.cost_amount)
         self.assertEqual(data['cost_currency'], str(category.cost_currency.id))
         self.assertEqual(data['cost_code'], category.cost_code)
