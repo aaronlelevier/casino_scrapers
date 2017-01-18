@@ -23,7 +23,7 @@ const LOCATION_LEVEL_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 var endpoint_detail, list_xhr, detail_xhr, location_level_district_detail_data;
 
-moduleForAcceptance('Acceptance | general detail-test', {
+moduleForAcceptance('Acceptance | general location level detail-test', {
   beforeEach() {
     let location_list_data = LLF.list();
     let location_detail_data = LLF.detail();

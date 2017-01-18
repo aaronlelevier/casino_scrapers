@@ -44,7 +44,7 @@ var LocationLevel = Model.extend(Validations, {
     };
   },
   set_children(new_children) {
-    this.set('children_fks', new_children.mapBy('id'));
+    this.set('children_fks', new_children.mapBy('id').sort());
   },
   removeRecord() {
     run(() => {
