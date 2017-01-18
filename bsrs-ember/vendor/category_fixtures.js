@@ -98,6 +98,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
     category.sub_category_label = this.category_defaults.subCatLabelOne;
     category.parent = this.category_defaults.parent;
     category.children = this.children();
+    category.inherited = this.category_defaults.inherited;
     return category;
   };
   factory.prototype.put = function(category) {

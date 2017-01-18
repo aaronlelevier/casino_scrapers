@@ -115,3 +115,15 @@ test('category deserializer returns correct data with existing category that has
     assert.equal(categories.get('length'), 1);
     assert.ok(categories.objectAt(0).get('isNotDirty'), false);
 });
+
+test('category deserializer detail payload contains inherited object with proxy_cost_amount field', assert => {
+    let json = CF.detail(CD.idTwo);
+    run(() => {
+        subject.deserialize(json, CD.idTwo);
+    });
+    let categories = store.find('category', CD.idTwo);
+    assert.equal(categories.get('inherited').proxy_cost_amount.value, null);
+    assert.equal(categories.get('inherited').proxy_cost_amount.inherited_value, CD.costAmountOne);
+    assert.equal(categories.get('inherited').proxy_cost_amount.inherits_from, 'category');
+    assert.equal(categories.get('inherited').proxy_cost_amount.inherits_from_id, CD.idOne);
+});

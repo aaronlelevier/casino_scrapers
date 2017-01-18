@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import PageObject from 'bsrs-ember/tests/page-object';
 import BASEURLS from 'bsrs-ember/utilities/urls';
 import CD from 'bsrs-ember/vendor/defaults/category';
@@ -8,6 +9,7 @@ import { POWER_SELECT_OPTIONS, multiple_options } from 'bsrs-ember/tests/helpers
 const BASE_URL = BASEURLS.base_categories_url;
 const INDEX_URL = BASEURLS.base_categories_url + '/index';
 const DETAIL_URL = `${BASE_URL}/${CD.idOne}`;
+const DETAIL_URL_TWO = `${BASE_URL}/${CD.idTwo}`;
 const CATEGORY_NEW_URL = BASE_URL + '/new/1';
 const CATEGORY = '.t-category-children-select .ember-basic-dropdown-trigger > .ember-power-select-multiple-options';
 const CATEGORIES = `${CATEGORY} > .ember-power-select-multiple-option`;
@@ -19,6 +21,7 @@ const CATEGORY_DROPDOWN = multiple_options;
 var CategoryPage = PageObject.create({
   visit: visitable(INDEX_URL),
   visitDetail: visitable(DETAIL_URL),
+  visitDetailTwo: visitable(DETAIL_URL_TWO),
   visitNew: visitable(CATEGORY_NEW_URL),
   nameFill: fillable('.t-category-name'),
   nameInput: value('.t-category-name'),
@@ -39,6 +42,11 @@ var CategoryPage = PageObject.create({
   categoryClickOptionTwoEq: clickable(`${POWER_SELECT_OPTIONS} > .ember-power-select-option:eq(1)`),
   categoryOptionLength: count(`${POWER_SELECT_OPTIONS} > li`),
   categoriesSelected: count(CATEGORIES),
+
+  costAmountInheritedFromText: text('.t-inherited-msg-cost_amount'),
+  costAmountPlaceholder: () => Ember.$('.t-amount').get(0)['placeholder'],
+  costAmountValue: value('.t-amount'),
+  costAmountInheritedFromClick: clickable('.t-inherited-msg-cost_amount-link'),
   
   //validation
   nameValidationErrorVisible: hasClass('invalid', '.t-category-name-validator'),

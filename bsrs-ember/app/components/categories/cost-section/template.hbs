@@ -4,10 +4,18 @@
       <div class="row">
         <div class="col-md-12">
           {{#form-group title="admin.category.label.cost_amount" for="cost_amount"}}
+          {{#if model.inherited.proxy_cost_amount.inherits_from}}
+          <p class="inherited-msg t-inherited-msg-cost_amount">
+            {{#link-to "admin.categories.category" model.inherited.proxy_cost_amount.inherits_from_id class="t-inherited-msg-cost_amount-link"}}
+            {{t "crud.inherited_from" from=model.inherited.proxy_cost_amount.inherits_from}}
+            {{/link-to}}
+          </p>
+          {{/if}}
           {{input-currency
             model=model
             field="cost_amount"
             currencyField="cost_currency"
+            placeholder=(t "crud.default_value" value=model.inherited.proxy_cost_amount.inherited_value)
           }}
           {{/form-group}}
         </div>

@@ -1,10 +1,13 @@
+const COST_AMOUNT_ONE = '10.00';
+const ID_ONE = 'ec62006b-6275-4aa9-abfa-38b146383d301';
+
 var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
     var factory = function(currency_defaults) {
         this.currency = currency_defaults
     };
     factory.prototype.defaults = function() {
         return {
-            idOne: 'ec62006b-6275-4aa9-abfa-38b146383d301',
+            idOne: ID_ONE,
             idTwo: 'ec62006b-6275-4aa9-abfa-38b146383d302',
             idThree: 'ec62006b-6275-4aa9-abfa-38b146383d303',
             idChild: 'ec62006b-6275-4aa9-abfa-38b146383d304',//used for outlet right now
@@ -32,7 +35,7 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             status: 'admin.category.status.active',
             descriptionRepair: 'Interior and Exterior Store Repair',
             descriptionMaintenance: 'Preventive Maintenance',
-            costAmountOne: '10.00',
+            costAmountOne: COST_AMOUNT_ONE,
             costAmountTwo: '20.00',
             currency: this.currency.id,
             costCodeOne: '12584',
@@ -46,7 +49,15 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             statusOne: 'admin.category.status.active',
             statusTwo: 'admin.category.status.inactive',
             nameRandom: 'x',
-            idRandom: 'ec62006b-6275-4aa9-abfa-38b146383z213'
+            idRandom: 'ec62006b-6275-4aa9-abfa-38b146383z213',
+            inherited: {
+                proxy_cost_amount: {
+                    value: null,
+                    inherited_value: COST_AMOUNT_ONE,
+                    inherits_from: 'category',
+                    inherits_from_id: ID_ONE
+                }
+            }
         };
     };
     return factory;

@@ -77,7 +77,8 @@ var BSRS_TENANT_DEFAULTS_OBJECT = (function() {
       password_one_timeOther: true,
       // Misc.
       inherits_from_general: 'general',
-      inherits_from_role: 'role'
+      inherits_from_role: 'role',
+      inherits_from_category: 'category'
     };
   };
   return factory;

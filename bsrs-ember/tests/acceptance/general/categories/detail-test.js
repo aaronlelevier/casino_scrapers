@@ -10,6 +10,7 @@ import config from 'bsrs-ember/config/environment';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currency';
+import TD from 'bsrs-ember/vendor/defaults/tenant';
 import page from 'bsrs-ember/tests/pages/category';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import personPage from 'bsrs-ember/tests/pages/person';
@@ -21,6 +22,7 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_categories_url;
 const CATEGORIES_INDEX_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + CD.idOne;
+const DETAIL_URL_TWO = BASE_URL + '/' + CD.idTwo;
 const GRID_DETAIL_URL = BASE_URL + '/' + CD.idGridOne;
 const LETTER_A = {keyCode: 65};
 const SPACEBAR = {keyCode: 32};
@@ -431,4 +433,24 @@ test('deep linking with an xhr with a 404 status code will show up in the error 
     assert.equal(find('.t-error-message').text(), 'WAT'); // uses `error` route/template
   });
   errorTearDown();
+});
+
+test('currency helper displays inherited cost_amount, and can click link-to to go to roles inherited value', function(assert) {
+  clearxhr(list_xhr);
+  clearxhr(detail_xhr);
+  let detailData = CF.detail(CD.idTwo);
+  detailData.cost_amount = undefined;
+  xhr(CATEGORIES_URL + CD.idTwo + '/', 'GET', null, {}, 200, detailData);
+  page.visitDetailTwo();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL_TWO);
+    assert.equal(page.costAmountPlaceholder(), 'Default: ' + CD.costAmountOne);
+    assert.equal(page.costAmountInheritedFromText, 'Inherited from: ' + TD.inherits_from_category);
+    assert.equal(page.costAmountValue, '');
+  });
+  xhr(`${CATEGORIES_URL}${CD.idOne}/`, 'GET', null, {}, 200, CF.detail(CD.idOne));
+  page.costAmountInheritedFromClick();
+  andThen(() => {
+    assert.equal(currentURL(), `${BASE_URL}/${CD.idOne}`);
+  });
 });
