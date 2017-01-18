@@ -188,8 +188,8 @@ class CategoryTests(CategorySetupMixin, TestCase):
     def test_inherited(self):
         ret = self.type.inherited
 
-        self.assertEqual(ret['proxy_cost_amount'], self.type.proxy_cost_amount)
-        self.assertEqual(ret['proxy_sc_category_name'], self.type.proxy_sc_category_name)
+        self.assertEqual(ret['cost_amount'], self.type.proxy_cost_amount)
+        self.assertEqual(ret['sc_category_name'], self.type.proxy_sc_category_name)
 
     def test_proxy_cost_amount(self):
         cost_amount = 1

@@ -131,6 +131,7 @@ def create_categories(tenant=None):
                 subcategory_label=data.get('subcategory_label'),
                 parent=parent,
                 tenant=tenant,
+                cost_amount=None if parent else 10,
                 sc_category_name=data.get('sc_category_name')
             )
 

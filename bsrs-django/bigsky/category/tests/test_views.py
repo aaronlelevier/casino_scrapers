@@ -146,8 +146,8 @@ class CategoryDetailTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertEqual(data['cost_currency'], str(category.cost_currency.id))
         self.assertEqual(data['cost_code'], category.cost_code)
         self.assertEqual(data['level'], category.level)
-        self.assertEqual(data['inherited']['proxy_cost_amount'], category.proxy_cost_amount)
-        self.assertEqual(data['inherited']['proxy_sc_category_name'], category.proxy_sc_category_name)
+        self.assertEqual(data['inherited']['cost_amount'], category.proxy_cost_amount)
+        self.assertEqual(data['inherited']['sc_category_name'], category.proxy_sc_category_name)
 
     def test_data_parent(self):
         category = Category.objects.filter(label='Issue').first()

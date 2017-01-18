@@ -166,8 +166,8 @@ class Category(BaseModel):
     @property
     def inherited(self):
         return {
-            'proxy_cost_amount': self.proxy_cost_amount,
-            'proxy_sc_category_name': self.proxy_sc_category_name
+            'cost_amount': self.proxy_cost_amount,
+            'sc_category_name': self.proxy_sc_category_name
         }
 
     proxy_cost_amount = SelfInheritedValueField('parent', 'cost_amount')

@@ -51,7 +51,7 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             nameRandom: 'x',
             idRandom: 'ec62006b-6275-4aa9-abfa-38b146383z213',
             inherited: {
-                proxy_cost_amount: {
+                cost_amount: {
                     value: null,
                     inherited_value: COST_AMOUNT_ONE,
                     inherits_from: 'category',

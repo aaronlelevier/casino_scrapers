@@ -122,8 +122,8 @@ test('category deserializer detail payload contains inherited object with proxy_
         subject.deserialize(json, CD.idTwo);
     });
     let categories = store.find('category', CD.idTwo);
-    assert.equal(categories.get('inherited').proxy_cost_amount.value, null);
-    assert.equal(categories.get('inherited').proxy_cost_amount.inherited_value, CD.costAmountOne);
-    assert.equal(categories.get('inherited').proxy_cost_amount.inherits_from, 'category');
-    assert.equal(categories.get('inherited').proxy_cost_amount.inherits_from_id, CD.idOne);
+    assert.equal(categories.get('inherited').cost_amount.value, null);
+    assert.equal(categories.get('inherited').cost_amount.inherited_value, CD.costAmountOne);
+    assert.equal(categories.get('inherited').cost_amount.inherits_from, 'category');
+    assert.equal(categories.get('inherited').cost_amount.inherits_from_id, CD.idOne);
 });

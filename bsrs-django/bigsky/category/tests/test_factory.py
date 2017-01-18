@@ -210,6 +210,15 @@ class CreateCategoriesTests(TestCase):
     def test_tenant_exists_on_all_categories(self):
         self.assertEqual(Category.objects.filter(tenant__isnull=True).count(), 0)
 
+    def test_root_categories_have_required_fields(self):
+        # required fields on root caterories are: cost_amount, sc_category_name
+        self.assertEqual(
+            Category.objects.filter(parent__isnull=True,
+                                    cost_amount__isnull=True).count(), 0)
+        self.assertEqual(
+            Category.objects.filter(parent__isnull=True,
+                                    sc_category_name__isnull=True).count(), 0)
+
 
 class CreateOtherTenantFactoryTests(TestCase):
 
