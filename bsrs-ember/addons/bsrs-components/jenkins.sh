@@ -3,13 +3,13 @@
 echo $(date -u) "EMBER COMPONENT BUILD STARTED!"
 
 function npmInstall {
-    npm install --no-optional
+    yarn install --no-optional
     NPM_INSTALL=$?
     bower install
     NPM_INSTALL=$?
     echo $NPM_INSTALL
     if [ "$NPM_INSTALL" == 1 ]; then
-      echo "npm install failed"
+      echo "yarn install failed"
       exit $NPM_INSTALL
     fi
 }
@@ -27,7 +27,7 @@ function emberUnitTest {
     fi
 }
 
-echo $(date -u) "NPM INSTALL"
+echo $(date -u) "YARN (NPM) INSTALL"
 npmInstall
 
 echo $(date -u) "EMBER UNIT TESTS"

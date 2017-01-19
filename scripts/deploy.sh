@@ -85,9 +85,9 @@ echo "EMBER"
 cd ../../bsrs-ember
 
 wait
-echo "NPM INSTALL"
-npm install
-TEST=$?; if [ "$TEST" == 1 ]; then echo "npm install failed"; exit $TEST; fi
+echo "YARN (NPM) INSTALL"
+yarn install
+TEST=$?; if [ "$TEST" == 1 ]; then echo "yarn install failed"; exit $TEST; fi
 
 
 wait

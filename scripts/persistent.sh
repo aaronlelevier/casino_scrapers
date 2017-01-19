@@ -74,12 +74,12 @@ echo "EMBER"
 cd ../../bsrs-ember
 
 wait
-echo "NPM INSTALL"
+echo "YARN (NPM) INSTALL"
 rm -rf node_modules/bsrs-components
-npm cache clean
+yarn cache clean
 bower cache clean
-npm install
-TEST=$?; if [ "$TEST" == 1 ]; then echo "npm install failed"; exit $TEST; fi
+yarn install
+TEST=$?; if [ "$TEST" == 1 ]; then echo "yarn install failed"; exit $TEST; fi
 
 
 wait

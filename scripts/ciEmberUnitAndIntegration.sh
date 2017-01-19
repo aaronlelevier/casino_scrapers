@@ -28,13 +28,13 @@ cd $SCRIPT_DIR
 cd ../
 
 function npmInstall {
-  npm cache clean
+  yarn cache clean
   bower cache clean
-  npm install
+  yarn install
   NPM_INSTALL=$?
   echo $NPM_INSTALL
   if [ "$NPM_INSTALL" == 1 ]; then
-    echo "npm install failed"
+    echo "yarn install failed"
     exit $NPM_INSTALL
   fi
 }
@@ -117,7 +117,7 @@ function emberAddonTest {
 
 cd bsrs-ember
 
-echo $(date -u) "NPM INSTALL"
+echo $(date -u) "YARN (NPM) INSTALL"
 npmInstall
 
 echo $(date -u) "EMBER UNIT TESTS"

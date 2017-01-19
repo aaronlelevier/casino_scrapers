@@ -8,7 +8,7 @@ cd $SCRIPT_DIR
 cd ../
 
 cd bsrs-ember
-npm install
+yarn install
 
 rm -rf tmp dist
 wait
