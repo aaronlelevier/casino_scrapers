@@ -173,9 +173,8 @@ Ember.Test.registerAsyncHelper('patchRandomAsync', patchRandomAsync);
 export default function startApp(attrs={}) {
   let application;
 
-  let attributes = Ember.assign({}, config.APP, attrs);
-  // let attributes = Ember.merge({}, config.APP);
-  // attributes = Ember.merge(attributes, attrs);
+  let attributes = Ember.merge({}, config.APP);
+  attributes = Ember.merge(attributes, attrs); // use defaults, but you can override;
 
   // Mock person current session
   Ember.$.fauxjax.new({
