@@ -86,5 +86,8 @@
     "markdown-code-highlighting": "0.1.0",
     "morgan": "^1.6.1",
     "object-assign": "^4.0.1"
+  },
+  "dependencies": {
+    "ember-cli-code-coverage": "^0.3.11"
   }
 }

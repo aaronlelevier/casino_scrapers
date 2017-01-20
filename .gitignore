@@ -4,7 +4,6 @@
 *.pid
 .idea
 .DS_Store
-.coverage
 /dist/assets/
 /target
 htmlcov/
@@ -37,7 +36,6 @@ bower_components/
 # misc
 .sass-cache/
 connect.lock/
-coverage/
 .ctags
 
 # personal doc files

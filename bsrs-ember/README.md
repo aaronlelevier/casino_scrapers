@@ -35,6 +35,12 @@ Make use of the many generators for code, try `ember help generate` for more det
 * `ember test`
 * `ember test --server`
 
+*Test coverage report*
+
+* `COVERAGE=true ember test`, see [ember-cli-code-coverage]
+
+[ember-cli-code-coverage]: https://github.com/kategengler/ember-cli-code-coverage
+
 ### Building
 
 * `ember build` (development)
