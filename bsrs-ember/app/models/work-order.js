@@ -32,12 +32,14 @@ let WorkOrder = Model.extend(OptConf, Validations, {
     belongs_to.bind(this)('provider', 'work-order');
     belongs_to.bind(this)('approver', 'work-order', { bootstrapped: true});
     belongs_to.bind(this)('cost_estimate_currency', 'work-order', { bootstrapped: true });
+    // setup location toOne
   },
   simpleStore: Ember.inject.service(),
   status_fk: undefined,
   category_fk: undefined,
   provider_fk: undefined,
   approver_fk: undefined,
+  // needs a location id
   cost_estimate_currency_fk: undefined,
   scheduled_date: attr(''),
   completed_date: attr(''),

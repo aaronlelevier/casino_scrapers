@@ -55,7 +55,6 @@ LOCAL_APPS = [
     'ticket',
     'translation',
     'work_order',
-    'work_request',
     'utils',
     ]
 

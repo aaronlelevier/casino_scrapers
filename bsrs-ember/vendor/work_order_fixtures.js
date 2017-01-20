@@ -15,6 +15,7 @@ var BSRS_WORK_ORDER_FACTORY = (function() {
         id: this.currency.idOne,
         name: this.currency.name
       },
+      // needs a location id
       cost_estimate: this.workOrder.costEstimateOne,
       scheduled_date: this.workOrder.scheduledDateOne,
       approval_date: this.workOrder.approvalDateOne,

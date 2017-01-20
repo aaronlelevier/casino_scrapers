@@ -35,7 +35,7 @@ class WorkOrderListTests(APITestCase):
         self.assertEqual(wo['status'], str(self.wo.status.id))
         self.assertEqual(wo['priority'], str(self.wo.priority.id))
         self.assertIsNotNone(wo['requester'])
-        self.assertIsNotNone(wo['date_due'])
+        self.assertIsNotNone(wo['scheduled_date'])
 
     def test_data_location(self):
         response = self.client.get('/api/work-orders/')
@@ -75,11 +75,16 @@ class WorkOrderDetailTests(APITestCase):
         response = self.client.get('/api/work-orders/{}/'.format(self.wo.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.wo.id))
+        self.assertIsNotNone(data['assignee'])
+        self.assertIsNotNone(data['category'])
+        self.assertIsNotNone(data['cost_estimate'])
+        self.assertIsNotNone(data['cost_estimate_currency'])
+        self.assertIsNotNone(data['instructions'])
         self.assertIsNotNone(data['location'])
-        self.assertEqual(data['status'], str(self.wo.status.id))
         self.assertEqual(data['priority'], str(self.wo.priority.id))
         self.assertIsNotNone(data['requester'])
-        self.assertIsNotNone(data['date_due'])
+        self.assertIsNotNone(data['scheduled_date'])
+        self.assertEqual(data['status'], str(self.wo.status.id))
 
 
 class WorkOrderUpdateTests(APITestCase):
@@ -145,7 +150,7 @@ class WorkOrderCreateTests(APITestCase):
     def test_data(self):
         self.data.update({
             'id': str(uuid.uuid4()),
-            'date_due': TIME
+            'scheduled_date': TIME
         })
         response = self.client.post('/api/work-orders/', self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
@@ -156,4 +161,4 @@ class WorkOrderCreateTests(APITestCase):
         self.assertEqual(data['location'], str(wo.location.id))
         self.assertEqual(data['assignee'], str(wo.assignee.id))
         self.assertEqual(data['requester'], str(wo.requester.id))
-        self.assertEqual(datetime.strptime(data['date_due'], '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%m/%d/%Y'), wo.date_due.strftime('%m/%d/%Y'))
+        self.assertEqual(datetime.strptime(data['scheduled_date'], '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%m/%d/%Y'), wo.scheduled_date.strftime('%m/%d/%Y'))

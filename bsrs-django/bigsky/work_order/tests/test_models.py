@@ -61,4 +61,4 @@ class TicketTests(TestCase):
         self.assertIsInstance(work_order.requester, Person)
         self.assertIsInstance(work_order.assignee, Person) 
         self.assertIsInstance(work_order.location, Location) 
-        self.assertEqual(work_order.date_due.strftime('%m/%d/%Y'), TIME.strftime('%m/%d/%Y')) 
+        self.assertEqual(work_order.scheduled_date.strftime('%m/%d/%Y'), TIME.strftime('%m/%d/%Y')) 
