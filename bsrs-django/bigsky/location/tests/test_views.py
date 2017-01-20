@@ -471,6 +471,10 @@ class LocationListTests(MockPermissionsAllowAnyMixin, APITestCase):
         self.assertTrue(data['count'] > 10)
         self.assertEqual(len(data['results']), settings.PAGE_SIZE)
 
+    def test_order_by_name__despite_name_field_is_ambiguous(self):
+        response = self.client.get('/api/admin/locations/?ordering=name')
+        self.assertEqual(response.status_code, 200)
+
 
 class LocationDetailTests(MockPermissionsAllowAnyMixin, APITestCase):
 

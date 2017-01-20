@@ -7,6 +7,7 @@ from model_mommy import mommy
 from rest_framework.test import APITestCase
 
 from accounting.models import Currency
+from accounting.tests.factory import create_currencies
 from accounting.serializers import CurrencySerializer
 from location.models import LocationLevel
 from location.tests.factory import create_location, create_location_level
@@ -77,94 +78,52 @@ class OrderingQuerySetMixinTests(MockPermissionsAllowAnyMixin, APITestCase):
 
     def setUp(self):
         super(OrderingQuerySetMixinTests, self).setUp()
-        # Role
-        self.role = create_role()
-        # Person Records w/ specific Username
-        for i in range(20):
-            name = self._get_name(i)
-            create_single_person(name)
-            
-        self.people = Person.objects.count()
-        # Login
-        self.person = Person.objects.first()
+        self.person = create_single_person()
+        create_currencies()
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
         super(OrderingQuerySetMixinTests, self).tearDown()
         self.client.logout()
 
-    @staticmethod
-    def _get_name(record):
-        # Generate regarless of letter case name/username function 
-        # for "ordering" tests
-        if record % 2 == 0:
-            return "wat{}".format(chr(65+record))
-        else:
-            return "Wat{}".format(chr(65+record))
+    def test_ordering_symbol(self):
+        response = self.client.get('/api/admin/currencies/?ordering=symbol')
 
-    def test_ordering_first_name_data(self):
-        response = self.client.get('/api/admin/people/?ordering=first_name')
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        record = 0
-
-    def test_ordering_first_name_data_reverse(self):
-        response = self.client.get('/api/admin/people/?ordering=-first_name')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
-            data['results'][0]['first_name'],
-            Person.objects.order_by(Lower('first_name')).reverse().first().first_name
-            )
+            data['results'][0]['symbol'],
+            Currency.objects.order_by(Lower('symbol')).first().symbol
+        )
 
-    def test_second_page(self):
-        response = self.client.get('/api/admin/people/?page=2')
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data['results']), 10)
+    def test_ordering_symbol__reverse(self):
+        response = self.client.get('/api/admin/currencies/?ordering=-symbol')
 
-    def test_ordering_second_page_ordering(self):
-        # 11th Person, should be the 1st Person on Page=2
-        response = self.client.get('/api/admin/people/?page=2&ordering=first_name')
-        self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['results'][0]['first_name'], self._get_name(10))
-
-    def test_ordering_first_page_ordering_reverse(self):
-        # The last name on the last page in descending order should
-        # be the first record in normal ascending order
-        response = self.client.get('/api/admin/people/?ordering=-first_name&page=2')
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['results'][-1]['first_name'], self._get_name(0))
+        self.assertEqual(
+            data['results'][0]['symbol'],
+            Currency.objects.order_by(Lower('symbol')).reverse().first().symbol
+        )
 
     def test_ordering_first_name_page_search(self):
-        response = self.client.get('/api/admin/people/?page=2&ordering=first_name&search=wat')
+        response = self.client.get('/api/admin/currencies/?ordering=code&search=cad')
+
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['results'][0]['first_name'], self._get_name(10))
+        self.assertEqual(data['results'][0]['code'], 'CAD')
 
     def test_ordering_data_type__date(self):
-        create_single_person()
-        create_single_person()
-        raw_qs_first = Person.objects.order_by('created').first()
+        raw_qs_first = Currency.objects.order_by('created').first()
 
-        response = self.client.get('/api/admin/people/?ordering=created')
+        response = self.client.get('/api/admin/currencies/?ordering=created')
+
         data = json.loads(response.content.decode('utf8'))
-
         self.assertEqual(str(raw_qs_first.id), data['results'][0]['id'])
 
     def test_ordering_data_type__int(self):
-        role = create_role()
-        role.auth_amount = 1
-        role.save()
-        role_two = create_role()
-        role_two.auth_amount = 2
-        role.save()
-        raw_qs_first = Role.objects.order_by('-auth_amount').first()
+        raw_qs_first = Currency.objects.order_by('-rounding').first()
 
-        response = self.client.get('/api/admin/roles/?ordering=-auth_amount')
+        response = self.client.get('/api/admin/currencies/?ordering=-rounding')
+
         data = json.loads(response.content.decode('utf8'))
-
         self.assertEqual(str(raw_qs_first.id), data['results'][0]['id'])
 
 
@@ -233,15 +192,14 @@ class RelatedOrderingTests(MockPermissionsAllowAnyMixin, APITestCase):
         )
 
     def test_list_multiple_with_non_related(self):
-        params = ["username", "role__location_level__name"]
+        params = ["title", "role__location_level__name"]
         response = self.client.get('/api/admin/people/?ordering={}'
             .format(','.join(params)))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['results'][0]['role'],
-            str(Person.objects.extra(select={'lower_username': 'lower(username)'})
-                              .order_by("lower_username", "role__location_level__name")
+            str(Person.objects.order_by("title", "role__location_level__name")
                               .first().role.id)
         )
 

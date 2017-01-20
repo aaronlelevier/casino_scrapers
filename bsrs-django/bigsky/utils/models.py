@@ -154,6 +154,28 @@ timestamp of when the record was deleted.""")
 
         return value
 
+    @classproperty
+    def ambiguous_field_names(cls):
+        """
+        :return:
+            set() of ambiguous field names on the model between
+            the model's fields and it's foreign key related models.
+        """
+        fields = cls._meta.get_fields()
+        names = set([f.name for f in fields])
+        ambiguous_names = set()
+
+        for f in fields:
+            if isinstance(f, (models.ForeignKey,)):
+                related_str_fields = [x for x in f.model._meta.get_fields()
+                                    if isinstance(x, (models.CharField, models.TextField,))]
+
+                for rf in related_str_fields:
+                    if rf.name in names:
+                        ambiguous_names.update([rf.name])
+
+        return ambiguous_names
+
 
 class ToDictNameMixin(object):
 

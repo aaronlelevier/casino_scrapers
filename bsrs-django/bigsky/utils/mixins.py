@@ -91,7 +91,7 @@ class OrderingQuerySetMixin(object):
         for param in ordering.split(','):
             field, asc = self._get_field(param)
 
-            if self._is_str_field(field):
+            if self._is_str_field(field) and field not in self.model.ambiguous_field_names:
                 select_dict[self._get_key(field)] = self._get_value(field)
                 order_by_list.append(self._get_asc_desc_value(field, asc))
             else:

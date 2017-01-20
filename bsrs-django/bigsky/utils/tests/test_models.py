@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from model_mommy import mommy
 
 from contact.models import Country
-from location.models import LocationType
+from location.models import LocationType, Location
 from person.models import Person, PersonQuerySet
 from person.tests.factory import create_single_person, create_role
 from translation.tests.factory import create_translation_keys_for_fixtures
@@ -167,6 +167,12 @@ class BaseModelTests(TestCase):
         ret = status.get_i18n_value('name')
 
         self.assertEqual(ret, status.name)
+
+    def test_ambiguous_field_names(self):
+        self.assertEqual(
+            sorted(['name', 'number']),
+            sorted(list(Location.ambiguous_field_names))
+        )
 
 
 class BaseNameModelTests(TestCase):
