@@ -18,14 +18,14 @@ class ProviderViewSet(FilterRelatedMixin, mixins.ListModelMixin, viewsets.Generi
     def list(self, request, *args, **kwargs):
         """
         GET request to the /api/providers/ endpoint
-        - param for: ?category=<id> (by trade^)
+        - param for: ?categories=<id> (by trade^)
         - param to search by a provider's name, &name__icontains=<String>
         """
-        if 'category' not in request.query_params:
+        if 'categories' not in request.query_params:
             raise exceptions.ValidationError('errors.client.category_param_missing')
 
         try:
-            Category.objects.get(id=request.query_params['category'])
+            Category.objects.get(id=request.query_params['categories'])
         except Category.DoesNotExist:
             raise exceptions.ValidationError('errors.client.category_not_found')
 

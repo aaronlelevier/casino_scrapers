@@ -14,7 +14,9 @@ def create_provider(category):
     first, middle, last = random.choice(person_names.ALL)
     num = Provider.objects.count()
     name = "{f} {m} {l} {n}".format(f=first, m=middle, l=last, n=num)
-    return mommy.make(Provider, name=name, category=category)
+    provider = mommy.make(Provider, name=name)
+    provider.categories.add(category)
+    return provider
 
 def create_providers():
     # for every category generate a list of provider objects (random between 1 and 10)

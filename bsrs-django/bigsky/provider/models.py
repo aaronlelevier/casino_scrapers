@@ -18,5 +18,5 @@ class Provider(BaseModel):
     email = models.EmailField(null=True)
     logo = models.TextField(validators=[URLValidator()], null=True)
 
-    category = models.ForeignKey(Category, related_name='providers')
+    categories = models.ManyToManyField(Category, related_name='providers')
 

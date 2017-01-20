@@ -15,8 +15,8 @@ class FactoryTest(TestCase):
         obj = factory.create_provider(category)
         self.assertIsInstance(obj, Provider)
         # The category is the Trade
-        self.assertIsInstance(obj.category, Category)
-        self.assertEqual(obj.category.children.count(), 0)
+        self.assertIsInstance(obj.categories.first(), Category)
+        self.assertEqual(obj.categories.first().children.count(), 0, 'This is a leaf node')
         self.assertIsNotNone(obj.fbid)
 
     def test_create_providers(self):
