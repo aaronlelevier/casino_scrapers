@@ -195,3 +195,13 @@ test('category deserializer sets up relationship for sccategory', assert => {
     let sccategory = store.find('sccategory.name', SCD.nameOne);
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
 });
+
+test('category deserializer does not set up relationship if sccategory is null', assert => {
+    let json = CF.detail(CD.idOne);
+    json.sc_category = null;
+    run(() => {
+        subject.deserialize(json, CD.idOne);
+    });
+    let category = store.find('category', CD.idOne);
+    assert.equal(category.get('sccategory.id'), undefined);
+});
