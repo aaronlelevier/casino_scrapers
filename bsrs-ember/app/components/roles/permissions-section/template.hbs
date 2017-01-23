@@ -21,25 +21,25 @@
 		</div>
     <div class="permission-section__cell--checkbox">
     {{checkbox-component
-     dataTestId=(concat "permission-view-" permissionItem)
+     data-test-id=(concat "permission-view-" permissionItem)
      checked=(get model (get-permission permissionItem "view"))
     }}
     </div>
     <div class="permission-section__cell--checkbox">
     {{checkbox-component
-     dataTestId=(concat "permission-add-" permissionItem)
+     data-test-id=(concat "permission-add-" permissionItem)
      checked=(get model (get-permission permissionItem "add"))
     }}
     </div>
     <div class="permission-section__cell--checkbox">
     {{checkbox-component
-     dataTestId=(concat "permission-change-" permissionItem)
+     data-test-id=(concat "permission-change-" permissionItem)
      checked=(get model (get-permission permissionItem "change"))
     }}
     </div>
     <div class="permission-section__cell--checkbox">
     {{checkbox-component
-     dataTestId=(concat "permission-delete-" permissionItem)
+     data-test-id=(concat "permission-delete-" permissionItem)
      checked=(get model (get-permission permissionItem "delete"))
     }}
     </div>
