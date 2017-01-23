@@ -1,19 +1,18 @@
-from datetime import timedelta
 import json
-from mock import patch
+from datetime import timedelta
 
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import timezone
-
+from mock import patch
+from oauth2_provider.models import AccessToken, Application
 from oauthlib.oauth2 import LegacyApplicationClient, TokenExpiredError
-from oauth2_provider.models import Application, AccessToken
 from requests_oauthlib import OAuth2Session
 
 from contact.tests.factory import create_address
 from location.models import Location
-from location.tests.factory import create_locations, SAN_DIEGO
-from person.tests.factory import create_single_person, PASSWORD
+from location.tests.factory import SAN_DIEGO, create_locations
+from person.tests.factory import PASSWORD, create_single_person
 from sc import oauth
 from sc.etl import LocationEtlAdapter, TenantEtlAdapter
 from tenant.tests.factory import get_or_create_tenant

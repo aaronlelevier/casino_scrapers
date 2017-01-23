@@ -22,6 +22,15 @@ export default Ember.Mixin.create({
       associated_model: 'category',
       associated_pointer: 'children',
       join_model: 'category-children'
+    },
+    parent: {
+      collection: 'categories',
+      owner: 'category',
+      override_property_getter: 'parent'
+    },
+    sccategory: {
+      collection: 'categories',
+      owner: 'sccategory'
     }
   },
 });

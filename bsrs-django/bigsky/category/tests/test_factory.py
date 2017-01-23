@@ -1,13 +1,24 @@
 from django.contrib.auth.models import ContentType
 from django.test import TestCase, TransactionTestCase
-
 from model_mommy import mommy
 
+from category.models import (CATEGORY_STATUSES, LABEL_TRADE, LABEL_TYPE,
+                             Category, CategoryStatus, ScCategory)
 from category.tests import factory
-from category.models import Category, CategoryStatus, CATEGORY_STATUSES, LABEL_TRADE, LABEL_TYPE
 from tenant.models import Tenant
 from tenant.tests.factory import get_or_create_tenant
 from utils.helpers import generate_uuid
+
+
+class CreateRepairCategoryTests(TestCase):
+
+    def test_main(self):
+        ret = factory.create_repair_category()
+
+        self.assertEqual(ret.name, factory.REPAIR)
+        self.assertEqual(ret.label, LABEL_TYPE)
+        self.assertEqual(ret.subcategory_label, LABEL_TRADE)
+        self.assertEqual(ret.description, 1)
 
 
 class CreateSingleCategoryTests(TestCase):
@@ -36,14 +47,6 @@ class CreateSingleCategoryTests(TestCase):
         self.assertEqual(category.parent, parent)
         self.assertEqual(category.label, parent.subcategory_label)
 
-    def test_create_repair_category(self):
-        ret = factory.create_repair_category()
-
-        self.assertEqual(ret.name, factory.REPAIR)
-        self.assertEqual(ret.label, LABEL_TYPE)
-        self.assertEqual(ret.subcategory_label, LABEL_TRADE)
-        self.assertEqual(ret.description, 1)
-
     def test_tenant(self):
         tenant = get_or_create_tenant('bar')
 
@@ -55,68 +58,6 @@ class CreateSingleCategoryTests(TestCase):
         ret = factory.create_single_category(cost_amount=10)
 
         self.assertEqual(ret.cost_amount, 10)
-
-
-class CategoryTests(TransactionTestCase):
-
-    def setUp(self):
-        self.statuses = factory.create_category_statuses()
-
-        self.type = mommy.make(
-            Category,
-            id=generate_uuid(Category),
-            name='repair',
-            subcategory_label='trade'
-        )
-
-        self.trade = mommy.make(
-            Category,
-            id=generate_uuid(Category),
-            name='plumbing',
-            subcategory_label='issue',
-            parent=self.type
-        )
-
-    def tearDown(self):
-        ContentType.objects.clear_cache()
-
-    def test_trade(self):
-        self.assertTrue(Category.objects.filter(label='trade'))
-
-    def test_parents(self):
-        self.assertTrue(self.trade.parent)
-        self.assertIsNotNone(self.trade.status)
-
-    def test_children(self):
-        self.assertTrue(self.trade.children)
-
-    def test_create_category_statuses(self):
-        statuses = factory.create_category_statuses()
-
-        self.assertEqual(
-            len(CATEGORY_STATUSES),
-            len(statuses)
-        )
-
-    def test_create_category_status(self):
-        ret = factory.create_category_status()
-
-        self.assertEqual(
-            len(CATEGORY_STATUSES),
-            CategoryStatus.objects.count()
-        )
-        self.assertIsInstance(ret, CategoryStatus)
-        self.assertIn(ret.name, CATEGORY_STATUSES)
-
-    def test_create_category_status__name_not_in_category_statuses(self):
-        with self.assertRaises(Exception):
-            factory.create_category_status('bob')
-
-    def test_create_category_status__name_arg(self):
-        name = CATEGORY_STATUSES[0]
-        ret = factory.create_category_status(name)
-
-        self.assertEqual(ret.name, name)
 
 
 class CreateCategoriesTests(TestCase):
@@ -211,16 +152,61 @@ class CreateCategoriesTests(TestCase):
         self.assertEqual(Category.objects.filter(tenant__isnull=True).count(), 0)
 
     def test_root_categories_have_required_fields(self):
-        # required fields on root caterories are: cost_amount, sc_category_name
+        # required fields on root caterories are: cost_amount, sc_category
         self.assertEqual(
             Category.objects.filter(parent__isnull=True,
                                     cost_amount__isnull=True).count(), 0)
         self.assertEqual(
             Category.objects.filter(parent__isnull=True,
-                                    sc_category_name__isnull=True).count(), 0)
+                                    sc_category__isnull=True).count(), 0)
         self.assertEqual(
             Category.objects.filter(parent__isnull=True,
                                     cost_code__isnull=True).count(), 0)
+
+
+class GetScCategoryOrNone(TestCase):
+
+    def test_get_sc_category_or_none__none(self):
+        ret = factory.get_sc_category_or_none(None)
+        self.assertIsNone(ret)
+
+    def test_get_sc_category_or_none__sc_category(self):
+        sc_name = 'WATER HEATERS'
+        ret = factory.get_sc_category_or_none(sc_name)
+        self.assertIsInstance(ret, ScCategory)
+        self.assertEqual(ret.sc_name, sc_name)
+        self.assertEqual(ret.key, 'water.heaters')
+
+
+class CategoryStatusTests(object):
+
+    def test_create_category_statuses(self):
+        statuses = factory.create_category_statuses()
+
+        self.assertEqual(
+            len(CATEGORY_STATUSES),
+            len(statuses)
+        )
+
+    def test_create_category_status(self):
+        ret = factory.create_category_status()
+
+        self.assertEqual(
+            len(CATEGORY_STATUSES),
+            CategoryStatus.objects.count()
+        )
+        self.assertIsInstance(ret, CategoryStatus)
+        self.assertIn(ret.name, CATEGORY_STATUSES)
+
+    def test_create_category_status__name_not_in_category_statuses(self):
+        with self.assertRaises(Exception):
+            factory.create_category_status('bob')
+
+    def test_create_category_status__name_arg(self):
+        name = CATEGORY_STATUSES[0]
+        ret = factory.create_category_status(name)
+
+        self.assertEqual(ret.name, name)
 
 
 class CreateOtherTenantFactoryTests(TestCase):

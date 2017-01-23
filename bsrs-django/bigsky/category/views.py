@@ -1,14 +1,22 @@
-from django.conf import settings
-
+from rest_framework import mixins, permissions, viewsets
 from rest_framework.decorators import list_route
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from category import serializers as cs
-from category.models import Category
-from utils.mixins import EagerLoadQuerySetMixin, SearchMultiMixin, FilterByTenantMixin
+from category.models import Category, ScCategory
+from utils.mixins import (EagerLoadQuerySetMixin, FilterByTenantMixin,
+                          FilterRelatedMixin, SearchMultiMixin)
 from utils.permissions import CrudPermissions
 from utils.views import BaseModelViewSet, paginate_queryset_as_response
+
+
+class ScCategoryViewSet(FilterRelatedMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+
+    model = ScCategory
+    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = cs.ScCategorySerializer
+    queryset = ScCategory.objects.all()
+    filter_fields = [f.name for f in model._meta.get_fields()]
 
 
 class CategoryViewSet(FilterByTenantMixin, EagerLoadQuerySetMixin,
@@ -37,7 +45,7 @@ class CategoryViewSet(FilterByTenantMixin, EagerLoadQuerySetMixin,
 
     '''
     model = Category
-    permission_classes = (IsAuthenticated, CrudPermissions)
+    permission_classes = (permissions.IsAuthenticated, CrudPermissions)
     queryset = Category.objects.all()
     filter_fields = [f.name for f in model._meta.get_fields()]
     eager_load_actions = ['retrieve']

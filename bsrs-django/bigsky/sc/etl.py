@@ -1,11 +1,11 @@
 import json
-import random
 
 from rest_framework.exceptions import ValidationError
 
-from contact.models import Address, AddressType, PhoneNumber, PhoneNumberType, State, Country
-from location.models import Location, LOCATION_DISTRICT, LOCATION_REGION
-from sc.oauth import BsOAuthSession, DEV_SC_SUBSCRIBERS_URL, DEV_SC_LOCATIONS_URL
+from contact.models import Address, AddressType, PhoneNumber, PhoneNumberType
+from location.models import LOCATION_DISTRICT, LOCATION_REGION, Location
+from sc.oauth import (DEV_SC_LOCATIONS_URL, DEV_SC_SUBSCRIBERS_URL,
+                      BsOAuthSession)
 
 
 class BaseEtlAdapter(object):

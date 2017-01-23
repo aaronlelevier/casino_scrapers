@@ -8,6 +8,8 @@ from django.contrib.auth.models import ContentType
 from django.test import TestCase
 from django.utils import timezone
 
+import gspread
+
 from automation.models import AutomationFilter
 from automation.tests.factory import (
     create_automation, create_ticket_priority_filter, create_ticket_categories_filter,
@@ -19,7 +21,8 @@ from person.tests.factory import create_role
 from utils.helpers import (BASE_UUID, model_to_json, model_to_json_select_related,
     model_to_json_prefetch_related, generate_uuid, get_content_type_number, media_path,
     create_default, local_strftime, queryset_to_json, add_related, remove_related,
-    clear_related, get_model_class, KwargsAsObject, get_person_and_role_ids)
+    clear_related, get_model_class, KwargsAsObject, get_person_and_role_ids,
+    get_gspread_connection)
 
 
 class ModelToJsonTests(TestCase):
@@ -227,3 +230,10 @@ class GetPersonAndRoleIdsTests(TestCase):
 
         self.assertEqual(person_ids, [action.content['recipients'][0]['id']])
         self.assertEqual(role_ids, [action.content['recipients'][1]['id']])
+
+
+class GetGspreadConnectionTests(TestCase):
+
+    def test_main(self):
+        ret = get_gspread_connection()
+        self.assertIsInstance(ret, gspread.client.Client)

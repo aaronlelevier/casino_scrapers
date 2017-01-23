@@ -1,5 +1,6 @@
 import datetime
 import json
+import os
 import pytz
 import uuid
 
@@ -7,6 +8,9 @@ from django.conf import settings
 from django.contrib.auth.models import ContentType
 from django.db import models
 from django.forms.models import model_to_dict as django_model_to_dict
+
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 
 
 BASE_UUID = "530c4-ce6c-4724-9cfd-37a16e787"
@@ -132,3 +136,10 @@ def get_person_and_role_ids(data):
             role_ids.append(x['id'])
 
     return person_ids, role_ids
+
+
+def get_gspread_connection():
+    scope = ['https://spreadsheets.google.com/feeds']
+    credentials = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(
+        os.path.join(settings.MEDIA_ROOT, 'translation'), 'i18n.json'), scope)
+    return gspread.authorize(credentials)

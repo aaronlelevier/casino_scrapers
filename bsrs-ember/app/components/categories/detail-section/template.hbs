@@ -23,6 +23,24 @@
       </div>
       <div class="row">
         <div class="col-md-12">
+          {{#form-group title="admin.category.label.parent"}}
+            {{db-fetch-select
+              model=model
+              selectedAttr=model.parent
+              allowClear=true
+              className="t-parent-select"
+              displayName="name"
+              change_func="change_parent"
+              remove_func="change_parent"
+              repository=repository
+              searchMethod="findCategory"
+              valuePath="name"
+            }}
+          {{/form-group}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
           {{#form-group title="admin.category.label.label" for="category_label"}}
           {{input type="text" placeholder=(t "admin.category.label.label") value=model.label class="form-control t-category-label" id="category_label"}}
           {{/form-group}}
@@ -37,15 +55,26 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          {{#unless model.inherited.sc_category_name.value}}
+          {{#unless model.inherited.sc_category.value}}
             <p class="inherited-msg t-inherited-msg-sc_category_name">
-              {{#link-to "admin.categories.category" model.inherited.sc_category_name.inherits_from_id class="t-inherited-msg-sc_category_name-link"}}
-              {{t "crud.inherited_from" from=model.inherited.sc_category_name.inherits_from}}
+              {{#link-to "admin.categories.category" model.inherited.sc_category.inherits_from_id class="t-inherited-msg-sc_category_name-link"}}
+              {{t "crud.inherited_from" from=model.inherited.sc_category.inherits_from}}
               {{/link-to}}
             </p>
           {{/unless}}
           {{#form-group title="admin.category.label.sc_category_name"}}
-            <input type="text" class="form-control t-sc-category-name" readonly value={{model.sc_category_name}} placeholder={{t "crud.default_value" value=model.inherited.sc_category_name.inherited_value}}>
+            {{db-fetch-select
+              model=model
+              selectedAttr=model.sccategory
+              placeholder=model.inherited.sc_category.inherited_value
+              allowClear=true
+              className="t-sc-category-name-select"
+              displayName="name"
+              change_func="change_sccategory"
+              repository=repository
+              searchMethod="findScCategory"
+              valuePath="name"
+            }}
           {{/form-group}}
         </div>
       </div>

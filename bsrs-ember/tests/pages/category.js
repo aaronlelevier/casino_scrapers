@@ -17,6 +17,11 @@ const CATEGORY_ONE = `${CATEGORIES}:eq(0)`;
 const CATEGORY_TWO = `${CATEGORIES}:eq(1)`;
 const CATEGORY_THREE = `${CATEGORIES}:eq(2)`;
 const CATEGORY_DROPDOWN = multiple_options;
+const SC_CATEGORY_NAME = '.t-sc-category-name-select .ember-basic-dropdown-trigger';
+const SC_CATEGORY_NAME_PLACEHOLDER = '.t-sc-category-name-select .ember-power-select-placeholder';
+
+const PARENT_NAME = '.t-parent-select .ember-basic-dropdown-trigger';
+
 
 var CategoryPage = PageObject.create({
   visit: visitable(INDEX_URL),
@@ -34,7 +39,6 @@ var CategoryPage = PageObject.create({
   labelFill: fillable('.t-category-label'),
   labelInput: PageObject.value('.t-category-label'),
   subLabelFill: fillable('.t-category-subcategory-label'),
-  scCategoryNameInput: value('.t-sc-category-name'),
   categoryClickDropdown: clickable(CATEGORY),
   categorySelected: text(`${CATEGORY_ONE}`),
   categoryOneRemove: clickable(`${CATEGORY_ONE} > .ember-power-select-multiple-remove-btn`),
@@ -44,14 +48,19 @@ var CategoryPage = PageObject.create({
   categoryOptionLength: count(`${POWER_SELECT_OPTIONS} > li`),
   categoriesSelected: count(CATEGORIES),
 
+  parentNameInput: text(PARENT_NAME),
+  parentNameClickRemove: clickable(`${PARENT_NAME} .ember-power-select-clear-btn`),
+
   costAmountInheritedFromText: text('.t-inherited-msg-cost_amount'),
   costAmountPlaceholder: () => Ember.$('.t-amount').get(0)['placeholder'],
   costAmountValue: value('.t-amount'),
   costAmountInheritedFromClick: clickable('.t-inherited-msg-cost_amount-link'),
 
+  scCategoryNameInput: text(SC_CATEGORY_NAME),
+  scCategoryNamePlaceholder: text(SC_CATEGORY_NAME_PLACEHOLDER),
   scCategoryNameInheritedFromText: text('.t-inherited-msg-sc_category_name'),
-  scCategoryNamePlaceholder: () => Ember.$('.t-sc-category-name').get(0)['placeholder'],
   scCategoryNameInheritedFromClick: clickable('.t-inherited-msg-sc_category_name-link'),
+  scCategoryNameClickRemove: clickable(`${SC_CATEGORY_NAME} .ember-power-select-clear-btn`),
 
   costCodePlaceholder: () => Ember.$('.t-category-cost-code').get(0)['placeholder'],
   costCodeInheritedFromText: text('.t-inherited-msg-cost_code'),

@@ -1,14 +1,18 @@
-from django.db import models
+import csv
+import os
+
 from django.conf import settings
+from django.db import models
 from django.db.models import Q
 
 from accounting.models import Currency
-from location.models import SelfReferencingQuerySet, SelfReferencingManager
+from location.models import SelfReferencingManager, SelfReferencingQuerySet
 from tenant.models import Tenant
 from utils import classproperty
 from utils.fields import SelfInheritedValueField
-from utils.models import BaseModel, BaseNameModel, DefaultNameManager
-
+from utils.helpers import get_gspread_connection
+from utils.models import (BaseManager, BaseModel, BaseNameModel, BaseQuerySet,
+                          DefaultNameManager)
 
 LABEL_ACTIVE = 'category.status.active'
 LABEL_INACTIVE = 'category.status.inactive'
@@ -110,8 +114,6 @@ class Category(BaseModel):
         help_text="This field cannot be set directly.  It is either set from "
                   "a system setting, or defaulted from the Parent Category.")
     subcategory_label = models.CharField(max_length=100, blank=True)
-    sc_category_name = models.CharField(max_length=100, null=True,
-                                  help_text="Mapping to SC Category name")
     cost_amount = models.DecimalField(max_digits=15, decimal_places=4, null=True,
                                       help_text="aka (NTE) not to exceed amount")
     cost_currency = models.ForeignKey(Currency, blank=True, null=True)
@@ -120,6 +122,9 @@ class Category(BaseModel):
     status = models.ForeignKey(CategoryStatus, blank=True, null=True)
     level = models.IntegerField(blank=True, default=0,
         help_text="A count of how many parent categories that this Category has.")
+    sc_category = models.ForeignKey("category.ScCategory", null=True,
+        help_text="Mapping to SC Category name. Can be null because this is an inherited field,"
+                  "but all root categories must have this.")
 
     objects = CategoryManager()
 
@@ -167,13 +172,13 @@ class Category(BaseModel):
     def inherited(self):
         return {
             'cost_amount': self.proxy_cost_amount,
-            'sc_category_name': self.proxy_sc_category_name,
-            'cost_code': self.proxy_cost_code
+            'cost_code': self.proxy_cost_code,
+            'sc_category': self.proxy_sc_category
         }
 
-    proxy_cost_amount = SelfInheritedValueField('parent', 'cost_amount')
-    proxy_sc_category_name = SelfInheritedValueField('parent', 'sc_category_name')
-    proxy_cost_code = SelfInheritedValueField('parent', 'cost_code')
+    proxy_cost_amount = SelfInheritedValueField('cost_amount')
+    proxy_cost_code = SelfInheritedValueField('cost_code')
+    proxy_sc_category = SelfInheritedValueField('sc_category')
 
     def to_dict(self):
         if self.parent:
@@ -227,3 +232,62 @@ class Category(BaseModel):
             return " - ".join([s['name'] for s in sorted_list])
         else:
             return self.parents_and_self_as_string(category.parent, names)
+
+
+encoding = 'ISO-8859-2'
+
+SC_TRADES_CSV = "sc_trades.csv"
+
+
+class ScCategoryQuerySet(BaseQuerySet):
+    pass
+
+
+class ScCategoryManager(BaseManager):
+
+    queryset_cls = ScCategoryQuerySet
+
+    def download_sc_trades(self):
+        """
+        Connect to Google Sheets and download 'SC Categories' to CSV
+        """
+        gc = get_gspread_connection()
+        wks = gc.open('SC Primary Trades').sheet1
+
+        with open(os.path.join(os.path.join(settings.MEDIA_ROOT, 'sc'), SC_TRADES_CSV), 'w', newline='') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',')
+            for row in wks.get_all_values():
+                writer.writerow(row)
+
+    def import_sc_trades(self):
+        """
+        Read 'SC Categories' from CSV and write to database
+        """
+        file_str = os.path.join(os.path.join(settings.MEDIA_ROOT, "sc"), SC_TRADES_CSV)
+
+        with open(file_str, encoding=encoding) as csvfile:
+            reader = csv.DictReader(csvfile)
+            for i, row in enumerate(reader):
+                try:
+                    self.create(
+                        sc_name=row['sc_name'],
+                        key=row['i18n']
+                    )
+                except Exception as e:
+                    print(i, ":", e)
+
+
+class ScCategory(BaseModel):
+    """
+    Fixture records to store the SC category trade names along
+    with i18n keys for use in UI.
+    """
+    sc_name = models.CharField(max_length=100, unique=True,
+        help_text="SC trade name")
+    key = models.CharField(max_length=100, unique=True,
+        help_text="i18n key of string name for UI. English version will be the prettified 'SC trade name'.")
+
+    objects = ScCategoryManager()
+
+    def __str__(self):
+        return self.sc_name

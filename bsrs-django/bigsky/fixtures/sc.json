@@ -1,0 +1,2455 @@
+[
+{
+  "model": "sc.sccategory",
+  "pk": "01b4382b-9778-45ca-817e-3df5ab1bd55e",
+  "fields": {
+    "created": "2017-01-24T20:35:51.554Z",
+    "modified": "2017-01-24T20:35:51.554Z",
+    "deleted": null,
+    "sc_name": "CEILINGS",
+    "key": "ceilings"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "03d951a2-9fbc-4235-93d3-673aa04a2cc3",
+  "fields": {
+    "created": "2017-01-24T20:35:51.573Z",
+    "modified": "2017-01-24T20:35:51.573Z",
+    "deleted": null,
+    "sc_name": "DOCUMENT MANAGEMENT",
+    "key": "document.management"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "0433805f-d71b-4817-9602-1ba867d20792",
+  "fields": {
+    "created": "2017-01-24T20:35:51.527Z",
+    "modified": "2017-01-24T20:35:51.527Z",
+    "deleted": null,
+    "sc_name": "AIR BALANCE",
+    "key": "air.balance"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "078ff1a2-9f2f-48fc-a6b3-80382a9d5249",
+  "fields": {
+    "created": "2017-01-24T20:35:51.640Z",
+    "modified": "2017-01-24T20:35:51.640Z",
+    "deleted": null,
+    "sc_name": "MATS",
+    "key": "mats"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "09d2783d-fb20-458c-a3e2-f14fee25031b",
+  "fields": {
+    "created": "2017-01-24T20:35:51.715Z",
+    "modified": "2017-01-24T20:35:51.715Z",
+    "deleted": null,
+    "sc_name": "VEHICLE MAINTENANCE",
+    "key": "vehicle.maintenance"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "0bbb0353-3f81-4f81-bdba-2bea814f8eef",
+  "fields": {
+    "created": "2017-01-24T20:35:51.644Z",
+    "modified": "2017-01-24T20:35:51.644Z",
+    "deleted": null,
+    "sc_name": "METAL RESTORATION",
+    "key": "metal.restoration"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "0c7e0ad4-f25e-4b0e-9477-3dfa78e1d790",
+  "fields": {
+    "created": "2017-01-24T20:35:51.524Z",
+    "modified": "2017-01-24T20:35:51.524Z",
+    "deleted": null,
+    "sc_name": "ACCOUNTING",
+    "key": "accounting"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "0d9a5fa3-0fa0-408e-bc3a-b0a2659ab5f0",
+  "fields": {
+    "created": "2017-01-24T20:35:51.644Z",
+    "modified": "2017-01-24T20:35:51.644Z",
+    "deleted": null,
+    "sc_name": "MILLWRIGHT",
+    "key": "millwright"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "0f45d24f-52f0-4456-92aa-874358ddc478",
+  "fields": {
+    "created": "2017-01-24T20:35:51.638Z",
+    "modified": "2017-01-24T20:35:51.638Z",
+    "deleted": null,
+    "sc_name": "MARKETING",
+    "key": "marketing"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "0fd22934-b9d4-42d2-bea3-f528201b0f91",
+  "fields": {
+    "created": "2017-01-24T20:35:51.667Z",
+    "modified": "2017-01-24T20:35:51.667Z",
+    "deleted": null,
+    "sc_name": "RECYCLING",
+    "key": "recycling"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "117c1b94-f196-43a5-985b-41e31c2a083a",
+  "fields": {
+    "created": "2017-01-24T20:35:51.557Z",
+    "modified": "2017-01-24T20:35:51.557Z",
+    "deleted": null,
+    "sc_name": "CHIMNEY SERVICE and REPAIR",
+    "key": "chimney.service.and.repair"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "1200bc6a-a6cf-43a4-831a-14df8633fc72",
+  "fields": {
+    "created": "2017-01-24T20:35:51.580Z",
+    "modified": "2017-01-24T20:35:51.580Z",
+    "deleted": null,
+    "sc_name": "ELECTRIC SHOPPING CARTS",
+    "key": "electric.shopping.carts"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "12e315c9-0b98-4052-8399-edd6fbbc8f55",
+  "fields": {
+    "created": "2017-01-24T20:35:51.664Z",
+    "modified": "2017-01-24T20:35:51.664Z",
+    "deleted": null,
+    "sc_name": "PRINTING",
+    "key": "printing"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "13205028-3a20-41ad-bec2-712c666c4715",
+  "fields": {
+    "created": "2017-01-24T20:35:51.566Z",
+    "modified": "2017-01-24T20:35:51.566Z",
+    "deleted": null,
+    "sc_name": "CROWD CONTROL",
+    "key": "crowd.control"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "1360d955-9f40-4747-a299-52fb265cd2ef",
+  "fields": {
+    "created": "2017-01-24T20:35:51.711Z",
+    "modified": "2017-01-24T20:35:51.711Z",
+    "deleted": null,
+    "sc_name": "TRAINING",
+    "key": "training"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "13d935a0-d092-44de-8b70-644376e0d085",
+  "fields": {
+    "created": "2017-01-24T20:35:51.578Z",
+    "modified": "2017-01-24T20:35:51.578Z",
+    "deleted": null,
+    "sc_name": "DRYWALL",
+    "key": "drywall"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "14769974-8c8b-4170-9c7e-e74caecfebeb",
+  "fields": {
+    "created": "2017-01-24T20:35:51.692Z",
+    "modified": "2017-01-24T20:35:51.692Z",
+    "deleted": null,
+    "sc_name": "SHOWCASE and DISPLAY",
+    "key": "showcase.and.display"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "14def49f-9fff-4f27-8e3b-6f4791e8e07e",
+  "fields": {
+    "created": "2017-01-24T20:35:51.717Z",
+    "modified": "2017-01-24T20:35:51.717Z",
+    "deleted": null,
+    "sc_name": "VERTICAL TRANSPORTATION",
+    "key": "vertical.transportation"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "17019171-0963-4479-ae4a-a52c8b04dc30",
+  "fields": {
+    "created": "2017-01-24T20:35:51.602Z",
+    "modified": "2017-01-24T20:35:51.602Z",
+    "deleted": null,
+    "sc_name": "GAMING AND AMUSEMENT",
+    "key": "gaming.and.amusement"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "17f8e595-5da0-47e0-be9a-7784ad29b806",
+  "fields": {
+    "created": "2017-01-24T20:35:51.552Z",
+    "modified": "2017-01-24T20:35:51.552Z",
+    "deleted": null,
+    "sc_name": "CAULKING and WATERPROOFING",
+    "key": "caulking.and.waterproofing"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "1988780e-4247-4648-9f49-cbbae1121745",
+  "fields": {
+    "created": "2017-01-24T20:35:51.547Z",
+    "modified": "2017-01-24T20:35:51.547Z",
+    "deleted": null,
+    "sc_name": "BOILERS",
+    "key": "boilers"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "1a022fe6-7698-4821-b24c-e1c90ab94b66",
+  "fields": {
+    "created": "2017-01-24T20:35:51.599Z",
+    "modified": "2017-01-24T20:35:51.599Z",
+    "deleted": null,
+    "sc_name": "FRAGRANCING",
+    "key": "fragrancing"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "1a0df745-fd7b-4c54-a2e6-4742156240c5",
+  "fields": {
+    "created": "2017-01-24T20:35:51.708Z",
+    "modified": "2017-01-24T20:35:51.708Z",
+    "deleted": null,
+    "sc_name": "TENT RENTALS",
+    "key": "tent.rentals"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "1a2aaa79-e236-4182-914f-1b606497dea6",
+  "fields": {
+    "created": "2017-01-24T20:35:51.529Z",
+    "modified": "2017-01-24T20:35:51.529Z",
+    "deleted": null,
+    "sc_name": "AIR DUCT CLEANING",
+    "key": "air.duct.cleaning"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "1b1f40ab-b233-43a2-9636-ffac1fc11fee",
+  "fields": {
+    "created": "2017-01-24T20:35:51.626Z",
+    "modified": "2017-01-24T20:35:51.626Z",
+    "deleted": null,
+    "sc_name": "KITCHEN EXHAUST",
+    "key": "kitchen.exhaust"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "1b7edcfb-c6a1-4c55-bf25-19a5c4ba434b",
+  "fields": {
+    "created": "2017-01-24T20:35:51.696Z",
+    "modified": "2017-01-24T20:35:51.696Z",
+    "deleted": null,
+    "sc_name": "SOLAR PANELS",
+    "key": "solar.panels"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "1b9356a6-0eb7-441e-afa9-996415d801bb",
+  "fields": {
+    "created": "2017-01-24T20:35:51.567Z",
+    "modified": "2017-01-24T20:35:51.567Z",
+    "deleted": null,
+    "sc_name": "CUSTOMER CHECK OUT BELTS",
+    "key": "customer.check.out.belts"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "1d3a2eea-7ada-447c-9cd1-42fd56e09a95",
+  "fields": {
+    "created": "2017-01-24T20:35:51.586Z",
+    "modified": "2017-01-24T20:35:51.586Z",
+    "deleted": null,
+    "sc_name": "EQUIPMENT LIFTING",
+    "key": "equipment.lifting"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "1d9c67c8-e787-4bbd-a8bd-3823dbbe7bd9",
+  "fields": {
+    "created": "2017-01-24T20:35:51.678Z",
+    "modified": "2017-01-24T20:35:51.678Z",
+    "deleted": null,
+    "sc_name": "ROAD MAINTENANCE",
+    "key": "road.maintenance"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "1f2e5923-dc9c-4fe9-9879-c0bf1106eda9",
+  "fields": {
+    "created": "2017-01-24T20:35:51.579Z",
+    "modified": "2017-01-24T20:35:51.579Z",
+    "deleted": null,
+    "sc_name": "EDUCATOR",
+    "key": "educator"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "21c90f2e-d392-4ba6-a312-91f29e5299e6",
+  "fields": {
+    "created": "2017-01-24T20:35:51.674Z",
+    "modified": "2017-01-24T20:35:51.674Z",
+    "deleted": null,
+    "sc_name": "RESTROOM PARTITIONS",
+    "key": "restroom.partitions"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "229d510f-2d08-4f65-b486-c495be97bd21",
+  "fields": {
+    "created": "2017-01-24T20:35:51.657Z",
+    "modified": "2017-01-24T20:35:51.657Z",
+    "deleted": null,
+    "sc_name": "PLUMBING",
+    "key": "plumbing"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "24c7d4f8-8361-4509-b321-f2e78240b82b",
+  "fields": {
+    "created": "2017-01-24T20:35:51.668Z",
+    "modified": "2017-01-24T20:35:51.668Z",
+    "deleted": null,
+    "sc_name": "REFINERY",
+    "key": "refinery"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "26bbc195-8e5b-47ed-b17a-b3b62352b56d",
+  "fields": {
+    "created": "2017-01-24T20:35:51.697Z",
+    "modified": "2017-01-24T20:35:51.697Z",
+    "deleted": null,
+    "sc_name": "SPOT COOLERS",
+    "key": "spot.coolers"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "2826916c-a4a2-4ef1-a450-0728479f1a8b",
+  "fields": {
+    "created": "2017-01-24T20:35:51.716Z",
+    "modified": "2017-01-24T20:35:51.716Z",
+    "deleted": null,
+    "sc_name": "VENDING",
+    "key": "vending"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "29989e52-709f-4ee1-8a6d-c7d612b8b158",
+  "fields": {
+    "created": "2017-01-24T20:35:51.706Z",
+    "modified": "2017-01-24T20:35:51.706Z",
+    "deleted": null,
+    "sc_name": "SUPPLIES",
+    "key": "supplies"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "2bb492d0-577e-4e7b-b266-a839c1dccbe8",
+  "fields": {
+    "created": "2017-01-24T20:35:51.614Z",
+    "modified": "2017-01-24T20:35:51.614Z",
+    "deleted": null,
+    "sc_name": "HAIR SALON EQUIPMENT",
+    "key": "hair.salon.equipment"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "2bcf075d-87ac-4c73-9d22-4949b6ba3ce6",
+  "fields": {
+    "created": "2017-01-24T20:35:51.712Z",
+    "modified": "2017-01-24T20:35:51.712Z",
+    "deleted": null,
+    "sc_name": "TRENCH DRAIN",
+    "key": "trench.drain"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "2dfc82ed-40ab-4a78-98eb-d179b3828f8c",
+  "fields": {
+    "created": "2017-01-24T20:35:51.603Z",
+    "modified": "2017-01-24T20:35:51.603Z",
+    "deleted": null,
+    "sc_name": "GARBAGE CHUTE CLEANING",
+    "key": "garbage.chute.cleaning"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "30fe95ce-93eb-4163-8f91-802b76413a62",
+  "fields": {
+    "created": "2017-01-24T20:35:51.648Z",
+    "modified": "2017-01-24T20:35:51.648Z",
+    "deleted": null,
+    "sc_name": "OPHTHALMIC EQUIPMENT",
+    "key": "ophthalmic.equipment"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "311432ee-7922-41ef-93af-37840e9776ba",
+  "fields": {
+    "created": "2017-01-24T20:35:51.546Z",
+    "modified": "2017-01-24T20:35:51.546Z",
+    "deleted": null,
+    "sc_name": "BLINDS and WINDOW COVERINGS",
+    "key": "blinds.and.window.coverings"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "3191d5b0-73be-44d5-a40e-f34498752ad0",
+  "fields": {
+    "created": "2017-01-24T20:35:51.542Z",
+    "modified": "2017-01-24T20:35:51.542Z",
+    "deleted": null,
+    "sc_name": "AWNING CLEANING",
+    "key": "awning.cleaning"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "31ffe28b-2507-42d5-9f8a-7414a7fb2765",
+  "fields": {
+    "created": "2017-01-24T20:35:51.647Z",
+    "modified": "2017-01-24T20:35:51.647Z",
+    "deleted": null,
+    "sc_name": "OFFICE EQUIPMENT",
+    "key": "office.equipment"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "331ffc62-0490-442e-bd20-8fcaf88228e5",
+  "fields": {
+    "created": "2017-01-24T20:35:51.550Z",
+    "modified": "2017-01-24T20:35:51.551Z",
+    "deleted": null,
+    "sc_name": "CAR WASH",
+    "key": "car.wash"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "357d5c71-61d0-43e6-ab4e-85ff7a16eaaa",
+  "fields": {
+    "created": "2017-01-24T20:35:51.577Z",
+    "modified": "2017-01-24T20:35:51.577Z",
+    "deleted": null,
+    "sc_name": "DRUG and ALCOHOL TESTING",
+    "key": "drug.and.alcohol.testing"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "3582e595-3d0d-4271-8fc1-5dc71dcff945",
+  "fields": {
+    "created": "2017-01-24T20:35:51.682Z",
+    "modified": "2017-01-24T20:35:51.682Z",
+    "deleted": null,
+    "sc_name": "SAFETY",
+    "key": "safety"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "3686838d-e71b-4ea0-91c6-37212953ffd5",
+  "fields": {
+    "created": "2017-01-24T20:35:51.543Z",
+    "modified": "2017-01-24T20:35:51.544Z",
+    "deleted": null,
+    "sc_name": "AWNINGS and SHADES",
+    "key": "awnings.and.shades"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "3813a689-037f-4661-b885-aa62e2ee0d8d",
+  "fields": {
+    "created": "2017-01-24T20:35:51.553Z",
+    "modified": "2017-01-24T20:35:51.553Z",
+    "deleted": null,
+    "sc_name": "CEILING CLEANING",
+    "key": "ceiling.cleaning"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "384587ec-a6d9-4eb1-ad38-8994a0565331",
+  "fields": {
+    "created": "2017-01-24T20:35:51.653Z",
+    "modified": "2017-01-24T20:35:51.653Z",
+    "deleted": null,
+    "sc_name": "PERMITS",
+    "key": "permits"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "3a2b4f50-45cc-40f6-b732-6da71941b6ed",
+  "fields": {
+    "created": "2017-01-24T20:35:51.656Z",
+    "modified": "2017-01-24T20:35:51.656Z",
+    "deleted": null,
+    "sc_name": "PLAYGROUND",
+    "key": "playground"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "3aeb6dfe-bf1f-4feb-b535-99a06adad209",
+  "fields": {
+    "created": "2017-01-24T20:35:51.662Z",
+    "modified": "2017-01-24T20:35:51.662Z",
+    "deleted": null,
+    "sc_name": "POWER WASHING",
+    "key": "power.washing"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "3aecab9f-b387-4a4a-badd-e7bfcf0f40cb",
+  "fields": {
+    "created": "2017-01-24T20:35:51.549Z",
+    "modified": "2017-01-24T20:35:51.549Z",
+    "deleted": null,
+    "sc_name": "BULLET RESISTANT ENCLOSURES",
+    "key": "bullet.resistant.enclosures"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "3cf38efa-e99f-4b49-9753-4d5fb5bef926",
+  "fields": {
+    "created": "2017-01-24T20:35:51.650Z",
+    "modified": "2017-01-24T20:35:51.650Z",
+    "deleted": null,
+    "sc_name": "PARKING LOT SWEEPING",
+    "key": "parking.lot.sweeping"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "3f1b1c66-c9d7-4eb2-ad2f-525358edca42",
+  "fields": {
+    "created": "2017-01-24T20:35:51.699Z",
+    "modified": "2017-01-24T20:35:51.699Z",
+    "deleted": null,
+    "sc_name": "STAINLESS EQUIPMENT and MAINTENANCE",
+    "key": "stainless.equipment.and.maintenance"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "4218be4c-5433-4fe0-9320-f47d3496bea6",
+  "fields": {
+    "created": "2017-01-24T20:35:51.722Z",
+    "modified": "2017-01-24T20:35:51.722Z",
+    "deleted": null,
+    "sc_name": "WATER INSTALLATIONS",
+    "key": "water.installations"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "424d18e6-a534-4122-9422-a951f72f3a61",
+  "fields": {
+    "created": "2017-01-24T20:35:51.654Z",
+    "modified": "2017-01-24T20:35:51.654Z",
+    "deleted": null,
+    "sc_name": "PEST CONTROL",
+    "key": "pest.control"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "42889436-1520-4d1c-bd42-a6943d7f4487",
+  "fields": {
+    "created": "2017-01-24T20:35:51.719Z",
+    "modified": "2017-01-24T20:35:51.719Z",
+    "deleted": null,
+    "sc_name": "WASTE and RECYCLING",
+    "key": "waste.and.recycling"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "43e0bcb7-01be-4e36-a21c-ff513d598488",
+  "fields": {
+    "created": "2017-01-24T20:35:51.533Z",
+    "modified": "2017-01-24T20:35:51.533Z",
+    "deleted": null,
+    "sc_name": "APPLIANCES",
+    "key": "appliances"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "449169a0-3b1c-4937-87d6-ea583f87b37b",
+  "fields": {
+    "created": "2017-01-24T20:35:51.539Z",
+    "modified": "2017-01-24T20:35:51.539Z",
+    "deleted": null,
+    "sc_name": "AUDIO and VIDEO",
+    "key": "audio.and.video"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "45a46be0-016f-4715-9b8e-5c6e5465bdee",
+  "fields": {
+    "created": "2017-01-24T20:35:51.617Z",
+    "modified": "2017-01-24T20:35:51.617Z",
+    "deleted": null,
+    "sc_name": "HVAC",
+    "key": "hvac"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "4c74f3b7-69e2-46c2-9e29-8fe695bf3ef7",
+  "fields": {
+    "created": "2017-01-24T20:35:51.600Z",
+    "modified": "2017-01-24T20:35:51.600Z",
+    "deleted": null,
+    "sc_name": "FREIGHT",
+    "key": "freight"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "4dcd58e2-7b11-4cdd-84e5-aaeea68c9af8",
+  "fields": {
+    "created": "2017-01-24T20:35:51.720Z",
+    "modified": "2017-01-24T20:35:51.720Z",
+    "deleted": null,
+    "sc_name": "WATER COOLERS",
+    "key": "water.coolers"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "4ee6b98f-a9e8-4d40-87c5-eb5717fa02ab",
+  "fields": {
+    "created": "2017-01-24T20:35:51.589Z",
+    "modified": "2017-01-24T20:35:51.589Z",
+    "deleted": null,
+    "sc_name": "EXCLUDE",
+    "key": "exclude"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "4f1dd5e9-38c9-49ca-84dd-e9fd54113901",
+  "fields": {
+    "created": "2017-01-24T20:35:51.684Z",
+    "modified": "2017-01-24T20:35:51.684Z",
+    "deleted": null,
+    "sc_name": "SEATING",
+    "key": "seating"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "4f41c15e-63b2-4af1-b8eb-e3d3d7fb74b9",
+  "fields": {
+    "created": "2017-01-24T20:35:51.572Z",
+    "modified": "2017-01-24T20:35:51.572Z",
+    "deleted": null,
+    "sc_name": "DOCK DOORS and EQUIPMENT",
+    "key": "dock.doors.and.equipment"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "516506ab-9db8-41a1-b56a-8c1057907d14",
+  "fields": {
+    "created": "2017-01-24T20:35:51.665Z",
+    "modified": "2017-01-24T20:35:51.665Z",
+    "deleted": null,
+    "sc_name": "PROMOTIONAL PRODUCTS",
+    "key": "promotional.products"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "52063791-6820-4892-acfd-7ebdc85018ef",
+  "fields": {
+    "created": "2017-01-24T20:35:51.597Z",
+    "modified": "2017-01-24T20:35:51.597Z",
+    "deleted": null,
+    "sc_name": "FLOOR CLEANING",
+    "key": "floor.cleaning"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "529bf727-a656-4c1c-b45a-d92d047e8533",
+  "fields": {
+    "created": "2017-01-24T20:35:51.651Z",
+    "modified": "2017-01-24T20:35:51.651Z",
+    "deleted": null,
+    "sc_name": "PARTS WASHING EQUIPMENT",
+    "key": "parts.washing.equipment"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "542408ac-a525-4524-b7fd-3765941eeba8",
+  "fields": {
+    "created": "2017-01-24T20:35:51.687Z",
+    "modified": "2017-01-24T20:35:51.687Z",
+    "deleted": null,
+    "sc_name": "SEWAGE LIFT STATIONS",
+    "key": "sewage.lift.stations"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "5546500e-e9c2-4d3f-aef0-bd32fca960d5",
+  "fields": {
+    "created": "2017-01-24T20:35:51.562Z",
+    "modified": "2017-01-24T20:35:51.562Z",
+    "deleted": null,
+    "sc_name": "CONCESSION STAND EQUIPMENT REPAIR",
+    "key": "concession.stand.equipment.repair"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "56f1ca7c-3a55-44d2-8260-f8c6ae9cdafc",
+  "fields": {
+    "created": "2017-01-24T20:35:51.701Z",
+    "modified": "2017-01-24T20:35:51.701Z",
+    "deleted": null,
+    "sc_name": "STORAGE",
+    "key": "storage"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "584e4cad-833d-42f9-96c4-ebf478914559",
+  "fields": {
+    "created": "2017-01-24T20:35:51.536Z",
+    "modified": "2017-01-24T20:35:51.536Z",
+    "deleted": null,
+    "sc_name": "ARTWORK",
+    "key": "artwork"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "58c89e0c-e958-4fe2-96bb-4c16e28cc254",
+  "fields": {
+    "created": "2017-01-24T20:35:51.587Z",
+    "modified": "2017-01-24T20:35:51.587Z",
+    "deleted": null,
+    "sc_name": "EVENT RENTALS",
+    "key": "event.rentals"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "59a0356c-8b5e-4f9d-b4e4-b53871a246da",
+  "fields": {
+    "created": "2017-01-24T20:35:51.714Z",
+    "modified": "2017-01-24T20:35:51.714Z",
+    "deleted": null,
+    "sc_name": "UTILITIES",
+    "key": "utilities"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "59fb663f-bd52-40b2-bf15-9c6a67112343",
+  "fields": {
+    "created": "2017-01-24T20:35:51.619Z",
+    "modified": "2017-01-24T20:35:51.619Z",
+    "deleted": null,
+    "sc_name": "INDUSTRIAL HYGIENE",
+    "key": "industrial.hygiene"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "5a60f43d-f882-4f35-a5e9-83fa58de04db",
+  "fields": {
+    "created": "2017-01-24T20:35:51.590Z",
+    "modified": "2017-01-24T20:35:51.590Z",
+    "deleted": null,
+    "sc_name": "EXTERIOR CLEANING and MAINTENANCE",
+    "key": "exterior.cleaning.and.maintenance"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "5b9c243c-8d78-40ab-bced-6b4f267a21cc",
+  "fields": {
+    "created": "2017-01-24T20:35:51.685Z",
+    "modified": "2017-01-24T20:35:51.685Z",
+    "deleted": null,
+    "sc_name": "SECURITY",
+    "key": "security"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "5c5df891-b714-4cb8-a770-3fe7595a9a01",
+  "fields": {
+    "created": "2017-01-24T20:35:51.669Z",
+    "modified": "2017-01-24T20:35:51.669Z",
+    "deleted": null,
+    "sc_name": "REFRIGERATION",
+    "key": "refrigeration"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "5f138403-5e29-4714-accd-ea5eb95638d3",
+  "fields": {
+    "created": "2017-01-24T20:35:51.681Z",
+    "modified": "2017-01-24T20:35:51.681Z",
+    "deleted": null,
+    "sc_name": "SAFES",
+    "key": "safes"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "5fa066bb-3a7a-402b-a4ec-046bef730550",
+  "fields": {
+    "created": "2017-01-24T20:35:51.563Z",
+    "modified": "2017-01-24T20:35:51.563Z",
+    "deleted": null,
+    "sc_name": "CONSTRUCTION",
+    "key": "construction"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "6216e9fc-67d2-4ea8-be1a-7d928e6351d9",
+  "fields": {
+    "created": "2017-01-24T20:35:51.542Z",
+    "modified": "2017-01-24T20:35:51.542Z",
+    "deleted": null,
+    "sc_name": "AUTOMATION",
+    "key": "automation"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "6893f408-697a-45f5-8829-e81a35997ff5",
+  "fields": {
+    "created": "2017-01-24T20:35:51.635Z",
+    "modified": "2017-01-24T20:35:51.635Z",
+    "deleted": null,
+    "sc_name": "MACHINE REPAIR",
+    "key": "machine.repair"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "6ac0f17a-5f70-424e-ae0e-b2fedfdca0b1",
+  "fields": {
+    "created": "2017-01-24T20:35:51.649Z",
+    "modified": "2017-01-24T20:35:51.649Z",
+    "deleted": null,
+    "sc_name": "PAINT and WALLCOVERING",
+    "key": "paint.and.wallcovering"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "6cff6083-5972-4575-80bb-9aee4155f784",
+  "fields": {
+    "created": "2017-01-24T20:35:51.596Z",
+    "modified": "2017-01-24T20:35:51.596Z",
+    "deleted": null,
+    "sc_name": "FIXXPERT",
+    "key": "fixxpert"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "6e99829e-8843-433b-9f26-9593de2fd28d",
+  "fields": {
+    "created": "2017-01-24T20:35:51.601Z",
+    "modified": "2017-01-24T20:35:51.601Z",
+    "deleted": null,
+    "sc_name": "FURNITURE and FIXTURES",
+    "key": "furniture.and.fixtures"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "7205708c-6d69-494a-85af-1ff793110a47",
+  "fields": {
+    "created": "2017-01-24T20:35:51.670Z",
+    "modified": "2017-01-24T20:35:51.670Z",
+    "deleted": null,
+    "sc_name": "REFRIGERATION PARTS",
+    "key": "refrigeration.parts"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "72e04076-4770-4921-8681-3ac42ced618d",
+  "fields": {
+    "created": "2017-01-24T20:35:51.671Z",
+    "modified": "2017-01-24T20:35:51.671Z",
+    "deleted": null,
+    "sc_name": "RELOCATION",
+    "key": "relocation"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "7314270e-453c-4afd-a849-f53d724f35d1",
+  "fields": {
+    "created": "2017-01-24T20:35:51.655Z",
+    "modified": "2017-01-24T20:35:51.655Z",
+    "deleted": null,
+    "sc_name": "PHOTOGRAPHY",
+    "key": "photography"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "737d7561-a228-4f1d-9b15-1a46488f96fe",
+  "fields": {
+    "created": "2017-01-24T20:35:51.532Z",
+    "modified": "2017-01-24T20:35:51.532Z",
+    "deleted": null,
+    "sc_name": "ANIMATRONICS",
+    "key": "animatronics"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "741d6302-cd54-4dac-895c-5da87914880f",
+  "fields": {
+    "created": "2017-01-24T20:35:51.666Z",
+    "modified": "2017-01-24T20:35:51.667Z",
+    "deleted": null,
+    "sc_name": "RAIL ROAD MATERIALS HANDLING",
+    "key": "rail.road.materials.handling"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "74b1eaf6-f9bb-4427-bb9a-372ca36a503b",
+  "fields": {
+    "created": "2017-01-24T20:35:51.545Z",
+    "modified": "2017-01-24T20:35:51.545Z",
+    "deleted": null,
+    "sc_name": "BICYCLE RACKS",
+    "key": "bicycle.racks"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "74c1d520-ac82-4eb8-b83c-9a753cf2cbaa",
+  "fields": {
+    "created": "2017-01-24T20:35:51.584Z",
+    "modified": "2017-01-24T20:35:51.584Z",
+    "deleted": null,
+    "sc_name": "ENGINEERING",
+    "key": "engineering"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "74c204ef-3194-420b-bfdd-31efd46ef77c",
+  "fields": {
+    "created": "2017-01-24T20:35:51.679Z",
+    "modified": "2017-01-24T20:35:51.679Z",
+    "deleted": null,
+    "sc_name": "ROOFING",
+    "key": "roofing"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "7617c5e8-6947-4737-902e-12409a1b703c",
+  "fields": {
+    "created": "2017-01-24T20:35:51.646Z",
+    "modified": "2017-01-24T20:35:51.646Z",
+    "deleted": null,
+    "sc_name": "NOISE CONTROL PRODUCTS",
+    "key": "noise.control.products"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "7697efa5-46a5-46fb-854b-4a8764a09497",
+  "fields": {
+    "created": "2017-01-24T20:35:51.631Z",
+    "modified": "2017-01-24T20:35:51.631Z",
+    "deleted": null,
+    "sc_name": "LINENS and TABLECLOTHS",
+    "key": "linens.and.tablecloths"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "78af9b85-ddc7-4f91-8828-41b9b91b7b5b",
+  "fields": {
+    "created": "2017-01-24T20:35:51.587Z",
+    "modified": "2017-01-24T20:35:51.587Z",
+    "deleted": null,
+    "sc_name": "EQUIPMENT MOVING",
+    "key": "equipment.moving"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "797739f9-f597-477e-b422-b125c461ae6c",
+  "fields": {
+    "created": "2017-01-24T20:35:51.583Z",
+    "modified": "2017-01-24T20:35:51.583Z",
+    "deleted": null,
+    "sc_name": "ENERGY MANAGEMENT",
+    "key": "energy.management"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "79eaa969-ead5-45e0-bd60-e34fded4d91a",
+  "fields": {
+    "created": "2017-01-24T20:35:51.616Z",
+    "modified": "2017-01-24T20:35:51.616Z",
+    "deleted": null,
+    "sc_name": "HEALTH AND SAFETY SYSTEMS",
+    "key": "health.and.safety.systems"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "7b0661de-086e-446f-b8c6-f2187f4405b3",
+  "fields": {
+    "created": "2017-01-24T20:35:51.592Z",
+    "modified": "2017-01-24T20:35:51.592Z",
+    "deleted": null,
+    "sc_name": "FENCING",
+    "key": "fencing"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "7c74c6bb-3373-47a6-a257-b83ae5b6c99d",
+  "fields": {
+    "created": "2017-01-24T20:35:51.630Z",
+    "modified": "2017-01-24T20:35:51.630Z",
+    "deleted": null,
+    "sc_name": "LIGHTING",
+    "key": "lighting"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "81bf4f0e-ff9a-4780-97ab-6f8c83932651",
+  "fields": {
+    "created": "2017-01-24T20:35:51.707Z",
+    "modified": "2017-01-24T20:35:51.707Z",
+    "deleted": null,
+    "sc_name": "TABLE/BAR TOP REFINISHING",
+    "key": "table/bar.top.refinishing"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "81f2e576-474a-48a7-8196-5ca5e877aedd",
+  "fields": {
+    "created": "2017-01-24T20:35:51.629Z",
+    "modified": "2017-01-24T20:35:51.629Z",
+    "deleted": null,
+    "sc_name": "LAUNDRY EQUIPMENT",
+    "key": "laundry.equipment"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "82839702-1e62-4cd8-8b76-6cc432036616",
+  "fields": {
+    "created": "2017-01-24T20:35:51.562Z",
+    "modified": "2017-01-24T20:35:51.562Z",
+    "deleted": null,
+    "sc_name": "CONCRETE STAINING",
+    "key": "concrete.staining"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "82a56803-4a92-491f-9338-4a849e37d5de",
+  "fields": {
+    "created": "2017-01-24T20:35:51.577Z",
+    "modified": "2017-01-24T20:35:51.577Z",
+    "deleted": null,
+    "sc_name": "DRY ICE",
+    "key": "dry.ice"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "833f92b2-7eeb-423c-8494-0a04a96dcabb",
+  "fields": {
+    "created": "2017-01-24T20:35:51.660Z",
+    "modified": "2017-01-24T20:35:51.660Z",
+    "deleted": null,
+    "sc_name": "POOL EQUIPMENT",
+    "key": "pool.equipment"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "84ef94d2-d2d6-486f-83e0-04ff0beed928",
+  "fields": {
+    "created": "2017-01-24T20:35:51.632Z",
+    "modified": "2017-01-24T20:35:51.632Z",
+    "deleted": null,
+    "sc_name": "LOCKERS",
+    "key": "lockers"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "870d7c25-c919-4969-9ad5-e70bf905f38e",
+  "fields": {
+    "created": "2017-01-24T20:35:51.661Z",
+    "modified": "2017-01-24T20:35:51.661Z",
+    "deleted": null,
+    "sc_name": "POWER GENERATION",
+    "key": "power.generation"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "8793d39d-eaad-4b33-b1cc-f165b67ae2b7",
+  "fields": {
+    "created": "2017-01-24T20:35:51.694Z",
+    "modified": "2017-01-24T20:35:51.694Z",
+    "deleted": null,
+    "sc_name": "SNOW REMOVAL",
+    "key": "snow.removal"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "889e6a01-2450-4dfc-b98f-fb3cd29a7862",
+  "fields": {
+    "created": "2017-01-24T20:35:51.571Z",
+    "modified": "2017-01-24T20:35:51.571Z",
+    "deleted": null,
+    "sc_name": "DIVING SERVICES,COMMERCIAL",
+    "key": "diving.services,commercial"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "898031e1-caf6-4ad0-9773-5237be37ab81",
+  "fields": {
+    "created": "2017-01-24T20:35:51.643Z",
+    "modified": "2017-01-24T20:35:51.643Z",
+    "deleted": null,
+    "sc_name": "MERCHANT SERVICES",
+    "key": "merchant.services"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "89b6e9d5-f87a-4ab0-8f92-a2c95c1ee25f",
+  "fields": {
+    "created": "2017-01-24T20:35:51.693Z",
+    "modified": "2017-01-24T20:35:51.693Z",
+    "deleted": null,
+    "sc_name": "SITE INSPECTIONS",
+    "key": "site.inspections"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "89d3532f-93ef-44bf-8cdb-63e17498f850",
+  "fields": {
+    "created": "2017-01-24T20:35:51.673Z",
+    "modified": "2017-01-24T20:35:51.673Z",
+    "deleted": null,
+    "sc_name": "RESTROOM ACCESSORIES",
+    "key": "restroom.accessories"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "8cbfdb12-75db-4ef9-b737-84944fe149f0",
+  "fields": {
+    "created": "2017-01-24T20:35:51.659Z",
+    "modified": "2017-01-24T20:35:51.659Z",
+    "deleted": null,
+    "sc_name": "PNEUMATIC SYSTEMS",
+    "key": "pneumatic.systems"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "8dc9c603-ef60-4b45-b4b7-75b2bf86adaa",
+  "fields": {
+    "created": "2017-01-24T20:35:51.556Z",
+    "modified": "2017-01-24T20:35:51.556Z",
+    "deleted": null,
+    "sc_name": "CHILLERS",
+    "key": "chillers"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "8e0913a5-b9ac-4640-bff8-22c483ed940b",
+  "fields": {
+    "created": "2017-01-24T20:35:51.614Z",
+    "modified": "2017-01-24T20:35:51.614Z",
+    "deleted": null,
+    "sc_name": "HARDSCAPING",
+    "key": "hardscaping"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "8e881a88-d2f6-4d2e-8704-4fbdd6a86858",
+  "fields": {
+    "created": "2017-01-24T20:35:51.609Z",
+    "modified": "2017-01-24T20:35:51.609Z",
+    "deleted": null,
+    "sc_name": "GRAFFITI REMOVAL",
+    "key": "graffiti.removal"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "8f299079-f093-4fe6-afee-3e15e524f0cb",
+  "fields": {
+    "created": "2017-01-24T20:35:51.627Z",
+    "modified": "2017-01-24T20:35:51.627Z",
+    "deleted": null,
+    "sc_name": "LABORATORY AND SCIENTIFIC EQUIPMENT",
+    "key": "laboratory.and.scientific.equipment"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "90e099ce-b717-4b33-bcb6-b97659fb913a",
+  "fields": {
+    "created": "2017-01-24T20:35:51.564Z",
+    "modified": "2017-01-24T20:35:51.564Z",
+    "deleted": null,
+    "sc_name": "CONSTRUCTION EQUIPMENT REPAIR, SALES, RENTAL",
+    "key": "construction.equipment.repair,.sales,.rental"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "912889bb-5b84-4030-9c67-2abbd6610cfe",
+  "fields": {
+    "created": "2017-01-24T20:35:51.595Z",
+    "modified": "2017-01-24T20:35:51.595Z",
+    "deleted": null,
+    "sc_name": "FITNESS EQUIPMENT",
+    "key": "fitness.equipment"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "92b74be2-8ac6-495b-b709-b27c17e0ec32",
+  "fields": {
+    "created": "2017-01-24T20:35:51.688Z",
+    "modified": "2017-01-24T20:35:51.688Z",
+    "deleted": null,
+    "sc_name": "SHARPENING SERVICES",
+    "key": "sharpening.services"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "92e98b53-b065-44eb-ae32-83403a448d43",
+  "fields": {
+    "created": "2017-01-24T20:35:51.605Z",
+    "modified": "2017-01-24T20:35:51.605Z",
+    "deleted": null,
+    "sc_name": "GENERAL REPAIRS",
+    "key": "general.repairs"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "949c11a7-a1d1-4226-989e-8fecafd159af",
+  "fields": {
+    "created": "2017-01-24T20:35:51.548Z",
+    "modified": "2017-01-24T20:35:51.548Z",
+    "deleted": null,
+    "sc_name": "BOOK-BINDING",
+    "key": "book-binding"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "95d6f727-45cd-4132-b6f7-9daf8071aaf8",
+  "fields": {
+    "created": "2017-01-24T20:35:51.625Z",
+    "modified": "2017-01-24T20:35:51.625Z",
+    "deleted": null,
+    "sc_name": "KITCHEN EQUIPMENT PARTS",
+    "key": "kitchen.equipment.parts"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "966ba0d4-97a0-46b8-adc3-afb9e2a155f4",
+  "fields": {
+    "created": "2017-01-24T20:35:51.570Z",
+    "modified": "2017-01-24T20:35:51.570Z",
+    "deleted": null,
+    "sc_name": "DENTAL EQUIPMENT REPAIR",
+    "key": "dental.equipment.repair"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "96ec5788-04d9-4beb-97be-ef59874f2bf2",
+  "fields": {
+    "created": "2017-01-24T20:35:51.598Z",
+    "modified": "2017-01-24T20:35:51.598Z",
+    "deleted": null,
+    "sc_name": "FLOORING",
+    "key": "flooring"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "991a8c30-cb59-4a13-8b41-ed4a7ecf1c87",
+  "fields": {
+    "created": "2017-01-24T20:35:51.604Z",
+    "modified": "2017-01-24T20:35:51.604Z",
+    "deleted": null,
+    "sc_name": "GATES and GRILLS",
+    "key": "gates.and.grills"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "9a22817c-3e20-4716-af7b-465584e49e37",
+  "fields": {
+    "created": "2017-01-24T20:35:51.537Z",
+    "modified": "2017-01-24T20:35:51.537Z",
+    "deleted": null,
+    "sc_name": "ASSEMBLY SERVICES",
+    "key": "assembly.services"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "9b8c9374-b156-4e17-a37f-3eb51f3e5de5",
+  "fields": {
+    "created": "2017-01-24T20:35:51.639Z",
+    "modified": "2017-01-24T20:35:51.639Z",
+    "deleted": null,
+    "sc_name": "MATERIAL HANDLING",
+    "key": "material.handling"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "9c211603-056d-4584-b481-1c2e5cc2b491",
+  "fields": {
+    "created": "2017-01-24T20:35:51.725Z",
+    "modified": "2017-01-24T20:35:51.725Z",
+    "deleted": null,
+    "sc_name": "WINDOW CLEANING",
+    "key": "window.cleaning"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "9c223d3d-d8ce-4cfe-ab9f-a434f3e3d157",
+  "fields": {
+    "created": "2017-01-24T20:35:51.703Z",
+    "modified": "2017-01-24T20:35:51.703Z",
+    "deleted": null,
+    "sc_name": "STORM WATER SYSTEMS",
+    "key": "storm.water.systems"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "9c921a7e-8718-41c1-a7c6-17c3bfa38514",
+  "fields": {
+    "created": "2017-01-24T20:35:51.538Z",
+    "modified": "2017-01-24T20:35:51.538Z",
+    "deleted": null,
+    "sc_name": "ASSET TAGGING",
+    "key": "asset.tagging"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "9cddd222-8a41-4f5f-81f4-4888fd877f80",
+  "fields": {
+    "created": "2017-01-24T20:35:51.575Z",
+    "modified": "2017-01-24T20:35:51.575Z",
+    "deleted": null,
+    "sc_name": "DOORS and GRILLS",
+    "key": "doors.and.grills"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "9f413552-0d3e-4147-a9b6-f7523bbb3340",
+  "fields": {
+    "created": "2017-01-24T20:35:51.628Z",
+    "modified": "2017-01-24T20:35:51.628Z",
+    "deleted": null,
+    "sc_name": "LANDSCAPING",
+    "key": "landscaping"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "9fbde827-f7bb-46ed-adb5-7180f0a3e7e1",
+  "fields": {
+    "created": "2017-01-24T20:35:51.560Z",
+    "modified": "2017-01-24T20:35:51.560Z",
+    "deleted": null,
+    "sc_name": "COMMUNICATIONS",
+    "key": "communications"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "9fe331bb-4131-47cf-a74d-693e197341af",
+  "fields": {
+    "created": "2017-01-24T20:35:51.555Z",
+    "modified": "2017-01-24T20:35:51.555Z",
+    "deleted": null,
+    "sc_name": "CHEMICAL PROCESS",
+    "key": "chemical.process"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "a01748bd-fd88-4094-9823-618d07cf0183",
+  "fields": {
+    "created": "2017-01-24T20:35:51.594Z",
+    "modified": "2017-01-24T20:35:51.594Z",
+    "deleted": null,
+    "sc_name": "FIRE PROTECTION and SAFETY",
+    "key": "fire.protection.and.safety"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "a0f8dfc5-5656-45a9-b582-20bfc405ecfc",
+  "fields": {
+    "created": "2017-01-24T20:35:51.691Z",
+    "modified": "2017-01-24T20:35:51.691Z",
+    "deleted": null,
+    "sc_name": "SHOPPING CARTS",
+    "key": "shopping.carts"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "a10bd797-853b-4d4b-99db-f738e4ea1f7d",
+  "fields": {
+    "created": "2017-01-24T20:35:51.622Z",
+    "modified": "2017-01-24T20:35:51.622Z",
+    "deleted": null,
+    "sc_name": "JANITORIAL",
+    "key": "janitorial"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "a19e7caf-79d8-45a6-b66b-3c445a11ad98",
+  "fields": {
+    "created": "2017-01-24T20:35:51.692Z",
+    "modified": "2017-01-24T20:35:51.693Z",
+    "deleted": null,
+    "sc_name": "SIGNS and BANNERS",
+    "key": "signs.and.banners"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "a40236c5-9c80-4b1c-980c-baed92e082ca",
+  "fields": {
+    "created": "2017-01-24T20:35:51.566Z",
+    "modified": "2017-01-24T20:35:51.566Z",
+    "deleted": null,
+    "sc_name": "COOLING TOWERS",
+    "key": "cooling.towers"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "aa7f3c35-df4f-481a-88d3-3a959252e1ea",
+  "fields": {
+    "created": "2017-01-24T20:35:51.713Z",
+    "modified": "2017-01-24T20:35:51.713Z",
+    "deleted": null,
+    "sc_name": "UPHOLSTERY",
+    "key": "upholstery"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "aa9f25ab-d3ab-4472-8e51-17d37281e6d7",
+  "fields": {
+    "created": "2017-01-24T20:35:51.652Z",
+    "modified": "2017-01-24T20:35:51.652Z",
+    "deleted": null,
+    "sc_name": "PATIO",
+    "key": "patio"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "ab01721b-0773-4d02-b9ae-ddfb5426d240",
+  "fields": {
+    "created": "2017-01-24T20:35:51.550Z",
+    "modified": "2017-01-24T20:35:51.550Z",
+    "deleted": null,
+    "sc_name": "CABLE SERVICES",
+    "key": "cable.services"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "aed5a000-b824-4b4d-ac15-583e3740576c",
+  "fields": {
+    "created": "2017-01-24T20:35:51.710Z",
+    "modified": "2017-01-24T20:35:51.710Z",
+    "deleted": null,
+    "sc_name": "THERMAL IMAGING",
+    "key": "thermal.imaging"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "b0986b61-f6d8-4799-92b1-880d27c017ec",
+  "fields": {
+    "created": "2017-01-24T20:35:51.556Z",
+    "modified": "2017-01-24T20:35:51.556Z",
+    "deleted": null,
+    "sc_name": "CHEMICALS",
+    "key": "chemicals"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "b17c340f-dd5c-4e19-9b55-ee6a3547b5d4",
+  "fields": {
+    "created": "2017-01-24T20:35:51.663Z",
+    "modified": "2017-01-24T20:35:51.663Z",
+    "deleted": null,
+    "sc_name": "POWER WASHING EQUIPMENT",
+    "key": "power.washing.equipment"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "b20afaa6-e7ca-4c3c-8d1d-8b92f03ea012",
+  "fields": {
+    "created": "2017-01-24T20:35:51.723Z",
+    "modified": "2017-01-24T20:35:51.723Z",
+    "deleted": null,
+    "sc_name": "WELDING",
+    "key": "welding"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "b2526ab4-85fe-42c5-b617-70a3e9dc8e31",
+  "fields": {
+    "created": "2017-01-24T20:35:51.620Z",
+    "modified": "2017-01-24T20:35:51.620Z",
+    "deleted": null,
+    "sc_name": "INFORMATION TECHNOLOGY",
+    "key": "information.technology"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "b3f42b6b-2686-46c5-8bbd-9b339b659205",
+  "fields": {
+    "created": "2017-01-24T20:35:51.621Z",
+    "modified": "2017-01-24T20:35:51.621Z",
+    "deleted": null,
+    "sc_name": "IRRIGATION SYSTEMS",
+    "key": "irrigation.systems"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "b53dfe14-a2b5-4ab4-a5df-3db10a7fc081",
+  "fields": {
+    "created": "2017-01-24T20:35:51.666Z",
+    "modified": "2017-01-24T20:35:51.666Z",
+    "deleted": null,
+    "sc_name": "QUALITY ASSURANCE",
+    "key": "quality.assurance"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "b6125e0a-3b42-4a72-92d8-125e1cf9e16e",
+  "fields": {
+    "created": "2017-01-24T20:35:51.637Z",
+    "modified": "2017-01-24T20:35:51.637Z",
+    "deleted": null,
+    "sc_name": "MANUFACTURING",
+    "key": "manufacturing"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "ba6fcd43-725b-4df7-a25a-39a9759de792",
+  "fields": {
+    "created": "2017-01-24T20:35:51.591Z",
+    "modified": "2017-01-24T20:35:51.591Z",
+    "deleted": null,
+    "sc_name": "EXTERIOR LIGHTING",
+    "key": "exterior.lighting"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "bc06316b-d15b-4453-b385-bc5964f82f96",
+  "fields": {
+    "created": "2017-01-24T20:35:51.541Z",
+    "modified": "2017-01-24T20:35:51.541Z",
+    "deleted": null,
+    "sc_name": "AUTO GLASS",
+    "key": "auto.glass"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "bc7c55b9-ecef-47aa-ab3f-0e62bd9ae72d",
+  "fields": {
+    "created": "2017-01-24T20:35:51.611Z",
+    "modified": "2017-01-24T20:35:51.611Z",
+    "deleted": null,
+    "sc_name": "GREASE CLEANING and DISPOSAL",
+    "key": "grease.cleaning.and.disposal"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "bd57a9a9-179d-443a-8ff0-81d5869295c8",
+  "fields": {
+    "created": "2017-01-24T20:35:51.675Z",
+    "modified": "2017-01-24T20:35:51.675Z",
+    "deleted": null,
+    "sc_name": "RETENTION PONDS",
+    "key": "retention.ponds"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "bdd56078-063e-4295-a417-395ebbafb0d3",
+  "fields": {
+    "created": "2017-01-24T20:35:51.530Z",
+    "modified": "2017-01-24T20:35:51.530Z",
+    "deleted": null,
+    "sc_name": "ALARMS",
+    "key": "alarms"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "be70c32e-9222-4122-919a-4bf9cab00409",
+  "fields": {
+    "created": "2017-01-24T20:35:51.593Z",
+    "modified": "2017-01-24T20:35:51.593Z",
+    "deleted": null,
+    "sc_name": "FINANCIAL COMPUTER EQUIPMENT",
+    "key": "financial.computer.equipment"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "bf05b7a9-8c36-458b-a537-f667e9ae30e7",
+  "fields": {
+    "created": "2017-01-24T20:35:51.576Z",
+    "modified": "2017-01-24T20:35:51.576Z",
+    "deleted": null,
+    "sc_name": "Draft Beer and Wine",
+    "key": "draft.beer.and.wine"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "bfedca6c-5d4e-4e57-a4da-780762729f92",
+  "fields": {
+    "created": "2017-01-24T20:35:51.676Z",
+    "modified": "2017-01-24T20:35:51.676Z",
+    "deleted": null,
+    "sc_name": "RISK MANAGEMENT",
+    "key": "risk.management"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "c09ba9d1-8ba0-48b8-a9c8-5a6ad5e14164",
+  "fields": {
+    "created": "2017-01-24T20:35:51.551Z",
+    "modified": "2017-01-24T20:35:51.551Z",
+    "deleted": null,
+    "sc_name": "CARPET CLEANING",
+    "key": "carpet.cleaning"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "c1793cca-d1db-4b4a-9a44-1c3ee9c68277",
+  "fields": {
+    "created": "2017-01-24T20:35:51.706Z",
+    "modified": "2017-01-24T20:35:51.706Z",
+    "deleted": null,
+    "sc_name": "STRUCTURAL REPAIRS",
+    "key": "structural.repairs"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "c207d4a3-b78f-402a-aead-3283365303fb",
+  "fields": {
+    "created": "2017-01-24T20:35:51.535Z",
+    "modified": "2017-01-24T20:35:51.535Z",
+    "deleted": null,
+    "sc_name": "ARCHITECTURAL",
+    "key": "architectural"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "c32d9ba3-0f78-4b37-b86a-67be63f0c0cc",
+  "fields": {
+    "created": "2017-01-24T20:35:51.686Z",
+    "modified": "2017-01-24T20:35:51.686Z",
+    "deleted": null,
+    "sc_name": "SECURITY EQUIPMENT",
+    "key": "security.equipment"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "c53ef4a3-89b9-4415-b446-23f0aba74102",
+  "fields": {
+    "created": "2017-01-24T20:35:51.607Z",
+    "modified": "2017-01-24T20:35:51.607Z",
+    "deleted": null,
+    "sc_name": "GLASS and MIRRORS",
+    "key": "glass.and.mirrors"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "c6fa9975-4696-4e9e-8168-189fdae54f82",
+  "fields": {
+    "created": "2017-01-24T20:35:51.709Z",
+    "modified": "2017-01-24T20:35:51.709Z",
+    "deleted": null,
+    "sc_name": "THEATRE SCREEN RIGGING",
+    "key": "theatre.screen.rigging"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "c70997d2-ad18-4bff-a7ed-8832cf137b19",
+  "fields": {
+    "created": "2017-01-24T20:35:51.672Z",
+    "modified": "2017-01-24T20:35:51.672Z",
+    "deleted": null,
+    "sc_name": "REMEDIATION",
+    "key": "remediation"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "c85c2fde-1605-488a-b759-6e2ce9a4f2e2",
+  "fields": {
+    "created": "2017-01-24T20:35:51.571Z",
+    "modified": "2017-01-24T20:35:51.571Z",
+    "deleted": null,
+    "sc_name": "DISASTER RECOVERY",
+    "key": "disaster.recovery"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "c94c0034-2b62-4460-9334-4c1784eddd89",
+  "fields": {
+    "created": "2017-01-24T20:35:51.588Z",
+    "modified": "2017-01-24T20:35:51.588Z",
+    "deleted": null,
+    "sc_name": "EXCAVATION AND SOIL CONSTRUCTION",
+    "key": "excavation.and.soil.construction"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "cb8d7ebe-90af-4eaa-9693-4d6a314d6926",
+  "fields": {
+    "created": "2017-01-24T20:35:51.702Z",
+    "modified": "2017-01-24T20:35:51.702Z",
+    "deleted": null,
+    "sc_name": "STOREFRONT",
+    "key": "storefront"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "cc614265-79d7-4196-b028-9b29cd8fdb27",
+  "fields": {
+    "created": "2017-01-24T20:35:51.568Z",
+    "modified": "2017-01-24T20:35:51.568Z",
+    "deleted": null,
+    "sc_name": "CUSTOMER PAGING SYSTEMS",
+    "key": "customer.paging.systems"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "cd047632-ea75-4293-91e7-b59c6fb442d1",
+  "fields": {
+    "created": "2017-01-24T20:35:51.633Z",
+    "modified": "2017-01-24T20:35:51.633Z",
+    "deleted": null,
+    "sc_name": "LOCKS and KEYS",
+    "key": "locks.and.keys"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "cdefcb89-bddd-42b2-8f1d-44b0a7a4ae47",
+  "fields": {
+    "created": "2017-01-24T20:35:51.677Z",
+    "modified": "2017-01-24T20:35:51.677Z",
+    "deleted": null,
+    "sc_name": "RIVER AND LEVEE REPAIR",
+    "key": "river.and.levee.repair"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "ced5f716-db0e-403f-96a6-3972a658df86",
+  "fields": {
+    "created": "2017-01-24T20:35:51.574Z",
+    "modified": "2017-01-24T20:35:51.574Z",
+    "deleted": null,
+    "sc_name": "DOORS",
+    "key": "doors"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "cfb693cb-8385-4495-99c8-e9a6fb25b2a6",
+  "fields": {
+    "created": "2017-01-24T20:35:51.600Z",
+    "modified": "2017-01-24T20:35:51.601Z",
+    "deleted": null,
+    "sc_name": "FUEL SYSTEMS",
+    "key": "fuel.systems"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "d00d858f-4e29-4497-9aa5-34af72041291",
+  "fields": {
+    "created": "2017-01-24T20:35:51.626Z",
+    "modified": "2017-01-24T20:35:51.626Z",
+    "deleted": null,
+    "sc_name": "KITCHEN VENTILATION CONTROLS",
+    "key": "kitchen.ventilation.controls"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "d0bbdc3a-2c05-4651-be64-79acf3011eb6",
+  "fields": {
+    "created": "2017-01-24T20:35:51.544Z",
+    "modified": "2017-01-24T20:35:51.544Z",
+    "deleted": null,
+    "sc_name": "BAR EQUIPMENT",
+    "key": "bar.equipment"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "d0bc625b-2030-4507-88e5-28140727ca3f",
+  "fields": {
+    "created": "2017-01-24T20:35:51.613Z",
+    "modified": "2017-01-24T20:35:51.613Z",
+    "deleted": null,
+    "sc_name": "GUTTERS and REPAIRS",
+    "key": "gutters.and.repairs"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "d1b90634-2a14-45c3-bd8f-2758ba5b52fe",
+  "fields": {
+    "created": "2017-01-24T20:35:51.559Z",
+    "modified": "2017-01-24T20:35:51.559Z",
+    "deleted": null,
+    "sc_name": "COIL CLEANING",
+    "key": "coil.cleaning"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "d36c7c6e-f2a2-4183-91c4-769f9cf9240f",
+  "fields": {
+    "created": "2017-01-24T20:35:51.658Z",
+    "modified": "2017-01-24T20:35:51.658Z",
+    "deleted": null,
+    "sc_name": "PLUMBING PARTS",
+    "key": "plumbing.parts"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "d3f85778-2cd4-4087-bd8b-ec6735fbade4",
+  "fields": {
+    "created": "2017-01-24T20:35:51.653Z",
+    "modified": "2017-01-24T20:35:51.653Z",
+    "deleted": null,
+    "sc_name": "PAVING",
+    "key": "paving"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "d46cb0c4-bfa4-404b-81be-8fc97e85173b",
+  "fields": {
+    "created": "2017-01-24T20:35:51.610Z",
+    "modified": "2017-01-24T20:35:51.610Z",
+    "deleted": null,
+    "sc_name": "GRAPHIC DESIGN",
+    "key": "graphic.design"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "d6ac7ae6-f10d-480f-8eac-d7e3bfed3bab",
+  "fields": {
+    "created": "2017-01-24T20:35:51.718Z",
+    "modified": "2017-01-24T20:35:51.718Z",
+    "deleted": null,
+    "sc_name": "VIOLATIONS",
+    "key": "violations"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "d7f6cd7e-a955-494c-a3ed-0432ebecf462",
+  "fields": {
+    "created": "2017-01-24T20:35:51.641Z",
+    "modified": "2017-01-24T20:35:51.641Z",
+    "deleted": null,
+    "sc_name": "MEAT PROCESSING",
+    "key": "meat.processing"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "d8f5cfe3-a551-46ff-bb55-eb0b554b651a",
+  "fields": {
+    "created": "2017-01-24T20:35:51.724Z",
+    "modified": "2017-01-24T20:35:51.724Z",
+    "deleted": null,
+    "sc_name": "WHOLESALE DISTRIBUTING",
+    "key": "wholesale.distributing"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "d94a5e3d-1a0b-48f0-a860-c08a2a5642ba",
+  "fields": {
+    "created": "2017-01-24T20:35:51.569Z",
+    "modified": "2017-01-24T20:35:51.569Z",
+    "deleted": null,
+    "sc_name": "DEMOLITION",
+    "key": "demolition"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "d9e67b5a-4eb8-4dfe-92a7-1f6c1f53ad81",
+  "fields": {
+    "created": "2017-01-24T20:35:51.636Z",
+    "modified": "2017-01-24T20:35:51.636Z",
+    "deleted": null,
+    "sc_name": "MAIL SERVICES",
+    "key": "mail.services"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "db46ad47-5214-4fae-8c88-7bfe5d9cf394",
+  "fields": {
+    "created": "2017-01-24T20:35:51.607Z",
+    "modified": "2017-01-24T20:35:51.607Z",
+    "deleted": null,
+    "sc_name": "GENERATORS",
+    "key": "generators"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "ddb80403-86a2-4888-94ee-2a3503055cd5",
+  "fields": {
+    "created": "2017-01-24T20:35:51.623Z",
+    "modified": "2017-01-24T20:35:51.623Z",
+    "deleted": null,
+    "sc_name": "JUNK REMOVAL",
+    "key": "junk.removal"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "ddbb09ff-6efa-4682-8728-8a385012e074",
+  "fields": {
+    "created": "2017-01-24T20:35:51.695Z",
+    "modified": "2017-01-24T20:35:51.695Z",
+    "deleted": null,
+    "sc_name": "SODA EQUIPMENT",
+    "key": "soda.equipment"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "e0247afc-437f-4431-a908-e8087ffaf19a",
+  "fields": {
+    "created": "2017-01-24T20:35:51.721Z",
+    "modified": "2017-01-24T20:35:51.721Z",
+    "deleted": null,
+    "sc_name": "WATER HEATERS",
+    "key": "water.heaters"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "e10589ce-6cb2-4ba7-840e-f717c9a66ed7",
+  "fields": {
+    "created": "2017-01-24T20:35:51.715Z",
+    "modified": "2017-01-24T20:35:51.715Z",
+    "deleted": null,
+    "sc_name": "VACUUM",
+    "key": "vacuum"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "e11ea64a-33b8-4201-8caf-b78a123e380d",
+  "fields": {
+    "created": "2017-01-24T20:35:51.635Z",
+    "modified": "2017-01-24T20:35:51.635Z",
+    "deleted": null,
+    "sc_name": "LOSS PREVENTION AND INVESTIGATIONS",
+    "key": "loss.prevention.and.investigations"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "e23d151e-1d6d-4cce-b0b9-2f98f583f187",
+  "fields": {
+    "created": "2017-01-24T20:35:51.689Z",
+    "modified": "2017-01-24T20:35:51.689Z",
+    "deleted": null,
+    "sc_name": "SHEET METAL",
+    "key": "sheet.metal"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "e333af80-114c-488c-bb88-56f66d61a243",
+  "fields": {
+    "created": "2017-01-24T20:35:51.624Z",
+    "modified": "2017-01-24T20:35:51.624Z",
+    "deleted": null,
+    "sc_name": "KITCHEN EQUIPMENT",
+    "key": "kitchen.equipment"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "e36e8729-00a0-4d3b-bd3d-6ad26535489b",
+  "fields": {
+    "created": "2017-01-24T20:35:51.534Z",
+    "modified": "2017-01-24T20:35:51.534Z",
+    "deleted": null,
+    "sc_name": "AQUARIUMS",
+    "key": "aquariums"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "e68585be-b3ed-43cd-a5cd-3772ee8c94b6",
+  "fields": {
+    "created": "2017-01-24T20:35:51.634Z",
+    "modified": "2017-01-24T20:35:51.634Z",
+    "deleted": null,
+    "sc_name": "LOGISTICS",
+    "key": "logistics"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "e82219f8-d40e-4b59-b100-e11d6a44d95b",
+  "fields": {
+    "created": "2017-01-24T20:35:51.642Z",
+    "modified": "2017-01-24T20:35:51.642Z",
+    "deleted": null,
+    "sc_name": "MEDICAL EQUIPMENT REPAIR",
+    "key": "medical.equipment.repair"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "e911577e-f8b5-4d9f-ad1c-cbb872f66007",
+  "fields": {
+    "created": "2017-01-24T20:35:51.606Z",
+    "modified": "2017-01-24T20:35:51.606Z",
+    "deleted": null,
+    "sc_name": "GENERAL REPAIRS and MAINTENANCE",
+    "key": "general.repairs.and.maintenance"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "e9129b63-6417-4e1a-9b76-169bdc3d7667",
+  "fields": {
+    "created": "2017-01-24T20:35:51.582Z",
+    "modified": "2017-01-24T20:35:51.582Z",
+    "deleted": null,
+    "sc_name": "EMERGENCY CLEANING",
+    "key": "emergency.cleaning"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "eb3ff9ee-50fb-485d-9067-aaf4b4724d84",
+  "fields": {
+    "created": "2017-01-24T20:35:51.558Z",
+    "modified": "2017-01-24T20:35:51.558Z",
+    "deleted": null,
+    "sc_name": "COFFEE EQUIPMENT",
+    "key": "coffee.equipment"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "eb756a48-3ad3-46eb-8bb3-4eaf076dc76e",
+  "fields": {
+    "created": "2017-01-24T20:35:51.612Z",
+    "modified": "2017-01-24T20:35:51.612Z",
+    "deleted": null,
+    "sc_name": "GUNSMITH",
+    "key": "gunsmith"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "ef088dc1-af4b-421a-b518-5c2f9ad87d4d",
+  "fields": {
+    "created": "2017-01-24T20:35:51.561Z",
+    "modified": "2017-01-24T20:35:51.561Z",
+    "deleted": null,
+    "sc_name": "COMPUTER",
+    "key": "computer"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "ef9caa68-f954-4fac-b0f4-d3b85945d1e1",
+  "fields": {
+    "created": "2017-01-24T20:35:51.645Z",
+    "modified": "2017-01-24T20:35:51.645Z",
+    "deleted": null,
+    "sc_name": "MOVIE SCREEN CLEANING",
+    "key": "movie.screen.cleaning"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "f05be52b-e587-41f9-8164-ce3452741b91",
+  "fields": {
+    "created": "2017-01-24T20:35:51.683Z",
+    "modified": "2017-01-24T20:35:51.683Z",
+    "deleted": null,
+    "sc_name": "SCAFFOLDING",
+    "key": "scaffolding"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "f155256f-9f0a-477f-b28d-6a2e8ba0b09f",
+  "fields": {
+    "created": "2017-01-24T20:35:51.565Z",
+    "modified": "2017-01-24T20:35:51.565Z",
+    "deleted": null,
+    "sc_name": "CONSULTING",
+    "key": "consulting"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "f18049e1-4784-4a87-9adc-f7520750e2ba",
+  "fields": {
+    "created": "2017-01-24T20:35:51.660Z",
+    "modified": "2017-01-24T20:35:51.660Z",
+    "deleted": null,
+    "sc_name": "POS SYSTEMS",
+    "key": "pos.systems"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "f1ea2512-f903-422d-9bc6-77073ff8d776",
+  "fields": {
+    "created": "2017-01-24T20:35:51.608Z",
+    "modified": "2017-01-24T20:35:51.608Z",
+    "deleted": null,
+    "sc_name": "GONDOLAS",
+    "key": "gondolas"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "f49ada9e-f6c0-460b-88f3-eace2861f65a",
+  "fields": {
+    "created": "2017-01-24T20:35:51.582Z",
+    "modified": "2017-01-24T20:35:51.582Z",
+    "deleted": null,
+    "sc_name": "ELECTRICAL PARTS",
+    "key": "electrical.parts"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "f675b227-3b31-4ff5-b9af-6359426ed145",
+  "fields": {
+    "created": "2017-01-24T20:35:51.672Z",
+    "modified": "2017-01-24T20:35:51.672Z",
+    "deleted": null,
+    "sc_name": "RESTORATION",
+    "key": "restoration"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "f77efd98-5a84-401f-b3ac-7d4c451f02b5",
+  "fields": {
+    "created": "2017-01-24T20:35:51.711Z",
+    "modified": "2017-01-24T20:35:51.711Z",
+    "deleted": null,
+    "sc_name": "TILES",
+    "key": "tiles"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "f78053fa-8663-4a8a-9d6e-cb1af21a86c3",
+  "fields": {
+    "created": "2017-01-24T20:35:51.596Z",
+    "modified": "2017-01-24T20:35:51.597Z",
+    "deleted": null,
+    "sc_name": "FLAG",
+    "key": "flag"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "f78e2daa-2935-4fe3-9c35-7c5250ccd499",
+  "fields": {
+    "created": "2017-01-24T20:35:51.698Z",
+    "modified": "2017-01-24T20:35:51.698Z",
+    "deleted": null,
+    "sc_name": "STAFFING SERVICES",
+    "key": "staffing.services"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "f8eae329-e1b9-4750-ad7b-5c696429f5fa",
+  "fields": {
+    "created": "2017-01-24T20:35:51.705Z",
+    "modified": "2017-01-24T20:35:51.705Z",
+    "deleted": null,
+    "sc_name": "STROLLERS",
+    "key": "strollers"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "f93ab651-1179-4d90-b3f4-035ddc6a0d04",
+  "fields": {
+    "created": "2017-01-24T20:35:51.581Z",
+    "modified": "2017-01-24T20:35:51.581Z",
+    "deleted": null,
+    "sc_name": "ELECTRICAL",
+    "key": "electrical"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "f9d39432-4aa6-4284-bd2e-7530b534e56e",
+  "fields": {
+    "created": "2017-01-24T20:35:51.719Z",
+    "modified": "2017-01-24T20:35:51.719Z",
+    "deleted": null,
+    "sc_name": "WATER CONSERVATION",
+    "key": "water.conservation"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "fa368c4b-91d4-4b78-b318-1461ac7bac56",
+  "fields": {
+    "created": "2017-01-24T20:35:51.585Z",
+    "modified": "2017-01-24T20:35:51.585Z",
+    "deleted": null,
+    "sc_name": "ENVIRONMENTAL SERVICES",
+    "key": "environmental.services"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "fb7aaf53-eefb-4f33-a0ad-9deff0655d6f",
+  "fields": {
+    "created": "2017-01-24T20:35:51.680Z",
+    "modified": "2017-01-24T20:35:51.680Z",
+    "deleted": null,
+    "sc_name": "ROOM PARTITIONS",
+    "key": "room.partitions"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "fbc9ee8b-519d-482a-8119-31d6fcad811d",
+  "fields": {
+    "created": "2017-01-24T20:35:51.592Z",
+    "modified": "2017-01-24T20:35:51.592Z",
+    "deleted": null,
+    "sc_name": "FILTER REPLACEMENT",
+    "key": "filter.replacement"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "fcbf021f-d621-40ba-a33c-d301719d2c8d",
+  "fields": {
+    "created": "2017-01-24T20:35:51.618Z",
+    "modified": "2017-01-24T20:35:51.618Z",
+    "deleted": null,
+    "sc_name": "HVAC PARTS",
+    "key": "hvac.parts"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "fd69d6d0-fde2-4c9e-bf47-c8c3d6d4297b",
+  "fields": {
+    "created": "2017-01-24T20:35:51.690Z",
+    "modified": "2017-01-24T20:35:51.690Z",
+    "deleted": null,
+    "sc_name": "SHIPPING and RECEIVING",
+    "key": "shipping.and.receiving"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "fd9af09e-55e0-490f-b57b-ede90008cf7b",
+  "fields": {
+    "created": "2017-01-24T20:35:51.615Z",
+    "modified": "2017-01-24T20:35:51.615Z",
+    "deleted": null,
+    "sc_name": "HARDWARE",
+    "key": "hardware"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "fe82f15e-f5ea-4c54-bbc7-d21288701c0b",
+  "fields": {
+    "created": "2017-01-24T20:35:51.704Z",
+    "modified": "2017-01-24T20:35:51.704Z",
+    "deleted": null,
+    "sc_name": "STREET SWEEPING",
+    "key": "street.sweeping"
+  }
+},
+{
+  "model": "sc.sccategory",
+  "pk": "ff78fba8-49ae-444e-a3f1-b93ed8d29f35",
+  "fields": {
+    "created": "2017-01-24T20:35:51.639Z",
+    "modified": "2017-01-24T20:35:51.639Z",
+    "deleted": null,
+    "sc_name": "MASONRY",
+    "key": "masonry"
+  }
+}
+]

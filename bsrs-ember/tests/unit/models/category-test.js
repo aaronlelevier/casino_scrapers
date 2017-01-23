@@ -2,28 +2,29 @@ import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import CD from 'bsrs-ember/vendor/defaults/category';
+import SCD from 'bsrs-ember/vendor/defaults/sccategory';
 import CCD from 'bsrs-ember/vendor/defaults/category-children';
 
 var store, category, run = Ember.run;
 
 module('unit: category test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:category', 'model:category-children', 'service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:category', 'model:category-children', 'model:sccategory', 'service:i18n']);
         run(() => {
             category = store.push('category', {id: CD.idOne});
         });
     }
 });
 
-test('parent category returns associated model or undefined', (assert) => {
+test('ticketparent category returns associated model or undefined', (assert) => {
     category = store.push('category', {id: 1, parent_id: 2});
     store.push('category', {id: 2, name: 'x', parent_id: null});
-    let parent = category.get('parent');
-    assert.equal(parent.get('id'), 2);
-    assert.equal(parent.get('name'), 'x');
+    let ticketparent = category.get('ticketparent');
+    assert.equal(ticketparent.get('id'), 2);
+    assert.equal(ticketparent.get('name'), 'x');
     category.set('parent_id', null);
-    parent = category.get('parent');
-    assert.equal(parent, undefined);
+    ticketparent = category.get('ticketparent');
+    assert.equal(ticketparent, undefined);
 });
 
 /*CATEGORY TO CHILDREN M2M*/
@@ -161,4 +162,111 @@ test('category is not dry after save (starting with not children)', (assert) => 
     assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(category.get('category_children_fks').length, 1);
     assert.equal(category.get('children').get('length'), 1);
+});
+
+/*CATEGORY to SCCATEGORY*/
+test('sccategory relates to the category', assert => {
+  category = store.push('category', {id: CD.idOne, sccategory_fk: SCD.idOne});
+  let sccategory = store.push('sccategory', {id: SCD.idOne, categories: [CD.idOne]});
+  assert.equal(category.get('sccategory').get('id'), SCD.idOne);
+  assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('change_sccategory', assert => {
+  category = store.push('category', {id: CD.idOne, sccategory_fk: SCD.idOne});
+  let sccategory = store.push('sccategory', {id: SCD.idOne, categories: [CD.idOne]});
+  assert.equal(category.get('sccategory').get('id'), SCD.idOne);
+  assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
+  category.change_sccategory({id: SCD.idTwo});
+  assert.equal(category.get('sccategory').get('id'), SCD.idTwo);
+  assert.ok(category.get('isDirtyOrRelatedDirty'));
+});
+
+test('remove - using change_sccategory - but w/ change_sccategory(null)', assert => {
+  category = store.push('category', {id: CD.idOne, sccategory_fk: SCD.idOne});
+  let sccategory = store.push('sccategory', {id: SCD.idOne, categories: [CD.idOne]});
+  assert.equal(category.get('sccategory').get('id'), SCD.idOne);
+  category.change_sccategory(null);
+  assert.equal(category.get('sccategory'), undefined);
+});
+
+test('remove - using change_sccategory - handle gracefully if called with no sccategory', assert => {
+  assert.equal(category.get('sccategory'), undefined);
+  category.change_sccategory(null);
+  assert.equal(category.get('sccategory'), undefined);
+});
+
+test('sccategory rollback', assert => {
+  category = store.push('category', {id: CD.idOne, sccategory_fk: SCD.idOne});
+  let sccategory = store.push('sccategory', {id: SCD.idOne, categories: [CD.idOne]});
+  assert.equal(category.get('sccategory').get('id'), SCD.idOne);
+  assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
+  category.change_sccategory({id: SCD.idTwo});
+  assert.equal(category.get('sccategory').get('id'), SCD.idTwo);
+  assert.ok(category.get('isDirtyOrRelatedDirty'));
+  category.rollback();
+  assert.equal(category.get('sccategory').get('id'), SCD.idOne);
+  assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('sccategory saveRelated', assert => {
+  assert.equal(category.get('sccategory'), undefined);
+  category.change_sccategory({id: SCD.idOne});
+  assert.equal(category.get('sccategory').get('id'), SCD.idOne);
+  assert.ok(category.get('isDirtyOrRelatedDirty'));
+  category.saveRelated();
+  assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+/*CATEGORY to PARENT*/
+test('parent relates to the category', assert => {
+  category = store.push('category', {id: CD.idOne, parent_fk: CD.idTwo});
+  let parent = store.push('category', {id: CD.idTwo, categories: [CD.idOne]});
+  assert.equal(category.get('parent').get('id'), CD.idTwo);
+  assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('change_parent', assert => {
+  category = store.push('category', {id: CD.idOne, parent_fk: CD.idTwo});
+  let parent = store.push('category', {id: CD.idTwo, categories: [CD.idOne]});
+  assert.equal(category.get('parent').get('id'), CD.idTwo);
+  assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
+  category.change_parent({id: CD.idThree});
+  assert.equal(category.get('parent').get('id'), CD.idThree);
+  assert.ok(category.get('isDirtyOrRelatedDirty'));
+});
+
+test('remove - using change_parent - but w/ change_parent(null)', assert => {
+  let parent = store.push('category', {id: CD.idTwo, categories: [CD.idOne]});
+  assert.equal(category.get('parent').get('id'), CD.idTwo);
+  category.change_parent(null);
+  assert.equal(category.get('parent'), undefined);
+});
+
+test('remove - using change_parent - handle gracefully if called with no parent', assert => {
+  assert.equal(category.get('parent'), undefined);
+  category.change_parent(null);
+  assert.equal(category.get('parent'), undefined);
+});
+
+test('parent rollback', assert => {
+  category = store.push('category', {id: CD.idOne, parent_fk: CD.idTwo});
+  let parent = store.push('category', {id: CD.idTwo, categories: [CD.idOne]});
+  assert.equal(category.get('parent').get('id'), CD.idTwo);
+  assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
+  category.change_parent({id: CD.idThree});
+  assert.equal(category.get('parent').get('id'), CD.idThree);
+  assert.ok(category.get('isDirtyOrRelatedDirty'));
+  category.rollback();
+  assert.equal(category.get('parent').get('id'), CD.idTwo);
+  assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('parent saveRelated', assert => {
+  assert.equal(category.get('parent'), undefined);
+  category.change_parent({id: CD.idTwo});
+  assert.equal(category.get('parent').get('id'), CD.idTwo);
+  assert.ok(category.get('isDirtyOrRelatedDirty'));
+  category.saveRelated();
+  assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
 });

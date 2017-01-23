@@ -1,13 +1,13 @@
-from collections import namedtuple
 import random
+from collections import namedtuple
 
 from model_mommy import mommy
 
-from category.models import Category, CATEGORY_STATUSES, CategoryStatus, LABEL_TRADE
+from category.models import (CATEGORY_STATUSES, LABEL_TRADE, Category,
+                             CategoryStatus, ScCategory)
 from tenant.tests.factory import get_or_create_tenant
 from utils.create import random_lorem
 from utils.helpers import generate_uuid
-
 
 REPAIR = 'Repair'
 
@@ -133,10 +133,18 @@ def create_categories(tenant=None):
                 tenant=tenant,
                 cost_amount=None if parent else 10,
                 cost_code=None if parent else random_lorem(1),
-                sc_category_name=data.get('sc_category_name')
+                sc_category=get_sc_category_or_none(data.get('sc_category_name'))
             )
 
     return Category.objects.all()
+
+def get_sc_category_or_none(sc_name=None):
+    if sc_name:
+        sc_category, _ = ScCategory.objects.get_or_create(
+            key='.'.join(sc_name.split(' ')).lower(),
+            sc_name=sc_name
+        )
+        return sc_category
 
 
 def create_category_statuses():

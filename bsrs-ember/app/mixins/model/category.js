@@ -63,11 +63,11 @@ var CategoriesMixin = Ember.Mixin.create({
     if (!child_pk) { return; }
     let child = get(this, 'simpleStore').find('category', child_pk);
     //TODO: check to see if only need to check for parent_id
-    let parent_id = get(child, 'parent.id') || get(child, 'parent_id');
+    let parent_id = get(child, 'ticketparent.id') || get(child, 'parent_id');
     if (parent_id) {
       parent_ids.push(parent_id);
     }
-    this.find_parent_nodes(get(child, 'parent.id'), parent_ids);
+    this.find_parent_nodes(get(child, 'ticketparent.id'), parent_ids);
     return parent_ids;
   },
   remove_categories_down_tree(category_pk) {

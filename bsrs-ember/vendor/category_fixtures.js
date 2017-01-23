@@ -1,6 +1,7 @@
 var BSRS_CATEGORY_FACTORY = (function() {
-  var factory = function(category_defaults, config) {
+  var factory = function(category_defaults, sccategory, config) {
     this.category_defaults = category_defaults.default || category_defaults;
+    this.sccategory = sccategory;
     this.config = config;
   };
   factory.prototype.get = function(i, name) {
@@ -38,8 +39,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
       cost_currency: this.category_defaults.currency,
       cost_code: this.category_defaults.costCodeOne,
       label: this.category_defaults.labelOne,
-      subcategory_label: this.category_defaults.subCatLabelOne,
-      sc_category_name: this.category_defaults.scCategoryNameOne
+      subcategory_label: this.category_defaults.subCatLabelOne
     }
   },
   factory.prototype.children = function(id) {
@@ -93,25 +93,36 @@ var BSRS_CATEGORY_FACTORY = (function() {
     }
     return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
   };
-  factory.prototype.detail = function(i) {
+  factory.prototype.detail = function(i, args) {
     var id = i || this.category_defaults.idOne;
     var category = this.generate(id);
     category.sub_category_label = this.category_defaults.subCatLabelOne;
-    category.parent = this.category_defaults.parent;
+    category.parent = {
+      id: this.category_defaults.idParent,
+      name: this.category_defaults.nameParent
+    };
     category.children = this.children();
     category.inherited = this.category_defaults.inherited;
+    category.sc_category = {
+      id: this.sccategory.idOne,
+      name: this.sccategory.nameOne
+    };
+    for (var key in args) {
+      category[key] = args[key];
+    }
     return category;
   };
   factory.prototype.put = function(category) {
     var response = this.generate(category.id)
+    response.parent = this.category_defaults.idParent;
     response.children = this.children();
     response.children = response.children.map(function(child) {
-      return child.id ;
+      return child.id;
     });
+    response.sc_category = this.sccategory.idOne;
     for (var key in category) {
       response[key] = category[key];
     }
-    delete response.sc_category_name; // field is read-only, so not sent in PUT
     return response;
   };
   factory.prototype.list_power_select = function() {
@@ -153,14 +164,15 @@ if (typeof window === 'undefined') {
   var objectAssign = require('object-assign');
   var mixin = require('../vendor/mixin');
   var category_defaults = require('./defaults/category');
+  var sccategory = require('./defaults/sccategory');
   var config = require('../config/environment');
   objectAssign(BSRS_CATEGORY_FACTORY.prototype, mixin.prototype);
-  module.exports = new BSRS_CATEGORY_FACTORY(category_defaults, config);
+  module.exports = new BSRS_CATEGORY_FACTORY(category_defaults, sccategory, config);
 } else {
-  define('bsrs-ember/vendor/category_fixtures', ['exports', 'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'], function (exports, category_defaults, mixin, config) {
+  define('bsrs-ember/vendor/category_fixtures', ['exports', 'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/defaults/sccategory', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'], function (exports, category_defaults, sccategory, mixin, config) {
     'use strict';
     Object.assign(BSRS_CATEGORY_FACTORY.prototype, mixin.prototype);
-    var Factory = new BSRS_CATEGORY_FACTORY(category_defaults, config);
+    var Factory = new BSRS_CATEGORY_FACTORY(category_defaults, sccategory, config);
     return {default: Factory};
   });
 }

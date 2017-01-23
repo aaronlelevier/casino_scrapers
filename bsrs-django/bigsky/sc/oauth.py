@@ -1,11 +1,10 @@
 import os
 
-from oauthlib.oauth2 import LegacyApplicationClient, TokenExpiredError
 from oauth2_provider.models import Application
+from oauthlib.oauth2 import LegacyApplicationClient, TokenExpiredError
 from requests_oauthlib import OAuth2Session
 
 from utils.create import _generate_chars
-
 
 SC_GRANT_TYPE = 'password'
 

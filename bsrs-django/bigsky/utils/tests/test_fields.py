@@ -85,7 +85,7 @@ class SelfInheritedValueFieldTests(TestCase):
 
         self.assertEqual(ret['value'], cost_amount)
         self.assertEqual(ret['inherited_value'], self.cost_amount)
-        self.assertEqual(ret['inherits_from'], 'category')
+        self.assertEqual(ret['inherits_from'], self.type.name)
         self.assertEqual(ret['inherits_from_id'], str(self.type.id))
 
     def test_inherited__parent(self):
@@ -96,7 +96,7 @@ class SelfInheritedValueFieldTests(TestCase):
 
         self.assertEqual(ret['value'], None)
         self.assertEqual(ret['inherited_value'], self.cost_amount)
-        self.assertEqual(ret['inherits_from'], 'category')
+        self.assertEqual(ret['inherits_from'], self.type.name)
         self.assertEqual(ret['inherits_from_id'], str(self.type.id))
 
     def test_inherited__grandparent(self):
@@ -107,7 +107,7 @@ class SelfInheritedValueFieldTests(TestCase):
 
         self.assertEqual(ret['value'], None)
         self.assertEqual(ret['inherited_value'], self.cost_amount)
-        self.assertEqual(ret['inherits_from'], 'category')
+        self.assertEqual(ret['inherits_from'], self.type.name)
         self.assertEqual(ret['inherits_from_id'], str(self.type.id))
 
     def test_inherited__parent_doesnt_inherit(self):

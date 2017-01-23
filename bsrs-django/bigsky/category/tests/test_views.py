@@ -2,17 +2,45 @@ import json
 import uuid
 
 from django.conf import settings
-
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
-from category.models import Category, LABEL_TRADE
-from category.serializers import CategoryUpdateSerializer
-from category.tests.factory import (create_single_category, create_categories,
-    create_other_category)
+from category.models import LABEL_TRADE, Category, ScCategory
+from category.serializers import CategoryUpdateSerializer, CategoryCreateSerializer
+from category.tests.factory import (create_categories, create_other_category,
+                                    create_single_category)
 from person.tests.factory import PASSWORD, create_person
 from utils import create
-from utils.tests.mixins import MockPermissionsAllowAnyMixin
+from utils.tests.mixins import LoginMixin, MockPermissionsAllowAnyMixin
+
+
+class ScCategoryViewTests(LoginMixin, APITestCase):
+
+    def setUp(self):
+        super(ScCategoryViewTests, self).setUp()
+        self.sccategory_one = mommy.make(ScCategory, sc_name='one')
+        self.sccategory_two = mommy.make(ScCategory, sc_name='two')
+
+    def test_list_data(self):
+        response = self.client.get('/api/admin/sc-categories/')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(data['count'] > 0)
+        self.assertIn('id', data['results'][0])
+        self.assertIn('name', data['results'][0])
+
+    def test_search(self):
+        keyword = 'tw'
+        self.assertEqual(
+            ScCategory.objects.filter(sc_name__icontains=keyword).count(), 1)
+
+        response = self.client.get(
+            '/api/admin/sc-categories/?sc_name__icontains={}'.format(keyword))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
 
 
 class CategoryViewTestSetupMixin(MockPermissionsAllowAnyMixin):
@@ -26,8 +54,7 @@ class CategoryViewTestSetupMixin(MockPermissionsAllowAnyMixin):
         self.type = Category.objects.filter(parent__isnull=True).first()
         self.trade = Category.objects.filter(label=LABEL_TRADE).first()
         # Data
-        serializer = CategoryUpdateSerializer(self.trade)
-        self.data = serializer.data
+        self.data = CategoryUpdateSerializer(self.trade).data
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -142,13 +169,14 @@ class CategoryDetailTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertEqual(data['description'], category.description)
         self.assertEqual(data['label'], category.label)
         self.assertEqual(data['subcategory_label'], category.subcategory_label)
-        self.assertEqual(data['sc_category_name'], category.sc_category_name)
+        self.assertEqual(data['sc_category']['id'], str(category.sc_category.id))
+        self.assertEqual(data['sc_category']['name'], category.sc_category.sc_name)
         self.assertEqual(data['cost_amount'], category.cost_amount)
         self.assertEqual(data['cost_currency'], str(category.cost_currency.id))
         self.assertEqual(data['cost_code'], category.cost_code)
         self.assertEqual(data['level'], category.level)
         self.assertEqual(data['inherited']['cost_amount'], category.proxy_cost_amount)
-        self.assertEqual(data['inherited']['sc_category_name'], category.proxy_sc_category_name)
+        self.assertEqual(data['inherited']['sc_category'], category.proxy_sc_category)
         self.assertEqual(data['inherited']['cost_code'], category.proxy_cost_code)
 
     def test_data_parent(self):
@@ -160,11 +188,10 @@ class CategoryDetailTests(CategoryViewTestSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(category.id))
         self.assertIsInstance(data['parent'], dict)
+        self.assertEqual(len(data['parent']), 3)
         self.assertEqual(data['parent']['id'], str(category.parent.id))
         self.assertEqual(data['parent']['name'], str(category.parent.name))
-        self.assertIn('parent_id', data['parent'])
-        self.assertIn('children', data['parent'])
-        self.assertIsInstance(data['parent']['children'], list)
+        self.assertEqual(data['parent']['level'], category.parent.level)
 
     def test_data_children(self):
         category = self.trade
@@ -232,6 +259,8 @@ class CategoryUpdateTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertEqual(data['cost_amount'], self.data['cost_amount'])
         self.assertEqual(data['cost_currency'], str(self.data['cost_currency']))
         self.assertEqual(data['cost_code'], self.data['cost_code'])
+        self.assertEqual(data['sc_category'], str(self.data['sc_category']))
+        self.assertEqual(data['parent'], str(self.data['parent']))
         self.assertNotIn('tenant', data)
         self.assertEqual(data['parent'], str(self.trade.parent.id))
         # children
@@ -321,6 +350,8 @@ class CategoryUpdateTests(CategoryViewTestSetupMixin, APITestCase):
     def test_if_root_category_cost_amount_and_cost_code_and_sccategory_name_are_required(self):
         self.data.update({
             'parent': None,
+            'cost_amount': None,
+            'sc_category': None,
             'cost_amount': None
         })
 
@@ -333,13 +364,17 @@ class CategoryUpdateTests(CategoryViewTestSetupMixin, APITestCase):
             "Root Category must have: {field}".format(field='cost_amount'))
         self.assertEqual(
             json.loads(response.content.decode('utf8'))['non_field_errors'][1],
-            "Root Category must have: {field}".format(field='sc_category_name'))
+            "Root Category must have: {field}".format(field='sc_category'))
         self.assertEqual(
             json.loads(response.content.decode('utf8'))['non_field_errors'][2],
             "Root Category must have: {field}".format(field='cost_code'))
 
 
 class CategoryCreateTests(CategoryViewTestSetupMixin, APITestCase):
+
+    def setUp(self):
+        super(CategoryCreateTests, self).setUp()
+        self.data = CategoryCreateSerializer(self.trade).data
 
     def test_data(self):
         # Change the Trade name, and POST to create a new Trade
@@ -359,6 +394,8 @@ class CategoryCreateTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertEqual(data['cost_amount'], self.data['cost_amount'])
         self.assertEqual(data['cost_currency'], str(self.data['cost_currency']))
         self.assertEqual(data['cost_code'], self.data['cost_code'])
+        self.assertEqual(data['sc_category'], str(self.data['sc_category']))
+        self.assertEqual(data['parent'], str(self.data['parent']))
         category = Category.objects.get(id=data['id'])
         self.assertNotIn('tenant', data)
         self.assertEqual(category.tenant.id, self.person.role.tenant.id)
@@ -394,6 +431,8 @@ class CategoryCreateTests(CategoryViewTestSetupMixin, APITestCase):
             'id': str(uuid.uuid4()),
             'parent': None,
             'cost_amount': None,
+            'sc_category': None,
+            'cost_amount': None,
             'name': 'new category'
         })
 
@@ -406,7 +445,7 @@ class CategoryCreateTests(CategoryViewTestSetupMixin, APITestCase):
             "Root Category must have: {field}".format(field='cost_amount'))
         self.assertEqual(
             json.loads(response.content.decode('utf8'))['non_field_errors'][1],
-            "Root Category must have: {field}".format(field='sc_category_name'))
+            "Root Category must have: {field}".format(field='sc_category'))
         self.assertEqual(
             json.loads(response.content.decode('utf8'))['non_field_errors'][2],
             "Root Category must have: {field}".format(field='cost_code'))

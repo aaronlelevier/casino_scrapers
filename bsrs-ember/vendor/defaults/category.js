@@ -1,4 +1,6 @@
 const ID_ONE = 'ec62006b-6275-4aa9-abfa-38b146383d301';
+const ID_PARENT = 'ec62006b-6275-4aa9-abfa-38b146383d305';
+const NAME_PARENT = 'General Repair';
 const COST_AMOUNT_ONE = '10.00';
 const SC_CATEGORY_NAME_ONE = 'GENERAL REPAIRS';
 const COST_CODE_ONE = '12584';
@@ -16,7 +18,7 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             idGridOne: 'ec62006b-6275-4aa9-abfa-38b146383d401',
             idSelected: 'ec62006b-6275-4aa9-abfa-38b146383d403',
             idWatChild: 'ec62006b-6275-4aa9-abfa-38b146383d306',
-            idParent: 'ec62006b-6275-4aa9-abfa-38b146383d305',
+            idParent: ID_PARENT,
             idPlumbing: 'ec62006b-6275-4aa9-abfa-38b146383d306',
             idPlumbingChild: 'ec62006b-6275-4aa9-abfa-38b146383d307',
             idLossPreventionChild: 'ec62006b-6275-4aa9-abfa-38b146383d308',
@@ -33,6 +35,7 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             nameElectricalChild: 'Outlet',
             nameUnused: 'wat',
             nameWatChild: 'scott',
+            nameParent: NAME_PARENT,
             scCategoryNameOne: SC_CATEGORY_NAME_ONE,
             scCategoryNameTwo: 'GENERAL REPAIRS and MAINTENANCE',
             idNew: 'abc123',
@@ -50,6 +53,10 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             subCatLabelOne: 'Trade',
             subCatLabelTwo: 'Issue',
             parent: [],
+            parentObject: {
+                id: ID_PARENT,
+                name: NAME_PARENT
+            },
             statusOne: 'admin.category.status.active',
             statusTwo: 'admin.category.status.inactive',
             nameRandom: 'x',
@@ -61,7 +68,7 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
                     inherits_from: 'category',
                     inherits_from_id: ID_ONE
                 },
-                sc_category_name: {
+                sc_category: {
                     value: null,
                     inherited_value: SC_CATEGORY_NAME_ONE,
                     inherits_from: 'category',

@@ -89,17 +89,20 @@ class InheritedValueField(object):
 
 
 class SelfInheritedValueField(object):
-    def __init__(self, parent_model, field):
+
+    def __init__(self, field, parent_model='parent', inherited_from='name'):
         """
         Used to lookup either a concrete field value on the model
         instance, or traverse up the parent relationhships to get
         the value. The parent model at the root must have the value.
 
-        :param parent_model: String name or field on model of the same type
         :param field: String field name to be inherited
+        :param parent_model: String name or field on model of the same type
+        :param inherited_from: String to distinguish the parent
         """
-        self.parent_model = parent_model
         self.field = field
+        self.parent_model = parent_model
+        self.inherited_from = inherited_from
 
     def __get__(self, obj, type=None):
         """
@@ -129,17 +132,24 @@ class SelfInheritedValueField(object):
 
         concrete_field = getattr(obj, self.field, None)
         if concrete_field:
-            ret['value'] = concrete_field
+            ret['value'] = self.resolve_field_value(concrete_field)
 
         parent = getattr(obj, self.parent_model)
         while parent:
             parent_field = getattr(parent, self.field, None)
             if parent_field:
-                ret['inherited_value'] = parent_field
-                ret['inherits_from'] = obj.__class__.__name__.lower()
+                ret['inherited_value'] = self.resolve_field_value(parent_field)
+                ret['inherits_from'] = getattr(parent, self.inherited_from)
                 ret['inherits_from_id'] = str(getattr(parent, 'id'))
                 break
             else:
                 parent = getattr(parent, self.parent_model, None)
 
         return ret
+
+    @staticmethod
+    def resolve_field_value(field):
+        if isinstance(field, models.Model):
+            return str(field)
+        else:
+            return field

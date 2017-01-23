@@ -3,6 +3,7 @@ import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
+import SCD from 'bsrs-ember/vendor/defaults/sccategory';
 import CCD from 'bsrs-ember/vendor/defaults/category-children';
 import CategoryDeserializer from 'bsrs-ember/deserializers/category';
 
@@ -10,7 +11,7 @@ var store, subject, category, run = Ember.run;
 
 module('unit: category deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:category', 'model:category-list', 'model:category-children', 'service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:category', 'model:sccategory', 'model:category-list', 'model:category-children', 'service:i18n']);
         subject = CategoryDeserializer.create({simpleStore: store});
     }
 });
@@ -62,7 +63,6 @@ test('category deserializer returns correct data (w/ children) with no existing 
     assert.equal(categories.get('length'), 2);
     assert.ok(categories.objectAt(0).get('isNotDirty'), false);
     assert.ok(categories.objectAt(1).get('isNotDirty'), false);
-    assert.equal(category.get('sc_category_name'), CD.scCategoryNameOne);
 });
 
 test('category deserialized with null parent returns correct model with no related parent record (detail)', (assert) => {
@@ -74,6 +74,17 @@ test('category deserialized with null parent returns correct model with no relat
     let categories = store.find('category');
     assert.equal(categories.get('length'), 1);
     assert.deepEqual(categories.objectAt(0).get('parent'), undefined);
+});
+
+test('category deserialized with parent setups up relationship', assert => {
+    let response = CF.detail(CD.idOne, {parent: CD.parentObject});
+    run(() => {
+        subject.deserialize(response, CD.idOne);
+    });
+    let categories = store.find('category');
+    assert.equal(categories.get('length'), 3);
+    category = store.find('category', CD.idOne);
+    assert.deepEqual(category.get('parent.id'), CD.idParent);
 });
 
 test('category deserializer returns correct data with existing category and different children (detail)', (assert) => {
@@ -117,7 +128,7 @@ test('category deserializer returns correct data with existing category that has
     assert.ok(categories.objectAt(0).get('isNotDirty'), false);
 });
 
-test('category deserializer detail payload contains inherited object with: cost_amount and sc_category_name', assert => {
+test('category deserializer detail payload contains inherited object with: cost_amount and sc_category', assert => {
     let json = CF.detail(CD.idTwo);
     run(() => {
         subject.deserialize(json, CD.idTwo);
@@ -128,14 +139,35 @@ test('category deserializer detail payload contains inherited object with: cost_
     assert.equal(categories.get('inherited').cost_amount.inherited_value, CD.costAmountOne);
     assert.equal(categories.get('inherited').cost_amount.inherits_from, 'category');
     assert.equal(categories.get('inherited').cost_amount.inherits_from_id, CD.idOne);
-    // sc_category_name
-    assert.equal(categories.get('inherited').sc_category_name.value, null);
-    assert.equal(categories.get('inherited').sc_category_name.inherited_value, CD.scCategoryNameOne);
-    assert.equal(categories.get('inherited').sc_category_name.inherits_from, 'category');
-    assert.equal(categories.get('inherited').sc_category_name.inherits_from_id, CD.idOne);
+    // sc_category
+    assert.equal(categories.get('inherited').sc_category.value, null);
+    assert.equal(categories.get('inherited').sc_category.inherited_value, CD.scCategoryNameOne);
+    assert.equal(categories.get('inherited').sc_category.inherits_from, 'category');
+    assert.equal(categories.get('inherited').sc_category.inherits_from_id, CD.idOne);
     //cost_code
     assert.equal(categories.get('inherited').cost_code.value, null);
     assert.equal(categories.get('inherited').cost_code.inherited_value, CD.costCodeOne);
     assert.equal(categories.get('inherited').cost_code.inherits_from, 'category');
     assert.equal(categories.get('inherited').cost_code.inherits_from_id, CD.idOne);
+});
+
+test('category deserializer sets up relationship for sccategory', assert => {
+    let json = CF.detail(CD.idOne);
+    run(() => {
+        subject.deserialize(json, CD.idOne);
+    });
+    let category = store.find('category', CD.idOne);
+    assert.equal(category.get('sccategory.id'), SCD.idOne);
+    let sccategory = store.find('sccategory.name', SCD.nameOne);
+    assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('category deserializer does not set up relationship if sccategory is null', assert => {
+    let json = CF.detail(CD.idOne);
+    json.sc_category = null;
+    run(() => {
+        subject.deserialize(json, CD.idOne);
+    });
+    let category = store.find('category', CD.idOne);
+    assert.equal(category.get('sccategory.id'), undefined);
 });

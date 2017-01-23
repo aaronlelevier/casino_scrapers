@@ -1,5 +1,7 @@
 import Ember from 'ember';
 import { many_to_many_extract } from 'bsrs-components/repository/many-to-many';
+import { belongs_to } from 'bsrs-components/repository/belongs-to';
+import OptConf from 'bsrs-ember/mixins/optconfigure/category';
 
 var extract_tree = function(model, store) {
   let parent_id;
@@ -11,7 +13,12 @@ var extract_tree = function(model, store) {
   return [parent_id];
 };
 
-var CategoryDeserializer = Ember.Object.extend({
+var CategoryDeserializer = Ember.Object.extend(OptConf, {
+  init() {
+    this._super(...arguments);
+    belongs_to.bind(this)('sccategory', 'sccategory');
+    belongs_to.bind(this)('parent', 'category');
+  },
   deserialize(response, id) {
     if (id) {
       return this._deserializeSingle(response);
@@ -23,7 +30,19 @@ var CategoryDeserializer = Ember.Object.extend({
     const store = this.get('simpleStore');
     let children_json = response.children;
     delete response.children;
+
+    let sccategory_json = response.sc_category;
+    if (sccategory_json) {
+      response.sccategory_fk = sccategory_json.id;
+      delete response.sc_category;
+    }
+
+    let parent_json = response.parent;
     [response.parent_id] = extract_tree(response, store);
+    if (parent_json) {
+      response.parent_fk = parent_json.id;
+    }
+
     response.detail = true;
     let category = store.push('category', response);
     if(children_json){
@@ -36,6 +55,8 @@ var CategoryDeserializer = Ember.Object.extend({
       });
       category = store.push('category', {id: response.id, category_children_fks: server_sum});
     }
+    this.setup_sccategory(sccategory_json, category);
+    this.setup_parent(parent_json, category);
     category.save();
     return category;
   },

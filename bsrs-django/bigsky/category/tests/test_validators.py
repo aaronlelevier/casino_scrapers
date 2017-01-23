@@ -3,7 +3,8 @@ import uuid
 
 from rest_framework.test import APITestCase
 
-from category.serializers import CategoryUpdateSerializer, CategoryCreateSerializer
+from category.serializers import (CategoryCreateSerializer,
+                                  CategoryUpdateSerializer)
 from category.tests.factory import create_single_category
 from person.tests.factory import PASSWORD, create_single_person
 from utils.tests.mixins import MockPermissionsAllowAnyMixin

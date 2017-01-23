@@ -1,7 +1,5 @@
 import csv
 import copy
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
 import os
 
 from django.db import models
@@ -11,7 +9,7 @@ from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-from utils.helpers import get_model_class
+from utils.helpers import get_model_class, get_gspread_connection
 from utils.models import BaseModel, BaseManager, BaseQuerySet
 
 
@@ -122,9 +120,7 @@ class TranslationManager(BaseManager):
         """
         Connects to Google Sheets API and retrieves worksheets for i18n.
         """
-        scope = ['https://spreadsheets.google.com/feeds']
-        credentials = ServiceAccountCredentials.from_json_keyfile_name(os.path.join(self.translation_dir, 'i18n.json'), scope)
-        gc = gspread.authorize(credentials)
+        gc = get_gspread_connection()
         wks = gc.open(language).sheet1
         self._write_to_csv(wks, language, locale)
 

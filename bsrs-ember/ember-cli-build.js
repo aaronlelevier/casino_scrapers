@@ -95,6 +95,7 @@ module.exports = function(defaults) {
     app.import('vendor/defaults/role.js');
     app.import('vendor/defaults/sendemail.js');
     app.import('vendor/defaults/generic-join-recipients.js');
+    app.import('vendor/defaults/sccategory.js');
     app.import('vendor/defaults/sendsms.js');
     app.import('vendor/defaults/state.js');
     app.import('vendor/defaults/status.js');

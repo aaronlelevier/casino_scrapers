@@ -12,6 +12,7 @@ export const AUTOMATION_AVAILABLE_FILTERS_URL = `${PREFIX}/admin/automation-auto
 export const AUTOMATION_EVENTS_URL = `${PREFIX}/admin/automation-events/`;
 export const ATTACHMENTS_URL = `${PREFIX}/admin/attachments/`;
 export const CATEGORIES_URL = `${PREFIX}/admin/categories/`;
+export const SC_CATEGORIES_URL = `${PREFIX}/admin/sc-categories/`;
 export const COUNTRY_URL = `${PREFIX}/countries/`;
 export const CURRENCIES_URL = `${PREFIX}/admin/currency/`;
 export const DASHBOARD_URL = `${PREFIX}/dashboard/`;

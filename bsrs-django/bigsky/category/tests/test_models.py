@@ -1,3 +1,4 @@
+import os
 import random
 
 from django.conf import settings
@@ -5,7 +6,8 @@ from django.db.models import Q
 from django.test import TestCase
 
 from accounting.models import Currency
-from category.models import Category, CategoryManager, CategoryQuerySet, CategoryStatus
+from category.models import (Category, CategoryManager, CategoryQuerySet,
+                             CategoryStatus, SC_TRADES_CSV, ScCategory, ScCategoryManager)
 from category.tests import factory
 from person.tests.factory import create_single_person
 from tenant.tests.factory import get_or_create_tenant
@@ -17,9 +19,10 @@ class CategorySetupMixin(object):
 
     def setUp(self):
         factory.create_categories()
-        self.type = Category.objects.filter(subcategory_label='Trade').first()
-        self.trade = Category.objects.filter(label='Trade').first()
-        self.child = Category.objects.filter(subcategory_label='Sub-Issue').first()
+        self.type = Category.objects.filter(label='Type').first()
+        self.trade = self.type.children.filter(label='Trade', sc_category__isnull=True,
+                                               children__isnull=False).first()
+        self.child = self.trade.children.filter(label='Issue').first()
         # Category Status
         self.statuses = CategoryStatus.objects.all()
 
@@ -189,8 +192,8 @@ class CategoryTests(CategorySetupMixin, TestCase):
         ret = self.type.inherited
 
         self.assertEqual(ret['cost_amount'], self.type.proxy_cost_amount)
-        self.assertEqual(ret['sc_category_name'], self.type.proxy_sc_category_name)
         self.assertEqual(ret['cost_code'], self.type.proxy_cost_code)
+        self.assertEqual(ret['sc_category'], self.type.proxy_sc_category)
 
     def test_proxy_cost_amount(self):
         cost_amount = 1
@@ -200,18 +203,6 @@ class CategoryTests(CategorySetupMixin, TestCase):
 
         self.assertIsInstance(ret, dict)
         self.assertEqual(ret['value'], cost_amount)
-        self.assertIn('inherited_value', ret)
-        self.assertIn('inherits_from', ret)
-        self.assertIn('inherits_from_id', ret)
-
-    def test_proxy_sc_category_name(self):
-        sc_category_name = 'foo'
-        self.type.sc_category_name = sc_category_name
-
-        ret = self.type.proxy_sc_category_name
-
-        self.assertIsInstance(ret, dict)
-        self.assertEqual(ret['value'], sc_category_name)
         self.assertIn('inherited_value', ret)
         self.assertIn('inherits_from', ret)
         self.assertIn('inherits_from_id', ret)
@@ -227,6 +218,30 @@ class CategoryTests(CategorySetupMixin, TestCase):
         self.assertIn('inherited_value', ret)
         self.assertIn('inherits_from', ret)
         self.assertIn('inherits_from_id', ret)
+
+    def test_proxy_sc_category__root_category(self):
+        self.assertIsInstance(self.type.sc_category, ScCategory)
+        sc_category = self.type.sc_category
+
+        ret = self.type.proxy_sc_category
+
+        self.assertIsInstance(ret, dict)
+        self.assertEqual(ret['value'], sc_category.sc_name)
+        self.assertIsNone(ret['inherited_value'])
+        self.assertIsNone(ret['inherits_from'])
+        self.assertIsNone(ret['inherits_from_id'])
+
+    def test_proxy_sc_category__leaf_category(self):
+        self.assertIsNone(self.trade.sc_category)
+        self.assertEqual(self.trade.parent, self.type)
+
+        ret = self.trade.proxy_sc_category
+
+        self.assertIsInstance(ret, dict)
+        self.assertIsNone(ret['value'])
+        self.assertEqual(ret['inherited_value'], self.type.sc_category.sc_name)
+        self.assertEqual(ret['inherits_from'], self.type.name)
+        self.assertEqual(ret['inherits_from_id'], str(self.type.id))
 
     def test_to_dict(self):
         d = self.type.to_dict()
@@ -319,3 +334,30 @@ class CategoryLevelTests(CategorySetupMixin, TestCase):
         self.assertEqual(child.level, 0)
         child.save()
         self.assertEqual(child.level, 1)
+
+
+class ScCategoryManagerTests(TestCase):
+
+    def test_download_sc_trades(self):
+        filename = os.path.join(
+            os.path.join(settings.MEDIA_ROOT, 'sc'), SC_TRADES_CSV)
+        with open(filename, 'w'): pass
+
+        ScCategory.objects.download_sc_trades()
+
+        with open(filename) as f:
+            self.assertEqual(sum(1 for line in f), 224,
+                             '1 extra than number of records b/c includes column titles')
+
+    def test_import_sc_trades(self):
+        self.assertEqual(ScCategory.objects.count(), 0)
+
+        ScCategory.objects.import_sc_trades()
+
+        self.assertEqual(ScCategory.objects.count(), 223)
+
+
+class ScCategoryTests(TestCase):
+
+    def test_manager(self):
+        self.assertIsInstance(ScCategory.objects, ScCategoryManager)

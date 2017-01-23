@@ -6,7 +6,7 @@ import GridRepositoryMixin from 'bsrs-ember/mixins/repositories/grid';
 import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
 import CRUDMixin from 'bsrs-ember/mixins/repositories/crud';
 import findByName from 'bsrs-ember/utilities/find-by-name';
-import { CATEGORIES_URL } from 'bsrs-ember/utilities/urls';
+import { CATEGORIES_URL, SC_CATEGORIES_URL } from 'bsrs-ember/utilities/urls';
 
 var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: 'category',
@@ -16,6 +16,13 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
   uuid: injectUUID('uuid'),
   CategoryDeserializer: inject('category'),
   deserializer: Ember.computed.alias('CategoryDeserializer'),
+  findCategory(search) {
+    if (search) {
+      return findByName(CATEGORIES_URL, search).then((response) => {
+        return response.results;
+      });
+    }
+  },
   findCategoryChildren(search) {
     let url = CATEGORIES_URL;
     if (search) {
@@ -38,6 +45,13 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
     return PromiseMixin.xhr(url, 'GET').then((response) => {
       return response.results;
     });
+  },
+  findScCategory(search) {
+    if (search) {
+      return PromiseMixin.xhr(`${SC_CATEGORIES_URL}?sc_name__icontains=${search}`, 'GET').then((response) => {
+        return response.results;
+      });
+    }
   }
 });
 

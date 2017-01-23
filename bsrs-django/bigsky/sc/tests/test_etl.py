@@ -1,26 +1,25 @@
 import json
 import random
 import uuid
-from mock import patch
 
-from rest_framework.exceptions import ValidationError
 from django.test import TestCase
-
-from model_mommy import mommy
+from mock import patch
 from pretend import stub
+from rest_framework.exceptions import ValidationError
 from rest_framework.test import APITestCase
 
-from contact.models import Address, AddressType, PhoneNumber, PhoneNumberType, Email
-from contact.serializers import EmailSerializer
-from contact.tests.factory import (create_contact, create_address_type,
-    create_contact_state, create_contact_country, create_phone_number_type)
-from location.tests.factory import create_locations, SAN_DIEGO
-from location.models import Location, LOCATION_REGION, LOCATION_DISTRICT
+from contact.models import (Address, AddressType, Email, PhoneNumber,
+                            PhoneNumberType)
+from contact.tests.factory import (create_address_type, create_contact,
+                                   create_contact_country,
+                                   create_contact_state,
+                                   create_phone_number_type)
+from location.models import LOCATION_DISTRICT, LOCATION_REGION, Location
 from location.serializers import LocationCreateUpdateSerializer
-from person.tests.factory import create_single_person, PASSWORD
+from location.tests.factory import SAN_DIEGO, create_locations
+from person.tests.factory import PASSWORD, create_single_person
 from sc.etl import LocationEtlAdapter, TenantEtlAdapter, TenantEtlDataAdapter
-from sc.oauth import DEV_SC_SUBSCRIBERS_URL, DEV_SC_LOCATIONS_URL
-from tenant.serializers import TenantCreateSerializer
+from sc.oauth import DEV_SC_LOCATIONS_URL, DEV_SC_SUBSCRIBERS_URL
 from tenant.tests.factory import get_or_create_tenant
 from utils import create
 from utils.tests.mixins import MockPermissionsAllowAnyMixin

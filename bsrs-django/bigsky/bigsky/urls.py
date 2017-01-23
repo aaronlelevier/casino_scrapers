@@ -11,6 +11,7 @@ from rest_framework import routers
 from rest_framework.routers import Route, SimpleRouter, DynamicListRoute
 
 from accounting import views as accounting_views
+from automation import views as automation_views
 from bigsky import views as bigsky_views
 from bigsky import views_api as bigsky_views_api
 from bigsky.forms import BsAuthenticationForm
@@ -23,7 +24,6 @@ from generic import views as generic_views
 from location import views as location_views
 from person import views as person_views
 from provider import views as provider_views
-from automation import views as automation_views
 from tenant import views as tenant_views
 from third_party import views as third_party_views
 from ticket import views as tickets_views
@@ -40,6 +40,7 @@ router.register(r'admin/currencies', accounting_views.CurrencyViewSet)
 router.register(r'dtds', dtd_views.TreeDataViewSet)
 # CATEGORY
 router.register(r'admin/categories', category_views.CategoryViewSet)
+router.register(r'admin/sc-categories', category_views.ScCategoryViewSet)
 # CONTACT
 router.register(r'countries', contact_views.CountryViewSet)
 router.register(r'states', contact_views.StateViewSet)
@@ -71,9 +72,9 @@ router.register(r'providers', provider_views.ProviderViewSet)
 router.register(r'admin/tenants', tenant_views.TenantViewSet)
 # THIRD PARTY
 router.register(r'admin/third-parties', third_party_views.ThirdPartyViewSet)
-# Tickets
+# TICKETS
 router.register(r'tickets', tickets_views.TicketViewSet)
-# Work Orders
+# WORK ORDERS
 router.register(r'work-orders', work_orders_views.WorkOrderViewSet)
 # TRANSLATION
 router.register(r'admin/locales', translation_views.LocaleViewSet)

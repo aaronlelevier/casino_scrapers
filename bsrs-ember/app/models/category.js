@@ -20,6 +20,8 @@ const Validations = buildValidations({
 var CategoryModel = Model.extend(Validations, TranslationMixin, OptConf, {
   init() {
     many_to_many.bind(this)('children', 'category');
+    belongs_to.bind(this)('parent', 'category');
+    belongs_to.bind(this)('sccategory', 'category');
     this._super(...arguments);
   },
   simpleStore: Ember.inject.service(),
@@ -32,8 +34,8 @@ var CategoryModel = Model.extend(Validations, TranslationMixin, OptConf, {
   cost_code: attr(''),
   parent_id: undefined,
   category_children_fks: [],
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'childrenIsDirty', function() {
-    return this.get('isDirty') || this.get('childrenIsDirty');
+  isDirtyOrRelatedDirty: Ember.computed('isDirty', 'childrenIsDirty', 'sccategoryIsDirty', 'parentIsDirty', function() {
+    return this.get('isDirty') || this.get('childrenIsDirty') || this.get('sccategoryIsDirty') || this.get('parentIsDirty');
   }).readOnly(),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty').readOnly(),
   serialize() {
@@ -47,11 +49,13 @@ var CategoryModel = Model.extend(Validations, TranslationMixin, OptConf, {
       cost_code: this.get('cost_code'),
       label: this.get('label'),
       subcategory_label: this.get('subcategory_label'),
-      children: this.get('children_ids')
+      children: this.get('children_ids'),
+      sc_category: this.get('sccategory.id'),
+      parent: this.get('parent.id')
     };
   },
-  parent: Ember.computed.alias('parent_belongs_to.firstObject').readOnly(),
-  parent_belongs_to: Ember.computed('parent_id', function() {
+  ticketparent: Ember.computed.alias('ticketparent_belongs_to.firstObject').readOnly(),
+  ticketparent_belongs_to: Ember.computed('parent_id', function() {
     const { parent_id, simpleStore } = this.getProperties('parent_id', 'simpleStore');
     const filter = function(category) {
       return parent_id === category.get('id');
@@ -65,10 +69,14 @@ var CategoryModel = Model.extend(Validations, TranslationMixin, OptConf, {
   },
   rollback() {
     this.rollbackChildren();
+    this.rollbackParent();
+    this.rollbackSccategory();
     this._super(...arguments);
   },
   saveRelated() {
     this.saveChildren();
+    this.saveParent();
+    this.saveSccategory();
   }
 });
 
