@@ -19,8 +19,21 @@ class FactoryTest(TestCase):
         self.assertEqual(obj.categories.first().children.count(), 0, 'This is a leaf node')
         self.assertIsNotNone(obj.fbid)
 
+    def test_create_provider_with_all_categories(self):
+        ret = factory.create_provider_with_all_categories()
+
+        self.assertIsInstance(ret, Provider)
+        self.assertEqual(
+            ret.categories.count(),
+            Category.objects.filter(children__isnull=True).count()
+        )
+        self.assertRegexpMatches(ret.name, r'^Joe')
+
     def test_create_providers(self):
         list_set = factory.create_providers()
+
         self.assertTrue(list_set.count() > 0)
         self.assertEqual(list_set.distinct('name').count(), list_set.count())
-
+        self.assertEqual(
+            Category.objects.filter(children__isnull=True,
+                                    providers__isnull=True).count(), 0)

@@ -1,9 +1,14 @@
 import json
+import pytz
 import uuid
+from datetime import datetime, timedelta
 
+from django.conf import settings
 from django.test import TestCase
+from django.utils.timezone import now, localtime
 
 from rest_framework.test import APITestCase
+from rest_framework.exceptions import ValidationError
 
 from automation.models import Automation
 from automation.tests.mixins import ViewTestSetupMixin
@@ -17,7 +22,7 @@ from utils.create import _generate_chars
 from utils.validators import (
     regex_check_contains, contains_digit, contains_upper_char,
     contains_lower_char, contains_special_char, contains_no_whitespaces,
-    valid_email, valid_phone)
+    valid_email, valid_phone, gte_today)
 from utils.tests.mixins import MockPermissionsAllowAnyMixin
 
 
@@ -96,6 +101,37 @@ class UniqueByTenantValidatorTests(ViewTestSetupMixin, APITestCase):
         automation = Automation.objects.get(id=data['id'])
         self.assertEqual(automation.description, self.automation.description)
         self.assertNotEqual(automation.tenant, self.automation.tenant)
+
+
+class FunctionValidatorTests(TestCase):
+
+    def setUp(self):
+        tz = pytz.timezone(settings.TIME_ZONE)
+        self.today_datetime = tz.localize(datetime.now())
+        self.today_date = self.today_datetime.date()
+
+    def test_gte_today__today(self):
+        dt = localtime(now())
+        self.assertTrue(dt.date() >= self.today_date)
+
+        ret = gte_today(dt)
+
+        self.assertIsNone(ret)
+
+    def test_gte_today__yesterday(self):
+        dt = localtime(now()) - timedelta(days=1)
+        self.assertTrue(dt.date() < self.today_date)
+
+        with self.assertRaises(ValidationError):
+            ret = gte_today(dt)
+
+    def test_gte_today__tomorrow(self):
+        dt = localtime(now()) + timedelta(days=1)
+        self.assertTrue(dt.date() >= self.today_date)
+
+        ret = gte_today(dt)
+
+        self.assertIsNone(ret)
 
 
 DIGITS = "Bobby123"

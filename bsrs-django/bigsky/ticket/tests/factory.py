@@ -21,6 +21,7 @@ from ticket.tests.factory_related import (create_ticket_status, create_ticket_st
     create_ticket_priorities)
 from utils.create import _generate_chars
 from utils.helpers import generate_uuid, create_default
+from work_order.tests.factory import create_work_order
 
 
 class RegionManagerWithTickets(object):
@@ -346,4 +347,11 @@ def create_other_ticket():
     ticket = create_ticket()
     ticket.location = create_other_location()
     ticket.save()
+    return ticket
+
+
+def create_ticket_with_work_order():
+    ticket = create_ticket()
+    work_order = create_work_order()
+    ticket.work_orders.add(work_order)
     return ticket

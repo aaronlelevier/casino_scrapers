@@ -1,6 +1,6 @@
 from utils.views import BaseModelViewSet
 from work_order.models import WorkOrder
-from work_order.serializers import (WorkOrderCreateSerializer, WorkOrderSerializer, WorkOrderListSerializer,)
+from work_order import serializers as ws
 
 
 class WorkOrderViewSet(BaseModelViewSet):
@@ -10,8 +10,10 @@ class WorkOrderViewSet(BaseModelViewSet):
 
     def get_serializer_class(self):
         if self.action == 'list':
-            return WorkOrderListSerializer 
-        elif self.action in ('create', 'update', 'partial_update'):
-            return WorkOrderCreateSerializer
+            return ws.WorkOrderListSerializer
+        elif self.action == 'create':
+            return ws.WorkOrderCreateSerializer
+        elif self.action in ('update', 'partial_update'):
+            return ws.WorkOrderUpdateSerializer
         else:
-            return WorkOrderSerializer
+            return ws.WorkOrderSerializer

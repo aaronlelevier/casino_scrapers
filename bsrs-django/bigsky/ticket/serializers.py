@@ -10,6 +10,7 @@ from person.serializers_leaf import PersonSimpleSerializer
 from ticket.helpers import TicketActivityToRepresentation
 from ticket.models import Ticket, TicketActivity, TicketActivityType, TicketPriority, TicketStatus
 from utils.serializers import BaseCreateSerializer
+from work_order.serializers import WorkOrderLeafSerializer
 
 
 TICKET_BASE_FIELDS = ('id', 'location', 'assignee',
@@ -88,11 +89,12 @@ class TicketSerializer(serializers.ModelSerializer):
                                                    source='status')
     priority_fk = serializers.PrimaryKeyRelatedField(queryset=TicketPriority.objects.all(),
                                                      source='priority')
+    work_orders = WorkOrderLeafSerializer(many=True, read_only=True)
 
     class Meta:
         model = Ticket
         fields = TICKET_BASE_FIELDS + ('number', 'cc', 'attachments', 'created', 'legacy_ref_number',
-                                       'status_fk', 'priority_fk')
+                                       'status_fk', 'priority_fk', 'work_orders')
 
     @staticmethod
     def eager_load(queryset):

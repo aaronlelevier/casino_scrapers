@@ -7,9 +7,9 @@
 {{/if}}
 
 {{#if currentStateRendered.hasWorkOrderDispatchBtn}}
-<button disabled={{if saveWorkOrderTask.isRunning "disabled"}} {{action "dispatchWorkOrder"}} class="btn btn-primary btn-icon" data-test-id="wo-send-post">{{fa-icon "wrench"}} <span class="btn-text">{{t "work-order.button.dispatch"}}</span></button>
+<button disabled={{if saveWorkOrderTask.isRunning "disabled"}} {{action "dispatchWorkOrder"}} class="btn btn-primary btn-icon" data-test-id="wo-send-post">{{fa-icon "wrench"}} <span class="btn-text">{{t "work_order.button.dispatch"}}</span></button>
 {{/if}}
 
 {{#if currentStateRendered.lastStep}}
-  <button {{action "done"}} class="btn btn-default btn-icon" data-test-id="wo-done">{{fa-icon "check-circle"}} <span class="btn-text">{{t "work-order.button.done"}}</span></button>
+  <button {{action "done"}} class="btn btn-default btn-icon" data-test-id="wo-done">{{fa-icon "check-circle"}} <span class="btn-text">{{t "work_order.button.done"}}</span></button>
 {{/if}}

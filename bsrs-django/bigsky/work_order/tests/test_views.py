@@ -1,6 +1,8 @@
-from datetime import datetime
 import json
 import uuid
+from datetime import timedelta
+
+from django.utils.timezone import localtime, now
 
 from rest_framework import status
 
@@ -8,7 +10,7 @@ from rest_framework.test import APITestCase
 from person.tests.factory import PASSWORD, create_single_person
 from location.tests.factory import create_location
 from work_order.models import WorkOrder
-from work_order.serializers import WorkOrderCreateSerializer
+from work_order.serializers import WorkOrderCreateSerializer, WorkOrderUpdateSerializer
 from work_order.tests.factory import create_work_order, create_work_order_status, TIME
 
 
@@ -93,7 +95,7 @@ class WorkOrderUpdateTests(APITestCase):
         self.person = create_single_person()
         self.wo = create_work_order()
         self.client.login(username=self.person.username, password=PASSWORD)
-        serializer = WorkOrderCreateSerializer(self.wo)
+        serializer = WorkOrderUpdateSerializer(self.wo)
         self.data = serializer.data
 
     def tearDown(self):
@@ -128,37 +130,44 @@ class WorkOrderUpdateTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['assignee'], str(self.data['assignee']))
 
+
 class WorkOrderCreateTests(APITestCase):
 
     def setUp(self):
         self.person = create_single_person()
         self.wo = create_work_order()
         self.client.login(username=self.person.username, password=PASSWORD)
-        serializer = WorkOrderCreateSerializer(self.wo)
-        self.data = serializer.data
+        self.data = WorkOrderCreateSerializer(self.wo).data
 
     def tearDown(self):
         self.client.logout()
 
-    def test_create(self):
+    def test_data(self):
         self.data.update({
             'id': str(uuid.uuid4())
         })
-        response = self.client.post('/api/work-orders/', self.data, format='json')
-        self.assertEqual(response.status_code, 201)
 
-    def test_data(self):
+        response = self.client.post('/api/work-orders/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['id'], self.data['id'])
+        self.assertEqual(data['category'], str(self.data['category']))
+        self.assertEqual(data['provider'], str(self.data['provider']))
+        self.assertEqual(data['location'], str(self.data['location']))
+        self.assertEqual(data['scheduled_date'], self.data['scheduled_date'])
+        self.assertEqual(data['approved_amount'], self.data['approved_amount'])
+        self.assertEqual(data['cost_estimate'], self.data['cost_estimate'])
+        self.assertEqual(data['cost_estimate_currency'], str(self.data['cost_estimate_currency']))
+
+    def test_validation__scheduled_date_gte_today(self):
         self.data.update({
             'id': str(uuid.uuid4()),
-            'scheduled_date': TIME
+            'scheduled_date': localtime(now()) - timedelta(days=1)
         })
+
         response = self.client.post('/api/work-orders/', self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
         data = json.loads(response.content.decode('utf8'))
-        wo = WorkOrder.objects.get(id=data['id'])
-        self.assertEqual(data['id'], str(wo.id))
-        self.assertEqual(data['status'], str(wo.status.id))
-        self.assertEqual(data['priority'], str(wo.priority.id))
-        self.assertEqual(data['location'], str(wo.location.id))
-        self.assertEqual(data['assignee'], str(wo.assignee.id))
-        self.assertEqual(data['requester'], str(wo.requester.id))
-        self.assertEqual(datetime.strptime(data['scheduled_date'], '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%m/%d/%Y'), wo.scheduled_date.strftime('%m/%d/%Y'))
+        self.assertEqual(data['scheduled_date'][0], 'errors.date.gte_today')

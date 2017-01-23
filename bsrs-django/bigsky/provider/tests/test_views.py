@@ -47,17 +47,20 @@ class UserWithPrivilegeProviderTest(APITestCase):
     def test_provider_filtered_by_category(self):
         self.assertIn('view_provider', self.person.permissions)
         provider = Provider.objects.filter(categories=self.category_id)
-        self.assertEqual(provider.count(), 2)
+        self.assertEqual(provider.count(), 3)
 
         response = self.client.get('/api/providers/?categories={id}'.format(id=self.category_id))
 
         self.assertIn('application/json', response._headers['content-type'][1])
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 2)
+        self.assertEqual(data['count'], 3)
 
         for p in data['results']:
             provider = Provider.objects.get(id=p['id'])
-            self.assertEqual(provider.categories.first().id, self.category_id)
+            provider_id = provider.categories.first().id
+            category_id = self.category_id;
+            msg = '{provider_id} matches expected cateogry {id}'.format(provider_id=provider_id, id=category_id);
+            self.assertEqual(provider_id, category_id, msg)
 
     def test_provider_data_includes_id_and_name(self):
         self.assertIn('view_provider', self.person.permissions)

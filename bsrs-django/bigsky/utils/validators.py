@@ -2,6 +2,7 @@ import copy
 import re
 import uuid
 
+from django.utils.timezone import now, localtime
 from django.utils.translation import ugettext_lazy as _
 
 from rest_framework.exceptions import ValidationError
@@ -81,6 +82,17 @@ class UniqueByTenantValidator(object):
         """Determine the existing instance, prior to the validation
         call being made."""
         self.instance = getattr(serializer, 'instance', None)
+
+
+def gte_today(dt):
+    """
+    :param dt: datetime
+
+    :raise `ValidationError`:
+        if the date of `dt` is not greater than or equal to today
+    """
+    if not dt.date() >= localtime(now()).date():
+        raise ValidationError("errors.date.gte_today")
 
 
 ### REGEX VALIDATORS

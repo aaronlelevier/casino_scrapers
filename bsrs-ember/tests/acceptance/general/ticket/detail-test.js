@@ -987,7 +987,7 @@ test('can create a work order', async function(assert) {
   const ticket = this.store.find('ticket', TD.idOne);
   assert.equal(find('[data-test-id="work-order-modal"]').length, 1);
   assert.equal(find('.t-wo-create-trade-select .ember-power-select-selected-item').text().trim(), ticket.get('leaf_category').get('name'));
-  xhr(`${PROVIDER_URL}?category=${ticket.get('leaf_category').get('id')}&name__icontains=b`, 'GET', null, {}, 200, PROVIDER_FIXTURES.list());
+  xhr(`${PROVIDER_URL}?categories=${ticket.get('leaf_category').get('id')}&name__icontains=b`, 'GET', null, {}, 200, PROVIDER_FIXTURES.list());
   await selectSearch('.t-wo-create-provider-select', 'b');
   await selectChoose('.t-wo-create-provider-select', ProviderD.nameOne);
   assert.equal(find('.t-wo-create-provider-select .ember-power-select-selected-item').text().trim(), ProviderD.nameOne);

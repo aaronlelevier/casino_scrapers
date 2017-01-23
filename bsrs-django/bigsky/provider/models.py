@@ -17,6 +17,4 @@ class Provider(BaseModel):
     phone = models.CharField(max_length=64, null=True)
     email = models.EmailField(null=True)
     logo = models.TextField(validators=[URLValidator()], null=True)
-
     categories = models.ManyToManyField(Category, related_name='providers')
-

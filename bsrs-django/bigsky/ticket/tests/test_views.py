@@ -22,7 +22,7 @@ from ticket.permissions import TicketActivityPermissions
 from ticket.serializers import TicketCreateUpdateSerializer
 from ticket.tests.factory import (create_ticket, create_standard_ticket,
     create_ticket_activity, create_ticket_activity_type, create_ticket_activity_types,
-    create_other_ticket)
+    create_other_ticket, create_ticket_with_work_order)
 from ticket.tests.factory_related import create_ticket_priority, create_ticket_status
 from ticket.tests.mixins import (TicketSetupNoLoginMixin, TicketSetupMixin,
     MockTicketActivityPermissionsMixin)
@@ -147,23 +147,38 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_data(self):
-        response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
+        ticket = create_ticket_with_work_order()
+
+        response = self.client.get('/api/tickets/{}/'.format(ticket.id))
 
         data = json.loads(response.content.decode('utf8'))
-
-        self.assertEqual(data['id'], str(self.ticket.id))
-        self.assertEqual(data['status_fk'], str(self.ticket.status.id))
-        self.assertEqual(data['priority_fk'], str(self.ticket.priority.id))
+        self.assertEqual(data['id'], str(ticket.id))
+        self.assertEqual(data['status_fk'], str(ticket.status.id))
+        self.assertEqual(data['priority_fk'], str(ticket.priority.id))
         self.assertEqual(data['attachments'],
-            list(self.ticket.attachments.values_list('id', flat=True)))
-        self.assertEqual(data['request'], self.ticket.request)
-        self.assertEqual(data['number'], self.ticket.number),
+            list(ticket.attachments.values_list('id', flat=True)))
+        self.assertEqual(data['request'], ticket.request)
+        self.assertEqual(data['number'], ticket.number),
         self.assertEqual(
-            self.ticket.created.strftime('%m/%d/%Y'),
+            ticket.created.strftime('%m/%d/%Y'),
             datetime.datetime.strptime(str(data['created']), '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%m/%d/%Y')
         )
         self.assertIn('completion_date', data)
         self.assertIn('creator', data)
+        self.assertEqual(len(data['work_orders']), 1)
+        work_order = ticket.work_orders.first()
+        self.assertEqual(data['work_orders'][0]['id'], str(work_order.id))
+        self.assertEqual(data['work_orders'][0]['cost_estimate_currency']['id'], str(work_order.cost_estimate_currency.id))
+        self.assertEqual(data['work_orders'][0]['cost_estimate_currency']['name'], work_order.cost_estimate_currency.name)
+        self.assertEqual(data['work_orders'][0]['cost_estimate'], str(work_order.cost_estimate))
+        self.assertIn('scheduled_date', data['work_orders'][0])
+        self.assertIn('approval_date', data['work_orders'][0])
+        self.assertIn('completed_date', data['work_orders'][0])
+        self.assertIn('expiration_date', data['work_orders'][0])
+        self.assertEqual(data['work_orders'][0]['tracking_number'], work_order.tracking_number)
+        self.assertEqual(data['work_orders'][0]['status'], str(work_order.status.id))
+        self.assertEqual(data['work_orders'][0]['category'], str(work_order.category.id))
+        self.assertEqual(data['work_orders'][0]['provider'], str(work_order.provider.id))
 
     def test_legacy_ref_number(self):
         self.ticket.legacy_ref_number = '42'

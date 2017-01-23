@@ -50,9 +50,9 @@ test('content for automation generated ticket activity for an SMS', function(ass
     fulltime=(moment-from-now activity.created)
   }}`);
   assert.equal(this.$('.t-link').text().trim(), AD.descriptionOne);
-  assert.equal(
-    this.$('.t-activity-wrap').text().replace(/[\s\n]+/gm, ''),
-    `${trans.t('automation.actions.sms').string.replace(/\s+/, '')}sentto${PD.fullname.replace(/\s+/, '')}${trans.t('general.and')}${PD.fullnameBoy.replace(/\s+/, '')}viafoobar${moment(timestamp).fromNow().replace(/[\s]/g, '')}`);
+  let actualText = this.$('.t-activity-wrap').text();
+  let expectedText = `${trans.t('automation.actions.sms')}sentto${PD.fullname.replace(/\s+/, '')}${trans.t('general.and')}${PD.fullnameBoy.replace(/\s+/, '')}viafoobar${moment(timestamp).fromNow().replace(/[\s]/g, '')}`;
+  assert.equal(actualText.replace(/[\s\n]+/gm, ''), expectedText.replace(/[\s\n]+/gm, ''), 'SMS action text ok.');
   assert.equal(this.$('[data-test-id=message-type]').text().trim(), trans.t('automation.actions.sms') + ' sent to');
   assert.equal(this.$('.t-recipients0').text().trim(), PD.fullname);
   assert.equal(this.$('.t-recipients1').text().trim(), PD.fullnameBoy);

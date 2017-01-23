@@ -20,7 +20,7 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
     return PromiseMixin.xhr(`${CATEGORIES_URL}?children__isnull=true&name__icontains=${search}`, 'GET').then(response => response.results);
   },
   findWorkOrderProvider(search, category_id) {
-    return PromiseMixin.xhr(`${PROVIDER_URL}?category=${category_id}&name__icontains=${search}`, 'GET').then(response => response.results);
+    return PromiseMixin.xhr(`${PROVIDER_URL}?categories=${category_id}&name__icontains=${search}`, 'GET').then(response => response.results);
   },
   createWorkOrder(leaf_category_id) {
     const pk = this.get('uuid').v4();
