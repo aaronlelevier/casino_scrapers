@@ -5,7 +5,6 @@ from accounting.models import Currency
 from category.models import Category
 from provider.models import Provider
 from location.models import Location
-from third_party.models import ThirdParty
 from utils.models import BaseModel, BaseNameModel, DefaultToDictMixin, DefaultNameManager
 
 
@@ -51,6 +50,8 @@ class WorkOrderPriority(BaseNameModel):
 
 
 class WorkOrder(BaseModel):
+    scid = models.IntegerField(null=True, unique=True,
+        help_text="id of SC primary key record of the WorkOrder. Will be null on initial BS create")
     category = models.ForeignKey(Category, related_name='work_orders',
         help_text='SC field: Category, Required for SC API, broader than TradeName')
     provider = models.ForeignKey(Provider, related_name='work_orders',

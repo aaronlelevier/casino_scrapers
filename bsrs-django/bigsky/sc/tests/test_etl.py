@@ -8,6 +8,7 @@ from pretend import stub
 from rest_framework.exceptions import ValidationError
 from rest_framework.test import APITestCase
 
+from category.tests.factory import create_single_category, get_sc_category_or_none
 from contact.models import (Address, AddressType, Email, PhoneNumber,
                             PhoneNumberType)
 from contact.tests.factory import (create_address_type, create_contact,
@@ -18,11 +19,14 @@ from location.models import LOCATION_DISTRICT, LOCATION_REGION, Location
 from location.serializers import LocationCreateUpdateSerializer
 from location.tests.factory import SAN_DIEGO, create_locations
 from person.tests.factory import PASSWORD, create_single_person
-from sc.etl import LocationEtlAdapter, TenantEtlAdapter, TenantEtlDataAdapter
-from sc.oauth import DEV_SC_LOCATIONS_URL, DEV_SC_SUBSCRIBERS_URL
+from sc.etl import (LocationEtlAdapter, TenantEtlAdapter, TenantEtlDataAdapter,
+                    WorkOrderEtlDataAdapter)
+from sc.oauth import DEV_SC_LOCATIONS_URL, DEV_SC_SUBSCRIBERS_URL, DEV_SC_WORKORDERS_URL
 from tenant.tests.factory import get_or_create_tenant
+from ticket.tests.factory import create_ticket
 from utils import create
 from utils.tests.mixins import MockPermissionsAllowAnyMixin
+from work_order.tests.factory import create_work_order
 
 
 class SetupMixin(object):
@@ -440,3 +444,64 @@ class TenantEtlDataAdapterTests(TestCase):
 
         with self.assertRaises(ValidationError):
             response = self.adapter.post()
+
+
+class WorkOrderEtlDataAdapterTests(TestCase):
+
+    def setUp(self):
+        self.maxDiff = None
+
+        self.person = create_single_person()
+        create_single_category()
+        self.ticket = create_ticket()
+        self.work_order = create_work_order()
+        self.category = self.work_order.category
+        self.category.sc_category = get_sc_category_or_none('foo')
+        self.category.save()
+        validated_data = {
+            "id": str(uuid.uuid4()),
+            "requester": self.person,
+            "instructions": self.work_order.instructions,
+            "approved_amount": self.work_order.cost_estimate,
+            "cost_estimate": self.work_order.cost_estimate,
+            "scheduled_date": self.work_order.scheduled_date,
+            "expiration_date": self.work_order.expiration_date,
+            "approval_date": self.work_order.approval_date,
+            "category": self.work_order.category,
+            "provider": self.work_order.provider,
+            "ticket": self.ticket
+        }
+        self.adapter = WorkOrderEtlDataAdapter(validated_data)
+
+    def test_data(self):
+        raw_ret = {
+            "ContractInfo": {
+                "SubscriberId": self.person.role.tenant.scid,
+                "LocationId": self.ticket.location.scid,
+                "StoreId": self.ticket.location.number,
+                "ProviderId": self.work_order.provider.fbid,
+                "TradeName": self.category.sc_category.sc_name
+            },
+            "Category": self.category.sc_category.sc_name,
+            "Priority": self.ticket.priority.name,
+            "CallDate": self.work_order.expiration_date,
+            "Description": self.work_order.instructions,
+            "ProblemCode": self.work_order.category.name,
+            "Status": {
+                "Primary": self.ticket.status.name,
+                "Extended": self.ticket.status.name,
+                "PrimaryStatusValue": self.ticket.status.name
+            }
+        }
+
+        ret = self.adapter.data
+
+        self.assertEqual(ret, raw_ret)
+
+    def test_list_url(self):
+        self.assertEqual(self.adapter.list_url, DEV_SC_WORKORDERS_URL)
+
+    def test_post(self):
+        scid = self.adapter.post()
+
+        self.assertIsInstance(scid, int)

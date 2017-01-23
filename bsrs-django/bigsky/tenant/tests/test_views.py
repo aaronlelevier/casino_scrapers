@@ -6,7 +6,6 @@ import uuid
 from django.conf import settings
 
 from model_mommy import mommy
-from pretend import stub
 from rest_framework.exceptions import ValidationError
 from rest_framework.test import APITestCase
 

@@ -16,7 +16,7 @@ import caps from 'bsrs-components/utils/caps';
  * @return list of defined properties/methods/computed to handle belongs_to relationship with parent
  */
 var belongs_to = function(_ownerName, modelName, noSetup) {
-  let { bootstrapped=false, change_func=true, belongs_to=true, rollback=true, save=true, dirty=true, track_related_model=false } = noSetup || {};
+  let { bootstrapped=false, change_func=true, belongs_to=true, rollback=true, save=true, dirty=true, track_related_model=false, remove_func=false } = noSetup || {};
   const _capsOwnerName = caps(_ownerName);
   const _camelOwnerName = camel(_ownerName);
 

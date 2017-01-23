@@ -13,13 +13,13 @@ from location.models import (Location, LocationLevel, LOCATION_COMPANY, LOCATION
     LOCATION_REGION)
 from location.tests.factory import (create_location, create_locations,
     create_location_level, create_location_levels, create_top_level_location)
-from person.helpers import PermissionInfo
 from person.models import Role, Person
 from person.tests import factory
 from tenant.models import Tenant
 from tenant.tests.factory import get_or_create_tenant
 from translation.models import Locale
 from translation.tests.factory import create_locales
+from utils.permissions import PermissionInfo
 
 
 class DistrictManagerFactoryTests(TestCase):

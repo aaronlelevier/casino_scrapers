@@ -1,11 +1,12 @@
 import json
 
+from pretend import stub
 from rest_framework.exceptions import ValidationError
 
 from contact.models import Address, AddressType, PhoneNumber, PhoneNumberType
 from location.models import LOCATION_DISTRICT, LOCATION_REGION, Location
 from sc.oauth import (DEV_SC_LOCATIONS_URL, DEV_SC_SUBSCRIBERS_URL,
-                      BsOAuthSession)
+                      DEV_SC_WORKORDERS_URL, BsOAuthSession)
 
 
 class BaseEtlAdapter(object):
@@ -266,3 +267,53 @@ class TenantEtlDataAdapter(object):
             raise ValidationError(data['Reason'])
 
         return data['id']
+
+
+class WorkOrderEtlDataAdapter(object):
+    """
+    Used for WorkOrder data where a WorkOrder model instance
+    doesn't yet exist.
+    """
+    def __init__(self, validated_data):
+        """
+        :person: Person model instance
+        :param validated_data: dict of validated data from DRF Serializer instance
+        """
+        self._data = validated_data
+        self._person = validated_data['requester']
+
+    @property
+    def data(self):
+        return {
+            "ContractInfo": {
+                "SubscriberId": self._person.role.tenant.scid,
+                "LocationId": self._data['ticket'].location.scid,
+                "StoreId": self._data['ticket'].location.number,
+                "ProviderId": self._data['provider'].fbid,
+                "TradeName": self._data['category'].sc_category.sc_name
+            },
+            "Category": self._data['category'].sc_category.sc_name,
+            "Priority": self._data['ticket'].priority.name,
+            "CallDate": self._data['expiration_date'],
+            "Description": self._data['instructions'],
+            "ProblemCode": self._data['category'].name,
+            "Status": {
+                "Primary": self._data['ticket'].status.name,
+                "Extended": self._data['ticket'].status.name,
+                "PrimaryStatusValue": self._data['ticket'].status.name
+            }
+        }
+
+    @property
+    def list_url(self):
+        return DEV_SC_WORKORDERS_URL
+
+    def post(self):
+        """
+        This method is stubbed until we integrate with SC
+
+        :return scid: Integer id of WorkOrder in SC
+        """
+        # TODO: this is a mock response until we integrate with SC
+        # response = BsOAuthSession().post(self.list_url, data=self.data)
+        return random.randint(100,1000)

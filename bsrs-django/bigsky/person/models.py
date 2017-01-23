@@ -26,6 +26,7 @@ from utils import classproperty
 from utils.fields import InheritedValueField
 from utils.models import (BaseModel, BaseManager, BaseManagerMixin, BaseQuerySet,
     BaseNameModel, DefaultNameManager)
+from utils.permissions import PermissionInfo
 from utils.validators import (contains_digit, contains_upper_char, contains_lower_char,
     contains_special_char, contains_no_whitespaces)
 from work_order.models import WorkOrderStatus
@@ -272,7 +273,7 @@ class Role(BaseModel):
 
     @property
     def permissions(self):
-        role_perms = (self.group.permissions.filter(codename__in=helpers.PermissionInfo.CODENAMES)
+        role_perms = (self.group.permissions.filter(codename__in=PermissionInfo.CODENAMES)
                                             .values_list('codename', flat=True))
         return {p:True for p in role_perms}
 

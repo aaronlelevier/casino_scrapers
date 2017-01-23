@@ -313,9 +313,9 @@ test('ticket detail shows the activity list including event data (send_sms)', fu
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(find(ACTIVITY_ITEMS).length, 1);
-    const actualText = find(`${ACTIVITY_ITEMS}:eq(0)`).text();
-    const expectedText = `${t('automation.actions.sms')}sentto${PD.fullnameBoy.replace(/\s/, '')}via${AD.descriptionOne}15daysago`;
-    assert.equal(actualText.replace(/[\s]+/gm, ''), expectedText.replace(/[\s]+/gm, ''), 'SMS action text ok');
+    assert.equal(
+      find(`${ACTIVITY_ITEMS}:eq(0)`).text().replace(/[\s]+/gm, ''),
+      `${t('automation.actions.sms').string.replace(/\s/, '')}sentto${PD.fullnameBoy.replace(/\s/, '')}via${AD.descriptionOne}15daysago`);
   });
 });
 

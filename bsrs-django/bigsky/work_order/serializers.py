@@ -4,6 +4,7 @@ from accounting.serializers import CurrencyIdNameSerializer
 from location.serializers import LocationSerializer
 from person.serializers import PersonTicketSerializer
 from work_order.models import WorkOrder
+from sc.etl import WorkOrderEtlDataAdapter
 from utils.serializers import BaseCreateSerializer
 from utils.validators import gte_today
 
@@ -46,6 +47,18 @@ class WorkOrderCreateSerializer(BaseCreateSerializer):
         fields = ('id', 'category', 'provider', 'location', 'scheduled_date',
                   'approved_amount', 'cost_estimate', 'cost_estimate_currency')
 
+    def create(self, validated_data):
+        """
+        Synchronously create the WorkOrder in SC before creating in BS.
+        """
+        scid = WorkOrderEtlDataAdapter(validated_data).post()
+
+        instance = super(WorkOrderCreateSerializer, self).create(validated_data)
+
+        instance.scid = scid
+        instance.save()
+        return instance
+
 
 class WorkOrderLeafSerializer(serializers.ModelSerializer):
 
@@ -53,6 +66,4 @@ class WorkOrderLeafSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WorkOrder
-        fields = ('id', 'cost_estimate_currency', 'cost_estimate', 'scheduled_date',
-                  'approval_date', 'completed_date', 'expiration_date', 'tracking_number',
-                  'status', 'category', 'provider')
+        fields = WO_FIELDS + ('scid',)

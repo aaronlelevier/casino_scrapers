@@ -20,6 +20,7 @@ DEV_SC_TOKEN_URL = DEV_SC_BASE_URL+"/oauth/token"
 DEV_SC_API_URL = "https://dev1api.servicechannel.com:443"
 DEV_SC_SUBSCRIBERS_URL = DEV_SC_API_URL+"/subscribers"
 DEV_SC_LOCATIONS_URL = DEV_SC_API_URL+"/locations"
+DEV_SC_WORKORDERS_URL = DEV_SC_API_URL+"/workorders"
 
 
 def request_token():

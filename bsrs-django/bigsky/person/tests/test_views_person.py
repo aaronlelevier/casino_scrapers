@@ -4,7 +4,6 @@ from io import BytesIO
 
 from django.conf import settings
 from django.contrib.auth.models import ContentType
-from django.test import TestCase
 
 from model_mommy import mommy
 from rest_framework.test import APITestCase, APITransactionTestCase
@@ -19,7 +18,6 @@ from person.models import Person, Role, PersonStatus
 from person.serializers import PersonUpdateSerializer
 from person.tests.factory import (PASSWORD, create_single_person, create_role, create_roles,
     create_all_people, create_person_statuses, create_other_person)
-from tenant.tests.factory import get_or_create_tenant
 from translation.models import Locale
 from translation.tests.factory import create_locale, create_locales
 from utils import create

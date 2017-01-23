@@ -1,32 +1,45 @@
 import json
+import random
 import uuid
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from django.utils.timezone import localtime, now
 
+from mock import patch
 from rest_framework import status
-
 from rest_framework.test import APITestCase
-from person.tests.factory import PASSWORD, create_single_person
+
 from location.tests.factory import create_location
+from person.tests.factory import PASSWORD, create_single_person
+from utils.tests.mixins import MockPermissionsAllowAnyMixin
 from work_order.models import WorkOrder
 from work_order.serializers import WorkOrderCreateSerializer, WorkOrderUpdateSerializer
 from work_order.tests.factory import create_work_order, create_work_order_status, TIME
 
 
-class WorkOrderListTests(APITestCase):
+class SetupMixin(MockPermissionsAllowAnyMixin):
     
     def setUp(self):
+        super(SetupMixin, self).setUp()
         self.person = create_single_person()
         self.wo = create_work_order()
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
+        super(SetupMixin, self).tearDown()
         self.client.logout()
+
+
+class WorkOrderListTests(SetupMixin, APITestCase):
 
     def test_response(self):
         response = self.client.get('/api/work-orders/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_auth_required(self):
+        self.client.logout()
+        response = self.client.get('/api/work-orders/')
+        self.assertEqual(response.status_code, 403)
 
     def test_data(self):
         response = self.client.get('/api/work-orders/')
@@ -59,15 +72,7 @@ class WorkOrderListTests(APITestCase):
         self.assertEqual(assignee['last_name'], self.wo.assignee.last_name)
 
 
-class WorkOrderDetailTests(APITestCase):
-
-    def setUp(self):
-        self.person = create_single_person()
-        self.wo = create_work_order()
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def tearDown(self):
-        self.client.logout()
+class WorkOrderDetailTests(SetupMixin, APITestCase):
 
     def test_response(self):
         response = self.client.get('/api/work-orders/{}/'.format(self.wo.id))
@@ -89,17 +94,11 @@ class WorkOrderDetailTests(APITestCase):
         self.assertEqual(data['status'], str(self.wo.status.id))
 
 
-class WorkOrderUpdateTests(APITestCase):
+class WorkOrderUpdateTests(SetupMixin, APITestCase):
 
     def setUp(self):
-        self.person = create_single_person()
-        self.wo = create_work_order()
-        self.client.login(username=self.person.username, password=PASSWORD)
-        serializer = WorkOrderUpdateSerializer(self.wo)
-        self.data = serializer.data
-
-    def tearDown(self):
-        self.client.logout()
+        super(WorkOrderUpdateTests, self).setUp()
+        self.data = WorkOrderCreateSerializer(self.wo).data
 
     def test_no_change(self):
         response = self.client.put('/api/work-orders/{}/'.format(self.wo.id), 
@@ -131,16 +130,12 @@ class WorkOrderUpdateTests(APITestCase):
         self.assertEqual(data['assignee'], str(self.data['assignee']))
 
 
-class WorkOrderCreateTests(APITestCase):
+class WorkOrderCreateTests(SetupMixin, APITestCase):
 
     def setUp(self):
-        self.person = create_single_person()
+        super(WorkOrderCreateTests, self).setUp()
         self.wo = create_work_order()
-        self.client.login(username=self.person.username, password=PASSWORD)
         self.data = WorkOrderCreateSerializer(self.wo).data
-
-    def tearDown(self):
-        self.client.logout()
 
     def test_data(self):
         self.data.update({

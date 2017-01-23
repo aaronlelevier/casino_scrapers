@@ -3,11 +3,10 @@ from django.contrib.auth.models import Permission
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
-from person.helpers import PermissionInfo
 from person.tests.factory import PASSWORD, create_single_person
 from ticket.models import Ticket
 from ticket.tests.factory import create_ticket_activity_type, create_ticket_activity
-from utils.permissions import CrudPermissions
+from utils.permissions import CrudPermissions, PermissionInfo
 
 
 class CrudPermissionsTests(APITestCase):

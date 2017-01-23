@@ -9,15 +9,13 @@ from rest_framework.test import APITestCase
 
 from accounting.models import Currency
 from category.models import Category
-from location.models import LocationLevel
 from location.tests.factory import create_location_level
 from person import config as person_config
-from person.helpers import PermissionInfo
 from person.models import Role
 from person.serializers import RoleUpdateSerializer
 from person.tests.factory import create_role, create_other_role
 from person.tests.mixins import RoleSetupMixin
-from tenant.tests.factory import get_or_create_tenant
+from utils.permissions import PermissionInfo
 
 
 class RoleListTests(RoleSetupMixin, APITestCase):

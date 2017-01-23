@@ -16,7 +16,6 @@ from location.models import (LocationLevel, Location, LocationStatus, LocationTy
 from location.tests.factory import (
     create_location, create_locations, create_location_level, create_location_levels,
     create_top_level_location, create_other_location, create_other_location_level)
-from person.helpers import PermissionInfo
 from person.models import Role, Person, PersonStatus
 from tenant.tests.factory import get_or_create_tenant
 from translation.tests.factory import create_locale, LOCALES
@@ -24,6 +23,7 @@ from translation.models import Locale
 from utils import create
 from utils.fake_data import person_names
 from utils.helpers import generate_uuid
+from utils.permissions import PermissionInfo
 
 
 PASSWORD = 'tangobravo'

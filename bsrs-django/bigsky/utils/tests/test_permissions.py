@@ -1,5 +1,7 @@
 from django.conf import settings
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import ContentType, Permission
+from django.db import models
+from django.test import TestCase
 
 from model_mommy import mommy
 from rest_framework.test import APITestCase
@@ -7,12 +9,12 @@ from rest_framework.test import APITestCase
 from category.tests.factory import create_single_category
 from location.models import Location, LocationLevel
 from location.tests.factory import create_location
-from person.helpers import PermissionInfo
 from person.tests.factory import PASSWORD, create_person
 from provider.tests.factory import create_provider
 from ticket.models import Ticket
 from ticket.tests.factory import create_ticket
-from utils.permissions import CrudPermissions
+from utils.permissions import CrudPermissions, PermissionInfo
+from work_order.tests.factory import create_work_order
 
 
 class CrudPermissionsTests(APITestCase):
@@ -29,6 +31,7 @@ class CrudPermissionsTests(APITestCase):
         self.role = self.person.role
         self.provider = create_provider(create_single_category())
         self.ticket = create_ticket()
+        self.work_order = create_work_order()
 
         self.RESOUCE_MAP = {
             'category': ('admin/categories', self.trade.id),
@@ -37,7 +40,8 @@ class CrudPermissionsTests(APITestCase):
             'person': ('admin/people', self.person.id),
             'provider': ('providers', self.provider.id),
             'role': ('admin/roles', self.role.id),
-            'ticket': ('tickets', self.ticket.id)
+            'ticket': ('tickets', self.ticket.id),
+            'workorder': ('work-orders', self.work_order.id)
         }
 
         self.METHOD_MAP = {
@@ -117,3 +121,60 @@ class CrudPermissionsTests(APITestCase):
                 sub_url), {}, format='json')
 
         return (method, model, response)
+
+
+class PermissionInfoTests(TestCase):
+
+    def test_codenames(self):
+        for p in PermissionInfo.PERMS:
+            for m in PermissionInfo.MODELS:
+                self.assertIn('{}_{}'.format(p, m),
+                              PermissionInfo.CODENAMES)
+
+    def test_all_defaults(self):
+        raw_ret = {}
+        for m in PermissionInfo.MODELS:
+            for p in PermissionInfo.PERMS:
+                raw_ret["{}_{}".format(p, m)] = False
+        raw_ret['view_provider'] = False
+
+        ret = PermissionInfo.ALL_DEFAULTS
+
+        self.assertIsInstance(ret, dict)
+        self.assertEqual(len(ret), 29, '29 possible permissions')
+        for k,v in ret.items():
+            self.assertFalse(v)
+            self.assertEqual(v, raw_ret[k])
+
+    def test_setUp(self):
+        perm_info = PermissionInfo()
+
+        self.assertEqual(
+            Permission.objects.filter(codename__startswith='view_').count(), 0)
+
+        perm_info.setUp()
+
+        ret = perm_info.all()
+        self.assertEqual(ret.count(), 29)
+        for p in PermissionInfo.PERMS:
+            for m in PermissionInfo.MODELS:
+                self.assertIsInstance(ret.get(codename="{}_{}".format(p,m)),
+                                      Permission)
+
+    def test_all(self):
+        perm_info = PermissionInfo()
+        perm_info.setUp()
+
+        ret = perm_info.all()
+
+        self.assertIsInstance(ret, models.query.QuerySet)
+        self.assertEqual(ret.count(), 29)
+        for r in ret:
+            self.assertIsInstance(r, Permission)
+            perm, model = r.codename.split('_')
+            # self.assertEqual(r.name, 'Can {} {}'.format(perm, model))
+            self.assertIn(perm, PermissionInfo.PERMS)
+            self.assertIn(model, PermissionInfo.MODELS + ['provider'])
+            # ContentType
+            content_type = ContentType.objects.get(model=model)
+            self.assertEqual(content_type.model, model)

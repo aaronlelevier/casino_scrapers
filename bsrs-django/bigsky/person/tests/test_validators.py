@@ -4,7 +4,7 @@ from model_mommy import mommy
 from rest_framework.test import APITestCase
 
 from category.tests.factory import create_single_category
-from location.models import Location, LocationLevel
+from location.models import Location
 from location.tests.factory import create_location, create_location_level
 from person.models import Person
 from person.serializers import RoleUpdateSerializer, PersonUpdateSerializer
