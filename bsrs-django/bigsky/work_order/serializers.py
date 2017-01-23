@@ -5,6 +5,7 @@ from location.serializers import LocationSerializer
 from person.serializers import PersonTicketSerializer
 from work_order.models import WorkOrder
 from sc.etl import WorkOrderEtlDataAdapter
+from work_order.models import WorkOrder
 from utils.serializers import BaseCreateSerializer
 from utils.validators import gte_today
 

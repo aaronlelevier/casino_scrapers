@@ -130,6 +130,7 @@ class WorkOrderUpdateTests(SetupMixin, APITestCase):
         self.assertEqual(data['assignee'], str(self.data['assignee']))
 
 
+
 class WorkOrderCreateTests(SetupMixin, APITestCase):
 
     def setUp(self):
