@@ -20,11 +20,9 @@ var LocationLevel = Model.extend(Validations, {
   },
   simpleStore: Ember.inject.service(),
   name: attr(''),
-  // TODO: wrap in attr?
-  children_fks: attr([]),
-  isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
-    return this.get('isDirty');
-  }).readOnly(),
+  // TODO: make this a m2m for future use (potentially drag in order it needs to be)
+  children_fks: attr(),
+  isDirtyOrRelatedDirty: Ember.computed.or('isDirty'),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty').readOnly(),
   rollback() {
     this.rollbackChildren();
@@ -65,6 +63,10 @@ var LocationLevel = Model.extend(Validations, {
     };
     return this.get('simpleStore').find('location-level', filter.bind(this));
   }),
+  /**
+   * whenever ask for location level model w/ toString, return the name (templates in role grid)
+   * @method toString
+   */
   toString: function() {
     const name = this.get('name');
     return name ? name : '';

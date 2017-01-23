@@ -26,7 +26,6 @@ export default GridViewComponent.extend({
     },
     {
       field: 'location_level', 
-      // classNames: ['role-location-level'],
       headerLabel: 'admin.role.label.location_level', 
       headerIsTranslatable: true
     }

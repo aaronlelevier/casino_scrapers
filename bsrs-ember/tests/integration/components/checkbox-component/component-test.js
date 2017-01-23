@@ -11,10 +11,8 @@ test('it renders with api', function(assert) {
   this.checkboxText = 'watbar';
   this.checked = false;
   this.inputClass = 'watter';
-  this.dataTestId = 't-watter';
-  this.render(hbs`{{checkbox-component dataTestId=dataTestId inputClass=inputClass checked=checked checkboxText=checkboxText labelText=labelText labelClass=labelClass}}`);
+  this.render(hbs`{{checkbox-component inputClass=inputClass checked=checked checkboxText=checkboxText labelText=labelText labelClass=labelClass}}`);
   assert.equal(this.$('span').text().trim(), this.checkboxText);
   assert.ok(this.$('input').attr('class').includes(this.inputClass));
   assert.ok(this.$('label').attr('class').includes(this.labelClass));
-  assert.equal(this.$('label').attr('data-test-id'), this.dataTestId);
 });
