@@ -1,6 +1,7 @@
 const ID_ONE = 'ec62006b-6275-4aa9-abfa-38b146383d301';
 const COST_AMOUNT_ONE = '10.00';
 const SC_CATEGORY_NAME_ONE = 'GENERAL REPAIRS';
+const COST_CODE_ONE = '12584';
 
 var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
     var factory = function(currency_defaults) {
@@ -41,7 +42,7 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             costAmountOne: COST_AMOUNT_ONE,
             costAmountTwo: '20.00',
             currency: this.currency.id,
-            costCodeOne: '12584',
+            costCodeOne: COST_CODE_ONE,
             costCodeTwo: '12585',
             labelOne: 'Type',
             labelTwo: 'Trade',
@@ -63,6 +64,12 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
                 sc_category_name: {
                     value: null,
                     inherited_value: SC_CATEGORY_NAME_ONE,
+                    inherits_from: 'category',
+                    inherits_from_id: ID_ONE
+                },
+                cost_code: {
+                    value: null,
+                    inherited_value: COST_CODE_ONE,
                     inherits_from: 'category',
                     inherits_from_id: ID_ONE
                 }

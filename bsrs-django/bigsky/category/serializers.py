@@ -89,7 +89,8 @@ class CategoryUpdateSerializer(BaseCreateSerializer):
         model = Category
         validators = [CategoryParentAndNameValidator(),
                       RootCategoryRequiredFieldValidator('cost_amount'),
-                      RootCategoryRequiredFieldValidator('sc_category_name')]
+                      RootCategoryRequiredFieldValidator('sc_category_name'),
+                      RootCategoryRequiredFieldValidator('cost_code')]
         fields = CATEGORY_FIELDS + ('subcategory_label', 'parent', 'children',)
 
 
@@ -102,5 +103,6 @@ class CategoryCreateSerializer(RemoveTenantMixin, BaseCreateSerializer):
         model = Category
         validators = [CategoryParentAndNameValidator(),
                       RootCategoryRequiredFieldValidator('cost_amount'),
-                      RootCategoryRequiredFieldValidator('sc_category_name')]
+                      RootCategoryRequiredFieldValidator('sc_category_name'),
+                      RootCategoryRequiredFieldValidator('cost_code')]
         fields = CATEGORY_FIELDS + ('tenant', 'subcategory_label', 'parent', 'children',)

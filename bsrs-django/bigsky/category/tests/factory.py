@@ -132,6 +132,7 @@ def create_categories(tenant=None):
                 parent=parent,
                 tenant=tenant,
                 cost_amount=None if parent else 10,
+                cost_code=None if parent else random_lorem(1),
                 sc_category_name=data.get('sc_category_name')
             )
 

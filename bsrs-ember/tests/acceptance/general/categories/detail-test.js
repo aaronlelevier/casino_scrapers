@@ -477,3 +477,23 @@ test('currency helper displays inherited sc_category_name, and can click link-to
     assert.equal(currentURL(), `${BASE_URL}/${CD.idOne}`);
   });
 });
+
+test('currency helper displays inherited cost_code, and can click link-to to go to category inherited value', function(assert) {
+  clearxhr(list_xhr);
+  clearxhr(detail_xhr);
+  let detailData = CF.detail(CD.idTwo);
+  detailData.cost_code = undefined;
+  xhr(CATEGORIES_URL + CD.idTwo + '/', 'GET', null, {}, 200, detailData);
+  page.visitDetailTwo();
+  andThen(() => {
+    assert.equal(currentURL(), DETAIL_URL_TWO);
+    assert.equal(page.costCodePlaceholder(), 'Default: ' + CD.costCodeOne);
+    assert.equal(page.costCodeInheritedFromText, 'Inherited from: ' + TD.inherits_from_category);
+    assert.equal(page.costCodeInput, '');
+  });
+  xhr(`${CATEGORIES_URL}${CD.idOne}/`, 'GET', null, {}, 200, CF.detail(CD.idOne));
+  page.costCodeInheritedFromClick();
+  andThen(() => {
+    assert.equal(currentURL(), `${BASE_URL}/${CD.idOne}`);
+  });
+});

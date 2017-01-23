@@ -167,11 +167,13 @@ class Category(BaseModel):
     def inherited(self):
         return {
             'cost_amount': self.proxy_cost_amount,
-            'sc_category_name': self.proxy_sc_category_name
+            'sc_category_name': self.proxy_sc_category_name,
+            'cost_code': self.proxy_cost_code
         }
 
     proxy_cost_amount = SelfInheritedValueField('parent', 'cost_amount')
     proxy_sc_category_name = SelfInheritedValueField('parent', 'sc_category_name')
+    proxy_cost_code = SelfInheritedValueField('parent', 'cost_code')
 
     def to_dict(self):
         if self.parent:

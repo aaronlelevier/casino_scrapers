@@ -149,6 +149,7 @@ class CategoryDetailTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertEqual(data['level'], category.level)
         self.assertEqual(data['inherited']['cost_amount'], category.proxy_cost_amount)
         self.assertEqual(data['inherited']['sc_category_name'], category.proxy_sc_category_name)
+        self.assertEqual(data['inherited']['cost_code'], category.proxy_cost_code)
 
     def test_data_parent(self):
         category = Category.objects.filter(label='Issue').first()
@@ -317,7 +318,7 @@ class CategoryUpdateTests(CategoryViewTestSetupMixin, APITestCase):
         child = Category.objects.get(id=data['children'][0])
         self.assertEqual(2, child.level)
 
-    def test_if_root_category_cost_amount_is_required(self):
+    def test_if_root_category_cost_amount_and_cost_code_and_sccategory_name_are_required(self):
         self.data.update({
             'parent': None,
             'cost_amount': None
@@ -329,8 +330,13 @@ class CategoryUpdateTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(
             json.loads(response.content.decode('utf8'))['non_field_errors'][0],
-            "Root Category must have: {field}".format(field='cost_amount')
-        )
+            "Root Category must have: {field}".format(field='cost_amount'))
+        self.assertEqual(
+            json.loads(response.content.decode('utf8'))['non_field_errors'][1],
+            "Root Category must have: {field}".format(field='sc_category_name'))
+        self.assertEqual(
+            json.loads(response.content.decode('utf8'))['non_field_errors'][2],
+            "Root Category must have: {field}".format(field='cost_code'))
 
 
 class CategoryCreateTests(CategoryViewTestSetupMixin, APITestCase):
@@ -382,6 +388,28 @@ class CategoryCreateTests(CategoryViewTestSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201)
         self.assertIn(str(new_sub_category.id), data['children'])
+
+    def test_if_root_category_cost_amount_and_cost_code_and_sccategory_name_are_required(self):
+        self.data.update({
+            'id': str(uuid.uuid4()),
+            'parent': None,
+            'cost_amount': None,
+            'name': 'new category'
+        })
+
+        response = self.client.post('/api/admin/categories/',
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(
+            json.loads(response.content.decode('utf8'))['non_field_errors'][0],
+            "Root Category must have: {field}".format(field='cost_amount'))
+        self.assertEqual(
+            json.loads(response.content.decode('utf8'))['non_field_errors'][1],
+            "Root Category must have: {field}".format(field='sc_category_name'))
+        self.assertEqual(
+            json.loads(response.content.decode('utf8'))['non_field_errors'][2],
+            "Root Category must have: {field}".format(field='cost_code'))
 
 
 class CategoryFilterTests(CategoryViewTestSetupMixin, APITestCase):

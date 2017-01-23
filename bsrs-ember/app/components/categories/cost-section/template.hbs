@@ -23,8 +23,15 @@
       <div class="row">
         <div class="col-md-12">
           {{#form-group title="admin.category.label.cost_code" for="category_cost_code"}}
+          {{#unless model.inherited.cost_code.value}}
+          <p class="inherited-msg t-inherited-msg-cost_code">
+            {{#link-to "admin.categories.category" model.inherited.cost_code.inherits_from_id class="t-inherited-msg-cost_code-link"}}
+            {{t "crud.inherited_from" from=model.inherited.cost_code.inherits_from}}
+            {{/link-to}}
+          </p>
+          {{/unless}}
           {{input type="text"
-            placeholder=(t "admin.category.label.cost_code")
+            placeholder=(t "crud.default_value" value=model.inherited.cost_code.inherited_value)
             value=model.cost_code
             class="form-control t-category-cost-code"
             id="category_cost_code"

@@ -52,7 +52,11 @@ var CategoryPage = PageObject.create({
   scCategoryNameInheritedFromText: text('.t-inherited-msg-sc_category_name'),
   scCategoryNamePlaceholder: () => Ember.$('.t-sc-category-name').get(0)['placeholder'],
   scCategoryNameInheritedFromClick: clickable('.t-inherited-msg-sc_category_name-link'),
-  
+
+  costCodePlaceholder: () => Ember.$('.t-category-cost-code').get(0)['placeholder'],
+  costCodeInheritedFromText: text('.t-inherited-msg-cost_code'),
+  costCodeInheritedFromClick: clickable('.t-inherited-msg-cost_code-link'),
+
   //validation
   nameValidationErrorVisible: hasClass('invalid', '.t-category-name-validator'),
 });

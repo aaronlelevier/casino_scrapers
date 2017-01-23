@@ -16,7 +16,7 @@ module('unit: category deserializer test', {
 });
 
 test('category deserializer returns correct data with existing category (list)', (assert) => {
-    category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
+    category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair,
                               label: CD.labelOne});
     store.push('category-list', {id: CD.unusedId, name: CD.nameTwo, description: CD.descriptionMaintenance});
     let json = [CF.generate(CD.idOne), CF.generate(CD.unusedId)];
@@ -133,4 +133,9 @@ test('category deserializer detail payload contains inherited object with: cost_
     assert.equal(categories.get('inherited').sc_category_name.inherited_value, CD.scCategoryNameOne);
     assert.equal(categories.get('inherited').sc_category_name.inherits_from, 'category');
     assert.equal(categories.get('inherited').sc_category_name.inherits_from_id, CD.idOne);
+    //cost_code
+    assert.equal(categories.get('inherited').cost_code.value, null);
+    assert.equal(categories.get('inherited').cost_code.inherited_value, CD.costCodeOne);
+    assert.equal(categories.get('inherited').cost_code.inherits_from, 'category');
+    assert.equal(categories.get('inherited').cost_code.inherits_from_id, CD.idOne);
 });

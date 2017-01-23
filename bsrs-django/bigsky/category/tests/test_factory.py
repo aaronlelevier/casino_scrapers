@@ -218,6 +218,9 @@ class CreateCategoriesTests(TestCase):
         self.assertEqual(
             Category.objects.filter(parent__isnull=True,
                                     sc_category_name__isnull=True).count(), 0)
+        self.assertEqual(
+            Category.objects.filter(parent__isnull=True,
+                                    cost_code__isnull=True).count(), 0)
 
 
 class CreateOtherTenantFactoryTests(TestCase):

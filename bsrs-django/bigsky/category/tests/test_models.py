@@ -190,6 +190,7 @@ class CategoryTests(CategorySetupMixin, TestCase):
 
         self.assertEqual(ret['cost_amount'], self.type.proxy_cost_amount)
         self.assertEqual(ret['sc_category_name'], self.type.proxy_sc_category_name)
+        self.assertEqual(ret['cost_code'], self.type.proxy_cost_code)
 
     def test_proxy_cost_amount(self):
         cost_amount = 1
@@ -211,6 +212,18 @@ class CategoryTests(CategorySetupMixin, TestCase):
 
         self.assertIsInstance(ret, dict)
         self.assertEqual(ret['value'], sc_category_name)
+        self.assertIn('inherited_value', ret)
+        self.assertIn('inherits_from', ret)
+        self.assertIn('inherits_from_id', ret)
+
+    def test_proxy_cost_code(self):
+        cost_code = 'foo'
+        self.type.cost_code = cost_code
+
+        ret = self.type.proxy_cost_code
+
+        self.assertIsInstance(ret, dict)
+        self.assertEqual(ret['value'], cost_code)
         self.assertIn('inherited_value', ret)
         self.assertIn('inherits_from', ret)
         self.assertIn('inherits_from_id', ret)
