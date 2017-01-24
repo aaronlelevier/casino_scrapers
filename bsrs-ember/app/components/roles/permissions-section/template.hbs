@@ -21,24 +21,28 @@
 		</div>
     <div class="permission-section__cell--checkbox">
     {{checkbox-component
+     inputClass=(concat "t-permission-view-" permissionItem)
      data-test-id=(concat "permission-view-" permissionItem)
      checked=(get model (get-permission permissionItem "view"))
     }}
     </div>
     <div class="permission-section__cell--checkbox">
     {{checkbox-component
+     inputClass=(concat "t-permission-add-" permissionItem)
      data-test-id=(concat "permission-add-" permissionItem)
      checked=(get model (get-permission permissionItem "add"))
     }}
     </div>
     <div class="permission-section__cell--checkbox">
     {{checkbox-component
+     inputClass=(concat "t-permission-change-" permissionItem)
      data-test-id=(concat "permission-change-" permissionItem)
      checked=(get model (get-permission permissionItem "change"))
     }}
     </div>
     <div class="permission-section__cell--checkbox">
     {{checkbox-component
+     inputClass=(concat "t-permission-delete-" permissionItem)
      data-test-id=(concat "permission-delete-" permissionItem)
      checked=(get model (get-permission permissionItem "delete"))
     }}

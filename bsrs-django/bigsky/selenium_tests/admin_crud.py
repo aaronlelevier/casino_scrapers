@@ -473,7 +473,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         ll_option = self.driver.find_element_by_xpath("//*[@aria-current='true']")
         ll_option.click()
         # Permissions
-        checkbox = self.driver.find_element_by_css_selector('[data-test-id="permission-view-ticket"]')
+        checkbox = self.wait_for_xhr_request_xpath("//*[contains(@class, 't-permission-view-ticket')]/parent::*")
         checkbox.click()
 
         self.gen_elem_page.click_save_btn()
