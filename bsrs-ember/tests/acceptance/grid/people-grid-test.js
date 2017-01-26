@@ -23,7 +23,7 @@ const LETTER_A = {keyCode: 65};
 const SPACEBAR = {keyCode: 32};
 const NUMBER_EIGHT = {keyCode: 56};
 const BACKSPACE = {keyCode: 8};
-const SORT_STATUS_DIR = '.t-sort-status-translated-name-dir';
+const SORT_STATUS_DIR = '.t-sort-status-name-dir';
 
 let endpoint, list_xhr;
 
@@ -321,20 +321,23 @@ test('full text search will filter down the result set and query django accordin
     assert.ok(find('.t-grid-data').length < PAGE_SIZE);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-person-username').text().trim()), 'scott');
   });
+  click('.t-filter-username');
+  andThen(() => {
+    assert.equal(Ember.$('[data-test-id="column-filter--head"]').text().trim(), t('admin.person.label.username'));
+    assert.equal(Ember.$('[data-test-id="column-filter--body"] input').attr('placeholder'), t('admin.person.label.username'));
+  });
   filterGrid('username', '7');
   andThen(() => {
     assert.equal(currentURL(),PEOPLE_LIST_URL + '?find=title%3Awat%2Cusername%3A7');
     assert.equal(find('.t-grid-data').length, 1);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-person-username').text().trim()), 'scott');
   });
-  click('.t-filter-fullname');
   filterGrid('fullname', 'ewcomer');
   andThen(() => {
     assert.equal(currentURL(),PEOPLE_LIST_URL + '?find=title%3Awat%2Cusername%3A7%2Cfullname%3Aewcomer');
     assert.equal(find('.t-grid-data').length, 1);
     assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-person-username').text().trim()), 'scott');
   });
-  click('.t-filter-fullname');
   filterGrid('username', 'lelevier');
   andThen(() => {
     assert.equal(currentURL(),PEOPLE_LIST_URL + '?find=title%3Awat%2Cusername%3Alelevier%2Cfullname%3Aewcomer');
@@ -372,10 +375,6 @@ test('loading screen shown before any xhr and hidden after', function(assert) {
 test('when a full text filter is selected the input inside the modal is focused', function(assert) {
   visit(PEOPLE_LIST_URL);
   click('.t-filter-fullname');
-  andThen(() => {
-    isFocused('.ember-modal-dialog input:first');
-  });
-  click('.t-filter-title');
   andThen(() => {
     isFocused('.ember-modal-dialog input:first');
   });
@@ -674,7 +673,7 @@ test('typing a search will search on related', function(assert) {
   });
 });
 
-test('status.translated_name is a functional related filter', function(assert) {
+test('status.name is a functional related filter', function(assert) {
   let option_four = PREFIX + BASE_URL + '/?page=1&ordering=-status__name&status__name__icontains=rr';
   xhr(option_four,'GET',null,{},200,PF.searched_related(SD.activeId, 'status'));
   let option_three = PREFIX + BASE_URL + '/?page=1&ordering=-status__name';
@@ -687,37 +686,37 @@ test('status.translated_name is a functional related filter', function(assert) {
   andThen(() => {
     assert.equal(currentURL(), PEOPLE_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-person-status-translated_name').text().trim(), t(SD.activeName));
+    assert.equal(find('.t-grid-data:eq(0) .t-person-status-name').text().trim(), t(SD.activeName));
   });
   fillIn('.t-grid-search-input', 'a');
   triggerEvent('.t-grid-search-input', 'keyup', LETTER_A);
   andThen(() => {
     assert.equal(currentURL(),PEOPLE_LIST_URL + '?search=a');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-person-status-translated_name').text().trim(), t(SD.activeName));
+    assert.equal(find('.t-grid-data:eq(0) .t-person-status-name').text().trim(), t(SD.activeName));
   });
   fillIn('.t-grid-search-input', '');
   triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
   andThen(() => {
     assert.equal(currentURL(),PEOPLE_LIST_URL + '?search=');
-    assert.equal(find('.t-grid-data:eq(0) .t-person-status-translated_name').text().trim(), t(SD.activeName));
+    assert.equal(find('.t-grid-data:eq(0) .t-person-status-name').text().trim(), t(SD.activeName));
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
   });
   click(SORT_STATUS_DIR);
   andThen(() => {
-    assert.equal(currentURL(),PEOPLE_LIST_URL + '?search=&sort=status.translated_name');
+    assert.equal(currentURL(),PEOPLE_LIST_URL + '?search=&sort=status.name');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.equal(find('.t-grid-data:eq(0) .t-person-status-translated_name').text().trim(), t(SD.activeName));
+    assert.equal(find('.t-grid-data:eq(0) .t-person-status-name').text().trim(), t(SD.activeName));
   });
   click(SORT_STATUS_DIR);
   andThen(() => {
-    assert.equal(currentURL(),PEOPLE_LIST_URL + '?search=&sort=-status.translated_name');
+    assert.equal(currentURL(),PEOPLE_LIST_URL + '?search=&sort=-status.name');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-2);
-    assert.equal(find('.t-grid-data:eq(0) .t-person-status-translated_name').text().trim(), t(SD.inactiveName));
+    assert.equal(find('.t-grid-data:eq(0) .t-person-status-name').text().trim(), t(SD.inactiveName));
   });
-  filterGrid('status.translated_name', 'rr');
+  filterGrid('status.name', 'rr');
   andThen(() => {
-    assert.equal(currentURL(),PEOPLE_LIST_URL + '?find=status.translated_name%3Arr&search=&sort=-status.translated_name');
+    assert.equal(currentURL(),PEOPLE_LIST_URL + '?find=status.name%3Arr&search=&sort=-status.name');
     assert.equal(find('.t-grid-data').length, 0);
   });
 });

@@ -54,7 +54,7 @@ test('visiting mobile person grid show correct layout', async function(assert) {
   assert.equal(currentURL(), PEOPLE_LIST_URL);
   assert.equal(find('.t-mobile-grid-title').text().trim(), '18 People');
   assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-  assert.ok(find('.t-grid-data:eq(0) > div:eq(4)').hasClass('t-person-status-translated_name'));
+  assert.ok(find('.t-grid-data:eq(0) > div:eq(4)').hasClass('t-person-status-name'));
   assert.equal(find('.t-grid-data:eq(0) > div:eq(0)').text().trim(), PD.fullname);
   assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), PD.username);
   assert.equal(find('.t-grid-data:eq(0) > div:eq(2)').text().trim(), PD.title);
@@ -123,7 +123,7 @@ test('filtering on status will sort when filter is clicked', async function(asse
   assert.equal(page.statusFourIsChecked(), false);
   await generalMobilePage.submitFilterSort();
   assert.equal(this.store.find('person-list').get('length'), 10);
-  assert.equal(find('.t-grid-data:eq(0) > .t-person-status-translated_name span').text().trim(), t('admin.person.status.active'));
+  assert.equal(find('.t-grid-data:eq(0) > .t-person-status-name span').text().trim(), t('admin.person.status.active'));
   await generalMobilePage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 1);
   assert.equal(page.statusOneIsChecked(), true);

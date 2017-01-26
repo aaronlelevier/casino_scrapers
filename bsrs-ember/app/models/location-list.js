@@ -13,7 +13,7 @@ export default Ember.Object.extend({
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
   status: Ember.computed(function() {
     const store = this.get('simpleStore');
-    const location_status_list = store.find('location-status-list');
+    const location_status_list = store.find('general-status-list');
     return location_status_list.filter((ls) => {
       return Ember.$.inArray(this.get('id'), ls.get('locations')) > -1; 
     }).objectAt(0);

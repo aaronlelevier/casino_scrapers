@@ -30,7 +30,7 @@ let subject, uuid, location_deserializer, location_level_deserializer, status, l
 moduleFor('deserializer:person', 'Unit | Deserializer | person', {
   needs: ['model:person', 'model:random','model:uuid', 'model:person-list', 'model:role', 'model:person-location','model:location',
     'model:location-level','model:email', 'model:email-type', 'model:phonenumber', 'model:phone-number-type', 'model:person-join-phonenumber',
-    'model:person-join-email', 'service:person-current','service:translations-fetcher', 'service:i18n', 'model:status', 'model:person-status-list',
+    'model:person-join-email', 'service:person-current','service:translations-fetcher', 'service:i18n', 'model:status', 'model:general-status-list',
     'model:location-status', 'model:locale', 'model:attachment', 'model:currency', 'validator:presence', 'validator:unique-username', 'validator:length',
     'validator:format', 'validator:has-many'],
   beforeEach() {
@@ -144,7 +144,7 @@ test('person setup correct status fk with bootstrapped data (list)', function(as
     subject.deserialize(response);
   });
   person = this.store.find('person-list', PD.idOne);
-  status = this.store.find('person-status-list', status.get('id'));
+  status = this.store.find('general-status-list', status.get('id'));
   assert.equal(person.get('status.id'), status.get('id'));
   assert.equal(status.get('people').length, 1);
   assert.deepEqual(status.get('people'), [PD.idOne]);

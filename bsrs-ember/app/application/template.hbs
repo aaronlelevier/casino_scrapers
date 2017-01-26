@@ -10,8 +10,8 @@
 {{#if modalIsShowing}}
 {{#modal-dialog translucentOverlay=true}}
   <div>
-    <div class="modal-header">
-      <h4 class="modal-title t-modal-title">{{if (is-equal action 'closeTab' 'cancel') (t 'crud.discard_changes') (t 'crud.delete.title')}}</h4>
+    <div class="modal-header flex">
+      <h2 class="modal-title flex-item--auto t-modal-title">{{if (is-equal action 'closeTab' 'cancel') (t 'crud.discard_changes') (t 'crud.delete.title')}}</h2>
     </div>
     <div class="modal-body t-modal-body">
       <p>{{if (is-equal action 'closeTab' 'cancel') (t 'crud.discard_changes_confirm') (t 'crud.delete.confirm' module=module)}}</p>

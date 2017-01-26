@@ -20,7 +20,7 @@ export default Ember.Component.extend({
   }),
   /*
   * @method actionClass
-  * converts priority.translated_name to priority-translated-name
+  * converts priority.name to priority-name
   */
   actionClass: Ember.computed(function() {
     let className = this.get('column.actionClassName') || this.get('column.field') || 'invalid-field';
@@ -30,7 +30,7 @@ export default Ember.Component.extend({
   }),
   /*
   * @method filterClass
-  * @param actionClass - e.g. priority-translated-name
+  * @param actionClass - e.g. priority-name
   * @return {string} - fa icon && test class
   */
   filterClass: Ember.computed(function() {

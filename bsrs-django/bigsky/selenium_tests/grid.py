@@ -251,7 +251,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         # Sort DESC
         search_ticket = str(uuid.uuid4())[:5]
         self.wait_for_xhr_request("t-sort-location-name-dir", debounce=True).click()
-        self.wait_for_xhr_request("t-filter-status-translated-name", debounce=True).click()
+        self.wait_for_xhr_request("t-filter-status-name", debounce=True).click()
         title_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
         title_fulltext_search.send_keys("n")
         title_fulltext_search.send_keys(Keys.RETURN)
@@ -281,7 +281,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
     #     # Sort DESC
     #     search_location = str(uuid.uuid4())[:5]
     #     self.wait_for_xhr_request("t-sort-name-dir", debounce=True).click()
-    #     self.wait_for_xhr_request("t-filter-status-translated-name", debounce=True).click()
+    #     self.wait_for_xhr_request("t-filter-status-name", debounce=True).click()
     #     title_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
     #     title_fulltext_search.send_keys("a")
     #     title_fulltext_search.send_keys(Keys.RETURN)

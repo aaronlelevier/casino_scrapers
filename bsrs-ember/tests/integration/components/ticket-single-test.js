@@ -141,6 +141,6 @@ test('permissions to "read only" show disabled input and select boxes', function
 test('ticket single renders work order dispatch btn if no work orders', function(assert) {
   this.render(hbs`{{tickets/ticket-single model=model activities=activities}}`);
   assert.equal(this.$('[data-test-id="wo-dispatch"]').length, 1);
-  assert.equal(this.$('[data-test-id="wo-dispatch"]').text().trim(), trans.t('work-order.button.dispatch'));
+  assert.equal(this.$('[data-test-id="wo-dispatch"]').text().trim(), trans.t('work_order.button.dispatch'));
   assert.ok(this.$('[data-test-id="wo-dispatch"] > i').attr('class').includes('fa-wrench'));
 });

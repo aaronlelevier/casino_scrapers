@@ -1,20 +1,31 @@
 {{#if savingFilter}}
 {{#tether-dialog close="toggleSaveFilterSetModal" containerClassNames="bs-dialog" hasOverlay=true clickOutsideToClose=true translucentOverlay=true}}
-<div class="form-group input-group">
-  {{input value=filtersetName class="form-control input-md t-filterset-name-input" enter="invokeSaveFilterSet" placeholder=(t "grid.filterset_name")}}
-  <div class="input-group-btn">
-    <button class="btn btn-primary btn-sm t-filterset-save-btn" {{action "invokeSaveFilterSet"}}>{{t "grid.save_filter"}}</button>
+<div class="modal-header flex" data-test-id="fulltext-search">
+  <h2 class="flex-item--auto">{{t "grid.filterset_name"}}</h2>
+</div>
+<div class="modal-body">
+  <div class="form-group input-group">
+    {{input value=filtersetName class="form-control input-md t-filterset-name-input" enter="invokeSaveFilterSet" placeholder=(t "grid.filterset_name")}}
+    <div class="input-group-btn">
+      <button class="btn btn-primary btn-sm t-filterset-save-btn" {{action "invokeSaveFilterSet"}}>{{t "grid.save_filter"}}</button>
+    </div>
+    <h6 class="error t-save-filterset-error-msg">{{logMsg}}</h6>
   </div>
-  <h6 class="error t-save-filterset-error-msg">{{logMsg}}</h6>
 </div>
 {{/tether-dialog}}
 {{/if}}
+
 {{#if toggleFilter}}
-{{#tether-dialog containerClassNames="bs-dialog" close="toggleFilterModal" hasOverlay=true clickOutsideToClose=true translucentOverlay=true}}
-<div class="form-group input-group">
-  {{input-dynamic-filter close="toggleFilterModal" obj=filterModel prop=filterField placeholder=filterPlaceholder}}
-  <div class="input-group-btn">
-    <button class="btn btn-primary btn-sm t-filterset-save-btn" {{action "toggleFilterModal"}}>{{t "grid.filter"}}</button>
+{{#tether-dialog close="toggleFilterModal" containerClassNames="bs-dialog" hasOverlay=true clickOutsideToClose=true translucentOverlay=true}}
+<div class="modal-header flex" data-test-id="column-filter--head">
+  <h2 class="flex-item--auto">{{t filterPlaceholder}}</h2>
+</div>
+<div class="modal-body" data-test-id="column-filter--body">
+  <div class="form-group input-group">
+    {{input-dynamic-filter close="toggleFilterModal" obj=filterModel prop=filterField placeholder=(t filterPlaceholder)}}
+    <div class="input-group-btn">
+      <button class="btn btn-primary btn-sm t-filterset-save-btn" {{action "toggleFilterModal"}}>{{t "grid.filter"}}</button>
+    </div>
   </div>
 </div>
 {{/tether-dialog}}

@@ -5,7 +5,7 @@ export default GridViewComponent.extend({
   layoutName: 'components/grid-view',
   columns: [
     {
-      field: 'status.translated_name',
+      field: 'status.name',
       headerLabel: 'admin.location.label.status-name',
       headerIsTranslatable: true,
       isSortable: true,

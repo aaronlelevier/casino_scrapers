@@ -12,7 +12,7 @@ import { PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin, {
   type: 'person',
   typeGrid: 'person-list',
-  garbage_collection: ['person-list', 'person-status-list'],
+  garbage_collection: ['person-list', 'general-status-list'],
   url: PEOPLE_URL,
   uuid: injectUUID('uuid'),
   PersonDeserializer: inject('person'),

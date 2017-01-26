@@ -66,9 +66,9 @@ test('visiting mobile ticket grid show correct layout', assert => {
     assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').hasClass('t-ticket-categories'));
     assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
     assert.equal(find('.t-grid-data:eq(0) > div:eq(2)').text().trim(), t('ticket.status.new'));
-    assert.ok(find('.t-grid-data:eq(0) > div:eq(2)').hasClass('t-ticket-status-translated_name'));
+    assert.ok(find('.t-grid-data:eq(0) > div:eq(2)').hasClass('t-ticket-status-name'));
     assert.equal(find('.t-grid-data:eq(0) > div:eq(3)').text().trim(), t('ticket.priority.emergency'));
-    assert.ok(find('.t-grid-data:eq(0) > div:eq(3)').hasClass('t-ticket-priority-translated_name'));
+    assert.ok(find('.t-grid-data:eq(0) > div:eq(3)').hasClass('t-ticket-priority-name'));
     assert.equal(find('.t-grid-data:eq(0) > div:eq(4)').text().trim(), LD.baseStoreName);
     assert.equal(find('.t-grid-data:eq(0) > div:eq(5)').text().trim(), ticket.get('assignee').fullname);
     assert.equal(find('.t-grid-data:eq(0) > div:eq(6)').text().trim().split(' ')[0], 'Today');
@@ -110,7 +110,7 @@ test('filtering on priority will sort when filter is clicked', async assert => {
   assert.equal(page.priorityFourIsChecked(), false);
   await generalMobilePage.submitFilterSort();
   assert.equal(store.find('ticket-list').get('length'), 10);
-  assert.equal(find('.t-grid-data:eq(0) > .t-ticket-priority-translated_name span').text().trim(), t('ticket.priority.emergency'));
+  assert.equal(find('.t-grid-data:eq(0) > .t-ticket-priority-name span').text().trim(), t('ticket.priority.emergency'));
   await generalMobilePage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 1);
   assert.equal(page.priorityOneIsChecked(), true);
@@ -139,7 +139,7 @@ test('can uncheck a value after already checked and no xhr is sent', async asser
   assert.equal(page.priorityFourIsChecked(), false);
   await generalMobilePage.submitFilterSort();
   assert.equal(store.find('ticket-list').get('length'), 10);
-  assert.equal(find('.t-grid-data:eq(0) > .t-ticket-priority-translated_name span').text().trim(), t('ticket.priority.emergency'));
+  assert.equal(find('.t-grid-data:eq(0) > .t-ticket-priority-name span').text().trim(), t('ticket.priority.emergency'));
   await generalMobilePage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 1);
   await page.priorityOneCheck();

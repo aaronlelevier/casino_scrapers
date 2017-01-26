@@ -348,10 +348,6 @@ test('when a full text filter is selected the input inside the modal is focused'
   andThen(() => {
     isFocused('.ember-modal-dialog input:first');
   });
-  click('.t-filter-role-type');
-  andThen(() => {
-    isFocused('.ember-modal-dialog input:first');
-  });
 });
 
 test('full text searched columns will have a special on css class when active', function(assert) {

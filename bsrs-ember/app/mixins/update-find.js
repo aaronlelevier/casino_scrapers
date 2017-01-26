@@ -3,10 +3,10 @@ import Ember from 'ember';
 /* @method update_find_query
 * @param {string} column - 'location.name'
 * @param {string} value - 'newwat'
-* @param {string} find - 'location.name:wat,status.translated_name:foo'
+* @param {string} find - 'location.name:wat,status.name:foo'
 * pure function that does not mutate state
 * possible for mobile that find is empty; however, second filter on a find column, thus need to handle both by relying on finalFilter string as well
-* @return {string} newFind - `find` string 'location.name:newwat,status.translated_name:foo' for that one column (desktop - saving-filter component, mobile - grid-head)
+* @return {string} newFind - `find` string 'location.name:newwat,status.name:foo' for that one column (desktop - saving-filter component, mobile - grid-head)
 */
 var UpdateFind = Ember.Mixin.create({
   update_find_query: function(column, value, find, finalFilter) {

@@ -14,7 +14,7 @@ export default Ember.Component.extend({
   }),
   /*
   * @method actionClass
-  * converts priority.translated_name to priority-translated-name
+  * converts priority.name to priority-name
   */
   actionClass: Ember.computed(function() {
     let className = this.get('column.actionClassName') || this.get('column.field') || 'invalid-field';
@@ -33,7 +33,7 @@ export default Ember.Component.extend({
   }),
   /*
   * @method sortByClass
-  * @param actionClass - e.g. priority-translated-name
+  * @param actionClass - e.g. priority-name
   * @return {string} - fa (first part of putting a fa-icon in template from query-param-asc helper)
   * && test class
   */
@@ -44,7 +44,7 @@ export default Ember.Component.extend({
   }),
   /*
   * @method filterClass
-  * @param actionClass - e.g. priority-translated-name
+  * @param actionClass - e.g. priority-name
   * @return {string} - fa icone && test class
   */
   filterClass: Ember.computed(function() {
@@ -56,11 +56,11 @@ export default Ember.Component.extend({
     sortBy(field) {
       this.get('sortBy')(field);
     },
-    toggleFilterModal(placeholder) {
+    toggleFilterModal() {
       // if(this.get('column.headerIsTranslatable')){
       //     placeholder = this.get('i18n').t(placeholder);
       // }
-      this.get('toggleFilterModal')(placeholder);
+      this.get('toggleFilterModal')();
     }
   }
 });

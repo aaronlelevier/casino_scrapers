@@ -62,7 +62,7 @@ test('modifyEndpoint - no page argument - search', assert => {
 
 test('modifyEndpoint - no page argument - find', assert => {
   let subject = FakeRepo.create();
-  const args = 'status.translated_name:b';
+  const args = 'status.name:b';
   const key = 'status__name__icontains';
   const value = 'b';
   const url = '/api/tickets/';
@@ -130,9 +130,9 @@ test('modifyEndpoint - no page argument - sort', assert => {
   assert.equal(endpoint, `/api/tickets/?ordering=${args}`);
 });
 
-test('modifyEndpoint - no page argument - sort translated_name', assert => {
+test('modifyEndpoint - no page argument - sort name', assert => {
   let subject = FakeRepo.create();
-  const args = 'status.translated_name';
+  const args = 'status.name';
   const value = 'status__name';
   const url = '/api/tickets/';
   let endpoint = subject.modifyEndpoint(
@@ -169,7 +169,7 @@ test('modifyEndpoint - no page argument - multiple filters', assert => {
   let subject = FakeRepo.create();
   const search = 'a';
   // find
-  const findArgs = 'status.translated_name:b';
+  const findArgs = 'status.name:b';
   const findKey = 'status__name__icontains';
   const findValue = 'b';
   // sort

@@ -8,7 +8,7 @@ import GridViewComponent from 'bsrs-ember/components/grid-view/component';
 */
 export let columns = [
   {
-    field: 'priority.translated_name',
+    field: 'priority.name',
     headerLabel: 'ticket.label.priority-name',
     headerIsTranslatable: true,
     isFilterable: true,
@@ -20,7 +20,7 @@ export let columns = [
     multiple: true,
   },
   {
-    field: 'status.translated_name',
+    field: 'status.name',
     headerLabel: 'ticket.label.status-name',
     headerIsTranslatable: true,
     isFilterable: true,

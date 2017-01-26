@@ -1,19 +1,20 @@
 import Ember from 'ember';
 
 var FilterBy = Ember.Mixin.create({
+  /**
+   * @method toggle
+   * @param {Object} column
+   */
   toggle(column) {
-    let css_column = column ? column.replace('_', '-').replace('.', '-') : '';
-    if(column && this.get('toggleFilter')) {
-      if('.t-filter-' + css_column !== this.get('targetFilter')) {
-        Ember.run.later(() => {
-          this.toggleProperty('toggleFilter');
-        }, 0);
-      }
-    }
-    this.set('filterField', column);
+    const field = column && column.field;
+
+    // on close, sets all of these to undefined
+    this.set('filterField', field);
+
+    // toggleFilter is variable to show dialog or not
     this.toggleProperty('toggleFilter');
-    this.set('filterPlaceholder', column);
-    this.set('targetFilter', '.t-filter-' + css_column);
+    const headerLabel = column && column.headerLabel;
+    this.set('filterPlaceholder', headerLabel);
     this.set('page', 1);
   }
 });

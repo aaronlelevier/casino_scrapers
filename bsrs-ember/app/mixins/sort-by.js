@@ -9,7 +9,7 @@ var remove_and_shift = function(sorted, column, existing) {
 };
 
 /* @mixin SortBy
-* @param {array} currentSort - '['location.name', 'priority.translated_name']'
+* @param {array} currentSort - '['location.name', 'priority.name']'
 * @param {string} column - 'location.name'
 * method removes existing sorts and adds column
 */

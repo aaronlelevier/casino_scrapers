@@ -6,15 +6,15 @@ moduleForComponent('grid-column', 'integration: grid-column', {
 });
 
 test('related property name with underscore will have the correct filterClass, sortByClass and sortClass', function(assert) {
-    this.set('column', 'priority.translated_name');
+    this.set('column', 'priority.name');
     this.set('prefix', 'ticket.label');
     this.render(hbs`{{grid-column label=(t (t-prefix prefix column)) column=column}}`);
     let $component = this.$('th');
     assert.equal($component.length, 1);
     assert.equal($component.find('span').length, 3);
-    assert.ok($component.find('span:eq(0)').hasClass('t-sort-priority-translated-name'));
-    assert.ok($component.find('span:eq(1)').hasClass('t-filter-priority-translated-name'));
-    assert.ok($component.find('span:eq(2)').hasClass('t-sort-priority-translated-name-dir'));
+    assert.ok($component.find('span:eq(0)').hasClass('t-sort-priority-name'));
+    assert.ok($component.find('span:eq(1)').hasClass('t-filter-priority-name'));
+    assert.ok($component.find('span:eq(2)').hasClass('t-sort-priority-name-dir'));
 });
 
 // test('array based column will have the correct filterClass, sortByClass and sortClass', function(assert) {

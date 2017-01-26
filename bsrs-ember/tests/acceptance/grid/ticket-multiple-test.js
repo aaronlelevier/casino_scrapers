@@ -42,7 +42,7 @@ test('navigating between ticket and people and locations and category will not d
     assert.equal(find('.t-grid-title').text(), 'Tickets');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
-    assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority-translated_name').text().trim(), TD.priorityOne);
+    assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority-name').text().trim(), TD.priorityOne);
     const tickets = functionalStore.find('ticket-list');
     assert.equal(tickets.get('length'), 10);
     tickets.forEach((ticket) => {
@@ -238,7 +238,7 @@ test('navigating between ticket and people and locations and category will not d
     assert.equal(find('.t-grid-title').text(), 'Tickets');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text().trim(), TD.requestOneGrid);
-    assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority-translated_name').text().trim(), TD.priorityOne);
+    assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority-name').text().trim(), TD.priorityOne);
     const tickets = functionalStore.find('ticket-list');
     assert.equal(tickets.get('length'), 10);
     tickets.forEach((ticket) => {

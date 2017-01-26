@@ -22,6 +22,6 @@ test('visiting /locations', (assert) => {
     assert.equal(find('.t-sort-name').text(), t('admin.location.label.name'));
     assert.equal(find('.t-sort-number').text(), t('admin.location.label.number'));
     assert.equal(find('.t-sort-location-level-name').text(), t('admin.location.label.location_level'));
-    assert.equal(find('.t-sort-status-translated-name').text(), t('admin.location.label.status-name'));
+    assert.equal(find('.t-sort-status-name').text(), t('admin.location.label.status-name'));
   });
 });

@@ -73,12 +73,12 @@ test('clicking filter on a column head column will display an input with existin
 });
 
 test('if column has filterComponent it is rendered', function(assert) {
-  this.column = { field: 'priority.translated_name', isFilterable: true, filterComponent: 'grid/filters/checkbox-list' };
+  this.column = { field: 'priority.name', isFilterable: true, filterComponent: 'grid/filters/checkbox-list' };
   this.gridFilterParams = {};
   this.gridIdInParams = {};
   this.render(hbs`{{grid/helpers/grid-header-column-mobile column=column gridIdInParams=gridIdInParams gridFilterParams=gridFilterParams}}`);
   assert.equal(this.$('.t-checkbox-list').length, 0);
-  this.$('.t-filter-priority-translated-name').click();
+  this.$('.t-filter-priority-name').click();
   assert.equal(this.$('.t-checkbox-list').length, 1);
 });
 

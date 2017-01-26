@@ -25,7 +25,7 @@ export default Ember.Object.extend(RoleMixin, OptConf, {
   }),
   status: Ember.computed(function() {
     const store = this.get('simpleStore');
-    const person_status_list = store.find('person-status-list');
+    const person_status_list = store.find('general-status-list');
     return person_status_list.filter((ps) => {
       return Ember.$.inArray(this.get('id'), ps.get('people')) > -1; 
     }).objectAt(0);

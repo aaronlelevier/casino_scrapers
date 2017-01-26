@@ -73,7 +73,7 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
       /* 'id_in' query param - pipe separated model types, comma separated list of model's ids that were filtered */
       const idInParams = this.get('gridIdInParams');
       let finalIdInFilter = '';
-      /* loop through keys in gridIdInParams object > status.translated_name:['12493-adv32...'],location.name:[obj, obj] */
+      /* loop through keys in gridIdInParams object > status.name:['12493-adv32...'],location.name:[obj, obj] */
       Object.keys(idInParams).forEach((key) => {
         const arrVals = idInParams[key];
         if (arrVals.length === 0) {

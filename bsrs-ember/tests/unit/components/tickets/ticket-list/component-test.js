@@ -7,7 +7,7 @@ moduleForComponent('tickets/ticket-list', 'Unit | Component | tickets/ticket lis
 
 test('it has correct properties set for ticket-list', function(assert) {
   let component = this.subject();
-  assert.equal(component.columns[0].field, 'priority.translated_name');
+  assert.equal(component.columns[0].field, 'priority.name');
   assert.equal(component.columns[0].filterModelName, 'ticket-priority');
   assert.equal(component.columns[0].filterComponent, 'grid/filters/checkbox-list');
   assert.ok(component.columns[0].multiple);
@@ -15,7 +15,7 @@ test('it has correct properties set for ticket-list', function(assert) {
   assert.ok(component.columns[0].isSearchable);
   assert.ok(component.columns[0].headerIsTranslatable);
   assert.notOk(component.columns[1].isSortable);
-  assert.equal(component.columns[1].field, 'status.translated_name');
+  assert.equal(component.columns[1].field, 'status.name');
   assert.equal(component.columns[1].filterModelName, 'ticket-status');
   assert.equal(component.columns[1].filterComponent, 'grid/filters/checkbox-list');
   assert.ok(component.columns[1].multiple);

@@ -28,7 +28,7 @@ var store, location_unused, location_level_deserializer, subject, location_statu
 
 module('unit: location deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:location', 'model:location-list', 'model:location-status-list', 'model:location-level', 'model:location-status', 'model:location-children', 'model:location-parents', 'model:address', 'model:location-join-phonenumber', 'model:location-join-email', 'model:location-join-address', 'model:phonenumber', 'model:phone-number-type', 'model:email', 'model:email-type', 'model:country', 'model:state', 'model:address-type', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:location', 'model:location-list', 'model:general-status-list', 'model:location-level', 'model:location-status', 'model:location-children', 'model:location-parents', 'model:address', 'model:location-join-phonenumber', 'model:location-join-email', 'model:location-join-address', 'model:phonenumber', 'model:phone-number-type', 'model:email', 'model:email-type', 'model:country', 'model:state', 'model:address-type', 'service:i18n']);
     location_level_deserializer = LocationLevelDeserializer.create({simpleStore: store});
     subject = LocationDeserializer.create({simpleStore: store, LocationLevelDeserializer: location_level_deserializer});
     run(function() {

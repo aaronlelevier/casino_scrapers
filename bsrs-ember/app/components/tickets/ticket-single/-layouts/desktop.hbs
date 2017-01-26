@@ -51,7 +51,7 @@
 
       {{#if dispatchWorkOrderSteps}}
         {{#ember-wormhole to="work-order-create"}}
-          {{#modal-dialog translucentOverlay=true}}
+          {{#modal-dialog containerClassNames="modal-large" translucentOverlay=true}}
             {{work-orders/new 
               model=workOrderModel 
               cancel=(action "cancelWorkOrder")

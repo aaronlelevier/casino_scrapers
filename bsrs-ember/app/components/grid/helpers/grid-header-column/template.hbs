@@ -1,6 +1,6 @@
 <span class={{sortClass}}>{{if column.headerIsTranslatable (t column.headerLabel) column.headerLabel}}</span>
 {{#if column.isFilterable}}
-  <span class="{{filterClass}} {{if (fulltext-active column.field find) 'on' ''}}" {{action "toggleFilterModal" column.field}}></span>
+  <span class="{{filterClass}} {{if (fulltext-active column.field find) 'on' ''}}" {{action "toggleFilterModal"}}></span>
 {{/if}}
 {{#if column.isSortable}}
   <span {{action "sortBy" column.field}} class="{{sortByClass}} {{if column.isSortable (query-param-asc column.field sort) ''}}"></span>

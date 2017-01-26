@@ -39,7 +39,7 @@ export default GridViewComponent.extend({
     filterModelName: 'role',
     multiple: true,
   }, {
-    field: 'status.translated_name',
+    field: 'status.name',
     headerLabel: 'admin.person.label.status',
     headerIsTranslatable: true,
     isSortable: true,

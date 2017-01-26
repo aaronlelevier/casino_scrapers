@@ -14,7 +14,7 @@ export default create({
   clickFilterUsername: clickable('.t-filter-username'),
   clickFilterFullname: clickable('.t-filter-fullname'),
   clickFilterTitle: clickable('.t-filter-title'),
-  clickFilterStatus: clickable('.t-filter-status-translated-name'),
+  clickFilterStatus: clickable('.t-filter-status-name'),
   clickFilterRole: clickable('.t-filter-role-name'),
   statusOneIsChecked: () => Ember.$('.t-checkbox-list input:eq(0)').is(':checked'),
   statusTwoIsChecked: () => Ember.$('.t-checkbox-list input:eq(1)').is(':checked'),

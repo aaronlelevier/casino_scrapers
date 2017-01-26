@@ -9,12 +9,12 @@ var store, locationz, location_detail;
 
 module('unit: location list test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:location', 'model:location-list', 'model:location-status-list', 'model:location-level']);
+        store = module_registry(this.container, this.registry, ['model:location', 'model:location-list', 'model:general-status-list', 'model:location-level']);
         run(() => {
             location_detail = store.push('location', {id: LD.idOne, number: 'scoo', location_level_fk: LLD.idOne});
             locationz = store.push('location-list', {id: LD.idOne});
-            store.push('location-status-list', {id: 1, name: 'wat', locations: [LD.idOne]});
-            store.push('location-status-list', {id: 2, name: 'wat'});
+            store.push('general-status-list', {id: 1, name: 'wat', locations: [LD.idOne]});
+            store.push('general-status-list', {id: 2, name: 'wat'});
             store.push('location-level', {id: LLD.idOne, locations: [LD.idOne]});
         });
     }
