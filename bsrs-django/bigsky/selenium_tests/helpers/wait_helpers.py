@@ -5,6 +5,39 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 
+class WaitSelectorsMixin(object):
+    """
+    Mixin to provide specific selectors, e.g. visible, invisible, clickable, stale, matches text, etc.
+    """
+
+    def find_clickable_element_by_css_selector(self, selector):
+        return self._find_clickable_element(selector, By.CSS_SELECTOR)
+
+    def find_clickable_element_by_class_name(self, class_name):
+        return self._find_clickable_element(class_name, By.CLASS_NAME)
+
+    def _find_clickable_element(self, locator, query):
+        return self.wait.until(EC.element_to_be_clickable((query, locator)))
+
+    def find_visible_element_by_css_selector(self, selector):
+        return self._find_visible_element(selector, By.CSS_SELECTOR)
+
+    def find_visible_element_by_class_name(self, class_name):
+        return self._find_visible_element(class_name, By.CLASS_NAME)
+
+    def _find_visible_element(self, locator, query):
+        return self.wait.until(EC.visibility_of_element_located((query, locator)))
+
+    def find_invisible_element_by_css_selector(self, selector):
+        return self.wait.until(EC.invisibility_of_element_located((By.CSS_SELECTOR, selector)))
+
+    def element_not_present(self, element):
+        self.wait.until(EC.staleness_of(element))
+
+    def text_present_in_element_by_css_selector(self, selector, text):
+        self.wait.until(EC.text_to_be_present_in_element((By.CSS_SELECTOR, selector), text))
+
+
 def wait_elemment(arg1):
     '''Decorator to define the element type that the Webdriver 
     should wait for.'''
