@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { test } from 'qunit';
+import { test, skip } from 'qunit';
 import moduleForAcceptance from 'bsrs-ember/tests/helpers/module-for-acceptance';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
@@ -24,9 +24,6 @@ const CATEGORIES_INDEX_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + CD.idOne;
 const DETAIL_URL_TWO = BASE_URL + '/' + CD.idTwo;
 const GRID_DETAIL_URL = BASE_URL + '/' + CD.idGridOne;
-const LETTER_A = {keyCode: 65};
-const SPACEBAR = {keyCode: 32};
-const CATEGORY = '.t-category-children-select .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.ember-basic-dropdown-content > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
@@ -424,7 +421,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
   });
 });
 
-test('deep linking with an xhr with a 404 status code will show up in the error component (categories)', function(assert) {
+skip('deep linking with an xhr with a 404 status code will show up in the error component (categories)', function(assert) {
   errorSetup();
   clearxhr(detail_xhr);
   clearxhr(list_xhr);

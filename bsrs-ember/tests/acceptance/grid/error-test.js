@@ -11,6 +11,7 @@ import BASEURLS, { TICKET_LIST_URL } from 'bsrs-ember/utilities/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 // import timemachine from 'vendor/timemachine';
 import page from 'bsrs-ember/tests/pages/tickets';
+import error from 'bsrs-ember/tests/pages/error';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -38,7 +39,8 @@ test('typing a search will with a 400 or greater will show in context error', fu
   fillIn('.t-grid-search-input', '5');
   triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FIVE);
   andThen(() => {
-    assert.equal(currentURL(),TICKET_LIST_URL + '?search=5');
+    assert.ok(error.errorText);
+    assert.equal(currentURL(), TICKET_LIST_URL);
     assert.equal(find('.t-grid-data').length, 0);
     assert.equal(document.title,  t('doctitle.ticket.index', { count: 10 }));
   });

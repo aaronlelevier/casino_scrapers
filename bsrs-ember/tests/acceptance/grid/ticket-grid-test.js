@@ -18,6 +18,7 @@ import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/
 import moment from 'moment';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/tickets';
+import error from 'bsrs-ember/tests/pages/error';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -34,7 +35,7 @@ const SORT_ASSIGNEE_DIR = '.t-sort-assignee-fullname-dir';
 const FILTER_PRIORITY = '.t-filter-priority-name';
 const PD = PERSON_DEFAULTS.defaults();
 
-var application, endpoint, list_xhr, functionalStore;
+var endpoint, list_xhr, functionalStore;
 
 moduleForAcceptance('Acceptance | ticket grid test', {
   beforeEach() {
@@ -834,7 +835,7 @@ test('picking a different number of pages will alter the query string and xhr an
   });
 });
 
-test('grid debounces correctly with structured concurrency', (assert) => {
+test('grid debounces correctly with structured concurrency', function(assert) {
   visit(TICKET_LIST_URL);
   andThen(() => {
     //SC: hard to test that xhr doesn't get fired but can test if url changes within the DEBOUNCE INTERVAL.  Can't use fillIn
@@ -850,7 +851,7 @@ test('grid debounces correctly with structured concurrency', (assert) => {
   });
 });
 
-test('export csv button shows in grid header', (assert) => {
+test('export csv button shows in grid header', function(assert) {
   visit(TICKET_LIST_URL);
   andThen(() => {
     assert.equal(find('[data-test-id="grid-export-btn"]').length, 1);
@@ -860,7 +861,7 @@ test('export csv button shows in grid header', (assert) => {
   click('[data-test-id="grid-export-btn"]');
 });
 
-test('export data - sort', assert => {
+test('export data - sort', function(assert) {
   visit(TICKET_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
@@ -873,7 +874,7 @@ test('export data - sort', assert => {
   click('[data-test-id="grid-export-btn"]');
 });
 
-test('export data - search', assert => {
+test('export data - search', function(assert) {
   visit(TICKET_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), TICKET_LIST_URL);
@@ -887,23 +888,13 @@ test('export data - search', assert => {
   click('[data-test-id="grid-export-btn"]');
 });
 
-// test('a 400 status code will show up in the error component with duplicate name message', (assert) => {
-//   random.uuid = function() { return UUID.value; };
-//   visit(TICKET_LIST_URL);
-//   var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=location__name';
-//   xhr(sort_one ,'GET',null,{},200,TF.sorted('priority'));
-//   click(SORT_LOCATION_DIR);
-//   click('.t-show-save-filterset-modal');
-//   const exception = 'This name is already taken';
-//   let query = '?sort=priority.name';
-//   let name = 'foobar';
-//   let routePath = 'main.tickets.index';
-//   let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
-//   xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 400, {});
-//   saveFilterSet(name, routePath);
-//   andThen(() => {
-//     waitFor(assert, () => {
-//       assert.equal(Ember.$('.t-save-filterset-error-msg').text(), exception);
-//     });
-//   });
-// });
+test('a 400 (bad req, not found) or greater status code will redirect to main wrapper error template', function(assert) {
+  clearxhr(list_xhr);
+  // need to see what is actually returned
+  xhr(endpoint, 'GET', null, {}, 404, {"detail": "Unauthorized"});
+  visit(TICKET_LIST_URL);
+  andThen(() => {
+    assert.ok(error.errorText);
+    assert.equal(currentURL(), TICKET_LIST_URL);
+  });
+});

@@ -1,5 +1,5 @@
 /**
-  - Error.prototype.constructor.call is calling super for the ClientError
+  - Error.prototype.constructor.call is calling super for the ServerError
   @class ServerError
   @constructor
   @param {String} message

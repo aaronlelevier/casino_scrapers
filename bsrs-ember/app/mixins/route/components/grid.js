@@ -55,11 +55,11 @@ let GridViewRoute = Ember.Route.extend({
   },
   model(params, transition) {
     const { filtersetRepository, repository, special_url, routeName } = this.getProperties('filtersetRepository', 'repository', 'special_url', 'routeName');
-    let filtersets = filtersetRepository.fetch();
-    let name = nameRoute(this);
-    let query = transition.queryParams;
-    let page = parseInt(query.page, 10) || 1;
-    let requested = this.get('pagination').requested(name, page);
+    const filtersets = filtersetRepository.fetch();
+    const name = nameRoute(this);
+    const query = transition.queryParams;
+    const page = parseInt(query.page, 10) || 1;
+    const requested = this.get('pagination').requested(name, page);
     const search = query.search;
     set_filter_model_attrs(this.filterModel, query.find);
     return new Ember.RSVP.Promise((resolve, reject) => {
@@ -98,8 +98,8 @@ let GridViewRoute = Ember.Route.extend({
         if ([401,403].includes(xhr.status)) {
           reject( new ClientError(msg, 'error', xhr) );
         } else if (xhr.status >= 400) {
-          // in context error so will call setupController
-          resolve( new ClientError(msg, 'error', xhr) );
+          // use main or admin error substate
+          reject( new ClientError(msg, 'error', xhr) );
         }
       });
     });
@@ -113,7 +113,11 @@ let GridViewRoute = Ember.Route.extend({
     } else {
       controller.set('error', hash);
       // need to set model to empty array due to model state preserved in component.  Error shows in place of component
-      controller.set('model', []);
+      const model_array = controller.set('model', []);
+      model_array.set('isLoaded', true);
+      // TODO: put lower down and set defaults or set here?
+      controller.set('filtersets', []);
+      controller.set('requested', []);
     }
     set(controller, 'isLoading', undefined);
     

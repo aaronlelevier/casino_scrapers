@@ -8,6 +8,7 @@ import TD from 'bsrs-ember/vendor/defaults/tenant';
 import TF from 'bsrs-ember/vendor/tenant_fixtures';
 import config from 'bsrs-ember/config/environment';
 import page from 'bsrs-ember/tests/pages/tenant';
+import error from 'bsrs-ember/tests/pages/error';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import { isDisabledElement, isNotDisabledElement } from 'bsrs-ember/tests/helpers/disabled';
 import random from 'bsrs-ember/models/random';
@@ -302,5 +303,16 @@ test('loading screen shown before any xhr and hidden after', function(assert) {
   });
   andThen(() => {
     assert.equal(find('.t-grid-loading-graphic').length, 0);
+  });
+});
+
+test('a 400 (bad req, not found) or greater status code will redirect to main wrapper error template', function(assert) {
+  clearxhr(listXhr);
+  // need to see what is actually returned
+  xhr(`${TENANT_URL}?page=1`, 'GET', null, {}, 404, {"detail": "Unauthorized"});
+  visit(TENANT_LIST_URL);
+  andThen(() => {
+    assert.ok(error.adminErrorText);
+    assert.equal(currentURL(), TENANT_LIST_URL);
   });
 });

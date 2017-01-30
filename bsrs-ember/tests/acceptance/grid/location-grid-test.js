@@ -7,6 +7,7 @@ import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LDS from 'bsrs-ember/vendor/defaults/location-status';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
+import error from 'bsrs-ember/tests/pages/error';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS, { LOCATION_LIST_URL, EXPORT_DATA_URL } from 'bsrs-ember/utilities/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
@@ -709,4 +710,15 @@ test('export csv button shows in grid header', function(assert) {
   });
   xhr(`${EXPORT_DATA_URL}location/`, 'GET', null, {}, 200, undefined);
   click('[data-test-id="grid-export-btn"]');
+});
+
+test('a 400 (bad req, not found) or greater status code will redirect to main wrapper error template', function(assert) {
+  clearxhr(list_xhr);
+  // need to see what is actually returned
+  xhr(endpoint, 'GET', null, {}, 404, {"detail": "Unauthorized"});
+  visit(LOCATION_LIST_URL);
+  andThen(() => {
+    assert.ok(error.adminErrorText);
+    assert.equal(currentURL(), LOCATION_LIST_URL);
+  });
 });

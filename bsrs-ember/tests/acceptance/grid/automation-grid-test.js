@@ -8,6 +8,7 @@ import AD from 'bsrs-ember/vendor/defaults/automation';
 import AF from 'bsrs-ember/vendor/automation_fixtures';
 import config from 'bsrs-ember/config/environment';
 import page from 'bsrs-ember/tests/pages/automation';
+import error from 'bsrs-ember/tests/pages/error';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import { isDisabledElement, isNotDisabledElement } from 'bsrs-ember/tests/helpers/disabled';
 import random from 'bsrs-ember/models/random';
@@ -202,5 +203,14 @@ test('loading screen shown before any xhr and hidden after', function(assert) {
   andThen(() => {
     assert.equal(find('.t-grid-loading-graphic').length, 0);
   });
+});
+
+test('a 400 (bad req, not found) or greater status code will redirect to main wrapper error template', async function(assert) {
+  clearxhr(listXhr);
+  // need to see what is actually returned
+  xhr(`${AUTOMATION_URL}?page=1`, 'GET', null, {}, 400, {"detail": "Unauthorized"});
+  await visit(AUTOMATION_LIST_URL);
+  assert.ok(error.adminErrorText);
+  assert.equal(currentURL(), AUTOMATION_LIST_URL);
 });
 /* jshint ignore:end */

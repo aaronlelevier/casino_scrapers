@@ -8,6 +8,7 @@ import PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import SD from 'bsrs-ember/vendor/defaults/status';
 import config from 'bsrs-ember/config/environment';
+import error from 'bsrs-ember/tests/pages/error';
 import BASEURLS, { PEOPLE_LIST_URL, EXPORT_DATA_URL } from 'bsrs-ember/utilities/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
@@ -729,4 +730,15 @@ test('export csv button shows in grid header', (assert) => {
   });
   xhr(`${EXPORT_DATA_URL}person/`, 'GET', null, {}, 200, undefined);
   click('[data-test-id="grid-export-btn"]');
+});
+
+test('a 400 (bad req, not found) or greater status code will redirect to main wrapper error template', function(assert) {
+  clearxhr(list_xhr);
+  // need to see what is actually returned
+  xhr(endpoint, 'GET', null, {}, 404, {"detail": "Unauthorized"});
+  visit(PEOPLE_LIST_URL);
+  andThen(() => {
+    assert.ok(error.adminErrorText);
+    assert.equal(currentURL(), PEOPLE_LIST_URL);
+  });
 });

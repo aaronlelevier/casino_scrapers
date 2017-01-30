@@ -6,6 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import RF from 'bsrs-ember/vendor/role_fixtures';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import config from 'bsrs-ember/config/environment';
+import error from 'bsrs-ember/tests/pages/error';
 import BASEURLS, { PREFIX, ROLE_LIST_URL, EXPORT_DATA_URL } from 'bsrs-ember/utilities/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
@@ -831,5 +832,16 @@ skip('adding a new filterset with search will still allow the search input to be
   andThen(() => {
     assert.equal(currentURL(), '/admin/roles/index?sort=name');
     assert.equal(find('.t-grid-search-input').val(), '');
+  });
+});
+
+test('a 400 (bad req, not found) or greater status code will redirect to main wrapper error template', function(assert) {
+  clearxhr(list_xhr);
+  // need to see what is actually returned
+  xhr(endpoint, 'GET', null, {}, 404, {"detail": "Unauthorized"});
+  visit(ROLE_LIST_URL);
+  andThen(() => {
+    assert.ok(error.adminErrorText);
+    assert.equal(currentURL(), ROLE_LIST_URL);
   });
 });

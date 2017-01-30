@@ -15,7 +15,7 @@ export default Ember.Route.extend({
         // Unauthorized - not using 401
         this.send('showLogin');
       } else if (error.code >= 400 && error.code < 500) {
-        this.intermediateTransitionTo('error', error);
+        this.intermediateTransitionTo('main.error', error);
       } else {
         this.intermediateTransitionTo('application_error', error);
       }
