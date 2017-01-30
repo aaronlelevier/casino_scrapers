@@ -78,14 +78,6 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
     return this.get('isDirty') || this.get('defaultCurrencyIsDirty') || this.get('countriesIsDirty') || this.get('billingEmailIsDirty') || this.get('billingPhoneNumberIsDirty') || this.get('implementationEmailIsDirty') || this.get('implementationContactIsDirty') || this.get('billingAddressIsDirty') || this.get('dtdStartIsDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-  remove_implementation_contact(id) {
-    const store = this.get('simpleStore');
-    let contactsArr = store.find('person', id).get('tenants_implementation_contact');
-    contactsArr.splice(contactsArr.indexOf(this.get('id')), 1);
-    run(() => {
-      store.push('person', {id:this.get('id'), tenants_implementation_contact: contactsArr});
-    });
-  },
   rollback() {
     this.rollbackDefaultCurrency();
     this.rollbackCountries();

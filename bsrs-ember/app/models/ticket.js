@@ -6,7 +6,6 @@ import computed from 'ember-computed-decorators';
 //end-non-standard
 import equal from 'bsrs-ember/utilities/equal';
 import CategoriesMixin from 'bsrs-ember/mixins/model/category';
-import TicketLocationMixin from 'bsrs-ember/mixins/model/ticket/location';
 import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
 import { belongs_to, change_belongs_to } from 'bsrs-components/attr/belongs-to';
 import { many_to_many, add_many_to_many } from 'bsrs-components/attr/many-to-many';
@@ -44,7 +43,7 @@ const Validations = buildValidations({
 
 const { run, set, get } = Ember;
 
-let TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Validations, {
+let TicketModel = Model.extend(CategoriesMixin, OptConf, Validations, {
   init() {
     this._super(...arguments);
     set(this, 'requestValues', []); //store array of values to be sent in dt post or put request field
@@ -54,7 +53,7 @@ let TicketModel = Model.extend(CategoriesMixin, TicketLocationMixin, OptConf, Va
     belongs_to.bind(this)('status', 'ticket', {bootstrapped:true});
     belongs_to.bind(this)('priority', 'ticket', {bootstrapped:true});
     belongs_to.bind(this)('assignee', 'ticket');
-    belongs_to.bind(this)('location', 'ticket', {change_func:false});
+    belongs_to.bind(this)('location', 'ticket');
     many_to_many.bind(this)('cc', 'ticket');
     many_to_many.bind(this)('wo', 'ticket');
     many_to_many.bind(this)('attachment', 'generic', {plural: true});

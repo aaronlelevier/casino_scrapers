@@ -1169,17 +1169,11 @@ test('change_location will remove the ticket id from the prev location tickets a
   assert.deepEqual(location.get('tickets'), [9]);
 });
 
-test('remove_location will remove the ticket id from the location tickets array', function(assert) {
+test('change_location will remove the ticket id from the location tickets array', function(assert) {
   let location = store.push('related-location', {id: LD.idOne, name: LD.storeName, tickets: [9, TD.idOne]});
   assert.deepEqual(location.get('tickets'), [9, TD.idOne]);
-  ticket.remove_location();
+  ticket.change_location();
   assert.deepEqual(location.get('tickets'), [9]);
-});
-
-test('remove_location will do nothing if the ticket has no location', function(assert) {
-  assert.ok(!ticket.get('_location'));
-  ticket.remove_location();
-  assert.ok(!ticket.get('_location'));
 });
 
 test('location will save correctly as undefined', (assert) => {
