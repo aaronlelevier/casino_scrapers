@@ -77,7 +77,9 @@ test('can update all fields and save', async assert => {
     $('.t-amount').focusout();
   });
   await page.dashboard_textFill('wat');
-  const payload = RF.put({id: RD.idOne, name: RD.nameTwo, role_type: RD.t_roleTypeContractor, location_level: LLD.idLossRegion, categories: [], auth_currency: CURRENCY_D.idCAD, auth_amount: '10.00', dashboard_text: 'wat'});
+  const payload = RF.put({id: RD.idOne, name: RD.nameTwo, role_type: RD.t_roleTypeContractor, 
+    location_level: LLD.idLossRegion, categories: [], auth_currency: CURRENCY_D.idCAD, 
+    auth_amount: 10.00, dashboard_text: 'wat'});
   xhr(ROLE_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
   await generalPage.save()
   assert.equal(currentURL(), ROLE_LIST_URL);

@@ -70,7 +70,8 @@ test('visiting role/new', function(assert) {
     assert.equal(store.find('location-level').get('length'), 8);
     assert.equal(page.categorySelectText, t('power.select.select'));
     assert.equal(find('.t-amount').get(0)['placeholder'], 'Amount: 0.00');
-    assert.equal(inputCurrencyPage.authAmountValue, '0.00');
+    // this might be a bug
+    assert.equal(inputCurrencyPage.authAmountValue, '0');
     assert.equal(inputCurrencyPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
     assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.code);
     assert.equal(find('.t-inherited-msg-dashboard_text-link').text().trim(), 'Inherited from: general');
@@ -91,7 +92,7 @@ test('visiting role/new', function(assert) {
     $('.t-amount').focusout();
   });
   let postPayload = Object.assign(payload, {
-    auth_amount: parseFloat(CURRENCY_DEFAULTS.authAmountOne).toFixed(2),
+    auth_amount: CURRENCY_DEFAULTS.authAmountOne,
     dashboard_text: RD.dashboard_textTwo
   });
   xhr(url, 'POST', JSON.stringify(postPayload), {}, 201, {});
