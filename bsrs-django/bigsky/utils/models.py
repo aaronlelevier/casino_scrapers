@@ -186,6 +186,16 @@ class ToDictNameMixin(object):
         }
 
 
+class SimpleNameMixin(object):
+
+    @property
+    def simple_name(self):
+        """
+        To retrieve a human readable name from i18n strings
+        """
+        return self.name.split('.')[-1]
+
+
 class BaseNameModel(ToDictNameMixin, BaseModel):
     name = models.CharField(max_length=100, unique=True)
 

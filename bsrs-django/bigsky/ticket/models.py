@@ -14,7 +14,7 @@ from location.models import Location
 from person.models import Person
 from utils import classproperty
 from utils.models import (BaseModel, BaseQuerySet, BaseManager, BaseNameModel,
-    DefaultToDictMixin)
+    DefaultToDictMixin, SimpleNameMixin)
 
 
 class TicketStatus(DefaultToDictMixin, BaseModel):
@@ -72,7 +72,7 @@ class TicketStatus(DefaultToDictMixin, BaseModel):
         }
 
 
-class TicketPriority(DefaultToDictMixin, BaseNameModel):
+class TicketPriority(DefaultToDictMixin, SimpleNameMixin, BaseNameModel):
     EMERGENCY = 'ticket.priority.emergency'
     HIGH = 'ticket.priority.high'
     MEDIUM = 'ticket.priority.medium'

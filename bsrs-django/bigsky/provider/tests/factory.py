@@ -20,6 +20,12 @@ def create_provider(category):
     num = Provider.objects.count()
     name = "{f} {m} {l} {n}".format(f=first, m=middle, l=last, n=num)
     provider = mommy.make(Provider, name=name)
+
+    for field in ('logo', 'address1', 'address2', 'city',
+                  'state', 'postal_code', 'phone', 'email'):
+        setattr(provider, field, "{} {}".format(random_lorem(1), num))
+    provider.save()
+
     provider.categories.add(category)
     return provider
 

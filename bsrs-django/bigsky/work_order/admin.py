@@ -2,6 +2,7 @@ from django.contrib import admin
 
 from work_order import models
 
+
 @admin.register(models.WorkOrder)
 class WorkOrderAdmin(admin.ModelAdmin):
     pass

@@ -2,8 +2,8 @@ from rest_framework import permissions
 
 from utils.permissions import CrudPermissions
 from utils.views import BaseModelViewSet
-from work_order.models import WorkOrder
 from work_order import serializers as ws
+from work_order.models import WorkOrder
 
 
 class WorkOrderViewSet(BaseModelViewSet):
@@ -23,5 +23,8 @@ class WorkOrderViewSet(BaseModelViewSet):
             return ws.WorkOrderSerializer
 
     def create(self, request, *args, **kwargs):
+        """
+        Add the User making the POST request as the 'requester'
+        """
         request.data['requester'] = request.user.id
         return super(WorkOrderViewSet, self).create(request, *args, **kwargs)

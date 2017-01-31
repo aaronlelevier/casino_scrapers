@@ -3,25 +3,36 @@ from django.db import models
 
 from accounting.models import Currency
 from category.models import Category
-from provider.models import Provider
 from location.models import Location
-from utils.models import BaseModel, BaseNameModel, DefaultToDictMixin, DefaultNameManager
 
-
-WORKORDER_STATUSES = [
-    'work_order.status.draft',
-    'work_order.status.new',
-    'work_order.status.in_progress',
-    'work_order.status.deferred',
-    'work_order.status.denied',
-    'work_order.status.problem_solved',
-    'work_order.status.completed',
-    'work_order.status.closed',
-    'work_order.status.unsatisfactory_completion'
-]
+from provider.models import Provider
+from third_party.models import ThirdParty
+from utils.models import (BaseModel, BaseNameModel, DefaultNameManager,
+                          DefaultToDictMixin, SimpleNameMixin)
 
 
 class WorkOrderStatus(DefaultToDictMixin, BaseNameModel):
+    DRAFT = 'work_order.status.draft'
+    NEW = 'work_order.status.new'
+    IN_PROGRESS = 'work_order.status.in_progress'
+    DEFERRED = 'work_order.status.deferred'
+    DENIED = 'work_order.status.denied'
+    PROBLEM_SOLVED = 'work_order.status.problem_solved'
+    COMPLETED = 'work_order.status.completed'
+    CLOSED = 'work_order.status.closed'
+    UNSATISFACTORY_COMPLETION = 'work_order.status.unsatisfactory_completion'
+
+    ALL = [
+        DRAFT,
+        NEW,
+        IN_PROGRESS,
+        DEFERRED,
+        DENIED,
+        PROBLEM_SOLVED,
+        COMPLETED,
+        CLOSED,
+        UNSATISFACTORY_COMPLETION
+    ]
 
     default = settings.DEFAULTS_WORKORDER_STATUS
 
@@ -31,17 +42,20 @@ class WorkOrderStatus(DefaultToDictMixin, BaseNameModel):
         verbose_name_plural = "Work order statuses"
 
 
-WORKORDER_PRIORITIES = [
-    'work_order.priority.emergency',
-    'work_order.priority.high',
-    'work_order.priority.medium',
-    'work_order.priority.low',
-]
+class WorkOrderPriority(SimpleNameMixin, BaseNameModel):
+    EMERGENCY = 'work_order.priority.emergency'
+    HIGH = 'work_order.priority.high'
+    MEDIUM = 'work_order.priority.medium'
+    LOW = 'work_order.priority.low'
 
+    ALL = [
+        EMERGENCY,
+        HIGH,
+        MEDIUM,
+        LOW
+    ]
 
-class WorkOrderPriority(BaseNameModel):
-
-    default = WORKORDER_PRIORITIES[0]
+    default = EMERGENCY
 
     objects = DefaultNameManager()
 

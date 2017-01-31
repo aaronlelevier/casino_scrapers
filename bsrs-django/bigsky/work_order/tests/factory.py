@@ -1,16 +1,16 @@
 import random
 from decimal import Decimal
-from django.utils import timezone
 
-from category.models import Category
-from person.models import Person
-from work_order.models import WorkOrderStatus, WorkOrderPriority, WorkOrder
-from work_order.models import WORKORDER_STATUSES
+from django.utils import timezone
+from model_mommy import mommy
 
 from accounting.tests.factory import create_currency
+from category.models import Category
+from person.models import Person
 from provider.tests.factory import create_provider
-from utils.helpers import generate_uuid
-from utils.tests.test_helpers import create_default
+from ticket.models import Ticket, TicketPriority, TicketStatus
+from utils.helpers import create_default, generate_uuid
+from work_order.models import WorkOrder, WorkOrderPriority, WorkOrderStatus
 
 
 TIME = timezone.now()
@@ -27,7 +27,13 @@ def create_work_order():
     requester = random.choice(people)
     assignee = random.choice(people)
 
+    ticket = Ticket.objects.filter(work_orders__isnull=True).first()
+    if not ticket:
+        ticket = mommy.make(Ticket, status=create_default(TicketStatus),
+                            priority=create_default(TicketPriority))
+
     kwargs = {
+        'ticket': ticket,
         'assignee': assignee,
         'category': category,
         'cost_estimate': Decimal(0),
@@ -49,11 +55,23 @@ def create_work_order():
 
 def create_work_order_status(name=None):
     if not name:
-        name = random.choice(WORKORDER_STATUSES)
+        name = random.choice(WorkOrderStatus.ALL)
 
     obj, _ = WorkOrderStatus.objects.get_or_create(name=name)
     return obj
 
 
 def create_work_order_statuses():
-    return [create_work_order_status(s) for s in WORKORDER_STATUSES]
+    return [create_work_order_status(s) for s in WorkOrderStatus.ALL]
+
+
+def create_work_order_priority(name=None):
+    if not name:
+        name = random.choice(WorkOrderPriority.ALL)
+
+    obj, _ = WorkOrderPriority.objects.get_or_create(name=name)
+    return obj
+
+
+def create_work_order_priorities():
+    return [create_work_order_priority(s) for s in WorkOrderPriority.ALL]

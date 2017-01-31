@@ -12,12 +12,22 @@ class FactoryTest(TestCase):
 
     def test_create_provider(self):
         category = Category.objects.filter(children__isnull=True).first()
+
         obj = factory.create_provider(category)
+
         self.assertIsInstance(obj, Provider)
         # The category is the Trade
         self.assertIsInstance(obj.categories.first(), Category)
         self.assertEqual(obj.categories.first().children.count(), 0, 'This is a leaf node')
         self.assertIsNotNone(obj.fbid)
+        self.assertTrue(obj.address1)
+        self.assertTrue(obj.address2)
+        self.assertTrue(obj.city)
+        self.assertTrue(obj.email)
+        self.assertTrue(obj.logo)
+        self.assertTrue(obj.phone)
+        self.assertTrue(obj.postal_code)
+        self.assertTrue(obj.state)
 
     def test_create_provider_with_all_categories(self):
         ret = factory.create_provider_with_all_categories()

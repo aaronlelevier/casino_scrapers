@@ -12,9 +12,13 @@ from rest_framework.test import APITestCase
 from location.tests.factory import create_location
 from person.tests.factory import PASSWORD, create_single_person
 from utils.tests.mixins import MockPermissionsAllowAnyMixin
-from work_order.models import WorkOrder
-from work_order.serializers import WorkOrderCreateSerializer, WorkOrderUpdateSerializer
-from work_order.tests.factory import create_work_order, create_work_order_status, TIME
+from work_order.models import WorkOrder, WorkOrderStatus
+from work_order.serializers import (WorkOrderCreateSerializer,
+                                    WorkOrderUpdateSerializer)
+from work_order.tests.factory import (TIME, create_work_order,
+                                      create_work_order_priorities,
+                                      create_work_order_status,
+                                      create_work_order_statuses)
 
 
 class SetupMixin(MockPermissionsAllowAnyMixin):
@@ -148,13 +152,27 @@ class WorkOrderCreateTests(SetupMixin, APITestCase):
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], self.data['id'])
+        self.assertEqual(data['ticket'], str(self.data['ticket']))
         self.assertEqual(data['category'], str(self.data['category']))
         self.assertEqual(data['provider'], str(self.data['provider']))
-        self.assertEqual(data['location'], str(self.data['location']))
         self.assertEqual(data['scheduled_date'], self.data['scheduled_date'])
         self.assertEqual(data['approved_amount'], self.data['approved_amount'])
-        self.assertEqual(data['cost_estimate'], self.data['cost_estimate'])
-        self.assertEqual(data['cost_estimate_currency'], str(self.data['cost_estimate_currency']))
+        self.assertEqual(data['requester'], str(self.person.id))
+        # these fields are auto generated
+        work_order = WorkOrder.objects.get(id=self.data['id'])
+        self.assertEqual(work_order.expiration_date, work_order.scheduled_date)
+        self.assertEqual(work_order.approval_date, work_order.scheduled_date)
+        self.assertIsNone(work_order.completed_date)
+        self.assertEqual(work_order.cost_estimate, work_order.category.cost_amount)
+        self.assertEqual(work_order.approver, self.person)
+        self.assertEqual(work_order.location, work_order.ticket.location)
+        self.assertEqual(work_order.status.name, WorkOrderStatus.NEW)
+        self.assertEqual(work_order.priority.simple_name, work_order.ticket.priority.simple_name)
+        # not being defaulted
+        self.assertFalse(work_order.tracking_number)
+        self.assertFalse(work_order.instructions)
+        self.assertFalse(work_order.cost_estimate_currency)
+        self.assertFalse(work_order.assignee)
 
     def test_validation__scheduled_date_gte_today(self):
         self.data.update({

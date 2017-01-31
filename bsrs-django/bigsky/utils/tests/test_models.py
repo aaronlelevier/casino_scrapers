@@ -13,6 +13,7 @@ from person.models import Person, PersonQuerySet
 from person.tests.factory import create_single_person, create_role
 from translation.tests.factory import create_translation_keys_for_fixtures
 from ticket.models import TicketStatus
+from ticket.tests.factory_related import create_ticket_priority
 from utils import create
 from utils.helpers import create_default
 
@@ -173,6 +174,16 @@ class BaseModelTests(TestCase):
             sorted(['name', 'number']),
             sorted(list(Location.ambiguous_field_names))
         )
+
+
+class SimpleNameMixinTests(TestCase):
+
+    def test_simple_name(self):
+        priority = create_ticket_priority()
+
+        ret = priority.simple_name
+
+        self.assertEqual(ret, priority.name.split('.')[-1])
 
 
 class BaseNameModelTests(TestCase):

@@ -66,7 +66,7 @@ var BSRS_TICKET_FACTORY = (function() {
       requester: this.people_defaults.nameMel,
       assignee: this.people_fixtures.get(),
       location: location,
-      work_order: [this.work_order_fixtures.detail()],
+      work_orders: [this.work_order_fixtures.detail()],
       attachments: [],
       created: new Date(),
     }

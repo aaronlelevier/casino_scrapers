@@ -23,7 +23,10 @@ var BSRS_WORK_ORDER_FACTORY = (function() {
       tracking_number: this.workOrder.trackingNumberOne,
       instructions: this.workOrder.instructions,
       gl_code: this.workOrder.glCodeOne,
-      status: {id: this.workOrderStatuses.idOne, name: this.workOrderStatuses.nameFive},
+      status: {
+        id: this.workOrderStatuses.idOne,
+        name: this.workOrderStatuses.nameFive
+      },
       category: this.category_fixtures.generate(),
       provider: this.provider_fixtures.generate(),
       approver: this.people_fixtures.get_names(),

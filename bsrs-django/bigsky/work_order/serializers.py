@@ -1,13 +1,21 @@
 from rest_framework import serializers
 
 from accounting.serializers import CurrencyIdNameSerializer
+from category.serializers import CategoryLeafWorkOrderSerializer
 from location.serializers import LocationSerializer
 from person.serializers import PersonTicketSerializer
-from work_order.models import WorkOrder
 from sc.etl import WorkOrderEtlDataAdapter
-from work_order.models import WorkOrder
+from provider.serializers import ProviderDetailSerializer
 from utils.serializers import BaseCreateSerializer
 from utils.validators import gte_today
+from work_order.models import WorkOrder, WorkOrderPriority, WorkOrderStatus
+
+
+class WorkOrderStatusSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = WorkOrderStatus
+        fields = ('id', 'name')
 
 
 WO_FIELDS = ('id', 'approver', 'assignee', 'category', 'completed_date',
@@ -50,13 +58,17 @@ class WorkOrderCreateSerializer(BaseCreateSerializer):
 
     def create(self, validated_data):
         """
-        Synchronously create the WorkOrder in SC before creating in BS.
+        Auto fill other fields based upon Person, Ticket, etc...
         """
-        scid = WorkOrderEtlDataAdapter(validated_data).post()
-
         instance = super(WorkOrderCreateSerializer, self).create(validated_data)
-
-        instance.scid = scid
+        instance.expiration_date = instance.scheduled_date
+        instance.approval_date = instance.scheduled_date
+        instance.cost_estimate = instance.category.cost_amount
+        instance.approver = instance.requester
+        instance.location = instance.ticket.location
+        instance.status = WorkOrderStatus.objects.get(name=WorkOrderStatus.NEW)
+        instance.priority = WorkOrderPriority.objects.get(
+            name__iendswith=instance.ticket.priority.simple_name)
         instance.save()
         return instance
 
@@ -64,6 +76,9 @@ class WorkOrderCreateSerializer(BaseCreateSerializer):
 class WorkOrderLeafSerializer(serializers.ModelSerializer):
 
     cost_estimate_currency = CurrencyIdNameSerializer()
+    status = WorkOrderStatusSerializer()
+    category = CategoryLeafWorkOrderSerializer()
+    provider = ProviderDetailSerializer()
 
     class Meta:
         model = WorkOrder

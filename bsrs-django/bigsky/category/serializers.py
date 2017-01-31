@@ -48,6 +48,15 @@ class CategoryRoleSerializer(BaseCreateSerializer):
         fields = ('id', 'name',)
 
 
+class CategoryLeafWorkOrderSerializer(serializers.ModelSerializer):
+
+    display_name = serializers.CharField(max_length=256, source='parents_and_self_as_string')
+
+    class Meta:
+        model = Category
+        fields = CATEGORY_FIELDS + ('display_name',)
+
+
 # Main
 
 class CategoryListSerializer(BaseCreateSerializer):
