@@ -90,6 +90,7 @@ class WorkOrderDetailTests(SetupMixin, APITestCase):
         self.assertIsNotNone(data['category'])
         self.assertIsNotNone(data['cost_estimate'])
         self.assertIsNotNone(data['cost_estimate_currency'])
+        self.assertIn('gl_code', data)
         self.assertIsNotNone(data['instructions'])
         self.assertIsNotNone(data['location'])
         self.assertEqual(data['priority'], str(self.wo.priority.id))

@@ -18,7 +18,7 @@ class WorkOrderStatusSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-WO_FIELDS = ('id', 'approver', 'assignee', 'category', 'completed_date',
+WO_FIELDS = ('id', 'approver', 'assignee', 'category', 'completed_date', 'gl_code',
     'cost_estimate', 'cost_estimate_currency', 'expiration_date', 'instructions',
     'location', 'priority', 'provider', 'requester', 'status', 'scheduled_date')
 
@@ -75,6 +75,7 @@ class WorkOrderCreateSerializer(BaseCreateSerializer):
 
 class WorkOrderLeafSerializer(serializers.ModelSerializer):
 
+    approver = PersonTicketSerializer()
     cost_estimate_currency = CurrencyIdNameSerializer()
     status = WorkOrderStatusSerializer()
     category = CategoryLeafWorkOrderSerializer()
@@ -82,4 +83,6 @@ class WorkOrderLeafSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = WorkOrder
-        fields = WO_FIELDS + ('scid',)
+        fields = ('id', 'cost_estimate_currency', 'cost_estimate', 'scheduled_date',
+                  'approval_date', 'completed_date', 'expiration_date', 'tracking_number',
+                  'approver', 'gl_code', 'status', 'category', 'provider')

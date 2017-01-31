@@ -49,7 +49,7 @@ class WorkOrderPriorityTests(TestCase):
         self.assertEqual(self.default.simple_name, WorkOrderPriority.default.split('.')[-1])
 
 
-class TicketTests(TestCase):
+class WorkOrderTests(TestCase):
 
     def setUp(self):
         create_single_person()

@@ -29,6 +29,7 @@ class FactoryTests(TestCase):
 
         self.assertIsInstance(wo, WorkOrder)
         self.assertIsInstance(wo.ticket, Ticket)
+        self.assertIsInstance(wo.approver, Person)
         self.assertIsInstance(wo.assignee, Person)
         self.assertIsInstance(wo.category, Category)
         self.assertIsInstance(wo.cost_estimate, Decimal)

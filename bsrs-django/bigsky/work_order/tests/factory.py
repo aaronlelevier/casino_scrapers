@@ -25,6 +25,7 @@ def create_work_order():
     category = Category.objects.filter(children__isnull=True)[0]
     people = Person.objects.all()
     requester = random.choice(people)
+    approver = requester
     assignee = random.choice(people)
 
     ticket = Ticket.objects.filter(work_orders__isnull=True).first()
@@ -34,6 +35,7 @@ def create_work_order():
 
     kwargs = {
         'ticket': ticket,
+        'approver': approver,
         'assignee': assignee,
         'category': category,
         'cost_estimate': Decimal(0),

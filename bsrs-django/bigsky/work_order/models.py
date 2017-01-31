@@ -84,7 +84,8 @@ class WorkOrder(BaseModel):
         help_text='SC field: Nte - will change based on the amount the Provider estimates for the work')
     # TODO: may end up being the "currency" for the whole work order
     cost_estimate_currency = models.ForeignKey(Currency, null=True)
-    # optional field
+    gl_code = models.CharField(max_length=100, blank=True, null=True,
+        help_text='an inherited value from the category')
     tracking_number = models.CharField(max_length=128, blank=True, null=True,
         help_text="SC field: work order number")
     instructions = models.TextField(blank=True, null=True,
