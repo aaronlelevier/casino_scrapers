@@ -25,10 +25,9 @@ var LocationLevelDeserializer = Ember.Object.extend({
     return location_level;
   },
   _deserializeList(response) {
-    const store = this.get('simpleStore');
     const results = [];
     response.results.forEach((model) => {
-      const location_level = store.push('location-level-list', model);
+      const location_level = this.get('functionalStore').push('location-level-list', model);
       results.push(location_level);
     });
     return results;

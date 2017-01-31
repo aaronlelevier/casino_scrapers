@@ -75,7 +75,6 @@ var extract_person_location = function(model, store, location_level_fk, location
 
 var PersonDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin, {
   init() {
-    this._super(...arguments);
     belongs_to.bind(this)('status', 'general');
     belongs_to.bind(this)('locale', 'person');
     belongs_to.bind(this)('photo', 'person');
@@ -94,15 +93,16 @@ var PersonDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin, 
     }
   },
   _deserializeList(response) {
-    const store = this.get('simpleStore');
+    const store = this.get('functionalStore');
+    const simpleStore = this.get('simpleStore');
     const results = [];
     response.results.forEach((model) => {
-      [model.role_fk] = extract_role(model, store);
+      [model.role_fk] = extract_role(model, simpleStore);
       const status_json = model.status;
       delete model.status;
       if (model.photo) {
         const photo = model.photo;
-        store.push('attachment', photo);
+        simpleStore.push('attachment', photo);
         model.photo_fk = model.photo.id;
         delete model.photo;
       }

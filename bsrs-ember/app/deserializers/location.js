@@ -108,7 +108,6 @@ var extract_children = function(model, store) {
 
 var LocationDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin, {
   init() {
-    this._super(...arguments);
     belongs_to.bind(this)('status', 'general');
     belongs_to.bind(this)('country');
     belongs_to.bind(this)('state');
@@ -150,14 +149,12 @@ var LocationDeserializer = Ember.Object.extend(OptConf, ContactDeserializerMixin
     return location;
   },
   _deserializeList(response) {
-    const store = this.get('simpleStore');
+    const store = this.get('functionalStore');
     const results = [];
     response.results.forEach((model) => {
-      model.location_level_fk = extract_location_level(model, store);
-      const status_json = model.status;
-      delete model.status;
+      model.location_level_fk = model.location_level;
+      delete model.location_level;
       const location = store.push('location-list', model);
-      this.setup_status(status_json, location);
       results.push(location);
     });
     return results;

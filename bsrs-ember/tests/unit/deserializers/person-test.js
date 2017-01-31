@@ -25,7 +25,7 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
 const PD = PERSON_DEFAULTS.defaults();
 
-let subject, uuid, location_deserializer, location_level_deserializer, status, locale, person, role;
+let subject, uuid, location_deserializer, location_level_deserializer, status, locale, person, role, functionalStore;
 
 moduleFor('deserializer:person', 'Unit | Deserializer | person', {
   needs: ['model:person', 'model:random','model:uuid', 'model:person-list', 'model:role', 'model:person-location','model:location',
@@ -38,7 +38,13 @@ moduleFor('deserializer:person', 'Unit | Deserializer | person', {
     uuid = this.container.lookup('model:uuid');
     location_level_deserializer = LocationLevelDeserializer.create({simpleStore: this.store});
     location_deserializer = LocationDeserializer.create({simpleStore: this.store, LocationLevelDeserializer: location_level_deserializer});
-    subject = PersonDeserializer.create({simpleStore: this.store, uuid: uuid, LocationDeserializer: location_deserializer});
+    functionalStore = this.container.lookup('service:functional-store');
+    subject = PersonDeserializer.create({
+      simpleStore: this.store, 
+      uuid: uuid, 
+      LocationDeserializer: location_deserializer, 
+      functionalStore: functionalStore
+    });
     run(() => {
       status = this.store.push('status', {id: SD.activeId, name: SD.activeName, people: [PD.idOne]});
       // need to push in locale to emulate bootstrapped locales
@@ -143,11 +149,9 @@ test('person setup correct status fk with bootstrapped data (list)', function(as
   run(() => {
     subject.deserialize(response);
   });
-  person = this.store.find('person-list', PD.idOne);
-  status = this.store.find('general-status-list', status.get('id'));
-  assert.equal(person.get('status.id'), status.get('id'));
-  assert.equal(status.get('people').length, 1);
-  assert.deepEqual(status.get('people'), [PD.idOne]);
+  person = functionalStore.find('person-list', PD.idOne);
+  assert.equal(person.get('status.id'), SD.activeId);
+  assert.equal(person.get('status.name'), SD.activeName);
 });
 
 test('person may not have a photo (list)', function(assert) {
@@ -161,18 +165,18 @@ test('person may not have a photo (list)', function(assert) {
   assert.equal(person.get('photo.id'), undefined);
 });
 
+/* PHOTO */
+
 test('person setup correct photo fk (list)', function(assert) {
   let json = PF.generate_list(PD.idOne);
   let response = {'count':1,'next':null,'previous':null,'results': [json]};
   run(() => {
     subject.deserialize(response);
   });
-  person = this.store.find('person-list', PD.idOne);
+  person = functionalStore.find('person-list', PD.idOne);
   const photo = this.store.find('attachment').objectAt(0);
   assert.equal(person.get('photo.id'), photo.get('id'));
 });
-
-/* PHOTO */
 
 test('person setup correct photo fk', function(assert) {
   let response = PF.generate(PD.idOne);

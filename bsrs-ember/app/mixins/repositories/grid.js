@@ -98,8 +98,6 @@ var GridRepositoryMixin = Ember.Mixin.create({
   },
   /* Non Optimistic Rendering: Desktop */
   findWithQuery(page, search, find, id_in, page_size, sort, special_url=undefined) {
-    const store = this.get('simpleStore');
-    const functionalStore = this.get('functionalStore');
     page = page || 1;
     const url = this.get('url');
     let endpoint = this.modifyEndpoint(url, page, search, find, id_in, page_size, sort, special_url);
@@ -109,16 +107,16 @@ var GridRepositoryMixin = Ember.Mixin.create({
       /* Need to remove when functional store handles all grid */
       garbage_collection.forEach((type) => {
         run(() => {
-          store.clear(type);
-          functionalStore.clear(type);
+          this.get('functionalStore').clear(type);
         });
       });
       return this.deserializeResponse(response);
     });
   },
   deserializeResponse(response) {
-    const { typeGrid: type, simpleStore, deserializer } = this.getProperties('typeGrid', 'simpleStore', 'deserializer');
-    const all = deserializer.deserialize(response);
+    const { typeGrid: type, simpleStore, functionalStore, deserializer } = this.getProperties('typeGrid', 'simpleStore', 'functionalStore', 'deserializer');
+    deserializer.deserialize(response);
+    const all = functionalStore.find(type);
     all.set('isLoaded', true);
     const count = response.count;
     all.set('count', count);

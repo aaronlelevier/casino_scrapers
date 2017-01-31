@@ -119,6 +119,7 @@ let GridViewRoute = Ember.Route.extend({
       controller.set('filtersets', []);
       controller.set('requested', []);
     }
+    // grid-loading-graphic
     set(controller, 'isLoading', undefined);
     
     // set doc title, but if error, no model
@@ -137,7 +138,7 @@ let GridViewRoute = Ember.Route.extend({
      * @param {object} column - 'description' or 'location.name'
      * @param {obj} val - e.g. location class or if gridFilterParams it is a string
      */
-    updateGridFilterParams(column, val) {
+    updateGridFilterParams(type, column, val) {
       const fieldName = column.field.includes('.') ? column.field.split('.')[0] : column.field;
       if(column.multiple) {
         const gridIdInParams = get(this, 'gridIdInParams');
@@ -159,6 +160,8 @@ let GridViewRoute = Ember.Route.extend({
         const gridFilterParams = get(this, 'gridFilterParams');
         set(gridFilterParams, column.field, val);
       }
+      // clear store so that results are only from server
+      this.get('functionalStore').clear(type);
     },
     linkToNew(url) {
       const count = this.get('repository').findCount(); 

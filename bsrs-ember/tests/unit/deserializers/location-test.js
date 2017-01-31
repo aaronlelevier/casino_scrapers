@@ -24,13 +24,21 @@ import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import LocationDeserializer from 'bsrs-ember/deserializers/location';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 
-var store, location_unused, location_level_deserializer, subject, location_status, location_level;
+var store, location_unused, location_level_deserializer, subject, location_status, location_level, functionalStore;
 
 module('unit: location deserializer test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:location', 'model:location-list', 'model:general-status-list', 'model:location-level', 'model:location-status', 'model:location-children', 'model:location-parents', 'model:address', 'model:location-join-phonenumber', 'model:location-join-email', 'model:location-join-address', 'model:phonenumber', 'model:phone-number-type', 'model:email', 'model:email-type', 'model:country', 'model:state', 'model:address-type', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:location', 'model:location-list', 'model:general-status-list', 'model:location-level', 
+      'model:location-status', 'model:location-children', 'model:location-parents', 'model:address', 'model:location-join-phonenumber', 
+      'model:location-join-email', 'model:location-join-address', 'model:phonenumber', 'model:phone-number-type', 'model:email', 
+      'model:email-type', 'model:country', 'model:state', 'model:address-type', 'service:i18n']);
     location_level_deserializer = LocationLevelDeserializer.create({simpleStore: store});
-    subject = LocationDeserializer.create({simpleStore: store, LocationLevelDeserializer: location_level_deserializer});
+    functionalStore = this.container.lookup('service:functional-store');
+    subject = LocationDeserializer.create({
+      simpleStore: store, 
+      functionalStore: functionalStore, 
+      LocationLevelDeserializer: location_level_deserializer
+    });
     run(function() {
       location_status = store.push('location-status', {id: LDS.openId, name: LDS.openName, locations: [LD.idOne]});
       store.push('location-status', {id: LDS.closedId, name: LDS.closedName, locations: []});
@@ -62,18 +70,6 @@ test('location deserializer returns correct data with already present location_l
   assert.equal(location.get('location_level_fk'), LLD.idOne);
   assert.equal(location_unused.get('location_level_fk'), LLD.idOne);
   assert.equal(store.find('location-list').get('length'), 2);
-});
-
-test('location deserializer returns correct data with no current location_level (list)', (assert) => {
-  let json = [LF.generate_list(LD.unusedId)];
-  let response = {'count':1,'next':null,'previous':null,'results': json};
-  store.push('location-list', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
-  run(() => {
-    subject.deserialize(response);
-  });
-  let original = store.find('location-level', LLD.idOne);
-  assert.deepEqual(original.get('locations'), [LD.idOne, LD.unusedId]);
-  assert.ok(original.get('isNotDirty'));
 });
 
 test('(2) location deserializer returns correct data with already present location_level (detail)', (assert) => {

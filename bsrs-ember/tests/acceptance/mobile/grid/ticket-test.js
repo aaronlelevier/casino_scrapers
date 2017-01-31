@@ -20,7 +20,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, PEOPLE_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
 import { TICKET_ASSIGNEE, TICKET_LOCATION } from 'bsrs-ember/tests/helpers/const-names';
 
-var store, list_xhr;
+var list_xhr;
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -31,53 +31,49 @@ const PD = PERSON_DEFAULTS.defaults();
 moduleForAcceptance('Acceptance | general grid ticket mobile test', {
   beforeEach() {
     setWidth('mobile');
-    store = this.application.__container__.lookup('service:functional-store');
+    this.functionalStore = this.application.__container__.lookup('service:functional-store');
     list_xhr = xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list());
   },
+  afterEach() {
+    delete this.functionalStore;
+  }
 });
 
 /* jshint ignore:start */
 
-test('only renders grid items from server and not other ticket objects already in store', assert => {
+test('only renders grid items from server and not other ticket objects already in store', async function(assert) {
   /* MOBILE doesn't clear out grid items on every route call to allow for infinite scrolling. If other tickets in store, this will fail */
   xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
-  visit(DASHBOARD_URL);
-  andThen(() => {
-    assert.equal(currentURL(), DASHBOARD_URL);
-    // assert.equal(store.find('ticket-list').get('length'), 0);
-  });
+  await visit(DASHBOARD_URL);
+  assert.equal(currentURL(), DASHBOARD_URL);
   clearxhr(list_xhr);
   xhr(`${TICKETS_URL}?page=1`, 'GET', null, {}, 200, TF.list_two());
-  visit(TICKET_LIST_URL);
-  andThen(() => {
-    assert.equal(currentURL(), TICKET_LIST_URL);
-    assert.equal(store.find('ticket-list').get('length'), 9);
-  });
+  await visit(TICKET_LIST_URL);
+  assert.equal(currentURL(), TICKET_LIST_URL);
+  assert.equal(this.functionalStore.find('ticket-list').get('length'), 9);
 });
 
-test('visiting mobile ticket grid show correct layout', assert => {
-  ticketPage.visit();
-  andThen(() => {
-    const ticket = store.find('ticket-list')[0];
-    assert.equal(currentURL(), TICKET_LIST_URL);
-    assert.equal(find('.t-mobile-grid-title').text().trim(), '19 Tickets');
-    assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-    assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').text().trim());
-    assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').hasClass('t-ticket-categories'));
-    assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
-    assert.equal(find('.t-grid-data:eq(0) > div:eq(2)').text().trim(), t('ticket.status.new'));
-    assert.ok(find('.t-grid-data:eq(0) > div:eq(2)').hasClass('t-ticket-status-name'));
-    assert.equal(find('.t-grid-data:eq(0) > div:eq(3)').text().trim(), t('ticket.priority.emergency'));
-    assert.ok(find('.t-grid-data:eq(0) > div:eq(3)').hasClass('t-ticket-priority-name'));
-    assert.equal(find('.t-grid-data:eq(0) > div:eq(4)').text().trim(), LD.baseStoreName);
-    assert.equal(find('.t-grid-data:eq(0) > div:eq(5)').text().trim(), ticket.get('assignee').fullname);
-    assert.equal(find('.t-grid-data:eq(0) > div:eq(6)').text().trim().split(' ')[0], 'Today');
-    assert.equal(find('.t-grid-data:eq(0) > div:eq(6)').text().trim().split(' ')[1], 'at');
-    assert.equal(find('.t-grid-data:eq(0) > div:eq(7)').text().trim(), ticket.get('number'));
-  });
+test('visiting mobile ticket grid show correct layout', async function(assert) {
+  await ticketPage.visit();
+  const ticket = this.functionalStore.find('ticket-list')[0];
+  assert.equal(currentURL(), TICKET_LIST_URL);
+  assert.equal(find('.t-mobile-grid-title').text().trim(), '19 Tickets');
+  assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+  assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').text().trim());
+  assert.ok(find('.t-grid-data:eq(0) > div:eq(0)').hasClass('t-ticket-categories'));
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(2)').text().trim(), t('ticket.status.new'));
+  assert.ok(find('.t-grid-data:eq(0) > div:eq(2)').hasClass('t-ticket-status-name'));
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(3)').text().trim(), t('ticket.priority.emergency'));
+  assert.ok(find('.t-grid-data:eq(0) > div:eq(3)').hasClass('t-ticket-priority-name'));
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(4)').text().trim(), LD.baseStoreName);
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(5)').text().trim(), ticket.get('assignee').fullname);
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(6)').text().trim().split(' ')[0], 'Today');
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(6)').text().trim().split(' ')[1], 'at');
+  assert.equal(find('.t-grid-data:eq(0) > div:eq(7)').text().trim(), ticket.get('number'));
 });
 
-test('ticket request filter will filter down results and reset page to 1', async assert => {
+test('ticket request filter will filter down results and reset page to 1', async function(assert) {
   xhr(`${TICKETS_URL}?page=1&request__icontains=ape19`, 'GET', null, {}, 200, TF.searched('ape19', 'request'));
   clearxhr(list_xhr);
   xhr(`${TICKETS_URL}?page=2`, 'GET', null, {}, 200, TF.list());
@@ -93,10 +89,10 @@ test('ticket request filter will filter down results and reset page to 1', async
   assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestLastPage2Grid);
 });
 
-test('filtering on priority will sort when filter is clicked', async assert => {
+test('filtering on priority will sort when filter is clicked', async function(assert) {
   xhr(`${TICKETS_URL}?page=1&priority__id__in=${TD.priorityOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
   await ticketPage.visit();
-  assert.equal(store.find('ticket-list').get('length'), 10);
+  assert.equal(this.functionalStore.find('ticket-list').get('length'), 10);
   await generalMobilePage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 0);
   await page.clickFilterPriority();
@@ -109,7 +105,7 @@ test('filtering on priority will sort when filter is clicked', async assert => {
   assert.equal(page.priorityThreeIsChecked(), false);
   assert.equal(page.priorityFourIsChecked(), false);
   await generalMobilePage.submitFilterSort();
-  assert.equal(store.find('ticket-list').get('length'), 10);
+  assert.equal(this.functionalStore.find('ticket-list').get('length'), 10);
   assert.equal(find('.t-grid-data:eq(0) > .t-ticket-priority-name span').text().trim(), t('ticket.priority.emergency'));
   await generalMobilePage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 1);
@@ -122,10 +118,10 @@ test('filtering on priority will sort when filter is clicked', async assert => {
   await generalMobilePage.submitFilterSort();
 });
 
-test('can uncheck a value after already checked and no xhr is sent', async assert => {
+test('can uncheck a value after already checked and no xhr is sent', async function(assert) {
   xhr(`${TICKETS_URL}?page=1&priority__id__in=${TD.priorityOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
   await ticketPage.visit();
-  assert.equal(store.find('ticket-list').get('length'), 10);
+  assert.equal(this.functionalStore.find('ticket-list').get('length'), 10);
   await generalMobilePage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 0);
   await page.clickFilterPriority();
@@ -138,7 +134,7 @@ test('can uncheck a value after already checked and no xhr is sent', async asser
   assert.equal(page.priorityThreeIsChecked(), false);
   assert.equal(page.priorityFourIsChecked(), false);
   await generalMobilePage.submitFilterSort();
-  assert.equal(store.find('ticket-list').get('length'), 10);
+  assert.equal(this.functionalStore.find('ticket-list').get('length'), 10);
   assert.equal(find('.t-grid-data:eq(0) > .t-ticket-priority-name span').text().trim(), t('ticket.priority.emergency'));
   await generalMobilePage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 1);
@@ -156,22 +152,29 @@ test('can uncheck a value after already checked and no xhr is sent', async asser
   assert.equal(page.priorityFourIsChecked(), false);
 });
 
-test('filtering on multiple parameters', async assert => {
+test('filtering on multiple parameters and can go to next page', async function(assert) {
   xhr(`${TICKETS_URL}?page=1&priority__id__in=${TD.priorityOneId}&status__id__in=${TD.statusOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
   await ticketPage.visit();
+  assert.equal(this.functionalStore.find('ticket-list').get('length'), 10);
   await generalMobilePage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 0);
+  assert.equal(this.functionalStore.find('ticket-list').get('length'), 10);
   await page.clickFilterPriority();
   await page.priorityOneCheck();
   await page.clickFilterStatus();
   await page.statusOneCheck();
   await generalMobilePage.submitFilterSort();
+  assert.equal(this.functionalStore.find('ticket-list').get('length'), 10);
+  xhr(`${TICKETS_URL}?page=2`, 'GET', null, {}, 200, TF.list_two());
+  await visit(`/tickets?page=2&priority__id__in=${TD.priorityOneId}&status__id__in=${TD.statusOneId}`);
+  assert.equal(currentURL(), `/tickets?page=2&priority__id__in=${TD.priorityOneId}&status__id__in=${TD.statusOneId}`);
+  assert.equal(this.functionalStore.find('ticket-list').get('length'), 19);
 });
 
-test('filtering assignee on power select and can remove', async assert => {
+test('filtering assignee on power select and can remove', async function(assert) {
   xhr(`${TICKETS_URL}?page=1&assignee__id__in=${PD.idBoy}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
   await ticketPage.visit();
-  assert.equal(store.find('ticket-list').get('length'), 10);
+  assert.equal(this.functionalStore.find('ticket-list').get('length'), 10);
   await generalMobilePage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 0);
   assert.equal(find(TICKET_ASSIGNEE).length, 0);
@@ -188,13 +191,13 @@ test('filtering assignee on power select and can remove', async assert => {
   await generalMobilePage.submitFilterSort();
 });
 
-test('filtering location on power select and can remove', async assert => {
+test('filtering location on power select and can remove', async function(assert) {
   xhr(`${TICKETS_URL}?page=1&location__id__in=${LD.idThree}&status__id__in=${TD.statusOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
   xhr(`${TICKETS_URL}?page=1&location__id__in=${LD.idFour},${LD.idThree}&status__id__in=${TD.statusOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
   xhr(`${TICKETS_URL}?page=1&location__id__in=${LD.idFour}&status__id__in=${TD.statusOneId}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
   xhr(`${TICKETS_URL}?page=1&location__id__in=${LD.idFour}`, 'GET', null, {}, 200, TF.searched_related(TD.priorityOneId, 'priority'));
   await ticketPage.visit();
-  assert.equal(store.find('ticket-list').get('length'), 10);
+  assert.equal(this.functionalStore.find('ticket-list').get('length'), 10);
   await generalMobilePage.clickFilterOpen();
   assert.equal(find('.t-filter__input-wrap').length, 0);
   assert.equal(find(TICKET_LOCATION).length, 0);
@@ -225,7 +228,7 @@ test('filtering location on power select and can remove', async assert => {
   assert.equal(page.locationInput.split(' ')[1], 'GHI789');
 });
 
-test('removing find or id_in filter will reset grid', async assert => {
+test('removing find or id_in filter will reset grid', async function(assert) {
   xhr(`${TICKETS_URL}?page=1&assignee__id__in=${PD.idBoy}`, 'GET', null, {}, 200, {'results': []});
   await ticketPage.visit();
   await generalMobilePage.clickFilterOpen();
@@ -235,7 +238,6 @@ test('removing find or id_in filter will reset grid', async assert => {
   await selectChoose(TICKET_ASSIGNEE, PD.fullnameBoy);
   await generalMobilePage.submitFilterSort();
   await generalMobilePage.clickFilterOpen();
-  assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), '');
   removeMultipleOption(TICKET_ASSIGNEE, PD.fullnameBoy);
   await generalMobilePage.submitFilterSort();
   assert.equal(find('.t-grid-data:eq(0) > div:eq(1)').text().trim(), TD.requestOneGrid);

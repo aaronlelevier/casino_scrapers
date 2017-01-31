@@ -28,29 +28,12 @@ module('unit: ticket list test', {
   }
 });
 
-test('ticket status returns one status', (assert) => {
-  assert.equal(ticket.get('status.id'), 1);
-  assert.equal(ticket.get('status.name'), 'wat');
-  assert.equal(ticket.get('status_class'), 'wat');
-});
-
-test('ticket priority returns one priority', (assert) => {
-  assert.equal(ticket.get('priority.id'), 3);
-  assert.equal(ticket.get('priority.name'), 'who');
-  assert.equal(ticket.get('priority_class'), 'who');
-});
-
 test('ticket assignee is not setup because grid displays plain object data', (assert) => {
   assert.equal(ticket.get('assignee'), undefined);
 });
 
 test('ticket location is not setup because grid displays plain object data', (assert) => {
   assert.equal(ticket.get('location'), undefined);
-});
-
-test('ticket categories are returned and sorted', (assert) => {
-  const names = ticket.get('categories');
-  assert.equal(names.string, 'Repair &#8226 Electrical');
 });
 
 test('ticket list is dirty trackable based on ticket', (assert) => {

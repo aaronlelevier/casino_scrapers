@@ -15,7 +15,7 @@ import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { PREFIX, ROLES_URL, ROLE_LIST_URL } from 'bsrs-ember/utilities/urls';
 
-var store, list_xhr;
+var list_xhr;
 
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 const DASHBOARD_URL = BASEURLS.DASHBOARD_URL;
@@ -24,29 +24,31 @@ const DETAIL_URL = `${ROLE_LIST_URL}/index/${RD.idOne}`;
 moduleForAcceptance('Acceptance | general grid roles mobile test', {
   beforeEach() {
     setWidth('mobile');
-    store = this.application.__container__.lookup('service:simpleStore');
     list_xhr = xhr(`${ROLES_URL}?page=1`, 'GET', null, {}, 200, RF.list());
+    this.functionalStore = this.application.__container__.lookup('service:functional-store');
   },
+  afterEach() {
+    delete this.functionalStore;
+  }
 });
 
 /* jshint ignore:start */
 
-test('only renders grid items from server and not other role objects already in store', async assert => {
+test('only renders grid items from server and not other role objects already in store', async function(assert) {
   /* MOBILE doesn't clear out grid items on every route call to allow for infinite scrolling. If other roles in store, this will fail */
   xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
   await visit(DASHBOARD_URL);
   assert.equal(currentURL(), DASHBOARD_URL);
-  assert.equal(store.find('role-list').get('length'), 0);
   clearxhr(list_xhr);
   xhr(`${ROLES_URL}?page=1`, 'GET', null, {}, 200, RF.list_two());
   await visit(ROLE_LIST_URL);
   assert.equal(currentURL(), ROLE_LIST_URL);
-  assert.equal(store.find('role-list').get('length'), 9);
+  assert.equal(this.functionalStore.find('role-list').get('length'), 9);
 });
 
-test('visiting mobile role grid show correct layout', async assert => {
+test('visiting mobile role grid show correct layout', async function(assert) {
   await rolePage.visit();
-  const role = store.findOne('role-list');
+  const role = this.functionalStore.find('role-list')[0];
   assert.equal(currentURL(), ROLE_LIST_URL);
   assert.equal(find('.t-mobile-grid-title').text().trim(), '19 Roles');
   assert.equal(find('.t-grid-data').length, PAGE_SIZE);
@@ -55,7 +57,7 @@ test('visiting mobile role grid show correct layout', async assert => {
   assert.equal(find('.t-grid-data:eq(0) > div:eq(2)').text().trim(), RD.locationLevelNameOne);
 });
 
-test('role name filter will filter down results and reset page to 1', async assert => {
+test('role name filter will filter down results and reset page to 1', async function(assert) {
   xhr(`${ROLES_URL}?page=1&name__icontains=9`, 'GET', null, {}, 200, RF.searched('9', 'name'));
   clearxhr(list_xhr);
   xhr(`${ROLES_URL}?page=2`, 'GET', null, {}, 200, RF.list());
@@ -70,7 +72,7 @@ test('role name filter will filter down results and reset page to 1', async asse
   assert.equal(find('.t-grid-data:eq(0) > div:eq(0)').text().trim(), RD.nameLastPage2Grid);
 });
 
-test('role type filter will filter down results and reset page to 1', async assert => {
+test('role type filter will filter down results and reset page to 1', async function(assert) {
   xhr(`${ROLES_URL}?page=1&role_type__icontains=1`, 'GET', null, {}, 200, RF.searched(RD.roleTypeGeneral, 'role_type'));
   clearxhr(list_xhr);
   xhr(`${ROLES_URL}?page=2`, 'GET', null, {}, 200, RF.list());

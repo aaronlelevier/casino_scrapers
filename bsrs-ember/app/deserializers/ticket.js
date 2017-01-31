@@ -7,7 +7,6 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
 
 var TicketDeserializer = Ember.Object.extend(OptConf, {
   init() {
-    this._super(...arguments);
     belongs_to.bind(this)('status', 'general');
     belongs_to.bind(this)('priority', 'ticket');
     belongs_to.bind(this)('assignee', 'person');

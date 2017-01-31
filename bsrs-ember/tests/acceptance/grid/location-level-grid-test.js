@@ -25,7 +25,11 @@ moduleForAcceptance('Acceptance | location-level grid list', {
   beforeEach() {
     endpoint = PREFIX + BASE_URL + '/?page=1';
     list_xhr = xhr(endpoint ,"GET",null,{},200,LLF.list());
+    this.functionalStore = this.application.__container__.lookup('service:functional-store');
   },
+  afterEach() {
+    delete this.functionalStore;
+  }
 });
 
 test('initial load should only show first PAGE_SIZE records ordered by id with correct pagination and no additional xhr', function(assert) {
@@ -46,7 +50,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
   visit(LOCATION_LEVEL_LIST_URL);
   click('.t-page:eq(1) a');
   andThen(() => {
-    const location_levels = this.store.find('location-level-list');
+    const location_levels = this.functionalStore.find('location-level-list');
     assert.equal(location_levels.get('length'), 9);
     assert.equal(currentURL(), LOCATION_LEVEL_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
@@ -55,7 +59,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
   });
   click('.t-page:eq(0) a');
   andThen(() => {
-    const location_levels = this.store.find('location-level-list');
+    const location_levels = this.functionalStore.find('location-level-list');
     assert.equal(location_levels.get('length'), 13);
     assert.equal(currentURL(),LOCATION_LEVEL_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);

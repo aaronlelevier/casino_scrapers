@@ -24,7 +24,7 @@ import SMSJRD from 'bsrs-ember/vendor/defaults/generic-join-recipients';
 
 const PersonD = PERSON_DEFAULTS.defaults();
 
-let store, automation, deserializer, pfilter, pfilter_unused;
+let store, automation, deserializer, pfilter, pfilter_unused, functionalStore;
 
 module('unit: automation deserializer test', {
   beforeEach() {
@@ -40,7 +40,8 @@ module('unit: automation deserializer test', {
       'service:translations-fetcher', 'service:i18n', 'validator:presence',
       'validator:length', 'validator:has-many', 'model:uuid']);
     const uuid = this.container.lookup('model:uuid');
-    deserializer = automationDeserializer.create({ simpleStore: store, uuid: uuid });
+    functionalStore = this.container.lookup('service:functional-store');
+    deserializer = automationDeserializer.create({ simpleStore: store, uuid: uuid, functionalStore: functionalStore });
     run(() => {
       automation = store.push('automation', { id: AD.idOne });
     });
@@ -861,8 +862,8 @@ test('deserialize list', assert => {
   run(() => {
     deserializer.deserialize(json);
   });
-  assert.equal(store.find('automation-list').get('length'), 10);
-  automation = store.find('automation-list').objectAt(0);
+  assert.equal(functionalStore.find('automation-list').get('length'), 10);
+  automation = functionalStore.find('automation-list').objectAt(0);
   assert.equal(automation.get('id'), AD.idOne);
   assert.equal(automation.get('description'), AD.descriptionOne+'1');
   // events

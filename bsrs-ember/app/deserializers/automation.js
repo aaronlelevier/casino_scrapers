@@ -9,7 +9,6 @@ import { ACTION_SEND_EMAIL, ACTION_SEND_SMS } from 'bsrs-ember/models/automation
 export default Ember.Object.extend(OptConf, {
   uuid: injectUUID('uuid'),
   init() {
-    this._super(...arguments);
     // relationship bindings give us a method called setup_.....
     many_to_many.bind(this)('event', 'automation');
     many_to_many.bind(this)('action', 'automation');
@@ -166,13 +165,10 @@ export default Ember.Object.extend(OptConf, {
     return automation;
   },
   _deserializeList(response) {
-    const store = this.get('simpleStore');
     const results = [];
     response.results.forEach((model) => {
-      run(() => {
-        const automationList = store.push('automation-list', model);
-        results.push(automationList);
-      });
+      const automationList = this.get('functionalStore').push('automation-list', model);
+      results.push(automationList);
     });
     return results;
   }

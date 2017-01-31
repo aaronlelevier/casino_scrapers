@@ -1,4 +1,5 @@
 import Ember from 'ember';
+const { run } = Ember;
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import DTDF from 'bsrs-ember/vendor/dtd_fixtures';
@@ -13,7 +14,7 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/model-category';
 import CD from 'bsrs-ember/vendor/defaults/category';
 
-var store, subject, dtd, run = Ember.run;
+var store, subject, dtd, functionalStore;
 
 module('unit: dtd deserializer test', {
   beforeEach() {
@@ -24,7 +25,8 @@ module('unit: dtd deserializer test', {
       'model:category', 'model:category-children', 'model:model-category',
       'model:attachment', 'model:generic-join-attachment', 'service:i18n',
       'service:person-current']);
-    subject = DTDDeserializer.create({simpleStore: store});
+    functionalStore = this.container.lookup('service:functional-store');
+    subject = DTDDeserializer.create({simpleStore: store, functionalStore: functionalStore});
     run(() => {
       store.push('ticket-priority', {id: TP.priorityOneId, name: TP.priorityOne});
       store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
@@ -34,19 +36,19 @@ module('unit: dtd deserializer test', {
 
 // List
 
-test('dtd deserializer returns correct data', (assert) => {
+test('dtd deserializer returns correct data - list', (assert) => {
   const json = [DTDF.generate_list(DTD.idOne), DTDF.generate_list(DTD.idTwo)];
   const response = {'count':2,'next':null,'previous':null,'results': json};
   run(() => {
     subject.deserialize(response);
   });
-  let dtds = store.find('dtd-list');
+  let dtds = functionalStore.find('dtd-list');
   assert.equal(dtds.get('length'), 2);
-  let dtd = store.find('dtd-list', DTD.idOne);
+  let dtd = functionalStore.find('dtd-list', DTD.idOne);
   assert.ok(dtd.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(dtd.get('key'), DTD.keyOne);
   assert.equal(dtd.get('description'), DTD.descriptionOne);
-  let dtd_two = store.find('dtd-list', DTD.idTwo);
+  let dtd_two = functionalStore.find('dtd-list', DTD.idTwo);
   assert.ok(dtd_two.get('isNotDirtyOrRelatedNotDirty'));
 });
 

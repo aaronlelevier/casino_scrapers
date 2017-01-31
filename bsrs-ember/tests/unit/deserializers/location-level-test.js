@@ -1,16 +1,18 @@
 import Ember from 'ember';
+const { run } = Ember;
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LLF from 'bsrs-ember/vendor/location-level_fixtures';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 
-var store, location_level, location_level_two, run = Ember.run, subject;
+var store, location_level, location_level_two, functionalStore, subject;
 
 module('unit: location level deserializer test', {
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:location-level', 'model:location-level-list']);
-    subject = LocationLevelDeserializer.create({simpleStore: store});
+    functionalStore = this.container.lookup('service:functional-store');
+    subject = LocationLevelDeserializer.create({simpleStore: store, functionalStore: functionalStore});
   }
 });
 
@@ -21,7 +23,7 @@ test('location level list model is correctly deserialized in its own store', (as
   run(() => {
     subject.deserialize(response);
   });
-  const location_levelz = store.find('location-level-list');
+  const location_levelz = functionalStore.find('location-level-list');
   assert.equal(location_levelz.get('length'), 1);
 });
 

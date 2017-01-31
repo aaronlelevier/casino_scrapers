@@ -105,12 +105,11 @@ let RoleDeserializer = Ember.Object.extend({
     return role;
   },
   _deserializeList(response) {
-    const store = this.get('simpleStore');
     const results = [];
     response.results.forEach((model) => {
       model.location_level_fk = model.location_level;
       delete model.location_level;
-      const role = store.push('role-list', model);
+      const role = this.get('functionalStore').push('role-list', model);
       results.push(role);
     });
     return results;

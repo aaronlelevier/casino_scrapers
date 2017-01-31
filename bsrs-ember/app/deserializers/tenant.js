@@ -6,7 +6,6 @@ import ContactDeserializerMixin from 'bsrs-ember/mixins/deserializer/contact';
 
 export default Ember.Object.extend(OptConf, ContactDeserializerMixin, {
   init() {
-    this._super(...arguments);
     belongs_to.bind(this)('default_currency');
     belongs_to.bind(this)('billing_phone_number');
     belongs_to.bind(this)('billing_email');
@@ -73,10 +72,9 @@ export default Ember.Object.extend(OptConf, ContactDeserializerMixin, {
     return tenant;
   },
   _deserializeList(response) {
-    const store = this.get('simpleStore');
     const results = [];
     response.results.forEach((model) => {
-      const tenant = store.push('tenant-list', model);
+      const tenant = this.get('functionalStore').push('tenant-list', model);
       results.push(tenant);
     });
     return results;

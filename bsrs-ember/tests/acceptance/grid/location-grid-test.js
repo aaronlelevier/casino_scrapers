@@ -32,8 +32,12 @@ var application, endpoint, list_xhr;
 moduleForAcceptance('Acceptance | location grid list', {
   beforeEach() {
     endpoint = PREFIX + BASE_URL + '/?page=1';
-    list_xhr = xhr(endpoint ,"GET",null,{},200,LF.list());
+    list_xhr = xhr(endpoint, "GET", null, {}, 200, LF.list());
+    this.functionalStore = this.application.__container__.lookup('service:functional-store');
   },
+  afterEach() {
+    delete this.functionalStore;
+  }
 });
 
 test(`initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr with correct th widths`, function(assert) {
@@ -60,7 +64,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
   visit(LOCATION_LIST_URL);
   click('.t-page:eq(1) a');
   andThen(() => {
-    const locations = this.store.find('location-list');
+    const locations = this.functionalStore.find('location-list');
     assert.equal(locations.get('length'), 9);
     assert.equal(currentURL(), LOCATION_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
@@ -69,7 +73,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
   });
   click('.t-page:eq(0) a');
   andThen(() => {
-    const locations = this.store.find('location-list');
+    const locations = this.functionalStore.find('location-list');
     assert.equal(locations.get('length'), 10);
     assert.equal(currentURL(),LOCATION_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
@@ -558,7 +562,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 //     andThen(() => {
 //         let html = find(section);
 //         assert.equal(html.find(navigation).length, 1);
-//         let filterset = this.store.find('filterset', UUID.value);
+//         let filterset = this.functionalStore.find('filterset', UUID.value);
 //         assert.equal(filterset.get('name'), name);
 //         assert.equal(filterset.get('endpoint_name'), routePath);
 //         assert.equal(filterset.get('endpoint_uri'), query);
@@ -677,7 +681,7 @@ test('location level name is a functional related filter', function(assert) {
   andThen(() => {
     assert.equal(currentURL(),LOCATION_LIST_URL + '?search=');
     assert.equal(find('.t-grid-data:eq(0) .t-location-location_level-name').text().trim(), LLD.nameCompany);
-    assert.equal(find('.t-grid-data:eq(1) .t-location-location_level-name').text().trim(), LLD.nameCompany);
+    assert.equal(find('.t-grid-data:eq(1) .t-location-location_level-name').text().trim(), LLD.nameDepartment);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
   });
   click(SORT_LLEVEL_DIR);
@@ -692,6 +696,7 @@ test('location level name is a functional related filter', function(assert) {
     assert.equal(currentURL(),LOCATION_LIST_URL + '?search=&sort=-location_level.name');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
     assert.equal(find('.t-grid-data:eq(0) .t-location-location_level-name').text().trim(), LLD.nameDepartment);
+    assert.equal(find('.t-grid-data:eq(1) .t-location-location_level-name').text().trim(), LLD.nameDepartment);
   });
   filterGrid('location_level.name', 'd');
   andThen(() => {

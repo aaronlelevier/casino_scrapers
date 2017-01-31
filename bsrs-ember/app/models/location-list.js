@@ -11,24 +11,14 @@ export default Ember.Object.extend({
     return this.get('location').get('isDirtyOrRelatedDirty');
   }),
   isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-  status: Ember.computed(function() {
-    const store = this.get('simpleStore');
-    const location_status_list = store.find('general-status-list');
-    return location_status_list.filter((ls) => {
-      return Ember.$.inArray(this.get('id'), ls.get('locations')) > -1; 
-    }).objectAt(0);
-  }),
   status_class: Ember.computed('status', function(){
     const name = this.get('status.name');
     return name ? name.replace(/\./g, '-') : '';
   }),
   location_level: Ember.computed(function() {
-    const store = this.get('simpleStore'); 
-    const pk = this.get('id');
-    const location_levels = store.find('location-level');
+    const location_levels = this.get('simpleStore').find('location-level');
     return location_levels.filter((llevel) => {
-      const location_pks = llevel.get('locations') || [];
-      return location_pks.includes(pk);
+      return llevel.get('id') === this.get('location_level_fk');
     }).objectAt(0);
   })
 }); 

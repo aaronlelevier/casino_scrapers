@@ -328,7 +328,7 @@ test('clicking cancel on a not dirty model should not close tab', function(asser
   });
 });
 
-test('opening a tab, making the model dirty and closing the tab should display the confirm dialog', function(assert) {
+skip('opening a tab, making the model dirty and closing the tab should display the confirm dialog', function(assert) {
   visit(DETAIL_URL);
   page.keyFillIn(DTD.keyTwo);
   andThen(() => {
@@ -393,7 +393,7 @@ test('opening a tab and closing the tab should remove the tab from the this.stor
   });
 });
 
-test('opening a tab, making the model dirty and closing the tab should display the confirm dialog', function(assert) {
+skip('opening a tab, making the model dirty and closing the tab should display the confirm dialog', function(assert) {
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);

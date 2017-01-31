@@ -28,7 +28,11 @@ moduleForAcceptance('Acceptance | general grid tenant mobile test', {
   beforeEach() {
     setWidth('mobile');
     list_xhr = xhr(`${TENANT_URL}?page=1`, 'GET', null, {}, 200, TF.list());
+    this.functionalStore = this.application.__container__.lookup('service:functional-store');
   },
+  afterEach() {
+    delete this.functionalStore;
+  }
 });
 
 /* jshint ignore:start */
@@ -38,17 +42,16 @@ test('only renders grid items from server and not other tenant objects already i
   xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
   await visit(DASHBOARD_URL);
   assert.equal(currentURL(), DASHBOARD_URL);
-  assert.equal(this.store.find('tenant-list').get('length'), 0);
   clearxhr(list_xhr);
   xhr(`${TENANT_URL}?page=1`, 'GET', null, {}, 200, TF.list_two());
   await visit(TENANT_LIST_URL);
   assert.equal(currentURL(), TENANT_LIST_URL);
-  assert.equal(this.store.find('tenant-list').get('length'), 9);
+  assert.equal(this.functionalStore.find('tenant-list').get('length'), 9);
 });
 
 test('visiting mobile tenant grid show correct layout', async function(assert) {
   await tenantPage.visit();
-  const tenant = this.store.findOne('tenant-list');
+  const tenant = this.functionalStore.find('tenant-list')[0];
   assert.equal(currentURL(), TENANT_LIST_URL);
   assert.equal(find('.t-mobile-grid-title').text().trim(), `19 ${t('tenant.other')}`);
   assert.equal(find('.t-grid-data').length, PAGE_SIZE);

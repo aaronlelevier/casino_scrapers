@@ -61,10 +61,9 @@ var CategoryDeserializer = Ember.Object.extend(OptConf, {
     return category;
   },
   _deserializeList(response) {
-    const store = this.get('simpleStore');
     const results = [];
     response.results.forEach((model) => {
-      const category = store.push('category-list', model);
+      const category = this.get('functionalStore').push('category-list', model);
       results.push(category);
     });
     return results;

@@ -15,7 +15,7 @@ import generalMobilePage from 'bsrs-ember/tests/pages/general-mobile';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import BASEURLS, { AUTOMATION_URL, AUTOMATION_LIST_URL, PEOPLE_URL } from 'bsrs-ember/utilities/urls';
 
-var list_xhr;
+let list_xhr;
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -27,33 +27,36 @@ const PersonD  = PERSON_DEFAULTS.defaults();
 moduleForAcceptance('Acceptance | general grid automation mobile test', {
   beforeEach() {
     setWidth('mobile');
+    this.functionalStore = this.application.__container__.lookup('service:functional-store');
     list_xhr = xhr(`${AUTOMATION_URL}?page=1`, 'GET', null, {}, 200, AF.list());
   },
+  afterEach() {
+    delete this.functionalStore;
+  }
 });
 
 /* jshint ignore:start */
 
-test('only renders grid items from server and not other automation objects already in this.store', function(assert) {
-  /* MOBILE doesn't clear out grid items on every route call to allow for infinite scrolling. If other automation in this.store, this will fail */
+test('only renders grid items from server and not other automation objects already in this.functionalStore', function(assert) {
+  /* MOBILE doesn't clear out grid items on every route call to allow for infinite scrolling. If other automation in this.functionalStore, this will fail */
   xhr(`${PREFIX}${DASHBOARD_URL}/`, 'GET', null, {}, 200, {settings: {dashboard_text: TENANT_DEFAULTS.dashboard_text}});
   visit(DASHBOARD_URL);
   andThen(() => {
     assert.equal(currentURL(), DASHBOARD_URL);
-    assert.equal(this.store.find('automation-list').get('length'), 0);
   });
   clearxhr(list_xhr);
   xhr(`${AUTOMATION_URL}?page=1`, 'GET', null, {}, 200, AF.list_two());
   visit(AUTOMATION_LIST_URL);
   andThen(() => {
     assert.equal(currentURL(), AUTOMATION_LIST_URL);
-    assert.equal(this.store.find('automation-list').get('length'), 10);
+    assert.equal(this.functionalStore.find('automation-list').get('length'), 10);
   });
 });
 
 test('visiting mobile automation grid show correct layout', function(assert) {
   automationPage.visit();
   andThen(() => {
-    const automation = this.store.findOne('automation-list');
+    const automation = this.functionalStore.find('automation-list')[0];
     assert.equal(currentURL(), AUTOMATION_LIST_URL);
     assert.equal(find('.t-mobile-grid-title').text().trim(), '19 '+t('admin.automation.other'));
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
@@ -82,7 +85,7 @@ test('automation description filter will filter down results and reset page to 1
 // test('can uncheck a value after already checked and no xhr is sent', async function(assert) {
 //   xhr(`${AUTOMATION_URL}?page=1&priority__id__in=${AD.priorityOneId}`, 'GET', null, {}, 200, AF.searched_related(AD.priorityOneId, 'priority'));
 //   await automationPage.visit();
-//   assert.equal(this.store.find('automation-list').get('length'), 10);
+//   assert.equal(this.functionalStore.find('automation-list').get('length'), 10);
 //   await generalMobilePage.clickFilterOpen();
 //   assert.equal(find('.t-filter__input-wrap').length, 0);
 //   await page.clickFilterPriority();
@@ -95,7 +98,7 @@ test('automation description filter will filter down results and reset page to 1
 //   assert.equal(page.priorityThreeIsChecked(), false);
 //   assert.equal(page.priorityFourIsChecked(), false);
 //   await generalMobilePage.submitFilterSort();
-//   assert.equal(this.store.find('automation-list').get('length'), 10);
+//   assert.equal(this.functionalStore.find('automation-list').get('length'), 10);
 //   assert.equal(find('.t-grid-data:eq(0) > .t-automation-priority-translated_name span').text().trim(), t('automation.priority.emergency'));
 //   await generalMobilePage.clickFilterOpen();
 //   assert.equal(find('.t-filter__input-wrap').length, 1);

@@ -132,16 +132,11 @@ var DTDDeserializer = Ember.Object.extend({
     return existing;
   },
   _deserializeList(response) {
-    const store = this.get('simpleStore');
+    const store = this.get('functionalStore');
     const return_array = [];
     response.results.forEach((model) => {
-      const existing = store.find('dtd-list', model.id);
-      if(!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')){
-        const dtd = store.push('dtd-list', model);
-        return_array.push(dtd);
-      } else {
-        return_array.push(existing);
-      }
+      const dtd = store.push('dtd-list', model);
+      return_array.push(dtd);
     });
     return return_array;
   }

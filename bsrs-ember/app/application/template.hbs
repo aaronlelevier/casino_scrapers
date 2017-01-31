@@ -9,11 +9,11 @@
 
 {{#if modalIsShowing}}
 {{#modal-dialog translucentOverlay=true}}
-  <div>
-    <div class="modal-header flex">
+  <div role="dialog" aria-labelledby="applicationTitle" aria-describedby="applicationBody">
+    <div class="modal-header flex" id="applicationTitle">
       <h2 class="modal-title flex-item--auto t-modal-title">{{if (is-equal action 'closeTab' 'cancel') (t 'crud.discard_changes') (t 'crud.delete.title')}}</h2>
     </div>
-    <div class="modal-body t-modal-body">
+    <div class="modal-body t-modal-body" id="applicationBody">
       <p>{{if (is-equal action 'closeTab' 'cancel') (t 'crud.discard_changes_confirm') (t 'crud.delete.confirm' module=module)}}</p>
     </div>
     <div class="modal-footer t-modal-footer">

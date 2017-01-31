@@ -29,6 +29,10 @@ moduleForAcceptance('Acceptance | automation grid test', {
   beforeEach() {
     const listData = AF.list();
     listXhr = xhr(`${AUTOMATION_URL}?page=1`, 'GET', null, {}, 200, listData);
+    this.functionalStore = this.application.__container__.lookup('service:functional-store');
+  },
+  afterEach() {
+    delete this.functionalStore;
   }
 });
 
@@ -59,7 +63,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
   xhr(page_two ,'GET',null,{},200,AF.list());
   await visit(AUTOMATION_LIST_URL);
   await click('.t-page:eq(1) a');
-  const automations = this.store.find('automation-list');
+  const automations = this.functionalStore.find('automation-list');
   assert.equal(automations.get('length'), 10);
   assert.equal(currentURL(), AUTOMATION_LIST_URL + '?page=2');
   assert.equal(find('.t-grid-data').length, PAGE_SIZE);

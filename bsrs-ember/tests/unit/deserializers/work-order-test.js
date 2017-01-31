@@ -1,6 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
-import { test, module } from 'bsrs-ember/tests/helpers/qunit';
+import { moduleFor, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import WORK_ORDER_DEFAULTS from 'bsrs-ember/vendor/defaults/work-order';
 import WORK_ORDER_STATUSES from 'bsrs-ember/vendor/defaults/work-order-status';
@@ -16,13 +16,12 @@ const ProviderD = PROVIDER_DEFAULTS.defaults();
 
 let store, workOrder, deserializer;
 
-module('unit: work-order deserializer test', {
+moduleFor('deserializer:work-order', 'Unit | Deserializer | work order', {
+  needs: ['model:work-order', 'model:currency', 'model:category', 'model:provider', 'model:work-order-status',
+  'validator:presence', 'service:i18n'],
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:work-order', 'model:currency', 'model:category', 'model:provider', 'model:work-order-status',
-    'service:i18n']);
-    deserializer = WDeserializer.create({
-      simpleStore: store
-    });
+    store = module_registry(this.container, this.registry);
+    deserializer = WDeserializer.create({ simpleStore: store });
     run(() => {
       workOrder = store.push('work-order', { id: WD.idOne });
       store.push('currency', { id: CD.idOne, name: CD.name });
@@ -30,7 +29,7 @@ module('unit: work-order deserializer test', {
   }
 });
 
-test('deserialize single', assert => {
+test('deserialize single', function(assert) {
   const json = WF.detail();
   run(() => {
     deserializer.deserialize(json, WD.idOne);
@@ -45,8 +44,10 @@ test('deserialize single', assert => {
   assert.equal(workOrder.get('cost_estimate_currency').get('name'), CD.name);
 });
 
-test('deserialize single with existing currency', assert => {
-  store.push('currency', {id: CD.idOne, workOrders: [WD.idOne]});
+test('deserialize single with existing currency', function(assert) {
+  run(() => {
+    store.push('currency', {id: CD.idOne, workOrders: [WD.idOne]});
+  });
   const json = WF.detail();
   run(() => {
     deserializer.deserialize(json, WD.idOne);
@@ -62,7 +63,7 @@ test('deserialize single with existing currency', assert => {
 });
 
 //Work order status
-test('deserialize single with no existing status', assert => {
+test('deserialize single with no existing status', function(assert) {
   const json = WF.detail();
   run(() => {
     deserializer.deserialize(json, WD.idOne);
@@ -77,8 +78,10 @@ test('deserialize single with no existing status', assert => {
   assert.equal(workOrder.get('status').get('name'), WOSD.nameFive);
 });
 
-test('deserialize single with existing status', assert => {
-  store.push('work-order-status', {id: WOSD.idOne, name: WOSD.nameFive,  workOrders: [WD.idOne]});
+test('deserialize single with existing status', function(assert) {
+  run(() => {
+    store.push('work-order-status', {id: WOSD.idOne, name: WOSD.nameFive,  workOrders: [WD.idOne]});
+  });
   const json = WF.detail();
   run(() => {
     deserializer.deserialize(json, WD.idOne);
@@ -94,7 +97,7 @@ test('deserialize single with existing status', assert => {
 });
 
 //Work order category
-test('deserialize single with no existing category', assert => {
+test('deserialize single with no existing category', function(assert) {
   const json = WF.detail();
   run(() => {
     deserializer.deserialize(json, WD.idOne);
@@ -109,8 +112,10 @@ test('deserialize single with no existing category', assert => {
   assert.equal(workOrder.get('category').get('name'), CategoryD.nameOne);
 });
 
-test('deserialize single with existing category', assert => {
-  store.push('category', {id: CategoryD.idOne, name: CategoryD.nameOne,  workOrders: [WD.idOne]});
+test('deserialize single with existing category', function(assert) {
+  run(() => {
+    store.push('category', {id: CategoryD.idOne, name: CategoryD.nameOne,  workOrders: [WD.idOne]});
+  });
   const json = WF.detail();
   run(() => {
     deserializer.deserialize(json, WD.idOne);
@@ -126,7 +131,7 @@ test('deserialize single with existing category', assert => {
 });
 
 //Work order provider
-test('deserialize single with no existing provider', assert => {
+test('deserialize single with no existing provider', function(assert) {
   const json = WF.detail();
   run(() => {
     deserializer.deserialize(json, WD.idOne);
@@ -141,8 +146,10 @@ test('deserialize single with no existing provider', assert => {
   assert.equal(workOrder.get('provider').get('name'), ProviderD.nameOne);
 });
 
-test('deserialize single with existing provider', assert => {
-  store.push('provider', {id: ProviderD.idOne, name: ProviderD.nameOne,  workOrders: [WD.idOne]});
+test('deserialize single with existing provider', function(assert) {
+  run(() => {
+    store.push('provider', {id: ProviderD.idOne, name: ProviderD.nameOne,  workOrders: [WD.idOne]});
+  });
   const json = WF.detail();
   run(() => {
     deserializer.deserialize(json, WD.idOne);

@@ -4,7 +4,6 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/work-order';
 
 export default Ember.Object.extend(OptConf, {
   init() {
-    this._super(...arguments);
     belongs_to.bind(this)('cost_estimate_currency');
     belongs_to.bind(this)('status');
     belongs_to.bind(this)('category');

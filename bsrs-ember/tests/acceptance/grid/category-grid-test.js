@@ -25,6 +25,10 @@ moduleForAcceptance('Acceptance | category grid list', {
   beforeEach() {
     endpoint = PREFIX + BASE_URL + '/?page=1';
     list_xhr = xhr(endpoint, 'GET', null, {}, 200, CF.list());
+    this.functionalStore = this.application.__container__.lookup('service:functional-store');
+  },
+  afterEach() {
+    delete this.functionalStore;
   }
 });
 
@@ -50,7 +54,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
   xhr(page_two ,"GET",null,{},200,CF.list_two());
   click('.t-page:eq(1) a');
   andThen(() => {
-    const categories = this.store.find('category-list');
+    const categories = this.functionalStore.find('category-list');
     assert.equal(categories.get('length'), 9);
     assert.equal(currentURL(), CATEGORY_LIST_URL + '?page=2');
     assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
@@ -59,7 +63,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
   });
   click('.t-page:eq(0) a');
   andThen(() => {
-    const categories = this.store.find('category-list');
+    const categories = this.functionalStore.find('category-list');
     assert.equal(categories.get('length'), 10);
     assert.equal(currentURL(),CATEGORY_LIST_URL);
     assert.equal(find('.t-grid-data').length, PAGE_SIZE);
