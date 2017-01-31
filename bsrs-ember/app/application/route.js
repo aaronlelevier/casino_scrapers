@@ -147,6 +147,7 @@ let ApplicationRoute = Route.extend({
       const tab_id = tab.get('model_id') ? tab.get('model_id') : tab.get('id');
       const model = this.get('simpleStore').find(tab.get('module'), tab_id);
       const tabService = this.get('tabList');
+
       if (tabService.showModal(tab, action, confirmed)) {
         // strings set on controller to control logic in the template
         this.controllerFor('application').set('action', action);

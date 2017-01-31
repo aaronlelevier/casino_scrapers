@@ -3,7 +3,7 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   drawerOpen: false,
   actions: {
-    closeTabMaster(tab, action){
+    closeTabMaster(tab, action) {
       this.sendAction('closeTabMaster', tab, action);
     },
     //TODO: test

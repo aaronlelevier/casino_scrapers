@@ -37,7 +37,10 @@ var DTDDeserializer = Ember.Object.extend({
       delete response.links;
       let field_json = response.fields;
       delete response.fields;
+      // push in dtd single
       let dtd = store.push('dtd', response);
+      // need to also push into dtd-list store since show side by side
+      store.push('dtd-list', response);
 
       // Links
       let [m2m_links, links, links_server_sum] = many_to_many_extract(link_json, store, dtd, 'dtd_links', 'dtd_pk', 'link', 'link_pk');
