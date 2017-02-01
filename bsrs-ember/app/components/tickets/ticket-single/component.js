@@ -24,36 +24,52 @@ let TicketSingleComponent = Ember.Component.extend(TabMixin, {
    * @method saveTask
    */
   saveTask: task(function * (update, updateActivities) {
+    const tab = this.tab();
 
-    let childTasks = [];
-    const work_orders = this.get('model').get('wo');
+    /* WO SAVE START */
+    const work_orders = this.get('model.wo');
+    if (work_orders.get('length') > 0) {
+      let childTasks = [];
 
-    for (let indx = 0; indx < work_orders.get('length'); ++indx) {
-      const wo = work_orders.objectAt(indx);
-      // TODO: test validations
-      if (wo.get('isDirtyOrRelatedDirty') && wo.get('validations.isValid')) {
-        childTasks.push(this.get('saveWorkOrderTask').perform(wo));
+      // is work order dirty and valid?  Then save
+      for (let indx = 0; indx < work_orders.get('length'); ++indx) {
+        const wo = work_orders.objectAt(indx);
+        if (wo.get('isDirtyOrRelatedDirty') && wo.get('validations.isValid')) {
+          childTasks.push(this.get('saveWorkOrderTask').perform(wo));
+        }
+      }
+
+      try {
+        yield all(childTasks);
+        if (!update && this.get('model.isNotDirtyOrRelatedNotDirty')) {
+          // close tab & choke point to stop ticket from saving
+          this.get('closeTabMaster')(tab);
+          return;
+        }
+      } catch(xhr) {
+        this.get('ticketApplicationNotice')(xhr, {});
+        // prevent ticket from saving if error
+        return;
       }
     }
+    /* WO SAVE END */
 
-    try {
-      yield all(childTasks);
-    } catch(xhr) {
-      // We dont know which work order put xhr failed
-      this.get('ticketApplicationNotice')(xhr, {});
-      return;
-    }
-
+    /* TICKET SAVE START */
     if (this.get('model.isDirtyOrRelatedDirty') && this.get('model.validations.isValid')) {
-      const tab = this.tab();
       const activities = yield this.get('save')(tab, this.get('activityRepository'), update, updateActivities);
 
+      // use activities return from xhr to update list of activities
       if (activities && updateActivities) {
         this.set('activities', activities);
       }
     }
+    /* TICKET SAVE END */
 
   }),
+  /**
+   * call closure acton from ticket route and save work order
+   * @method saveWorkOrderTask
+   */
   saveWorkOrderTask: task(function * (wo) {
     yield this.get('saveWorkOrder')(wo);
   }),

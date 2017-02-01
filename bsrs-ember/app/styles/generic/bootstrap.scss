@@ -118,6 +118,12 @@ fieldset[disabled] .form-control,
     background: $darkGreen !important; //needed for active, etc
     border-color: $darkGreen !important;
   }
+  &[disabled]:hover,
+  &[disabled]:active,
+  &[disabled]:focus {
+    background: $gray !important;
+    border-color: $gray !important;
+  }
 }
 .btn-danger{
   background: $deleteColor;
@@ -187,12 +193,7 @@ fieldset[disabled] .form-control,
   opacity: 1;
   background: $lightGray;
   color: $medGray;
-  border-color: $lightGray;
-}
-.btn-primary[disabled]:hover {
-  background: $lightGray;
-  color: $medGray;
-  border-color: $lightGray;
+  border: $borderStyle;
 }
 .btn-default.disabled.focus, .btn-default.disabled:focus, .btn-default.disabled:hover, .btn-default[disabled].focus, .btn-default[disabled]:focus, .btn-default[disabled]:hover, fieldset[disabled] .btn-default.focus, fieldset[disabled] .btn-default:focus, fieldset[disabled] .btn-default:hover {
   background-color: $lightGray;

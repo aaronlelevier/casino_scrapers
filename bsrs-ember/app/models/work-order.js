@@ -81,7 +81,15 @@ let WorkOrder = Model.extend(OptConf, Validations, {
       approver: get(this, 'approver.id'),
       ticket: get(this, 'ticket'),
     };
-  }
+  },
+  timelineItems: [
+    { name: 'work_order.status.sent', index: 0 }, 
+    { name: 'work_order.status.scheduled', index: 1 },
+    { name: 'work_order.status.on_site', index: 2 }, 
+    { name: 'work_order.status.complete', index: 3 }, 
+    { name: 'work_order.status.invoiced', index: 4 }, 
+    { name: 'work_order.status.paid', index: 5 }
+  ],
 });
 
 export default WorkOrder;

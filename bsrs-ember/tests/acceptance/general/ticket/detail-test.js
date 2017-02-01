@@ -20,6 +20,7 @@ import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import CurrencyD from 'bsrs-ember/vendor/defaults/currency';
 import PROVIDER_DEFAULTS from 'bsrs-ember/vendor/defaults/provider';
 import PROVIDER_FIXTURES from 'bsrs-ember/vendor/provider_fixtures';
 import WORK_ORDER_DEFAULTS from 'bsrs-ember/vendor/defaults/work-order';
@@ -990,17 +991,25 @@ test('can create a work order', async function(assert) {
   await selectChoose('.t-wo-create-provider-select', ProviderD.nameOne);
   assert.equal(find('.t-wo-create-provider-select .ember-power-select-selected-item').text().trim(), ProviderD.nameOne);
   await click('[data-test-id="next"]');
+  assert.equal(find('.t-wo-approved_amount').val(), CD.costAmountOne, 'work order has approved_amount set from category');
   await fillIn('.t-wo-approved_amount', WD.approvedAmount);
   let interactor = openDatepicker(Ember.$('.t-scheduled-date'));
-  const expectedDate = new Date(2016, 4, 28);
-  await interactor.selectDate(expectedDate);
+  const d = new Date();
+  // selected scheduled_date is 5 days from now
+  const scheduled_date = d.setDate(d.getDate() + 5);
+  assert.equal(find('.t-scheduled-date').val(), moment(scheduled_date).format('MM/DD/YYYY'), 'has defaulted scheduled_date 5 days from now');
+  // select todays date (not tomorrows)
+  await interactor.selectDate(new Date());
   await click('[data-test-id="next"]');
-  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, approved_amount: WD.approvedAmount, 
-    scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }), {}, 201, WF.detail());
+  // scheduled_date start of day.  Pikaday selects it this way
+  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: WD.approvedAmount,
+    scheduled_date: moment().hours(0).startOf('hour'), category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }), {}, 201, WF.detail());
   await click('[data-test-id="wo-send-post"]');
   await click('[data-test-id="wo-done"]');
   assert.equal(currentURL(), DETAIL_URL);
   assert.equal(find('[data-test-id="work-order-modal"]').length, 0);
+  assert.equal(ticket.get('wo').get('length'), 1);
+  assert.equal(find('[data-test-id="ticket-display-collapsed"]').length, 1, 'work order was created!');
 });
 
 test('can update a work order', async function(assert) {
@@ -1011,7 +1020,34 @@ test('can update a work order', async function(assert) {
   const wo_payload = WF.put({id: WD.idOne, gl_code: WD.glCodeTwo});
   xhr(WO_PUT_URL, 'PUT', JSON.stringify(wo_payload), {}, 200, {});
   await generalPage.save();
-  assert.ok(urlContains(currentURL(), TICKET_LIST_URL));
+  assert.equal(currentURL(), TICKET_LIST_URL);
+});
+
+test('update a work order and ticket will send two xhrs', async function(assert) {
+  await page.visitDetail(); 
+  await click('[data-test-id="expander-collapsed0"]');
+  await selectChoose('.t-ticket-status-select', t('ticket.status.complete'));
+  await fillIn('.t-wo-gl_code0', WD.glCodeTwo);
+  const wo_payload = WF.put({id: WD.idOne, gl_code: WD.glCodeTwo});
+  xhr(WO_PUT_URL, 'PUT', JSON.stringify(wo_payload), {}, 200, {});
+  let payload = TF.put({id: TD.idOne, status: TD.statusFourId});
+  xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
+  await generalPage.save();
+  assert.equal(currentURL(), TICKET_LIST_URL);
+});
+
+test('no cost_amount will also save work order (input currency component will clear out non numbers)', async function(assert) {
+  await page.visitDetail(); 
+  await click('[data-test-id="expander-collapsed0"]');
+  await fillIn('.t-amount', 'a');
+  andThen(() => {
+    Ember.$('.t-amount').focusout();
+  });
+  let payload = TF.put({id: TD.idOne});
+  const wo_payload = WF.put({id: WD.idOne, cost_estimate: ''});
+  xhr(WO_PUT_URL, 'PUT', JSON.stringify(wo_payload), {}, 200, {});
+  await generalPage.save();
+  assert.equal(currentURL(), TICKET_LIST_URL);
 });
 
 test('400 update a work order', async function(assert) {
@@ -1068,7 +1104,7 @@ test('400 create a work order', async function(assert) {
   const expectedDate = new Date(2016, 4, 28);
   await interactor.selectDate(expectedDate);
   await click('[data-test-id="next"]');
-  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, approved_amount: WD.approvedAmount, 
+  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: WD.approvedAmount, 
     scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }), 
     {}, 400, WF.detail());
   await click('[data-test-id="wo-send-post"]');
@@ -1097,7 +1133,7 @@ test('502 create a work order', async function(assert) {
   const expectedDate = new Date(2016, 4, 28);
   await interactor.selectDate(expectedDate);
   await click('[data-test-id="next"]');
-  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, approved_amount: WD.approvedAmount, 
+  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: WD.approvedAmount, 
     scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }), 
     {}, 502, WF.detail());
   await click('[data-test-id="wo-send-post"]');

@@ -26,6 +26,7 @@ from ticket.models import TicketStatus, TicketPriority
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from utils.helpers import media_path
+from work_order.models import WorkOrderStatus
 
 
 class SetupMixin(object):
@@ -185,6 +186,7 @@ class BootstrappedDataTests(SetupMixin, TestCase):
         self.person_status = mommy.make(PersonStatus)
         self.ticket_status = mommy.make(TicketStatus)
         self.ticket_priority = mommy.make(TicketPriority)
+        self.work_order_status = mommy.make(WorkOrderStatus)
 
         categories = Category.objects.order_by("-parent")
         self.parent_category = categories[0]
@@ -341,6 +343,13 @@ class BootstrappedDataTests(SetupMixin, TestCase):
         self.assertTrue(len(data) > 0)
         self.assertIn(str(self.ticket_priority.id), [c['id'] for c in data])
         self.assertIn(str(self.ticket_priority.name), [c['name'] for c in data])
+
+    def test_work_order_statuses(self):
+        data = json.loads(self.response.context['work_order_statuses'])
+        self.assertTrue(len(data) > 0)
+        self.assertIn(str(self.work_order_status.id), [c['id'] for c in data])
+        self.assertIn(str(self.work_order_status.name), [c['name'] for c in data])
+        self.assertTrue([c['default'] for c in data])
 
 
 class ErrorPageTests(TestCase):

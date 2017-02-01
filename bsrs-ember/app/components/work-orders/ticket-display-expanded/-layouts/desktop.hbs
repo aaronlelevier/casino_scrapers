@@ -22,13 +22,13 @@
     </div>
 
     <div class="timeline flex">
-      {{#each timelineItems as |item i|}}
+      {{#each model.timelineItems as |item i|}}
         <div data-test-id={{concat "timeline-item-" indx "-" i}} class="item timeline__item">
           <div class="item__icon">
           </div>
           <div class="item__text">
             <button class="btn" data-test-id={{concat "timeline-btn" indx "-" i}}>
-              {{t item}}
+              {{t item.name}}
             </button>
           </div>
         </div>

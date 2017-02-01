@@ -43,10 +43,10 @@ let ApplicationRoute = Route.extend({
     ticket_priority_list.forEach((model) => {
       store.push('ticket-priority', model);
     });
-    // const work_order_status_list = Ember.$('[data-preload-work-order-statuses]').data('configuration');
-    // work_order_status_list.forEach((model) => {
-    //   store.push('work-order-status', model);
-    // });
+    const work_order_status_list = Ember.$('[data-preload-work-order-statuses]').data('configuration');
+    work_order_status_list.forEach((model) => {
+      store.push('work-order-status', model);
+    });
     const currency_list = Ember.$('[data-preload-currencies]').data('configuration');
     for (let key in currency_list) {
       store.push('currency', currency_list[key]);

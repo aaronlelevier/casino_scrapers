@@ -2,3 +2,46 @@
   width: 400px;
   border-radius: $borderRadius;
 }
+body.centered-modal-showing {
+  overflow: hidden;
+}
+.centered-scrolling-wrapper {
+  position: fixed;
+  z-index: 99;
+  height: 100vh;
+  left: 0;
+  right: 0;
+  top: 0;
+  overflow-y: scroll;
+}
+
+.centered-scrolling-overlay {
+  display: flex;
+  display: -webkit-flex;
+  align-items: flex-start;
+  -webkit-align-items: flex-start;
+  justify-content: center;
+  -webkit-justify-content: center;
+  min-height: 100vh;
+  padding: 1em;
+  position: relative;
+  height: auto;
+}
+
+.centered-scrolling-overlay.translucent {
+  background-color: rgba(0,0,0,0.5);
+  opacity: 1;
+}
+
+.centered-scrolling-container {
+  position: relative;
+  background-color: white;
+  min-width: 30em;
+  max-width: 650px;
+  min-height: 20em;
+  padding: 3em;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  box-sizing: border-box;
+  box-shadow: 0px 4px 25px 4px rgba(0,0,0,0.30);
+}

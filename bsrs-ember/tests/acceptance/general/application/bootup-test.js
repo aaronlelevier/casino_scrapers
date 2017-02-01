@@ -113,7 +113,7 @@ test('on boot we should fetch and load the ticket status configuration', functio
   });
 });
 
-skip('on boot we should fetch and load the work order status configuration', function(assert) {
+test('on boot we should fetch and load the work order status configuration', function(assert) {
   visit(HOME_URL);
   andThen(() => {
     assert.equal(this.store.find('work-order-status').get('length'), 13);

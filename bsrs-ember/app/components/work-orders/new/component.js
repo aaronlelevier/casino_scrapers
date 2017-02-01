@@ -112,19 +112,37 @@ export default Component.extend({
     return get(this, 'currentStateRendered').componentName;
   }).readOnly(),
 
+  /**
+   * @method setState
+   */
   setState(state) {
     state.enter();
+
+    if (state.lastStep) {
+      set(this, 'allStepsCompleted', true);
+    }
+
     return set(this, 'currentStateRendered', state);
   },
+  /**
+   * @method getState
+   * @param {String} step_name - get step asked for
+   * @return {Class} - state based on param passed
+  */
   getState(step_name) {
     const states = get(this, 'states');
     return states.filter((state) => {
       return state.componentName === step_name; 
     })[0];
   },
-  exitState() {
+  /**
+   * calls exit function
+   * @method exitState
+   * @param {Object} - next properties (can be passed nothing)
+   */
+  exitState({ next } = {}) {
     const state = get(this, 'currentStateRendered');
-    state.exit();
+    state.exit({ next });
   },
   saveWorkOrderTask: task(function * (work_order) {
     try {
@@ -145,7 +163,7 @@ export default Component.extend({
     /**
      * called from status-tracker component
      * no-op transitioning if on same component as indx
-     * determines going forward or backwards depending on position relateve to steps array
+     * determines going forward or backwards depending on position relative to steps array
      * @method determineStep
      * @param {String} transition_to_step
      */
@@ -176,7 +194,7 @@ export default Component.extend({
      * @param {String} next_step - component you are trying to go to
      */
     next(next_step) {
-      this.exitState();
+      this.exitState({next: true});
 
       const states = get(this, 'states');
       const nextStepState = this.getState(next_step);
@@ -226,6 +244,13 @@ export default Component.extend({
       this.setProperties({'saveError': null, 'level': null});
     }
   },
+
+  /**
+   * @property allStepsCompleted
+   * @type {Boolean}
+   * @default false
+   */
+  allStepsCompleted: false,
 
   /*
     saveError for display at the application level for notices

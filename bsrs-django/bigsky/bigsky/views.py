@@ -20,6 +20,7 @@ from ticket.models import TicketStatus, TicketPriority
 from translation.models import Locale
 from utils.helpers import (model_to_json, model_to_json_select_related,
     model_to_json_prefetch_related, queryset_to_json)
+from work_order.models import WorkOrderStatus
 
 
 class IndexView(TemplateView):
@@ -61,6 +62,7 @@ class IndexView(TemplateView):
                 SavedSearch.objects.person_saved_searches(self.request.user)),
             'ticket_statuses': model_to_json(TicketStatus),
             'ticket_priorities': model_to_json(TicketPriority),
+            'work_order_statuses': model_to_json(WorkOrderStatus),
         })
         return context
 

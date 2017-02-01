@@ -50,15 +50,19 @@
       {{/card-section}}
 
       {{#if dispatchWorkOrderSteps}}
-        {{#ember-wormhole to="work-order-create"}}
-          {{#modal-dialog containerClassNames="modal-large" translucentOverlay=true}}
-            {{work-orders/new 
-              model=workOrderModel 
-              cancel=(action "cancelWorkOrder")
-              dispatchWorkOrder=dispatchWorkOrder
-            }}
-          {{/modal-dialog}}
-        {{/ember-wormhole}}
+        {{#modal-dialog 
+          containerClassNames="modal-large" 
+          close='toggleCenteredScrolling'
+          translucentOverlay=true
+          targetAttachment='none'
+          overlay-class='centered-scrolling-overlay'
+          wrapper-class='centered-scrolling-wrapper'}}
+          {{work-orders/new 
+            model=workOrderModel 
+            cancel=(action "cancelWorkOrder")
+            dispatchWorkOrder=dispatchWorkOrder
+          }}
+        {{/modal-dialog}}
       {{/if}}
 
         {{#if model.wo}}

@@ -89,7 +89,7 @@ test('visiting role/new', function(assert) {
   page.categoryClickOptionOneEq();
   fillIn('.t-amount', CURRENCY_DEFAULTS.authAmountOne);
   andThen(() => {
-    $('.t-amount').focusout();
+    Ember.$('.t-amount').focusout();
   });
   let postPayload = Object.assign(payload, {
     auth_amount: CURRENCY_DEFAULTS.authAmountOne,

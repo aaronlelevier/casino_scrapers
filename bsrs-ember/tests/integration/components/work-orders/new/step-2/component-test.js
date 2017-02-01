@@ -27,14 +27,14 @@ moduleForComponent('work-orders/new/step-2', 'Integration | Component | work ord
   }
 });
 
-test('can can fill out approved_amount', function(assert) {
+test('can fill out approved_amount', function(assert) {
   this.model = wo;
   this.render(hbs`{{work-orders/new/step-2 model=model}}`);
   this.$('.t-wo-approved_amount').val('23').trigger('change');
   assert.equal(wo.get('approved_amount'), '23');
 });
 
-test('can can fill out scheduled_date', function(assert) {
+test('can fill out scheduled_date', function(assert) {
   const expectedDate = new Date(2016, 4, 28);
   this.model = wo;
   this.render(hbs`{{work-orders/new/step-2 model=model}}`);
@@ -45,4 +45,14 @@ test('can can fill out scheduled_date', function(assert) {
   assert.equal(interactor.selectedMonth(), 4);
   assert.equal(interactor.selectedDay(), 28);
   assert.equal(this.$('.t-scheduled-date').val(), '05/28/2016');
+});
+
+test('can fill out instructions with optional flag', function(assert) {
+  const expectedDate = new Date(2016, 4, 28);
+  this.model = wo;
+  this.render(hbs`{{work-orders/new/step-2 model=model}}`);
+  this.$('.t-wo-instructions').val(WD.instructions).trigger('change');
+  assert.equal(wo.get('instructions'), WD.instructions);
+  assert.equal(this.$('.t-wo-instructions').val(), WD.instructions);
+  assert.equal(this.$('[data-test-id="instructions"]').text().trim(), `${trans.t('work_order.label.instructions')}optional`);
 });

@@ -6,7 +6,7 @@
     type="text"
     placeholder=(if placeholder placeholder (t "admin.amount_and_default_value" value=placeholderAmount))
     value=(get model field)
-    class=(concat "form-control t-amount" (if showMessage " invalid"))
+    class=(concat "form-control t-amount " className (if showMessage " invalid"))
     id=(if (gt count -1) (concat valuePath count) valuePath)
     disabled=editPrivilege
     focus-out="formatCurrency"

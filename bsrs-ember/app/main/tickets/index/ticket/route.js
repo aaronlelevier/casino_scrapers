@@ -64,7 +64,7 @@ let TicketSingleRoute = TabRoute.extend(FindById, {
     createWorkOrder() {
       const ticket = this.modelFor(this.routeName).model;
       const leaf_category = ticket.get('leaf_category');
-      return this.get('workOrderRepository').createWorkOrder(leaf_category.get('id'), ticket.get('id'));
+      return this.get('workOrderRepository').createWorkOrder(leaf_category, ticket.get('id'));
     },
     /**
      * will pause until work order is created before showing ticket single
@@ -85,7 +85,10 @@ let TicketSingleRoute = TabRoute.extend(FindById, {
      * @method dispatchWorkOrder
      */
     dispatchWorkOrder(work_order) {
-      return this.get('workOrderRepository').dispatchWorkOrder(work_order);
+      return this.get('workOrderRepository').dispatchWorkOrder(work_order).then((wo) => {
+        const ticket = this.modelFor(this.routeName).model;
+        return ticket.add_wo({ id: wo.get('id') });
+      });
     },
   }
 });

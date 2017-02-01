@@ -1,11 +1,12 @@
 <div class="row">
   <div class="col-md-12">
     {{#form-group title="work_order.label.approved_amount" for="approved_amount" dataTestId="approved_amount"}}
-    {{validated-input
+    {{input-currency
       model=model
-      valuePath="approved_amount"
+      field="approved_amount"
+      currencyField="cost_estimate_currency"
+      placeholder=(t "work_order.label.approved_amount")
       className="t-wo-approved_amount"
-      placeholder=(t "work_order.label.name")
     }}
     {{/form-group}}
   </div>
@@ -14,11 +15,26 @@
 <div class="row">
   <div class="col-md-12">
     {{#form-group title="work_order.label.scheduled_date" for="scheduled_date" dataTestId="scheduled_date"}}
-      <span class="">{{fa-icon "calendar"}}</span>
-      {{pikaday-input 
+      {{input-calendar
         onSelection=(action "setDate")
-        class="form-control t-scheduled-date"
         format="MM/DD/YYYY"
+        inputClass="t-scheduled-date"
+        value=model.scheduled_date
+        dataTestId="scheduled-date"
+      }}
+    {{/form-group}}
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    {{#form-group title="work_order.label.instructions" for="instructions" dataTestId="instructions" optional="true"}}
+      {{validated-input
+        model=model
+        placeholder=(t "work_order.label.instructions")
+        valuePath="instructions"
+        textarea=true
+        className="t-wo-instructions"
       }}
     {{/form-group}}
   </div>

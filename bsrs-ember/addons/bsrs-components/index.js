@@ -21,6 +21,7 @@ module.exports = {
                 config_data += "<script type='text/preload' charset='utf-8' data-preload-person-current='person_current' data-configuration='{{person_current|escape}}'></script>";
                 config_data += "<script type='text/preload' charset='utf-8' data-preload-saved-filterset='saved_filterset' data-configuration='{{saved_search|escape}}'></script>";
                 config_data += "<script type='text/preload' charset='utf-8' data-preload-ticket-statuses='ticket_statuses' data-configuration='{{ticket_statuses|escape}}'></script>";
+                config_data += "<script type='text/preload' charset='utf-8' data-preload-work-order-statuses='work_order_statuses' data-configuration='{{work_order_statuses|escape}}'></script>";
                 config_data += "<script type='text/preload' charset='utf-8' data-preload-ticket-priorities='ticket_priorities' data-configuration='{{ticket_priorities|escape}}'></script>";
             } else {
                 config_data += "<script type='text/preload' charset='utf-8' data-preload-email_types='email_types' data-configuration='[{ \"id\": \"c41834fb-7997-4a04-8f7e-f3b57b214c51\", \"name\": \"admin.emailtype.work\" }, { \"id\": \"60898078-dafe-4cf1-8aa5-867b0ebc5e2e\", \"name\": \"admin.emailtype.personal\" }]'></script>";
