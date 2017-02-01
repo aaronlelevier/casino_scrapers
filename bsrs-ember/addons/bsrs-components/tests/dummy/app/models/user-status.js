@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { attr, Model } from 'ember-cli-simple-store/model';
+import { Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import OPT_CONF from 'dummy/mixins/user_status_config';
 

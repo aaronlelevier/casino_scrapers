@@ -1,7 +1,6 @@
 import Ember from 'ember';
-const { run } = Ember;
-import { belongs_to_extract, belongs_to } from 'bsrs-components/repository/belongs-to';
-import { many_to_many_extract, many_to_many } from 'bsrs-components/repository/many-to-many';
+import { belongs_to } from 'bsrs-components/repository/belongs-to';
+import { many_to_many } from 'bsrs-components/repository/many-to-many';
 import OPT_CONF from 'dummy/mixins/user_config';
 
 var Deserializer = Ember.Object.extend(OPT_CONF, {

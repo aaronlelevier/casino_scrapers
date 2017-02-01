@@ -72,7 +72,7 @@ test('shoe property is not dirty when no shoe present (empty array)', (assert) =
 
 test('shoe property is not dirty when attr on shoe is changed', (assert) => {
   store.push('user-shoe', {id: 3, user_pk: 1, shoe_pk: 2});
-  let shoe = store.push('shoe', {id: 2});
+  store.push('shoe', {id: 2});
   user = store.push('user', {id: 1, user_shoes_fks: [3]});
   assert.equal(user.get('shoes').get('length'), 1);
   assert.ok(user.get('shoesIsNotDirty'));
@@ -85,7 +85,7 @@ test('shoe property is not dirty when attr on shoe is changed', (assert) => {
 
 test('removing a user-shoe will mark the user as dirty and reduce the associated shoe models to zero', (assert) => {
   store.push('user-shoe', {id: 3, user_pk: 1, shoe_pk: 2});
-  let shoe = store.push('shoe', {id: 2});
+  store.push('shoe', {id: 2});
   user = store.push('user', {id: 1, user_shoes_fks: [3]});
   assert.equal(user.get('shoes').get('length'), 1);
   assert.ok(user.get('shoesIsNotDirty'));
@@ -104,7 +104,7 @@ test('replacing a user-shoe with some other user-shoe still shows the user model
   user.remove_shoe(2);
   assert.ok(user.get('shoesIsDirty'));
   assert.equal(user.get('shoes').get('length'), 0);
-  let added_shoe = user.add_shoe(shoe_two);
+  user.add_shoe(shoe_two);
   // assert.ok(added_shoe.get('id'));
   // assert.ok(user.get('shoesIsDirty'));
   // assert.equal(user.get('shoes').get('length'), 1);
@@ -147,7 +147,7 @@ test('shoe property will update when the m2m array suddenly has the shoe pk (sta
 test('shoe property will update when the m2m array suddenly has the shoe pk', (assert) => {
   store.push('user-shoe', {id: 3, shoe_pk: 2, user_pk: 1});
   user = store.push('user', {id: 1, user_shoes_fks: [3]});
-  let shoe = store.push('shoe', {id: 2});
+  store.push('shoe', {id: 2});
   let shoe_two = {id: 5};
   assert.equal(user.get('shoes').get('length'), 1);
   assert.ok(user.get('shoesIsNotDirty'));
@@ -159,9 +159,9 @@ test('shoe property will update when the m2m array suddenly has the shoe pk', (a
 });
 
 test('shoe property will update when the m2m array suddenly removes the shoe', (assert) => {
-  let m2m = store.push('user-shoe', {id: 3, shoe_pk: 2, user_pk: 1});
+  store.push('user-shoe', {id: 3, shoe_pk: 2, user_pk: 1});
   user = store.push('user', {id: 1, user_shoes_fks: [3]});
-  let shoe = store.push('shoe', {id: 2});
+  store.push('shoe', {id: 2});
   assert.equal(user.get('shoes').get('length'), 1);
   user.remove_shoe(2);
   assert.equal(user.get('shoes').get('length'), 0);
@@ -169,7 +169,7 @@ test('shoe property will update when the m2m array suddenly removes the shoe', (
 
 test('when shoe is changed dirty tracking works as expected (removing)', (assert) => {
   store.push('user-shoe', {id: 3, user_pk: 1, shoe_pk: 2});
-  let shoe = store.push('shoe', {id: 2});
+  store.push('shoe', {id: 2});
   user = store.push('user', {id: 1, user_shoes_fks: [3]});
   assert.equal(user.get('shoes').get('length'), 1);
   assert.ok(user.get('shoesIsNotDirty'));
@@ -189,7 +189,7 @@ test('when shoe is changed dirty tracking works as expected (removing)', (assert
 
 test('add_shoe will add back old join model after it was removed and dirty the model (multiple)', (assert) => {
   const user = store.push('user', {id: 1, user_shoes_fks: [3, 4]});
-  const shoe_two = store.push('shoe', {id: 5});
+  store.push('shoe', {id: 5});
   const shoe_three = store.push('shoe', {id: 7});
   store.push('user-shoe', {id: 3, user_pk: 1, shoe_pk: 5});
   store.push('user-shoe', {id: 4, user_pk: 1, shoe_pk: 7});
@@ -203,7 +203,7 @@ test('add_shoe will add back old join model after it was removed and dirty the m
 test('multiple user\'s with same shoe will rollback correctly', (assert) => {
   store.push('user-shoe', {id: 3, user_pk: 1, shoe_pk: 2});
   store.push('user-shoe', {id: 4, user_pk: 10, shoe_pk: 2});
-  let shoe = store.push('shoe', {id: 2});
+  store.push('shoe', {id: 2});
   user = store.push('user', {id: 1, user_shoes_fks: [3]});
   let user_two = store.push('user', {id: 10, user_shoes_fks: [4]});
   assert.equal(user.get('shoes').get('length'), 1);
@@ -440,7 +440,7 @@ test('on push, model will be saved if not dirty and gets updated properties', (a
 test('add many to many works with models defined with Ember.Object as well', (assert) => {
   store.push('finger', {id: 2});
   store.push('finger', {id: 5});
-  const pushed_unused = store.push('finger', {id: 6, name: 'wat'});
+  store.push('finger', {id: 6, name: 'wat'});
   const finger_unused = {id: 6, name: 'who'};
   store.push('user-finger', {id: 3, finger_pk: 2, user_pk: 1});
   store.push('user-finger', {id: 4, finger_pk: 5, user_pk: 1});

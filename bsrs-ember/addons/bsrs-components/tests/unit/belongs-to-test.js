@@ -109,7 +109,7 @@ test('change_shirt accepts js objects', function(assert) {
 
 test('change_shirt will save with updated properties', function(assert) {
   let user = store.push('user', {id: 1});
-  let shirt_pushed = store.push('shirt', {id: 2, name: 'wat'});
+  store.push('shirt', {id: 2, name: 'wat'});
   let js_shirt = {id: 2, name: 'who'};
   assert.equal(user.get('shirt'), undefined);
   user.change_shirt(js_shirt);
@@ -319,7 +319,6 @@ test('hat will save correctly as undefined', (assert) => {
   user = store.push('user', {id: 1, hat_fk: undefined});
   store.push('hat', {id: 2, users: []});
   user.saveHat();
-  let hat = user.get('hat');
   assert.equal(user.get('hat_fk'), undefined);
 });
 
@@ -339,7 +338,7 @@ test('hat will be set then removed and model is updated', (assert) => {
 
 test('change_hat to null', function(assert) {
   let user = store.push('user', {id: 1, hat_fk: 2});
-  let hat = store.push('hat', {id: 2, users: [1]});
+  store.push('hat', {id: 2, users: [1]});
   assert.equal(user.get('hat.id'), 2);
   assert.ok(user.get('hatIsNotDirty'));
   user.change_hat(null);
@@ -351,7 +350,7 @@ test('change_hat start with null hat, add, then remove', function(assert) {
   let user = store.push('user', {id: 1});
   assert.equal(user.get('hat.id'), undefined);
   assert.ok(user.get('hatIsNotDirty'));
-  let hat = store.push('hat', {id: 2});
+  store.push('hat', {id: 2});
   user.change_hat(2);
   assert.equal(user.get('hat.id'), 2);
   assert.ok(user.get('hatIsDirty'));
@@ -397,7 +396,7 @@ test('ignore defining a property on a model if passed in on init (user-status mo
 test('exported function still able to use by overriding overrideOwnerName', assert => {
   let user = store.push('user', {id: 1});
   let hat = store.push('hat', {id: 2, users: undefined});
-  let hat2 = store.push('hat', {id: 3, users: undefined});
+  store.push('hat', {id: 3, users: undefined});
   assert.equal(user.get('hat'), undefined);
   user.change_fk(2);
   assert.deepEqual(hat.get('users'), [1]);
