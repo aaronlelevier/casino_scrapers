@@ -1,6 +1,11 @@
 #!/bin/bash -lx
 
 echo "sandbox sandbox STARTED!"#!/bin/bash -lx
+source ~/.bashrc
+echo "Node Version:"
+node --version
+echo "PSQL version"
+psql --version
 
 BRANCH="$1"
 

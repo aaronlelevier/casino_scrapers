@@ -4,6 +4,8 @@ echo "DEPLOY DEPLOY STARTED!"#!/bin/bash -lx
 source ~/.bashrc
 echo "Node Version:"
 node --version
+echo "PSQL version"
+psql --version
 
 wait
 echo "UWSGI - START/RELOAD"

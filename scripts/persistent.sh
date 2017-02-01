@@ -1,7 +1,11 @@
 #!/bin/bash -lx
 
 echo "PERSISTENT DEPLOY STARTED!"
-
+source ~/.bashrc
+echo "Node Version:"
+node --version
+echo "PSQL version"
+psql --version
 
 echo "CONFIG - SET SCRIPT CONFIGURATION"
 export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
