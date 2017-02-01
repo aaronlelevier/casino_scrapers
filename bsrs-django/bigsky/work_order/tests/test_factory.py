@@ -4,10 +4,13 @@ from django.test import TestCase
 
 from accounting.models import Currency
 from category.models import Category
+from category.tests.factory import create_single_category
 from location.models import Location
 from person.models import Person
 from person.tests.factory import create_single_person
+from provider.tests.factory import create_provider
 from ticket.models import Ticket
+from ticket.tests.factory import create_ticket
 from work_order.models import WorkOrder, WorkOrderPriority, WorkOrderStatus
 from work_order.tests import factory
 
@@ -40,6 +43,17 @@ class FactoryTests(TestCase):
         self.assertIsInstance(wo.requester, Person)
         self.assertEqual(wo.scheduled_date, factory.TIME)
         self.assertIsInstance(wo.status, WorkOrderStatus)
+
+    def test_create_work_order__use_existing_ticket_and_provider(self):
+        ticket = create_ticket()
+        category = Category.objects.filter(children__isnull=True).first()
+        self.assertIsInstance(category, Category)
+        provider = create_provider(category)
+
+        ret = factory.create_work_order()
+
+        self.assertEqual(ret.ticket, ticket)
+        self.assertEqual(ret.provider, provider)
 
     def test_create_work_order_status(self):
         obj = factory.create_work_order_status()

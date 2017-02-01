@@ -58,7 +58,12 @@ wait
 wait
 ./manage.py create_tickets
 wait
+# work_order requires a ticket
+./manage.py create_work_order
+wait
 ./manage.py dumpdata ticket --indent=2 > fixtures/ticket.json
+wait
+./manage.py dumpdata work_order --indent=2 > fixtures/work_order.json
 
 wait
 ./manage.py create_automations

@@ -1,0 +1,161 @@
+[
+{
+  "model": "work_order.workorderstatus",
+  "pk": "05d615b2-c112-42eb-9958-c893a213e23d",
+  "fields": {
+    "created": "2017-02-02T17:13:16.493Z",
+    "modified": "2017-02-02T17:13:16.493Z",
+    "deleted": null,
+    "name": "work_order.status.in_progress"
+  }
+},
+{
+  "model": "work_order.workorderstatus",
+  "pk": "0df50822-af08-4ee1-aaa4-98c95a7f1eda",
+  "fields": {
+    "created": "2017-02-02T17:13:16.503Z",
+    "modified": "2017-02-02T17:13:16.503Z",
+    "deleted": null,
+    "name": "work_order.status.unsatisfactory_completion"
+  }
+},
+{
+  "model": "work_order.workorderstatus",
+  "pk": "316352c3-c150-4d2a-a7cb-6102b7f3f003",
+  "fields": {
+    "created": "2017-02-02T17:13:16.496Z",
+    "modified": "2017-02-02T17:13:16.496Z",
+    "deleted": null,
+    "name": "work_order.status.denied"
+  }
+},
+{
+  "model": "work_order.workorderstatus",
+  "pk": "3265a375-f3d7-4786-abfd-07fcd8e4e137",
+  "fields": {
+    "created": "2017-02-02T17:13:16.490Z",
+    "modified": "2017-02-02T17:13:16.490Z",
+    "deleted": null,
+    "name": "work_order.status.draft"
+  }
+},
+{
+  "model": "work_order.workorderstatus",
+  "pk": "467db8fc-35a8-4e56-b8e6-0add7ac7d434",
+  "fields": {
+    "created": "2017-02-02T17:13:16.495Z",
+    "modified": "2017-02-02T17:13:16.495Z",
+    "deleted": null,
+    "name": "work_order.status.deferred"
+  }
+},
+{
+  "model": "work_order.workorderstatus",
+  "pk": "497f6e92-6751-4071-bfce-20006a8bc0a6",
+  "fields": {
+    "created": "2017-02-02T17:13:16.501Z",
+    "modified": "2017-02-02T17:13:16.501Z",
+    "deleted": null,
+    "name": "work_order.status.closed"
+  }
+},
+{
+  "model": "work_order.workorderstatus",
+  "pk": "4bcf12bd-330c-4d32-a15d-d0072da69ca6",
+  "fields": {
+    "created": "2017-02-02T17:13:16.498Z",
+    "modified": "2017-02-02T17:13:16.498Z",
+    "deleted": null,
+    "name": "work_order.status.problem_solved"
+  }
+},
+{
+  "model": "work_order.workorderstatus",
+  "pk": "c8dd4386-5365-42d6-987d-55a194d8896d",
+  "fields": {
+    "created": "2017-02-02T17:13:16.492Z",
+    "modified": "2017-02-02T17:13:16.492Z",
+    "deleted": null,
+    "name": "work_order.status.new"
+  }
+},
+{
+  "model": "work_order.workorderstatus",
+  "pk": "eeac4875-7683-40e3-8d6c-eb371488ba54",
+  "fields": {
+    "created": "2017-02-02T17:13:16.500Z",
+    "modified": "2017-02-02T17:13:16.500Z",
+    "deleted": null,
+    "name": "work_order.status.completed"
+  }
+},
+{
+  "model": "work_order.workorderpriority",
+  "pk": "2f8f9faf-85ab-47b5-83d2-61e76d05998e",
+  "fields": {
+    "created": "2017-02-02T17:13:16.484Z",
+    "modified": "2017-02-02T17:13:16.484Z",
+    "deleted": null,
+    "name": "work_order.priority.high"
+  }
+},
+{
+  "model": "work_order.workorderpriority",
+  "pk": "60f5cf53-9068-4f41-b07e-65500cead80e",
+  "fields": {
+    "created": "2017-02-02T17:13:16.486Z",
+    "modified": "2017-02-02T17:13:16.486Z",
+    "deleted": null,
+    "name": "work_order.priority.medium"
+  }
+},
+{
+  "model": "work_order.workorderpriority",
+  "pk": "705e48c1-44a2-4f96-8304-5e7eeb74440f",
+  "fields": {
+    "created": "2017-02-02T17:13:16.480Z",
+    "modified": "2017-02-02T17:13:16.480Z",
+    "deleted": null,
+    "name": "work_order.priority.emergency"
+  }
+},
+{
+  "model": "work_order.workorderpriority",
+  "pk": "85507940-ff96-4879-8914-c9b4ae0bd958",
+  "fields": {
+    "created": "2017-02-02T17:13:16.488Z",
+    "modified": "2017-02-02T17:13:16.488Z",
+    "deleted": null,
+    "name": "work_order.priority.low"
+  }
+},
+{
+  "model": "work_order.workorder",
+  "pk": "057530c4-ce6c-4724-9cfd-37a16e787001",
+  "fields": {
+    "created": "2017-02-02T17:13:16.536Z",
+    "modified": "2017-02-02T17:13:16.536Z",
+    "deleted": null,
+    "scid": null,
+    "category": "023530c4-ce6c-4724-9cfd-37a16e787029",
+    "provider": "13dc9bf1-5fe3-4cc1-84ac-e1fe95460a02",
+    "scheduled_date": "2017-02-02T17:13:16.247Z",
+    "approved_amount": null,
+    "ticket": "050530c4-ce6c-4724-9cfd-37a16e787100",
+    "location": "e89b0f75-2c4c-400e-b427-da3d5b0039ad",
+    "cost_estimate": "0.0000",
+    "cost_estimate_currency": "009530c4-ce6c-4724-9cfd-37a16e787004",
+    "gl_code": null,
+    "tracking_number": null,
+    "instructions": "Need to describe the work for SC API",
+    "approval_date": null,
+    "completed_date": null,
+    "expiration_date": null,
+    "approver": "041530c4-ce6c-4724-9cfd-37a16e787166",
+    "assignee": "041530c4-ce6c-4724-9cfd-37a16e787006",
+    "priority": "705e48c1-44a2-4f96-8304-5e7eeb74440f",
+    "requester": "041530c4-ce6c-4724-9cfd-37a16e787166",
+    "status": "c8dd4386-5365-42d6-987d-55a194d8896d"
+  }
+}
+]

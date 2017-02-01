@@ -7,6 +7,7 @@ from model_mommy import mommy
 from accounting.tests.factory import create_currency
 from category.models import Category
 from person.models import Person
+from provider.models import Provider
 from provider.tests.factory import create_provider
 from ticket.models import Ticket, TicketPriority, TicketStatus
 from utils.helpers import create_default, generate_uuid
@@ -33,6 +34,10 @@ def create_work_order():
         ticket = mommy.make(Ticket, status=create_default(TicketStatus),
                             priority=create_default(TicketPriority))
 
+    provider = Provider.objects.filter(categories__children__isnull=True).first()
+    if not provider:
+        provider = create_provider(category)
+
     kwargs = {
         'ticket': ticket,
         'approver': approver,
@@ -45,7 +50,7 @@ def create_work_order():
         'status': WorkOrderStatus.objects.default(),
         'requester': requester,
         'priority': WorkOrderPriority.objects.default(),
-        'provider': create_provider(category),
+        'provider': provider,
         'scheduled_date': TIME
     }
 
