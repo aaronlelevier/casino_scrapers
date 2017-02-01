@@ -120,6 +120,13 @@ var BSRS_TICKET_FACTORY = (function() {
     detail.attachments = [];
     return detail;
   };
+  factory.prototype.detailWithoutWorkOrders = function(i, status_id) {
+    var pk = i || this.ticket.idOne;
+    var detail = this.generate(pk, status_id);
+    detail.attachments = [];
+    detail.work_orders = [];
+    return detail;
+  };
   factory.prototype.put = function(ticket) {
     var response = this.generate(ticket.id);
     response.cc = [response.cc[0].id];
@@ -133,7 +140,7 @@ var BSRS_TICKET_FACTORY = (function() {
     delete response.number;
     delete response.created;
     // TODO: tmp before figuring out serializer
-    delete response.work_order;
+    delete response.work_orders;
     for(var key in ticket) {
       response[key] = ticket[key];
     }

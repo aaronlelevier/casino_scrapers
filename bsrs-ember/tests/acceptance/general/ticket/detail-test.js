@@ -953,10 +953,9 @@ skip('deep linking with an xhr with a 404 status code will show up in the error 
 
 test('can start to create a work order and cancel', async function(assert) {
   clearxhr(detail_xhr);
-  const detail_data_no_wo = TF.detail(TD.idOne);
-  delete detail_data_no_wo.work_order;
+  const detail_data_no_wo = TF.detailWithoutWorkOrders(TD.idOne);
   xhr(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_data_no_wo);
-  await page.visitDetail(); 
+  await page.visitDetail();
   await click('[data-test-id="wo-dispatch"]');
   assert.equal(find('[data-test-id="work-order-modal"]').length, 1);
   await click('[data-test-id="cancel"]');
@@ -965,8 +964,7 @@ test('can start to create a work order and cancel', async function(assert) {
 
 test('can search and select for leaf categories', async function(assert) {
   clearxhr(detail_xhr);
-  const detail_data_no_wo = TF.detail(TD.idOne);
-  delete detail_data_no_wo.work_order;
+  const detail_data_no_wo = TF.detailWithoutWorkOrders(TD.idOne);
   xhr(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_data_no_wo);
   await page.visitDetail(); 
   await click('[data-test-id="wo-dispatch"]');
@@ -980,8 +978,7 @@ test('can search and select for leaf categories', async function(assert) {
 test('can create a work order', async function(assert) {
   random.uuid = function() { return UUID.value; };
   clearxhr(detail_xhr);
-  const detail_data_no_wo = TF.detail(TD.idOne);
-  delete detail_data_no_wo.work_order;
+  const detail_data_no_wo = TF.detailWithoutWorkOrders(TD.idOne);
   xhr(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_data_no_wo);
   await page.visitDetail(); 
   await click('[data-test-id="wo-dispatch"]');
@@ -1054,8 +1051,7 @@ test('502 update a work order', async function(assert) {
 test('400 create a work order', async function(assert) {
   random.uuid = function() { return UUID.value; };
   clearxhr(detail_xhr);
-  const detail_data_no_wo = TF.detail(TD.idOne);
-  delete detail_data_no_wo.work_order;
+  const detail_data_no_wo = TF.detailWithoutWorkOrders(TD.idOne);
   xhr(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_data_no_wo);
   await page.visitDetail(); 
   await click('[data-test-id="wo-dispatch"]');
@@ -1084,8 +1080,7 @@ test('400 create a work order', async function(assert) {
 test('502 create a work order', async function(assert) {
   random.uuid = function() { return UUID.value; };
   clearxhr(detail_xhr);
-  const detail_data_no_wo = TF.detail(TD.idOne);
-  delete detail_data_no_wo.work_order;
+  const detail_data_no_wo = TF.detailWithoutWorkOrders(TD.idOne);
   xhr(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_data_no_wo);
   await page.visitDetail(); 
   await click('[data-test-id="wo-dispatch"]');

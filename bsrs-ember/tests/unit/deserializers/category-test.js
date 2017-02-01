@@ -89,17 +89,6 @@ test('category deserialized with parent setups up relationship', assert => {
   assert.deepEqual(category.get('parent.id'), CD.idParent);
 });
 
-test('category deserialized with parent setups up relationship', assert => {
-    let response = CF.detail(CD.idOne, {parent: CD.parentObject});
-    run(() => {
-        subject.deserialize(response, CD.idOne);
-    });
-    let categories = store.find('category');
-    assert.equal(categories.get('length'), 3);
-    category = store.find('category', CD.idOne);
-    assert.deepEqual(category.get('parent.id'), CD.idParent);
-});
-
 test('category deserializer returns correct data with existing category and different children (detail)', (assert) => {
   let category = store.push('category', {id: CD.idOne, name: CD.nameOne, category_children_fks: [CCD.idOne]});
   store.push('category', {id: CD.idTwo});
@@ -183,25 +172,4 @@ test('category deserializer does not set up relationship if sccategory is null',
   });
   let category = store.find('category', CD.idOne);
   assert.equal(category.get('sccategory.id'), undefined);
-});
-
-test('category deserializer sets up relationship for sccategory', assert => {
-    let json = CF.detail(CD.idOne);
-    run(() => {
-        subject.deserialize(json, CD.idOne);
-    });
-    let category = store.find('category', CD.idOne);
-    assert.equal(category.get('sccategory.id'), SCD.idOne);
-    let sccategory = store.find('sccategory.name', SCD.nameOne);
-    assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
-});
-
-test('category deserializer does not set up relationship if sccategory is null', assert => {
-    let json = CF.detail(CD.idOne);
-    json.sc_category = null;
-    run(() => {
-        subject.deserialize(json, CD.idOne);
-    });
-    let category = store.find('category', CD.idOne);
-    assert.equal(category.get('sccategory.id'), undefined);
 });

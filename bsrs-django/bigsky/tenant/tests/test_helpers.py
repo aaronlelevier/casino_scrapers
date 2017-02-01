@@ -135,7 +135,7 @@ class TenantFixturesTests(TestCase):
             admin.role,
             Role.objects.get(name=ROLE_ADMINISTRATOR, tenant=self.tenant)
         )
-        self.assertEqual(len(admin.role.permissions), 25)
+        self.assertEqual(len(admin.role.permissions), 29)
 
     def test_create_categories(self):
         self.assertEqual(Category.objects.filter(tenant=self.tenant).count(), 0)

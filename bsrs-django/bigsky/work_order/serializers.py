@@ -53,8 +53,8 @@ class WorkOrderCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = WorkOrder
-        fields = ('id', 'category', 'provider', 'location', 'scheduled_date',
-                  'approved_amount', 'cost_estimate', 'cost_estimate_currency')
+        fields = ('id', 'ticket', 'category', 'provider', 'location', 'scheduled_date',
+                  'approved_amount', 'cost_estimate', 'requester')
 
     def create(self, validated_data):
         """
@@ -76,7 +76,6 @@ class WorkOrderCreateSerializer(BaseCreateSerializer):
 class WorkOrderLeafSerializer(serializers.ModelSerializer):
 
     approver = PersonTicketSerializer()
-    cost_estimate_currency = CurrencyIdNameSerializer()
     status = WorkOrderStatusSerializer()
     category = CategoryLeafWorkOrderSerializer()
     provider = ProviderDetailSerializer()

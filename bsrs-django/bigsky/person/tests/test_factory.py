@@ -315,7 +315,7 @@ class UpdateAdminTests(TestCase):
 
         factory.grant_all_permissions(person)
 
-        self.assertEqual(len(person.role.permissions), 25)
+        self.assertEqual(len(person.role.permissions), 29)
         self.assertEqual(
             sorted(person.role.permissions.keys()),
             sorted(PermissionInfo.ALL_DEFAULTS.keys()))

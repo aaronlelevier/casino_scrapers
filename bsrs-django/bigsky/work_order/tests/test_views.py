@@ -140,6 +140,8 @@ class WorkOrderCreateTests(SetupMixin, APITestCase):
 
     def setUp(self):
         super(WorkOrderCreateTests, self).setUp()
+        create_work_order_statuses()
+        create_work_order_priorities()
         self.wo = create_work_order()
         self.data = WorkOrderCreateSerializer(self.wo).data
 
@@ -150,7 +152,8 @@ class WorkOrderCreateTests(SetupMixin, APITestCase):
 
         response = self.client.post('/api/work-orders/', self.data, format='json')
 
-        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 201,
+                         'Error: {}'.format(json.loads(response.content.decode('utf8'))))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], self.data['id'])
         self.assertEqual(data['ticket'], str(self.data['ticket']))

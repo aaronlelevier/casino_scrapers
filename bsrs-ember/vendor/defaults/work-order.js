@@ -1,3 +1,5 @@
+const DATE = new Date();
+
 var BSRS_WO_DEFAULTS_OBJECT = (function() {
   var factory = function() {
   };
@@ -9,14 +11,14 @@ var BSRS_WO_DEFAULTS_OBJECT = (function() {
       costEstimateOne: '350.00',
       costEstimateTwo: '500.14',
       approvedAmount: '300.00',
-      scheduledDateOne: new Date(),
-      scheduledDateTwo: new Date(),
-      completedDateOne: new Date(),
-      completedDateTwo: new Date(),
-      expirationDateOne: new Date(),
-      expirationDateTwo: new Date(),
-      approvalDateOne: new Date(),
-      approvalDateTwo: new Date(),
+      scheduledDateOne: DATE,
+      scheduledDateTwo: DATE,
+      completedDateOne: DATE,
+      completedDateTwo: DATE,
+      expirationDateOne: DATE,
+      expirationDateTwo: DATE,
+      approvalDateOne: DATE,
+      approvalDateTwo: DATE,
       providerNameOne: 'Bobs Construction',
       providerNameTwo: 'Charlies Construction',
       providerLogoOne: 'http://pngimg.com/upload/cat_PNG1631.png',
