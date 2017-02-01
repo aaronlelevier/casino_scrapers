@@ -1,6 +1,9 @@
 #!/bin/bash -lx
 
 echo "DEPLOY DEPLOY STARTED!"#!/bin/bash -lx
+source ~/.bashrc
+echo "Node Version:"
+node --version
 
 wait
 echo "UWSGI - START/RELOAD"
