@@ -38,6 +38,7 @@ class CreateSingleCategoryTests(TestCase):
         self.assertEqual(category.subcategory_label, LABEL_TRADE)
         self.assertIsInstance(category.status, CategoryStatus)
         self.assertIsInstance(category.tenant, Tenant)
+        self.assertIsInstance(category.sc_category, ScCategory)
 
     def test_parent(self):
         parent = factory.create_single_category()

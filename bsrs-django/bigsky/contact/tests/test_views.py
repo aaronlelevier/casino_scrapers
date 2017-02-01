@@ -88,8 +88,10 @@ class CountryViewSetTests(StateCountryViewTestSetupMixin, APITestCase):
         keyword = 'aa'
         b = create_contact_country('aab')
         a = create_contact_country('aaa')
+        self.person.role.tenant.countries.clear()
         self.person.role.tenant.countries.add(a,b)
         countries = Country.objects.filter(common_name__icontains=keyword)
+        self.assertEqual(countries.count(), 2)
         self.assertEqual(countries[0], b)
         self.assertEqual(countries[1], a)
 

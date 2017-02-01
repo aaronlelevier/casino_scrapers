@@ -33,6 +33,7 @@ def create_single_category(name=None, parent=None, tenant=None, **kwargs):
         status=status,
         parent=parent,
         tenant=tenant,
+        sc_category=get_sc_category_or_none(random_lorem()),
         **kwargs
     )
 

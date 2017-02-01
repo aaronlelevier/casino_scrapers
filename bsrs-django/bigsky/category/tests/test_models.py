@@ -18,11 +18,9 @@ from utils.tests.test_helpers import create_default
 class CategorySetupMixin(object):
 
     def setUp(self):
-        factory.create_categories()
-        self.type = Category.objects.filter(label='Type').first()
-        self.trade = self.type.children.filter(label='Trade', sc_category__isnull=True,
-                                               children__isnull=False).first()
-        self.child = self.trade.children.filter(label='Issue').first()
+        self.type = factory.create_single_category()
+        self.trade = factory.create_single_category(parent=self.type)
+        self.child = factory.create_single_category(parent=self.trade)
         # Category Status
         self.statuses = CategoryStatus.objects.all()
 
@@ -232,6 +230,7 @@ class CategoryTests(CategorySetupMixin, TestCase):
         self.assertIsNone(ret['inherits_from_id'])
 
     def test_proxy_sc_category__leaf_category(self):
+        self.trade.sc_category = None
         self.assertIsNone(self.trade.sc_category)
         self.assertEqual(self.trade.parent, self.type)
 
