@@ -1,4 +1,5 @@
 from rest_framework import permissions
+from rest_framework.exceptions import MethodNotAllowed
 
 from utils.permissions import CrudPermissions
 from utils.views import BaseModelViewSet
@@ -28,3 +29,9 @@ class WorkOrderViewSet(BaseModelViewSet):
         """
         request.data['requester'] = request.user.id
         return super(WorkOrderViewSet, self).create(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):
+        """
+        WorkOrder is a contract, delete action is not allowed
+        """
+        raise MethodNotAllowed(method='destroy')

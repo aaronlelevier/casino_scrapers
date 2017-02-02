@@ -22,7 +22,7 @@ from work_order.tests.factory import (TIME, create_work_order,
 
 
 class SetupMixin(MockPermissionsAllowAnyMixin):
-    
+
     def setUp(self):
         super(SetupMixin, self).setUp()
         self.person = create_single_person()
@@ -189,3 +189,13 @@ class WorkOrderCreateTests(SetupMixin, APITestCase):
         self.assertEqual(response.status_code, 400)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['scheduled_date'][0], 'errors.date.gte_today')
+
+
+class WorkOrderDeleteTests(SetupMixin, APITestCase):
+    """
+    Work orders are a contract and can't be deleted, only cancelled
+    """
+
+    def test_delete_not_allowed(self):
+        response = self.client.delete('/api/work-orders/{}/'.format(self.wo.id))
+        self.assertEqual(response.status_code, 405)
