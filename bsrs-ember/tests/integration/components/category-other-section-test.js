@@ -10,7 +10,7 @@ import page from 'bsrs-ember/tests/pages/category';
 
 let store, category;
 
-moduleForComponent('category-detail-section', 'Integration | Component | category-detail-section', {
+moduleForComponent('category-other-section', 'Integration | Component | category-other-section', {
   integration: true,
   beforeEach() {
     page.setContext(this);
@@ -36,7 +36,7 @@ moduleForComponent('category-detail-section', 'Integration | Component | categor
 test('sc_category inherited text should not show if there is a concrete value', function(assert) {
   this.model = category;
   this.render(hbs`{{
-    categories/detail-section
+    categories/other-section
     model=model
   }}`);
   assert.equal(page.scCategoryNameInput, `${SCD.nameOne} ×`);
@@ -59,7 +59,7 @@ test('sc_category inherited text should show if there is no concrete value', fun
   });
   this.model = category;
   this.render(hbs`{{
-    categories/detail-section
+    categories/other-section
     model=model
   }}`);
   assert.equal(this.$('.t-inherited-msg-sc_category_name').length, 1);
