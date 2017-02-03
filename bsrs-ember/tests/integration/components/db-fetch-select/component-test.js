@@ -60,3 +60,11 @@ test('it renders with name and photo', function(assert) {
   });
 });
 
+test('it renders with a placeholder', function(assert) {
+  this.render(hbs`
+    {{db-fetch-select
+      placeholder="select.person"
+    }}
+  `);
+  assert.equal(this.$('.ember-power-select-placeholder').text().trim(), 'select.person');
+});
