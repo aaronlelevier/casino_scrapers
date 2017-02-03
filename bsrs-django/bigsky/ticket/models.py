@@ -106,7 +106,7 @@ class TicketQuerySet(BaseQuerySet):
 
     def next_number(self):
         """Auto incrementing number field"""
-        count = self.all().aggregate(Max('number'))['number__max']
+        count = Ticket.objects_all.all().aggregate(Max('number'))['number__max']
         if not count:
             return 1
         else:

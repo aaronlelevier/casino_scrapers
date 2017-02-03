@@ -216,6 +216,22 @@ class TicketManagerTests(TestCase):
 
         self.assertEqual(ret, 1)
 
+    def test_next_number__increments_even_with_soft_delete(self):
+        number = 100
+        ticket = Ticket.objects.first()
+        ticket.number = number
+        ticket.save()
+        raw_max = Ticket.objects_all.all().aggregate(Max('number'))['number__max']
+
+        next_number = Ticket.objects.next_number()
+        self.assertEqual(raw_max+1, next_number)
+
+        ticket.delete()
+
+        next_number = Ticket.objects.next_number()
+        self.assertEqual(raw_max+1, next_number)
+
+
     def test_filter_export_data(self):
         assignee = create_single_person()
         ticket = create_ticket(assignee=assignee)
