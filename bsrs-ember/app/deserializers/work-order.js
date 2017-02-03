@@ -1,8 +1,9 @@
 import Ember from 'ember';
 import { belongs_to } from 'bsrs-components/repository/belongs-to';
 import OptConf from 'bsrs-ember/mixins/optconfigure/work-order';
+import FormatCurrency from 'bsrs-ember/mixins/format-currency';
 
-export default Ember.Object.extend(OptConf, {
+export default Ember.Object.extend(OptConf, FormatCurrency, {
   init() {
     belongs_to.bind(this)('status');
     belongs_to.bind(this)('category');
@@ -16,6 +17,7 @@ export default Ember.Object.extend(OptConf, {
   },
   _deserializeSingle(response) {
     const store = this.get('simpleStore');
+    response.cost_estimate = this.formatCurrency(response.cost_estimate, response.cost_estimate_currency);
     response.status_fk = response.status.id;
     response.category_fk = response.category.id;
     response.provider_fk = response.provider.id;

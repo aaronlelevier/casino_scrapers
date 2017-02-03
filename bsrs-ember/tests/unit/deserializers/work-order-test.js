@@ -20,14 +20,15 @@ let store, workOrder, deserializer;
 
 moduleFor('deserializer:work-order', 'Unit | Deserializer | work order', {
   needs: ['model:work-order', 'model:person', 'model:currency', 'model:category', 'model:provider', 'model:work-order-status',
-  'validator:presence', 'service:i18n', 'service:person-current', 'service:translations-fetcher', 'validator:unique-username', 
+  'validator:presence', 'service:i18n', 'service:currency', 'service:person-current', 'service:translations-fetcher', 'validator:unique-username', 
     'validator:length', 'validator:format', 'validator:presence', 'validator:has-many'],
   beforeEach() {
     store = module_registry(this.container, this.registry);
-    deserializer = WDeserializer.create({ simpleStore: store });
+    const currency = this.container.lookup('service:currency');
+    deserializer = WDeserializer.create({ simpleStore: store, currency: currency });
     run(() => {
       workOrder = store.push('work-order', { id: WD.idOne });
-      store.push('currency', { id: CD.idOne, name: CD.name });
+      store.push('currency', { id: CD.idOne, name: CD.name, decimal_digits: 2 });
     });
   }
 });
@@ -49,6 +50,15 @@ test('deserialize single', function(assert) {
   assert.equal(workOrder.get('gl_code'), WD.glCodeOne);
   assert.equal(workOrder.get('tracking_number'), WD.trackingNumberOne);
   assert.equal(workOrder.get('instructions'), WD.instructions);
+});
+
+test('will format cost_estimate based on currency decimal_digits', function(assert) {
+  const json = WF.detail();
+  json.cost_estimate = '350.0000';
+  run(() => {
+    deserializer.deserialize(json, WD.idOne);
+  });
+  assert.equal(workOrder.get('cost_estimate'), WD.costEstimateOne);
 });
 
 //Work order status

@@ -58,6 +58,11 @@ test('locale should default if not present in Person model', function(assert) {
   assert.equal(Ember.$('[data-test-id="locale"] > label > span').text().trim(), trans.t('optional'));
 });
 
+test('middle initial should have a maxlength of 1', function(assert) {
+  this.render(hbs`{{people/person-new model=model locales=locales}}`);
+  assert.equal(this.$('.t-person-middle-initial').attr('maxlength'), 1);
+});
+
 // test('password validation error if not present or greater than 30 characters', function(assert) {
 //   let modalDialogService = this.container.lookup('service:modal-dialog');
 //   modalDialogService.destinationElementId = 'password';

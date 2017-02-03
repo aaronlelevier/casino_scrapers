@@ -37,7 +37,7 @@ import { openDatepicker } from 'ember-pikaday/helpers/pikaday';
 import { POWER_SELECT_OPTIONS, TICKET_CC_SELECT } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, LOCATIONS_URL, PEOPLE_URL, CATEGORIES_URL,
   DT_URL, PROVIDER_URL, WORK_ORDER_URL } from 'bsrs-ember/utilities/urls';
-import { TICKET_ASSIGNEE, PS_SEARCH } from 'bsrs-ember/tests/helpers/const-names';
+import { TICKET_ASSIGNEE, TICKET_LOCATION, PS_SEARCH } from 'bsrs-ember/tests/helpers/const-names';
 
 const WD = WORK_ORDER_DEFAULTS.defaults();
 const PREFIX = config.APP.NAMESPACE;
@@ -371,8 +371,8 @@ test('starting with multiple cc, can remove all ccs (while not populating option
   });
   let PEOPLE_TICKETS_URL = `${PEOPLE_URL}person__icontains=Mel/`;
   xhr(PEOPLE_TICKETS_URL, 'GET', null, {}, 200, PF.get_for_power_select());
-  selectSearch('.t-ticket-cc-select', 'Mel');
-  selectChoose('.t-ticket-cc-select', PD.nameMel);
+  selectSearch(TICKET_CC_SELECT, 'Mel');
+  selectChoose(TICKET_CC_SELECT, PD.nameMel);
   andThen(() => {
     let ticket = this.store.find('ticket', TD.idOne);
     assert.equal(ticket.get('cc').get('length'), 1);
@@ -730,10 +730,8 @@ test('location component shows location for ticket and will fire off xhr to fetc
   page.categoryTwoClickDropdown();
   andThen(() => {
     assert.equal(page.categoryTwoInput, CD.nameRepairChild);
-    // assert.equal(page.categoryTwoOptionLength, 1);//fetch data will change this to 2 once implemented
   });
   xhr(`${CATEGORIES_URL}?parent=${CD.idPlumbing}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbingChild, CD.namePlumbingChild, [], CD.idPlumbing, 2));
-  page.categoryTwoClickDropdown();
   page.categoryThreeClickDropdown();
   andThen(() => {
     assert.equal(page.categoryThreeInput, CD.namePlumbingChild);
@@ -741,9 +739,8 @@ test('location component shows location for ticket and will fire off xhr to fetc
   });
   // </check category tree>
   xhr(`${LOCATIONS_URL}location__icontains=6/`, 'GET', null, {}, 200, LF.search_power_select());
-  page.categoryThreeClickDropdown();
-  page.locationClickDropdown();
-  fillIn(PS_SEARCH, '6');
+  page.categoryThreeClickDropdown(); // close the category selector
+  selectSearch(TICKET_LOCATION, '6');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(page.locationInput, LD.storeName);
@@ -751,24 +748,23 @@ test('location component shows location for ticket and will fire off xhr to fetc
     assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), LD.storeNameFour);
     assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(1)`).text().trim(), LD.storeNameTwo);
   });
-  page.locationClickOptionTwo();
+  selectChoose(TICKET_LOCATION, LD.storeNameTwo);
   andThen(() => {
     assert.equal(page.locationInput, LD.storeNameTwo);
   });
-  page.locationClickDropdown();
-  fillIn(PS_SEARCH, '');
+  selectSearch(TICKET_LOCATION, '');
   andThen(() => {
     assert.equal(page.locationOptionLength, 1);
     assert.equal(find(`${POWER_SELECT_OPTIONS}`).text().trim(), GLOBALMSG.power_search);
   });
-  fillIn(PS_SEARCH, '6');
+  selectSearch(TICKET_LOCATION, '6');
   andThen(() => {
     assert.equal(page.locationInput, LD.storeNameTwo);
     assert.equal(page.locationOptionLength, 2);
     assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), LD.storeNameFour);
     assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(1)`).text().trim(), LD.storeNameTwo);
   });
-  page.locationClickOptionTwo();
+  selectChoose(TICKET_LOCATION, LD.storeNameTwo);
   andThen(() => {
     assert.equal(page.locationInput, LD.storeNameTwo);
     let ticket = this.store.find('ticket', TD.idOne);
@@ -781,14 +777,8 @@ test('location component shows location for ticket and will fire off xhr to fetc
   });
   //search specific location
   xhr(`${LOCATIONS_URL}location__icontains=GHI789/`, 'GET', null, {}, 200, LF.search_idThree());
-  page.locationClickDropdown();
-  fillIn(PS_SEARCH, 'GHI789');
-  andThen(() => {
-    assert.equal(page.locationInput, LD.storeNameTwo);
-    assert.equal(page.locationOptionLength, 1);
-    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), LD.storeNameThree);
-  });
-  page.locationClickIdThree();
+  selectSearch(TICKET_LOCATION, 'GHI789');
+  selectChoose(TICKET_LOCATION, LD.storeNameThree);
   andThen(() => {
     assert.equal(page.locationInput, LD.storeNameThree);
     let ticket = this.store.find('ticket', TD.idOne);
