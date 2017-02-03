@@ -247,6 +247,7 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
         self.assertIn('id', category)
         self.assertIn('name', category)
         self.assertIn('level', category)
+        self.assertIn('cost_amount', category)
 
     def test_cc(self):
         response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
