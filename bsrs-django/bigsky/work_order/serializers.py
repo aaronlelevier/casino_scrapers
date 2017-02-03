@@ -3,7 +3,7 @@ from rest_framework import serializers
 from accounting.serializers import CurrencyIdNameSerializer
 from category.serializers import CategoryLeafWorkOrderSerializer
 from location.serializers import LocationSerializer
-from person.serializers import PersonTicketSerializer
+from person.serializers import PersonTicketSerializer, PersonNoRelatedSerializer
 from sc.etl import WorkOrderEtlDataAdapter
 from provider.serializers import ProviderDetailSerializer
 from utils.serializers import BaseCreateSerializer
@@ -75,7 +75,7 @@ class WorkOrderCreateSerializer(BaseCreateSerializer):
 
 class WorkOrderLeafSerializer(serializers.ModelSerializer):
 
-    approver = PersonTicketSerializer()
+    approver = PersonNoRelatedSerializer()
     status = WorkOrderStatusSerializer()
     category = CategoryLeafWorkOrderSerializer()
     provider = ProviderDetailSerializer()
