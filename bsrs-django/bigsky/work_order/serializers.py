@@ -53,8 +53,11 @@ class WorkOrderCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = WorkOrder
-        fields = ('id', 'ticket', 'category', 'provider', 'location', 'scheduled_date',
-                  'approved_amount', 'cost_estimate', 'requester')
+        fields = ('id', 'ticket', 'category', 'provider', 'location', 'scheduled_date', 'instructions',
+                  'approved_amount', 'cost_estimate', 'requester', 'cost_estimate_currency')
+
+    def to_representation(self, instance):
+        return WorkOrderLeafSerializer(instance).data
 
     def create(self, validated_data):
         """
@@ -63,7 +66,7 @@ class WorkOrderCreateSerializer(BaseCreateSerializer):
         instance = super(WorkOrderCreateSerializer, self).create(validated_data)
         instance.expiration_date = instance.scheduled_date
         instance.approval_date = instance.scheduled_date
-        instance.cost_estimate = instance.category.cost_amount
+        instance.cost_estimate = instance.approved_amount
         instance.approver = instance.requester
         instance.location = instance.ticket.location
         instance.status = WorkOrderStatus.objects.get(name=WorkOrderStatus.NEW)
@@ -84,4 +87,4 @@ class WorkOrderLeafSerializer(serializers.ModelSerializer):
         model = WorkOrder
         fields = ('id', 'cost_estimate_currency', 'cost_estimate', 'scheduled_date',
                   'approval_date', 'completed_date', 'expiration_date', 'tracking_number',
-                  'approver', 'gl_code', 'status', 'category', 'provider')
+                  'approver', 'gl_code', 'status', 'category', 'provider', 'instructions')

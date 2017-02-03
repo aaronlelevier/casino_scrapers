@@ -228,8 +228,9 @@ class TicketManagerTests(TestCase):
 
         ticket.delete()
 
-        next_number = Ticket.objects.next_number()
-        self.assertEqual(raw_max+1, next_number)
+        assignee = create_single_person()
+        new_ticket = create_ticket(assignee=assignee)
+        self.assertEqual(number+1, new_ticket.number)
 
 
     def test_filter_export_data(self):

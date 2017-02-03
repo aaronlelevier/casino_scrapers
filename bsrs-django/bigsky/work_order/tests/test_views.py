@@ -103,7 +103,20 @@ class WorkOrderUpdateTests(SetupMixin, APITestCase):
 
     def setUp(self):
         super(WorkOrderUpdateTests, self).setUp()
-        self.data = WorkOrderCreateSerializer(self.wo).data
+        self.data = {
+            'id': str(uuid.uuid4()),
+            'scheduled_date': self.wo.scheduled_date,
+            'approval_date': self.wo.approval_date,
+            'approved_amount': self.wo.approved_amount,
+            'gl_code': self.wo.gl_code,
+            'instructions': self.wo.instructions,
+            'cost_estimate_currency': self.wo.cost_estimate_currency.id,
+            'requester': self.wo.requester.id,
+            'provider': self.wo.provider.id,
+            'location': self.wo.location.id,
+            'status': self.wo.status.id,
+            'category': self.wo.category.id,
+        }
 
     def test_no_change(self):
         response = self.client.put('/api/work-orders/{}/'.format(self.wo.id), 
@@ -116,7 +129,7 @@ class WorkOrderUpdateTests(SetupMixin, APITestCase):
         response = self.client.put('/api/work-orders/{}/'.format(self.wo.id), 
             self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['location'], str(self.data['location']))
+        self.assertEqual(data['location'], str(new_location.id))
 
     def test_change_status(self):
         new_status = create_work_order_status()
@@ -124,16 +137,7 @@ class WorkOrderUpdateTests(SetupMixin, APITestCase):
         response = self.client.put('/api/work-orders/{}/'.format(self.wo.id), 
             self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['status'], str(self.data['status']))
-
-    def test_change_assignee(self):
-        new_assignee = create_single_person()
-        self.data['assignee'] = new_assignee.id
-        response = self.client.put('/api/work-orders/{}/'.format(self.wo.id), 
-            self.data, format='json')
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['assignee'], str(self.data['assignee']))
-
+        self.assertEqual(data['status'], str(new_status.id))
 
 
 class WorkOrderCreateTests(SetupMixin, APITestCase):
@@ -142,49 +146,77 @@ class WorkOrderCreateTests(SetupMixin, APITestCase):
         super(WorkOrderCreateTests, self).setUp()
         create_work_order_statuses()
         create_work_order_priorities()
-        self.wo = create_work_order()
-        self.data = WorkOrderCreateSerializer(self.wo).data
 
     def test_data(self):
-        self.data.update({
-            'id': str(uuid.uuid4())
-        })
+        post_data = {
+            'id': str(uuid.uuid4()),
+            'ticket': self.wo.ticket.id,
+            'category': self.wo.category.id,
+            'provider': self.wo.provider.id,
+            'location': self.wo.location.id,
+            'scheduled_date': self.wo.scheduled_date,
+            'instructions': self.wo.instructions,
+            'approved_amount': self.wo.approved_amount,
+            'cost_estimate_currency': self.wo.cost_estimate_currency.id,
+            'requester': self.wo.requester.id
+        }
 
-        response = self.client.post('/api/work-orders/', self.data, format='json')
+        response = self.client.post('/api/work-orders/', post_data, format='json')
 
         self.assertEqual(response.status_code, 201,
                          'Error: {}'.format(json.loads(response.content.decode('utf8'))))
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['id'], self.data['id'])
-        self.assertEqual(data['ticket'], str(self.data['ticket']))
-        self.assertEqual(data['category'], str(self.data['category']))
-        self.assertEqual(data['provider'], str(self.data['provider']))
-        self.assertEqual(data['scheduled_date'], self.data['scheduled_date'])
-        self.assertEqual(data['approved_amount'], self.data['approved_amount'])
-        self.assertEqual(data['requester'], str(self.person.id))
+        work_order = WorkOrder.objects.get(id=post_data['id'])
+        self.assertEqual(data['id'], str(work_order.id))
+        self.assertEqual(data['cost_estimate'], work_order.cost_estimate)
+        self.assertEqual(data['cost_estimate_currency'], str(work_order.cost_estimate_currency.id))
+        self.assertEqual(data['tracking_number'], work_order.tracking_number)
+        self.assertEqual(data['gl_code'], work_order.gl_code)
+        self.assertEqual(data['instructions'], work_order.instructions)
+        self.assertIsNotNone(data['scheduled_date'])
+        self.assertIsNotNone(data['expiration_date'])
+        self.assertEqual(data['status']['id'], str(work_order.status.id))
+        self.assertEqual(data['status']['name'], work_order.status.name)
+        self.assertEqual(data['category']['id'], str(work_order.category.id))
+        self.assertEqual(data['category']['name'], work_order.category.name)
+        self.assertEqual(data['category']['description'], work_order.category.description)
+        self.assertEqual(data['category']['cost_code'], work_order.category.cost_code)
+        self.assertEqual(data['category']['cost_currency'], str(work_order.category.cost_currency.id))
+        self.assertEqual(data['category']['cost_amount'], work_order.category.cost_amount)
+        self.assertEqual(data['category']['label'], work_order.category.label)
+        self.assertEqual(data['provider']['id'], str(work_order.provider.id))
+        self.assertEqual(data['provider']['name'], work_order.provider.name)
+        self.assertEqual(data['provider']['address1'], work_order.provider.address1)
+        self.assertEqual(data['provider']['address2'], work_order.provider.address2)
+        self.assertEqual(data['provider']['city'], work_order.provider.city)
+        self.assertEqual(data['provider']['state'], work_order.provider.state)
+        self.assertEqual(data['provider']['postal_code'], work_order.provider.postal_code)
+        self.assertEqual(data['provider']['phone'], work_order.provider.phone)
+        self.assertEqual(data['provider']['email'], work_order.provider.email)
+        self.assertEqual(data['provider']['logo'], work_order.provider.logo)
         # these fields are auto generated
-        work_order = WorkOrder.objects.get(id=self.data['id'])
+        self.assertEqual(work_order.cost_estimate, work_order.approved_amount)
         self.assertEqual(work_order.expiration_date, work_order.scheduled_date)
         self.assertEqual(work_order.approval_date, work_order.scheduled_date)
         self.assertIsNone(work_order.completed_date)
-        self.assertEqual(work_order.cost_estimate, work_order.category.cost_amount)
-        self.assertEqual(work_order.approver, self.person)
-        self.assertEqual(work_order.location, work_order.ticket.location)
-        self.assertEqual(work_order.status.name, WorkOrderStatus.NEW)
         self.assertEqual(work_order.priority.simple_name, work_order.ticket.priority.simple_name)
         # not being defaulted
         self.assertFalse(work_order.tracking_number)
-        self.assertFalse(work_order.instructions)
-        self.assertFalse(work_order.cost_estimate_currency)
         self.assertFalse(work_order.assignee)
 
     def test_validation__scheduled_date_gte_today(self):
-        self.data.update({
+        post_data = {
             'id': str(uuid.uuid4()),
-            'scheduled_date': localtime(now()) - timedelta(days=1)
-        })
+            'ticket': self.wo.ticket.id,
+            'category': self.wo.category.id,
+            'provider': self.wo.provider.id,
+            'location': self.wo.location.id,
+            'scheduled_date': localtime(now()) - timedelta(days=1),
+            'approved_amount': self.wo.approved_amount,
+            'requester': self.wo.requester.id,
+        }
 
-        response = self.client.post('/api/work-orders/', self.data, format='json')
+        response = self.client.post('/api/work-orders/', post_data, format='json')
 
         self.assertEqual(response.status_code, 400)
         data = json.loads(response.content.decode('utf8'))
