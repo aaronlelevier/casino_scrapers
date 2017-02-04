@@ -3,7 +3,7 @@
 {{/if}}
 
 {{#if currentStateRendered.hasNextBtn}}
-  <button disabled={{if disabled "disabled"}} class="btn btn-primary" {{action "next" currentStateRendered.nextStep}} data-test-id="next">{{t "work_order.create.next"}}</button>
+  <button disabled={{if disabled "disabled"}} class="btn btn-primary t-next-btn" {{action "next" currentStateRendered.nextStep}} data-test-id="next">{{t "work_order.create.next"}}</button>
 {{/if}}
 
 {{#if currentStateRendered.hasWorkOrderDispatchBtn}}

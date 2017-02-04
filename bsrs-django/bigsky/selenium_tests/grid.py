@@ -47,7 +47,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         # DESC
         self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual(self.lorem[-1], usernames[2].text)
+        self.assertEqual(self.lorem[-1], usernames[1].text)
 
     def test_ordering_multiple(self):
         self.wait_for_xhr_request("t-sort-username-dir").click()
@@ -61,7 +61,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
         # Somehow zap-person is added so check the second to last person (sorted desc)
-        self.assertEqual(usernames[2].text, self.lorem[-1])
+        self.assertEqual(usernames[1].text, self.lorem[-1])
 
     def test_search_input(self):
         people = self.wait_for_xhr_request("t-grid-data", plural=True)

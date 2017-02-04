@@ -18,9 +18,9 @@ class TicketPage(WaitSelectorsMixin):
         element = self.find_clickable_element_by_class_name('t-nav-tickets')
         element.click()
 
-    def click_item_in_list(self):
+    def click_item_in_list(self, item=1):
         # This selector uses the first column "priority" as an click target
-        first_item_selector = '.t-grid-data:nth-child(1) > td:nth-child(2)'
+        first_item_selector = '.t-grid-data:nth-child({}) > td:nth-child({})'.format(item, item+1)
         self.find_clickable_element_by_css_selector(first_item_selector).click()
 
     def find_create_work_order_button(self):
@@ -39,14 +39,16 @@ class TicketWithoutWorkOrderPage(TicketPage):
         """
         Power select for category (trade) is pre-populated no need to search and select
         """
-        selected_category = '.t-wo-create-trade-select .ember-power-select-selected-item';
+        selected_category = '.t-wo-create-trade-select .ember-power-select-selected-item'
         return self.find_visible_element_by_css_selector(selected_category)
 
     def choose_a_provider(self):
         self.find_clickable_element_by_class_name('t-wo-create-provider-select').click()
-        search_term = 'Joe';
-        # Searches for a provider based on fixure data, Joe's… blah is a provider for every category/trade
-        self.find_visible_element_by_css_selector('.ember-power-select-search > input').send_keys(search_term)
+        search_term = 'Joe'
+        # Searches for a provider based on fixure data, Joe's… blah is a
+        # provider for every category/trade
+        self.find_visible_element_by_css_selector(
+            '.ember-power-select-search > input').send_keys(search_term)
         search_result_selector = '.ember-power-select-option:nth-child(1)'
         self.text_present_in_element_by_css_selector(search_result_selector, search_term)
         self.find_clickable_element_by_css_selector(search_result_selector).click()
@@ -62,6 +64,10 @@ class TicketWithoutWorkOrderPage(TicketPage):
     def find_primary_button(self):
         return self.find_visible_element_by_css_selector('.ember-modal-dialog .btn-primary')
 
+    def click_next_button(self):
+        self.find_primary_button()
+        self.find_clickable_element_by_class_name('t-next-btn').click()
+
     def find_nte_input(self):
         return self.find_clickable_element_by_css_selector('[data-test-id="approved_amount"]')
 
@@ -73,9 +79,6 @@ class TicketWithoutWorkOrderPage(TicketPage):
         self.find_visible_element_by_class_name('t-scheduled-date').click()
         current_day_selector = '.pika-single:not(.is-hidden) .pika-table .is-today button'
         self.find_clickable_element_by_css_selector(current_day_selector).click()
-        # Normally, a click on the current day button dismisses the picker, but not with the driver
-        # Be sure the modal for the steps have gone away by clicking elsewhere on the model
-        self.find_clickable_element_by_css_selector('[data-test-id="work-order-modal"]').click()
         self.find_invisible_element_by_css_selector('.pika-single.is-hidden')
 
     def find_third_and_active_step(self):
@@ -86,6 +89,7 @@ class TicketWithoutWorkOrderPage(TicketPage):
     def find_done_button(self):
         modal_btn_selector = '.modal-footer .btn-default'
         return self.find_clickable_element_by_css_selector(modal_btn_selector)
+
 
 class TicktetWorkOrderTests(LoginMixin, unittest.TestCase):
 
@@ -106,7 +110,7 @@ class TicktetWorkOrderTests(LoginMixin, unittest.TestCase):
         page = TicketWithoutWorkOrderPage(self.driver, self.wait)
         # User loads the ticket list and clicks through to the details page
         page.click_ticket_menu_link()
-        page.click_item_in_list()
+        page.click_item_in_list(2)
         # The user should see a "dispatch work order button"
         page.find_create_work_order_button()
         # User can click to begin the steps to dispatch a new work order
@@ -118,7 +122,7 @@ class TicktetWorkOrderTests(LoginMixin, unittest.TestCase):
         # User can search and select a provided based on selected category
         page.choose_a_provider()
         # User can click 'next' to move on to the second step
-        page.click_primary_button()
+        page.click_next_button()
         # The second step has an input for NTE (approved amount) value
         page.find_nte_input()
         # Can input an approved amount
@@ -126,7 +130,7 @@ class TicktetWorkOrderTests(LoginMixin, unittest.TestCase):
         # Select a scheduled date
         page.pick_scheduled_date()
         # User can click 'next' to move on to confirm
-        page.click_primary_button()
+        page.click_next_button()
         # User is on the confirm page
         page.find_third_and_active_step()
         # User dispatches work order
@@ -137,6 +141,28 @@ class TicktetWorkOrderTests(LoginMixin, unittest.TestCase):
         done_btn.click()
         # Be sure the modal for the steps have gone away
         page.element_not_present(done_btn)
+
+
+    def test_update(self):
+        """
+        User can go to a Ticket with an existing WorkOrder and update the WorkOrder
+        """
+        page = TicketWithoutWorkOrderPage(self.driver, self.wait)
+        # User loads the ticket list and clicks through to the details page
+        page.click_ticket_menu_link()
+        page.click_item_in_list()
+        # expand work order
+        page.find_clickable_element_by_class_name('work-order-collapsed').click()
+        # edit gl_code
+        page.find_clickable_element_by_class_name('t-wo-gl_code0').send_keys(1)
+        # edit instructions
+        page.find_clickable_element_by_class_name('t-instructions').send_keys(1)
+        # save btn is active, so can be clicked
+        self.assertTrue(page.find_visible_element_by_class_name('t-save-btn').is_enabled())
+        # save
+        page.find_clickable_element_by_class_name('t-save-btn').click()
+        # redirected to list
+        page.find_clickable_element_by_class_name('t-add-new')
 
 
 if __name__ == "__main__":
