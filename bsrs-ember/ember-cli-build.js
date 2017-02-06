@@ -32,6 +32,9 @@ module.exports = function(defaults) {
     minifyJS: {
       enabled: false
     },
+    autoprefixer: {
+      browsers: ['> 1%', 'last 3 versions', 'ff >= 45'] // ESR
+    }
     // 'ember-cli-bootstrap-sassy': {
     //   'js': false
     // }
