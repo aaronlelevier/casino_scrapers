@@ -7,11 +7,11 @@ import regex_property from 'bsrs-ember/utilities/regex-property';
 const { Component, computed } = Ember;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
-var GridBodyComponent = Component.extend(SortBy, FilterBy, {
+let GridBodyComponent = Component.extend(SortBy, FilterBy, {
   /**
    * TODO: refactor to remove searching w/ regex match.  Refactor in test suite
    * @property found_content
-   * @return {Array} - filtered results
+   * @type Array - filtered results
    */
   found_content: computed('find', 'sort', 'page', 'search', 'model.[]', function() {
     const find = this.get('find') || '';

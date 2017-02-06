@@ -1,6 +1,10 @@
 <div style="clear:both;" class="input-group clearfix">
   <div class="input-group-addon t-currency-symbol">
-    {{currencyObject.symbol}}
+    {{get (get-currency-object 
+      currencyService=currency 
+      currencyId=(get model currencyField) 
+      inheritsFrom=inheritsFrom) 
+    'symbol'}}
   </div>
   {{input
     type="text"
@@ -14,7 +18,7 @@
     readonly=readonly
   }}
   {{#power-select
-    selected=currencyObject
+    selected=(get-currency-object currencyService=currency currencyId=(get model currencyField) inheritsFrom=inheritsFrom)
     options=currencyObjects
     onchange=(action "selected")
     class="input-group-btn input-group-select t-currency-code-select"

@@ -85,7 +85,7 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
       if (!finalFilter && !finalIdInFilter) {
         // if initial state, do not reset grid and keep local cache of grid data
         if (typeof find === 'undefined' && typeof id_in === 'undefined') { return; }
-        // if find or id_in had previous values, reset grid and clear store in anticipation of new data
+        // if find or id_in had previous values, reset grid in anticipation of new data
         this.setProperties({page: 1, find: undefined, id_in: undefined});
       } else {
         this.setProperties({ page: 1, find: finalFilter, id_in: finalIdInFilter });
