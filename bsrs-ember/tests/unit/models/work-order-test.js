@@ -1,5 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
+import moment from 'moment';
 import { moduleFor, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import WORK_ORDER_STATUSES from 'bsrs-ember/vendor/defaults/work-order-status';
@@ -10,20 +11,23 @@ import CurrencyD from 'bsrs-ember/vendor/defaults/currency';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 
-let workOrder;
+let workOrder, WD, WOSD, PRD, PD;
 
-const WD = WORK_ORDER.defaults();
-const WOSD = WORK_ORDER_STATUSES.defaults();
-const PRD = PROVIDER.defaults();
-const PD = PERSON_DEFAULTS.defaults();
-// const PC = PERSON_CURRENT.defaults();
+function setDefaults() {
+  WD = WORK_ORDER.defaults();
+  WOSD = WORK_ORDER_STATUSES.defaults();
+  PRD = PROVIDER.defaults();
+  PD = PERSON_DEFAULTS.defaults();
+}
 
 moduleFor('model:work-order', 'Unit | Model | work-order', {
   needs: ['model:currency','service:translations-fetcher','service:i18n', 'model:uuid',
     'model:status','validator:presence', 'validator:unique-username', 'validator:length',
-    'validator:format', 'validator:has-many', 'model:person', 'service:person-current',
-    'model:work-order-status', 'model:category', 'model:provider', 'validator:presence'],
+    'validator:format', 'validator:has-many', 'validator:presence', 'validator:date',
+    'model:person', 'service:person-current', 'model:work-order-status', 'model:category',
+    'model:provider'],
   beforeEach() {
+    setDefaults();
     this.store = module_registry(this.container, this.registry);
     run(() => {
       workOrder = this.store.push('work-order', { id: WD.idOne });
@@ -332,4 +336,22 @@ test('serialize', function(assert) {
   assert.equal(ret.approver, PD.idOne);
   assert.equal(ret.cost_estimate_currency, CurrencyD.idOne);
   assert.equal(ret.ticket, TD.idOne);
+});
+
+test('scheduled_date validation', function(assert) {
+  let tomorrow = moment().add(1, 'days').format('MM/DD/YYYY');
+  workOrder.set('scheduled_date', new Date(tomorrow));
+  let errors = workOrder.get('validations.attrs.scheduled_date.errors');
+  assert.equal(errors, 0, 'Tomorrow is a valid date.');
+  let yesterday = moment().subtract(1, 'days').format('MM/DD/YYYY');
+  workOrder.set('scheduled_date', new Date(yesterday));
+  errors = workOrder.get('validations.attrs.scheduled_date.errors');
+  let actual = errors[0].message;
+  let expected = 'errors.work_order.scheduled_date_in_past';
+  assert.equal(actual, expected, 'Yesterday is NOT a valid date.');
+  workOrder.set('scheduled_date', '');
+  errors = workOrder.get('validations.attrs.scheduled_date.errors');
+  actual = errors[0].message;
+  expected = 'errors.work_order.scheduled_date';
+  assert.equal(actual, expected, 'presence is required for a valid date.');
 });

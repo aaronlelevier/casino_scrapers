@@ -6,10 +6,17 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/work-order';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 const Validations = buildValidations({
-  scheduled_date: validator('presence', {
-    presence: true,
-    message: 'errors.work_order.scheduled_date'
-  }),
+  scheduled_date: [ 
+    validator('presence', {
+      presence: true,
+      message: 'errors.work_order.scheduled_date'
+    }),
+    validator('date', {
+      after: 'now',
+      precision: 'day',
+      message: 'errors.work_order.scheduled_date_in_past'
+    })
+  ],
   cost_estimate: validator('format', {
     allowBlank: true,
     // allow only numbers commas and decimal points
