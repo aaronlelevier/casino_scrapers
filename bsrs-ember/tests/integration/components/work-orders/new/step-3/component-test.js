@@ -8,18 +8,19 @@ import PROVIDER_DEFAULTS from 'bsrs-ember/vendor/defaults/provider';
 import WORK_ORDER_DEFAULTS from 'bsrs-ember/vendor/defaults/work-order';
 import moment from 'moment';
 
-const WD = WORK_ORDER_DEFAULTS.defaults();
-const ProviderD = PROVIDER_DEFAULTS.defaults();
-let model, store;
+let WD, ProviderD, model, store;
 
 moduleForComponent('work-orders/new/step-3', 'Integration | Component | work orders/new/step 3', {
   integration: true,
   setup() {
     store = module_registry(this.container, this.registry);
+    WD = WORK_ORDER_DEFAULTS.defaults();
+    ProviderD = PROVIDER_DEFAULTS.defaults();
     run(() => {
-      model = store.push('work-order', { id: WD.idOne, approved_amount: WD.approvedAmount, scheduled_date: WD.scheduledDateOne,
-      category_fk: CD.idOne, provider_fk: ProviderD.idOne });
-
+      model = store.push('work-order', {
+        id: WD.idOne, approved_amount: WD.approvedAmount, scheduled_date: WD.scheduledDateOne,
+        category_fk: CD.idOne, provider_fk: ProviderD.idOne, instructions: WD.instructions
+      });
       store.push('category', { id: CD.idOne, name: CD.nameElectricalChild, workOrders: [WD.idOne] });
       store.push('provider', { id: ProviderD.idOne, name: ProviderD.nameOne, address1: ProviderD.address1One, 
         logo: ProviderD.logoOne, workOrders: [WD.idOne] });
@@ -36,4 +37,5 @@ test('it renders with display information', function(assert) {
   assert.equal(logo1.replace(/\"/g, ''), `url(${model.get('provider.logo')})`);
   assert.equal(this.$('[data-test-id="scheduled-date"]').text(), moment(model.get('scheduled_date')).format('MM/DD/YYYY'));
   assert.equal(this.$('[data-test-id="approved-amount"]').text(), model.get('approved_amount'));
+  assert.equal(this.$('[data-test-id="instructions"]').text(), model.get('instructions'));
 });
