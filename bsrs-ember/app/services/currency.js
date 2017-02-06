@@ -1,5 +1,6 @@
 import Ember from 'ember';
 const { get } = Ember;
+import formatNumber from 'accounting/format-number';
 
 let CurrencyService = Ember.Service.extend({
   simpleStore: Ember.inject.service(),
@@ -22,10 +23,10 @@ let CurrencyService = Ember.Service.extend({
     return get(this, 'simpleStore').find('currency');
   },
   /**
-     @method currencyObject
-     @param { String } currencyId - optional
-     @param { String } inheritsFrom - optional
-     model.currencyField is an FK to a currency object loaded on boot
+   * @method currencyObject
+   * @param { String } currencyId - optional
+   * @param { String } inheritsFrom - optional
+   * model.currencyField is an FK to a currency object loaded on boot
    */
   getCurrencyObject(currencyId, inheritsFrom) {
     if (currencyId) {
@@ -35,12 +36,18 @@ let CurrencyService = Ember.Service.extend({
     }
     return this._getDefaultCurrency();
   },
+  /**
+   * @method formatCurrency
+   * @param val
+   * @param currencyId
+   * @param inheritsFrom
+   * @return {Number} - formatted
+   */
   formatCurrency(val, currencyId, inheritsFrom) {
     const currencyObject = this.getCurrencyObject(currencyId, inheritsFrom);
     const precision = currencyObject.get('decimal_digits');
-    // 0 may be falsy but we still want to display something?
-    // isNaN(parseFloat()) takes care of '' and 'abc' b/c '' gets converted to 0, so thinks it is a number
-    return !isNaN(parseFloat(val)) ? parseFloat(val).toFixed(precision) : '';
+    const symbol = currencyObject.get('symbol');
+    return formatNumber(val, { precision: precision });
   }
 });
 

@@ -43,7 +43,7 @@ export default ValidationInput.extend({
       set(this, 'model.' + field, typedInput);
     },
     /**
-     * remove any non number or comma or decimal
+     * remove any non (number comma decimal)
      * @method keyedUp
      */
     keyedUp() {

@@ -1,4 +1,4 @@
-<div style="clear:both;" class="input-group clearfix">
+<div class="input-group {{if readonly 'readonly'}}">
   <div class="input-group-addon t-currency-symbol">
     {{get (get-currency-object 
       currencyService=currency 
@@ -12,7 +12,6 @@
     value=(get model field)
     class=(concat "form-control t-amount " className (if showMessage " invalid"))
     id=(if (gt count -1) (concat valuePath count) valuePath)
-    disabled=editPrivilege
     focus-out="formatCurrency"
     key-up=(action "keyedUp")
     readonly=readonly
