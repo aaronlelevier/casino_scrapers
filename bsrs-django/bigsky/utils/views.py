@@ -9,7 +9,7 @@ class BaseModelViewSet(CheckIdCreateMixin, DestroyModelMixin, FilterRelatedMixin
     pass
 
 
-def paginate_queryset_as_response(serializer_class):
+def paginate_queryset_as_response(serializer_class=None):
     """
     Use to decorate a method that returns a queryset. That queryset will
     then be returned as a a paginated DRF response.
@@ -22,7 +22,12 @@ def paginate_queryset_as_response(serializer_class):
             queryset = wrapped_function(self, *args, **kwargs)
 
             queryset = self.paginate_queryset(queryset)
-            serializer = serializer_class(queryset, many=True)
+
+            if serializer_class:
+                serializer = serializer_class(queryset, many=True)
+            else:
+                serializer = self.get_serializer(queryset, many=True)
+
             return self.get_paginated_response(serializer.data)
         return _wrapper
     return _outer_wrapper

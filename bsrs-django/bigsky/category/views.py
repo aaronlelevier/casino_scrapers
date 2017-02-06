@@ -87,6 +87,10 @@ class CategoryViewSet(FilterByTenantMixin, EagerLoadQuerySetMixin,
         # custom: end
         return Response(serializer.data)
 
+    @paginate_queryset_as_response()
+    def list(self, request, *args, **kwargs):
+        return sorted(self.get_queryset(), key=lambda x: x.parents_and_self_as_string())
+
     @list_route(methods=['GET'])
     @paginate_queryset_as_response(cs.CategoryChildrenSerializer)
     def parents(self, request):
@@ -96,11 +100,12 @@ class CategoryViewSet(FilterByTenantMixin, EagerLoadQuerySetMixin,
         return Category.objects.filter(parent__isnull=True)
 
     @list_route(methods=['GET'], url_path=r"category__icontains=(?P<search_key>[\w\-]+)")
-    @paginate_queryset_as_response(cs.CategorySearchSerializer)
+    @paginate_queryset_as_response(cs.CategoryListSerializer)
     def search(self, request, search_key=None):
-        return Category.objects.search_power_select(search_key)
+        return sorted(Category.objects.search_power_select(search_key),
+                      key=lambda x: x.parents_and_self_as_string())
 
     @list_route(methods=['GET'], url_path=r"automation-criteria/(?P<search_key>[\w\-]+)")
     @paginate_queryset_as_response(cs.CategoryAutomationFilterSerializer)
     def automation_filter(self, request, search_key=None):
-        return Category.objects.ordered_parents_and_self_as_strings(search_key)
+        return Category.objects.ordered_parents_and_self_as_strings(name__icontains=search_key)

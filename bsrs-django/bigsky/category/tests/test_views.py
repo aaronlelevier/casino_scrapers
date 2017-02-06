@@ -75,7 +75,7 @@ class CategoryListTests(CategoryViewTestSetupMixin, APITestCase):
         # db object
         category = Category.objects.get(id=data['id'])
         self.assertEqual(data['id'], str(category.id))
-        self.assertEqual(data['name'], category.name)
+        self.assertEqual(data['name'], category.parents_and_self_as_string())
         self.assertEqual(data['description'], category.description)
         self.assertEqual(data['label'], category.label)
         self.assertEqual(data['cost_amount'], category.cost_amount)
@@ -102,10 +102,7 @@ class CategoryListTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['id'], str(category.id))
         self.assertEqual(data['results'][0]['name'], 'foobar')
-        self.assertNotIn('parent', data['results'][0]['name'])
-        self.assertNotIn('status', data['results'][0]['name'])
-        self.assertNotIn('description', data['results'][0])
-        self.assertNotIn('label', data['results'][0])
+        self.assertEqual(data['results'][0]['name'], category.parents_and_self_as_string())
 
     def test_power_select_category_cost_code(self):
         category = create_single_category(name='nothing')
@@ -151,6 +148,17 @@ class CategoryListTests(CategoryViewTestSetupMixin, APITestCase):
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], logged_in_user_count)
+
+    def test_default_ordering_by_verbose_name(self):
+        search_key = 'a'
+        categories = Category.objects.ordered_parents_and_self_as_strings(name__icontains=search_key)
+        response = self.client.get('/api/admin/categories/?search={}'.format(search_key))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['results'][0]['name'], categories[0].parents_and_self_as_string())
+        self.assertEqual(data['results'][1]['name'], categories[1].parents_and_self_as_string())
+        self.assertEqual(data['results'][2]['name'], categories[2].parents_and_self_as_string())
+        self.assertEqual(data['results'][3]['name'], categories[3].parents_and_self_as_string())
 
 
 class CategoryDetailTests(CategoryViewTestSetupMixin, APITestCase):
@@ -546,10 +554,8 @@ class CategorySubRouteSearchTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['id'], str(category.id))
         self.assertEqual(data['results'][0]['name'], 'foobar')
-        self.assertNotIn('parent', data['results'][0]['name'])
-        self.assertNotIn('status', data['results'][0]['name'])
-        self.assertNotIn('description', data['results'][0])
-        self.assertNotIn('label', data['results'][0])
+        self.assertEqual(data['results'][0]['name'], category.parents_and_self_as_string())
+
 
     def test_power_select_category_cost_code(self):
         category = create_single_category(name='nothing')

@@ -62,6 +62,8 @@ class CategoryLeafWorkOrderSerializer(serializers.ModelSerializer):
 
 class CategoryListSerializer(BaseCreateSerializer):
 
+    name = serializers.CharField(source='parents_and_self_as_string')
+
     class Meta:
         model = Category
         fields = CATEGORY_FIELDS + ('level',)

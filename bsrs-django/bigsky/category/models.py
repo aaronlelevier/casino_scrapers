@@ -61,8 +61,8 @@ class CategoryQuerySet(SelfReferencingQuerySet):
             Q(label__icontains=keyword)
         )
 
-    def ordered_parents_and_self_as_strings(self, keyword):
-        return sorted(self.filter(name__icontains=keyword),
+    def ordered_parents_and_self_as_strings(self, **kwargs):
+        return sorted(self.filter(**kwargs),
                       key=lambda x: x.parents_and_self_as_string())
 
 
@@ -79,8 +79,8 @@ class CategoryManager(SelfReferencingManager):
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
 
-    def ordered_parents_and_self_as_strings(self, keyword):
-        return self.get_queryset().ordered_parents_and_self_as_strings(keyword)
+    def ordered_parents_and_self_as_strings(self, **kwargs):
+        return self.get_queryset().ordered_parents_and_self_as_strings(**kwargs)
 
 
 class Category(BaseModel):
