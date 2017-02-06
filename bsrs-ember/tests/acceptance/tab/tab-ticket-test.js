@@ -408,7 +408,7 @@ test('opening a tab, navigating away and closing the tab should remove the tab',
   });
 });
 
-skip('opening a tab, navigating to a diff module and closing the tab should remove the tab', function(assert) {
+test('opening a tab, navigating to a diff module and closing the tab should remove the tab', function(assert) {
   visit(DETAIL_URL);
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
