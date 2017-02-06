@@ -45,7 +45,7 @@ class Step1 extends BaseStep {
 }
 
 class Step2 extends BaseStep {
-  constructor(model) {
+  constructor() {
     super(...arguments);
     this.hasNextBtn = true;
     this.hasBackBtn = true;
@@ -168,7 +168,6 @@ export default Component.extend({
      * @param {String} transition_to_step
      */
     determineStep(transition_to_step) {
-      const componentRendered = get(this, 'componentRendered');
       const currentState = get(this, 'currentStateRendered');
       const currentIndx = currentState.indx;
       const nextStepIndx = this.getState(transition_to_step).indx;
@@ -196,7 +195,6 @@ export default Component.extend({
     next(next_step) {
       this.exitState({next: true});
 
-      const states = get(this, 'states');
       const nextStepState = this.getState(next_step);
 
       const currentStateRendered = this.setState(nextStepState);
@@ -215,7 +213,6 @@ export default Component.extend({
     back(prev_step) {
       this.exitState();
 
-      const states = get(this, 'states');
       const prevStepState = this.getState(prev_step);
 
       this.setState(prevStepState);
