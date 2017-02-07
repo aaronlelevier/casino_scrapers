@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from accounting.serializers import CurrencyIdNameSerializer
-from category.serializers import CategoryLeafWorkOrderSerializer
+from category.serializers import CategoryListSerializer
 from location.serializers import LocationSerializer
 from person.serializers import PersonTicketSerializer, PersonNoRelatedSerializer
 from sc.etl import WorkOrderEtlDataAdapter
@@ -80,7 +80,7 @@ class WorkOrderLeafSerializer(serializers.ModelSerializer):
 
     approver = PersonNoRelatedSerializer()
     status = WorkOrderStatusSerializer()
-    category = CategoryLeafWorkOrderSerializer()
+    category = CategoryListSerializer()
     provider = ProviderDetailSerializer()
 
     class Meta:
