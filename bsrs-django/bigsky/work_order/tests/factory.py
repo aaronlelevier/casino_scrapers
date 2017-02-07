@@ -10,6 +10,7 @@ from person.models import Person
 from provider.models import Provider
 from provider.tests.factory import create_provider
 from ticket.models import Ticket, TicketPriority, TicketStatus
+from utils.create import _generate_chars
 from utils.helpers import create_default, generate_uuid
 from work_order.models import WorkOrder, WorkOrderPriority, WorkOrderStatus
 
@@ -25,8 +26,8 @@ def create_work_order():
     create_default(WorkOrderPriority)
     category = Category.objects.filter(children__isnull=True)[0]
     people = Person.objects.all()
-    requester = random.choice(people)
-    approver = requester
+    approver = random.choice(people)
+    requester = _generate_chars()
     assignee = random.choice(people)
 
     ticket = Ticket.objects.filter(work_orders__isnull=True).first()
@@ -46,7 +47,7 @@ def create_work_order():
         'cost_estimate': Decimal(0),
         'cost_estimate_currency': create_currency(),
         'instructions': 'Need to describe the work for SC API',
-        'location': requester.locations.first(),
+        'location': approver.locations.first(),
         'status': WorkOrderStatus.objects.default(),
         'requester': requester,
         'priority': WorkOrderPriority.objects.default(),

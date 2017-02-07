@@ -53,8 +53,8 @@ class WorkOrderCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = WorkOrder
-        fields = ('id', 'ticket', 'category', 'provider', 'location', 'scheduled_date', 'instructions',
-                  'approved_amount', 'cost_estimate', 'requester', 'cost_estimate_currency')
+        fields = ('id', 'ticket', 'category', 'provider', 'scheduled_date', 'instructions',
+                  'approved_amount', 'cost_estimate_currency')
 
     def to_representation(self, instance):
         return WorkOrderLeafSerializer(instance).data
@@ -67,7 +67,7 @@ class WorkOrderCreateSerializer(BaseCreateSerializer):
         instance.expiration_date = instance.scheduled_date
         instance.approval_date = instance.scheduled_date
         instance.cost_estimate = instance.approved_amount
-        instance.approver = instance.requester
+        instance.requester = instance.ticket.requester
         instance.location = instance.ticket.location
         instance.status = WorkOrderStatus.objects.get(name=WorkOrderStatus.NEW)
         instance.priority = WorkOrderPriority.objects.get(

@@ -101,7 +101,7 @@ class WorkOrder(BaseModel):
         related_name='assignee_work_orders')
     priority = models.ForeignKey(WorkOrderPriority, null=True,
         help_text='SC field: Priority, Required for SC API')
-    requester = models.ForeignKey(settings.AUTH_USER_MODEL, null=True,
-        related_name='requester_work_orders')
+    requester = models.CharField(max_length=150, blank=True, null=True,
+        help_text="The User or string inputted by User")
     status = models.ForeignKey(WorkOrderStatus, null=True,
         help_text='SC field: Status')

@@ -111,7 +111,6 @@ class WorkOrderUpdateTests(SetupMixin, APITestCase):
             'gl_code': self.wo.gl_code,
             'instructions': self.wo.instructions,
             'cost_estimate_currency': self.wo.cost_estimate_currency.id,
-            'requester': self.wo.requester.id,
             'provider': self.wo.provider.id,
             'location': self.wo.location.id,
             'status': self.wo.status.id,
@@ -122,14 +121,6 @@ class WorkOrderUpdateTests(SetupMixin, APITestCase):
         response = self.client.put('/api/work-orders/{}/'.format(self.wo.id), 
             self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_change_location(self):
-        new_location = create_location()
-        self.data['location'] = new_location.id
-        response = self.client.put('/api/work-orders/{}/'.format(self.wo.id), 
-            self.data, format='json')
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['location'], str(new_location.id))
 
     def test_change_status(self):
         new_status = create_work_order_status()
@@ -158,7 +149,7 @@ class WorkOrderCreateTests(SetupMixin, APITestCase):
             'instructions': self.wo.instructions,
             'approved_amount': self.wo.approved_amount,
             'cost_estimate_currency': self.wo.cost_estimate_currency.id,
-            'requester': self.wo.requester.id
+            'requester': self.wo.requester
         }
 
         response = self.client.post('/api/work-orders/', post_data, format='json')
@@ -213,7 +204,7 @@ class WorkOrderCreateTests(SetupMixin, APITestCase):
             'location': self.wo.location.id,
             'scheduled_date': localtime(now()) - timedelta(days=1),
             'approved_amount': self.wo.approved_amount,
-            'requester': self.wo.requester.id,
+            'requester': self.wo.requester
         }
 
         response = self.client.post('/api/work-orders/', post_data, format='json')
