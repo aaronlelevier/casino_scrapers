@@ -48,22 +48,13 @@ class CategoryQuerySet(SelfReferencingQuerySet):
             return Category.objects.all().values_list('id', flat=True)
         return role.categories.all().values_list('id', flat=True)
 
-    def search_power_select(self, keyword):
-        return self.filter(
-            Q(name__icontains=keyword) | \
-            Q(cost_code__icontains=keyword)
-        )
-
     def search_multi(self, keyword):
         return self.filter(
             Q(name__icontains=keyword) | \
             Q(description__icontains=keyword) | \
-            Q(label__icontains=keyword)
+            Q(label__icontains=keyword) | \
+            Q(cost_code__icontains=keyword)
         )
-
-    def ordered_parents_and_self_as_strings(self, **kwargs):
-        return sorted(self.filter(**kwargs),
-                      key=lambda x: x.parents_and_self_as_string())
 
 
 class CategoryManager(SelfReferencingManager):
@@ -73,14 +64,8 @@ class CategoryManager(SelfReferencingManager):
     def get_all_if_none(self, role):
         return self.get_queryset().get_all_if_none(role)
 
-    def search_power_select(self, keyword):
-        return self.get_queryset().search_power_select(keyword)
-
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
-
-    def ordered_parents_and_self_as_strings(self, **kwargs):
-        return self.get_queryset().ordered_parents_and_self_as_strings(**kwargs)
 
 
 class Category(BaseModel):

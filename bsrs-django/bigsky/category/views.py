@@ -34,15 +34,6 @@ class CategoryViewSet(FilterByTenantMixin, EagerLoadQuerySetMixin,
     1. Get top level Categories
 
         `/api/admin/categories/parents/`
-
-    2. General power-select endpoint
-
-        `/api/admin/categories/category__icontains=<search_key>/`
-
-    3. AutomationFilter power-select endpoint
-
-        `/api/admin/categories/automation-criteria/<search_key>/`
-
     '''
     model = Category
     permission_classes = (permissions.IsAuthenticated, CrudPermissions)
@@ -98,14 +89,3 @@ class CategoryViewSet(FilterByTenantMixin, EagerLoadQuerySetMixin,
         For ticket top level category open power select and role ccategory power select
         """
         return Category.objects.filter(parent__isnull=True)
-
-    @list_route(methods=['GET'], url_path=r"category__icontains=(?P<search_key>[\w\-]+)")
-    @paginate_queryset_as_response(cs.CategoryListSerializer)
-    def search(self, request, search_key=None):
-        return sorted(Category.objects.search_power_select(search_key),
-                      key=lambda x: x.parents_and_self_as_string())
-
-    @list_route(methods=['GET'], url_path=r"automation-criteria/(?P<search_key>[\w\-]+)")
-    @paginate_queryset_as_response(cs.CategoryAutomationFilterSerializer)
-    def automation_filter(self, request, search_key=None):
-        return Category.objects.ordered_parents_and_self_as_strings(name__icontains=search_key)

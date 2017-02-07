@@ -27,7 +27,7 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
     let url = CATEGORIES_URL;
     if (search) {
       // DT New
-      url += `category__icontains=${search}/`;
+      url += `?search=${search}`;
       return PromiseMixin.xhr(url, 'GET').then((response) => {
         return response.results;
       });
@@ -35,7 +35,7 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
   },
   findautomationCriteria(search) {
     if (search) {
-      return PromiseMixin.xhr(`${CATEGORIES_URL}automation-criteria/${search}/`, 'GET').then((response) => {
+      return PromiseMixin.xhr(`${CATEGORIES_URL}?search=${search}`, 'GET').then((response) => {
         return response.results;
       });
     }

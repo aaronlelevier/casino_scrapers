@@ -42,7 +42,7 @@ moduleForAcceptance('Acceptance | general category new test', {
     };
 
     list_xhr = xhr(CATEGORIES_URL + '?page=1', 'GET', null, {}, 200, CF.empty());
-    let category_children_endpoint = `${CATEGORIES_URL}category__icontains=a/`;
+    let category_children_endpoint = `${CATEGORIES_URL}?search=a`;
     children_xhr = xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list_power_select());
     run(() => {
       this.store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once

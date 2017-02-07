@@ -93,34 +93,11 @@ class CategoryListTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertFalse(self.type.parent)
         self.assertTrue(self.type.children)
 
-    def test_power_select_category_name(self):
-        category = create_single_category(name='foobar')
-
-        response = self.client.get('/api/admin/categories/category__icontains={}/'.format('foobar'))
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 1)
-        self.assertEqual(data['results'][0]['id'], str(category.id))
-        self.assertEqual(data['results'][0]['name'], 'foobar')
-        self.assertEqual(data['results'][0]['name'], category.parents_and_self_as_string())
-
-    def test_power_select_category_cost_code(self):
-        category = create_single_category(name='nothing')
-        category.cost_code = '760521'
-        category.save()
-
-        response = self.client.get('/api/admin/categories/category__icontains={}/'.format('760521'))
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 1)
-        self.assertEqual(data['results'][0]['id'], str(category.id))
-        self.assertEqual(data['results'][0]['cost_code'], str('760521'))
-
     def test_power_select_category__more_than_10_results(self):
         search_key = 'foo'
         for i in range(11):
             create_single_category(name=search_key + create._generate_chars())
-        self.assertTrue(Category.objects.search_power_select(search_key).count() > 10)
+        self.assertTrue(Category.objects.filter(name__icontains=search_key).count() > 10)
 
         response = self.client.get('/api/admin/categories/?search={}'.format(search_key))
 
@@ -151,14 +128,11 @@ class CategoryListTests(CategoryViewTestSetupMixin, APITestCase):
 
     def test_default_ordering_by_verbose_name(self):
         search_key = 'a'
-        categories = Category.objects.ordered_parents_and_self_as_strings(name__icontains=search_key)
 
         response = self.client.get('/api/admin/categories/?search={}'.format(search_key))
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['results'][0]['name'], categories[0].parents_and_self_as_string())
-        self.assertEqual(data['results'][1]['name'], categories[1].parents_and_self_as_string())
-        self.assertEqual(data['results'][2]['name'], categories[2].parents_and_self_as_string())
+        self.assertTrue(data['results'][0]['name'] < data['results'][1]['name'] < data['results'][2]['name'])
 
 
 class CategoryDetailTests(CategoryViewTestSetupMixin, APITestCase):
@@ -541,78 +515,3 @@ class CategorySubRouteParentsTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertTrue(data['children'][0]['name'])
         self.assertTrue(data['children'][0]['level'])
         self.assertIn('children', data)
-
-
-class CategorySubRouteSearchTests(CategoryViewTestSetupMixin, APITestCase):
-
-    def test_power_select_category_name(self):
-        category = create_single_category(name='foobar')
-
-        response = self.client.get('/api/admin/categories/category__icontains={}/'.format('foobar'))
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 1)
-        self.assertEqual(data['results'][0]['id'], str(category.id))
-        self.assertEqual(data['results'][0]['name'], 'foobar')
-        self.assertEqual(data['results'][0]['name'], category.parents_and_self_as_string())
-
-
-    def test_power_select_category_cost_code(self):
-        category = create_single_category(name='nothing')
-        category.cost_code = '760521'
-        category.save()
-
-        response = self.client.get('/api/admin/categories/category__icontains={}/'.format('760521'))
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 1)
-        self.assertEqual(data['results'][0]['id'], str(category.id))
-        self.assertEqual(data['results'][0]['cost_code'], str('760521'))
-
-
-class CategorySubRouteAutomationFilterTests(MockPermissionsAllowAnyMixin, APITestCase):
-
-    def setUp(self):
-        super(CategorySubRouteAutomationFilterTests, self).setUp()
-        self.password = PASSWORD
-        self.person = create_person()
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def tearDown(self):
-        super(CategorySubRouteAutomationFilterTests, self).tearDown()
-        self.client.logout()
-
-    def test_data(self):
-        parent = create_single_category(name='aaa')
-        child = create_single_category(name='aaab', parent=parent)
-        grand_child = create_single_category(name='c', parent=child)
-
-        response = self.client.get('/api/admin/categories/automation-criteria/{}/'.format(parent.name))
-
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 2)
-        self.assertEqual(data['results'][0]['id'], str(parent.id))
-        self.assertEqual(data['results'][0]['name'], str(parent.parents_and_self_as_string()))
-        self.assertEqual(data['results'][1]['id'], str(child.id))
-        self.assertEqual(data['results'][1]['name'], str(child.parents_and_self_as_string()))
-
-    def test_data__limit_full_list(self):
-        create_categories()
-        self.assertTrue(Category.objects.count() > settings.PAGE_SIZE)
-
-        response = self.client.get('/api/admin/categories/automation-criteria/{}/'.format('a'))
-
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data['results']), settings.PAGE_SIZE)
-
-    def test_data__no_match(self):
-        name = 'foobar'
-        self.assertFalse(Category.objects.filter(name__icontains=name).exists())
-
-        response = self.client.get('/api/admin/categories/automation-criteria/{}/'.format(name))
-
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data['results']), 0)

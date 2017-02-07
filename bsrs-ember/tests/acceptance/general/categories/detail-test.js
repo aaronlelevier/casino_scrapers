@@ -268,7 +268,7 @@ test('clicking and typing into power select for categories children will fire of
     assert.deepEqual(category.get('children').objectAt(0).get('id'), CD.idChild);
     assert.equal(category.get('children').get('length'), 1);
   });
-  let category_children_endpoint = `${CATEGORIES_URL}category__icontains=a/`;
+  let category_children_endpoint = `${CATEGORIES_URL}?search=a`;
   xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list_power_select());
   selectSearch('.t-category-children-select', 'a');
   andThen(() => {
@@ -311,7 +311,7 @@ test('when you deep link to the category detail can remove child from category a
     assert.equal(category.get('children').get('length'), 0);
     assert.equal(page.categoriesSelected, 0);
   });
-  let category_children_endpoint = `${CATEGORIES_URL}category__icontains=a/`;
+  let category_children_endpoint = `${CATEGORIES_URL}?search=a`;
   xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list_power_select());
   selectSearch('.t-category-children-select', 'a');
   page.categoryClickOptionOneEq();
@@ -325,6 +325,7 @@ test('when you deep link to the category detail can remove child from category a
   });
 });
 
+// TODO: (Ember team) please delete if this isn't needed. This endpoint: `/api/admin/categories/category__icontains/...` has been deprecated
 // test('starting with multiple categories, can remove all categories (while not populating options) and add back', function(assert) {
 //     detail_data.children = [...detail_data.children, CF.get(CD.idThree)];
 //     detail_data.children[1].name = CD.nameThree;

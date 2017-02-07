@@ -324,7 +324,7 @@ test('select category filter and update automation', async function(assert) {
   const response = CF.list_power_select_id_name();
   const firstItemId = response.results[0]['id'];
   const firstItemName = response.results[0]['name'];
-  xhr(`/api/admin/categories/automation-criteria/${keyword}/`, 'GET', null, {}, 200, response);
+  xhr(`/api/admin/categories/?search=${keyword}`, 'GET', null, {}, 200, response);
   await selectSearch('.t-ticket-category-select', keyword);
   await selectChoose('.t-ticket-category-select', firstItemName);
   assert.equal(page.categorySelectedOne.split(/\s+/)[1], firstItemName);
