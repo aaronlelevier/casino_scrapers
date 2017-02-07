@@ -339,19 +339,28 @@ test('serialize', function(assert) {
 });
 
 test('scheduled_date validation', function(assert) {
-  let tomorrow = moment().add(1, 'days').format('MM/DD/YYYY');
-  workOrder.set('scheduled_date', new Date(tomorrow));
+  // Assertions for presence of date value
+  workOrder.set('scheduled_date', '');
   let errors = workOrder.get('validations.attrs.scheduled_date.errors');
-  assert.equal(errors, 0, 'Tomorrow is a valid date.');
+  let actual = errors[0].message;
+  let expected = 'errors.work_order.scheduled_date';
+  assert.equal(actual, expected, 'presence is required for a valid date.');
+
+  // Assertions for date value, on or after today
   let yesterday = moment().subtract(1, 'days').format('MM/DD/YYYY');
   workOrder.set('scheduled_date', new Date(yesterday));
   errors = workOrder.get('validations.attrs.scheduled_date.errors');
-  let actual = errors[0].message;
-  let expected = 'errors.work_order.scheduled_date_in_past';
-  assert.equal(actual, expected, 'Yesterday is NOT a valid date.');
-  workOrder.set('scheduled_date', '');
-  errors = workOrder.get('validations.attrs.scheduled_date.errors');
   actual = errors[0].message;
-  expected = 'errors.work_order.scheduled_date';
-  assert.equal(actual, expected, 'presence is required for a valid date.');
+  expected = 'errors.work_order.scheduled_date_in_past';
+  assert.equal(actual, expected, 'Yesterday is NOT a valid date.');
+
+  let today = moment().format('MM/DD/YYYY');
+  workOrder.set('scheduled_date', new Date(today));
+  errors = workOrder.get('validations.attrs.scheduled_date.errors');
+  assert.equal(errors, 0, 'Today is a valid date.');
+
+  let tomorrow = moment().add(1, 'days').format('MM/DD/YYYY');
+  workOrder.set('scheduled_date', new Date(tomorrow));
+  errors = workOrder.get('validations.attrs.scheduled_date.errors');
+  assert.equal(errors, 0, 'Tomorrow is a valid date.');
 });

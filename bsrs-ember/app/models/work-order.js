@@ -6,13 +6,16 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/work-order';
 import { validator, buildValidations } from 'ember-cp-validations';
 
 const Validations = buildValidations({
+  /**
+    A valid scheduled date is present and after yesterday, today is valid
+  */
   scheduled_date: [ 
     validator('presence', {
       presence: true,
       message: 'errors.work_order.scheduled_date'
     }),
     validator('date', {
-      after: 'now',
+      onOrAfter: 'now',
       precision: 'day',
       message: 'errors.work_order.scheduled_date_in_past'
     })
