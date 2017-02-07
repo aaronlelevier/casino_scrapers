@@ -338,6 +338,33 @@ test('serialize', function(assert) {
   assert.equal(ret.ticket, TD.idOne);
 });
 
+test('postSerialize', function(assert) {
+  run(() => {
+      this.store.push('work-order-status', { id: WOSD.idOne, name: WOSD.nameOne, workOrders: [WD.idOne, WD.idTwo] });
+      workOrder = this.store.push('work-order', { id: WD.idOne, approved_amount: '1,200.012', scheduled_date: WD.scheduledDateOne, 
+        cost_estimate_currency: CurrencyD.idOne, provider_fk: PRD.idOne, category_fk: CD.idOne, gl_code: WD.glCodeOne, 
+        completed_date: WD.completedDateOne, instructions: WD.instructions, ticket: TD.idOne });
+      this.store.push('provider', {id: PRD.idOne, name: PRD.nameOne, address1: PRD.address1One, logo: PRD.logoOne, workOrders: [WD.idOne]});
+      this.store.push('currency', {id: CurrencyD.idOne, workOrders: [WD.idOne]});
+      this.store.push('category', { id: CD.idOne, name: CD.nameElectricalChild, workOrders: [WD.idOne] });
+      this.store.push('person', { id: PD.idOne, fullname: PD.fullname, workOrders: [WD.idOne] });
+  });
+  let ret = workOrder.postSerialize();
+  assert.equal(ret.id, WD.idOne);
+  assert.equal(ret.approved_amount, '1200.012', 'approved_amount serialized correctly');
+  assert.equal(ret.scheduled_date, WD.scheduledDateOne);
+  assert.equal(ret.gl_code, WD.glCodeOne);
+  assert.equal(ret.instructions, WD.instructions);
+  assert.equal(ret.category, CD.idOne);
+  assert.equal(ret.provider, PRD.idOne);
+  assert.equal(ret.cost_estimate_currency, CurrencyD.idOne);
+  assert.equal(ret.ticket, TD.idOne);
+  assert.notOk(ret.approval_date);
+  assert.notOk(ret.completed_date);
+  assert.notOk(ret.cost_estimate);
+  assert.notOk(ret.status);
+});
+
 test('serialize will format numbers with commas', function(assert) {
   run(() => {
       this.store.push('work-order-status', {id: WOSD.idOne, name: WOSD.nameOne, workOrders: [WD.idOne, WD.idTwo]});

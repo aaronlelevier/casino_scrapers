@@ -7,7 +7,7 @@
   search=(perform searchRepo)
   onchange=(action "selected")
   triggerClass=(if showMessage "invalid")
-  placeholder=placeholder
+  placeholder=(or placeholder (t "power.select.select"))
   disabled=disabled
   as |optionModel|
 }}

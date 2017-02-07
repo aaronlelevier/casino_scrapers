@@ -74,6 +74,19 @@ let WorkOrder = Model.extend(OptConf, Validations, {
     this.saveProvider();
     this.saveApprover();
   },
+  postSerialize() {
+    return {
+      id: get(this, 'id'),
+      cost_estimate_currency: get(this, 'cost_estimate_currency'),
+      scheduled_date: get(this, 'scheduled_date'),
+      approved_amount: unformat(get(this, 'approved_amount')),
+      instructions: get(this, 'instructions'),
+      gl_code: get(this, 'gl_code'),
+      category: get(this, 'category.id'),
+      provider: get(this, 'provider.id'),
+      ticket: get(this, 'ticket'),
+    };
+  },
   serialize() {
     return {
       id: get(this, 'id'),

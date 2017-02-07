@@ -10,7 +10,7 @@ moduleFor('service:currency', 'Unit | Service | currency', {
   beforeEach() {
     store = module_registry(this.container, this.registry, ['model:currency']);
     run(() => {
-      store.push('currency', { id: CurrencyD.idOne, name: CurrencyD.name });
+      store.push('currency', { id: CurrencyD.idOne, name: CurrencyD.name, decimal_digits: 2 });
     });
   }
 });

@@ -32,7 +32,7 @@
             {{db-fetch-select
               model=model
               selectedAttr=model.sccategory
-              placeholder=model.inherited.sc_category.inherited_value
+              placeholder=(t "crud.default_value" value=model.inherited.sc_category.inherited_value)
               allowClear=true
               className="t-sc-category-name-select"
               displayName="name"

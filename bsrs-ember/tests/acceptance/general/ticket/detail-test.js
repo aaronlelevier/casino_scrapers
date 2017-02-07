@@ -33,6 +33,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import dtdPage from 'bsrs-ember/tests/pages/dtd';
 // import timemachine from 'vendor/timemachine';
 import moment from 'moment';
+import unformat from 'accounting/unformat';
 import { openDatepicker } from 'ember-pikaday/helpers/pikaday';
 import { POWER_SELECT_OPTIONS, TICKET_CC_SELECT } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, LOCATIONS_URL, PEOPLE_URL, CATEGORIES_URL,
@@ -992,7 +993,7 @@ test('can create a work order', async function(assert) {
   await interactor.selectDate(new Date());
   await click('[data-test-id="next"]');
   // scheduled_date start of day.  Pikaday selects it this way
-  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: WD.approvedAmount,
+  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: unformat(WD.approvedAmount),
     scheduled_date: moment().hours(0).startOf('hour'), category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }), {}, 201, WF.detail());
   await click('[data-test-id="wo-send-post"]');
   await click('[data-test-id="wo-done"]');
@@ -1034,7 +1035,7 @@ test('no cost_amount will also save work order (input currency component will cl
     Ember.$('.t-amount').focusout();
   });
   let payload = TF.put({id: TD.idOne});
-  const wo_payload = WF.put({id: WD.idOne, cost_estimate: ''});
+  const wo_payload = WF.put({id: WD.idOne, cost_estimate: 0});
   xhr(WO_PUT_URL, 'PUT', JSON.stringify(wo_payload), {}, 200, {});
   await generalPage.save();
   assert.equal(currentURL(), TICKET_LIST_URL);
@@ -1094,7 +1095,7 @@ test('400 create a work order', async function(assert) {
   const expectedDate = new Date(2016, 4, 28);
   await interactor.selectDate(expectedDate);
   await click('[data-test-id="next"]');
-  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: WD.approvedAmount,
+  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: unformat(WD.approvedAmount),
     scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }),
     {}, 400, WF.detail());
   await click('[data-test-id="wo-send-post"]');
@@ -1123,8 +1124,8 @@ test('502 create a work order', async function(assert) {
   const expectedDate = new Date(2016, 4, 28);
   await interactor.selectDate(expectedDate);
   await click('[data-test-id="next"]');
-  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: WD.approvedAmount,
-    scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }),
+  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: unformat(WD.approvedAmount),
+    scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }), 
     {}, 502, WF.detail());
   await click('[data-test-id="wo-send-post"]');
   assert.equal(find('app-notice').length, 1, 'error notification displayed');

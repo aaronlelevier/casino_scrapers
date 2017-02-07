@@ -42,6 +42,8 @@ var BSRS_WORK_ORDER_FACTORY = (function() {
     response.status = response.status.id;
     response.provider = response.provider.id;
     response.approver = response.approver.id;
+    response.cost_estimate = Number(response.cost_estimate);
+    response.approved_amount = Number(response.approved_amount);
     delete response.tracking_number;
     for(var key in work_order) {
       response[key] = work_order[key];

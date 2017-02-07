@@ -11,13 +11,13 @@ let CurrencyService = Ember.Service.extend({
     let currencyId = person.get('auth_currency') ? person.get('auth_currency') : person.get('inherited').auth_currency.inherited_value;
     return store.find('currency', currencyId);
   },
-  _getDefaultCurrency() {
+  _getCurrency(currencyId) {
+    return get(this, 'simpleStore').find('currency', currencyId);
+  },
+  getDefaultCurrency() {
     // a single Currency will be marked as the default server side
     // based on the Tenant's General Settings. Then return default here.
     return get(this, 'simpleStore').find('currency', {default: true}).objectAt(0);
-  },
-  _getCurrency(currencyId) {
-    return get(this, 'simpleStore').find('currency', currencyId);
   },
   getCurrencies() {
     return get(this, 'simpleStore').find('currency');
@@ -34,7 +34,7 @@ let CurrencyService = Ember.Service.extend({
     } else if (inheritsFrom) {
       return this._getPersonCurrency();
     }
-    return this._getDefaultCurrency();
+    return this.getDefaultCurrency();
   },
   /**
    * @method formatCurrency

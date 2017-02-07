@@ -16,13 +16,28 @@ export default ValidationInput.extend({
   classNames: ['input-currency t-input-currency'],
   attributeBindings: ['valuePath:id'],
   /**
-   * @method currencyObjects
+   * @property currencyObjects
    * power select dropdown list of currencies
    * @type Array
    */
   currencyObjects: computed(function() {
     let currency_service = get(this, 'currency');
     return currency_service.getCurrencies();
+  }),
+  /**
+   * should format the placeholder amount to the correct decimal digits
+   * Set to zero until have further requirements
+   * @property placeholderAmount
+   * @type Number
+   */
+  placeholderAmount: computed(function() {
+    const currencyService = get(this, 'currency');
+    const currencyField = get(this, 'currencyField');
+    const currencyId = get(this, `model.${currencyField}`);
+    const inheritsFrom = get(this, 'inheritsFrom');
+    const boundField = 0;
+
+    return currencyService.formatCurrency(boundField, currencyId, inheritsFrom);
   }),
   actions: {
     /**

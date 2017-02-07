@@ -34,7 +34,7 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
     return work_order;
   },
   dispatchWorkOrder(work_order) {
-    return PromiseMixin.xhr(this.get('url'), 'POST', {data: JSON.stringify(work_order.serialize())}).then((wo) => {
+    return PromiseMixin.xhr(this.get('url'), 'POST', {data: JSON.stringify(work_order.postSerialize())}).then((wo) => {
       return this.get('deserializer').deserialize(wo, wo.id);
     });
   }
