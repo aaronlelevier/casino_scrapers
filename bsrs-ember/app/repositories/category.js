@@ -23,17 +23,7 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDM
       });
     }
   },
-  findCategoryChildren(search) {
-    let url = CATEGORIES_URL;
-    if (search) {
-      // DT New
-      url += `?search=${search}`;
-      return PromiseMixin.xhr(url, 'GET').then((response) => {
-        return response.results;
-      });
-    }
-  },
-  findautomationCriteria(search) {
+  findCategoryBySearch(search) {
     if (search) {
       return PromiseMixin.xhr(`${CATEGORIES_URL}?search=${search}`, 'GET').then((response) => {
         return response.results;

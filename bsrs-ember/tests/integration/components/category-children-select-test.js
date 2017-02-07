@@ -31,7 +31,7 @@ moduleForComponent('category-children-select', 'integration: category-children-s
       store.push('category', {id: CD.unusedId, name: CD.nameThree});
     });
     category_repo = repository.initialize(this.container, this.registry, 'category');
-    category_repo.findCategoryChildren = function() {
+    category_repo.findCategoryBySearch = function() {
       return store.find('category');
     };
   }
@@ -40,7 +40,7 @@ moduleForComponent('category-children-select', 'integration: category-children-s
 test('should render a selectbox when with options selected (initial state)', function(assert) {
   this.set('model', category_two);
   this.repository = category_repo;
-  this.render(hbs`{{db-fetch-multi-select model=model multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-category-children-select" displayName="name" add_func="add_children" remove_func="remove_child" repository=repository searchMethod="findCategoryChildren"}}`);
+  this.render(hbs`{{db-fetch-multi-select model=model multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-category-children-select" displayName="name" add_func="add_children" remove_func="remove_child" repository=repository searchMethod="findCategoryBySearch"}}`);
   clickTrigger();
   assert.equal(Ember.$(DROPDOWN).length, 1);
   assert.equal(Ember.$('.ember-power-select-options > li').length, 1);
@@ -51,7 +51,7 @@ test('should render a selectbox when with options selected (initial state)', fun
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
   this.set('model', category);
   this.repository = category_repo;
-  this.render(hbs`{{db-fetch-multi-select model=model multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-category-children-select" displayName="name" add_func="add_children" remove_func="remove_child" repository=repository searchMethod="findCategoryChildren"}}`);
+  this.render(hbs`{{db-fetch-multi-select model=model multiAttr="children" multiAttrIds="children_ids" selectedAttr=model.children className="t-category-children-select" displayName="name" add_func="add_children" remove_func="remove_child" repository=repository searchMethod="findCategoryBySearch"}}`);
   run(() => { typeInSearch('a'); });
   return wait().
     then(() => {

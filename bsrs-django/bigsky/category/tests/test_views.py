@@ -127,6 +127,7 @@ class CategoryListTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertEqual(data['count'], logged_in_user_count)
 
     def test_default_ordering_by_verbose_name(self):
+        #Test confirming the the ordering by 'verbose_name' is working
         search_key = 'a'
 
         response = self.client.get('/api/admin/categories/?search={}'.format(search_key))

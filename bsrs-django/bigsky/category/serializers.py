@@ -61,22 +61,6 @@ class CategoryListSerializer(BaseCreateSerializer):
         fields = CATEGORY_FIELDS + ('level',)
 
 
-class CategorySearchSerializer(BaseCreateSerializer):
-
-    class Meta:
-        model = Category
-        fields = ('id', 'name', 'cost_code')
-
-
-class CategoryAutomationFilterSerializer(serializers.ModelSerializer):
-
-    name = serializers.CharField(source='parents_and_self_as_string')
-
-    class Meta:
-        model = Category
-        fields = ('id', 'name',)
-
-
 class CategoryDetailSerializer(BaseCreateSerializer):
 
     parent = CategoryIDNameSerializer(read_only=True)
