@@ -202,6 +202,7 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
         self.assertEqual(data['work_orders'][0]['provider']['postal_code'], work_order.provider.postal_code)
         self.assertEqual(data['work_orders'][0]['provider']['phone'], work_order.provider.phone)
         self.assertEqual(data['work_orders'][0]['provider']['email'], work_order.provider.email)
+        self.assertEqual(data['categories'][0]['inherited'], self.ticket.categories.first().inherited)
 
     def test_legacy_ref_number(self):
         self.ticket.legacy_ref_number = '42'

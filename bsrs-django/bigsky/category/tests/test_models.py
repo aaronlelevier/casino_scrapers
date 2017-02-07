@@ -101,7 +101,7 @@ class CategoryManagerTests(TestCase):
         self.assertEqual(categories[0].parents_and_self_as_string(), 'b - xxx')
         self.assertEqual(categories[1].parents_and_self_as_string(), 'a - xxx')
 
-        ret = Category.objects.ordered_parents_and_self_as_strings(keyword)
+        ret = Category.objects.ordered_parents_and_self_as_strings(name__icontains=keyword)
 
         self.assertEqual(ret[0].parents_and_self_as_string(), 'a - xxx')
         self.assertEqual(ret[1].parents_and_self_as_string(), 'b - xxx')

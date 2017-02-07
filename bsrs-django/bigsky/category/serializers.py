@@ -35,11 +35,12 @@ class CategoryChildrenSerializer(BaseCreateSerializer):
 
     children = CategoryIDNameSerializer(many=True, read_only=True)
     parent_id = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), source='parent')
+    inherited = serializers.DictField()
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'level', 'parent_id', 'children', 'label', 'subcategory_label', 
-                'cost_amount')
+        fields = ('id', 'name', 'level', 'parent_id', 'children', 'label', 'subcategory_label',
+                'cost_amount', 'inherited')
 
 
 class CategoryRoleSerializer(BaseCreateSerializer):

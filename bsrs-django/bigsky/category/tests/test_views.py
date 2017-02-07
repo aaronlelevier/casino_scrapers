@@ -152,13 +152,13 @@ class CategoryListTests(CategoryViewTestSetupMixin, APITestCase):
     def test_default_ordering_by_verbose_name(self):
         search_key = 'a'
         categories = Category.objects.ordered_parents_and_self_as_strings(name__icontains=search_key)
+
         response = self.client.get('/api/admin/categories/?search={}'.format(search_key))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['results'][0]['name'], categories[0].parents_and_self_as_string())
         self.assertEqual(data['results'][1]['name'], categories[1].parents_and_self_as_string())
         self.assertEqual(data['results'][2]['name'], categories[2].parents_and_self_as_string())
-        self.assertEqual(data['results'][3]['name'], categories[3].parents_and_self_as_string())
 
 
 class CategoryDetailTests(CategoryViewTestSetupMixin, APITestCase):
