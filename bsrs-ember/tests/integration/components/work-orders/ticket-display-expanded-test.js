@@ -144,16 +144,13 @@ test('labels are translated', function(assert) {
 });
 
 test('can can fill out scheduled_date', function(assert) {
-  const expectedDate = new Date(2016, 4, 28);
+  const expectedDate = new Date();
   this.model = store.find('work-order', WD.idOne);
   this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
   assert.equal(this.$('[data-test-id="scheduled-date"]').length, 1);
   let interactor = openDatepicker(this.$('[data-test-id="scheduled-date"] input'));
   interactor.selectDate(expectedDate);
-  assert.equal(interactor.selectedYear(), 2016);
-  assert.equal(interactor.selectedMonth(), 4);
-  assert.equal(interactor.selectedDay(), 28);
-  assert.equal(this.$('[data-test-id="scheduled-date"] input').val(), '05/28/2016');
+  assert.equal(this.$('[data-test-id="scheduled-date"] input').val(), moment().format('L'));
 });
 
 test('if work order has tracking number display it otherwise show TBD', function(assert) {

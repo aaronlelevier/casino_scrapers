@@ -6,6 +6,7 @@ const { get, set } = Ember;
 
 export default Ember.Component.extend({
   currencyRepo: injectRepo('currency'),
+  today: new Date(),
   actions: {
     toggleIsExpanded() {
       this.get('toggleIsExpanded')();

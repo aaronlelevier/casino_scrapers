@@ -1101,11 +1101,11 @@ test('400 create a work order', async function(assert) {
   await click('[data-test-id="next"]');
   await fillIn('.t-wo-approved_amount', WD.approvedAmount);
   let interactor = openDatepicker(Ember.$('.t-scheduled-date'));
-  const expectedDate = new Date(2016, 4, 28);
+  const expectedDate = new Date();
   await interactor.selectDate(expectedDate);
   await click('[data-test-id="next"]');
-  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: WD.approvedAmount,
-    scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }),
+  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: WD.approvedAmount, 
+    scheduled_date: moment().hours(0).startOf('hour'), category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }), 
     {}, 400, WF.detail());
   await click('[data-test-id="wo-send-post"]');
   assert.equal(find('app-notice').length, 1, 'error notification displayed');
@@ -1130,11 +1130,11 @@ test('502 create a work order', async function(assert) {
   await click('[data-test-id="next"]');
   await fillIn('.t-wo-approved_amount', WD.approvedAmount);
   let interactor = openDatepicker(Ember.$('.t-scheduled-date'));
-  const expectedDate = new Date(2016, 4, 28);
+  const expectedDate = new Date();
   await interactor.selectDate(expectedDate);
   await click('[data-test-id="next"]');
-  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: WD.approvedAmount,
-    scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }),
+  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: WD.approvedAmount, 
+    scheduled_date: moment().hours(0).startOf('hour'), category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }), 
     {}, 502, WF.detail());
   await click('[data-test-id="wo-send-post"]');
   assert.equal(find('app-notice').length, 1, 'error notification displayed');
