@@ -46,7 +46,6 @@ let CurrencyService = Ember.Service.extend({
   formatCurrency(val, currencyId, inheritsFrom) {
     const currencyObject = this.getCurrencyObject(currencyId, inheritsFrom);
     const precision = currencyObject.get('decimal_digits');
-    const symbol = currencyObject.get('symbol');
     return formatNumber(val, { precision: precision });
   }
 });

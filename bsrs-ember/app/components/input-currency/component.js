@@ -26,7 +26,7 @@ export default ValidationInput.extend({
   }),
   actions: {
     /**
-     * formats the currency with the correct decimal points
+     * formats the currency with the correct decimal points and update the model's field
      * @method formatCurrency
      */
     formatCurrency() {
@@ -43,11 +43,10 @@ export default ValidationInput.extend({
       set(this, 'model.' + field, typedInput);
     },
     /**
-     * remove any non (number comma decimal)
+     * remove any non (number comma decimal). ie. remove negative sign for example
      * @method keyedUp
      */
     keyedUp() {
-      // remove negative sign
       let field = get(this, 'field');
       let bound_field = get(this, `model.${field}`);
       if (bound_field.match(/[^0-9.,]/g)) {

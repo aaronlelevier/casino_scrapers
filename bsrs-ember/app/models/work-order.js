@@ -4,6 +4,7 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import OptConf from 'bsrs-ember/mixins/optconfigure/work-order';
 import { validator, buildValidations } from 'ember-cp-validations';
+import unformat from 'accounting/unformat';
 
 const Validations = buildValidations({
   /**
@@ -77,10 +78,10 @@ let WorkOrder = Model.extend(OptConf, Validations, {
     return {
       id: get(this, 'id'),
       cost_estimate_currency: get(this, 'cost_estimate_currency'),
-      cost_estimate: get(this, 'cost_estimate'),
+      cost_estimate: unformat(get(this, 'cost_estimate')),
       scheduled_date: get(this, 'scheduled_date'),
       approval_date: get(this, 'approval_date'),
-      approved_amount: get(this, 'approved_amount'),
+      approved_amount: unformat(get(this, 'approved_amount')),
       completed_date: get(this, 'completed_date'),
       expiration_date: get(this, 'expiration_date'),
       instructions: get(this, 'instructions'),
