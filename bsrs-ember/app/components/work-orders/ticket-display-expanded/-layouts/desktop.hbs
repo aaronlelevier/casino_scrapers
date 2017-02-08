@@ -89,15 +89,26 @@
       </div>
       <div class="col-md-4">
         {{#form-group title="work_order.label.scheduled_date" for="scheduled_date" dataTestId=(concat "wo-fg-scheduled_date" indx)}}
-          {{input-calendar
-            onSelection=(action "setDate")
-            format="MM/DD/YYYY"
-            value=model.scheduled_date
-            dataTestId="scheduled-date"
-            readonly=model.isReadOnly
-            disabled=model.isReadOnly
-            minDate=today
-          }}
+          {{#if rescheduling}}
+            {{input-calendar
+              onSelection=(action "setDate")
+              format="MM/DD/YYYY"
+              value=model.scheduled_date
+              dataTestId="scheduled-date"
+              readonly=model.isReadOnly
+              disabled=model.isReadOnly
+              minDate=today
+            }}
+            <button class="btn btn-default" type="button" {{action "toggleIsRescheduling"}}>{{t "work_order.reschedule_cancel"}}</button>
+
+          {{else}}
+            <div class="input-group">
+              <input type="text" class="form-control" readonly="readonly" value={{moment-format model.scheduled_date "MM/DD/YYYY"}}>
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button" {{action "toggleIsRescheduling"}}>{{t "work_order.reschedule"}}</button>
+              </span>
+            </div>
+          {{/if}}
         {{/form-group}}
         {{#form-group title="work_order.label.tracking_number" readonly=true for="tracking_number" dataTestId=(concat "wo-fg-tracking_number" indx)}}
           <div data-test-id={{concat "wo-tracking" indx}}>
