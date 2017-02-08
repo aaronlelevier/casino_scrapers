@@ -99,13 +99,13 @@
               disabled=model.isReadOnly
               minDate=today
             }}
-            <button class="btn btn-default" type="button" {{action "toggleIsRescheduling"}}>{{t "work_order.reschedule_cancel"}}</button>
+            <button data-test-id="cancel-reschedule" class="btn btn-default" type="button" {{action "cancelReschedule"}}>{{t "work_order.reschedule_cancel"}}</button>
 
           {{else}}
             <div class="input-group">
               <input type="text" class="form-control" readonly="readonly" value={{moment-format model.scheduled_date "MM/DD/YYYY"}}>
               <span class="input-group-btn">
-                <button class="btn btn-default" type="button" {{action "toggleIsRescheduling"}}>{{t "work_order.reschedule"}}</button>
+                <button data-test-id="begin-reschedule" class="btn btn-default" type="button" {{action "beginReschedule"}}>{{t "work_order.reschedule"}}</button>
               </span>
             </div>
           {{/if}}

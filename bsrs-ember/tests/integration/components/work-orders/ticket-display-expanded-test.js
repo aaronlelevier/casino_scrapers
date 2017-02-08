@@ -11,6 +11,7 @@ import CurrencyD from 'bsrs-ember/vendor/defaults/currency';
 import PROVIDER_DEFAULTS from 'bsrs-ember/vendor/defaults/provider';
 import moment from 'moment';
 import { openDatepicker } from 'ember-pikaday/helpers/pikaday';
+import testSelector from 'ember-test-selectors';
 
 let WD, WOSD, ProviderD, PD, store, model, model2, trans;
 const PC = PERSON_CURRENT.defaults();
@@ -143,14 +144,22 @@ test('labels are translated', function(assert) {
   assert.equal(this.$('[data-test-id="wo-fg-tracking_number0"] label').text().trim(), trans.t('work_order.label.tracking_number'));
 });
 
-test('can can fill out scheduled_date', function(assert) {
-  const expectedDate = new Date();
+test('can reschedule scheduled_date', function(assert) {
+  const tomorrow = moment().add(1, 'day').format('L');
+  const expectedDate = new Date(tomorrow);
   this.model = store.find('work-order', WD.idOne);
   this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
-  assert.equal(this.$('[data-test-id="scheduled-date"]').length, 1);
-  let interactor = openDatepicker(this.$('[data-test-id="scheduled-date"] input'));
+  let selector = '[data-test-id="scheduled-date"]';
+  assert.equal(this.$(selector).length, 0, 'reschedule must be clicked first');
+  let actual = this.$(testSelector('id', 'wo-fg-scheduled_date0')).find('input[readonly]').val();
+  assert.ok(actual, 'a scheduled date is present');
+  assert.notEqual(actual, tomorrow, 'tomorrow is not scheduled');
+  this.$(testSelector('id', 'begin-reschedule')).click();
+  this.$(selector).click();
+  let interactor = openDatepicker(this.$(selector + ' input'));
   interactor.selectDate(expectedDate);
-  assert.equal(this.$('[data-test-id="scheduled-date"] input').val(), moment().format('L'));
+  actual = this.$(selector + ' input').val();
+  assert.equal(actual, tomorrow, 'tomorrow was selected');
 });
 
 test('if work order has tracking number display it otherwise show TBD', function(assert) {
