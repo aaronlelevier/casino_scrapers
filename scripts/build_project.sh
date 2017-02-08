@@ -8,6 +8,7 @@ cd $SCRIPT_DIR
 cd ../
 
 cd bsrs-ember
+yarn cache clean
 yarn install
 
 rm -rf tmp dist
