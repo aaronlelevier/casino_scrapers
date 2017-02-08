@@ -113,7 +113,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         NEW
         '''
         page.find_new_link().click()
-        description = rand_chars() 
+        description = rand_chars()
         automation = InputHelper(description=description)
         self._fill_in(automation)
         # EVENT
@@ -212,7 +212,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]")
         time.sleep(1)
         self.driver.find_element_by_xpath("//*[contains(@class, 'ember-power-select-options')]//li[1]").click()
-        
+
         self.gen_elem_page.click_save_btn()
 
         # Find in list
@@ -1019,8 +1019,9 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         time.sleep(1)
 
         # ensure scid is present
-        scid = self.wait_for_xhr_request('t-tenant-scid')
-        assert len(scid.get_attribute("value")) == 10
+        #TODO bring back this assertion once reintegrated with service channel
+        # scid = self.wait_for_xhr_request('t-tenant-scid')
+        # assert len(scid.get_attribute("value")) == 10
 
         '''
         DELETE

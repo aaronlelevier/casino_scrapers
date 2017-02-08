@@ -295,7 +295,17 @@ class TenantEtlAdapterTests(TestCase):
             "Email": self.tenant.implementation_email.email,
             "Phone": self.tenant.billing_phone_number.number,
             "Fax": "",
-            "ContactName": self.tenant.implementation_contact_initial
+            "ContactName": self.tenant.implementation_contact_initial,
+            "TaxId": "123456789",
+            "IsPersonalTaxId": False,
+            "SysadminContactFixxbook": {
+                "Name": self.tenant.company_name,
+                "JobTitle": "admin",
+                "Email": self.tenant.implementation_email.email,
+                "WorkPhone": self.tenant.billing_phone_number.number,
+                "MobilePhone": self.tenant.billing_phone_number.number,
+                "Fax": ""
+            }
         }
 
         ret = self.adapter.data
@@ -447,6 +457,14 @@ class TenantEtlDataAdapterTests(TestCase):
 
         with self.assertRaises(ValidationError):
             response = self.adapter.post()
+
+    @patch("sc.etl.BsOAuthSession.post")
+    def test_error__400_bad_request_sc_fixxbook_error(self, mock_func):
+        mock_func.return_value = stub(status_code=400, content=json.dumps({'ErrorCode': 0, 'ErrorMessage': 'The remote server returned an error: (404) Not Found.', 'ErrorCodes': []}).encode('utf8'))
+
+        response = self.adapter.post()
+
+        self.assertIsNone(response)
 
     @patch("sc.etl.BsOAuthSession.post")
     def test_error__406_duplicate_request(self, mock_func):

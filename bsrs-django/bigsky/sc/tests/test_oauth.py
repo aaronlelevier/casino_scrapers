@@ -136,7 +136,6 @@ class BsOAuthSessionSubscriberTests(BsOAuthSessionSetupMixin,
         response = adapter.put()
 
         self.assertEqual(response.status_code, 200)
-
         # 2nd GET - confirms resource was updated
         response = adapter.get()
 

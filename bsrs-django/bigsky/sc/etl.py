@@ -180,7 +180,17 @@ class TenantEtlAdapter(BaseEtlAdapter):
             "Email": self.instance.implementation_email.email,
             "Phone": self.instance.billing_phone_number.number,
             "Fax": "",
-            "ContactName": self.instance.implementation_contact_initial
+            "ContactName": self.instance.implementation_contact_initial,
+            "TaxId": "123456789",
+            "IsPersonalTaxId": False,
+            "SysadminContactFixxbook": {
+                "Name": self.instance.company_name,
+                "JobTitle": "admin",
+                "Email": self.instance.implementation_email.email,
+                "WorkPhone": self.instance.billing_phone_number.number,
+                "MobilePhone": self.instance.billing_phone_number.number,
+                "Fax": ""
+            }
         }
 
     @property
@@ -272,6 +282,9 @@ class TenantEtlDataAdapter(object):
         data = json.loads(response.content.decode('utf8'))
 
         if response.status_code == 400:
+            if data["ErrorMessage"] == 'The remote server returned an error: (404) Not Found.':
+                #this is the current error message fron Fixxbook when not working on the dev server
+                return
             raise ValidationError(data['ErrorMessage'])
 
         if response.status_code == 406:
