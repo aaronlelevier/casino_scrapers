@@ -162,6 +162,26 @@ test('can reschedule scheduled_date', function(assert) {
   assert.equal(actual, tomorrow, 'tomorrow was selected');
 });
 
+test('can cancel reschedule', function(assert) {
+  const tomorrow = moment().add(1, 'day').format('L');
+  const expectedDate = new Date(tomorrow);
+  this.model = store.find('work-order', WD.idOne);
+  this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
+  let selector = '[data-test-id="scheduled-date"]';
+  let actual = this.$(testSelector('id', 'wo-fg-scheduled_date0')).find('input[readonly]').val();
+  let expected = moment(WD.scheduledDateOne).format('MM/DD/YYYY');
+  assert.equal(actual, expected, `Date is ${expected}` );
+  this.$(testSelector('id', 'begin-reschedule')).click();
+  this.$(selector).click();
+  let interactor = openDatepicker(this.$(selector + ' input'));
+  interactor.selectDate(expectedDate);
+  actual = this.$(selector + ' input').val();
+  assert.equal(actual, tomorrow, 'tomorrow was selected');
+  this.$(testSelector('id', 'cancel-reschedule')).click();
+  actual = this.$(testSelector('id', 'wo-fg-scheduled_date0')).find('input[readonly]').val();
+  assert.equal(actual, expected, `Date is ${expected}` );
+});
+
 test('if work order has tracking number display it otherwise show TBD', function(assert) {
   this.model = store.find('work-order', WD.idOne);
   this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
