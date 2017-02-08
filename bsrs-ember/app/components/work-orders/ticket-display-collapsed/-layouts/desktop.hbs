@@ -25,7 +25,12 @@
     </div>
     <div class="work-order-meta">
       {{#form-group title="work_order.label.cost_estimate" readonly=true}}
-        <div data-test-id={{concat "cost-estimate" indx}}>{{model.cost_estimate}}</div>
+        <div data-test-id={{concat "cost-estimate" indx}}>{{format-money model.cost_estimate symbol=(get (get-currency-object 
+          currencyService=currency 
+          currencyId=model.cost_estimate_currency 
+          ) 
+          'symbol')}}
+        </div>
       {{/form-group}}
     </div>
     <div>

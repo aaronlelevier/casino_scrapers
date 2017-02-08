@@ -17,7 +17,7 @@
         {{/image-block}}
       </div>
       <div>
-        <div class="expander" data-test-id={{concat "expander-expanded" indx}} {{action "toggleIsExpanded"}}>{{fa-icon "caret-down"}}</div>
+        <div class="expander" data-test-id={{concat "expander-expanded" indx}} {{action (toggle "isExpanded" this)}}>{{fa-icon "caret-down"}}</div>
       </div>
     </div>
 
