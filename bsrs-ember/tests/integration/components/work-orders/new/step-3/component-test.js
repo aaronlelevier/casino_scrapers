@@ -22,7 +22,7 @@ moduleForComponent('work-orders/new/step-3', 'Integration | Component | work ord
         category_fk: CD.idOne, provider_fk: ProviderD.idOne, instructions: WD.instructions
       });
       store.push('category', { id: CD.idOne, name: CD.nameElectricalChild, workOrders: [WD.idOne] });
-      store.push('provider', { id: ProviderD.idOne, name: ProviderD.nameOne, address1: ProviderD.address1One, 
+      store.push('provider', { id: ProviderD.idOne, name: ProviderD.nameOne, address1: ProviderD.address1One,
         logo: ProviderD.logoOne, workOrders: [WD.idOne] });
     });
   }
@@ -37,5 +37,5 @@ test('it renders with display information', function(assert) {
   assert.equal(logo1.replace(/\"/g, ''), `url(${model.get('provider.logo')})`);
   assert.equal(this.$('[data-test-id="scheduled-date"]').text(), moment(model.get('scheduled_date')).format('MM/DD/YYYY'));
   assert.equal(this.$('[data-test-id="approved-amount"]').text(), model.get('approved_amount'));
-  assert.equal(this.$('[data-test-id="instructions"]').text(), model.get('instructions'));
+  assert.equal(this.$('[data-test-id="instructions"]').text().trim(), model.get('instructions'));
 });
