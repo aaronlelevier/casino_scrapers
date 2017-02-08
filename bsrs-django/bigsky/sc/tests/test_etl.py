@@ -407,7 +407,17 @@ class TenantEtlDataAdapterTests(TestCase):
             "Email": self.tenant.implementation_email.email,
             "Phone": self.tenant.billing_phone_number.number,
             "Fax": "",
-            "ContactName": self.tenant.implementation_contact_initial
+            "ContactName": self.tenant.implementation_contact_initial,
+            "TaxId": "123456789",
+            "IsPersonalTaxId": False,
+            "SysadminContactFixxbook": {
+                "Name": self.tenant.company_name,
+                "JobTitle": "admin",
+                "Email": self.tenant.implementation_email.email,
+                "WorkPhone": self.tenant.billing_phone_number.number,
+                "MobilePhone": self.tenant.billing_phone_number.number,
+                "Fax": ""
+            }
         }
 
         ret = self.adapter.data

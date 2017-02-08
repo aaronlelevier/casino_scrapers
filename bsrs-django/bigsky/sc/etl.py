@@ -247,7 +247,17 @@ class TenantEtlDataAdapter(object):
             "Email": self._data['implementation_email'].email,
             "Phone": self._data['billing_phone_number'].number,
             "Fax": "",
-            "ContactName": self._data['implementation_contact_initial']
+            "ContactName": self._data['implementation_contact_initial'],
+            "TaxId": "123456789",
+            "IsPersonalTaxId": False,
+            "SysadminContactFixxbook": {
+                "Name": self._data['company_name'],
+                "JobTitle": "admin",
+                "Email": self._data['implementation_email'].email,
+                "WorkPhone": self._data['billing_phone_number'].number,
+                "MobilePhone": self._data['billing_phone_number'].number,
+                "Fax": ""
+            }
         }
 
     @property
