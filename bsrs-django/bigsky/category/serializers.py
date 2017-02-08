@@ -24,7 +24,17 @@ CATEGORY_FIELDS = ('id', 'name', 'description', 'label',
 
 # Leaf Node
 
+class CategoryIDNameOnlySerializer(BaseCreateSerializer):
+    """For use with the person-current endpoint"""
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name',)
+
+
 class CategoryIDNameSerializer(BaseCreateSerializer):
+
+    name = serializers.CharField(source='parents_and_self_as_string')
 
     class Meta:
         model = Category
@@ -33,14 +43,15 @@ class CategoryIDNameSerializer(BaseCreateSerializer):
 
 class CategoryChildrenSerializer(BaseCreateSerializer):
 
+    verbose_name = serializers.CharField(source='parents_and_self_as_string')
     children = CategoryIDNameSerializer(many=True, read_only=True)
     parent_id = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), source='parent')
     inherited = serializers.DictField()
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'level', 'parent_id', 'children', 'label', 'subcategory_label',
-                'cost_amount', 'inherited')
+        fields = ('id', 'name', 'verbose_name', 'level', 'parent_id', 'children', 'label',
+                  'subcategory_label', 'cost_amount', 'inherited')
 
 
 class CategoryRoleSerializer(BaseCreateSerializer):
@@ -55,10 +66,11 @@ class CategoryRoleSerializer(BaseCreateSerializer):
 class CategoryListSerializer(BaseCreateSerializer):
 
     name = serializers.CharField(source='parents_and_self_as_string')
+    verbose_name = serializers.CharField(source='parents_and_self_as_string')
 
     class Meta:
         model = Category
-        fields = CATEGORY_FIELDS + ('level',)
+        fields = CATEGORY_FIELDS + ('level', 'verbose_name')
 
 
 class CategoryDetailSerializer(BaseCreateSerializer):

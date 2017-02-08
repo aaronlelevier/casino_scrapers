@@ -48,8 +48,8 @@ def _get_groups_and_perms():
             group.save()
 
 
-def _generate_ph():
-    return ''.join([str(random.randrange(0, 10)) for x in range(10)])
+def _generate_ph(length=10):
+    return ''.join([str(random.randrange(0, 10)) for x in range(length)])
 
 
 # copy method to new name for readablity in some tests that

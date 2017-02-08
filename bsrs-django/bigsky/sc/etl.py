@@ -8,6 +8,7 @@ from contact.models import Address, AddressType, PhoneNumber, PhoneNumberType
 from location.models import LOCATION_DISTRICT, LOCATION_REGION, Location
 from sc.oauth import (DEV_SC_LOCATIONS_URL, DEV_SC_SUBSCRIBERS_URL,
                       DEV_SC_WORKORDERS_URL, BsOAuthSession)
+from utils.create import _generate_ph
 
 
 class BaseEtlAdapter(object):
@@ -258,7 +259,7 @@ class TenantEtlDataAdapter(object):
             "Phone": self._data['billing_phone_number'].number,
             "Fax": "",
             "ContactName": self._data['implementation_contact_initial'],
-            "TaxId": "123456789",
+            "TaxId": _generate_ph(9),
             "IsPersonalTaxId": False,
             "SysadminContactFixxbook": {
                 "Name": self._data['company_name'],
@@ -282,7 +283,8 @@ class TenantEtlDataAdapter(object):
         data = json.loads(response.content.decode('utf8'))
 
         if response.status_code == 400:
-            if data["ErrorMessage"] == 'The remote server returned an error: (404) Not Found.':
+            if data["ErrorCode"] == 0: # no returning a diff error msg, so just checking for 'ErrorCode'
+                                       # SC Api still not in sync
                 #this is the current error message fron Fixxbook when not working on the dev server
                 return
             raise ValidationError(data['ErrorMessage'])

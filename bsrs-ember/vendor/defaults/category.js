@@ -1,6 +1,9 @@
 const ID_ONE = 'ec62006b-6275-4aa9-abfa-38b146383d301';
 const ID_PARENT = 'ec62006b-6275-4aa9-abfa-38b146383d305';
 const NAME_PARENT = 'General Repair';
+const NAME_ONE = 'Repair';
+const NAME_REPAIR_CHILD = 'Plumbing';
+const NAME_PLUMBING_CHILD = 'Toilet Leak';
 const COST_AMOUNT_ONE = '10.00';
 const SC_CATEGORY_NAME_ONE = 'GENERAL REPAIRS';
 const COST_CODE_ONE = '12584';
@@ -26,16 +29,19 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             nameSolo: 'Repair',
             nameRepairKey: 'admin.category.name.repair',
             unusedId: 'ec62006b-6275-4aa9-abfa-38b146383d50',
-            nameOne: 'Repair',
+            nameOne: NAME_ONE,
             nameTwo: 'Electrical',
             nameThree: 'Loss Prevention',
-            nameRepairChild: 'Plumbing',
-            namePlumbingChild: 'Toilet Leak',
+            nameRepairChild: NAME_REPAIR_CHILD,
+            namePlumbingChild: NAME_PLUMBING_CHILD,
             nameLossPreventionChild: 'Security',
             nameElectricalChild: 'Outlet',
             nameUnused: 'wat',
             nameWatChild: 'scott',
             nameParent: NAME_PARENT,
+            verboseNameParent: NAME_ONE,
+            verboseNameChild: `${NAME_ONE} - ${NAME_REPAIR_CHILD}`,
+            verboseNameChildChild: `${NAME_ONE} - ${NAME_REPAIR_CHILD} - ${NAME_PLUMBING_CHILD}`,
             scCategoryNameOne: SC_CATEGORY_NAME_ONE,
             scCategoryNameTwo: 'GENERAL REPAIRS and MAINTENANCE',
             idNew: 'abc123',

@@ -1,5 +1,5 @@
 var BSRS_TICKET_FACTORY = (function() {
-  var factory = function(ticket, people_defaults, people_fixtures, location_fixtures, category_fixtures, category_defaults, 
+  var factory = function(ticket, people_defaults, people_fixtures, location_fixtures, category_fixtures, category_defaults,
     field_defaults, option_defaults, work_order_fixtures, config) {
     this.ticket = ticket;
     this.people_defaults = people_defaults['default'].defaults();
@@ -14,13 +14,23 @@ var BSRS_TICKET_FACTORY = (function() {
   };
   factory.prototype.categories = function() {
     var child_category = this.category_fixtures.generate_for_power_select(this.category_defaults.idPlumbing, this.category_defaults.nameRepairChild);
-    var child_child_category = {id: this.category_defaults.idPlumbingChild, name: this.category_defaults.namePlumbingChild, parent_id: child_category.id, 
-      label: this.category_defaults.labelThree, children: [], level: 2, cost_amount: this.category_defaults.costAmountOne};
+    child_category.verbose_name = this.category_defaults.verboseNameChild;
+    var child_child_category = {
+        id: this.category_defaults.idPlumbingChild,
+        name: this.category_defaults.namePlumbingChild,
+        verbose_name: this.category_defaults.verboseNameChildChild,
+        parent_id: child_category.id,
+        label: this.category_defaults.labelThree,
+        children: [],
+        level: 2,
+        cost_amount: this.category_defaults.costAmountOne
+    };
     child_category.children = [{id:this.category_defaults.idPlumbingChild}];
     child_category.parent_id = this.category_defaults.idOne;
     child_category.label = this.category_defaults.labelTwo;
     child_category.level = 1;
     var parent_category = this.category_fixtures.generate_for_power_select(this.category_defaults.idOne, this.category_defaults.nameOne);
+    parent_category.verbose_name = this.category_defaults.verboseNameParent;
     parent_category.children = [{id: this.category_defaults.idPlumbing}, {id: this.category_defaults.idTwo}];
     parent_category.parent_id = null;
     parent_category.level = 0;
@@ -164,18 +174,18 @@ if (typeof window === 'undefined') {
   var options_defaults = require('../vendor/defaults/option');
   var config = require('../config/environment');
   objectAssign(BSRS_TICKET_FACTORY.prototype, mixin.prototype);
-  module.exports = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, people_fixtures, location_fixtures, category_fixtures, 
+  module.exports = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, people_fixtures, location_fixtures, category_fixtures,
     category_defaults, field_defaults, options_defaults, work_order_fixtures, config);
 } else {
-  define('bsrs-ember/vendor/ticket_fixtures', ['exports', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/person', 
-    'bsrs-ember/vendor/people_fixtures', 'bsrs-ember/vendor/location_fixtures', 'bsrs-ember/vendor/category_fixtures', 
-    'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/defaults/field', 'bsrs-ember/vendor/defaults/option', 'bsrs-ember/vendor/work_order_fixtures', 'bsrs-ember/vendor/mixin', 
+  define('bsrs-ember/vendor/ticket_fixtures', ['exports', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/person',
+    'bsrs-ember/vendor/people_fixtures', 'bsrs-ember/vendor/location_fixtures', 'bsrs-ember/vendor/category_fixtures',
+    'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/defaults/field', 'bsrs-ember/vendor/defaults/option', 'bsrs-ember/vendor/work_order_fixtures', 'bsrs-ember/vendor/mixin',
     'bsrs-ember/config/environment'],
-         function (exports, ticket_defaults, person_defaults, people_fixtures, location_fixtures, category_fixtures, category_defaults, 
+         function (exports, ticket_defaults, person_defaults, people_fixtures, location_fixtures, category_fixtures, category_defaults,
             field_defaults, option_defaults, work_order_fixtures, mixin, config) {
          'use strict';
          Object.assign(BSRS_TICKET_FACTORY.prototype, mixin.prototype);
-         var Factory = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, people_fixtures, location_fixtures, category_fixtures, 
+         var Factory = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, people_fixtures, location_fixtures, category_fixtures,
              category_defaults, field_defaults, option_defaults, work_order_fixtures, config);
          return {default: Factory};
 });

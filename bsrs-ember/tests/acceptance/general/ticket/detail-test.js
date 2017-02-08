@@ -35,7 +35,7 @@ import dtdPage from 'bsrs-ember/tests/pages/dtd';
 import moment from 'moment';
 import { openDatepicker } from 'ember-pikaday/helpers/pikaday';
 import { POWER_SELECT_OPTIONS, TICKET_CC_SELECT } from 'bsrs-ember/tests/helpers/power-select-terms';
-import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, LOCATIONS_URL, PEOPLE_URL, CATEGORIES_URL, 
+import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, LOCATIONS_URL, PEOPLE_URL, CATEGORIES_URL,
   DT_URL, PROVIDER_URL, WORK_ORDER_URL } from 'bsrs-ember/utilities/urls';
 import { TICKET_ASSIGNEE, PS_SEARCH } from 'bsrs-ember/tests/helpers/const-names';
 
@@ -967,13 +967,13 @@ test('can search and select for leaf categories', async function(assert) {
   clearxhr(detail_xhr);
   const detail_data_no_wo = TF.detailWithoutWorkOrders(TD.idOne);
   xhr(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_data_no_wo);
-  await page.visitDetail(); 
+  await page.visitDetail();
   await click('[data-test-id="wo-dispatch"]');
   const list_data = CF.list();
   xhr(`${CATEGORIES_URL}?children__isnull=true&name__icontains=b`, 'GET', null, {}, 200, list_data);
   await selectSearch('.t-wo-create-trade-select', 'b');
-  await selectChoose('.t-wo-create-trade-select', list_data.results[3].name);
-  assert.equal(find('.t-wo-create-trade-select .ember-power-select-selected-item').text().trim(), list_data.results[3].name);
+  await selectChoose('.t-wo-create-trade-select', list_data.results[3].verbose_name);
+  assert.equal(find('.t-wo-create-trade-select .ember-power-select-selected-item').text().trim(), list_data.results[3].verbose_name);
 });
 
 test('can create a work order', async function(assert) {
@@ -981,11 +981,11 @@ test('can create a work order', async function(assert) {
   clearxhr(detail_xhr);
   const detail_data_no_wo = TF.detailWithoutWorkOrders(TD.idOne);
   xhr(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_data_no_wo);
-  await page.visitDetail(); 
+  await page.visitDetail();
   await click('[data-test-id="wo-dispatch"]');
   const ticket = this.store.find('ticket', TD.idOne);
   assert.equal(find('[data-test-id="work-order-modal"]').length, 1);
-  assert.equal(find('.t-wo-create-trade-select .ember-power-select-selected-item').text().trim(), ticket.get('leaf_category').get('name'));
+  assert.equal(find('.t-wo-create-trade-select .ember-power-select-selected-item').text().trim(), ticket.get('leaf_category').get('verbose_name'));
   xhr(`${PROVIDER_URL}?categories=${ticket.get('leaf_category').get('id')}&name__icontains=b`, 'GET', null, {}, 200, PROVIDER_FIXTURES.list());
   await selectSearch('.t-wo-create-provider-select', 'b');
   await selectChoose('.t-wo-create-provider-select', ProviderD.nameOne);
@@ -1013,7 +1013,7 @@ test('can create a work order', async function(assert) {
 });
 
 test('can update a work order', async function(assert) {
-  await page.visitDetail(); 
+  await page.visitDetail();
   await click('[data-test-id="expander-collapsed0"]');
   await fillIn('.t-wo-gl_code0', WD.glCodeTwo);
   let payload = TF.put({id: TD.idOne});
@@ -1024,7 +1024,7 @@ test('can update a work order', async function(assert) {
 });
 
 test('update a work order and ticket will send two xhrs', async function(assert) {
-  await page.visitDetail(); 
+  await page.visitDetail();
   await click('[data-test-id="expander-collapsed0"]');
   await selectChoose('.t-ticket-status-select', t('ticket.status.complete'));
   await fillIn('.t-wo-gl_code0', WD.glCodeTwo);
@@ -1037,7 +1037,7 @@ test('update a work order and ticket will send two xhrs', async function(assert)
 });
 
 test('no cost_amount will also save work order (input currency component will clear out non numbers)', async function(assert) {
-  await page.visitDetail(); 
+  await page.visitDetail();
   await click('[data-test-id="expander-collapsed0"]');
   await fillIn('.t-amount', 'a');
   andThen(() => {
@@ -1051,7 +1051,7 @@ test('no cost_amount will also save work order (input currency component will cl
 });
 
 test('400 update a work order', async function(assert) {
-  await page.visitDetail(); 
+  await page.visitDetail();
   await click('[data-test-id="expander-collapsed0"]');
   const wo_payload = WF.put({ id: WD.idOne, gl_code: WD.glCodeTwo });
   await fillIn('.t-wo-gl_code0', WD.glCodeTwo);
@@ -1068,7 +1068,7 @@ test('400 update a work order', async function(assert) {
 });
 
 test('502 update a work order', async function(assert) {
-  await page.visitDetail(); 
+  await page.visitDetail();
   await click('[data-test-id="expander-collapsed0"]');
   const wo_payload = WF.put({ id: WD.idOne, gl_code: WD.glCodeTwo });
   await fillIn('.t-wo-gl_code0', WD.glCodeTwo);
@@ -1089,11 +1089,11 @@ test('400 create a work order', async function(assert) {
   clearxhr(detail_xhr);
   const detail_data_no_wo = TF.detailWithoutWorkOrders(TD.idOne);
   xhr(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_data_no_wo);
-  await page.visitDetail(); 
+  await page.visitDetail();
   await click('[data-test-id="wo-dispatch"]');
   const ticket = this.store.find('ticket', TD.idOne);
   assert.equal(find('[data-test-id="work-order-modal"]').length, 1);
-  assert.equal(find('.t-wo-create-trade-select .ember-power-select-selected-item').text().trim(), ticket.get('leaf_category').get('name'));
+  assert.equal(find('.t-wo-create-trade-select .ember-power-select-selected-item').text().trim(), ticket.get('leaf_category').get('verbose_name'));
   xhr(`${PROVIDER_URL}?categories=${ticket.get('leaf_category').get('id')}&name__icontains=b`, 'GET', null, {}, 200, PROVIDER_FIXTURES.list());
   await selectSearch('.t-wo-create-provider-select', 'b');
   await selectChoose('.t-wo-create-provider-select', ProviderD.nameOne);
@@ -1104,8 +1104,8 @@ test('400 create a work order', async function(assert) {
   const expectedDate = new Date(2016, 4, 28);
   await interactor.selectDate(expectedDate);
   await click('[data-test-id="next"]');
-  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: WD.approvedAmount, 
-    scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }), 
+  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: WD.approvedAmount,
+    scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }),
     {}, 400, WF.detail());
   await click('[data-test-id="wo-send-post"]');
   assert.equal(find('app-notice').length, 1, 'error notification displayed');
@@ -1118,11 +1118,11 @@ test('502 create a work order', async function(assert) {
   clearxhr(detail_xhr);
   const detail_data_no_wo = TF.detailWithoutWorkOrders(TD.idOne);
   xhr(`${TICKETS_URL}${TD.idOne}/`, 'GET', null, {}, 200, detail_data_no_wo);
-  await page.visitDetail(); 
+  await page.visitDetail();
   await click('[data-test-id="wo-dispatch"]');
   const ticket = this.store.find('ticket', TD.idOne);
   assert.equal(find('[data-test-id="work-order-modal"]').length, 1);
-  assert.equal(find('.t-wo-create-trade-select .ember-power-select-selected-item').text().trim(), ticket.get('leaf_category').get('name'));
+  assert.equal(find('.t-wo-create-trade-select .ember-power-select-selected-item').text().trim(), ticket.get('leaf_category').get('verbose_name'));
   xhr(`${PROVIDER_URL}?categories=${ticket.get('leaf_category').get('id')}&name__icontains=b`, 'GET', null, {}, 200, PROVIDER_FIXTURES.list());
   await selectSearch('.t-wo-create-provider-select', 'b');
   await selectChoose('.t-wo-create-provider-select', ProviderD.nameOne);
@@ -1133,8 +1133,8 @@ test('502 create a work order', async function(assert) {
   const expectedDate = new Date(2016, 4, 28);
   await interactor.selectDate(expectedDate);
   await click('[data-test-id="next"]');
-  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: WD.approvedAmount, 
-    scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }), 
+  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: WD.approvedAmount,
+    scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }),
     {}, 502, WF.detail());
   await click('[data-test-id="wo-send-post"]');
   assert.equal(find('app-notice').length, 1, 'error notification displayed');

@@ -75,6 +75,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
       }
       var category = this.generate(uuid);
       category.name += i;
+      category.verbose_name = category.name;
       category.label += i;
       delete category.parent;
       response.push(category);

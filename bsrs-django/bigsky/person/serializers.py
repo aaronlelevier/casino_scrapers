@@ -4,7 +4,7 @@ from django.contrib.auth.models import Permission
 
 from rest_framework import serializers
 
-from category.serializers import CategoryIDNameSerializer, CategoryRoleSerializer
+from category.serializers import CategoryIDNameOnlySerializer, CategoryRoleSerializer
 from generic.serializers import AttachmentSerializer, AttachmentThumbnailSerializer
 from contact.serializers import (PhoneNumberSerializer, EmailSerializer, AddressSerializer,
     AddressUpdateSerializer)
@@ -236,7 +236,7 @@ class PersonDetailSerializer(serializers.ModelSerializer):
 class PersonCurrentSerializer(PersonDetailSerializer):
 
     all_locations_and_children = LocationIdNameOnlySerializer(many=True)
-    categories = CategoryIDNameSerializer(many=True)
+    categories = CategoryIDNameOnlySerializer(many=True)
 
     class Meta:
         model = Person

@@ -242,12 +242,14 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
         response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
 
         data = json.loads(response.content.decode('utf8'))
-        category = data['categories'][0]
+        category_data = data['categories'][0]
 
-        self.assertIn('id', category)
-        self.assertIn('name', category)
-        self.assertIn('level', category)
-        self.assertIn('cost_amount', category)
+        self.assertIn('id', category_data)
+        category = Category.objects.get(id=category_data['id'])
+        self.assertEqual(category_data['name'], category.name)
+        self.assertEqual(category_data['verbose_name'], category.parents_and_self_as_string())
+        self.assertEqual(category_data['level'], category.level)
+        self.assertEqual(category_data['cost_amount'], str(category.cost_amount))
 
     def test_cc(self):
         response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
