@@ -256,7 +256,11 @@ test('change work order permissions', function(assert) {
   this.render(hbs`{{tickets/ticket-single model=model activities=activities permissions=permissions}}`);
   this.$('[data-test-id="ticket-display-collapsed"]').click();
   assert.equal(this.$('.t-wo-gl_code0').prop('readonly'), true);
-  assert.equal(this.$('.t-amount').prop('readonly'), true);
-  assert.ok(this.$('[data-test-id="scheduled-date"] input').prop('disabled'), true);
+  assert.equal(this.$('.t-amount').prop('readonly'), true); 
+  assert.ok(this.$('[data-test-id="scheduled-date"]').prop('disabled'), true);
   assert.ok(this.$('.t-instructions').prop('readonly'), true);
+  run(() => {
+    set(this, 'permissions', ['view_workorder', 'change_workorder']);
+  });
+  assert.ok(this.$('[data-test-id="begin-reschedule"]').length, 1);
 });

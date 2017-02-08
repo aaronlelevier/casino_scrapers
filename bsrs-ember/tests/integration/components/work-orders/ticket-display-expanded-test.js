@@ -145,10 +145,13 @@ test('labels are translated', function(assert) {
 });
 
 test('can reschedule scheduled_date', function(assert) {
+  run(() => {
+    set(this, 'permissions', ['view_workorder', 'change_workorder']);
+  });
   const tomorrow = moment().add(1, 'day').format('L');
   const expectedDate = new Date(tomorrow);
   this.model = store.find('work-order', WD.idOne);
-  this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
+  this.render(hbs`{{work-orders/ticket-display-expanded permissions=permissions model=model indx="0"}}`);
   let selector = '[data-test-id="scheduled-date"]';
   assert.equal(this.$(selector).length, 0, 'reschedule must be clicked first');
   let actual = this.$(testSelector('id', 'wo-fg-scheduled_date0')).find('input[readonly]').val();
@@ -163,10 +166,13 @@ test('can reschedule scheduled_date', function(assert) {
 });
 
 test('can cancel reschedule', function(assert) {
+  run(() => {
+    set(this, 'permissions', ['view_workorder', 'change_workorder']);
+  });
   const tomorrow = moment().add(1, 'day').format('L');
   const expectedDate = new Date(tomorrow);
   this.model = store.find('work-order', WD.idOne);
-  this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
+  this.render(hbs`{{work-orders/ticket-display-expanded model=model permissions=permissions indx="0"}}`);
   let selector = '[data-test-id="scheduled-date"]';
   let actual = this.$(testSelector('id', 'wo-fg-scheduled_date0')).find('input[readonly]').val();
   let expected = moment(WD.scheduledDateOne).format('MM/DD/YYYY');

@@ -391,10 +391,10 @@ test('rollback scheduled_date', function(assert) {
   let tomorrowDate = new Date(tomorrow);
   workOrder.set('scheduled_date', tomorrowDate);
   actual = workOrder.get('scheduled_date');
-  assert.equal(workOrder.get('isDirty'), true, ' work order is dirty')
+  assert.equal(workOrder.get('isDirty'), true, ' work order is dirty');
   assert.equal(actual, tomorrowDate, 'Date is ' + tomorrowDate);
   workOrder.rollbackProperty('scheduled_date');
-  assert.equal(workOrder.get('isDirty'), false, ' work order is NOT dirty')
+  assert.equal(workOrder.get('isDirty'), false, ' work order is NOT dirty');
   actual = workOrder.get('scheduled_date');
   assert.equal(actual, WD.scheduledDateOne, 'Date is ' + WD.scheduledDateOne);
 });

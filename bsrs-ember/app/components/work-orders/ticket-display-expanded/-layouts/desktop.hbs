@@ -102,12 +102,19 @@
             <button data-test-id="cancel-reschedule" class="btn btn-default" type="button" {{action "cancelReschedule"}}>{{t "work_order.reschedule_cancel"}}</button>
 
           {{else}}
-            <div class="input-group">
-              <input type="text" class="form-control" readonly="readonly" value={{moment-format model.scheduled_date "MM/DD/YYYY"}}>
-              <span class="input-group-btn">
-                <button data-test-id="begin-reschedule" class="btn btn-default" type="button" {{action "beginReschedule"}}>{{t "work_order.reschedule"}}</button>
-              </span>
-            </div>
+            {{#if (has-permission permissions=permissions verb="change" resource="workorder")}}
+              <div class="input-group">
+                <input type="text" class="form-control" readonly="readonly" value={{moment-format model.scheduled_date "MM/DD/YYYY"}}>
+                <span class="input-group-btn">
+                  <button data-test-id="begin-reschedule" class="btn btn-default" type="button" {{action "beginReschedule"}}>{{t "work_order.reschedule"}}</button>
+                </span>
+              </div>
+            {{else}}
+              <div class="input-group">
+                <input type="text" data-test-id="scheduled-date" class="form-control" disabled="disabled" readonly="readonly" value={{moment-format model.scheduled_date "MM/DD/YYYY"}}>
+                <span class="input-group-addon">{{fa-icon "calendar"}}</span>
+              </div>
+            {{/if}}
           {{/if}}
         {{/form-group}}
         {{#form-group title="work_order.label.tracking_number" readonly=true for="tracking_number" dataTestId=(concat "wo-fg-tracking_number" indx)}}
