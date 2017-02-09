@@ -1,5 +1,14 @@
 {{#unless isExpanded}}
-  {{work-orders/ticket-display-collapsed model=model indx=indx toggleIsExpanded=(action "toggleIsExpanded")}}
+  {{work-orders/ticket-display-collapsed
+    model=model
+    indx=indx
+    isExpanded=isExpanded
+  }}
 {{else}}
-  {{work-orders/ticket-display-expanded model=model indx=indx toggleIsExpanded=(action "toggleIsExpanded")}}
+  {{work-orders/ticket-display-expanded
+    model=model
+    indx=indx
+    permissions=permissions
+    isExpanded=isExpanded
+  }}
 {{/unless}}

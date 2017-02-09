@@ -10,6 +10,7 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 // import PROVIDER_DEFAULTS from 'bsrs-ember/vendor/defaults/provider';
 import WORK_ORDER_DEFAULTS from 'bsrs-ember/vendor/defaults/work-order';
 import { openDatepicker } from 'ember-pikaday/helpers/pikaday';
+import moment from 'moment';
 
 const WD = WORK_ORDER_DEFAULTS.defaults();
 let wo, store, trans;
@@ -35,20 +36,16 @@ test('can fill out approved_amount', function(assert) {
 });
 
 test('can fill out scheduled_date', function(assert) {
-  const expectedDate = new Date(2016, 4, 28);
+  const expectedDate = new Date();
   this.model = wo;
   this.render(hbs`{{work-orders/new/step-2 model=model}}`);
   assert.equal(this.$('.t-scheduled-date').length, 1);
   let interactor = openDatepicker(this.$('.t-scheduled-date'));
   interactor.selectDate(expectedDate);
-  assert.equal(interactor.selectedYear(), 2016);
-  assert.equal(interactor.selectedMonth(), 4);
-  assert.equal(interactor.selectedDay(), 28);
-  assert.equal(this.$('.t-scheduled-date').val(), '05/28/2016');
+  assert.equal(this.$('.t-scheduled-date').val(), moment().format('L'));
 });
 
 test('can fill out instructions with optional flag', function(assert) {
-  const expectedDate = new Date(2016, 4, 28);
   this.model = wo;
   this.render(hbs`{{work-orders/new/step-2 model=model}}`);
   this.$('.t-wo-instructions').val(WD.instructions).trigger('change');

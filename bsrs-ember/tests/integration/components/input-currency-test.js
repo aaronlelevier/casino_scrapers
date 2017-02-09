@@ -9,6 +9,7 @@ import CatD from 'bsrs-ember/vendor/defaults/category';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import page from 'bsrs-ember/tests/pages/input-currency';
 import waitFor from 'ember-test-helpers/wait';
+import formatNumber from 'accounting/format-number';
 
 const LONG_AUTH_AMOUNT = '50000.0000';
 const PD = PERSON_DEFAULTS.defaults();
@@ -149,7 +150,7 @@ test('renders a component with currency and label', function(assert) {
   $component.find('.t-amount').trigger('blur');
   assert.equal($component.find('.t-currency-symbol').text().trim(), CD.symbol_native);
   assert.equal($component.find('.t-currency-code-select').text().trim(), CD.code);
-  assert.equal($component.find('.t-amount').val(), parseFloat(PD.auth_amount).toFixed(CD.decimal_digits));
+  assert.equal($component.find('.t-amount').val(), formatNumber(PD.auth_amount, CD.decimal_digits));
 });
 
 test('the models bound field will update both the formatted input value and the model itself', function(assert) {

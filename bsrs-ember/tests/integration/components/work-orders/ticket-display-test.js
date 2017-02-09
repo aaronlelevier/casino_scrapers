@@ -28,7 +28,7 @@ moduleForComponent('ticket-display', 'integration: ticket-display test', {
       store.push('work-order', { id: WD.idOne, cost_estimate: WD.costEstimateOne, scheduled_date: WD.scheduledDateOne,
         cost_estimate_currency: CurrencyD.idOne, status_fk: WOSD.idOne, provider_fk: ProviderD.idOne });
       store.push('provider', {id: ProviderD.idOne, name: ProviderD.nameOne, city: ProviderD.cityOne, logo: ProviderD.logoOne, workOrders: [WD.idOne]});
-      store.push('currency', {id: CurrencyD.idOne, workOrders: [WD.idOne]});
+      store.push('currency', {id: CurrencyD.idOne, decimal_digits: 2, symbol: '$'});
     });
   },
 });
@@ -43,7 +43,7 @@ test('work order info is displayed', function(assert) {
   const logo1 = this.$('[data-test-id="provider-logo0"]').css('background-image');
   assert.equal(logo1.replace(/\"/g, ''), `url(${this.model.get('provider.logo')})`);
   assert.equal(this.$('[data-test-id="scheduled-date0"]').text(), moment(this.model.get('scheduled_date')).format('MM/DD/YYYY'));
-  assert.equal(this.$('[data-test-id="cost-estimate0"]').text(), this.model.get('cost_estimate'));
+  assert.equal(this.$('[data-test-id="cost-estimate0"]').text().trim(), `$${this.model.get('cost_estimate')}`);
   assert.equal(this.$('[data-test-id="wo-status-name"]:eq(0)').text(), this.model.get('status.name'));
 });
 

@@ -33,11 +33,12 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import dtdPage from 'bsrs-ember/tests/pages/dtd';
 // import timemachine from 'vendor/timemachine';
 import moment from 'moment';
+import unformat from 'accounting/unformat';
 import { openDatepicker } from 'ember-pikaday/helpers/pikaday';
 import { POWER_SELECT_OPTIONS, TICKET_CC_SELECT } from 'bsrs-ember/tests/helpers/power-select-terms';
 import BASEURLS, { TICKETS_URL, TICKET_LIST_URL, LOCATIONS_URL, PEOPLE_URL, CATEGORIES_URL,
   DT_URL, PROVIDER_URL, WORK_ORDER_URL } from 'bsrs-ember/utilities/urls';
-import { TICKET_ASSIGNEE, PS_SEARCH } from 'bsrs-ember/tests/helpers/const-names';
+import { TICKET_ASSIGNEE, TICKET_LOCATION, PS_SEARCH } from 'bsrs-ember/tests/helpers/const-names';
 
 const WD = WORK_ORDER_DEFAULTS.defaults();
 const PREFIX = config.APP.NAMESPACE;
@@ -371,8 +372,8 @@ test('starting with multiple cc, can remove all ccs (while not populating option
   });
   let PEOPLE_TICKETS_URL = `${PEOPLE_URL}person__icontains=Mel/`;
   xhr(PEOPLE_TICKETS_URL, 'GET', null, {}, 200, PF.get_for_power_select());
-  selectSearch('.t-ticket-cc-select', 'Mel');
-  selectChoose('.t-ticket-cc-select', PD.nameMel);
+  selectSearch(TICKET_CC_SELECT, 'Mel');
+  selectChoose(TICKET_CC_SELECT, PD.nameMel);
   andThen(() => {
     let ticket = this.store.find('ticket', TD.idOne);
     assert.equal(ticket.get('cc').get('length'), 1);
@@ -730,10 +731,8 @@ test('location component shows location for ticket and will fire off xhr to fetc
   page.categoryTwoClickDropdown();
   andThen(() => {
     assert.equal(page.categoryTwoInput, CD.nameRepairChild);
-    // assert.equal(page.categoryTwoOptionLength, 1);//fetch data will change this to 2 once implemented
   });
   xhr(`${CATEGORIES_URL}?parent=${CD.idPlumbing}&page_size=1000`, 'GET', null, {}, 200, CF.get_list(CD.idPlumbingChild, CD.namePlumbingChild, [], CD.idPlumbing, 2));
-  page.categoryTwoClickDropdown();
   page.categoryThreeClickDropdown();
   andThen(() => {
     assert.equal(page.categoryThreeInput, CD.namePlumbingChild);
@@ -741,9 +740,8 @@ test('location component shows location for ticket and will fire off xhr to fetc
   });
   // </check category tree>
   xhr(`${LOCATIONS_URL}location__icontains=6/`, 'GET', null, {}, 200, LF.search_power_select());
-  page.categoryThreeClickDropdown();
-  page.locationClickDropdown();
-  fillIn(PS_SEARCH, '6');
+  page.categoryThreeClickDropdown(); // close the category selector
+  selectSearch(TICKET_LOCATION, '6');
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
     assert.equal(page.locationInput, LD.storeName);
@@ -751,24 +749,23 @@ test('location component shows location for ticket and will fire off xhr to fetc
     assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), LD.storeNameFour);
     assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(1)`).text().trim(), LD.storeNameTwo);
   });
-  page.locationClickOptionTwo();
+  selectChoose(TICKET_LOCATION, LD.storeNameTwo);
   andThen(() => {
     assert.equal(page.locationInput, LD.storeNameTwo);
   });
-  page.locationClickDropdown();
-  fillIn(PS_SEARCH, '');
+  selectSearch(TICKET_LOCATION, '');
   andThen(() => {
     assert.equal(page.locationOptionLength, 1);
     assert.equal(find(`${POWER_SELECT_OPTIONS}`).text().trim(), GLOBALMSG.power_search);
   });
-  fillIn(PS_SEARCH, '6');
+  selectSearch(TICKET_LOCATION, '6');
   andThen(() => {
     assert.equal(page.locationInput, LD.storeNameTwo);
     assert.equal(page.locationOptionLength, 2);
     assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), LD.storeNameFour);
     assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(1)`).text().trim(), LD.storeNameTwo);
   });
-  page.locationClickOptionTwo();
+  selectChoose(TICKET_LOCATION, LD.storeNameTwo);
   andThen(() => {
     assert.equal(page.locationInput, LD.storeNameTwo);
     let ticket = this.store.find('ticket', TD.idOne);
@@ -781,14 +778,8 @@ test('location component shows location for ticket and will fire off xhr to fetc
   });
   //search specific location
   xhr(`${LOCATIONS_URL}location__icontains=GHI789/`, 'GET', null, {}, 200, LF.search_idThree());
-  page.locationClickDropdown();
-  fillIn(PS_SEARCH, 'GHI789');
-  andThen(() => {
-    assert.equal(page.locationInput, LD.storeNameTwo);
-    assert.equal(page.locationOptionLength, 1);
-    assert.equal(find(`${POWER_SELECT_OPTIONS} > li:eq(0)`).text().trim(), LD.storeNameThree);
-  });
-  page.locationClickIdThree();
+  selectSearch(TICKET_LOCATION, 'GHI789');
+  selectChoose(TICKET_LOCATION, LD.storeNameThree);
   andThen(() => {
     assert.equal(page.locationInput, LD.storeNameThree);
     let ticket = this.store.find('ticket', TD.idOne);
@@ -1002,7 +993,7 @@ test('can create a work order', async function(assert) {
   await interactor.selectDate(new Date());
   await click('[data-test-id="next"]');
   // scheduled_date start of day.  Pikaday selects it this way
-  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: WD.approvedAmount,
+  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: unformat(WD.approvedAmount),
     scheduled_date: moment().hours(0).startOf('hour'), category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }), {}, 201, WF.detail());
   await click('[data-test-id="wo-send-post"]');
   await click('[data-test-id="wo-done"]');
@@ -1015,6 +1006,8 @@ test('can create a work order', async function(assert) {
 test('can update a work order', async function(assert) {
   await page.visitDetail();
   await click('[data-test-id="expander-collapsed0"]');
+  assert.equal(find('[data-test-id="work-order-approved0"]').text().trim(), `$${t('work_order.phrase.approval', 
+    { cost: WD.approvedAmount, approver: PD.fullname, approvedDate: moment(WD.approvalDateOne).calendar() })}`);
   await fillIn('.t-wo-gl_code0', WD.glCodeTwo);
   let payload = TF.put({id: TD.idOne});
   const wo_payload = WF.put({id: WD.idOne, gl_code: WD.glCodeTwo});
@@ -1044,7 +1037,7 @@ test('no cost_amount will also save work order (input currency component will cl
     Ember.$('.t-amount').focusout();
   });
   let payload = TF.put({id: TD.idOne});
-  const wo_payload = WF.put({id: WD.idOne, cost_estimate: ''});
+  const wo_payload = WF.put({id: WD.idOne, cost_estimate: 0});
   xhr(WO_PUT_URL, 'PUT', JSON.stringify(wo_payload), {}, 200, {});
   await generalPage.save();
   assert.equal(currentURL(), TICKET_LIST_URL);
@@ -1101,11 +1094,11 @@ test('400 create a work order', async function(assert) {
   await click('[data-test-id="next"]');
   await fillIn('.t-wo-approved_amount', WD.approvedAmount);
   let interactor = openDatepicker(Ember.$('.t-scheduled-date'));
-  const expectedDate = new Date(2016, 4, 28);
+  const expectedDate = new Date();
   await interactor.selectDate(expectedDate);
   await click('[data-test-id="next"]');
-  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: WD.approvedAmount,
-    scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }),
+  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: unformat(WD.approvedAmount),
+    scheduled_date: moment().hours(0).startOf('hour'), category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }),
     {}, 400, WF.detail());
   await click('[data-test-id="wo-send-post"]');
   assert.equal(find('app-notice').length, 1, 'error notification displayed');
@@ -1130,11 +1123,11 @@ test('502 create a work order', async function(assert) {
   await click('[data-test-id="next"]');
   await fillIn('.t-wo-approved_amount', WD.approvedAmount);
   let interactor = openDatepicker(Ember.$('.t-scheduled-date'));
-  const expectedDate = new Date(2016, 4, 28);
+  const expectedDate = new Date();
   await interactor.selectDate(expectedDate);
   await click('[data-test-id="next"]');
-  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: WD.approvedAmount,
-    scheduled_date: expectedDate, category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }),
+  xhr(WORK_ORDER_URL, 'POST', JSON.stringify({ id: 1, cost_estimate_currency: CurrencyD.idOne, approved_amount: unformat(WD.approvedAmount),
+    scheduled_date: moment().hours(0).startOf('hour'), category: ticket.get('leaf_category.id'), provider: ProviderD.idOne, ticket: TD.idOne }), 
     {}, 502, WF.detail());
   await click('[data-test-id="wo-send-post"]');
   assert.equal(find('app-notice').length, 1, 'error notification displayed');

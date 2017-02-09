@@ -26,21 +26,21 @@ var GridRepositoryMixin = Ember.Mixin.create({
       return endpoint.includes('/?') ? '&' : '?';
     };
 
-    if(sort && sort !== 'id' && sort.indexOf('.') < 0){
+    if (sort && sort !== 'id' && sort.indexOf('.') < 0) {
       endpoint = endpoint + appendParamOperator(endpoint) + 'ordering=' + sort;
-    }else if(sort && sort !== 'id'){
+    } else if(sort && sort !== 'id') {
       endpoint = endpoint + appendParamOperator(endpoint) + 'ordering=' + sort.replace(/\./g, '__').replace(/translated_name/g, 'name');
     }
-    if(search && search !== ''){
+    if (search && search !== '') {
       endpoint = endpoint + appendParamOperator(endpoint) + 'search=' + encodeURIComponent(search);
     }
-    if(page_size) {
+    if (page_size) {
       endpoint = endpoint + appendParamOperator(endpoint) + 'page_size=' + page_size;
     }
-    if(special_url) {
+    if (special_url) {
       endpoint = endpoint + appendParamOperator(endpoint) + `${special_url}`;
     }
-    if(find && find !== ''){
+    if (find && find !== '') {
       let finds = find.split(',');
       finds.forEach((data) => {
         const params = data.split(':');
@@ -51,7 +51,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
       });
     }
     /* id__in can contain multiple id's for one field; however, assigning multiple ids to a field is done @ component level */
-    if(id_in) {
+    if (id_in) {
       const key_values = id_in.split('|');
       key_values.forEach((key_value) => {
         /* key='location' value='143ad-adie32,30843d-adc342,121ae-..., key='priority' value='123adbd-3' */

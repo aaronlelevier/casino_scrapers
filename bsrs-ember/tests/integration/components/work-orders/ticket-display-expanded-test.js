@@ -11,6 +11,7 @@ import CurrencyD from 'bsrs-ember/vendor/defaults/currency';
 import PROVIDER_DEFAULTS from 'bsrs-ember/vendor/defaults/provider';
 import moment from 'moment';
 import { openDatepicker } from 'ember-pikaday/helpers/pikaday';
+import testSelector from 'ember-test-selectors';
 
 let WD, WOSD, ProviderD, PD, store, model, model2, trans;
 const PC = PERSON_CURRENT.defaults();
@@ -30,7 +31,7 @@ moduleForComponent('ticket-display-expanded', 'integration: ticket-display-expan
     run(() => {
       store.push('person-current', PERSON_CURRENT.defaults());
       store.push('work-order-status', {id: WOSD.idOne, name: WOSD.nameOne, workOrders: [WD.idOne]});
-      store.push('person', { id: PD.idOne, fullname: PD.fullnume, workOrders: [WD.idOne] });
+      store.push('person', { id: PD.idOne, fullname: PD.fullname, workOrders: [WD.idOne] });
       model = store.push('work-order', { id: WD.idOne, cost_estimate: WD.costEstimateOne,
         scheduled_date: WD.scheduledDateOne, cost_estimate_currency: CurrencyD.idOne,
         status_fk: WOSD.idOne, provider_fk: ProviderD.idOne, approved_amount: WD.approvedAmount,
@@ -110,7 +111,6 @@ test('displays cost, gl, instructions, scheduled date and tracking number', func
 });
 
 test('approval text displays properly', function(assert) {
-  let approvalPhrase = `cost="${WD.approvedAmount}" approver="${PD.fullname}" approvedDate="${WD.approvalDateOne}" currency="${CurrencyD.code}" currencySymbol="${CurrencyD.symbol}"`;
   this.model = store.find('work-order', WD.idOne);
   this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
   //starts out with an approval
@@ -143,17 +143,48 @@ test('labels are translated', function(assert) {
   assert.equal(this.$('[data-test-id="wo-fg-tracking_number0"] label').text().trim(), trans.t('work_order.label.tracking_number'));
 });
 
-test('can can fill out scheduled_date', function(assert) {
-  const expectedDate = new Date(2016, 4, 28);
+test('can reschedule scheduled_date', function(assert) {
+  run(() => {
+    set(this, 'permissions', ['view_workorder', 'change_workorder']);
+  });
+  const tomorrow = moment().add(1, 'day').format('L');
+  const expectedDate = new Date(tomorrow);
   this.model = store.find('work-order', WD.idOne);
-  this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
-  assert.equal(this.$('[data-test-id="scheduled-date"]').length, 1);
-  let interactor = openDatepicker(this.$('[data-test-id="scheduled-date"] input'));
+  this.render(hbs`{{work-orders/ticket-display-expanded permissions=permissions model=model indx="0"}}`);
+  let selector = '[data-test-id="scheduled-date"]';
+  assert.equal(this.$(selector).length, 0, 'reschedule must be clicked first');
+  let actual = this.$(testSelector('id', 'wo-fg-scheduled_date0')).find('input[readonly]').val();
+  assert.ok(actual, 'a scheduled date is present');
+  assert.notEqual(actual, tomorrow, 'tomorrow is not scheduled');
+  this.$(testSelector('id', 'begin-reschedule')).click();
+  this.$(selector).click();
+  let interactor = openDatepicker(this.$(selector + ' input'));
   interactor.selectDate(expectedDate);
-  assert.equal(interactor.selectedYear(), 2016);
-  assert.equal(interactor.selectedMonth(), 4);
-  assert.equal(interactor.selectedDay(), 28);
-  assert.equal(this.$('[data-test-id="scheduled-date"] input').val(), '05/28/2016');
+  actual = this.$(selector + ' input').val();
+  assert.equal(actual, tomorrow, 'tomorrow was selected');
+});
+
+test('can cancel reschedule', function(assert) {
+  run(() => {
+    set(this, 'permissions', ['view_workorder', 'change_workorder']);
+  });
+  const tomorrow = moment().add(1, 'day').format('L');
+  const expectedDate = new Date(tomorrow);
+  this.model = store.find('work-order', WD.idOne);
+  this.render(hbs`{{work-orders/ticket-display-expanded model=model permissions=permissions indx="0"}}`);
+  let selector = '[data-test-id="scheduled-date"]';
+  let actual = this.$(testSelector('id', 'wo-fg-scheduled_date0')).find('input[readonly]').val();
+  let expected = moment(WD.scheduledDateOne).format('MM/DD/YYYY');
+  assert.equal(actual, expected, `Date is ${expected}` );
+  this.$(testSelector('id', 'begin-reschedule')).click();
+  this.$(selector).click();
+  let interactor = openDatepicker(this.$(selector + ' input'));
+  interactor.selectDate(expectedDate);
+  actual = this.$(selector + ' input').val();
+  assert.equal(actual, tomorrow, 'tomorrow was selected');
+  this.$(testSelector('id', 'cancel-reschedule')).click();
+  actual = this.$(testSelector('id', 'wo-fg-scheduled_date0')).find('input[readonly]').val();
+  assert.equal(actual, expected, `Date is ${expected}` );
 });
 
 test('if work order has tracking number display it otherwise show TBD', function(assert) {

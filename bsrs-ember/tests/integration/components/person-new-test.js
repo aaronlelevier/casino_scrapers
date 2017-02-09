@@ -58,37 +58,7 @@ test('locale should default if not present in Person model', function(assert) {
   assert.equal(Ember.$('[data-test-id="locale"] > label > span').text().trim(), trans.t('optional'));
 });
 
-// test('password validation error if not present or greater than 30 characters', function(assert) {
-//   let modalDialogService = this.container.lookup('service:modal-dialog');
-//   modalDialogService.destinationElementId = 'password';
-//   var done = assert.async();
-//   run(() => {
-//     this.set('model', store.push('person', {id: PD.idOne}));
-//   });
-//   this.render(hbs`{{people/person-new model=model}}`);
-//   // presence required
-//   let $err = this.$('.invalid');
-//   assert.equal($err.text().trim(), '');
-//   this.$('.t-person-password').val('').keyup();
-//   Ember.run.later(() => {
-//     let $err = this.$('.invalid');
-//     assert.ok($err.is(':visible'));
-//     this.$('.t-person-password').val('a123bc').keyup();
-//     Ember.run.later(() => {
-//       // valid input
-//       $err = this.$('.invalid');
-//       assert.notOk($err.is(':visible'));
-//       this.$('.t-person-password').val('a'.repeat(16)).keyup();
-//       Ember.run.later(() => {
-//         $err = this.$('.invalid');
-//         assert.ok($err.is(':visible'));
-//         this.$('.t-person-password').val('a'.repeat(15)).keyup();
-//         Ember.run.later(() => {
-//           $err = this.$('.invalid');
-//           assert.notOk($err.is(':visible'));
-//           done();
-//         }, 100);
-//       }, 1600);
-//     }, 1000);
-//   }, 1600);
-// });
+test('middle initial should have a maxlength of 1', function(assert) {
+  this.render(hbs`{{people/person-new model=model locales=locales}}`);
+  assert.equal(this.$('.t-person-middle-initial').attr('maxlength'), 1);
+});

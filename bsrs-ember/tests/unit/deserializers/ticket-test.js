@@ -36,7 +36,7 @@ module('unit: ticket deserializer test', {
       'model:status', 'model:location', 'model:location-list','model:person-location',
       'model:person', 'model:category', 'model:uuid', 'model:location-level',
       'model:attachment', 'model:location-status', 'service:person-current',
-      'service:translations-fetcher', 'service:i18n', 'model:locale', 'model:role',
+      'service:translations-fetcher', 'service:i18n', 'service:currency', 'model:locale', 'model:role',
       'model:general-status-list', 'model:ticket-priority-list', 'model:category-list',
       'model:category-children', 'model:generic-join-attachment','model:work-order',
       'model:related-person', 'model:related-location', 'validator:presence',
@@ -44,7 +44,8 @@ module('unit: ticket deserializer test', {
       'model:ticket-join-wo', 'model:currency', 'model:work-order-status', 'model:provider']);
     uuid = this.container.lookup('model:uuid');
     functionalStore = this.container.lookup('service:functional-store');
-    const workOrderDeserializer = WorkOrderDeserializer.create({simpleStore: store});
+    const currency = this.container.lookup('service:currency');
+    const workOrderDeserializer = WorkOrderDeserializer.create({ simpleStore: store, currency: currency });
     subject = TicketDeserializer.create({simpleStore: store, functionalStore: functionalStore,
       workOrderDeserializer: workOrderDeserializer, uuid: uuid});
     run(() => {
@@ -56,6 +57,7 @@ module('unit: ticket deserializer test', {
       store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, locations: [LD.idOne]});
       store.push('status', {id: SD.activeId, name: SD.activeName});
       store.push('role', {id: RD.idOne, name: RD.nameOne, location_level_fk: LLD.idOne});
+      store.push('currency', { id: CD.idOne, name: CD.name, decimal_digits: 2 });
     });
   }
 });

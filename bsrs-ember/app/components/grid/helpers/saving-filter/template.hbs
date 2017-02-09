@@ -1,5 +1,5 @@
 {{#if savingFilter}}
-{{#tether-dialog close="toggleSaveFilterSetModal" containerClassNames="bs-dialog" hasOverlay=true clickOutsideToClose=true translucentOverlay=true}}
+{{#tether-dialog close="toggleSaveFilterSetModal" containerClassNames="bs-dialog--small" hasOverlay=true clickOutsideToClose=true translucentOverlay=true}}
 <div role="filterset" aria-labelledby="filtersetTitle" aria-describedby="filtersetBody">
   <div class="modal-header flex" id="filtersetTitle" data-test-id="fulltext-search">
     <h2 class="flex-item--auto">{{t "grid.filterset_name"}}</h2>
@@ -18,7 +18,7 @@
 {{/if}}
 
 {{#if toggleFilter}}
-{{#tether-dialog close="toggleFilterModal" containerClassNames="bs-dialog" hasOverlay=true clickOutsideToClose=true translucentOverlay=true}}
+{{#tether-dialog close="toggleFilterModal" containerClassNames="bs-dialog--small" hasOverlay=true clickOutsideToClose=true translucentOverlay=true}}
 <div role="columnFilter" aria-labelledby="columnFilterTitle" aria-describedby="columnFilterBody">
   <div class="modal-header flex" id="columnFilterTitle" data-test-id="column-filter--head">
     <h2 class="flex-item--auto">{{t filterPlaceholder}}</h2>

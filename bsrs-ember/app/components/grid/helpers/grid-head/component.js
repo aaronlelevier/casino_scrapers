@@ -46,12 +46,7 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
       repo.mobileSearch(searchValue).then((results) => {
         this.set('searchResults', results);
       });
-      // this.setProperties({ page:1, search: searchValue });
     },
-    /*
-    // searchGrid() {
-    // this.toggleProperty('showSaveFilterInput');
-    // },
     /*
      * @method filterGrid
      * takes gridFilterParams && gridIdInParams object and turns values into a string
@@ -71,14 +66,14 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
       });
 
       /* 'id_in' query param - pipe separated model types, comma separated list of model's ids that were filtered */
-      const idInParams = this.get('gridIdInParams');
+      const gridIdInParams = this.get('gridIdInParams');
       let finalIdInFilter = '';
       /* loop through keys in gridIdInParams object > status.name:['12493-adv32...'],location.name:[obj, obj] */
-      Object.keys(idInParams).forEach((key) => {
-        const arrVals = idInParams[key];
+      Object.keys(gridIdInParams).forEach((key) => {
+        const arrVals = gridIdInParams[key];
         if (arrVals.length === 0) {
           // delete key if user set to none
-          delete idInParams[key];
+          delete gridIdInParams[key];
         }
         finalIdInFilter += (key.split('.')[0] + ':' + arrVals.reduce((prev, val) => {
           val = typeof(val) === 'object' ? val.id : val;
@@ -90,11 +85,9 @@ export default Ember.Component.extend(UpdateFind, SaveFiltersetMixin, {
       if (!finalFilter && !finalIdInFilter) {
         // if initial state, do not reset grid and keep local cache of grid data
         if (typeof find === 'undefined' && typeof id_in === 'undefined') { return; }
-        // if find or id_in had previous values, reset grid and clear store in anticipation of new data
-        this.get('simpleStore').clear(`${this.get('noun')}-list`);
+        // if find or id_in had previous values, reset grid in anticipation of new data
         this.setProperties({page: 1, find: undefined, id_in: undefined});
       } else {
-        this.get('simpleStore').clear(`${this.get('noun')}-list`);
         this.setProperties({ page: 1, find: finalFilter, id_in: finalIdInFilter });
       }
     },

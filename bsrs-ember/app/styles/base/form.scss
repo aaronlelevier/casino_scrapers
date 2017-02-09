@@ -3,14 +3,6 @@ input, textarea, select, button {
 	box-shadow: none !important;
   -webkit-appearance:none;
 }
-input[type="text"]:disabled {
-	border: none;
-	box-shadow: none;
-	&:hover {
-		border: none;
-		box-shadow: none;
-	}
-}
 .help-text,
 .help-text--approval{
 	font-size: 1.2rem;

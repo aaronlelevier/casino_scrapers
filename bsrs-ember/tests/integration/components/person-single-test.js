@@ -135,3 +135,8 @@ test('click on status dropdown and select status', function(assert) {
   assert.equal(Ember.$('[data-test-id="status-tag"]').text().trim(), SD.inactiveNameTranslated);
   assert.equal(Ember.$('[data-test-id="status-tag"]').length, 1);
 });
+
+test('middle initial should have a maxlength of 1', function(assert) {
+  this.render(hbs`{{people/person-single model=model}}`);
+  assert.equal(this.$('.t-person-middle-initial').attr('maxlength'), 1);
+});

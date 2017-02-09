@@ -1,6 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
 import PromiseMixin from 'ember-promise/mixins/promise';
+import formatNumber from 'accounting/format-number';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';
@@ -27,14 +28,14 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
     const pk = this.get('uuid').v4();
     const d = new Date();
     const scheduled_date = d.setDate(d.getDate() + 5);
-    const currency_id = this.get('currency').getDefaultCurrency().get('id');
-    const work_order = this.get('simpleStore').push('work-order', { id: pk, ticket: ticket_id, cost_estimate_currency: currency_id, 
-      approved_amount: leaf_category.get('cost_amount'), scheduled_date: new Date(scheduled_date) });
+    const currency_object = this.get('currency').getDefaultCurrency();
+    const work_order = this.get('simpleStore').push('work-order', { id: pk, ticket: ticket_id, cost_estimate_currency: currency_object.get('id'), 
+      approved_amount: formatNumber(leaf_category.get('cost_amount_or_inherited'), { precision: currency_object.get('decimal_digits')}), scheduled_date: new Date(scheduled_date) });
     this.get('simpleStore').push('category', { id: leaf_category.get('id'), workOrders: [pk] });
     return work_order;
   },
   dispatchWorkOrder(work_order) {
-    return PromiseMixin.xhr(this.get('url'), 'POST', {data: JSON.stringify(work_order.serialize())}).then((wo) => {
+    return PromiseMixin.xhr(this.get('url'), 'POST', {data: JSON.stringify(work_order.postSerialize())}).then((wo) => {
       return this.get('deserializer').deserialize(wo, wo.id);
     });
   }

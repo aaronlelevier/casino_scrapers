@@ -27,7 +27,7 @@ class WorkOrderViewSet(BaseModelViewSet):
         """
         Add the User making the POST request as the 'requester'
         """
-        request.data['requester'] = request.user.id
+        request.data['approver'] = request.user.id
         return super(WorkOrderViewSet, self).create(request, *args, **kwargs)
 
     def destroy(self, request, *args, **kwargs):

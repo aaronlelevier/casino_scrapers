@@ -28,6 +28,7 @@
     "ember-basic-dropdown": "0.19.1",
     "ember-browserify": "^1.1.11",
     "ember-cli": "2.11.0",
+    "ember-cli-accounting": "2.0.0",
     "ember-cli-app-version": "^2.0.0",
     "ember-cli-auto-register": "1.1.0",
     "ember-cli-autoprefixer": "0.6.0",

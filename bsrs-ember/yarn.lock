@@ -1815,6 +1815,12 @@ ember-browserify@^1.1.11:
     through2 "^2.0.0"
     walk-sync "^0.2.7"
 
+ember-cli-accounting@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/ember-cli-accounting/-/ember-cli-accounting-2.0.0.tgz#3b9051c361708056d9ac13ef03b920a8ccc53382"
+  dependencies:
+    ember-cli-babel "^5.1.7"
+
 ember-cli-app-version@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/ember-cli-app-version/-/ember-cli-app-version-2.0.1.tgz#64cbe581a9abaf98afd60e9cf60fdec460766c9b"
@@ -2300,17 +2306,9 @@ ember-computed-decorators@0.2.2, ember-computed-decorators@^0.2.2:
   dependencies:
     ember-cli-babel "^5.1.5"
 
-ember-concurrency@0.7.18:
+ember-concurrency@0.7.18, ember-concurrency@^0.7.15:
   version "0.7.18"
   resolved "https://registry.yarnpkg.com/ember-concurrency/-/ember-concurrency-0.7.18.tgz#864723370e0da2892ff6bfc34dbda3b38cb84884"
-  dependencies:
-    ember-cli-babel "^5.1.5"
-    ember-getowner-polyfill "^1.1.0"
-    ember-maybe-import-regenerator "^0.1.4"
-
-ember-concurrency@^0.7.15:
-  version "0.7.17"
-  resolved "https://registry.yarnpkg.com/ember-concurrency/-/ember-concurrency-0.7.17.tgz#28f963c96fa5d1c42bb4b239c0212220d849738f"
   dependencies:
     ember-cli-babel "^5.1.5"
     ember-getowner-polyfill "^1.1.0"

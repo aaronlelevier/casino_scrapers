@@ -8,7 +8,7 @@
 }}
 
 {{#if modalIsShowing}}
-{{#modal-dialog translucentOverlay=true}}
+{{#modal-dialog translucentOverlay=true container-class="bs-dialog--small"}}
   <div role="dialog" aria-labelledby="applicationTitle" aria-describedby="applicationBody">
     <div class="modal-header flex" id="applicationTitle">
       <h2 class="modal-title flex-item--auto t-modal-title">{{if (is-equal action 'closeTab' 'cancel') (t 'crud.discard_changes') (t 'crud.delete.title')}}</h2>

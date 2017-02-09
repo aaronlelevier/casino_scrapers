@@ -4,6 +4,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import CD from 'bsrs-ember/vendor/defaults/category';
+import CurrencyD from 'bsrs-ember/vendor/defaults/currency';
 import PROVIDER_DEFAULTS from 'bsrs-ember/vendor/defaults/provider';
 import WORK_ORDER_DEFAULTS from 'bsrs-ember/vendor/defaults/work-order';
 import moment from 'moment';
@@ -19,11 +20,13 @@ moduleForComponent('work-orders/new/step-3', 'Integration | Component | work ord
     run(() => {
       model = store.push('work-order', {
         id: WD.idOne, approved_amount: WD.approvedAmount, scheduled_date: WD.scheduledDateOne,
-        category_fk: CD.idOne, provider_fk: ProviderD.idOne, instructions: WD.instructions
+        category_fk: CD.idOne, provider_fk: ProviderD.idOne, instructions: WD.instructions,
+        cost_estimate_currency: CurrencyD.idOne
       });
       store.push('category', { id: CD.idOne, name: CD.nameElectricalChild, workOrders: [WD.idOne] });
       store.push('provider', { id: ProviderD.idOne, name: ProviderD.nameOne, address1: ProviderD.address1One,
         logo: ProviderD.logoOne, workOrders: [WD.idOne] });
+      store.push('currency', {id: CurrencyD.idOne, decimal_digits: 2, symbol: '#'});
     });
   }
 });
@@ -36,6 +39,6 @@ test('it renders with display information', function(assert) {
   const logo1 = this.$('[data-test-id="provider-logo"]').css('background-image');
   assert.equal(logo1.replace(/\"/g, ''), `url(${model.get('provider.logo')})`);
   assert.equal(this.$('[data-test-id="scheduled-date"]').text(), moment(model.get('scheduled_date')).format('MM/DD/YYYY'));
-  assert.equal(this.$('[data-test-id="approved-amount"]').text(), model.get('approved_amount'));
+  assert.equal(this.$('[data-test-id="approved-amount"]').text().trim(), `#${model.get('approved_amount')}`);
   assert.equal(this.$('[data-test-id="instructions"]').text().trim(), model.get('instructions'));
 });

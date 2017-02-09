@@ -1,28 +1,54 @@
 import Ember from 'ember';
+const { get } = Ember;
+import formatNumber from 'accounting/format-number';
 
 let CurrencyService = Ember.Service.extend({
   simpleStore: Ember.inject.service(),
-  getPersonCurrency() {
+  _getPersonCurrency() {
     // should always be using the person-current here.
-    let store = this.get('simpleStore');
+    let store = get(this, 'simpleStore');
     let person = store.find('person-current').objectAt(0).get('person');
     let currencyId = person.get('auth_currency') ? person.get('auth_currency') : person.get('inherited').auth_currency.inherited_value;
     return store.find('currency', currencyId);
   },
+  _getCurrency(currencyId) {
+    return get(this, 'simpleStore').find('currency', currencyId);
+  },
   getDefaultCurrency() {
     // a single Currency will be marked as the default server side
     // based on the Tenant's General Settings. Then return default here.
-    let store = this.get('simpleStore');
-    return store.find('currency', {default: true}).objectAt(0);
+    return get(this, 'simpleStore').find('currency', {default: true}).objectAt(0);
   },
   getCurrencies() {
-    let store = this.get('simpleStore');
-    return store.find('currency');
+    return get(this, 'simpleStore').find('currency');
   },
-  formatCurrency(val, precision) {
-    // 0 may be falsy but we still want to display something?
-    // isNaN(parseFloat()) takes care of '' and 'abc' b/c '' gets converted to 0, so thinks it is a number
-    return !isNaN(parseFloat(val)) ? parseFloat(val).toFixed(precision) : '';
+  /**
+   * @method currencyObject
+   * @param { String } currencyId - optional
+   * @param { String } inheritsFrom - optional
+   * model.currencyField is an FK to a currency object loaded on boot
+   */
+  getCurrencyObject(currencyId, inheritsFrom) {
+    if (currencyId) {
+      return this._getCurrency(currencyId); 
+    } else if (inheritsFrom) {
+      return this._getPersonCurrency();
+    }
+    return this.getDefaultCurrency();
+  },
+  /**
+   * only formats currency for its own currency
+   * This does not convert on currency to another.  TODO: convert currency
+   * @method formatCurrency
+   * @param val
+   * @param currencyId
+   * @param inheritsFrom
+   * @return {Number} - formatted
+   */
+  formatCurrency(val, currencyId, inheritsFrom) {
+    const currencyObject = this.getCurrencyObject(currencyId, inheritsFrom);
+    const precision = currencyObject.get('decimal_digits');
+    return formatNumber(val, { precision: precision });
   }
 });
 

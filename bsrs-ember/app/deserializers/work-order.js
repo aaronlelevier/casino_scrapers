@@ -1,8 +1,10 @@
 import Ember from 'ember';
+const { inject } = Ember;
 import { belongs_to } from 'bsrs-components/repository/belongs-to';
 import OptConf from 'bsrs-ember/mixins/optconfigure/work-order';
 
 export default Ember.Object.extend(OptConf, {
+  currency: inject.service(),
   init() {
     belongs_to.bind(this)('status');
     belongs_to.bind(this)('category');
@@ -10,12 +12,11 @@ export default Ember.Object.extend(OptConf, {
     belongs_to.bind(this)('approver');
   },
   deserialize(response, id) {
-    if (id) {
-      return this._deserializeSingle(response);
-    }
+    return this._deserializeSingle(response);
   },
   _deserializeSingle(response) {
     const store = this.get('simpleStore');
+    response.cost_estimate = this.get('currency').formatCurrency(response.cost_estimate, response.cost_estimate_currency);
     response.status_fk = response.status.id;
     response.category_fk = response.category.id;
     response.provider_fk = response.provider.id;

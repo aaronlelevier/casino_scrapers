@@ -92,3 +92,4 @@ test('when readonly is true, textarea has a readonly attribute', function(assert
   let el = this.$('textarea')[0];
   assert.equal(el.readOnly, true, 'readonly attribute is present on textarea');
 });
+

@@ -4,66 +4,65 @@ const { get, set, computed } = Ember;
 import ValidationInput from 'bsrs-ember/components/validated-input/component';
 
 /**
- * API
- *
+ * @property InputCurrency
+ * model {Object} required
+ * field {String} required - model property for value in input-currency
+ * currencyField {String} required - model property for id pointing to correct currency in simple store
+ * inheritsFrom {String|Number} optional - if currency is inherited from another object
+ * placeholder {String} optional
  */
 export default ValidationInput.extend({
   currency: Ember.inject.service(),
-  simpleStore: Ember.inject.service(),
   classNames: ['input-currency t-input-currency'],
+  classNameBindings: ['readonly'],
   attributeBindings: ['valuePath:id'],
   /**
-     @method currencyObject
-     @param { string } currencyField - API e.g. "auth_currency"
-     @param { string } inheritsFrom - not req from API
-     model.currencyField is an FK to a currency object loaded on boot
-   */
-  currencyObject: computed('model.auth_currency', 'model.cost_currency', 'model.cost_estimate_currency', function() {
-    let store = get(this, 'simpleStore');
-    let currencyField = get(this, 'currencyField');
-    let inheritsFrom = get(this, 'inheritsFrom');
-    let currency_service = get(this, 'currency');
-    if (get(this, `model.${currencyField}`)) {
-      return store.find('currency', get(this, `model.${currencyField}`));
-    } else if (inheritsFrom) {
-      return currency_service.getPersonCurrency();
-    }
-    return currency_service.getDefaultCurrency();
-  }),
-  /**
-     @method currencyObjects
-     power select dropdown list of currencies
+   * @property currencyObjects
+   * power select dropdown list of currencies
+   * @type Array
    */
   currencyObjects: computed(function() {
     let currency_service = get(this, 'currency');
     return currency_service.getCurrencies();
   }),
+  /**
+   * should format the placeholder amount to the correct decimal digits
+   * Set to zero until have further requirements
+   * @property placeholderAmount
+   * @type Number
+   */
   placeholderAmount: computed(function() {
-    const currency = get(this, 'currencyObject');
-    const field = get(this, 'field');
-    let amount = get(currency, `model.${field}`) ? get(currency, `model.${field}`) : 0;
-    return parseFloat(amount).toFixed(get(currency, 'decimal_digits'));
+    const currencyService = get(this, 'currency');
+    const currencyField = get(this, 'currencyField');
+    const currencyId = get(this, `model.${currencyField}`);
+    const inheritsFrom = get(this, 'inheritsFrom');
+    const boundField = 0;
+
+    return currencyService.formatCurrency(boundField, currencyId, inheritsFrom);
   }),
   actions: {
     /**
-     * formats the currency with the correct decimal points
+     * formats the currency with the correct decimal points and update the model's field
      * @method formatCurrency
      */
     formatCurrency() {
-      const field = get(this, 'field');
-      const currency_service = get(this, 'currency');
-      const precision = get(this, 'currencyObject').get('decimal_digits');
-      const bound_field = get(this, `model.${field}`);
+      const currencyService = get(this, 'currency');
 
-      const typedInput = currency_service.formatCurrency(bound_field, precision);
+      const field = get(this, 'field');
+      const boundField = get(this, `model.${field}`);
+
+      const currencyField = get(this, 'currencyField');
+      const currencyId = get(this, `model.${currencyField}`);
+      const inheritsFrom = get(this, 'inheritsFrom');
+
+      const typedInput = currencyService.formatCurrency(boundField, currencyId, inheritsFrom);
       set(this, 'model.' + field, typedInput);
     },
     /**
-     * remove any non number or comma or decimal
+     * remove any non (number comma decimal). ie. remove negative sign for example
      * @method keyedUp
      */
     keyedUp() {
-      // remove negative sign
       let field = get(this, 'field');
       let bound_field = get(this, `model.${field}`);
       if (bound_field.match(/[^0-9.,]/g)) {
@@ -79,7 +78,7 @@ export default ValidationInput.extend({
     selected(obj) {
       const model = get(this, 'model');
       const currencyField = get(this, 'currencyField');
-      model.set(currencyField, get(obj, 'id'));
+      set(model, currencyField, get(obj, 'id'));
     },
   }
 });

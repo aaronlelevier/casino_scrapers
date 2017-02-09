@@ -40,7 +40,7 @@ class FactoryTests(TestCase):
         self.assertIsInstance(wo.instructions, str)
         self.assertIsInstance(wo.location, Location)
         self.assertIsInstance(wo.priority, WorkOrderPriority)
-        self.assertIsInstance(wo.requester, Person)
+        self.assertIsNotNone(wo.requester)
         self.assertEqual(wo.scheduled_date, factory.TIME)
         self.assertIsInstance(wo.status, WorkOrderStatus)
 

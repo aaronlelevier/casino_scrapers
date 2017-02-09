@@ -1,6 +1,10 @@
-<div style="clear:both;" class="input-group clearfix">
+<div class="input-group {{if readonly 'readonly'}}">
   <div class="input-group-addon t-currency-symbol">
-    {{currencyObject.symbol}}
+    {{get (get-currency-object 
+      currencyService=currency 
+      currencyId=(get model currencyField) 
+      inheritsFrom=inheritsFrom) 
+    'symbol'}}
   </div>
   {{input
     type="text"
@@ -8,18 +12,18 @@
     value=(get model field)
     class=(concat "form-control t-amount " className (if showMessage " invalid"))
     id=(if (gt count -1) (concat valuePath count) valuePath)
-    disabled=editPrivilege
     focus-out="formatCurrency"
     key-up=(action "keyedUp")
     readonly=readonly
   }}
   {{#power-select
-    selected=currencyObject
+    selected=(get-currency-object currencyService=currency currencyId=(get model currencyField) inheritsFrom=inheritsFrom)
     options=currencyObjects
     onchange=(action "selected")
     class="input-group-btn input-group-select t-currency-code-select"
     tagName="div"
     searchEnabled=false
+    disabled=disabled
     as |op|
   }}
     {{op.code}}
