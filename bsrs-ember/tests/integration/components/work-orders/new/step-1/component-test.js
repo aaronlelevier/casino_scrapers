@@ -31,14 +31,14 @@ moduleForComponent('work-orders/new/step-1', 'Integration | Component | work ord
     store = module_registry(this.container, this.registry);
     run(() => {
       wo = store.push('work-order', { id: WD.idOne, category_fk: CD.idOne });
-      store.push('category', { id: CD.idOne, name: CD.nameElectricalChild, workOrders: [WD.idOne] });
+      store.push('category', { id: CD.idOne, name: CD.nameElectricalChild, verbose_name: CD.nameElectricalChild, workOrders: [WD.idOne] });
     });
     work_order_repo = repository.initialize(this.container, this.registry, 'work-order');
     work_order_repo.findWorkOrderCategory = function() {
       return [
-        {id: CD.idOne, name: CD.nameOne},
-        {id: CD.idTwo, name: CD.nameTwo},
-        {id: CD.unusedId, name: CD.nameUnused}
+        {id: CD.idOne, name: CD.nameOne, verbose_name: CD.nameOne},
+        {id: CD.idTwo, name: CD.nameTwo, verbose_name: CD.nameTwo},
+        {id: CD.unusedId, name: CD.nameUnused, verbose_name: CD.nameUnused}
       ];
     };
     work_order_repo.findWorkOrderProvider = function() {

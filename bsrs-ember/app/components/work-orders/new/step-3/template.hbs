@@ -25,7 +25,7 @@
 <div class="row">
   <div class="col-md-12">
     {{#form-group title="work_order.label.approved_amount" readonly=true}}
-      <div data-test-id=approved-amount">{{format-money model.approved_amount symbol=(get (get-currency-object 
+      <div data-test-id="approved-amount">{{format-money model.approved_amount symbol=(get (get-currency-object 
         currencyService=currency 
         currencyId=model.cost_estimate_currency 
         ) 

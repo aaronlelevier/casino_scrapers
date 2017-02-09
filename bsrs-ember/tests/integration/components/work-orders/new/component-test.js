@@ -39,7 +39,7 @@ moduleForComponent('work-orders/new', 'Integration | Component | work orders/new
       /* Setup WO with currency and status and category but not provider */
       store.push('currency', {id: CurrencyD.idOne, workOrders: [WD.idOne]});
       store.push('work-order-status', {id: WODS.idOne, name: WODS.nameOne, workOrders: [WD.idOne, WD.idTwo]});
-      store.push('category', { id: CD.idOne, name: CD.nameElectricalChild, workOrders: [WD.idOne], cost_amount: CD.costAmountOne });
+      store.push('category', { id: CD.idOne, name: CD.nameElectricalChild, verbose_name: CD.nameElectricalChild, workOrders: [WD.idOne], cost_amount: CD.costAmountOne });
     });
     const work_order_repo = repository.initialize(this.container, this.registry, 'work-order');
     work_order_repo.findWorkOrderProvider = function() {
