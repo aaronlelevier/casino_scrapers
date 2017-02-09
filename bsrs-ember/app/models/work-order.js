@@ -68,6 +68,14 @@ let WorkOrder = Model.extend(OptConf, Validations, {
     this.rollbackApprover();
   },
 
+  rollbackProperty(name) {
+    let oldState = this.get('_oldState');
+    for (let key in oldState) {
+      if (key === name) { 
+        this.set(key, oldState[key]);
+      }
+    }
+  },
   saveRelated() {
     this.saveStatus();
     this.saveCategory();

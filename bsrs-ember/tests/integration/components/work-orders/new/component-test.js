@@ -285,7 +285,7 @@ test('OVERALL - can click through to final step', function(assert) {
       assert.equal(this.$('[data-test-id="next"]').attr('disabled'), undefined, 'can click next btn because bot properties are defaulted');
 
       let interactor = openDatepicker(this.$('.t-scheduled-date'));
-      const expectedDate = new Date(2016, 4, 28);
+      const expectedDate = new Date();
       interactor.selectDate(expectedDate);
 
       // step 3 and next btn will not have changed disabled property yet

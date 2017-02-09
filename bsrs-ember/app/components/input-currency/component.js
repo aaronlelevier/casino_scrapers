@@ -14,6 +14,7 @@ import ValidationInput from 'bsrs-ember/components/validated-input/component';
 export default ValidationInput.extend({
   currency: Ember.inject.service(),
   classNames: ['input-currency t-input-currency'],
+  classNameBindings: ['readonly'],
   attributeBindings: ['valuePath:id'],
   /**
    * @property currencyObjects

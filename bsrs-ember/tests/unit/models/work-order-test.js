@@ -308,13 +308,21 @@ test('saveRelated workOrder approver to save model and make it clean', function(
   assert.ok(workOrder.get('isNotDirtyOrRelatedNotDirty'));
 });
 
+
 test('serialize', function(assert) {
+  function createWorkOrder() {
+    let workOrder =  this.store.push('work-order', { 
+      id: WD.idOne, cost_estimate: WD.costEstimateOne, approved_amount: WD.approvedAmount,
+      scheduled_date: WD.scheduledDateOne, approval_date: WD.approvalDateOne, expiration_date: WD.expirationDateOne, cost_estimate_currency: CurrencyD.idOne,
+      status_fk: WOSD.idOne, provider_fk: PRD.idOne, category_fk: CD.idOne, approver_fk: PD.idOne, gl_code: WD.glCodeOne, completed_date: WD.completedDateOne,
+      instructions: WD.instructions, ticket: TD.idOne
+    });
+    workOrder.save();
+    return workOrder;
+  }
   run(() => {
       this.store.push('work-order-status', {id: WOSD.idOne, name: WOSD.nameOne, workOrders: [WD.idOne, WD.idTwo]});
-      workOrder = this.store.push('work-order', { id: WD.idOne, cost_estimate: WD.costEstimateOne, approved_amount: WD.approvedAmount,
-        scheduled_date: WD.scheduledDateOne, approval_date: WD.approvalDateOne, expiration_date: WD.expirationDateOne, cost_estimate_currency: CurrencyD.idOne,
-        status_fk: WOSD.idOne, provider_fk: PRD.idOne, category_fk: CD.idOne, approver_fk: PD.idOne, gl_code: WD.glCodeOne, completed_date: WD.completedDateOne,
-        instructions: WD.instructions, ticket: TD.idOne});
+      workOrder = createWorkOrder.call(this);
       this.store.push('provider', {id: PRD.idOne, name: PRD.nameOne, address1: PRD.address1One, logo: PRD.logoOne, workOrders: [WD.idOne]});
       this.store.push('currency', {id: CurrencyD.idOne, workOrders: [WD.idOne]});
       this.store.push('category', { id: CD.idOne, name: CD.nameElectricalChild, workOrders: [WD.idOne] });
@@ -410,4 +418,30 @@ test('scheduled_date validation', function(assert) {
   workOrder.set('scheduled_date', new Date(tomorrow));
   errors = workOrder.get('validations.attrs.scheduled_date.errors');
   assert.equal(errors, 0, 'Tomorrow is a valid date.');
+});
+
+test('rollback scheduled_date', function(assert) {
+  function createWorkOrder() {
+    let workOrder =  this.store.push('work-order', { 
+      id: WD.idOne, 
+      scheduled_date: WD.scheduledDateOne
+    });
+    workOrder.save();
+    return workOrder;
+  }
+  run(() => {
+    workOrder = createWorkOrder.call(this);
+  });
+  let actual = workOrder.get('scheduled_date');
+  assert.equal(actual, WD.scheduledDateOne, 'Date is ' + WD.scheduledDateOne);
+  let tomorrow = moment().add(1, 'day').format('L');
+  let tomorrowDate = new Date(tomorrow);
+  workOrder.set('scheduled_date', tomorrowDate);
+  actual = workOrder.get('scheduled_date');
+  assert.equal(workOrder.get('isDirty'), true, ' work order is dirty');
+  assert.equal(actual, tomorrowDate, 'Date is ' + tomorrowDate);
+  workOrder.rollbackProperty('scheduled_date');
+  assert.equal(workOrder.get('isDirty'), false, ' work order is NOT dirty');
+  actual = workOrder.get('scheduled_date');
+  assert.equal(actual, WD.scheduledDateOne, 'Date is ' + WD.scheduledDateOne);
 });

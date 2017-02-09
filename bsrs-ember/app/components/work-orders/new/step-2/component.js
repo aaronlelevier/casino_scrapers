@@ -3,6 +3,7 @@ const { get, set } = Ember;
 
 export default Ember.Component.extend({
   classNames: ['animated-fast', 'fadeIn'],
+  today: new Date(),
   actions: {
     setDate(date) {
       const model = get(this, 'model');
