@@ -37,6 +37,8 @@ let CurrencyService = Ember.Service.extend({
     return this.getDefaultCurrency();
   },
   /**
+   * only formats currency for its own currency
+   * This does not convert on currency to another.  TODO: convert currency
    * @method formatCurrency
    * @param val
    * @param currencyId

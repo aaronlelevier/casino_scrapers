@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { run } = Ember;
+const { run, get } = Ember;
 import { attr, Model } from 'ember-cli-simple-store/model';
 import equal from 'bsrs-ember/utilities/equal';
 import inject from 'bsrs-ember/utilities/store';
@@ -31,6 +31,9 @@ var CategoryModel = Model.extend(Validations, TranslationMixin, OptConf, {
   label: attr(''),
   subcategory_label: attr(''),
   cost_amount: attr(''),
+  cost_amount_or_inherited: Ember.computed(function() {
+    return get(this, 'cost_amount') ? get(this, 'cost_amount') : get(this, 'inherited.cost_amount.inherited_value');
+  }),
   cost_code: attr(''),
   parent_id: undefined,
   category_children_fks: [],

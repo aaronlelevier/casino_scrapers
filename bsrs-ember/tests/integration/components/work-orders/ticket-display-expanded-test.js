@@ -31,7 +31,7 @@ moduleForComponent('ticket-display-expanded', 'integration: ticket-display-expan
     run(() => {
       store.push('person-current', PERSON_CURRENT.defaults());
       store.push('work-order-status', {id: WOSD.idOne, name: WOSD.nameOne, workOrders: [WD.idOne]});
-      store.push('person', { id: PD.idOne, fullname: PD.fullnume, workOrders: [WD.idOne] });
+      store.push('person', { id: PD.idOne, fullname: PD.fullname, workOrders: [WD.idOne] });
       model = store.push('work-order', { id: WD.idOne, cost_estimate: WD.costEstimateOne,
         scheduled_date: WD.scheduledDateOne, cost_estimate_currency: CurrencyD.idOne,
         status_fk: WOSD.idOne, provider_fk: ProviderD.idOne, approved_amount: WD.approvedAmount,
@@ -111,7 +111,6 @@ test('displays cost, gl, instructions, scheduled date and tracking number', func
 });
 
 test('approval text displays properly', function(assert) {
-  let approvalPhrase = `cost="${WD.approvedAmount}" approver="${PD.fullname}" approvedDate="${WD.approvalDateOne}" currency="${CurrencyD.code}" currencySymbol="${CurrencyD.symbol}"`;
   this.model = store.find('work-order', WD.idOne);
   this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
   //starts out with an approval

@@ -1006,6 +1006,8 @@ test('can create a work order', async function(assert) {
 test('can update a work order', async function(assert) {
   await page.visitDetail();
   await click('[data-test-id="expander-collapsed0"]');
+  assert.equal(find('[data-test-id="work-order-approved0"]').text().trim(), `$${t('work_order.phrase.approval', 
+    { cost: WD.approvedAmount, approver: PD.fullname, approvedDate: moment(WD.approvalDateOne).calendar() })}`);
   await fillIn('.t-wo-gl_code0', WD.glCodeTwo);
   let payload = TF.put({id: TD.idOne});
   const wo_payload = WF.put({id: WD.idOne, gl_code: WD.glCodeTwo});

@@ -59,9 +59,14 @@
             <p class="help-text--approval" data-test-id={{concat "work-order-approved" indx}}>
               {{fa-icon "check-circle"}}
               {{t "work_order.phrase.approval"
-                cost=model.approved_amount
-                currencySymbol=model.cost_estimate_currency.symbol
-                currencyName=model.cost_estimate_currency.code
+                cost=(format-money model.approved_amount 
+                  symbol=(get 
+                    (get-currency-object 
+                      currencyService=currency 
+                      currencyId=model.cost_estimate_currency 
+                    ) 
+                  'symbol')
+                )
                 approver=model.approver.fullname
                 approvedDate=(moment-calendar model.approval_date)
               }}
