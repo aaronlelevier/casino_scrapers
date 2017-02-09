@@ -73,14 +73,14 @@ class WorkOrder(BaseModel):
     # can't be in the past
     scheduled_date = models.DateTimeField(
         help_text='Due Date, SC field: ScheduledDate')
-    approved_amount = models.DecimalField(max_digits=9, decimal_places=4, null=True,
+    approved_amount = models.DecimalField(max_digits=15, decimal_places=4, null=True,
         help_text='May be the same as cost_estimate')
     ticket = models.ForeignKey("ticket.Ticket", related_name='work_orders', null=True,
         help_text='nullable because WorkOrders can exist without a Ticket')
     # TODO: not sure if these fields are required? Not being sent by Client POST currently
     location = models.ForeignKey(Location, related_name='work_orders', null=True,
         help_text='SC field: ContractInfo/LocationId, Required for SC API')
-    cost_estimate = models.DecimalField(max_digits=9, decimal_places=4, null=True,
+    cost_estimate = models.DecimalField(max_digits=15, decimal_places=4, null=True,
         help_text='SC field: Nte - will change based on the amount the Provider estimates for the work')
     # TODO: may end up being the "currency" for the whole work order
     cost_estimate_currency = models.ForeignKey(Currency, null=True)

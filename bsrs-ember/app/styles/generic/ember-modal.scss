@@ -1,59 +1,5 @@
-.modal-large {
-  width: 60%; 
-  min-width: 70rem;
-  max-width: 90rem;
-  max-height: 100%;
-  overflow: auto;
-}
-
 .ember-modal-overlay {
 	background-color: $dark;
 	// opacity: 0.3;
 }
-.ember-modal-dialog {
-	border-radius: $borderRadius;
-  padding: 0;
 
-  h1 {
-    font-size: 2.8rem;
-    margin: 0;
-  }
-
-  h2 {
-    font-size: 2.2rem;
-    margin: 0;
-  }
-
-	.modal-header {
-    padding: 0 $gutter;
-    border: $borderStyle;
-    border-width: 0 0 1px;
-    border-radius: $borderRadiusTop;
-    background: $light;
-    align-items: center;
-    min-height: 8rem;
-    h1, h2 {
-      @include truncate;
-    }
-	}
-
-	.modal-body {
-    padding: $gutter;
-    .form-wrap {
-      margin: 0 20rem;
-      .form-group {
-        padding-bottom: $gutter;
-      }
-    }
-    h1, h2 {
-      margin-bottom: $gutter;
-    }
-  }
-	.modal-footer {
-		border: none;
-		padding: 1rem 0;
-		text-align: center;
-    min-height: 8rem;
-    line-height: 8rem;
-	}
-}

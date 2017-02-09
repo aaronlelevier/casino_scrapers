@@ -1,7 +1,4 @@
-.bs-dialog {
-  width: 400px;
-  border-radius: $borderRadius;
-}
+
 body.centered-modal-showing {
   overflow: hidden;
 }
@@ -39,4 +36,62 @@ body.centered-modal-showing {
   margin-bottom: 3em;
   box-sizing: border-box;
   box-shadow: 0px 4px 25px 4px rgba(0,0,0,0.30);
+}
+
+.bs-dialog--small {
+  width: 400px;
+}
+
+.bs-dialog--large {
+  width: 60%; 
+  min-width: 70rem;
+  max-width: 90rem;
+}
+
+.bs-dialog--small, .bs-dialog--large {
+	border-radius: $borderRadius;
+  padding: 0;
+
+  h1 {
+    font-size: 2.8rem;
+    margin: 0;
+  }
+
+  h2 {
+    font-size: 2.2rem;
+    margin: 0;
+  }
+
+	.modal-header {
+    padding: 0 $gutter;
+    border: $borderStyle;
+    border-width: 0 0 1px;
+    border-radius: $borderRadiusTop;
+    background: $light;
+    align-items: center;
+    min-height: 8rem;
+    h1, h2 {
+      @include truncate;
+    }
+	}
+
+	.modal-body {
+    padding: $gutter;
+    .form-wrap {
+      margin: 0 14rem;
+      .form-group {
+        padding-bottom: $gutter;
+      }
+    }
+    h1, h2 {
+      margin-bottom: $gutter;
+    }
+  }
+	.modal-footer {
+		border: none;
+		padding: 1rem 0;
+		text-align: center;
+    min-height: 8rem;
+    line-height: 8rem;
+	}
 }
