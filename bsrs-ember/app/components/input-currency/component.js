@@ -56,7 +56,12 @@ export default ValidationInput.extend({
       const inheritsFrom = get(this, 'inheritsFrom');
 
       const typedInput = currencyService.formatCurrency(boundField, currencyId, inheritsFrom);
-      set(this, 'model.' + field, typedInput);
+      if (boundField === '') {
+        // need to set to null so serialize sends up key: null rather than nothing
+        set(this, 'model.' + field, null);
+      } else {
+        set(this, 'model.' + field, typedInput);
+      }
     },
     /**
      * remove any non (number comma decimal). ie. remove negative sign for example

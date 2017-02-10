@@ -246,14 +246,14 @@ test('cost_amount - is not required', function(assert) {
   });
   andThen(() => {
     const category = this.store.find('category', CD.idOne);
-    assert.equal(category.get('cost_amount'), 0, 'cost amount is blank and set to zero when clear out input');
+    assert.equal(category.get('cost_amount'), null, 'cost amount is blank and set to null when clear out input');
   });
   page.costCodeFill(CD.costCodeOne);
   page.subLabelFill(CD.subCatLabelTwo);
   let url = PREFIX + DETAIL_URL + '/';
   let response = CF.detail(CD.idOne);
   let payload = CF.put({id: CD.idOne, name: CD.nameOne, description: CD.descriptionMaintenance,
-                     label: CD.labelOne, subcategory_label: CD.subCatLabelTwo, cost_amount: "0.00", cost_code: CD.costCodeOne});
+                     label: CD.labelOne, subcategory_label: CD.subCatLabelTwo, cost_amount: null, cost_code: CD.costCodeOne});
                      xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
   generalPage.save();
   andThen(() => {

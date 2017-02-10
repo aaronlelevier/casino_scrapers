@@ -200,9 +200,6 @@ class Role(BaseModel):
             except IntegrityError:
                 raise
 
-        if not self.auth_amount:
-            self.auth_amount = 0
-
     def _update_password_history_length(self):
         """
         Append the previous ``password_min_length`` to the ``password_history_length``

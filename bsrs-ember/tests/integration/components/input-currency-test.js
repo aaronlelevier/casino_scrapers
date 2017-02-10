@@ -123,17 +123,29 @@ test('if the person does not have a currency, use their inherited currency from 
     });
   });
   this.set('model', model);
-  this.render(hbs `{{input-currency model=model field='auth_amount' currencyField='auth_currency' inheritsFrom=model.inherited.auth_amount.inherits_from}}`);
+  this.render(hbs `{{input-currency 
+    model=model 
+    field='auth_amount' 
+    currencyField='auth_currency' 
+    inheritsFrom=model.inherited.auth_amount.inherits_from}}`);
   let $component = this.$('.t-input-currency');
-  // assert.equal($component.find('.t-amount').val(), '0.00');
   $component.find('.t-amount').trigger('blur');
   assert.equal($component.find('.t-currency-symbol').text().trim(), CD.symbol);
   assert.equal($component.find('.t-currency-code-select').text().trim(), CD.code);
   assert.equal($component.find('.t-amount').val(), '0.00');
   // clear amount, and show placeholder
-  page.authAmountFillin('');
-  assert.equal($component.find('.t-amount').val(), '');
-  assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('admin.amount_and_default_value'));
+  this.$('.t-amount').val('').trigger('keyup').trigger('focusout');
+  return waitFor().then(() => {
+    assert.equal(this.$('.t-amount').val(), '');
+    assert.equal(model.get('auth_amount'), null, 'input sets to null');
+    assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('admin.amount_and_default_value'));
+    this.$('.t-amount').val(0).trigger('keyup').trigger('focusout');
+    return waitFor().then(() => {
+      assert.equal($component.find('.t-amount').val(), '0.00');
+      assert.equal(model.get('auth_amount'), 0, 'input sets to 0 and not to null');
+      assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('admin.amount_and_default_value'));
+    });
+  });
 });
 
 test('renders a component with currency and label', function(assert) {

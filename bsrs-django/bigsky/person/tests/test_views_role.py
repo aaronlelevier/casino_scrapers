@@ -220,6 +220,17 @@ class RoleUpdateTests(RoleSetupMixin, APITestCase):
         self.assertIsInstance(data['categories'], list)
         self.assertNotIn('tenant', data)
 
+    def test_update__auth_amount_null(self):
+        role_data = copy.copy(self.data)
+        role_data['auth_amount'] = None
+
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
+            role_data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        new_role_data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(new_role_data['auth_amount'], None)
+
     def test_update__location_level(self):
         role_data = copy.copy(self.data)
         role_data['location_level'] = str(create_location_level().id)

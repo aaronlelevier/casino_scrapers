@@ -21,11 +21,19 @@ const Validations = buildValidations({
       message: 'errors.work_order.scheduled_date_in_past'
     })
   ],
-  cost_estimate: validator('format', {
-    allowBlank: true,
-    // allow only numbers commas and decimal points
-    regex: /^[0-9.,]+$/,
-  })
+  cost_estimate: [
+    validator('format', {
+      allowBlank: true,
+      // allow only numbers commas and decimal points
+      regex: /^[0-9.,]+$/,
+    }),
+    validator('number', {
+      // 11 digits max (w/ 4 decimal points)
+      allowString: true,
+      lte: 99999999999,
+      message: 'errors.work_order.cost_estimate.length'
+    })
+  ]
 });
 
 let WorkOrder = Model.extend(OptConf, Validations, {

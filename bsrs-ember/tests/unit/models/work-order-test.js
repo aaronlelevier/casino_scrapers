@@ -23,7 +23,7 @@ function setDefaults() {
 moduleFor('model:work-order', 'Unit | Model | work-order', {
   needs: ['model:currency','service:translations-fetcher','service:i18n', 'model:uuid',
     'model:status','validator:presence', 'validator:unique-username', 'validator:length',
-    'validator:format', 'validator:has-many', 'validator:presence', 'validator:date',
+    'validator:format', 'validator:number', 'validator:has-many', 'validator:presence', 'validator:date',
     'model:person', 'service:person-current', 'model:work-order-status', 'model:category',
     'model:provider'],
   beforeEach() {
@@ -85,6 +85,7 @@ test('dirty test | cost_estimate', function(assert) {
   workOrder.set('cost_estimate', '');
   assert.equal(workOrder.get('isDirty'), false);
 });
+
 test('dirty test | cost_estimate_currency', function(assert) {
   assert.equal(workOrder.get('isDirty'), false);
   workOrder.set('cost_estimate_currency', 10.33);
@@ -444,4 +445,23 @@ test('rollback scheduled_date', function(assert) {
   assert.equal(workOrder.get('isDirty'), false, ' work order is NOT dirty');
   actual = workOrder.get('scheduled_date');
   assert.equal(actual, WD.scheduledDateOne, 'Date is ' + WD.scheduledDateOne);
+});
+
+test('cost_estimate validation with number length to prevent backend not accepting number', function(assert) {
+  workOrder.set('cost_estimate', 0);
+  let errors = workOrder.get('validations.attrs.cost_estimate.errors');
+  assert.equal(errors, 0, 'presence is not required for a valid cost_estimate.');
+  workOrder.set('cost_estimate', 1000000000000.0000);
+  errors = workOrder.get('validations.attrs.cost_estimate.errors');
+  let actual = errors[0].message;
+  let expected = 'errors.work_order.cost_estimate.length';
+  assert.equal(actual, expected, 'length is greater than 15 digits');
+  workOrder.set('cost_estimate', 99999999999.0001);
+  errors = workOrder.get('validations.attrs.cost_estimate.errors');
+  actual = errors[0].message;
+  expected = 'errors.work_order.cost_estimate.length';
+  assert.equal(actual, expected, 'length is greater than 15 digits');
+  workOrder.set('cost_estimate', 99999999999.0000);
+  errors = workOrder.get('validations.attrs.cost_estimate.errors');
+  assert.equal(errors, 0, 'correct number of digits for valid cost_estimate');
 });
