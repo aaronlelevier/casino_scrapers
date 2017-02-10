@@ -1,7 +1,7 @@
 /*global module*/
 // copy of bsrs-ember/utilities/constants
 
-var resources = 'ticket person role location locationlevel category workorder';
+var resources = 'ticket person role location locationlevel category workorder provider';
 var prefixes = 'view add change delete';
 
 var exports = module.exports = {};

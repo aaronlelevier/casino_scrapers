@@ -95,3 +95,23 @@ test('category link not shown if view_category is false', function(assert) {
   assert.equal(this.$('.t-nav-admin-category').length, 0);
   assert.equal(this.$('[data-test-id="admin-panel-category-header"]').length, 0);
 });
+
+test('provider link not shown if view_provider is false', function(assert) {
+  run(() => {
+    this.person_current = this.store.push('person-current', { id: PD.idOne, permissions: ['view_provider'] });
+  });
+  this.permissions = this.person_current.get('permissions');
+  this.render(hbs`{{admin-panel permissions=permissions}}`);
+  // TODO this assertion will fail when the link is added to the admin panel
+  assert.equal(this.$('[data-test-id="admin-panel-provider-header"]').length, 0);
+  assert.equal(this.$('.t-nav-admin-all-provider').length, 0);
+  assert.equal(this.$('.t-nav-admin-private-network').length, 0);
+  assert.equal(this.$('.t-nav-admin-preferred-provider').length, 0);
+  run(() => {
+    set(this, 'permissions', []);
+  });
+  assert.equal(this.$('[data-test-id="admin-panel-provider-header"]').length, 0);
+  assert.equal(this.$('.t-nav-admin-all-provider').length, 0);
+  assert.equal(this.$('.t-nav-admin-private-network').length, 0);
+  assert.equal(this.$('.t-nav-admin-preferred-provider').length, 0);
+});

@@ -29,6 +29,7 @@ test('it renders with defaults checked or unchecked', function(assert) {
   assert.equal(this.$('[data-test-id="t-permission-view-locationlevel"]').text().trim(), 'role.label.permission.locationlevel');
   assert.equal(this.$('[data-test-id="t-permission-view-category"]').text().trim(), 'role.label.permission.category');
   assert.equal(this.$('[data-test-id="t-permission-view-workorder"]').text().trim(), 'role.label.permission.workorder');
+  assert.equal(this.$('[data-test-id="t-permission-view-provider"]').text().trim(), 'role.label.permission.provider');
   assert.equal(this.$('[data-test-id="t-permission-view-create"]').text().trim(), 'role.label.permission.create');
   assert.equal(this.$('[data-test-id="t-permission-view-view"]').text().trim(), 'role.label.permission.view');
   assert.equal(this.$('[data-test-id="t-permission-view-edit"]').text().trim(), 'role.label.permission.edit');
@@ -75,6 +76,12 @@ test('it renders with defaults checked or unchecked', function(assert) {
   assert.equal(this.$('[data-test-id="permission-add-workorder"] > input').is(':checked'), true);
   assert.equal(this.$('[data-test-id="permission-change-workorder"] > input').is(':checked'), true);
   assert.equal(this.$('[data-test-id="permission-delete-workorder"] > input').is(':checked'), false);
+
+  // provider
+  assert.equal(this.$('[data-test-id="permission-view-provider"] > input').is(':checked'), true);
+  assert.equal(this.$('[data-test-id="permission-add-provider"] > input').is(':checked'), true);
+  assert.equal(this.$('[data-test-id="permission-change-provider"] > input').is(':checked'), true);
+  assert.equal(this.$('[data-test-id="permission-delete-provider"] > input').is(':checked'), false);
 });
 
 test('permissions should render in the correct order and labels should match their underlying checkboxes', function(assert) {
@@ -137,5 +144,48 @@ test('check dirty tracking', function(assert) {
   assert.ok(role.get('isDirty'));
   $('[data-test-id="permission-delete-category"]').click();
   assert.equal(this.$('[data-test-id="permission-delete-category"] > input').is(':checked'), false);
+  assert.ok(role.get('isNotDirty'));
+});
+
+test('check provider dirty tracking', function(assert) {
+  this.model = role;
+  this.render(hbs`{{roles/permissions-section model=model}}`);
+
+  // provider
+  assert.equal(this.$('[data-test-id="permission-view-provider"] > input').is(':checked'), true);
+  assert.equal(this.$('[data-test-id="permission-add-provider"] > input').is(':checked'), true);
+  assert.equal(this.$('[data-test-id="permission-change-provider"] > input').is(':checked'), true);
+  assert.equal(this.$('[data-test-id="permission-delete-provider"] > input').is(':checked'), false);
+
+  // view
+  $('[data-test-id="permission-view-provider"]').click();
+  assert.equal(this.$('[data-test-id="permission-view-provider"] > input').is(':checked'), false);
+  assert.ok(role.get('isDirty'));
+  $('[data-test-id="permission-view-provider"]').click();
+  assert.equal(this.$('[data-test-id="permission-view-provider"] > input').is(':checked'), true);
+  assert.ok(role.get('isNotDirty'));
+
+  // add
+  $('[data-test-id="permission-add-provider"]').click();
+  assert.equal(this.$('[data-test-id="permission-add-provider"] > input').is(':checked'), false);
+  assert.ok(role.get('isDirty'));
+  $('[data-test-id="permission-add-provider"]').click();
+  assert.equal(this.$('[data-test-id="permission-add-provider"] > input').is(':checked'), true);
+  assert.ok(role.get('isNotDirty'));
+
+  // change
+  $('[data-test-id="permission-change-provider"]').click();
+  assert.equal(this.$('[data-test-id="permission-change-provider"] > input').is(':checked'), false);
+  assert.ok(role.get('isDirty'));
+  $('[data-test-id="permission-change-provider"]').click();
+  assert.equal(this.$('[data-test-id="permission-change-provider"] > input').is(':checked'), true);
+  assert.ok(role.get('isNotDirty'));
+
+  // delete
+  $('[data-test-id="permission-delete-provider"]').click();
+  assert.equal(this.$('[data-test-id="permission-delete-provider"] > input').is(':checked'), true);
+  assert.ok(role.get('isDirty'));
+  $('[data-test-id="permission-delete-provider"]').click();
+  assert.equal(this.$('[data-test-id="permission-delete-provider"] > input').is(':checked'), false);
   assert.ok(role.get('isNotDirty'));
 });
