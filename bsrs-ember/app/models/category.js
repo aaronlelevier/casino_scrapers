@@ -15,6 +15,7 @@ const Validations = buildValidations({
     presence: true,
     message: 'errors.category.name'
   }),
+  cost_amount: validator('category-cost-amount'),
 });
 
 var CategoryModel = Model.extend(Validations, TranslationMixin, OptConf, {

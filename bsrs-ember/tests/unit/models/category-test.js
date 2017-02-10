@@ -9,7 +9,7 @@ var store, category, run = Ember.run;
 
 module('unit: category test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:category', 'model:category-children', 'model:sccategory', 'service:i18n']);
+    store = module_registry(this.container, this.registry, ['model:category', 'model:category-children', 'model:sccategory', 'service:i18n', 'validator:presence', 'validator:category-cost-amount']);
     run(() => {
       category = store.push('category', {id: CD.idOne});
     });
@@ -281,4 +281,19 @@ test('parent saveRelated', assert => {
   assert.ok(category.get('isDirtyOrRelatedDirty'));
   category.saveRelated();
   assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('cost_amount validation with number length to prevent backend not accepting number', function(assert) {
+  assert.equal(category.get('parent'), undefined);
+  category.set('cost_amount', '100');
+  let errors = category.get('validations.attrs.cost_amount.errors');
+  assert.equal(errors, 0, 'parent has cost_amount.');
+  category.set('cost_amount', null);
+  errors = category.get('validations.attrs.cost_amount.errors');
+  let actual = errors[0].message;
+  let expected = 'errors.category.cost_amount';
+  assert.equal(actual, expected, 'parent has no cost amount');
+  category.set('cost_amount', '100');
+  errors = category.get('validations.attrs.cost_amount.errors');
+  assert.equal(errors, 0, 'parent has cost_amount.');
 });
