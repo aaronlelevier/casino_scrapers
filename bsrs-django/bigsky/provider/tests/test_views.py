@@ -43,7 +43,6 @@ class UserWithPrivilegeProviderTest(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-
     def test_provider_filtered_by_category(self):
         self.assertIn('view_provider', self.person.permissions)
         provider = Provider.objects.filter(categories=self.category_id)
@@ -165,4 +164,3 @@ class UserWithoutPrivilegeProviderTest(APITestCase):
         response = self.client.get('/api/providers/?categories={id}'.format(id=self.category_id))
 
         self.assertEqual(response.status_code, 404)
-

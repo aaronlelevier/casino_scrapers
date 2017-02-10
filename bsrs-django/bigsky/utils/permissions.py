@@ -64,7 +64,8 @@ def exception_handler(exc, context):
 class PermissionInfo(object):
 
     # models that have permissions
-    MODELS = ['ticket', 'person', 'role', 'location', 'locationlevel', 'category', 'workorder']
+    MODELS = ['ticket', 'person', 'role', 'location', 'locationlevel', 'category',
+              'workorder', 'provider']
     # allowed permission types
     PERMS = ['view', 'add', 'change', 'delete']
     # models' content type fields
@@ -89,7 +90,7 @@ class PermissionInfo(object):
 
     @classmethod
     def names(cls):
-        return ['_'.join(x) for x in product(cls.PERMS, cls.MODELS)] + ['view_provider']
+        return ['_'.join(x) for x in product(cls.PERMS, cls.MODELS)]
 
     def setUp(self):
         """

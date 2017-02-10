@@ -5,9 +5,10 @@ from provider.models import Provider
 from provider.serializers import ProviderSerializer
 from utils.permissions import CrudPermissions
 from utils.mixins import FilterRelatedMixin
+from utils.views import BaseModelViewSet
 
 
-class ProviderViewSet(FilterRelatedMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class ProviderViewSet(BaseModelViewSet):
 
     model = Provider
     queryset = Provider.objects.all()

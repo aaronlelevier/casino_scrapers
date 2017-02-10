@@ -136,12 +136,11 @@ class PermissionInfoTests(TestCase):
         for m in PermissionInfo.MODELS:
             for p in PermissionInfo.PERMS:
                 raw_ret["{}_{}".format(p, m)] = False
-        raw_ret['view_provider'] = False
 
         ret = PermissionInfo.ALL_DEFAULTS
 
         self.assertIsInstance(ret, dict)
-        self.assertEqual(len(ret), 29, '29 possible permissions')
+        self.assertEqual(len(ret), 32, '32 possible permissions')
         for k,v in ret.items():
             self.assertFalse(v)
             self.assertEqual(v, raw_ret[k])
@@ -155,7 +154,7 @@ class PermissionInfoTests(TestCase):
         perm_info.setUp()
 
         ret = perm_info.all()
-        self.assertEqual(ret.count(), 29)
+        self.assertEqual(ret.count(), 32)
         for p in PermissionInfo.PERMS:
             for m in PermissionInfo.MODELS:
                 self.assertIsInstance(ret.get(codename="{}_{}".format(p,m)),
@@ -168,13 +167,13 @@ class PermissionInfoTests(TestCase):
         ret = perm_info.all()
 
         self.assertIsInstance(ret, models.query.QuerySet)
-        self.assertEqual(ret.count(), 29)
+        self.assertEqual(ret.count(), 32)
         for r in ret:
             self.assertIsInstance(r, Permission)
             perm, model = r.codename.split('_')
             # self.assertEqual(r.name, 'Can {} {}'.format(perm, model))
             self.assertIn(perm, PermissionInfo.PERMS)
-            self.assertIn(model, PermissionInfo.MODELS + ['provider'])
+            self.assertIn(model, PermissionInfo.MODELS)
             # ContentType
             content_type = ContentType.objects.get(model=model)
             self.assertEqual(content_type.model, model)

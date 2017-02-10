@@ -96,7 +96,7 @@ test('permissions should render in the correct order and labels should match the
   assert.equal(this.$('[data-test-id="t-permission-view-header"] div:nth-child(4)').text().trim(), 'role.label.permission.edit');
   assert.equal(this.$('[data-test-id="t-permission-view-header"] div:nth-child(5)').text().trim(), 'role.label.permission.delete');
 
-  assert.equal(this.$('[data-test-id="t-permission-view-row"]').length, 7);
+  assert.equal(this.$('[data-test-id="t-permission-view-row"]').length, 8);
   assert.equal(this.$('[data-test-id="t-permission-view-row"]:eq(0) div:nth-child(2) label')[0].getAttribute('data-test-id'), 'permission-view-ticket');
   assert.equal(this.$('[data-test-id="t-permission-view-row"]:eq(0) div:nth-child(3) label')[0].getAttribute('data-test-id'), 'permission-add-ticket');
   assert.equal(this.$('[data-test-id="t-permission-view-row"]:eq(0) div:nth-child(4) label')[0].getAttribute('data-test-id'), 'permission-change-ticket');
