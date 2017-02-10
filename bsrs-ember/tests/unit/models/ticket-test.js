@@ -1458,14 +1458,14 @@ test('wo property is dirty when attr on workOrder is changed', (assert) => {
   assert.equal(ticket.get('wo').objectAt(0).get('gl_code'), WD.glCodeOne);
 });
 
-test('removing a ticket-join-wo will mark the ticket as dirty and reduce the associated wo models to zero', (assert) => {
+test('removing a ticket-join-wo will not mark the ticket as dirty and reduce the associated wo models to zero', (assert) => {
   store.push('ticket-join-wo', {id: 1, ticket_pk: TD.idOne, work_order_pk: WD.idOne});
   store.push('work-order', {id: WD.idOne});
   ticket = store.push('ticket', {id: TD.idOne, ticket_wo_fks: [1]});
   assert.equal(ticket.get('wo').get('length'), 1);
   assert.ok(ticket.get('woIsNotDirty'));
   ticket.remove_wo(WD.idOne);
-  assert.ok(ticket.get('woIsDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
   assert.equal(ticket.get('wo').get('length'), 0);
 });
 
@@ -1478,12 +1478,12 @@ test('replacing a ticket-join-wo with some other ticket-join-wo still shows the 
   assert.ok(ticket.get('woIsNotDirty'));
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   ticket.remove_wo(WD.idOne);
-  assert.ok(ticket.get('woIsDirty'));
-  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(ticket.get('wo').get('length'), 0);
   ticket.add_wo(workOrder_two);
-  assert.ok(ticket.get('woIsDirty'));
-  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(ticket.get('wo').get('length'), 1);
   assert.equal(ticket.get('wo').objectAt(0).get('id'), WD.idTwo);
 });
@@ -1518,8 +1518,8 @@ test('wo property will update when the m2m array suddenly has the workOrder pk (
   ticket.add_wo(workOrder);
   assert.equal(ticket.get('wo').get('length'), 1);
   assert.equal(ticket.get('wo').objectAt(0).get('id'), WD.idOne);
-  assert.ok(ticket.get('woIsDirty'));
-  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('wo property will update when the m2m array suddenly has the workOrder pk', (assert) => {
@@ -1534,8 +1534,8 @@ test('wo property will update when the m2m array suddenly has the workOrder pk',
   assert.equal(ticket.get('wo').get('length'), 2);
   assert.equal(ticket.get('wo').objectAt(0).get('id'), WD.idOne);
   assert.equal(ticket.get('wo').objectAt(1).get('id'), WD.idTwo);
-  assert.ok(ticket.get('woIsDirty'));
-  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('wo property will update when the m2m array suddenly removes the workOrder', (assert) => {
@@ -1555,16 +1555,16 @@ test('when wo is changed dirty tracking works as expected (removing)', (assert) 
   assert.ok(ticket.get('woIsNotDirty'));
   ticket.remove_wo(WD.idOne);
   assert.equal(ticket.get('wo').get('length'), 0);
-  assert.ok(ticket.get('woIsDirty'));
-  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   ticket.rollback();
   assert.equal(ticket.get('wo').get('length'), 1);
   assert.ok(ticket.get('woIsNotDirty'));
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   ticket.remove_wo(WD.idOne);
   assert.equal(ticket.get('wo').get('length'), 0);
-  assert.ok(ticket.get('woIsDirty'));
-  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   ticket.rollback();
   assert.equal(ticket.get('wo').get('length'), 1);
   assert.ok(ticket.get('woIsNotDirty'));
@@ -1607,7 +1607,7 @@ test('multiple ticket\'s with same wo will rollback correctly', (assert) => {
   assert.equal(ticket.get('wo').get('length'), 1);
   assert.equal(ticket_two.get('wo').get('length'), 0);
   assert.ok(ticket.get('woIsNotDirty'));
-  assert.ok(ticket_two.get('woIsDirty'));
+  assert.ok(ticket_two.get('woIsNotDirty'));
   ticket_two.rollback();
   assert.equal(ticket.get('wo').get('length'), 1);
   assert.ok(ticket.get('woIsNotDirty'));
@@ -1617,8 +1617,8 @@ test('multiple ticket\'s with same wo will rollback correctly', (assert) => {
   assert.ok(ticket_two.get('isNotDirtyOrRelatedNotDirty'));
   ticket.remove_wo(WD.idOne);
   assert.equal(ticket.get('wo').get('length'), 0);
-  assert.ok(ticket.get('woIsDirty'));
-  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   assert.equal(ticket_two.get('wo').get('length'), 1);
   assert.ok(ticket_two.get('woIsNotDirty'));
   ticket.rollback();
@@ -1637,10 +1637,10 @@ test('when wo is changed dirty tracking works as expected (replacing)', (assert)
   assert.equal(ticket.get('wo').get('length'), 1);
   assert.ok(ticket.get('woIsNotDirty'));
   ticket.remove_wo(WD.idOne);
-  assert.ok(ticket.get('woIsDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
   assert.equal(ticket.get('wo').get('length'), 0);
   ticket.add_wo(workOrder_two);
-  assert.ok(ticket.get('woIsDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
   assert.equal(ticket.get('wo').get('length'), 1);
   assert.equal(ticket.get('wo').objectAt(0).get('id'), WD.idTwo);
   ticket.rollback();
@@ -1650,8 +1650,8 @@ test('when wo is changed dirty tracking works as expected (replacing)', (assert)
   ticket.remove_wo(WD.idOne);
   ticket.add_wo(workOrder_two);
   assert.equal(ticket.get('wo').get('length'), 1);
-  assert.ok(ticket.get('woIsDirty'));
-  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   ticket.rollback();
   assert.equal(ticket.get('wo').get('length'), 1);
   assert.ok(ticket.get('woIsNotDirty'));
@@ -1669,8 +1669,8 @@ test('when workOrder is suddently removed it shows as a dirty relationship (when
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   ticket.remove_wo(WD.idTwo);
   assert.equal(ticket.get('wo').get('length'), 1);
-  assert.ok(ticket.get('woIsDirty'));
-  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('rollback ticket will reset the previously used workOrders (wo) when switching from valid wo array to nothing', (assert) => {
@@ -1684,8 +1684,8 @@ test('rollback ticket will reset the previously used workOrders (wo) when switch
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   ticket.remove_wo(WD.idTwo);
   assert.equal(ticket.get('wo').get('length'), 1);
-  assert.ok(ticket.get('woIsDirty'));
-  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   ticket.rollback();
   assert.equal(ticket.get('wo').get('length'), 2);
   assert.ok(ticket.get('woIsNotDirty'));
@@ -1693,8 +1693,8 @@ test('rollback ticket will reset the previously used workOrders (wo) when switch
   ticket.remove_wo(WD.idTwo);
   ticket.remove_wo(WD.idOne);
   assert.equal(ticket.get('wo').get('length'), 0);
-  assert.ok(ticket.get('woIsDirty'));
-  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   ticket.rollback();
   assert.equal(ticket.get('wo').get('length'), 2);
   assert.ok(ticket.get('woIsNotDirty'));
@@ -1713,8 +1713,8 @@ test('rollback wo will reset the previous workOrders (wo) when switching from on
   assert.equal(ticket.get('wo').get('length'), 2);
   ticket.remove_wo(WD.idOne);
   assert.equal(ticket.get('wo').get('length'), 1);
-  assert.ok(ticket.get('woIsDirty'));
-  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   ticket.save();
   ticket.saveRelated();
   assert.equal(ticket.get('wo').get('length'), 1);
@@ -1723,8 +1723,8 @@ test('rollback wo will reset the previous workOrders (wo) when switching from on
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   ticket.add_wo(workOrder_unused);
   assert.equal(ticket.get('wo').get('length'), 2);
-  assert.ok(ticket.get('woIsDirty'));
-  assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+  assert.ok(ticket.get('woIsNotDirty'));
+  assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
   ticket.save();
   ticket.saveRelated();
   assert.equal(ticket.get('wo').get('length'), 2);

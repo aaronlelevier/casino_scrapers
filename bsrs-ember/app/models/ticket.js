@@ -83,10 +83,9 @@ let TicketModel = Model.extend(CategoriesMixin, OptConf, Validations, {
     const name = get(this, 'priority.name');
     return name ? name.replace(/\./g, '-') : '';
   }),
-  woIsDirtyContainer: many_to_many_dirty('ticket_wo'),
-  woIsDirty: Ember.computed('wo.@each.{isDirtyOrRelatedDirty}','woIsDirtyContainer', function() {
+  woIsDirty: Ember.computed('wo.@each.{isDirtyOrRelatedDirty}', function() {
     const wos = this.get('wo');
-    return wos.isAny('isDirtyOrRelatedDirty') || this.get('woIsDirtyContainer');
+    return wos.isAny('isDirtyOrRelatedDirty');
   }).readOnly(),
 
   woIsNotDirty: Ember.computed.not('woIsDirty').readOnly(),
