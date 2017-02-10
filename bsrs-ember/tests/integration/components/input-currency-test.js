@@ -78,7 +78,7 @@ test('role example setup', function(assert) {
   // default to inherited value placeholder if blank
   page.authAmountFillin('');
   assert.equal($component.find('.t-amount').val(), '');
-  assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('admin.amount_and_default_value'));
+  assert.equal($component.find('.t-amount').get(0)['placeholder'], '0.00');
 });
 
 test('category example setup', function(assert) {
@@ -99,7 +99,7 @@ test('category example setup', function(assert) {
   // default to inherited value placeholder if blank
   page.authAmountFillin('');
   assert.equal($component.find('.t-amount').val(), '');
-  assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('admin.amount_and_default_value'));
+  assert.equal($component.find('.t-amount').get(0)['placeholder'], '0.00');
 });
 
 test('renders a component with no value when bound attr is undefined', function(assert) {
@@ -134,16 +134,19 @@ test('if the person does not have a currency, use their inherited currency from 
   assert.equal($component.find('.t-currency-code-select').text().trim(), CD.code);
   assert.equal($component.find('.t-amount').val(), '0.00');
   // clear amount, and show placeholder
+  page.authAmountFillin('');
+  assert.equal($component.find('.t-amount').val(), '');
+  assert.equal($component.find('.t-amount').get(0)['placeholder'], '0.00');
   this.$('.t-amount').val('').trigger('keyup').trigger('focusout');
   return waitFor().then(() => {
     assert.equal(this.$('.t-amount').val(), '');
     assert.equal(model.get('auth_amount'), null, 'input sets to null');
-    assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('admin.amount_and_default_value'));
+    assert.equal($component.find('.t-amount').get(0)['placeholder'], '0.00');
     this.$('.t-amount').val(0).trigger('keyup').trigger('focusout');
     return waitFor().then(() => {
       assert.equal($component.find('.t-amount').val(), '0.00');
       assert.equal(model.get('auth_amount'), 0, 'input sets to 0 and not to null');
-      assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('admin.amount_and_default_value'));
+      assert.equal($component.find('.t-amount').get(0)['placeholder'], '0.00');
     });
   });
 });
@@ -193,7 +196,7 @@ test('t-amount placeholder should be defaulted if is not passed into component',
   this.set('model', model);
   this.render(hbs `{{input-currency model=model field='auth_amount' currencyField='auth_currency' inheritsFrom=model.inherited.auth_amount.inherits_from}}`);
   let $component = this.$('.t-input-currency');
-  assert.equal($component.find('.t-amount').get(0)['placeholder'], trans.t('admin.amount_and_default_value'));
+  assert.equal($component.find('.t-amount').get(0)['placeholder'], '0.00');
 });
 
 test('t-amount placeholder is not defaulted if is passed into component', function(assert) {
@@ -214,10 +217,10 @@ test('testing edge cases. ex: chars A-Z, negative numbers, commas & decimals', f
     });
   });
   this.set('model', model);
-  this.render(hbs `{{input-currency model=model 
-    field='auth_amount' 
-    currencyField='auth_currency' 
-    inheritsFrom=model.inherited.auth_amount.inherits_from 
+  this.render(hbs `{{input-currency model=model
+    field='auth_amount'
+    currencyField='auth_currency'
+    inheritsFrom=model.inherited.auth_amount.inherits_from
     placeholder='foo'
   }}`);
   let $component = this.$('.t-input-currency');
@@ -225,7 +228,7 @@ test('testing edge cases. ex: chars A-Z, negative numbers, commas & decimals', f
   this.$('.t-amount').val('-1.00-').trigger('keyup');
   return waitFor().then(() => {
     assert.equal(this.$('.t-amount').val(), '1.00');
-    // will not accept characters A-Z 
+    // will not accept characters A-Z
     this.$('.t-amount').val('wat').trigger('keyup');
     return waitFor().then(() => {
       assert.equal(this.$('.t-amount').val(), '');

@@ -1,5 +1,5 @@
 import Ember from 'ember';
-const { get, set } = Ember;
+const { computed, get, set } = Ember;
 
 export default Ember.Component.extend({
   classNames: ['animated-fast', 'fadeIn'],

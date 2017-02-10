@@ -25,21 +25,6 @@ export default ValidationInput.extend({
     let currency_service = get(this, 'currency');
     return currency_service.getCurrencies();
   }),
-  /**
-   * should format the placeholder amount to the correct decimal digits
-   * Set to zero until have further requirements
-   * @property placeholderAmount
-   * @type Number
-   */
-  placeholderAmount: computed(function() {
-    const currencyService = get(this, 'currency');
-    const currencyField = get(this, 'currencyField');
-    const currencyId = get(this, `model.${currencyField}`);
-    const inheritsFrom = get(this, 'inheritsFrom');
-    const boundField = 0;
-
-    return currencyService.formatCurrency(boundField, currencyId, inheritsFrom);
-  }),
   actions: {
     /**
      * formats the currency with the correct decimal points and update the model's field

@@ -5,7 +5,7 @@
       model=model
       field="approved_amount"
       currencyField="cost_estimate_currency"
-      placeholder=(t "work_order.label.approved_amount")
+      placeholder=(t "crud.default_value" value=(unbound model.approved_amount))
       className="t-wo-approved_amount"
     }}
     {{/form-group}}

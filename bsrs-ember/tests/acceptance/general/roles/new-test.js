@@ -69,7 +69,7 @@ test('visiting role/new', function(assert) {
     assert.equal(page.roleTypeInput, t(RD.t_roleTypeGeneral));
     assert.equal(store.find('location-level').get('length'), 8);
     assert.equal(page.categorySelectText, t('power.select.select'));
-    assert.equal(find('.t-amount').get(0)['placeholder'], 'Amount: 0.00');
+    assert.equal(find('.t-amount').get(0)['placeholder'], '0.00');
     // this might be a bug
     assert.equal(inputCurrencyPage.authAmountValue, '0');
     assert.equal(inputCurrencyPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);

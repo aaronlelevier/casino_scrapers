@@ -23,7 +23,7 @@ moduleForComponent('work-orders/new/step-2', 'Integration | Component | work ord
     translation.initialize(this);
     store = module_registry(this.container, this.registry);
     run(() => {
-      wo = store.push('work-order', {id: WD.idOne});
+      wo = store.push('work-order', {id: WD.idOne, approved_amount: WD.approvedAmount});
     });
   }
 });
@@ -52,4 +52,13 @@ test('can fill out instructions with optional flag', function(assert) {
   assert.equal(wo.get('instructions'), WD.instructions);
   assert.equal(this.$('.t-wo-instructions').val(), WD.instructions);
   assert.equal(this.$('[data-test-id="instructions"]').text().trim(), `${trans.t('work_order.label.instructions')}optional`);
+});
+
+test('auth_amount should be defaulted and placeholder value should not be bound to model', function(assert) {
+  this.model = wo;
+  this.render(hbs`{{work-orders/new/step-2 model=model}}`);
+  assert.equal($('.t-wo-approved_amount').val(), WD.approvedAmount);
+  assert.equal($('.t-wo-approved_amount').attr('placeholder'), `${trans.t('crud.default_value', { value: WD.approvedAmount })}`);
+  this.$('.t-wo-approved_amount').val('23').trigger('change');
+  assert.equal($('.t-wo-approved_amount').attr('placeholder'), `${trans.t('crud.default_value', { value: WD.approvedAmount })}`);
 });
