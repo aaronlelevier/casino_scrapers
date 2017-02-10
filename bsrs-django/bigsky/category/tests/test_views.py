@@ -75,7 +75,7 @@ class CategoryListTests(CategoryViewTestSetupMixin, APITestCase):
         # db object
         category = Category.objects.get(id=data['id'])
         self.assertEqual(data['id'], str(category.id))
-        self.assertEqual(data['name'], category.parents_and_self_as_string())
+        self.assertEqual(data['name'], category.name)
         self.assertEqual(data['verbose_name'], category.parents_and_self_as_string())
         self.assertEqual(data['description'], category.description)
         self.assertEqual(data['label'], category.label)
@@ -134,7 +134,7 @@ class CategoryListTests(CategoryViewTestSetupMixin, APITestCase):
         response = self.client.get('/api/admin/categories/?search={}'.format(search_key))
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertTrue(data['results'][0]['name'] < data['results'][1]['name'] < data['results'][2]['name'])
+        self.assertTrue(data['results'][0]['verbose_name'] < data['results'][1]['verbose_name'] < data['results'][2]['verbose_name'])
 
 
 class CategoryDetailTests(CategoryViewTestSetupMixin, APITestCase):
@@ -172,9 +172,9 @@ class CategoryDetailTests(CategoryViewTestSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(category.id))
         self.assertIsInstance(data['parent'], dict)
-        self.assertEqual(len(data['parent']), 3)
         self.assertEqual(data['parent']['id'], str(category.parent.id))
-        self.assertEqual(data['parent']['name'], category.parent.parents_and_self_as_string())
+        self.assertEqual(data['parent']['name'], category.parent.name)
+        self.assertEqual(data['parent']['verbose_name'], category.parent.parents_and_self_as_string())
         self.assertEqual(data['parent']['level'], category.parent.level)
 
     def test_data_children(self):
@@ -189,7 +189,8 @@ class CategoryDetailTests(CategoryViewTestSetupMixin, APITestCase):
         child = data['children'][0]
         self.assertIsInstance(child, dict)
         self.assertEqual(child['id'], str(category.children.first().id))
-        self.assertEqual(child['name'], category.children.first().parents_and_self_as_string())
+        self.assertEqual(child['name'], category.children.first().name)
+        self.assertEqual(child['verbose_name'], category.children.first().parents_and_self_as_string())
         self.assertIn('level', child)
         self.assertNotIn('children', child)
         self.assertNotIn('parent', child)

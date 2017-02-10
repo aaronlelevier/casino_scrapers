@@ -68,7 +68,7 @@ test('when you deep link to the category detail view you get bound attrs', funct
     assert.equal(page.amountInput, CD.costAmountOne);
     assert.equal(page.costCodeInput, CD.costCodeOne);
     assert.ok(page.scCategoryNameInput.includes(SCD.nameOne));
-    assert.ok(page.parentNameInput.includes(CD.nameParent));
+    assert.ok(page.parentNameInput.includes(CD.verboseNameParent));
   });
   const search = 'a';
   // select sc category
@@ -260,6 +260,7 @@ test('cost_amount - is not required', function(assert) {
     assert.equal(currentURL(), CATEGORIES_INDEX_URL);
   });
 });
+
 test('clicking and typing into power select for categories children will fire off xhr request for all categories', function(assert) {
 /* CATEGORY TO CHILDREN */
   page.visitDetail();
@@ -544,7 +545,7 @@ test('click remove parent and will remove relationship', assert => {
   page.visitDetail();
   andThen(() => {
     assert.equal(currentURL(), DETAIL_URL);
-    assert.equal(page.parentNameInput, `${CD.nameParent} ×`);
+    assert.equal(page.parentNameInput, `${CD.verboseNameParent} ×`);
   });
   page.parentNameClickRemove();
   andThen(() => {

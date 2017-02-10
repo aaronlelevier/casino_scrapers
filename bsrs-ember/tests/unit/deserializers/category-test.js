@@ -79,14 +79,16 @@ test('category deserialized with null parent returns correct model with no relat
 });
 
 test('category deserialized with parent setups up relationship', assert => {
-  let response = CF.detail(CD.idOne, {parent: CD.parentObject});
+  let response = CF.detail(CD.idOne);
   run(() => {
     subject.deserialize(response, CD.idOne);
   });
   let categories = store.find('category');
   assert.equal(categories.get('length'), 3);
   category = store.find('category', CD.idOne);
-  assert.deepEqual(category.get('parent.id'), CD.idParent);
+  assert.equal(category.get('parent.id'), CD.idParent);
+  assert.equal(category.get('parent.name'), CD.nameParent);
+  assert.equal(category.get('parent.verbose_name'), CD.verboseNameParent);
 });
 
 test('category deserializer returns correct data with existing category and different children (detail)', (assert) => {
@@ -103,6 +105,8 @@ test('category deserializer returns correct data with existing category and diff
   category = store.find('category', CD.idOne);
   assert.equal(category.get('children').get('length'), 1);
   assert.equal(category.get('children').objectAt(0).get('id'), CD.idChild);
+  assert.equal(category.get('children').objectAt(0).get('name'), CD.nameTwo);
+  assert.equal(category.get('children').objectAt(0).get('verbose_name'), CD.verboseNameChild);
 });
 
 test('category deserializer returns correct data with existing category and same children (detail)', (assert) => {

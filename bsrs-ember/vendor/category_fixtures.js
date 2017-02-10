@@ -44,7 +44,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
   },
   factory.prototype.children = function(id) {
     var _id = id || this.category_defaults.idChild;
-    return [{id: _id, name: this.category_defaults.nameTwo, level: 1}];
+    return [{id: _id, name: this.category_defaults.nameTwo, verbose_name: this.category_defaults.verboseNameChild, level: 1}];
   },
   factory.prototype.top_level = function() {
     var parent_one = this.get(this.category_defaults.idOne);
@@ -100,7 +100,8 @@ var BSRS_CATEGORY_FACTORY = (function() {
     category.sub_category_label = this.category_defaults.subCatLabelOne;
     category.parent = {
       id: this.category_defaults.idParent,
-      name: this.category_defaults.nameParent
+      name: this.category_defaults.nameParent,
+      verbose_name: this.category_defaults.verboseNameParent
     };
     category.children = this.children();
     category.inherited = this.category_defaults.inherited;
@@ -138,6 +139,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
       }
       var category = this.generate_for_power_select(uuid);
       category.name += i;
+      category.verbose_name = category.name;
       category.label += i;
       response.push(category);
     }

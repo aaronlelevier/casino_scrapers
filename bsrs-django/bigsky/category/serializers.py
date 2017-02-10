@@ -34,11 +34,11 @@ class CategoryIDNameOnlySerializer(BaseCreateSerializer):
 
 class CategoryIDNameSerializer(BaseCreateSerializer):
 
-    name = serializers.CharField(source='parents_and_self_as_string')
+    verbose_name = serializers.CharField(source='parents_and_self_as_string')
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'level',)
+        fields = ('id', 'name', 'verbose_name', 'level',)
 
 
 class CategoryChildrenSerializer(BaseCreateSerializer):
@@ -65,7 +65,6 @@ class CategoryRoleSerializer(BaseCreateSerializer):
 
 class CategoryListSerializer(BaseCreateSerializer):
 
-    name = serializers.CharField(source='parents_and_self_as_string')
     verbose_name = serializers.CharField(source='parents_and_self_as_string')
 
     class Meta:
