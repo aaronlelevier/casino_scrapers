@@ -108,7 +108,6 @@ class RoleTests(TestCase):
 
     def test_update_defaults(self):
         self.role.group = None
-        self.role.auth_amount = None
 
         self.role._update_defaults()
 
@@ -117,7 +116,6 @@ class RoleTests(TestCase):
             self.role.group.name,
             "{}-{}".format(self.role.name, self.role.tenant.scid)
         )
-        self.assertEqual(self.role.auth_amount, 0)
 
     def test_related_categories_can_only_be_top_level(self):
         parent = create_single_category()
