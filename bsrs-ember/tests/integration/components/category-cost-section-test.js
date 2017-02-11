@@ -7,6 +7,7 @@ import moment from 'moment';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CurrencyD from 'bsrs-ember/vendor/defaults/currency';
 import page from 'bsrs-ember/tests/pages/category';
+import waitFor from 'ember-test-helpers/wait';
 
 let store, category;
 
@@ -51,6 +52,21 @@ test('cost_amount inherited text should not show if there is a concrete value', 
   }}`);
   assert.equal(page.costAmountValue, CD.costAmountOne);
   assert.equal(this.$('.t-inherited-msg-cost_amount').length, 0);
+});
+
+test('cost_amount validations', function(assert) {
+  this.model = category;
+  this.render(hbs`{{
+    categories/cost-section
+    model=model
+  }}`);
+  this.$('.t-amount').val('100').trigger('keyup');
+  assert.equal(this.$('.t-amount').val(), '100');
+  assert.equal(Ember.$('.validated-input-error-dialog:eq(0)').text().trim(), '');
+  this.$('.t-amount').val('').trigger('keyup');
+  return waitFor().then(() => {
+    assert.equal(Ember.$('.validated-input-error-dialog:eq(0)').text().trim(), 'errors.category.cost_amount');
+  });
 });
 
 test('cost_amount inherited text should show if there is no concrete value', function(assert) {

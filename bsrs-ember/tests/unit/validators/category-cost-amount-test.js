@@ -11,8 +11,8 @@ moduleFor('validator:category-cost-amount', 'Unit | Validator | category-cost-am
   beforeEach() {
     this.store = module_registry(this.container, this.registry);
     run(() => {
-      this.store.push('category', {id: CD.idParent});
-      category = this.store.push('category', {id: CD.idOne});
+      this.store.push('category', { id: CD.idParent });
+      category = this.store.push('category', { id: CD.idOne });
     });
   }
 });
