@@ -8,7 +8,7 @@ import CCD from 'bsrs-ember/vendor/defaults/category-children';
 
 moduleForComponent('model-category-select', 'Unit | Component | model category select', {
   needs: ['model:person', 'model:ticket', 'model:category', 'model:model-category',
-    'model:category-children', 'model:uuid', 'service:i18n', 'validator:presence',
+    'model:category-children', 'validator:category-cost-amount', 'model:uuid', 'service:i18n', 'validator:presence',
     'service:person-current'],
   unit: true,
   beforeEach() {

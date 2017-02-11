@@ -22,8 +22,8 @@ test('visiting /categories/index', (assert) => {
     assert.equal(find('.t-sort-description').text(), t('admin.category.label.description'));
     assert.equal(find('.t-sort-label').text(), t('admin.category.label.label'));
     // unsortable columns
-    assert.equal(Ember.$('[data-test-id=cost_amount]').length, 1);
-    assert.equal(Ember.$('[data-test-id=cost_code]').length, 1);
-    assert.equal(Ember.$('[data-test-id=verbose_name]').length, 1);
+    assert.equal(find('[data-test-id=cost_amount]').length, 1);
+    assert.equal(find('[data-test-id=cost_code]').length, 1);
+    assert.equal(find('[data-test-id=verbose_name]').length, 1);
   });
 });
