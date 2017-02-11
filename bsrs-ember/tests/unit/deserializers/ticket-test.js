@@ -46,7 +46,7 @@ module('unit: ticket deserializer test', {
     functionalStore = this.container.lookup('service:functional-store');
     const currency = this.container.lookup('service:currency');
     const workOrderDeserializer = WorkOrderDeserializer.create({ simpleStore: store, currency: currency });
-    subject = TicketDeserializer.create({simpleStore: store, functionalStore: functionalStore,
+    subject = TicketDeserializer.create({simpleStore: store, currency: currency, functionalStore: functionalStore,
       workOrderDeserializer: workOrderDeserializer, uuid: uuid});
     run(() => {
       store.push('related-location', {id: LD.idOne, person_locations_fks: [PERSON_LD.idOne]});
@@ -470,6 +470,8 @@ test('model-category m2m is set up correctly using deserialize single (starting 
   assert.equal(m2m_ids.get('length'), 3);
   assert.equal(categories.objectAt(0).get('id'), CD.idOne);
   assert.equal(categories.objectAt(0).get('name'), CD.nameOne);
+  assert.equal(categories.objectAt(0).get('cost_amount'), CD.costAmountOne);
+  assert.equal(categories.objectAt(0).get('cost_currency'), CD.currency);
   assert.ok(!categories.objectAt(0).get('parent_id'));
   assert.equal(categories.objectAt(1).get('id'), CD.idPlumbing);
   assert.equal(categories.objectAt(1).get('name'), CD.nameRepairChild);
@@ -477,6 +479,24 @@ test('model-category m2m is set up correctly using deserialize single (starting 
   assert.equal(categories.objectAt(2).get('id'), CD.idPlumbingChild);
   const ticket_cat = store.find('model-category');
   assert.equal(ticket_cat.get('length'), 3);
+  assert.ok(original.get('isNotDirty'));
+  assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('if category has inherited, it will be formated', (assert) => {
+  let response = TF.generate(TD.idOne);
+  response.categories[0].cost_amount = null;
+  response.categories[0]['inherited'] = {
+    'cost_amount': {
+      'inherited_value': 100
+    }
+  };
+  run(() => {
+    subject.deserialize(response, TD.idOne);
+  });
+  let original = store.find('ticket', TD.idOne);
+  let categories = original.get('sorted_categories');
+  assert.equal(categories.objectAt(0).get('inherited.cost_amount.inherited_value'), '100');
   assert.ok(original.get('isNotDirty'));
   assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
 });

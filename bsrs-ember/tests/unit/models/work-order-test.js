@@ -355,14 +355,14 @@ test('postSerialize', function(assert) {
         completed_date: WD.completedDateOne, instructions: WD.instructions, ticket: TD.idOne });
       this.store.push('provider', {id: PRD.idOne, name: PRD.nameOne, address1: PRD.address1One, logo: PRD.logoOne, workOrders: [WD.idOne]});
       this.store.push('currency', {id: CurrencyD.idOne, workOrders: [WD.idOne]});
-      this.store.push('category', { id: CD.idOne, name: CD.nameElectricalChild, workOrders: [WD.idOne] });
+      this.store.push('category', { id: CD.idOne, name: CD.nameElectricalChild, cost_code: CD.costCodeOne, workOrders: [WD.idOne] });
       this.store.push('person', { id: PD.idOne, fullname: PD.fullname, workOrders: [WD.idOne] });
   });
   let ret = workOrder.postSerialize();
   assert.equal(ret.id, WD.idOne);
   assert.equal(ret.approved_amount, '1200.012', 'approved_amount serialized correctly');
   assert.equal(ret.scheduled_date, WD.scheduledDateOne);
-  assert.equal(ret.gl_code, WD.glCodeOne);
+  assert.equal(ret.gl_code, CD.costCodeOne);
   assert.equal(ret.instructions, WD.instructions);
   assert.equal(ret.category, CD.idOne);
   assert.equal(ret.provider, PRD.idOne);

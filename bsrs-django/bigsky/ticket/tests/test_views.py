@@ -251,6 +251,7 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
         self.assertEqual(category_data['verbose_name'], category.parents_and_self_as_string())
         self.assertEqual(category_data['level'], category.level)
         self.assertEqual(category_data['cost_amount'], str(category.cost_amount))
+        self.assertEqual(category_data['cost_currency'], str(category.cost_currency.id))
 
     def test_cc(self):
         response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))

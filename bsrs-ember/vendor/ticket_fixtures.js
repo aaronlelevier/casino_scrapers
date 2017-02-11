@@ -23,7 +23,13 @@ var BSRS_TICKET_FACTORY = (function() {
         label: this.category_defaults.labelThree,
         children: [],
         level: 2,
-        cost_amount: this.category_defaults.costAmountOne
+        cost_amount: this.category_defaults.costAmountOne,
+        cost_currency: this.category_defaults.currency,
+        inherited: { 
+          cost_amount: { 
+            inherited_value: this.category_defaults.costAmountTwo 
+          },
+        }
     };
     child_category.children = [{id:this.category_defaults.idPlumbingChild}];
     child_category.parent_id = this.category_defaults.idOne;
@@ -32,6 +38,11 @@ var BSRS_TICKET_FACTORY = (function() {
     var parent_category = this.category_fixtures.generate_for_power_select(this.category_defaults.idOne, this.category_defaults.nameOne);
     parent_category.verbose_name = this.category_defaults.verboseNameParent;
     parent_category.children = [{id: this.category_defaults.idPlumbing}, {id: this.category_defaults.idTwo}];
+    parent_category.inherited = { 
+      cost_amount: { 
+        inherited_value: null 
+      } 
+    };
     parent_category.parent_id = null;
     parent_category.level = 0;
     delete parent_category.status;

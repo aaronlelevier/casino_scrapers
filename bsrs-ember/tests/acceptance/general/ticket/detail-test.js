@@ -218,7 +218,7 @@ test('visiting detail should set the category even when it has no children', asy
   clearxhr(activity_one);
   xhr(`/api/tickets/${TD.idTwo}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
   let solo_data = TF.detail(TD.idTwo);
-  solo_data.categories = [{id: CD.idSolo, name: CD.nameSolo, children: []}];
+  solo_data.categories = [{ id: CD.idSolo, name: CD.nameSolo, children: [], inherited: { cost_amount: { inherited_value: null } } }];
   xhr(TICKETS_URL + TD.idTwo + '/', 'GET', null, {}, 200, solo_data);
   await visit(TICKET_LIST_URL + '/' + TD.idTwo);
   assert.equal(currentURL(), TICKET_LIST_URL + '/' + TD.idTwo);

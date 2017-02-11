@@ -41,10 +41,13 @@
     {{/form-group}}
   </div>
 </div>
-<div class="row">
-  <div class="col-md-12">
-    {{#form-group title="work_order.label.instructions" readonly=true}}
-      <div data-test-id="instructions">{{format-markdown model.instructions}}</div>
-    {{/form-group}}
+
+{{#if model.instructions}}
+  <div class="row">
+    <div class="col-md-12">
+      {{#form-group title="work_order.label.instructions" readonly=true}}
+        <div data-test-id="instructions">{{format-markdown model.instructions}}</div>
+      {{/form-group}}
+    </div>
   </div>
-</div>
+{{/if}}

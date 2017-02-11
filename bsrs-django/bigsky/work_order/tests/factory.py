@@ -47,6 +47,7 @@ def create_work_order():
         'cost_estimate': Decimal(0),
         'cost_estimate_currency': create_currency(),
         'instructions': 'Need to describe the work for SC API',
+        'gl_code': _generate_chars(),
         'location': approver.locations.first(),
         'status': WorkOrderStatus.objects.default(),
         'requester': requester,

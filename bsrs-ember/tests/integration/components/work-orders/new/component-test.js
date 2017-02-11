@@ -127,8 +127,8 @@ test('step2 removing either approved amount or scheduled date will disable next 
   assert.equal(this.$('[data-test-id="next"]').attr('disabled'), undefined, 'next has both approved_amount and scheduled_date');
   assert.equal(this.$('[data-test-id="step3"]').attr('disabled'), undefined, 'step3 has both approved_amount and scheduled_date');
   this.$('.t-wo-approved_amount').val('').trigger('change');
-  assert.equal(this.$('[data-test-id="next"]').attr('disabled'), 'disabled', 'next is disabled if remove one property from step2');
-  assert.equal(this.$('[data-test-id="step3"]').attr('disabled'), 'disabled', 'step3 is disabled if remove one property from step2');
+  assert.equal(this.$('[data-test-id="next"]').attr('disabled'), undefined, 'next is disabled if remove one property from step2');
+  assert.equal(this.$('[data-test-id="step3"]').attr('disabled'), undefined, 'step3 is disabled if remove one property from step2');
   this.$('.t-wo-approved_amount').val('100').trigger('change');
   assert.equal(this.$('[data-test-id="next"]').attr('disabled'), undefined, 'has both approved_amount and scheduled_date');
   assert.equal(this.$('[data-test-id="step3"]').attr('disabled'), undefined, 'step3 is disabled if remove one property from step2');
@@ -154,7 +154,7 @@ test('transitions to step-2 when click next and can click back and next btn is n
   this.$('[data-test-id="next"]').click();
 
   /* STEP 2 */
-  assert.equal(this.$('[data-test-id="next"]').attr('disabled'), 'disabled', 'is disabled if remove one property from step2');
+  assert.equal(this.$('[data-test-id="next"]').attr('disabled'), undefined, 'is disabled if remove one property from step2');
 
   assert.equal(model.get('category').get('id'), CD.idOne);
   assert.equal(model.get('provider').get('id'), ProviderD.idOne, 'model provider hasnt changed');
@@ -196,8 +196,8 @@ test('transitions to step-2 when click step2 in status-tracker component', funct
   /* STEP 2 */
   assert.equal(this.$('[data-test-id="step1"]').attr('disabled'), undefined, 'step1 is enabled still');
   assert.equal(this.$('[data-test-id="step2"]').attr('disabled'), undefined, 'status tracker action will no-op if on same state');
-  assert.equal(this.$('[data-test-id="step3"]').attr('disabled'), 'disabled', 'step3 disabled because havent filled out scheduled_date or approved_amount');
-  assert.equal(this.$('[data-test-id="next"]').attr('disabled'), 'disabled', 'next disabled because havent filled out scheduled_date or approved_amount');
+  assert.equal(this.$('[data-test-id="step3"]').attr('disabled'), undefined, 'step3 disabled because havent filled out scheduled_date or approved_amount');
+  assert.equal(this.$('[data-test-id="next"]').attr('disabled'), undefined, 'next disabled because havent filled out scheduled_date or approved_amount');
   assert.equal(this.$('.t-wo-approved_amount').val(), '');
 
   assert.equal(model.get('category').get('id'), CD.idOne);

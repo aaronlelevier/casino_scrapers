@@ -27,7 +27,14 @@ var BSRS_CATEGORY_FACTORY = (function() {
       id: i || this.category_defaults.idOne,
       name: name || this.category_defaults.nameOne,
       label: this.category_defaults.labelOne,
-      description: this.category_defaults.descriptionRepair
+      description: this.category_defaults.descriptionRepair,
+      cost_currency: this.category_defaults.currency,
+      // inherited always comes down with a category
+      inherited: {
+        cost_amount: { 
+          inherited_value: this.category_defaults.costAmountTwo 
+        }
+      }
     }
   };
   factory.prototype.generate = function(i, name) {

@@ -90,6 +90,10 @@ let WorkOrder = Model.extend(OptConf, Validations, {
     this.saveProvider();
     this.saveApprover();
   },
+  /**
+   * @method postSerialize
+   * @return {Object}
+   */
   postSerialize() {
     return {
       id: get(this, 'id'),
@@ -97,12 +101,17 @@ let WorkOrder = Model.extend(OptConf, Validations, {
       scheduled_date: get(this, 'scheduled_date'),
       approved_amount: unformat(get(this, 'approved_amount')),
       instructions: get(this, 'instructions'),
-      gl_code: get(this, 'gl_code'),
+      gl_code: get(this, 'category.cost_code_or_inherited'),
       category: get(this, 'category.id'),
       provider: get(this, 'provider.id'),
       ticket: get(this, 'ticket'),
     };
   },
+  /**
+   * only for put or patch
+   * @method serialize
+   * @return {Object}
+   */
   serialize() {
     return {
       id: get(this, 'id'),

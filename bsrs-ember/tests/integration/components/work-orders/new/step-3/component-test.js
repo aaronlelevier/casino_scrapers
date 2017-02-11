@@ -42,3 +42,12 @@ test('it renders with display information', function(assert) {
   assert.equal(this.$('[data-test-id="approved-amount"]').text().trim(), `#${model.get('approved_amount')}`);
   assert.equal(this.$('[data-test-id="instructions"]').text().trim(), model.get('instructions'));
 });
+
+test('if no instructions does not display', function(assert) {
+  run(() => {
+    model = store.push('work-order', { id: WD.idOne, instructions: null });
+  });
+  this.model = model;
+  this.render(hbs`{{work-orders/new/step-3 model=model}}`);
+  assert.equal(this.$('[data-test-id="instructions"]').length, 0);
+});

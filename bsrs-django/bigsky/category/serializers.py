@@ -51,7 +51,7 @@ class CategoryChildrenSerializer(BaseCreateSerializer):
     class Meta:
         model = Category
         fields = ('id', 'name', 'verbose_name', 'level', 'parent_id', 'children', 'label',
-                  'subcategory_label', 'cost_amount', 'inherited')
+                  'subcategory_label', 'cost_amount', 'inherited', 'cost_currency')
 
 
 class CategoryRoleSerializer(BaseCreateSerializer):

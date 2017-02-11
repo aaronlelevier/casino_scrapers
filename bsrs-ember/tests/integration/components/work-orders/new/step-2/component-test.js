@@ -54,7 +54,7 @@ test('can fill out instructions with optional flag', function(assert) {
   assert.equal(this.$('[data-test-id="instructions"]').text().trim(), `${trans.t('work_order.label.instructions')}optional`);
 });
 
-test('auth_amount should be defaulted and placeholder value should not be bound to model', function(assert) {
+test('approved_amount should be defaulted and placeholder value should not be bound to model', function(assert) {
   this.model = wo;
   this.render(hbs`{{work-orders/new/step-2 model=model}}`);
   assert.equal($('.t-wo-approved_amount').val(), WD.approvedAmount);

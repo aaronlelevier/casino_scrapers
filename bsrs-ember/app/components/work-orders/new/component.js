@@ -53,10 +53,17 @@ class Step2 extends BaseStep {
     this.prevStep = STEPS[0];
     this.properties = ['approved_amount', 'scheduled_date'];
     this.indx = 2;
+    this.exitStep = function(model) {
+      if (get(model, 'approved_amount')) {
+        return;
+      }
+      const cost_amount = get(model, 'category.cost_amount_or_inherited');
+      set(model, 'approved_amount', cost_amount);
+    };
   }
   computed(model) {
-    return computed('model.approved_amount', 'model.scheduled_date', function() {
-      return !model.get('approved_amount') || !model.get('scheduled_date');
+    return computed('model.scheduled_date', function() {
+      return !model.get('scheduled_date');
     });
   } 
 }

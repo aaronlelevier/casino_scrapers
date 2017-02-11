@@ -32,8 +32,21 @@ var CategoryModel = Model.extend(Validations, TranslationMixin, OptConf, {
   label: attr(''),
   subcategory_label: attr(''),
   cost_amount: attr(''),
+  /**
+   * used in work order creation to default value
+   * @property cost_amount_or_inherited
+   * @type { Number|String }
+  */ 
   cost_amount_or_inherited: Ember.computed(function() {
     return get(this, 'cost_amount') ? get(this, 'cost_amount') : get(this, 'inherited.cost_amount.inherited_value');
+  }),
+  /**
+   * used work order postSerializer
+   * @property cost_code_or_inherited
+   * @type { String }
+  */ 
+  cost_code_or_inherited: Ember.computed(function() {
+    return get(this, 'cost_code') ? get(this, 'cost_code') : get(this, 'inherited.cost_code.inherited_value');
   }),
   cost_code: attr(''),
   parent_id: undefined,

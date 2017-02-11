@@ -30,5 +30,5 @@ test('create - will use inherited category cost amount if applicable', function(
     category = store.push('category', { id: CD.idOne, inherited: { cost_amount: { inherited_value: '100.00' } } });
   });
   const work_order = workOrderRepo.createWorkOrder(category, 1);
-  assert.equal(work_order.get('approved_amount'), '100');
+  assert.equal(work_order.get('approved_amount'), '100.00');
 });

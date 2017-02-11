@@ -21,6 +21,10 @@ export default class Step {
   exit({ next = false }) {
     set(this, 'isActive', false);
 
+    if (this.exitStep) {
+      this.exitStep(this.model);
+    }
+
     // if step has NO properties
     if (!this.properties.length) {
       // only if going forward, set isCompleted on current step
@@ -36,7 +40,6 @@ export default class Step {
     } else {
       set(this, 'isError', true);
     }
-
 
   }
   /**

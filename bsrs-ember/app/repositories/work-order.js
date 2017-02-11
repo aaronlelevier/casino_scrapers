@@ -30,7 +30,7 @@ export default Ember.Object.extend(GridRepositoryMixin, FindByIdMixin, CRUDMixin
     const scheduled_date = d.setDate(d.getDate() + 5);
     const currency_object = this.get('currency').getDefaultCurrency();
     const work_order = this.get('simpleStore').push('work-order', { id: pk, ticket: ticket_id, cost_estimate_currency: currency_object.get('id'), 
-      approved_amount: formatNumber(leaf_category.get('cost_amount_or_inherited'), { precision: currency_object.get('decimal_digits')}), scheduled_date: new Date(scheduled_date) });
+      approved_amount: leaf_category.get('cost_amount_or_inherited'), scheduled_date: new Date(scheduled_date) });
     this.get('simpleStore').push('category', { id: leaf_category.get('id'), workOrders: [pk] });
     return work_order;
   },

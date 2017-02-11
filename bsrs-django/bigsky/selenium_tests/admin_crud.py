@@ -834,6 +834,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
 
         # b/c first save won't work if the 'password' is still attached to the person.
         self.gen_elem_page.click_save_btn()
+        time.sleep(1)
         self.wait_for_xhr_request("t-grid-search-input").send_keys(username)
         time.sleep(1)
         new_person = person_page.click_name_in_list_pages(username, new_model=None)

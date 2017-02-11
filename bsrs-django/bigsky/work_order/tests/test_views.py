@@ -147,6 +147,7 @@ class WorkOrderCreateTests(SetupMixin, APITestCase):
             'location': self.wo.location.id,
             'scheduled_date': self.wo.scheduled_date,
             'instructions': self.wo.instructions,
+            'gl_code': self.wo.gl_code,
             'approved_amount': self.wo.approved_amount,
             'cost_estimate_currency': self.wo.cost_estimate_currency.id,
             'requester': self.wo.requester
@@ -164,6 +165,7 @@ class WorkOrderCreateTests(SetupMixin, APITestCase):
         self.assertEqual(data['tracking_number'], work_order.tracking_number)
         self.assertEqual(data['gl_code'], work_order.gl_code)
         self.assertEqual(data['instructions'], work_order.instructions)
+        self.assertIsNotNone(data['gl_code'])
         self.assertIsNotNone(data['scheduled_date'])
         self.assertIsNotNone(data['expiration_date'])
         self.assertEqual(data['status']['id'], str(work_order.status.id))

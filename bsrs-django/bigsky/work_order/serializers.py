@@ -54,7 +54,7 @@ class WorkOrderCreateSerializer(BaseCreateSerializer):
     class Meta:
         model = WorkOrder
         fields = ('id', 'ticket', 'category', 'provider', 'scheduled_date', 'instructions',
-                  'approved_amount', 'approver', 'cost_estimate_currency')
+                  'gl_code', 'approved_amount', 'approver', 'cost_estimate_currency')
 
     def to_representation(self, instance):
         return WorkOrderLeafSerializer(instance).data

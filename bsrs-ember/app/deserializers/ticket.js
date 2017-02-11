@@ -1,11 +1,12 @@
 import Ember from 'ember';
-const { run } = Ember;
+const { run, inject } = Ember;
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 import { belongs_to_extract, belongs_to } from 'bsrs-components/repository/belongs-to';
 import { many_to_many_extract, many_to_many } from 'bsrs-components/repository/many-to-many';
 import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
 
 var TicketDeserializer = Ember.Object.extend(OptConf, {
+  currency: inject.service(),
   init() {
     belongs_to.bind(this)('status', 'general');
     belongs_to.bind(this)('priority', 'ticket');
@@ -44,6 +45,15 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     let [m2m_categories, categories, server_sum] = many_to_many_extract(categories_json, store, ticket, 'model_categories', 'model_pk', 'category', 'category_pk');
     run(() => {
       categories.forEach((cat) => {
+
+        // format currency - does not deal with conversions
+        if (cat.cost_amount && cat.cost_currency) {
+          cat.cost_amount = this.get('currency').formatCurrency(cat.cost_amount, cat.cost_currency);
+        }
+        if (cat.inherited.cost_amount.inherited_value) {
+          cat.inherited.cost_amount.inherited_value = this.get('currency').formatCurrency(cat.inherited.cost_amount.inherited_value, cat.cost_currency);
+        }
+
         const children_json = cat.children;
         delete cat.children;
         const category = store.push('category', cat);

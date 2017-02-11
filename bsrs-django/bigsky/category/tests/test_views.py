@@ -472,6 +472,8 @@ class CategoryFilterTests(CategoryViewTestSetupMixin, APITestCase):
         self.assertIn('name', data['results'][0])
         self.assertIn('label', data['results'][0])
         self.assertIn('subcategory_label', data['results'][0])
+        self.assertIn('cost_currency', data['results'][0])
+        self.assertIn('cost_amount', data['results'][0])
 
     def test_filter_by_parent_with_page_size(self):
         '''
