@@ -10,6 +10,10 @@ export default GridViewComponent.extend({
     isFilterable: true,
     isSearchable: true
   }, {
+    field: 'verbose_name',
+    headerLabel: 'admin.category.label.verbose_name',
+    headerIsTranslatable: true
+  }, {
     field: 'description',
     headerLabel: 'admin.category.label.description',
     headerIsTranslatable: true,

@@ -127,14 +127,35 @@ class CategoryListTests(CategoryViewTestSetupMixin, APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], logged_in_user_count)
 
-    def test_default_ordering_by_verbose_name(self):
-        #Test confirming the the ordering by 'verbose_name' is working
-        search_key = 'a'
-
-        response = self.client.get('/api/admin/categories/?search={}'.format(search_key))
+    def test_ordering__default_by_verbose_name(self):
+        response = self.client.get('/api/admin/categories/')
 
         data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(data['results'][0]['verbose_name'] <= data['results'][1]['verbose_name'],
+                        "Error: {} <= {} is not True".format(data['results'][0]['verbose_name'],
+                                                             data['results'][1]['verbose_name']))
+
+    def test_ordering__name(self):
+        response = self.client.get('/api/admin/categories/?ordering=name')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(data['results'][0]['name'] <= data['results'][1]['name'],
+                        "Error: {} <= {} is not True".format(data['results'][0]['name'],
+                                                             data['results'][1]['name']))
+
+    def test_ordering__label(self):
+        response = self.client.get('/api/admin/categories/?ordering=label')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        
+        self.assertTrue(data['results'][0]['label'] <= data['results'][1]['label'],
+                        "Error: {} <= {} is not True".format(data['results'][0]['label'],
+                                                             data['results'][1]['label']))
+
         self.assertTrue(data['results'][0]['verbose_name'] < data['results'][1]['verbose_name'] < data['results'][2]['verbose_name'])
+
 
 
 class CategoryDetailTests(CategoryViewTestSetupMixin, APITestCase):

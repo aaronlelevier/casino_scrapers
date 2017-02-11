@@ -6,6 +6,7 @@ en,activity.one,Activity,Activity,,"'activity.one':'Activity',",Activity,Activit
 en,activity.tabs.all_updates,All Updates,All Updates,,"'activity.tabs.all_updates':'All Updates',",All Updates,All Updates
 en,activity.tabs.comments,Comments,Comments,,"'activity.tabs.comments':'Comments',",Comments,Comments
 en,activity.tabs.status_updates,Status Updates,Status Updates,,"'activity.tabs.status_updates':'Status Updates',",Status Updates,Status Updates
+en,admin.category.label.verbose_name,Verbose Name,Verbose Name,,"'admin.category.label.verbose_name':'Verbose Name',",Verbose Name,Verbose Name
 en,activity.ticket.assignee,changed the {{type}} from %s{{from}} %sto %s{{to}} %s{{timestamp}},changed the {{type}} from %s{{from}} %sto %s{{to}} %s{{timestamp}},,"'activity.ticket.assignee':'changed the {{type}} from %s{{from}} %sto %s{{to}} %s{{timestamp}}',",changed the {{type_var_ from %s{{from_var_ %sto %s{{to_var_ %s{{timestamp_var_,changed the _type_var_ from %s_from_var_ %sto %s_to_var_ %s_timestamp_var_
 en,activity.ticket.attachment_add.one,uploaded %s{{count}} file %s{{timestamp}} %s{{added}},uploaded %s{{count}} file %s{{timestamp}} %s{{added}},,"'activity.ticket.attachment_add.one':'uploaded %s{{count}} file %s{{timestamp}} %s{{added}}',",uploaded %s{{count_var_ file %s{{timestamp_var_ %s{{added_var_,uploaded %s_count_var_ file %s_timestamp_var_ %s_added_var_
 en,activity.ticket.attachment_add.other,uploaded %s{{count}} files %s{{timestamp}} %s{{added}},uploaded %s{{count}} files %s{{timestamp}} %s{{added}},,"'activity.ticket.attachment_add.other':'uploaded %s{{count}} files %s{{timestamp}} %s{{added}}',",uploaded %s{{count_var_ files %s{{timestamp_var_ %s{{added_var_,uploaded %s_count_var_ files %s_timestamp_var_ %s_added_var_
@@ -279,6 +280,7 @@ en,admin.role.label.location_level,Location Level,Location Level,,"'admin.role.l
 en,admin.role.label.name,Role Name,Role Name,,"'admin.role.label.name':'Role Name',",Role Name,Role Name
 en,admin.role.label.number_users,# of People,# of People,,"'admin.role.label.number_users':'# of People',",# of People,# of People
 en,admin.role.label.permissions,Permissions,Permissions,,"'admin.role.label.permissions':'Permissions',",Permissions,Permissions
+en,role.label.permission.provider,Provider,Provider,,"'role.label.permission.provider':'Provider',",Provider,Provider
 en,admin.role.label.role_type,Role Type,Role Type,,"'admin.role.label.role_type':'Role Type',",Role Type,Role Type
 en,admin.role.label.settings,Settings,Settings,,"'admin.role.label.settings':'Settings',",Settings,Settings
 en,admin.role.new,New Role,New Role,,"'admin.role.new':'New Role',",New Role,New Role
@@ -516,6 +518,7 @@ en,errors.automation.description.min_max,Description must be at least 5 characht
 en,errors.automation.pf.criteria.length,Must have at least one criteria,Must have at least one criteria,,"'errors.automation.pf.criteria.length':'Must have at least one criteria',",Must have at least one criteria,Must have at least one criteria
 en,errors.automation.pf.length,Please add at least one filter,Please add at least one filter,,"'errors.automation.pf.length':'Please add at least one filter',",Please add at least one filter,
 en,errors.automation.ticketcc,Please select a CC,Please select a CC,,"'errors.automation.ticketcc':'Please select a CC',",Please select a CC,
+en,errors.category.cost_amount,Root cateogries must specify a default NTE.,Root cateogries must specify a default NTE.,,"'errors.category.cost_amount':'Root cateogries must specify a default NTE.',",Root cateogries must specify a default NTE.,Root cateogries must specify a default NTE.
 en,errors.category.name,Name must be provided. ,Name must be provided. ,,"'errors.category.name':'Name must be provided.',",Name must be provided. ,Name must be provided. 
 en,errors.client.category_not_found,Category not found,Category not found,,"'errors.client.category_not_found':'Category not found',",Category not found,Category not found
 en,errors.client.category_param_missing,Category parameter must be included,Category parameter must be included,,"'errors.client.category_param_missing':'Category parameter must be included',",Category parameter must be included,Category parameter must be included
@@ -571,6 +574,9 @@ en,errors.ticket.request,Request must be provided,Request must be provided,,"'er
 en,errors.ticket.request.length,Request must be at least 5 characters,Request must be at least 5 characters,,"'errors.ticket.request.length':'Request must be at least 5 characters',",Request must be at least 5 characters,Request must be at least 5 characters
 en,errors.ticket.requester,Requester must be provided,Requester must be provided,,"'errors.ticket.requester':'Requester must be provided',",Requester must be provided,Requester must be provided
 en,errors.ticket.status,Status must be provided,Status must be provided,,"'errors.ticket.status':'Status must be provided',",Status must be provided,Status must be provided
+en,errors.work_order.scheduled_date,ETA is required,ETA is required,,"'errors.work_order.scheduled_date':'ETA is required',",ETA is required,ETA is required
+en,errors.work_order.cost_estimate.length,Whoa money bags! I don't think you have the funds for this.,Whoa money bags! I don't think you have the funds for this.,,"'errors.work_order.cost_estimate.length':'Whoa money bags! I don't think you have the funds for this.',",Whoa money bags! I don't think you have the funds for this.,Whoa money bags! I don't think you have the funds for this.
+en,errors.work_order.scheduled_date_in_past,ETA should not be in the past,ETA should not be in the past,,"'errors.work_order.scheduled_date_in_past':'ETA should not be in the past',",ETA should not be in the past,ETA should not be in the past
 en,event.rentals,Event Rentals,Event Rentals,,"'event.rentals':'Event Rentals',",Event Rentals,Event Rentals
 en,excavation.and.soil.construction,Excavation And Soil Construction,Excavation And Soil Construction,,"'excavation.and.soil.construction':'Excavation And Soil Construction',",Excavation And Soil Construction,Excavation And Soil Construction
 en,exclude,Exclude,Exclude,,"'exclude':'Exclude',",Exclude,Exclude
@@ -851,6 +857,8 @@ en,work_order.label.gl_code,G.L. Code,G.L. Code,,"'work_order.label.gl_code':'G.
 en,work_order.label.instructions,Additional Instructions for Provider,Additional Instructions for Provider,,"'work_order.label.instructions':'Additional Instructions for Provider',",Additional Instructions for Provider,Additional Instructions for Provider
 en,work_order.label.name,name,name,,"'work_order.label.name':'name',",name,name
 en,work_order.label.provider,Provider,Provider,,"'work_order.label.provider':'Provider',",Provider,Provider
+en,work_order.label.reschedule,Reschedule,Reschedule,,"'work_order.label.reschedule':'Reschedule',",Reschedule,Reschedule
+en,work_order.label.reschedule_cancel,Cancel Reschedule,Cancel Reschedule,,"'work_order.label.reschedule_cancel':'Cancel Reschedule',",Cancel Reschedule,Cancel Reschedule
 en,work_order.label.scheduled_date,ETA,ETA,,"'work_order.label.scheduled_date':'ETA',",ETA,ETA
 en,work_order.label.success,Your work order has been sent!,Your work order has been sent!,,"'work_order.label.success':'Your work order has been sent!',",Your work order has been sent!,Your work order has been sent!
 en,work_order.label.time_on_site,Time on Site,Time on Site,,"'work_order.label.time_on_site':'Time on Site',",Time on Site,Time on Site
@@ -858,7 +866,7 @@ en,work_order.label.tracking_number,Tracking Number,Tracking Number,,"'work_orde
 en,work_order.label.tracking_tbd,Pending,Pending,,"'work_order.label.tracking_tbd':'Pending',",Pending,Pending
 en,work_order.new,Create Work Order,Create Work Order,,"'work_order.new':'Create Work Order',",Create Work Order,Create Work Order
 en,work_order.one,Work Order,Work Order,,"'work_order.one':'Work Order',",Work Order,Work Order
-en,work_order.phrase.approval,{{currencySymbol}}{{cost}} {{currencyName}} approved by {{approver}} on {{approvedDate}},{{currencySymbol}}{{cost}} {{currencyName}} approved by {{approver}} on {{approvedDate}},,"'work_order.phrase.approval':'{{currencySymbol}}{{cost}} {{currencyName}} approved by {{approver}} on {{approvedDate}}',",{{currencySymbol_var_{{cost_var_ {{currencyName_var_ approved by {{approver_var_ on {{approvedDate_var_,_currencySymbol_var__cost_var_ _currencyName_var_ approved by _approver_var_ on _approvedDate_var_
+en,work_order.phrase.approval,{{cost}} approved by {{approver}} on {{approvedDate}},{{cost}} approved by {{approver}} on {{approvedDate}},,"'work_order.phrase.approval':'{{cost}} approved by {{approver}} on {{approvedDate}}',",{{cost_var_ approved by {{approver_var_ on {{approvedDate_var_,_cost_var_ approved by _approver_var_ on _approvedDate_var_
 en,work_order.phrase.not_approved,Not approved,Not approved,,"'work_order.phrase.not_approved':'Not approved',",Not approved,Not approved
 en,work_order.status.complete,Work Complete,Work Complete,,"'work_order.status.complete':'Work Complete',",Work Complete,Work Complete
 en,work_order.status.invoiced,Invoiced,Invoiced,,"'work_order.status.invoiced':'Invoiced',",Invoiced,Invoiced

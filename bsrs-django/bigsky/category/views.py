@@ -80,7 +80,9 @@ class CategoryViewSet(FilterByTenantMixin, EagerLoadQuerySetMixin,
 
     @paginate_queryset_as_response()
     def list(self, request, *args, **kwargs):
-        return sorted(self.get_queryset(), key=lambda x: x.parents_and_self_as_string())
+        if 'ordering' not in request.query_params:
+            return sorted(self.get_queryset(), key=lambda x: x.parents_and_self_as_string())
+        return self.get_queryset()
 
     @list_route(methods=['GET'])
     @paginate_queryset_as_response(cs.CategoryChildrenSerializer)
