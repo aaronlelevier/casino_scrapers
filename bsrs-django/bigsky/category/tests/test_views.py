@@ -154,7 +154,10 @@ class CategoryListTests(CategoryViewTestSetupMixin, APITestCase):
                         "Error: {} <= {} is not True".format(data['results'][0]['label'],
                                                              data['results'][1]['label']))
 
-        self.assertTrue(data['results'][0]['verbose_name'] < data['results'][1]['verbose_name'] < data['results'][2]['verbose_name'])
+        verbose_name0 = data['results'][0]['verbose_name'].split('-')[-1]
+        verbose_name1 = data['results'][1]['verbose_name'].split('-')[-1]
+        verbose_name2 = data['results'][2]['verbose_name'].split('-')[-1]
+        self.assertTrue(verbose_name0 < verbose_name1 < verbose_name2)
 
 
 
