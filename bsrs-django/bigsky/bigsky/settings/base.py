@@ -244,9 +244,6 @@ ACTIVITY_DEFAULT_WEIGHT = 4
 # Enables Permission filtering on Ticket API data
 TICKET_FILTERING_ON = True
 
-### WORK ORDER
-DEFAULTS_WORKORDER_STATUS = "work_order.status.new"
-
 ### EMAIL ###
 # django native settings for ``django.core.mail.mail_admins()``
 EMAIL_USE_TLS = True

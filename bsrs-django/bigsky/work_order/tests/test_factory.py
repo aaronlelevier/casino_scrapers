@@ -8,7 +8,7 @@ from category.tests.factory import create_single_category
 from location.models import Location
 from person.models import Person
 from person.tests.factory import create_single_person
-from provider.tests.factory import create_provider
+from provider.tests.factory import create_provider, create_provider_with_all_categories
 from ticket.models import Ticket
 from ticket.tests.factory import create_ticket
 from work_order.models import WorkOrder, WorkOrderPriority, WorkOrderStatus
@@ -38,17 +38,19 @@ class FactoryTests(TestCase):
         self.assertIsInstance(wo.cost_estimate, Decimal)
         self.assertIsInstance(wo.cost_estimate_currency, Currency)
         self.assertIsInstance(wo.instructions, str)
-        self.assertIsInstance(wo.location, Location)
-        self.assertIsInstance(wo.priority, WorkOrderPriority)
-        self.assertIsNotNone(wo.requester)
+        self.assertEqual(wo.requester, 'admin')
         self.assertEqual(wo.scheduled_date, factory.TIME)
+        self.assertEqual(wo.expiration_date, wo.scheduled_date)
+        self.assertEqual(wo.approval_date, wo.scheduled_date)
+        self.assertEqual(wo.location, wo.ticket.location)
         self.assertIsInstance(wo.status, WorkOrderStatus)
+        self.assertIsInstance(wo.priority, WorkOrderPriority)
 
     def test_create_work_order__use_existing_ticket_and_provider(self):
         ticket = create_ticket()
         category = Category.objects.filter(children__isnull=True).first()
         self.assertIsInstance(category, Category)
-        provider = create_provider(category)
+        provider = create_provider_with_all_categories()
 
         ret = factory.create_work_order()
 

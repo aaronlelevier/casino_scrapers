@@ -19,7 +19,7 @@ class WorkOrderStatusTests(TestCase):
         self.assertEqual(WorkOrderStatus.objects.default(), self.default_status)
 
     def test_default_name(self):
-        self.assertEqual(WorkOrderStatus.default, settings.DEFAULTS_WORKORDER_STATUS)
+        self.assertEqual(WorkOrderStatus.default, WorkOrderStatus.NEW)
 
     def test_manager(self):
         self.assertIsInstance(WorkOrderStatus.objects, DefaultNameManager)

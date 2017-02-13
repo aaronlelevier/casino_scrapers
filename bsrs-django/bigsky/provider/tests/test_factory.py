@@ -1,8 +1,9 @@
 from django.test import TestCase
-from provider.tests import factory
-from provider.models import Provider
+
 from category.models import Category
 from category.tests.factory import create_categories
+from provider.tests import factory
+from provider.models import Provider
 
 
 class FactoryTest(TestCase):
@@ -38,6 +39,9 @@ class FactoryTest(TestCase):
             Category.objects.filter(children__isnull=True).count()
         )
         self.assertRegexpMatches(ret.name, r'^Joe')
+        for k,v in factory.PROVIDER_FIXTURE_DATA.items():
+            self.assertEqual(getattr(ret, k), v,
+                             '{} != {}'.format(getattr(ret, k), v))
 
     def test_create_providers(self):
         list_set = factory.create_providers()

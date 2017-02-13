@@ -34,7 +34,7 @@ class WorkOrderStatus(DefaultToDictMixin, BaseNameModel):
         UNSATISFACTORY_COMPLETION
     ]
 
-    default = settings.DEFAULTS_WORKORDER_STATUS
+    default = NEW
 
     objects = DefaultNameManager()
 

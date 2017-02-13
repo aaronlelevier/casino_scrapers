@@ -35,7 +35,8 @@ def create_work_order():
         ticket = mommy.make(Ticket, status=create_default(TicketStatus),
                             priority=create_default(TicketPriority))
 
-    provider = Provider.objects.filter(categories__children__isnull=True).first()
+    provider = Provider.objects.filter(categories__children__isnull=True,
+                                       name__startswith='Joe').first()
     if not provider:
         provider = create_provider(category)
 
@@ -48,12 +49,14 @@ def create_work_order():
         'cost_estimate_currency': create_currency(),
         'instructions': 'Need to describe the work for SC API',
         'gl_code': _generate_chars(),
-        'location': approver.locations.first(),
+        'location': ticket.location,
         'status': WorkOrderStatus.objects.default(),
-        'requester': requester,
+        'requester': 'admin',
         'priority': WorkOrderPriority.objects.default(),
         'provider': provider,
-        'scheduled_date': TIME
+        'scheduled_date': TIME,
+        'expiration_date': TIME,
+        'approval_date': TIME
     }
 
     id = generate_uuid(WorkOrder)
