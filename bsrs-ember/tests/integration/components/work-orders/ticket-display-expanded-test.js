@@ -10,8 +10,13 @@ import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
 import CurrencyD from 'bsrs-ember/vendor/defaults/currency';
 import PROVIDER_DEFAULTS from 'bsrs-ember/vendor/defaults/provider';
 import moment from 'moment';
+import calendar from 'ember-moment/computeds/calendar';
+import formatCurrency from 'accounting/format-money';
 import { openDatepicker } from 'ember-pikaday/helpers/pikaday';
 import testSelector from 'ember-test-selectors';
+import loadTranslations from 'bsrs-ember/tests/helpers/translations';
+import translation from "bsrs-ember/instance-initializers/ember-i18n";
+import translations from "bsrs-ember/vendor/translation_fixtures";
 
 let WD, WOSD, ProviderD, PD, store, model, model2, trans;
 const PC = PERSON_CURRENT.defaults();
@@ -27,7 +32,9 @@ moduleForComponent('ticket-display-expanded', 'integration: ticket-display-expan
 
     trans = this.container.lookup('service:i18n');
     store = module_registry(this.container, this.registry);
-
+    translation.initialize(this);
+    const json = translations.generate('en');
+    loadTranslations(trans, json);
     run(() => {
       store.push('person-current', PERSON_CURRENT.defaults());
       store.push('work-order-status', {id: WOSD.idOne, name: WOSD.nameOne, workOrders: [WD.idOne]});
@@ -91,7 +98,7 @@ test('displays cost, gl, instructions, scheduled date and tracking number', func
   assert.equal(this.$('[data-test-id="wo-fg-cost0"] .t-amount').val(), '');
   this.$('[data-test-id="wo-fg-cost0"] .t-amount').val(WD.costEstimateOne);
   assert.equal(this.$('[data-test-id="wo-fg-cost0"] .t-amount').val(), WD.costEstimateOne);
-  
+
   this.$('.t-wo-gl_code0').val('');
   assert.equal(this.$('.t-wo-gl_code0').val(), '');
   this.$('.t-wo-gl_code0').val(WD.glCodeOne);
@@ -114,7 +121,12 @@ test('approval text displays properly', function(assert) {
   this.model = store.find('work-order', WD.idOne);
   this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
   //starts out with an approval
-  assert.equal(this.$('[data-test-id="work-order-approved0"]').text().trim(), trans.t('work_order.phrase.approval'));
+  assert.equal(
+    this.$('[data-test-id="work-order-approved0"]').text().trim(),
+    trans.t('work_order.phrase.approval', {
+      cost: formatCurrency(WD.approvedAmount, { symbol: '$' }), approver: PD.fullname, approvedDate: calendar(WD.approvalDateOne)
+    }).string
+  );
   //remove approval
   run(() => {
     this.model.set('approved_amount', '');
@@ -155,6 +167,7 @@ test('can reschedule scheduled_date', function(assert) {
   assert.equal(this.$(selector).length, 0, 'reschedule must be clicked first');
   let actual = this.$(testSelector('id', 'wo-fg-scheduled_date0')).find('input[readonly]').val();
   assert.ok(actual, 'a scheduled date is present');
+  assert.equal(this.$(testSelector('id', 'begin-reschedule')).text(), trans.t('work_order.label.reschedule'));
   assert.notEqual(actual, tomorrow, 'tomorrow is not scheduled');
   this.$(testSelector('id', 'begin-reschedule')).click();
   this.$(selector).click();
@@ -178,6 +191,7 @@ test('can cancel reschedule', function(assert) {
   assert.equal(actual, expected, `Date is ${expected}` );
   this.$(testSelector('id', 'begin-reschedule')).click();
   this.$(selector).click();
+  assert.equal(this.$(testSelector('id', 'cancel-reschedule')).text(), trans.t('work_order.label.reschedule_cancel'));
   let interactor = openDatepicker(this.$(selector + ' input'));
   interactor.selectDate(expectedDate);
   actual = this.$(selector + ' input').val();
@@ -192,8 +206,7 @@ test('if work order has tracking number display it otherwise show TBD', function
   this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
   assert.equal(this.$('[data-test-id="wo-tracking0"]').text().trim(), trans.t('work_order.label.tracking_tbd'));
   run(() => {
-    store.push('work-order', {id: WD.idOne, tracking_number: WD.trackingNumberOne}); 
+    store.push('work-order', {id: WD.idOne, tracking_number: WD.trackingNumberOne});
   });
   assert.equal(this.$('[data-test-id="wo-tracking0"]').text().trim(), WD.trackingNumberOne);
 });
-

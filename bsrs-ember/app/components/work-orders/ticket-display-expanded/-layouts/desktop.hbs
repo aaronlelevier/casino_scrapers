@@ -59,12 +59,12 @@
             <p class="help-text--approval" data-test-id={{concat "work-order-approved" indx}}>
               {{fa-icon "check-circle"}}
               {{t "work_order.phrase.approval"
-                cost=(format-money model.approved_amount 
-                  symbol=(get 
-                    (get-currency-object 
-                      currencyService=currency 
-                      currencyId=model.cost_estimate_currency 
-                    ) 
+                cost=(format-money model.approved_amount
+                  symbol=(get
+                    (get-currency-object
+                      currencyService=currency
+                      currencyId=model.cost_estimate_currency
+                    )
                   'symbol')
                 )
                 approver=model.approver.fullname
@@ -104,7 +104,7 @@
               disabled=model.isReadOnly
               minDate=today
             }}
-            <button data-test-id="cancel-reschedule" class="btn btn-default" type="button" {{action (queue (action "cancelReschedule") (toggle "rescheduling" this))}}>{{t "work_order.reschedule_cancel"}}</button>
+            <button data-test-id="cancel-reschedule" class="btn btn-default" type="button" {{action (queue (action "cancelReschedule") (toggle "rescheduling" this))}}>{{t "work_order.label.reschedule_cancel"}}</button>
 
           {{else}}
 
@@ -112,7 +112,7 @@
               <div class="input-group">
                 <input type="text" class="form-control" readonly="readonly" value={{moment-format model.scheduled_date "MM/DD/YYYY"}}>
                 <span class="input-group-btn">
-                  <button data-test-id="begin-reschedule" class="btn btn-default" type="button" {{action (toggle "rescheduling" this)}}>{{t "work_order.reschedule"}}</button>
+                  <button data-test-id="begin-reschedule" class="btn btn-default" type="button" {{action (toggle "rescheduling" this)}}>{{t "work_order.label.reschedule"}}</button>
                 </span>
               </div>
             {{else}}
