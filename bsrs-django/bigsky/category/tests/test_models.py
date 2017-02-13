@@ -116,6 +116,22 @@ class CategoryTests(CategorySetupMixin, TestCase):
         for f in Category.EXPORT_FIELDS:
             self.assertTrue(hasattr(category, f))
 
+    def test_verbose_name(self):
+        self.assertEqual(self.trade.verbose_name, "{} - {}".format(self.type.name, self.trade.name))
+
+    def test_verbose_name__updates_when_parent_changes(self):
+        self.new_type = factory.create_single_category()
+        self.trade.parent = self.new_type
+        self.trade.save()
+        self.assertEqual(self.trade.verbose_name, "{} - {}".format(self.new_type.name, self.trade.name))
+
+    def test_verbose_name__updates_when_parent_name_changes(self):
+        new_name = 'foo'
+        self.type.name = new_name
+        self.type.save()
+        self.trade = Category.objects.get(id=self.trade.id)
+        self.assertEqual(self.trade.verbose_name, "{} - {}".format(new_name, self.trade.name))
+
     def test_label__no_parent_no_label_set(self):
         tenant = get_or_create_tenant()
         category = Category.objects.create(
@@ -282,19 +298,19 @@ class CategoryTests(CategorySetupMixin, TestCase):
 
 class CategoryLevelTests(CategorySetupMixin, TestCase):
 
-    def test_set_level__no_parents(self):
-        self.assertEqual(self.type._set_level(), 0)
+    def test_get_parent_count__no_parents(self):
+        self.assertEqual(self.type._get_parent_count(), 0)
 
-    def test_set_level__one_parent(self):
+    def test_get_parent_count__one_parent(self):
         self.assertTrue(self.trade.parent)
         self.assertFalse(self.trade.parent.parent)
-        self.assertEqual(self.trade._set_level(), 1)
+        self.assertEqual(self.trade._get_parent_count(), 1)
 
-    def test_set_level__two_parent(self):
+    def test_get_parent_count__two_parent(self):
         self.assertTrue(self.child.parent)
         self.assertTrue(self.child.parent.parent)
         self.assertFalse(self.child.parent.parent.parent)
-        self.assertEqual(self.child._set_level(), 2)
+        self.assertEqual(self.child._get_parent_count(), 2)
 
     def test_level__type(self):
         self.assertEqual(self.type.level, 0)

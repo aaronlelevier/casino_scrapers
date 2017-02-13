@@ -94,6 +94,8 @@ class Category(BaseModel):
 
     tenant = models.ForeignKey(Tenant, related_name="categories")
     name = models.CharField(max_length=100)
+    verbose_name = models.CharField(max_length=1000, null=True,
+        help_text="string name that holds i.e. parent - child - grand child")
     description = models.CharField(max_length=100, blank=True, null=True)
     label = models.CharField(max_length=100, editable=False, blank=True, null=True,
         help_text="This field cannot be set directly.  It is either set from "
@@ -120,9 +122,17 @@ class Category(BaseModel):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
+    def save(self, update_children=True, *args, **kwargs):
         self._update_defalts()
-        return super(Category, self).save(*args, **kwargs)
+        self.verbose_name = self.parents_and_self_as_string()
+
+        super(Category, self).save(*args, **kwargs)
+
+        # must call `save` on children in order to update their
+        # `verbose_name` which could go stale if parent name changes
+        if update_children:
+            for x in Category.objects.get_all_children(self):
+                x.save(update_children=False)
 
     def _update_defalts(self):
         if not self.label:
@@ -137,17 +147,12 @@ class Category(BaseModel):
         if not self.cost_currency:
             self.cost_currency = Currency.objects.default()
 
-        self.level = self._set_level()
+        self.level = self._get_parent_count()
 
-    def _set_level(self):
-        count = 0
+    def _get_parent_count(self, category=None, count=0):
+        if not category:
+            category = self
 
-        if not self.parent:
-            return count
-        else:
-            return self._get_parent_count(self.parent, count+1)
-
-    def _get_parent_count(self, category, count):
         if not category.parent:
             return count
         else:

@@ -14,16 +14,15 @@ moduleForAcceptance('Acceptance | general category list test', {
   },
 });
 
-test('visiting /categories/index', (assert) => {
+test('visiting /categories/index', function(assert) {
   page.visit();
   andThen(() => {
     assert.equal(currentURL(), CATEGORIES_INDEX_URL);
-    assert.equal(find('.t-sort-name').text(), t('admin.category.label.name'));
+    assert.equal(find('.t-sort-verbose-name').text(), t('admin.category.label.name'));
     assert.equal(find('.t-sort-description').text(), t('admin.category.label.description'));
     assert.equal(find('.t-sort-label').text(), t('admin.category.label.label'));
     // unsortable columns
     assert.equal(find('[data-test-id=cost_amount]').length, 1);
     assert.equal(find('[data-test-id=cost_code]').length, 1);
-    assert.equal(find('[data-test-id=verbose_name]').length, 1);
   });
 });

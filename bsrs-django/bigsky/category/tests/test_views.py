@@ -154,11 +154,15 @@ class CategoryListTests(CategoryViewTestSetupMixin, APITestCase):
                         "Error: {} <= {} is not True".format(data['results'][0]['label'],
                                                              data['results'][1]['label']))
 
-        verbose_name0 = data['results'][0]['verbose_name'].split('-')[-1]
-        verbose_name1 = data['results'][1]['verbose_name'].split('-')[-1]
-        verbose_name2 = data['results'][2]['verbose_name'].split('-')[-1]
-        self.assertTrue(verbose_name0 < verbose_name1 < verbose_name2)
+    def test_ordering__verbose_name(self):
+        # `verbose_name` is sortable
+        response = self.client.get('/api/admin/categories/?ordering=-verbose_name')
 
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(data['results'][0]['verbose_name'] >= data['results'][1]['verbose_name'],
+                        "Error: {} >= {} is not True".format(data['results'][0]['verbose_name'],
+                                                             data['results'][1]['verbose_name']))
 
 
 class CategoryDetailTests(CategoryViewTestSetupMixin, APITestCase):

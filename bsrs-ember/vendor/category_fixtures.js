@@ -41,6 +41,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
     return {
       id: i || this.category_defaults.idOne,
       name: name || this.category_defaults.nameOne,
+      verbose_name: name || this.category_defaults.nameOne,
       description: this.category_defaults.descriptionRepair,
       cost_amount: this.category_defaults.costAmountOne,
       cost_currency: this.category_defaults.currency,
@@ -96,6 +97,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
       var uuid = 'ec62006b-6275-4aa9-abfa-38b146383d4';
       var category = this.generate(uuid + i);
       category.name = 'cococat' + i;
+      category.verbose_name = 'cococat' + i;
       category.label = 'scohat' + i;
       response.push(category);
     }
@@ -123,6 +125,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
   };
   factory.prototype.put = function(category) {
     var response = this.generate(category.id)
+    delete response.verbose_name;
     response.parent = this.category_defaults.idParent;
     response.children = this.children();
     response.children = response.children.map(function(child) {

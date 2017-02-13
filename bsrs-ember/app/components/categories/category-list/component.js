@@ -3,16 +3,12 @@ import GridViewComponent from 'bsrs-ember/components/grid-view/component';
 export default GridViewComponent.extend({
   layoutName: 'components/grid-view',
   columns: [{
-    field: 'name',
+    field: 'verbose_name',
     headerLabel: 'admin.category.label.name',
     headerIsTranslatable: true,
     isSortable: true,
     isFilterable: true,
     isSearchable: true
-  }, {
-    field: 'verbose_name',
-    headerLabel: 'admin.category.label.verbose_name',
-    headerIsTranslatable: true
   }, {
     field: 'description',
     headerLabel: 'admin.category.label.description',

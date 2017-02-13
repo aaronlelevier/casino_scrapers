@@ -14,7 +14,7 @@ from model_mommy import mommy
 from accounting.models import Currency
 from bigsky.views import MediaView
 from category.models import Category
-from category.tests.factory import create_categories
+from category.tests.factory import create_categories, create_single_category
 from contact.models import State, Country, PhoneNumberType, AddressType, EmailType
 from generic.models import SavedSearch
 from generic.tests.factory import create_image_attachment
@@ -188,11 +188,8 @@ class BootstrappedDataTests(SetupMixin, TestCase):
         self.ticket_priority = mommy.make(TicketPriority)
         self.work_order_status = mommy.make(WorkOrderStatus)
 
-        categories = Category.objects.order_by("-parent")
-        self.parent_category = categories[0]
-        self.child_category = categories[1]
-        self.child_category.parent = self.parent_category
-        self.child_category.save()
+        self.parent_category = create_single_category()
+        self.child_category = create_single_category(parent=self.parent_category)
 
         self.saved_search = mommy.make(SavedSearch, person=self.person, name="foo",
             endpoint_name="admin.people.index")
