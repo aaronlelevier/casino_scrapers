@@ -1,6 +1,7 @@
 import Ember from 'ember';
 const { run } = Ember;
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
+import sinon from 'sinon';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TP from 'bsrs-ember/vendor/defaults/ticket-priority';
@@ -1731,6 +1732,16 @@ test('rollback wo will reset the previous workOrders (wo) when switching from on
   assert.ok(ticket.get('isNotDirty'));
   assert.ok(ticket.get('woIsNotDirty'));
   assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('rollback calls rollbackRelatedContainer for work order', function(assert) {
+  ticket = store.push('ticket', { id: TD.idOne, ticket_wo_fks: [1] });
+  // A mixin provides this method, stub in order to test that rollback calls
+  // this method with an arg: 'wo'; to rollback all the related work orders
+  let stub = sinon.stub(ticket, 'rollbackRelatedContainer');
+  ticket.rollback();
+  assert.equal(stub.firstCall.args[0], 'wo', 'work order rollback via mixin method rollbackRelatedContainer');
+  stub.restore();
 });
 
 test('wo_ids computed returns a flat list of ids for each workOrder', (assert) => {

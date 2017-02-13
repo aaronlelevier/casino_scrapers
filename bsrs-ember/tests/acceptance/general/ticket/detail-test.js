@@ -1016,6 +1016,19 @@ test('can update a work order', async function(assert) {
   assert.equal(currentURL(), TICKET_LIST_URL);
 });
 
+test('with a changed work order, cancel and return to list', async function(assert) {
+  await page.visitDetail();
+  await click('[data-test-id="expander-collapsed0"]');
+  assert.equal(find('[data-test-id="work-order-approved0"]').text().trim(), `$${t('work_order.phrase.approval',
+    { cost: WD.approvedAmount, approver: PD.fullname, approvedDate: moment(WD.approvalDateOne).calendar() })}`,
+    'The work order is expanded'
+  );
+  await fillIn('.t-wo-gl_code0', WD.glCodeTwo);
+  await generalPage.cancel();
+  await generalPage.clickModalRollback();
+  assert.equal(currentURL(), TICKET_LIST_URL, 'cancel returns to list view');
+});
+
 test('update a work order and ticket will send two xhrs', async function(assert) {
   await page.visitDetail();
   await click('[data-test-id="expander-collapsed0"]');

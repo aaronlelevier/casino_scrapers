@@ -10,6 +10,7 @@ import OptConf from 'bsrs-ember/mixins/optconfigure/ticket';
 import { belongs_to, change_belongs_to } from 'bsrs-components/attr/belongs-to';
 import { many_to_many, add_many_to_many, many_to_many_dirty } from 'bsrs-components/attr/many-to-many';
 import { validator, buildValidations } from 'ember-cp-validations';
+import SaveAndRollbackRelatedMixin from 'bsrs-ember/mixins/model/save-and-rollback-related';
 
 const Validations = buildValidations({
   request: [
@@ -43,7 +44,7 @@ const Validations = buildValidations({
 
 const { run, set, get } = Ember;
 
-let TicketModel = Model.extend(CategoriesMixin, OptConf, Validations, {
+let TicketModel = Model.extend(CategoriesMixin, OptConf, Validations, SaveAndRollbackRelatedMixin, {
   init() {
     this._super(...arguments);
     set(this, 'requestValues', []); //store array of values to be sent in dt post or put request field
@@ -171,6 +172,7 @@ let TicketModel = Model.extend(CategoriesMixin, OptConf, Validations, {
     this.rollbackAssignee();
     this.rollbackAttachmentsContainer();
     this.rollbackAttachments();
+    this.rollbackRelatedContainer('wo');
     this.rollbackWo();
     this._super(...arguments);
   },
