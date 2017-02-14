@@ -275,24 +275,26 @@ class TenantEtlDataAdapter(object):
     def list_url(self):
         return DEV_SC_SUBSCRIBERS_URL
 
+    # TODO: dev1 SC server is down, so don't call live post for now
     def post(self):
-        """
-        :return scid: Integer id of Subscriber in SC
-        """
-        response = BsOAuthSession().post(self.list_url, data=self.data)
-        data = json.loads(response.content.decode('utf8'))
+        pass
+        # """
+        # :return scid: Integer id of Subscriber in SC
+        # """
+        # response = BsOAuthSession().post(self.list_url, data=self.data)
+        # data = json.loads(response.content.decode('utf8'))
 
-        if response.status_code == 400:
-            if data["ErrorCode"] == 0: # no returning a diff error msg, so just checking for 'ErrorCode'
-                                       # SC Api still not in sync
-                #this is the current error message fron Fixxbook when not working on the dev server
-                return
-            raise ValidationError(data['ErrorMessage'])
+        # if response.status_code == 400:
+        #     if data["ErrorCode"] == 0: # no returning a diff error msg, so just checking for 'ErrorCode'
+        #                                # SC Api still not in sync
+        #         #this is the current error message fron Fixxbook when not working on the dev server
+        #         return
+        #     raise ValidationError(data['ErrorMessage'])
 
-        if response.status_code == 406:
-            raise ValidationError(data['Reason'])
+        # if response.status_code == 406:
+        #     raise ValidationError(data['Reason'])
 
-        return data['id']
+        # return data['id']
 
 
 class WorkOrderEtlDataAdapter(object):
