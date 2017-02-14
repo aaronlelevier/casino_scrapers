@@ -39,3 +39,5 @@ wait
 ../venv/bin/python manage.py loaddata fixtures/automation.AutomationEvent.json
 ../venv/bin/python manage.py loaddata fixtures/automation.AutomationActionType.json
 ../venv/bin/python manage.py loaddata fixtures/automation.AutomationFilterType.json
+../venv/bin/python manage.py loaddata fixtures/work_order.WorkOrderStatus.json
+../venv/bin/python manage.py loaddata fixtures/work_order.WorkOrderPriority.json

@@ -1,0 +1,42 @@
+[
+{
+  "model": "work_order.workorderpriority",
+  "pk": "2c18f431-23b8-42b0-96cb-d06e43e78e02",
+  "fields": {
+    "created": "2017-02-14T00:42:02.704Z",
+    "modified": "2017-02-14T00:42:02.704Z",
+    "deleted": null,
+    "name": "work_order.priority.high"
+  }
+},
+{
+  "model": "work_order.workorderpriority",
+  "pk": "53d74b60-de66-4f8b-8d8b-b6eaee73831e",
+  "fields": {
+    "created": "2017-02-14T00:42:02.708Z",
+    "modified": "2017-02-14T00:42:02.708Z",
+    "deleted": null,
+    "name": "work_order.priority.low"
+  }
+},
+{
+  "model": "work_order.workorderpriority",
+  "pk": "b2cfdfff-f356-4398-9751-438c6b4a6354",
+  "fields": {
+    "created": "2017-02-14T00:42:02.706Z",
+    "modified": "2017-02-14T00:42:02.706Z",
+    "deleted": null,
+    "name": "work_order.priority.medium"
+  }
+},
+{
+  "model": "work_order.workorderpriority",
+  "pk": "b6ab6718-37f8-4fd9-866f-94a823cc17d8",
+  "fields": {
+    "created": "2017-02-14T00:42:02.700Z",
+    "modified": "2017-02-14T00:42:02.700Z",
+    "deleted": null,
+    "name": "work_order.priority.emergency"
+  }
+}
+]
