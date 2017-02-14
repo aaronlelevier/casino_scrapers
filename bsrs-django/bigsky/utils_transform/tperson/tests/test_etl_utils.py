@@ -231,7 +231,7 @@ class CreatePersonTests(TestCase):
 
     def test_create_person(self):
         domino_person = create_domino_person()
-    
+
         person = create_person(domino_person, self.tenant)
 
         self.assertIsInstance(person, Person)
@@ -271,7 +271,6 @@ class CreatePersonTests(TestCase):
 
         self.assertTrue(person.is_staff)
         self.assertTrue(person.is_superuser)
-        self.assertEqual(len(person.permissions), 24)
 
     def test_bigsky_person_update__not_bigsky_person_no_change(self):
         domino_person = create_domino_person()
@@ -289,7 +288,7 @@ class CreatePersonTests(TestCase):
     def test_blank_middle_initial(self):
         domino_person = create_domino_person()
         domino_person.middle_initial = None
-        
+
         person_ = create_person(domino_person, self.tenant)
 
         self.assertEqual(person_.middle_initial, None)
@@ -313,7 +312,7 @@ class CreatePersonTests(TestCase):
         person_location = person_.locations.all()[0]
         self.assertIsInstance(person_location, Location)
         self.assertEqual(person_.locations.count(), 3)
-        
+
     def test_person_bad_location(self):
         domino_person = create_domino_person()
         domino_person.locations = '3534534'
@@ -325,7 +324,7 @@ class CreatePersonTests(TestCase):
 
         with self.assertRaises(Person.DoesNotExist):
             Person.objects.get(username=domino_person.username)
-        
+
     def test_person_missing_location(self):
         domino_person = create_domino_person()
         domino_person.locations = None
@@ -340,16 +339,16 @@ class CreatePersonTests(TestCase):
 
     def test_person_phonenumber(self):
         domino_person = create_domino_person()
-        
+
         person_ = create_person(domino_person, self.tenant)
 
         person_phonenumber = person_.phone_numbers.all()[0]
         self.assertIsInstance(person_phonenumber, PhoneNumber)
         self.assertEqual(person_phonenumber.number, PHONENUMBER)
-        
+
     def test_person_email(self):
         domino_person = create_domino_person()
-        
+
         person_ = create_person(domino_person, self.tenant)
 
         person_email_address = person_.emails.all()[0]
