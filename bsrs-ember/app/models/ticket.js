@@ -57,7 +57,7 @@ let TicketModel = Model.extend(CategoriesMixin, OptConf, Validations, SaveAndRol
     belongs_to.bind(this)('assignee', 'ticket');
     belongs_to.bind(this)('location', 'ticket');
     many_to_many.bind(this)('cc', 'ticket');
-    many_to_many.bind(this)('wo', 'ticket', {dirty:false});
+    many_to_many.bind(this)('wo', 'ticket', {dirty:false, save:false});
     many_to_many.bind(this)('attachment', 'generic', {plural: true});
     many_to_many.bind(this)('category', 'model', {plural:true, add_func:false});
   },
@@ -88,7 +88,6 @@ let TicketModel = Model.extend(CategoriesMixin, OptConf, Validations, SaveAndRol
     const wos = this.get('wo');
     return wos.isAny('isDirtyOrRelatedDirty');
   }).readOnly(),
-
   woIsNotDirty: Ember.computed.not('woIsDirty').readOnly(),
 
   isDirtyOrRelatedDirty: Ember.computed.or('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'locationIsDirty', 'attachmentsIsDirty', 'woIsDirty').readOnly(),
@@ -173,6 +172,8 @@ let TicketModel = Model.extend(CategoriesMixin, OptConf, Validations, SaveAndRol
     this.rollbackAttachmentsContainer();
     this.rollbackAttachments();
     this.rollbackRelatedContainer('wo');
+    // only for adding back join model when work order is removed (future feature). Ticket does not dirty track wo add/remove
+    // if feature to remove work order never makes it, rollbackWo can be removed
     this.rollbackWo();
     this._super(...arguments);
   },
@@ -180,7 +181,6 @@ let TicketModel = Model.extend(CategoriesMixin, OptConf, Validations, SaveAndRol
     this.saveStatus();
     this.savePriority();
     this.saveCc();
-    this.saveWo();
     this.saveAssignee();
     this.saveAttachmentsContainer();
     this.saveAttachments();

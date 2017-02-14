@@ -81,15 +81,11 @@ export default Model.extend(OptConf, Validations, SaveAndRollbackRelatedMixin, {
   rollback() {
     this.rollbackDefaultCurrency();
     this.rollbackCountries();
-    // this.rollbackImplementationEmail();
     this.rollbackRelatedSingle('implementation_email');
     this.rollbackImplementationContact();
-    // this.rollbackBillingEmail();
     this.rollbackRelatedSingle('billing_email');
     this.rollbackRelatedSingle('billing_phone_number');
     this.rollbackRelatedSingle('billing_address');
-    // this.rollbackBillingPhoneNumber();
-    // this.rollbackBillingAddress();
     this.rollbackDtdStart();
     this._super(...arguments);
   },

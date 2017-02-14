@@ -24,7 +24,7 @@ moduleFor('model:work-order', 'Unit | Model | work-order', {
   needs: ['model:currency','service:translations-fetcher','service:i18n', 'model:uuid',
     'model:status','validator:presence', 'validator:unique-username', 'validator:length',
     'validator:format', 'validator:number', 'validator:has-many', 'validator:presence', 'validator:date',
-    'model:person', 'service:person-current', 'model:work-order-status', 'model:category',
+    'validator:category-cost-amount', 'model:person', 'service:person-current', 'model:work-order-status', 'model:category',
     'model:provider'],
   beforeEach() {
     setDefaults();
