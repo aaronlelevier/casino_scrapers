@@ -61,15 +61,23 @@ class UserWithPrivilegeProviderTest(APITestCase):
             msg = '{provider_id} matches expected cateogry {id}'.format(provider_id=provider_id, id=category_id);
             self.assertEqual(provider_id, category_id, msg)
 
-    def test_provider_data_includes_id_and_name(self):
+    def test_provider_data_includes_provider_fields(self):
         self.assertIn('view_provider', self.person.permissions)
 
         response = self.client.get('/api/providers/?categories={id}'.format(id=self.category_id))
         data = json.loads(response.content.decode('utf8'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('id', data['results'][0])
-        self.assertIn('name', data['results'][0])
+        provider = Provider.objects.get(id=data['results'][0]["id"])
+        self.assertEqual(data['results'][0]["name"], provider.name)
+        self.assertEqual(data['results'][0]["logo"], provider.logo)
+        self.assertEqual(data['results'][0]["address1"], provider.address1)
+        self.assertEqual(data['results'][0]["address2"], provider.address2)
+        self.assertEqual(data['results'][0]["city"], provider.city)
+        self.assertEqual(data['results'][0]["state"], provider.state)
+        self.assertEqual(data['results'][0]["postal_code"], provider.postal_code)
+        self.assertEqual(data['results'][0]["phone"], provider.phone)
+        self.assertEqual(data['results'][0]["email"], provider.email)
 
     def test_provider_data_is_empty_with_non_matching_trade(self):
         self.assertIn('view_provider', self.person.permissions)
