@@ -6,7 +6,6 @@ en,activity.one,Activity,Activity,,"'activity.one':'Activity',",Activity,Activit
 en,activity.tabs.all_updates,All Updates,All Updates,,"'activity.tabs.all_updates':'All Updates',",All Updates,All Updates
 en,activity.tabs.comments,Comments,Comments,,"'activity.tabs.comments':'Comments',",Comments,Comments
 en,activity.tabs.status_updates,Status Updates,Status Updates,,"'activity.tabs.status_updates':'Status Updates',",Status Updates,Status Updates
-en,admin.category.label.verbose_name,Verbose Name,Verbose Name,,"'admin.category.label.verbose_name':'Verbose Name',",Verbose Name,Verbose Name
 en,activity.ticket.assignee,changed the {{type}} from %s{{from}} %sto %s{{to}} %s{{timestamp}},changed the {{type}} from %s{{from}} %sto %s{{to}} %s{{timestamp}},,"'activity.ticket.assignee':'changed the {{type}} from %s{{from}} %sto %s{{to}} %s{{timestamp}}',",changed the {{type_var_ from %s{{from_var_ %sto %s{{to_var_ %s{{timestamp_var_,changed the _type_var_ from %s_from_var_ %sto %s_to_var_ %s_timestamp_var_
 en,activity.ticket.attachment_add.one,uploaded %s{{count}} file %s{{timestamp}} %s{{added}},uploaded %s{{count}} file %s{{timestamp}} %s{{added}},,"'activity.ticket.attachment_add.one':'uploaded %s{{count}} file %s{{timestamp}} %s{{added}}',",uploaded %s{{count_var_ file %s{{timestamp_var_ %s{{added_var_,uploaded %s_count_var_ file %s_timestamp_var_ %s_added_var_
 en,activity.ticket.attachment_add.other,uploaded %s{{count}} files %s{{timestamp}} %s{{added}},uploaded %s{{count}} files %s{{timestamp}} %s{{added}},,"'activity.ticket.attachment_add.other':'uploaded %s{{count}} files %s{{timestamp}} %s{{added}}',",uploaded %s{{count_var_ files %s{{timestamp_var_ %s{{added_var_,uploaded %s_count_var_ files %s_timestamp_var_ %s_added_var_
@@ -76,6 +75,7 @@ en,admin.category.label.name,Name,Name,,"'admin.category.label.name':'Name',",Na
 en,admin.category.label.parent,Parent Category,Parent Category,,"'admin.category.label.parent':'Parent Category',",Parent Category,Parent Category
 en,admin.category.label.sc_category_name,SC Category Name,SC Category Name,,"'admin.category.label.sc_category_name':'SC Category Name',",SC Category Name,SC Category Name
 en,admin.category.label.subcategory_label,Sub Category Label,Sub Category Label,,"'admin.category.label.subcategory_label':'Sub Category Label',",Sub Category Label,Sub Category Label
+en,admin.category.label.verbose_name,Verbose Name,Verbose Name,,"'admin.category.label.verbose_name':'Verbose Name',",Verbose Name,Verbose Name
 en,admin.category.labelCat.issue,Issue,Issue,,"'admin.category.labelCat.issue':'Issue',",Issue,Issue
 en,admin.category.labelCat.trade,Trade,Trade,,"'admin.category.labelCat.trade':'Trade',",Trade,Trade
 en,admin.category.labelCat.type,Type,Type,,"'admin.category.labelCat.type':'Type',",Type,Type
@@ -280,7 +280,6 @@ en,admin.role.label.location_level,Location Level,Location Level,,"'admin.role.l
 en,admin.role.label.name,Role Name,Role Name,,"'admin.role.label.name':'Role Name',",Role Name,Role Name
 en,admin.role.label.number_users,# of People,# of People,,"'admin.role.label.number_users':'# of People',",# of People,# of People
 en,admin.role.label.permissions,Permissions,Permissions,,"'admin.role.label.permissions':'Permissions',",Permissions,Permissions
-en,role.label.permission.provider,Provider,Provider,,"'role.label.permission.provider':'Provider',",Provider,Provider
 en,admin.role.label.role_type,Role Type,Role Type,,"'admin.role.label.role_type':'Role Type',",Role Type,Role Type
 en,admin.role.label.settings,Settings,Settings,,"'admin.role.label.settings':'Settings',",Settings,Settings
 en,admin.role.new,New Role,New Role,,"'admin.role.new':'New Role',",New Role,New Role
@@ -519,6 +518,8 @@ en,errors.automation.pf.criteria.length,Must have at least one criteria,Must hav
 en,errors.automation.pf.length,Please add at least one filter,Please add at least one filter,,"'errors.automation.pf.length':'Please add at least one filter',",Please add at least one filter,
 en,errors.automation.ticketcc,Please select a CC,Please select a CC,,"'errors.automation.ticketcc':'Please select a CC',",Please select a CC,
 en,errors.category.cost_amount,Root cateogries must specify a default NTE.,Root cateogries must specify a default NTE.,,"'errors.category.cost_amount':'Root cateogries must specify a default NTE.',",Root cateogries must specify a default NTE.,Root cateogries must specify a default NTE.
+en,errors.category.cost_amount.gte,Cost amount cannot be negative,Cost amount cannot be negative,,"'errors.category.cost_amount.gte':'Cost amount cannot be negative',",Cost amount cannot be negative,Cost amount cannot be negative
+en,errors.category.cost_amount.length,Whoa money bags! I do not think you have the funds for this.,Whoa money bags! I do not think you have the funds for this.,,"'errors.category.cost_amount.length':'Whoa money bags! I do not think you have the funds for this.',",Whoa money bags! I do not think you have the funds for this.,Whoa money bags! I do not think you have the funds for this.
 en,errors.category.name,Name must be provided. ,Name must be provided. ,,"'errors.category.name':'Name must be provided.',",Name must be provided. ,Name must be provided. 
 en,errors.client.category_not_found,Category not found,Category not found,,"'errors.client.category_not_found':'Category not found',",Category not found,Category not found
 en,errors.client.category_param_missing,Category parameter must be included,Category parameter must be included,,"'errors.client.category_param_missing':'Category parameter must be included',",Category parameter must be included,Category parameter must be included
@@ -546,6 +547,8 @@ en,errors.phonenumber.number,Phone number required,Phone number required,,"'erro
 en,errors.profile.description,Description must be provided,Description must be provided,,"'errors.profile.description':'Description must be provided',",Description must be provided,Description must be provided
 en,errors.profile.description.min_max,Must be between 5 and 500 characters,Must be between 5 and 500 characters,,"'errors.profile.description.min_max':'Must be between 5 and 500 characters',",Must be between 5 and 500 characters,Must be between 5 and 500 characters
 en,errors.role.auth_amount,Auth Amount must be provided,Auth Amount must be provided,,"'errors.role.auth_amount':'Auth Amount must be provided',",Auth Amount must be provided,Auth Amount must be provided
+en,errors.role.auth_amount.gte,Auth amount cannot be negative,Auth amount cannot be negative,,"'errors.role.auth_amount.gte':'Auth amount cannot be negative',",Auth amount cannot be negative,Auth amount cannot be negative
+en,errors.role.auth_estimate.length,Whoa money bags! I do not think you have the funds for this.,Whoa money bags! I do not think you have the funds for this.,,"'errors.role.auth_estimate.length':'Whoa money bags! I do not think you have the funds for this.',",Whoa money bags! I do not think you have the funds for this.,Whoa money bags! I do not think you have the funds for this.
 en,errors.role.location_level,Location Level must be provided,Location Level must be provided,,"'errors.role.location_level':'Location Level must be provided',",Location Level must be provided,Location Level must be provided
 en,errors.role.name,Name must be provided,Name must be provided,,"'errors.role.name':'Name must be provided',",Name must be provided,Name must be provided
 en,errors.sendemail.body,Email Body required,Email Body required,,"'errors.sendemail.body':'Email Body required',",Email Body required,Email Body required
@@ -574,8 +577,10 @@ en,errors.ticket.request,Request must be provided,Request must be provided,,"'er
 en,errors.ticket.request.length,Request must be at least 5 characters,Request must be at least 5 characters,,"'errors.ticket.request.length':'Request must be at least 5 characters',",Request must be at least 5 characters,Request must be at least 5 characters
 en,errors.ticket.requester,Requester must be provided,Requester must be provided,,"'errors.ticket.requester':'Requester must be provided',",Requester must be provided,Requester must be provided
 en,errors.ticket.status,Status must be provided,Status must be provided,,"'errors.ticket.status':'Status must be provided',",Status must be provided,Status must be provided
+en,errors.work_order.cost_estimate,Please specify a cost estimate,Please specify a cost estimate,,"'errors.work_order.cost_estimate':'Please specify a cost estimate',",Please specify a cost estimate,Please specify a cost estimate
+en,errors.work_order.cost_estimate.gte,Cost estimates cannot be negative,Cost estimates cannot be negative,,"'errors.work_order.cost_estimate.gte':'Cost estimates cannot be negative',",Cost estimates cannot be negative,Cost estimates cannot be negative
+en,errors.work_order.cost_estimate.length,Whoa money bags! I do not think you have the funds for this.,Whoa money bags! I do not think you have the funds for this.,,"'errors.work_order.cost_estimate.length':'Whoa money bags! I do not think you have the funds for this.',",Whoa money bags! I do not think you have the funds for this.,Whoa money bags! I do not think you have the funds for this.
 en,errors.work_order.scheduled_date,ETA is required,ETA is required,,"'errors.work_order.scheduled_date':'ETA is required',",ETA is required,ETA is required
-en,errors.work_order.cost_estimate.length,Whoa money bags! I don't think you have the funds for this.,Whoa money bags! I don't think you have the funds for this.,,"'errors.work_order.cost_estimate.length':'Whoa money bags! I don't think you have the funds for this.',",Whoa money bags! I don't think you have the funds for this.,Whoa money bags! I don't think you have the funds for this.
 en,errors.work_order.scheduled_date_in_past,ETA should not be in the past,ETA should not be in the past,,"'errors.work_order.scheduled_date_in_past':'ETA should not be in the past',",ETA should not be in the past,ETA should not be in the past
 en,event.rentals,Event Rentals,Event Rentals,,"'event.rentals':'Event Rentals',",Event Rentals,Event Rentals
 en,excavation.and.soil.construction,Excavation And Soil Construction,Excavation And Soil Construction,,"'excavation.and.soil.construction':'Excavation And Soil Construction',",Excavation And Soil Construction,Excavation And Soil Construction
@@ -719,6 +724,7 @@ en,role.label.permission.edit,Edit,Edit,,"'role.label.permission.edit':'Edit',",
 en,role.label.permission.location,Location,Location,,"'role.label.permission.location':'Location',",Location,Location
 en,role.label.permission.locationlevel,Location Level,Location Level,,"'role.label.permission.locationlevel':'Location Level',",Location Level,Location Level
 en,role.label.permission.person,Person,Person,,"'role.label.permission.person':'Person',",Person,Person
+en,role.label.permission.provider,Provider,Provider,,"'role.label.permission.provider':'Provider',",Provider,Provider
 en,role.label.permission.role,Role,Role,,"'role.label.permission.role':'Role',",Role,Role
 en,role.label.permission.ticket,Ticket,Ticket,,"'role.label.permission.ticket':'Ticket',",Ticket,Ticket
 en,role.label.permission.view,View,View,,"'role.label.permission.view':'View',",View,View
