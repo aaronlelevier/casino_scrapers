@@ -1,7 +1,6 @@
 import Ember from 'ember';
 const { run } = Ember;
 import PromiseMixin from 'ember-promise/mixins/promise';
-import formatNumber from 'accounting/format-number';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import FindByIdMixin from 'bsrs-ember/mixins/repositories/findById';

@@ -35,6 +35,7 @@ import { POWER_SELECT_OPTIONS, PERSON_LOCATION_SELECT, PERSON_STATUS_SELECT, PER
 import { LOCALE_SELECT } from 'bsrs-ember/tests/helpers/const-names';
 import BSRS_TRANSLATION_FACTORY from 'bsrs-ember/vendor/translation_fixtures';
 import BASEURLS, { PREFIX, PEOPLE_URL, PEOPLE_LIST_URL, ROLE_LIST_URL, ROLES_URL, LOCATIONS_URL } from 'bsrs-ember/utilities/urls';
+import unformat from 'accounting/unformat';
 
 const PD = PERSON_DEFAULTS.defaults();
 const POWER_SELECT_LENGTH = 10;
@@ -130,26 +131,17 @@ test('when you deep link to the person detail view you get bound attrs', functio
   fillIn('.t-person-title', PD_PUT.title);
   fillIn('.t-person-employee_id', PD_PUT.employee_id);
   fillIn('.t-amount', PD_PUT.auth_amount);
-  andThen(() => {
-    $('.t-amount').focusout();
-  });
+  triggerEvent('.t-amount', 'blur');
   andThen(() => {
     let person = this.store.find('person', PD.idOne);
     assert.ok(person.get('isDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     assert.ok(person.get('emailsIsNotDirty'));
+    assert.equal(person.get('auth_amount'), PD_PUT.auth_amount);
   });
   let response = PF.detail(PD.idOne);
-  let payload = PF.put({
-    id: PD.id,
-    username: PD_PUT.username,
-    first_name: PD_PUT.first_name,
-    middle_initial: PD_PUT.middle_initial,
-    last_name: PD_PUT.last_name,
-    title: PD_PUT.title,
-    employee_id: PD_PUT.employee_id,
-    auth_amount: PD_PUT.auth_amount,
-    locale: PD.locale_id
+  let payload = PF.put({ id: PD.id, username: PD_PUT.username, first_name: PD_PUT.first_name, middle_initial: PD_PUT.middle_initial,
+    last_name: PD_PUT.last_name, title: PD_PUT.title, employee_id: PD_PUT.employee_id, auth_amount: unformat(PD_PUT.auth_amount), locale: PD.locale_id
   });
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
   generalPage.save();

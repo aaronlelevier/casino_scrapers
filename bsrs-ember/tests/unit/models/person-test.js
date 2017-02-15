@@ -26,7 +26,7 @@ moduleFor('model:person', 'Unit | Model | person', {
     'service:person-current','service:translations-fetcher','service:i18n', 'model:uuid', 
     'model:status', 'model:person-join-phonenumber', 'model:person-join-email', 'model:email', 
     'model:email-type', 'model:locale', 'validator:presence', 'validator:unique-username', 
-    'validator:length', 'validator:format', 'validator:has-many', 'model:attachment'],
+    'validator:length', 'validator:format', 'validator:number', 'validator:has-many', 'model:attachment'],
   beforeEach() {
     this.store = module_registry(this.container, this.registry);
     run(() => {

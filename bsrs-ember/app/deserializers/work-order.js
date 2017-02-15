@@ -16,7 +16,6 @@ export default Ember.Object.extend(OptConf, {
   },
   _deserializeSingle(response) {
     const store = this.get('simpleStore');
-    response.cost_estimate = this.get('currency').formatCurrency(response.cost_estimate, response.cost_estimate_currency);
     response.status_fk = response.status.id;
     response.category_fk = response.category.id;
     response.provider_fk = response.provider.id;

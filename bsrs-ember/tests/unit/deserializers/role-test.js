@@ -16,7 +16,7 @@ let store, uuid, category_deserializer, subject, role, functionalStore;
 
 moduleFor('deserializer:role', 'Unit | Deserializer | role', {
   needs: ['model:uuid', 'model:role', 'model:role-list', 'model:location-level', 'model:category', 'model:role-category', 
-    'service:i18n', 'validator:presence'],
+    'service:i18n', 'validator:presence', 'validator:number'],
   beforeEach() {
     store = module_registry(this.container, this.registry);
     uuid = this.container.lookup('model:uuid');

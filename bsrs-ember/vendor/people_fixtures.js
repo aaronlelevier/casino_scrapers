@@ -156,7 +156,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
     for(var key in person) {
       response[key] = person[key];
     }
-    response.auth_amount = response.auth_amount || null;
     return response;
   };
   factory.prototype.search = function() {

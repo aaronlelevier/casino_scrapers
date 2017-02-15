@@ -13,6 +13,7 @@ import page from 'bsrs-ember/tests/pages/category';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import random from 'bsrs-ember/models/random';
 import BASEURLS, { CATEGORIES_URL } from 'bsrs-ember/utilities/urls';
+import unformat from 'accounting/unformat';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -34,7 +35,7 @@ moduleForAcceptance('Acceptance | general category new test', {
       id: UUID.value,
       name: CD.nameOne,
       description: CD.descriptionMaintenance,
-      cost_amount: CD.costAmountOne,
+      cost_amount: unformat(CD.costAmountOne),
       cost_code: CD.costCodeOne,
       label: CD.labelOne,
       subcategory_label: CD.subCatLabelTwo,
@@ -75,9 +76,7 @@ test('visiting /category/new', function(assert) {
   fillIn('.t-category-label', CD.labelOne);
   fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
   fillIn('.t-amount', CD.costAmountOne);
-  andThen(() => {
-    $('.t-amount').focusout();
-  });
+  triggerEvent('.t-amount', 'blur');
   fillIn('.t-category-cost-code', CD.costCodeOne);
   generalPage.save();
   andThen(() => {
@@ -112,9 +111,7 @@ test('when editing the category name to invalid, it checks for validation', func
   fillIn('.t-category-label', CD.labelOne);
   fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
   fillIn('.t-amount', CD.costAmountOne);
-  andThen(() => {
-    $('.t-amount').focusout();
-  });
+  triggerEvent('.t-amount', 'blur');
   andThen(() => {
     assert.equal($('.validated-input-error-dialog').length, 0);
     assert.equal($('.validated-input-error-dialog:eq(0)').text().trim(), '');
@@ -220,9 +217,7 @@ test('clicking and typing into power select for categories children will fire of
   fillIn('.t-category-label', CD.labelOne);
   fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
   fillIn('.t-amount', CD.costAmountOne);
-  andThen(() => {
-    $('.t-amount').focusout();
-  });
+  triggerEvent('.t-amount', 'blur');
   fillIn('.t-category-cost-code', CD.costCodeOne);
   selectSearch('.t-category-children-select', 'a');
   page.categoryClickOptionOneEq();
@@ -261,9 +256,7 @@ test('clicking and typing into power select for categories children will not fil
   fillIn('.t-category-label', CD.labelOne);
   fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
   fillIn('.t-amount', CD.costAmountOne);
-  andThen(() => {
-    $('.t-amount').focusout();
-  });
+  triggerEvent('.t-amount', 'blur');
   fillIn('.t-category-cost-code', CD.costCodeOne);
   generalPage.save();
   andThen(() => {
@@ -286,9 +279,7 @@ test('you can add and remove child from category', function(assert) {
   fillIn('.t-category-label', CD.labelOne);
   fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
   fillIn('.t-amount', CD.costAmountOne);
-  andThen(() => {
-    $('.t-amount').focusout();
-  });
+  triggerEvent('.t-amount', 'blur');
   fillIn('.t-category-cost-code', CD.costCodeOne);
   selectSearch('.t-category-children-select', 'a');
   andThen(() => {
@@ -330,9 +321,7 @@ test('adding a new category should allow for another new category to be created 
   fillIn('.t-category-label', CD.labelOne);
   fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
   fillIn('.t-amount', CD.costAmountOne);
-  andThen(() => {
-    $('.t-amount').focusout();
-  });
+  triggerEvent('.t-amount', 'blur');
   generalPage.save();
   andThen(() => {
     assert.equal(currentURL(), CATEGORIES_INDEX_URL);

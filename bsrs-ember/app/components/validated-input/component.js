@@ -44,8 +44,8 @@ export default Ember.Component.extend(ValidationComponentPieces, ValidationCompo
         return false; // input|textarea[readonly] still allows events, not editing
       }
       if (this.get('isInvalid')) {
-        this.get('setFocusedOut').perform();
         this.set('focused', true); 
+        this.get('setFocusedOut').perform();
       } else {
         this.set('showMessage', false);
         this.set('invalidClass', false); 

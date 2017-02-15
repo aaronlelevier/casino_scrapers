@@ -46,11 +46,9 @@
           <!-- placeholder should be default cost from category -->
           {{input-currency
             model=model
-            field="cost_estimate"
             valuePath="cost_estimate"
             currencyField="cost_estimate_currency"
             count=indx
-            placeholder=(t "work_order.label.cost_estimate")
             readonly=model.isReadOnly
             disabled=model.isReadOnly
           }}

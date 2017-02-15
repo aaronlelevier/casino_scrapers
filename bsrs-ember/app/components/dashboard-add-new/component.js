@@ -1,10 +1,5 @@
 import Ember from 'ember';
-import config from 'bsrs-ember/config/environment';
-const { run } = Ember;
 import { htmlSafe } from 'ember-string';
-import { task, timeout } from 'ember-concurrency';
-
-const DEBOUNCE_MS = config.APP.POWER_SELECT_DEBOUNCE;
 
 export default Ember.Component.extend({
   attributeBindings: ['style'],

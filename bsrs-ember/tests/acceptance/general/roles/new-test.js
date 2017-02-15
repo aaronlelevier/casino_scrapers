@@ -46,7 +46,7 @@ moduleForAcceptance('Acceptance | general role new', {
     random.uuid = function() { return UUID.value; };
     url = `${PREFIX}${ROLE_LIST_URL}/`;
     counter=0;
-    run(function() {
+    run(() => {
       store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
     });
     // Settings
@@ -71,7 +71,7 @@ test('visiting role/new', function(assert) {
     assert.equal(page.categorySelectText, t('power.select.select'));
     assert.equal(find('.t-amount').get(0)['placeholder'], '0.00');
     // this might be a bug
-    assert.equal(inputCurrencyPage.authAmountValue, '0');
+    assert.equal(inputCurrencyPage.authAmountValue, '0.00');
     assert.equal(inputCurrencyPage.currencySymbolText, CURRENCY_DEFAULTS.symbol);
     assert.equal(inputCurrencyPage.currencyCodeText, CURRENCY_DEFAULTS.code);
     assert.equal(find('.t-inherited-msg-dashboard_text-link').text().trim(), 'Inherited from: general');
@@ -88,9 +88,7 @@ test('visiting role/new', function(assert) {
   page.categoryClickDropdown();
   page.categoryClickOptionOneEq();
   fillIn('.t-amount', CURRENCY_DEFAULTS.authAmountOne);
-  andThen(() => {
-    Ember.$('.t-amount').focusout();
-  });
+  triggerEvent('.t-amount', 'blur');
   let postPayload = Object.assign(payload, {
     auth_amount: CURRENCY_DEFAULTS.authAmountOne,
     dashboard_text: RD.dashboard_textTwo

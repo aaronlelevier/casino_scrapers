@@ -1,33 +1,26 @@
 <div class="input-group {{if readonly 'readonly'}}">
   <div class="input-group-addon t-currency-symbol">
-    {{get (get-currency-object
-      currencyService=currency
-      currencyId=(get model currencyField)
-      inheritsFrom=inheritsFrom)
-    'symbol'}}
+    {{get currencyObject 'symbol'}}
   </div>
-  {{input
-    type="text"
-    placeholder=(
-      if placeholder placeholder (format-number "0"
-        precision=(
-          get (get-currency-object
-            currencyService=currency
-            currencyId=(get model currencyField)
-            inheritsFrom=inheritsFrom)
-          'decimal_digits'
-        )
-      )
-    )
-    value=(get model field)
-    class=(concat "form-control t-amount " className (if showMessage " invalid"))
-    id=(if (gt count -1) (concat valuePath count) valuePath)
-    focus-out="formatCurrency"
-    key-up=(action "keyedUp")
-    readonly=readonly
+
+  {{!
+    model value can be 0 but not falsey (0 false "" null NaN). If value is truthy (including 0), then format number
+    https://www.npmjs.com/package/ember-truth-helpers
   }}
+
+  <input
+    value={{if hasCurrencyValue (format-number (get model valuePath) precision=(get currencyObject 'decimal_digits')) null }}
+    type="text"
+    data-test-id={{valuePath}}
+    class={{concat "form-control t-amount " className}}
+    id={{if (gt count -1) (concat valuePath count) valuePath}}
+    readonly={{if readonly "readonly" undefined}}
+    onblur={{action (pipe (action "formatCurrency" value="target.value") (action "focusedOut"))}}
+    oninput={{perform setModelTask value="target.value"}}
+    placeholder={{ if placeholder placeholder (format-number "0" precision=(get currencyObject 'decimal_digits')) }} 
+  >
   {{#power-select
-    selected=(get-currency-object currencyService=currency currencyId=(get model currencyField) inheritsFrom=inheritsFrom)
+    selected=currencyObject
     options=currencyObjects
     onchange=(action "selected")
     class="input-group-btn input-group-select t-currency-code-select"

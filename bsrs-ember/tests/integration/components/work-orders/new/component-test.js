@@ -8,7 +8,6 @@ import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import { typeInSearch, clickTrigger, nativeMouseUp } from '../../../../helpers/ember-power-select';
-import waitFor from 'ember-test-helpers/wait';
 import WORK_ORDER_DEFAULTS from 'bsrs-ember/vendor/defaults/work-order';
 import WORK_ORDER_STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/work-order-status';
 import PROVIDER_DEFAULTS from 'bsrs-ember/vendor/defaults/provider';
@@ -16,6 +15,9 @@ import CurrencyD from 'bsrs-ember/vendor/defaults/currency';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import { openDatepicker } from 'ember-pikaday/helpers/pikaday';
 import moment from 'moment';
+import wait from 'ember-test-helpers/wait';
+
+const ERR_TEXT = '.validated-input-error-dialog';
 
 const WD = WORK_ORDER_DEFAULTS.defaults();
 const WODS = WORK_ORDER_STATUS_DEFAULTS.defaults();
@@ -37,7 +39,7 @@ moduleForComponent('work-orders/new', 'Integration | Component | work orders/new
       model = store.push('work-order', { id: WD.idOne, cost_estimate: WD.costEstimateOne, scheduled_date: WD.scheduledDateOne, cost_estimate_currency: CurrencyD.idOne,
         status_fk: WODS.idOne, category_fk: CD.idOne });
       /* Setup WO with currency and status and category but not provider */
-      store.push('currency', {id: CurrencyD.idOne, workOrders: [WD.idOne]});
+      store.push('currency', { id: CurrencyD.idOne, decimal_digits: 2, workOrders: [WD.idOne] });
       store.push('work-order-status', {id: WODS.idOne, name: WODS.nameOne, workOrders: [WD.idOne, WD.idTwo]});
       store.push('category', { id: CD.idOne, name: CD.nameElectricalChild, verbose_name: CD.nameElectricalChild, workOrders: [WD.idOne], cost_amount: CD.costAmountOne });
     });
@@ -101,15 +103,14 @@ test('next button is not shown until select provider (step-1)', function(assert)
 
   clickTrigger(PROVIDER_COMPONENT);
   run(() => { typeInSearch('a'); });
-  return waitFor().
-    then(() => {
-      assert.equal($(DROPDOWN).length, 1);
-      assert.equal($('.ember-power-select-options > li').length, 3);
-      nativeMouseUp(`.ember-power-select-option:contains(${ProviderD.nameOne})`);
-      assert.equal(this.$(`${PROVIDER_COMPONENT} ${PowerSelect}`).text().trim(), ProviderD.nameOne);
-      assert.equal(model.get('provider').get('id'), ProviderD.idOne);
-      assert.equal(this.$('[data-test-id="next"]').attr('disabled'), undefined, 'not disabled b/c selected provider in step-1');
-    });
+  return wait().then(() => {
+    assert.equal($(DROPDOWN).length, 1);
+    assert.equal($('.ember-power-select-options > li').length, 3);
+    nativeMouseUp(`.ember-power-select-option:contains(${ProviderD.nameOne})`);
+    assert.equal(this.$(`${PROVIDER_COMPONENT} ${PowerSelect}`).text().trim(), ProviderD.nameOne);
+    assert.equal(model.get('provider').get('id'), ProviderD.idOne);
+    assert.equal(this.$('[data-test-id="next"]').attr('disabled'), undefined, 'not disabled b/c selected provider in step-1');
+  });
 });
 
 test('step2 removing either approved amount or scheduled date will disable next and step3 buttons', function(assert) {
@@ -126,10 +127,10 @@ test('step2 removing either approved amount or scheduled date will disable next 
   /* STEP 2 */
   assert.equal(this.$('[data-test-id="next"]').attr('disabled'), undefined, 'next has both approved_amount and scheduled_date');
   assert.equal(this.$('[data-test-id="step3"]').attr('disabled'), undefined, 'step3 has both approved_amount and scheduled_date');
-  this.$('.t-wo-approved_amount').val('').trigger('change');
+  this.$('.t-wo-approved_amount').val('').trigger('blur');
   assert.equal(this.$('[data-test-id="next"]').attr('disabled'), undefined, 'next is disabled if remove one property from step2');
   assert.equal(this.$('[data-test-id="step3"]').attr('disabled'), undefined, 'step3 is disabled if remove one property from step2');
-  this.$('.t-wo-approved_amount').val('100').trigger('change');
+  this.$('.t-wo-approved_amount').val('100').trigger('blur');
   assert.equal(this.$('[data-test-id="next"]').attr('disabled'), undefined, 'has both approved_amount and scheduled_date');
   assert.equal(this.$('[data-test-id="step3"]').attr('disabled'), undefined, 'step3 is disabled if remove one property from step2');
 
@@ -240,8 +241,7 @@ test('OVERALL - can click through to final step', function(assert) {
 
   clickTrigger(PROVIDER_COMPONENT);
   run(() => { typeInSearch('a'); });
-  return waitFor().
-    then(() => {
+  return wait().then(() => {
       assert.equal($(DROPDOWN).length, 1);
       assert.equal($('.ember-power-select-options > li').length, 3);
       // clicked provider
@@ -277,7 +277,7 @@ test('OVERALL - can click through to final step', function(assert) {
       assert.notOk(this.$('[data-test-id="item3"]').hasClass('timeline__item--active'), 'ensuring no active class');
       assert.notOk(this.$('[data-test-id="item3"]').hasClass('timeline__item--completed'), 'no completed class on step3 yet');
 
-      this.$('.t-wo-approved_amount').val('23').trigger('change');
+      this.$('.t-wo-approved_amount').val('23').trigger('blur');
 
       assert.equal(this.$('[data-test-id="step1"]').attr('disabled'), undefined, 'step1 is enabled still');
       assert.equal(this.$('[data-test-id="step2"]').attr('disabled'), undefined, 'status tracker action will no-op if on same state');
@@ -289,8 +289,7 @@ test('OVERALL - can click through to final step', function(assert) {
       interactor.selectDate(expectedDate);
 
       // step 3 and next btn will not have changed disabled property yet
-      return waitFor().
-        then(() => {
+      return wait().then(() => {
           assert.equal(this.$('[data-test-id="step1"]').attr('disabled'), undefined);
           assert.equal(this.$('[data-test-id="step2"]').attr('disabled'), undefined);
           assert.equal(this.$('[data-test-id="step3"]').attr('disabled'), undefined, 'step3 btn not disabled anymore');
@@ -367,7 +366,7 @@ test('transitions to step-3 from step-1 when click step3 in status-tracker compo
   assert.equal(model.get('approved_amount'), WD.approvedAmount, 'model approved_amount has not changed');
 });
 
-test('step 4 will have all buttons disabled and no cancel button', function(assert) {
+test('step4 will have all buttons disabled and no cancel button', function(assert) {
   run(() => {
     store.push('work-order', { id: WD.idOne, scheduled_date: new Date(), approved_amount: WD.approvedAmount, category_fk: CD.idOne, provider_fk: ProviderD.idOne });
     store.push('provider', { id: ProviderD.idOne, name: ProviderD.nameOne, workOrders: [WD.idOne] });
@@ -380,11 +379,42 @@ test('step 4 will have all buttons disabled and no cancel button', function(asse
   this.$('[data-test-id="step3"]').click();
   this.$('[data-test-id="next"]').click();
   this.$('[data-test-id="wo-send-post"]').click();
-  return waitFor().
-    then(() => {
+  return wait().then(() => {
       assert.equal(this.$('[data-test-id="step1"]').attr('disabled'), 'disabled', 'step1 is disabled');
       assert.equal(this.$('[data-test-id="step2"]').attr('disabled'), 'disabled', 'step2 is disabled');
       assert.equal(this.$('[data-test-id="step3"]').attr('disabled'), 'disabled', 'step3 is disabled');
       assert.equal(this.$('[data-test-id="cancel"]').length, 0);
     });
+});
+
+test('step2 invalid approved_amount will disabled btn', function(assert) {
+  const APPROVED_AMOUNT = '.t-amount';
+  let done = assert.async();
+  run(() => {
+    this.model = store.push('work-order', { id: WD.idOne, category_fk: CD.idOne, provider_fk: ProviderD.idOne });
+    store.push('provider', { id: ProviderD.idOne, name: ProviderD.nameOne, workOrders: [WD.idOne] });
+  });
+  this.render(hbs`{{work-orders/new model=model}}`);
+  this.$('[data-test-id="next"]').click();
+  assert.equal(this.$('[data-test-id="next"]').attr('disabled'), undefined, 'next has both approved_amount and scheduled_date');
+  assert.equal(this.$('[data-test-id="step3"]').attr('disabled'), undefined, 'step3 has both approved_amount and scheduled_date');
+  // presence required
+  assert.equal($(ERR_TEXT).text().trim(), '');
+  this.$(APPROVED_AMOUNT).val('-1').trigger('input');
+  return wait().then(() => {
+    // invalid input
+    assert.ok(this.$('.invalid').is(':visible'));
+    assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.work_order.approved_amount.gte'));
+    assert.equal(this.$('[data-test-id="next"]').attr('disabled'), 'disabled', 'next has both approved_amount and scheduled_date');
+    assert.equal(this.$('[data-test-id="step3"]').attr('disabled'), 'disabled', 'step3 has both approved_amount and scheduled_date');
+    this.$(APPROVED_AMOUNT).val('10').trigger('input');
+    return wait().then(() => {
+      // valid input
+      assert.notOk(this.$('.invalid').is(':visible'));
+      assert.equal($(ERR_TEXT).text().trim(), '');
+      assert.equal(this.$('[data-test-id="next"]').attr('disabled'), undefined, 'next has both approved_amount and scheduled_date');
+      assert.equal(this.$('[data-test-id="step3"]').attr('disabled'), undefined, 'step3 has both approved_amount and scheduled_date');
+      done();
+    });
+  });
 });

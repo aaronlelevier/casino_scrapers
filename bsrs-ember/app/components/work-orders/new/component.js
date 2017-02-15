@@ -62,8 +62,8 @@ class Step2 extends BaseStep {
     };
   }
   computed(model) {
-    return computed('model.scheduled_date', function() {
-      return !model.get('scheduled_date');
+    return computed('model.scheduled_date', 'model.approved_amount', function() {
+      return !model.get('scheduled_date') || model.get('validations.attrs.approved_amount.isInvalid');
     });
   } 
 }

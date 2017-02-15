@@ -32,7 +32,7 @@ moduleFor('deserializer:person', 'Unit | Deserializer | person', {
     'model:location-level','model:email', 'model:email-type', 'model:phonenumber', 'model:phone-number-type', 'model:person-join-phonenumber',
     'model:person-join-email', 'service:person-current','service:translations-fetcher', 'service:i18n', 'model:status', 'model:general-status-list',
     'model:location-status', 'model:locale', 'model:attachment', 'model:currency', 'validator:presence', 'validator:unique-username', 'validator:length',
-    'validator:format', 'validator:has-many'],
+    'validator:format', 'validator:number', 'validator:has-many'],
   beforeEach() {
     this.store = module_registry(this.container, this.registry);
     uuid = this.container.lookup('model:uuid');

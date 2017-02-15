@@ -3,7 +3,7 @@
     {{#form-group title="work_order.label.approved_amount" for="approved_amount" dataTestId="approved_amount"}}
     {{input-currency
       model=model
-      field="approved_amount"
+      valuePath="approved_amount"
       currencyField="cost_estimate_currency"
       placeholder=(t "crud.default_value" value=(unbound model.approved_amount))
       className="t-wo-approved_amount"
@@ -16,7 +16,7 @@
   <div class="col-md-12">
     {{#form-group title="work_order.label.scheduled_date" for="scheduled_date" dataTestId="scheduled_date"}}
       {{input-calendar
-        onSelection=(action "setDate")
+        onSelection=(action (mut model.scheduled_date))
         format="MM/DD/YYYY"
         inputClass="t-scheduled-date"
         value=model.scheduled_date

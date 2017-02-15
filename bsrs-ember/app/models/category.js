@@ -15,7 +15,23 @@ const Validations = buildValidations({
     presence: true,
     message: 'errors.category.name'
   }),
-  cost_amount: validator('category-cost-amount'),
+  cost_amount: [
+    validator('category-cost-amount'),
+    validator('number', {
+      // 11 digits max (w/ 4 decimal points)
+      allowString: true,
+      allowBlank: true,
+      lte: 99999999999,
+      message: 'errors.category.cost_amount.length'
+    }),
+    validator('number', {
+      // do not allow negative numbers
+      allowString: true,
+      allowBlank: true,
+      gte: 0,
+      message: 'errors.category.cost_amount.gte'
+    })
+  ]
 });
 
 var CategoryModel = Model.extend(Validations, TranslationMixin, OptConf, {

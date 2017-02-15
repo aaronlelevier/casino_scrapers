@@ -52,15 +52,6 @@ test('deserialize single', function(assert) {
   assert.equal(workOrder.get('instructions'), WD.instructions);
 });
 
-test('will format cost_estimate based on currency decimal_digits', function(assert) {
-  const json = WF.detail();
-  json.cost_estimate = '350.0000';
-  run(() => {
-    deserializer.deserialize(json, WD.idOne);
-  });
-  assert.equal(workOrder.get('cost_estimate'), WD.costEstimateOne);
-});
-
 //Work order status
 test('deserialize single with no existing status', function(assert) {
   const json = WF.detail();

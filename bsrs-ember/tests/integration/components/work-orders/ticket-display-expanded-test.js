@@ -17,11 +17,13 @@ import testSelector from 'ember-test-selectors';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import translations from "bsrs-ember/vendor/translation_fixtures";
+import wait from 'ember-test-helpers/wait';
 
-let WD, WOSD, ProviderD, PD, store, model, model2, trans;
+let WD, WOSD, ProviderD, PD, trans;
 const PC = PERSON_CURRENT.defaults();
+const ERR_TEXT = '.validated-input-error-dialog';
 
-moduleForComponent('ticket-display-expanded', 'integration: ticket-display-expanded test', {
+moduleForComponent('ticket-display-expanded', 'Integration: ticket-display-expanded test', {
   integration: true,
   setup() {
 
@@ -31,66 +33,64 @@ moduleForComponent('ticket-display-expanded', 'integration: ticket-display-expan
     PD = PERSON_DEFAULTS.defaults();
 
     trans = this.container.lookup('service:i18n');
-    store = module_registry(this.container, this.registry);
+    this.store = module_registry(this.container, this.registry);
     translation.initialize(this);
     const json = translations.generate('en');
     loadTranslations(trans, json);
     run(() => {
-      store.push('person-current', PERSON_CURRENT.defaults());
-      store.push('work-order-status', {id: WOSD.idOne, name: WOSD.nameOne, workOrders: [WD.idOne]});
-      store.push('person', { id: PD.idOne, fullname: PD.fullname, workOrders: [WD.idOne] });
-      model = store.push('work-order', { id: WD.idOne, cost_estimate: WD.costEstimateOne,
+      this.store.push('person-current', PERSON_CURRENT.defaults());
+      this.store.push('work-order-status', {id: WOSD.idOne, name: WOSD.nameOne, workOrders: [WD.idOne]});
+      this.store.push('person', { id: PD.idOne, fullname: PD.fullname, workOrders: [WD.idOne] });
+      this.model = this.store.push('work-order', { id: WD.idOne, cost_estimate: WD.costEstimateOne,
         scheduled_date: WD.scheduledDateOne, cost_estimate_currency: CurrencyD.idOne,
         status_fk: WOSD.idOne, provider_fk: ProviderD.idOne, approved_amount: WD.approvedAmount,
         approval_date: WD.approvalDateOne, approver_fk: PD.idOne, gl_code: WD.glCodeOne,
         instructions: WD.instructions
       });
-      store.push('provider', {id: ProviderD.idOne, name: ProviderD.nameOne,
+      this.store.push('provider', {id: ProviderD.idOne, name: ProviderD.nameOne,
         address1: ProviderD.address1One, logo: ProviderD.logoOne,
         workOrders: [WD.idOne]});
-      store.push('currency', {id: CurrencyD.idOne, symbol: CurrencyD.symbol,
+      this.store.push('currency', {id: CurrencyD.idOne, symbol: CurrencyD.symbol,
         code: CurrencyD.code, cost_estimate: CurrencyD.costEstimateOne, workOrders: [WD.idOne]});
     });
   },
 });
 
 test('displays provider logo, full address, phone and email', function(assert) {
-  this.model = store.find('work-order', WD.idOne);
-  let provider = store.find('provider', ProviderD.idOne);
+  let provider = this.store.find('provider', ProviderD.idOne);
   this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
 
   const logo1 = this.$('[data-test-id="provider-logo0"]').css('background-image');
-  assert.equal(logo1.replace(/\"/g, ''), `url(${model.get('provider.logo')})`);
-  assert.equal(this.$('[data-test-id="provider-address-0"]').text().trim(), model.get('provider.address1'));
+  assert.equal(logo1.replace(/\"/g, ''), `url(${this.model.get('provider.logo')})`);
+  assert.equal(this.$('[data-test-id="provider-address-0"]').text().trim(), this.model.get('provider.address1'));
   //address1 and city only
   run(()=>{
     provider.set('city', ProviderD.cityOne);
   });
-  assert.equal(this.$('[data-test-id="provider-address-0"]').text().trim(), model.get('provider.address1') + ' ' + model.get('provider.city'));
+  assert.equal(this.$('[data-test-id="provider-address-0"]').text().trim(), this.model.get('provider.address1') + ' ' + this.model.get('provider.city'));
   //address 1 and state only
   run(()=>{
     provider.set('city', '');
     provider.set('state', ProviderD.stateOne);
   });
-  assert.equal(this.$('[data-test-id="provider-address-0"]').text().trim(), model.get('provider.address1') + ' ' + model.get('provider.state'));
+  assert.equal(this.$('[data-test-id="provider-address-0"]').text().trim(), this.model.get('provider.address1') + ' ' + this.model.get('provider.state'));
   //address 1, city and state
   run(()=>{
     provider.set('city', ProviderD.cityOne);
   });
-  assert.equal(this.$('[data-test-id="provider-address-0"]').text().trim(), model.get('provider.address1') + ' ' + model.get('provider.city') + ', ' + model.get('provider.state'));
+  assert.equal(this.$('[data-test-id="provider-address-0"]').text().trim(), this.model.get('provider.address1') + ' ' + this.model.get('provider.city') + ', ' + this.model.get('provider.state'));
   //email only
   run(()=>{
     provider.set('postal_code', ProviderD.postalCodeOne);
     provider.set('phone', ProviderD.phoneOne);
     provider.set('email', ProviderD.emailOne);
   });
-  assert.equal(this.$('[data-test-id="provider-address-0"]').text().trim(), model.get('provider.address1') + ' ' + model.get('provider.city') + ', ' + model.get('provider.state') + ' ' + model.get('provider.postal_code') + ' • ' + model.get('provider.phone') + ' • ' + model.get('provider.email'));
+  assert.equal(this.$('[data-test-id="provider-address-0"]').text().trim(), this.model.get('provider.address1') + ' ' + this.model.get('provider.city') + ', ' + this.model.get('provider.state') + ' ' + this.model.get('provider.postal_code') + ' • ' + this.model.get('provider.phone') + ' • ' + this.model.get('provider.email'));
 
 });
 
 
 test('displays cost, gl, instructions, scheduled date and tracking number', function(assert) {
-  this.model = store.find('work-order', WD.idOne);
   this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0" currencyField="cost_estimate_currency" field="cost_estimate"}}`);
 
   //TODO: Currency helper is removing the decimal places from default currency amount
@@ -118,7 +118,6 @@ test('displays cost, gl, instructions, scheduled date and tracking number', func
 });
 
 test('approval text displays properly', function(assert) {
-  this.model = store.find('work-order', WD.idOne);
   this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
   //starts out with an approval
   assert.equal(
@@ -136,7 +135,6 @@ test('approval text displays properly', function(assert) {
 });
 
 test('all timeline items are displayed', function(assert) {
-  this.model = store.find('work-order', WD.idOne);
   this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
 
   assert.equal(this.$('[data-test-id*="timeline-item"]').length, 6);
@@ -145,7 +143,6 @@ test('all timeline items are displayed', function(assert) {
 });
 
 test('labels are translated', function(assert) {
-  this.model = store.find('work-order', WD.idOne);
   this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
   assert.equal(this.$('[data-test-id="work-order-title-cost0"]').text().trim(), trans.t('work_order.title.cost'));
   assert.equal(this.$('[data-test-id="work-order-title-instructions0"]').text().trim(), trans.t('work_order.title.instructions'));
@@ -161,7 +158,6 @@ test('can reschedule scheduled_date', function(assert) {
   });
   const tomorrow = moment().add(1, 'day').format('L');
   const expectedDate = new Date(tomorrow);
-  this.model = store.find('work-order', WD.idOne);
   this.render(hbs`{{work-orders/ticket-display-expanded permissions=permissions model=model indx="0"}}`);
   let selector = '[data-test-id="scheduled-date"]';
   assert.equal(this.$(selector).length, 0, 'reschedule must be clicked first');
@@ -183,7 +179,7 @@ test('can cancel reschedule', function(assert) {
   });
   const tomorrow = moment().add(1, 'day').format('L');
   const expectedDate = new Date(tomorrow);
-  this.model = store.find('work-order', WD.idOne);
+  this.model = this.store.find('work-order', WD.idOne);
   this.render(hbs`{{work-orders/ticket-display-expanded model=model permissions=permissions indx="0"}}`);
   let selector = '[data-test-id="scheduled-date"]';
   let actual = this.$(testSelector('id', 'wo-fg-scheduled_date0')).find('input[readonly]').val();
@@ -202,11 +198,73 @@ test('can cancel reschedule', function(assert) {
 });
 
 test('if work order has tracking number display it otherwise show TBD', function(assert) {
-  this.model = store.find('work-order', WD.idOne);
   this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
   assert.equal(this.$('[data-test-id="wo-tracking0"]').text().trim(), trans.t('work_order.label.tracking_tbd'));
   run(() => {
-    store.push('work-order', {id: WD.idOne, tracking_number: WD.trackingNumberOne});
+    this.store.push('work-order', {id: WD.idOne, tracking_number: WD.trackingNumberOne}); 
   });
   assert.equal(this.$('[data-test-id="wo-tracking0"]').text().trim(), WD.trackingNumberOne);
+});
+
+test('cost_estimate validation error for presence', function(assert) {
+  const COST_ESTIMATE = '.t-amount';
+  let done = assert.async();
+  this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
+  // presence required
+  assert.equal($(ERR_TEXT).text().trim(), '');
+  this.$(COST_ESTIMATE).val('').trigger('input');
+  return wait().then(() => {
+    // invalid input
+    assert.ok(this.$('.invalid').is(':visible'));
+    assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.work_order.cost_estimate'));
+    this.$(COST_ESTIMATE).val('1').trigger('input');
+    return wait().then(() => {
+      // valid input
+      assert.notOk(this.$('.invalid').is(':visible'));
+      assert.equal($(ERR_TEXT).text().trim(), '');
+      done();
+    });
+  });
+});
+
+test('cost_estimate validation error for negative number', function(assert) {
+  const COST_ESTIMATE = '.t-amount';
+  let done = assert.async();
+  this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
+  // presence required
+  assert.equal($(ERR_TEXT).text().trim(), '');
+  this.$(COST_ESTIMATE).val('-1').trigger('input');
+  return wait().then(() => {
+    // invalid input
+    assert.ok(this.$('.invalid').is(':visible'));
+    assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.work_order.cost_estimate.gte'));
+    this.$(COST_ESTIMATE).val('0').trigger('input');
+    return wait().then(() => {
+      // valid input
+      assert.notOk(this.$('.invalid').is(':visible'));
+      assert.equal($(ERR_TEXT).text().trim(), '');
+      done();
+    });
+  });
+});
+
+test('cost_estimate validation error for too lg number', function(assert) {
+  const COST_ESTIMATE = '.t-amount';
+  let done = assert.async();
+  this.render(hbs`{{work-orders/ticket-display-expanded model=model indx="0"}}`);
+  // presence required
+  assert.equal($(ERR_TEXT).text().trim(), '');
+  this.$(COST_ESTIMATE).val('999999999999999999999').trigger('input');
+  return wait().then(() => {
+    // invalid input
+    assert.ok(this.$('.invalid').is(':visible'));
+    assert.equal($(ERR_TEXT).text().trim(), trans.t('errors.work_order.cost_estimate.length'));
+    this.$(COST_ESTIMATE).val('0').trigger('input');
+    return wait().then(() => {
+      // valid input
+      assert.notOk(this.$('.invalid').is(':visible'));
+      assert.equal($(ERR_TEXT).text().trim(), '');
+      done();
+    });
+  });
 });

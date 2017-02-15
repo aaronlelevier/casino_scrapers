@@ -9,7 +9,8 @@ var store, category, run = Ember.run;
 
 module('unit: category test', {
   beforeEach() {
-    store = module_registry(this.container, this.registry, ['model:category', 'model:category-children', 'model:sccategory', 'service:i18n', 'validator:presence', 'validator:category-cost-amount']);
+    store = module_registry(this.container, this.registry, ['model:category', 'model:category-children', 'model:sccategory', 'service:i18n', 
+      'validator:presence', 'validator:category-cost-amount', 'validator:number']);
     run(() => {
       category = store.push('category', {id: CD.idOne});
     });

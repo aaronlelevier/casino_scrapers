@@ -4,7 +4,6 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import { belongs_to } from 'bsrs-components/attr/belongs-to';
 import OptConf from 'bsrs-ember/mixins/optconfigure/work-order';
 import { validator, buildValidations } from 'ember-cp-validations';
-import unformat from 'accounting/unformat';
 
 const Validations = buildValidations({
   /**
@@ -21,17 +20,38 @@ const Validations = buildValidations({
       message: 'errors.work_order.scheduled_date_in_past'
     })
   ],
-  cost_estimate: [
-    validator('format', {
+  approved_amount: [
+    validator('number', {
+      // 11 digits max (w/ 4 decimal points)
+      allowString: true,
       allowBlank: true,
-      // allow only numbers commas and decimal points
-      regex: /^[0-9.,]+$/,
+      lte: 99999999999,
+      message: 'errors.work_order.approved_amount.length'
+    }),
+    validator('number', {
+      // do not allow negative numbers
+      allowString: true,
+      allowBlank: true,
+      gte: 0,
+      message: 'errors.work_order.approved_amount.gte'
+    })
+  ],
+  cost_estimate: [
+    validator('presence', {
+      presence: true,
+      message: 'errors.work_order.cost_estimate'
     }),
     validator('number', {
       // 11 digits max (w/ 4 decimal points)
       allowString: true,
       lte: 99999999999,
       message: 'errors.work_order.cost_estimate.length'
+    }),
+    validator('number', {
+      // do not allow negative numbers
+      allowString: true,
+      gte: 0,
+      message: 'errors.work_order.cost_estimate.gte'
     })
   ]
 });
@@ -99,7 +119,7 @@ let WorkOrder = Model.extend(OptConf, Validations, {
       id: get(this, 'id'),
       cost_estimate_currency: get(this, 'cost_estimate_currency'),
       scheduled_date: get(this, 'scheduled_date'),
-      approved_amount: unformat(get(this, 'approved_amount')),
+      approved_amount: get(this, 'approved_amount'),
       instructions: get(this, 'instructions'),
       gl_code: get(this, 'category.cost_code_or_inherited'),
       category: get(this, 'category.id'),
@@ -116,10 +136,10 @@ let WorkOrder = Model.extend(OptConf, Validations, {
     return {
       id: get(this, 'id'),
       cost_estimate_currency: get(this, 'cost_estimate_currency'),
-      cost_estimate: unformat(get(this, 'cost_estimate')),
+      cost_estimate: get(this, 'cost_estimate'),
       scheduled_date: get(this, 'scheduled_date'),
       approval_date: get(this, 'approval_date'),
-      approved_amount: unformat(get(this, 'approved_amount')),
+      approved_amount: get(this, 'approved_amount'),
       completed_date: get(this, 'completed_date'),
       expiration_date: get(this, 'expiration_date'),
       instructions: get(this, 'instructions'),

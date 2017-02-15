@@ -38,6 +38,7 @@ module.exports = function(environment) {
     APP: {
       ANIMATION_TIME: 333,
       POWER_SELECT_DEBOUNCE: 300,
+      CURRENCY_INPUT_DEBOUNCE: 2000,
       POLL_INTERVAL: 1 * 30 * 1000,
       VALIDATION_TIMEOUT_INTERVAL: 1500
       // Here you can pass flags/options to your application instance
@@ -63,6 +64,7 @@ module.exports = function(environment) {
     ENV.locationType = 'none';
 
     ENV.DEBOUNCE_TIMEOUT_INTERVAL = 15;
+    ENV.CURRENCY_INPUT_DEBOUNCE = 15;
     ENV.APP.ANIMATION_TIME = 15;
     ENV.APP.POLL_INTERVAL = 15;
     ENV.APP.VALIDATION_TIMEOUT_INTERVAL = 15;

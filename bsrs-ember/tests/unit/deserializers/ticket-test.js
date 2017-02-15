@@ -642,9 +642,9 @@ test('deserialize detail with one work order and existing locally', (assert) => 
 
 test('deserialize detail with multiple work orders', (assert) => {
   const json = TF.generate(TD.idOne);
-  json.work_orders.push({ id: WD.idTwo, cost_estimate_currency: { id: CurrencyD.idOne }, 
+  json.work_orders.push({ id: WD.idTwo, cost_estimate_currency: CurrencyD.idOne, 
     status: {id: WOSD.idOne, name: WOSD.nameFive}, category: { id: CD.idOne }, provider: { id: ProviderD.idOne }, approver: { id: PD.idOne }});
-  store.push('currency', {id: CurrencyD.idOne, workOrders: [WD.idOne]});
+  store.push('currency', {id: CurrencyD.idOne });
   run(() => {
     subject.deserialize(json, json.id);
   });

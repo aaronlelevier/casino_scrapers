@@ -69,7 +69,7 @@
           {{/if}}
           {{input-currency
             model=model
-            field="auth_amount"
+            valuePath="auth_amount"
             currencyField="auth_currency"
             placeholder=(t "crud.default_value" value=model.inherited.auth_amount.inherited_value)
             inheritsFrom=model.inherited.auth_amount.inherits_from

@@ -293,7 +293,6 @@ test('adding a new person should allow for another new person to be created afte
     first_name: PD.first_name,
     middle_initial: PD.middle_initial,
     last_name: PD.last_name,
-    auth_amount: null,
     status: PD.statusInactive,
     role: PD.role,
     locations: [],

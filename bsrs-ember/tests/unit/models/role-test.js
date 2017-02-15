@@ -16,7 +16,7 @@ const PD = PERSON_DEFAULTS.defaults();
 let role;
 
 moduleFor('model:role', 'Unit | Model | role', {
-  needs: ['model:category', 'model:location-level', 'model:role-category', 'model:uuid', 'service:i18n', 'validator:presence'],
+  needs: ['model:category', 'model:location-level', 'model:role-category', 'model:uuid', 'service:i18n', 'validator:presence', 'validator:number'],
   beforeEach() {
     this.store = module_registry(this.container, this.registry);
     this.factory = this.container.lookupFactory('model:role');

@@ -72,6 +72,22 @@ const Validations = buildValidations({
   ],
   phonenumbers: validator('has-many'),
   emails: validator('has-many'),
+  auth_amount: [
+    validator('number', {
+      // 11 digits max (w/ 4 decimal points)
+      allowString: true,
+      allowBlank: true,
+      lte: 99999999999,
+      message: 'errors.person.auth_amount.length'
+    }),
+    validator('number', {
+      // do not allow negative numbers
+      allowString: true,
+      allowBlank: true,
+      gte: 0,
+      message: 'errors.person.auth_amount.gte'
+    })
+  ],
 });
 
 let Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMixin, LocaleMixin, {
@@ -264,7 +280,7 @@ let Person = Model.extend(Validations, CopyMixin, LocationMixin, OptConf, RoleMi
       last_name: this.get('last_name'),
       title: this.get('title'),
       employee_id: this.get('employee_id'),
-      auth_amount: this.get('auth_amount') || null,
+      auth_amount: this.get('auth_amount'),
       auth_currency: this.get('auth_currency'),
       status: this.get('status').get('id'),
       role: this.get('role').get('id'),

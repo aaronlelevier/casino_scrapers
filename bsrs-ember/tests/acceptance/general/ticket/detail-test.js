@@ -984,6 +984,7 @@ test('can create a work order', async function(assert) {
   await click('[data-test-id="next"]');
   assert.equal(find('.t-wo-approved_amount').val(), CD.costAmountOne, 'work order has approved_amount set from category');
   await fillIn('.t-wo-approved_amount', WD.approvedAmount);
+  triggerEvent('.t-wo-approved_amount', 'blur');
   let interactor = openDatepicker(Ember.$('.t-scheduled-date'));
   const d = new Date();
   // selected scheduled_date is 5 days from now
@@ -1046,9 +1047,7 @@ test('no cost_amount will also save work order (input currency component will cl
   await page.visitDetail();
   await click('[data-test-id="expander-collapsed0"]');
   await fillIn('.t-amount', 'a');
-  andThen(() => {
-    Ember.$('.t-amount').focusout();
-  });
+  triggerEvent('.t-amount', 'blur');
   let payload = TF.put({id: TD.idOne});
   const wo_payload = WF.put({id: WD.idOne, cost_estimate: 0});
   xhr(WO_PUT_URL, 'PUT', JSON.stringify(wo_payload), {}, 200, {});
@@ -1106,6 +1105,7 @@ test('400 create a work order', async function(assert) {
   assert.equal(find('.t-wo-create-provider-select .ember-power-select-selected-item').text().trim(), ProviderD.nameOne);
   await click('[data-test-id="next"]');
   await fillIn('.t-wo-approved_amount', WD.approvedAmount);
+  triggerEvent('.t-wo-approved_amount', 'blur');
   let interactor = openDatepicker(Ember.$('.t-scheduled-date'));
   const expectedDate = new Date();
   await interactor.selectDate(expectedDate);
@@ -1135,6 +1135,7 @@ test('502 create a work order', async function(assert) {
   assert.equal(find('.t-wo-create-provider-select .ember-power-select-selected-item').text().trim(), ProviderD.nameOne);
   await click('[data-test-id="next"]');
   await fillIn('.t-wo-approved_amount', WD.approvedAmount);
+  triggerEvent('.t-wo-approved_amount', 'blur');
   let interactor = openDatepicker(Ember.$('.t-scheduled-date'));
   const expectedDate = new Date();
   await interactor.selectDate(expectedDate);

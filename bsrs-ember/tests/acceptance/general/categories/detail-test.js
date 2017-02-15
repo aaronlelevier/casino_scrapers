@@ -17,6 +17,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import personPage from 'bsrs-ember/tests/pages/person';
 import rolePage from 'bsrs-ember/tests/pages/role';
 import BASEURLS, { CATEGORIES_URL, SC_CATEGORIES_URL } from 'bsrs-ember/utilities/urls';
+import unformat from 'accounting/unformat';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -73,13 +74,7 @@ test('when you deep link to the category detail view you get bound attrs', funct
   const search = 'a';
   // select sc category
   const sccategoryResponse = {
-    results: [{
-      id: SCD.idOne,
-      name: SCD.nameOne
-    },{
-      id: SCD.idTwo,
-      name: SCD.nameTwo
-    }]
+    results: [{ id: SCD.idOne, name: SCD.nameOne },{ id: SCD.idTwo, name: SCD.nameTwo }]
   };
   xhr(`${SC_CATEGORIES_URL}?sc_name__icontains=${search}`, 'GET', null, {}, 200, sccategoryResponse);
   selectSearch('.t-sc-category-name-select', search);
@@ -100,14 +95,8 @@ test('when you deep link to the category detail view you get bound attrs', funct
   // generate PUT
   let url = PREFIX + DETAIL_URL + '/';
   let response = CF.detail(CD.idOne);
-  let payload = CF.put({
-    id: CD.idOne,
-    name: CD.nameTwo,
-    description: CD.descriptionMaintenance,
-    label: CD.labelTwo,
-    cost_amount: CD.costAmountTwo,
-    cost_code: CD.costCodeTwo,
-    sc_category: SCD.idTwo,
+  let payload = CF.put({ id: CD.idOne, name: CD.nameTwo, description: CD.descriptionMaintenance,
+    label: CD.labelTwo, cost_amount: unformat(CD.costAmountTwo), cost_code: CD.costCodeTwo, sc_category: SCD.idTwo, 
     parent: parentId
   });
   xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
@@ -115,9 +104,7 @@ test('when you deep link to the category detail view you get bound attrs', funct
   page.descriptionFill(CD.descriptionMaintenance);
   page.labelFill(CD.labelTwo);
   page.amountFill(CD.costAmountTwo);
-  andThen(() => {
-    $('.t-amount').focusout();
-  });
+  triggerEvent('.t-amount', 'blur');
   page.costCodeFill(CD.costCodeTwo);
   andThen(() => {
     let category = this.store.find('category', CD.idOne);
@@ -241,9 +228,7 @@ test('cost_amount - is not required', function(assert) {
   page.descriptionFill(CD.descriptionMaintenance);
   page.labelFill(CD.labelOne);
   page.amountFill('');
-  andThen(() => {
-    Ember.$('.t-amount').focusout();
-  });
+  triggerEvent('.t-amount', 'blur');
   andThen(() => {
     const category = this.store.find('category', CD.idOne);
     assert.equal(category.get('cost_amount'), null, 'cost amount is blank and set to null when clear out input');

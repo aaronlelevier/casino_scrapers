@@ -20,10 +20,24 @@ const Validations = buildValidations({
     presence: true,
     message: 'errors.role.location_level'
   }),
-  auth_amount: validator('presence', {
-    presence: true,
-    message: 'errors.role.auth_amount'
-  }),
+  auth_amount: [
+    validator('presence', {
+      presence: true,
+      message: 'errors.role.auth_amount'
+    }),
+    validator('number', {
+      // 11 digits max (w/ 4 decimal points)
+      allowString: true,
+      lte: 99999999999,
+      message: 'errors.role.auth_amount.length'
+    }),
+    validator('number', {
+      // do not allow negative numbers
+      allowString: true,
+      gte: 0,
+      message: 'errors.role.auth_amount.gte'
+    })
+  ],
 });
 
 function permissionAttributes() {

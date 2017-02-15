@@ -45,15 +45,6 @@ var TicketDeserializer = Ember.Object.extend(OptConf, {
     let [m2m_categories, categories, server_sum] = many_to_many_extract(categories_json, store, ticket, 'model_categories', 'model_pk', 'category', 'category_pk');
     run(() => {
       categories.forEach((cat) => {
-
-        // format currency - does not deal with conversions
-        if (cat.cost_amount && cat.cost_currency) {
-          cat.cost_amount = this.get('currency').formatCurrency(cat.cost_amount, cat.cost_currency);
-        }
-        if (cat.inherited.cost_amount.inherited_value) {
-          cat.inherited.cost_amount.inherited_value = this.get('currency').formatCurrency(cat.inherited.cost_amount.inherited_value, cat.cost_currency);
-        }
-
         const children_json = cat.children;
         delete cat.children;
         const category = store.push('category', cat);
