@@ -7,6 +7,8 @@ node --version
 echo "PSQL version"
 psql --version
 
+TAG="$1"
+
 echo "CONFIG - SET SCRIPT CONFIGURATION"
 export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
 
@@ -23,21 +25,19 @@ fi
 cd ${PROJECT_DIR}/persistent
 TEST=$?; if [ "$TEST" == 1 ]; then echo "mkdir failed"; exit $TEST; fi
 
-BRANCH=persistent
-
 echo "GIT - PULL/CLONE REPO"
-if [  -d "${PROJECT_DIR}/persistent/bsrs" ];
-    then
-        echo "BSRS REPO EXISTS"
-        cd bsrs
-        git checkout .
-        git checkout $BRANCH
-        git pull
-    else
-        echo "BSRS REPO DOES NOT EXIST"
-        git clone -b $BRANCH git@github.com:bigskytech/bsrs.git
-        cd bsrs
-fi
+
+wait
+rm -rf bsrs
+TEST=$?; if [ "$TEST" == 1 ]; then echo "rm failed"; exit $TEST; fi
+
+wait
+echo "GIT - CLONE REPO"
+git clone git@github.com:bigskytech/bsrs.git
+TEST=$?; if [ "$TEST" == 1 ]; then echo "git clone failed"; exit $TEST; fi
+
+cd bsrs
+
 TEST=$?; if [ "$TEST" == 1 ]; then echo "git pull/clone failed"; exit $TEST; fi
 
 echo "DJANGO"
@@ -54,24 +54,14 @@ source venv/bin/activate
 pip install -r requirements.txt
 TEST=$?; if [ "$TEST" == 1 ]; then echo "pip install failed"; exit $TEST; fi
 
+if [ -n "$1" ]; then
+  git checkout $TAG
+fi
+
+echo "GIT TAG"
+git describe --tags
 
 cd bigsky/
-
-# NOTE: Need to manually migrate b/c this has an existing DB
-# TODO: Squash migrations and correctly version control them to make this
-#       process how it should be.
-# wait
-# ../venv/bin/python manage.py migrate
-# TEST=$?; if [ "$TEST" == 1 ]; then echo "migrate failed"; exit $TEST; fi
-
-
-echo "AFTER MIGRATIONS, LOAD LATEST FIXTURE DATA."
-wait
-# NOTE: remove for time being b/c DB already populated
-# ../venv/bin/python manage.py loaddata fixtures/translation.json
-# ../venv/bin/python manage.py loaddata fixtures/persistent/persistent.json
-TEST=$?; if [ "$TEST" == 1 ]; then echo "load fixture failed"; exit $TEST; fi
-
 
 echo "EMBER"
 
