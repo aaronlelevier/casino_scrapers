@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name='Casino Scrapers',
-    version='0.0.1',
+    version='0.0.2',
     description='Misc. Casino Scrapers',
     author='Aaron Lelevier',
     author_email='pyaaron@gmail.com',

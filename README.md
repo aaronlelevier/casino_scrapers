@@ -6,11 +6,11 @@ There is currently one example script to scrape [The Orleans Casino](http://www.
 
 ## Installation
 
-This project uses Python 2.
+This project uses Python 3.
 
-Make sure that Python 2 is installed.
+Make sure that Python 3 is installed.
 
-(optional) Install a python [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/) if desired.
+Install a python [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/) with Python 3. Activate `virtualenv`
 
 Install dependencies:
 
@@ -25,3 +25,7 @@ Simply run the following. An output file will be generated with the current casi
 ```
 python scrapers/orleans.py
 ```
+
+## Running and testing locally
+
+`pip install -r requirements.txt` to run and debug locally.
