@@ -91,5 +91,5 @@ ENV/
 .ropeproject
 
 # project specific
-outfile-*.txt
+*-output.md
 *.ipynb

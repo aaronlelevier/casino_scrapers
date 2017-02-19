@@ -37,7 +37,7 @@ strip_text_re = re.compile(r"^\s+", re.MULTILINE)
 
 
 def main():
-    with open(os.path.join("output", "{}.md".format(filename)), 'w', newline='') as f:
+    with open("{}-output.md".format(filename), 'w', newline='') as f:
         f.write(text_plus_linebreak("# Arizona Charlie's Casino Promotions"))
 
         # loop thro promo pages

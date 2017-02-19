@@ -29,3 +29,7 @@ python scrapers/orleans.py
 ## Running and testing locally
 
 `pip install -r requirements.txt` to run and debug locally.
+
+## License
+
+MIT
